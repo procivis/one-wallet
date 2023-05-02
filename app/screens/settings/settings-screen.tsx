@@ -75,6 +75,17 @@ const SettingsScreen: FunctionComponent = observer(() => {
     navigation.navigate('DeleteWallet');
   }, [navigation]);
 
+  const handleBiometricLoginChange = useCallback(
+    (enabled: boolean) => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        unsubscribe();
+        userSettings.switchBiometricLogin(enabled);
+      });
+      navigation.navigate('PinCodeCheck', { disableBiometry: true });
+    },
+    [navigation, userSettings],
+  );
+
   return (
     <FeatureScreen
       key={locale.locale}
@@ -105,7 +116,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
         <SwitchSetting
           title={translate('wallet.settings.security.biometricLogin')}
           value={userSettings.biometricLogin}
-          onChange={(enabled) => userSettings.switchBiometricLogin(enabled)}
+          onChange={handleBiometricLoginChange}
           icon={<BiometricLoginIcon />}
         />
       ) : null}
