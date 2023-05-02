@@ -1,0 +1,338 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots AutoImage Style Presets 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#f0f0f0",
+        "flex": 1,
+      },
+      Object {
+        "paddingBottom": 0,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <RCTScrollView
+      keyboardShouldPersistTaps="handled"
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "backgroundColor": "#eee",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderBottomColor": "#e6e6e6",
+                "borderBottomWidth": 1,
+                "paddingBottom": 10,
+                "paddingHorizontal": 10,
+                "paddingTop": 20,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "borderTopColor": "#e6e6e6",
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#666",
+                    "fontSize": 10,
+                    "paddingBottom": 2,
+                    "paddingHorizontal": 4,
+                  }
+                }
+              >
+                Use Case
+              </Text>
+            </View>
+            <View
+              style={Object {}}
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#3d3d3d",
+                    "fontWeight": "600",
+                  }
+                }
+              >
+                With URL
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "backgroundColor": "#fff",
+                "padding": 10,
+              }
+            }
+          >
+            <RCTImageView
+              internal_analyticTag={null}
+              resizeMode="cover"
+              source={
+                Array [
+                  Object {
+                    "uri": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                  },
+                ]
+              }
+              style={
+                Object {
+                  "height": 100,
+                  "overflow": "hidden",
+                  "width": 100,
+                }
+              }
+            />
+            <RCTImageView
+              internal_analyticTag={null}
+              resizeMode="cover"
+              source={
+                Array [
+                  Object {
+                    "uri": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                  },
+                ]
+              }
+              style={
+                Object {
+                  "height": 100,
+                  "overflow": "hidden",
+                  "width": 150,
+                }
+              }
+            />
+            <RCTImageView
+              internal_analyticTag={null}
+              resizeMode="cover"
+              source={
+                Array [
+                  Object {
+                    "uri": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                  },
+                ]
+              }
+              style={
+                Object {
+                  "height": 150,
+                  "overflow": "hidden",
+                  "width": 150,
+                }
+              }
+            />
+            <RCTImageView
+              internal_analyticTag={null}
+              resizeMode="cover"
+              source={
+                Array [
+                  Object {
+                    "uri": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                  },
+                ]
+              }
+              style={
+                Object {
+                  "height": 150,
+                  "overflow": "hidden",
+                  "width": 100,
+                }
+              }
+            />
+            <RCTImageView
+              internal_analyticTag={null}
+              resizeMode="contain"
+              source={
+                Array [
+                  Object {
+                    "uri": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                  },
+                ]
+              }
+              style={
+                Object {
+                  "height": 150,
+                  "overflow": "hidden",
+                  "resizeMode": "contain",
+                  "width": 100,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;
+
+exports[`Storyshots GradientBackground Style Presets 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#f0f0f0",
+        "flex": 1,
+      },
+      Object {
+        "paddingBottom": 0,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <RCTScrollView
+      keyboardShouldPersistTaps="handled"
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "backgroundColor": "#eee",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderBottomColor": "#e6e6e6",
+                "borderBottomWidth": 1,
+                "paddingBottom": 10,
+                "paddingHorizontal": 10,
+                "paddingTop": 20,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "borderTopColor": "#e6e6e6",
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#666",
+                    "fontSize": 10,
+                    "paddingBottom": 2,
+                    "paddingHorizontal": 4,
+                  }
+                }
+              >
+                Use Case
+              </Text>
+            </View>
+            <View
+              style={Object {}}
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#3d3d3d",
+                    "fontWeight": "600",
+                  }
+                }
+              >
+                default/stretch
+              </Text>
+            </View>
+            <Text
+              style={
+                Object {
+                  "color": "#666",
+                  "fontSize": 10,
+                  "paddingTop": 0,
+                }
+              }
+            >
+              Full screen background gradient.
+            </Text>
+          </View>
+          <View
+            style={
+              Object {
+                "backgroundColor": "#fff",
+                "padding": 10,
+              }
+            }
+          >
+            <ViewManagerAdapter_ExpoLinearGradient
+              proxiedProperties={
+                Object {
+                  "colors": Array [
+                    4282524739,
+                    4280818484,
+                  ],
+                  "endPoint": Array [
+                    0.5,
+                    1,
+                  ],
+                  "locations": undefined,
+                  "startPoint": Array [
+                    0.5,
+                    0,
+                  ],
+                }
+              }
+              style={
+                Array [
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                  Object {
+                    "backgroundColor": "#F1F3F5",
+                  },
+                ]
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

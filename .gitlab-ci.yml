@@ -1,0 +1,66 @@
+image: node:16-alpine
+
+stages:
+  - prepare
+  - test
+
+build_deps:
+  stage: prepare
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - apk update && apk upgrade
+    - apk add --no-cache --virtual .build-deps alpine-sdk python3 libc6-compat gcompat
+  script:
+    - yarn config delete https-proxy
+    - yarn config delete proxy
+    - yarn global add --cache-folder .yarn-cache-global node-gyp node-pre-gyp
+    - yarn install --frozen-lockfile --cache-folder .yarn-cache --prefer-offline --network-timeout=100000 --network-concurrency=1
+    - yarn rnuc:dev
+
+# Job Setup
+# - Setup Bash
+# - Check & Regenerate node_modules if necessary (Cache is only best effort)
+.modules_setup:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  before_script:
+    - >
+      if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
+        echo "node_modules exists and seems valid, not re-installing deps."
+      else
+        apk update && apk upgrade
+        apk add --no-cache --virtual .env bash
+        apk add --no-cache --virtual .build-deps alpine-sdk python3 libc6-compat gcompat
+        yarn config delete https-proxy
+        yarn config delete proxy
+        yarn global add node-gyp @mapbox/node-pre-gyp
+        yarn install --frozen-lockfile --network-concurrency 1
+        yarn rnuc:dev
+      fi
+
+lint:
+  stage: test
+  needs: [build_deps]
+  extends: .modules_setup
+  script:
+    - yarn lint
+
+compile:
+  stage: test
+  needs: [build_deps]
+  extends: .modules_setup
+  script:
+    - yarn compile
+
+test:
+  stage: test
+  needs: [build_deps]
+  extends: .modules_setup
+  script:
+    - yarn test

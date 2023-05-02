@@ -1,0 +1,22 @@
+// sample iOS associatation file
+// https://developer.apple.com/documentation/xcode/supporting-associated-domains#Add-the-associated-domain-file-to-your-website
+// to be served from desk: https://<fully qualified domain>/.well-known/apple-app-site-association
+
+{
+    "applinks": {
+        "details": [
+             {
+               "appIDs": [
+                 "AGG3V6QN4G.ch.procivis.ssi", // <- <Application Identifier Prefix (Team ID)>.<Bundle Identifier (APP_ID)>
+                 "AGG3V6QN4G.com.example.app2" // <- optionally additional app identifiers
+                ],
+               "components": [
+                 {
+                    "/": "/invitation",
+                    "comment": "Invitation link"
+                 }
+               ]
+             }
+         ]
+     }
+}

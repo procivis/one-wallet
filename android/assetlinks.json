@@ -1,0 +1,31 @@
+// sample json file to support universal links
+// https://developer.android.com/training/app-links/verify-site-associations#publish-json
+// to be served from the desk: https://domain.name/.well-known/assetlinks.json
+
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "ch.procivis.ssi", // <- this needs to be replaced with the applicationID
+            "sha256_cert_fingerprints": [
+                // debug.keystore fingerprint (used for local and bitrise builds)
+                "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
+                
+                // google play auto-signing certificates
+                // ch.procivis.ssi (Dev and Demo share the same bundle ID)
+                "C6:0D:3C:EA:62:29:89:39:FF:C5:51:57:BD:6C:89:09:F7:95:DB:D5:01:D7:9A:A2:0F:49:EC:E1:E5:32:33:6F",
+                // ch.procivis.ssi.public (SBB)
+                "52:BF:6D:06:1E:5C:83:F8:F1:2A:6E:12:57:6B:91:FF:7F:C1:DA:F0:6F:53:55:5F:E9:99:B3:43:C6:C2:97:D4",
+                // ch.procivis.ssi.izit
+                "2E:A4:8D:CB:D5:75:FD:72:15:FC:61:9E:09:5F:39:B7:8B:B9:77:FE:E5:ED:CA:9F:CF:10:A0:05:AC:F7:0C:63",
+                // ch.procivis.ssi.izit.dev
+                "8C:71:2D:E0:25:8D:FD:18:35:A1:CF:E9:C1:54:55:AF:7D:44:51:BD:2A:B2:F7:C2:52:44:A5:9A:E0:80:D1:65",
+                // ch.procivis.ssi.uzh (probably will be moved under an external google play account)
+                "1C:52:42:E9:FC:05:0E:68:30:39:92:DA:56:E0:CB:8C:1B:B6:14:F6:35:06:F1:96:44:18:C1:E3:5F:2D:B1:7D"
+            ]
+        }
+    }
+]

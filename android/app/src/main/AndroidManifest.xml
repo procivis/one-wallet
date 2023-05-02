@@ -1,0 +1,57 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.wallet">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+      android:networkSecurityConfig="@xml/network_security_config"
+      android:name=".MainApplication"
+      android:label="@string/APP_NAME"
+      android:icon="@mipmap/ic_launcher_${CONFIG_NAME}"
+      android:roundIcon="@mipmap/ic_launcher_${CONFIG_NAME}_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme.${CONFIG_NAME}">
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/APP_NAME"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true">
+        <!-- Accepts Universal links (invitation URL) -->
+        <intent-filter
+          android:label="@string/APP_NAME"
+          android:autoVerify="true">
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="https" />
+          <data android:host="${ASSOCIATED_INVITATION_DOMAIN}" android:path="/invitation" />
+        </intent-filter>
+
+        <!-- Accepts magic links (that begin with "didcomm:// etc.) -->
+        <intent-filter android:label="@string/APP_NAME">
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="didcomm" />
+          <data android:scheme="ssiplus" />
+          <data android:scheme="ssiplus-${CONFIG_NAME}" />
+        </intent-filter>
+      </activity>
+
+      <activity
+        android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
+        android:launchMode="singleTask"
+        android:exported="true"
+        android:theme="@style/BootTheme.${CONFIG_NAME}">
+        <intent-filter>
+          <action android:name="android.intent.action.MAIN" />
+          <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+    </application>
+</manifest>
