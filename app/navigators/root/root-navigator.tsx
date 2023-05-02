@@ -20,7 +20,7 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 const RootNavigator = () => {
   const { darkMode } = useAppColorScheme<AppColorScheme>();
   const initialRouteName = useInitialRoute();
-  usePinCodeCheckLogic(Boolean(initialRouteName));
+  usePinCodeCheckLogic(initialRouteName === 'Tabs');
   return initialRouteName ? (
     <>
       <StatusBar
@@ -38,7 +38,7 @@ const RootNavigator = () => {
         <RootStack.Screen
           name="PinCodeCheck"
           component={PinCodeCheckScreen}
-          options={{ gestureEnabled: false, animation: 'fade' }}
+          options={{ animation: 'fade' }}
           listeners={{ transitionEnd: () => hideSplashScreen() }}
         />
         <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />

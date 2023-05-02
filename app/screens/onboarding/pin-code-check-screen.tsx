@@ -1,28 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
-import { BackHandler } from 'react-native';
+import { useBlockOSBackNavigation } from '@procivis/react-native-components';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { FunctionComponent, useCallback } from 'react';
 
 import { PinCodeMode } from '../../components/pin-code/pin-code-entry';
 import PinCodeScreenContent from '../../components/pin-code/pin-code-screen-content';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
 
 const PinCodeCheckScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'PinCodeCheck'>>();
+  const route = useRoute<RootRouteProp<'PinCodeCheck'>>();
 
-  // disable back-button on android while on PIN screen
-  useEffect(() => {
-    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
-      return true;
-    });
-    return () => subscription.remove();
-  }, []);
+  useBlockOSBackNavigation();
 
   const onFinished = useCallback(() => {
     navigation.pop();
   }, [navigation]);
 
-  return <PinCodeScreenContent mode={PinCodeMode.Check} onFinished={onFinished} />;
+  return (
+    <PinCodeScreenContent
+      mode={PinCodeMode.Check}
+      onFinished={onFinished}
+      disableBiometry={route.params?.disableBiometry}
+    />
+  );
 };
 
 export default PinCodeCheckScreen;

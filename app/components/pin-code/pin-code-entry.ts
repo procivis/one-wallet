@@ -28,6 +28,7 @@ interface PinCodeEntryStatus {
   error?: string;
   onPressDigit?: (digit: number) => void;
   onPressDelete?: () => void;
+  onPressDeleteAll?: () => void;
 }
 
 async function loadPinCode(): Promise<string | null> {
@@ -102,6 +103,10 @@ export const usePinCodeEntry = (mode: PinCodeMode): PinCodeEntryStatus => {
     setUserEntry((curr) => curr.slice(0, curr.length - 1));
   }, []);
 
+  const onPressDeleteAll = useCallback(() => {
+    setUserEntry('');
+  }, []);
+
   const enteredLength = userEntry.length;
   const validated = enteredLength === PIN_CODE_LENGTH && storedEntry === Sha256(userEntry);
 
@@ -145,6 +150,7 @@ export const usePinCodeEntry = (mode: PinCodeMode): PinCodeEntryStatus => {
     error,
     onPressDigit: !finished && enteredLength < PIN_CODE_LENGTH ? onPressDigit : undefined,
     onPressDelete: !finished && enteredLength ? onPressDelete : undefined,
+    onPressDeleteAll: !finished && enteredLength ? onPressDeleteAll : undefined,
   };
 };
 

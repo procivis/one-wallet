@@ -7,5 +7,4 @@ import { LogBox } from 'react-native';
 // prettier-ignore
 LogBox.ignoreLogs([
   "Require cycle:",
-  "Mediator invitation has already been granted",
 ])
