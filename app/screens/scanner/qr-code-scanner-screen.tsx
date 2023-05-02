@@ -1,0 +1,60 @@
+import { QRCodeScanner } from '@procivis/react-native-components';
+import { useIsFocused } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { BarCodeReadEvent } from 'react-native-camera';
+
+import { FocusAwareStatusBar } from '../../components';
+import { translate } from '../../i18n';
+import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+
+const QRCodeScannerScreen: FunctionComponent = () => {
+  const navigation = useNavigation<RootNavigationProp<'Tabs'>>();
+  const isFocused = useIsFocused();
+  const [code, setCode] = useState<string>();
+
+  const handleCodeScan = useCallback(
+    (event: BarCodeReadEvent) => {
+      if (code) {
+        return;
+      }
+      setCode(event.data);
+    },
+    [code, setCode],
+  );
+
+  useEffect(() => {
+    if (!code) {
+      return;
+    }
+    navigation.navigate('Tabs', { screen: 'Wallet' });
+    setCode(undefined);
+  }, [code, navigation, setCode]);
+
+  return (
+    <View style={styles.screen}>
+      <FocusAwareStatusBar barStyle="light-content" />
+      {isFocused && (
+        <QRCodeScanner
+          onBarCodeRead={handleCodeScan}
+          title={translate('wallet.qrCodeScannerScreen.title')}
+          description={translate('wallet.qrCodeScannerScreen.description')}
+        />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  // eslint-disable-next-line react-native/no-color-literals
+  screen: {
+    alignItems: 'center',
+    backgroundColor: 'black',
+    height: '100%',
+    justifyContent: 'center',
+    width: '100%',
+  },
+});
+
+export default QRCodeScannerScreen;
