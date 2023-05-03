@@ -21,8 +21,6 @@ export async function setupLocaleStore(env: Environment) {
     i18n.locale = data.locale;
   } catch (e) {
     localeStore = LocaleStoreModel.create(defaultData, env);
-
-    __DEV__ && console.tron.error?.(e instanceof Error ? e.message : e, null);
   }
 
   onSnapshot(localeStore, (snapshot) => {
