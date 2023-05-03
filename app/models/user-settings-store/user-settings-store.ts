@@ -3,14 +3,10 @@ import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 export const UserSettingsStoreModel = types
   .model('UserSettingsStore', {
     biometricLogin: types.boolean,
-    unsafeOverrideConnectionLabel: types.boolean,
   })
   .actions((self) => ({
     switchBiometricLogin: (enabled: boolean) => {
       self.biometricLogin = enabled;
-    },
-    switchUnsafeOverrideConnectionLabel: (enabled: boolean) => {
-      self.unsafeOverrideConnectionLabel = enabled;
     },
   }));
 
