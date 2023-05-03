@@ -18,8 +18,6 @@ export async function setupBackendConfigStore(env: Environment) {
     backendConfigStore = BackendConfigStoreModel.create(data, env);
   } catch (e) {
     backendConfigStore = BackendConfigStoreModel.create(defaultData, env);
-
-    __DEV__ && console.tron.error?.(e instanceof Error ? e.message : e, null);
   }
 
   onSnapshot(backendConfigStore, (snapshot) => {
