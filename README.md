@@ -1,8 +1,8 @@
 [![pipeline status](https://gitlab.procivis.ch/procivis/one/one-wallet/badges/master/pipeline.svg)](https://gitlab.procivis.ch/procivis/one/one-wallet/-/pipelines)
 
-| Configuration |                                                                           Build Status                                                                            |
-| ------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| SSI+          | [![Build Status](https://app.bitrise.io/app/079ca4bd895e3f5b/status.svg?token=y7WWrQz9-9hOi6grH18Pog&branch=master)](https://app.bitrise.io/app/079ca4bd895e3f5b) |
+| Configuration |                                                                                               Build Status                                                                                                |
+| ------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Demo          | [![Build Status](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687/status.svg?token=asgEvbNJgYbMPW707rocOA&branch=master)](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687) |
 
 # App Flavors
 
