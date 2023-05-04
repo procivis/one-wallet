@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { useIsAppActive } from '../../utils/appState';
-import { usePinCodeInitialized } from './pin-code-entry';
 
 const PIN_CODE_INACTIVE_TIMEOUT = 60000;
 
@@ -26,18 +25,16 @@ export const preventBackgroundLockScreen = () => {
 export const usePinCodeCheckLogic = (enabled: boolean) => {
   const navigation = useNavigation<RootNavigationProp>();
 
-  const pinCodeInitialized = useRef<boolean>();
-  pinCodeInitialized.current = usePinCodeInitialized();
-
   const showPinCodeCheck = useCallback(() => {
-    if (!pinCodeInitialized.current || !backgroundPinLockEnabled) return false;
+    if (!backgroundPinLockEnabled) return false;
     const { routes, index } = navigation.getState?.() || {};
     const currentRoute = routes?.[index ?? 0]?.name;
-    if (currentRoute !== 'PinCodeCheck') {
-      navigation.navigate('PinCodeCheck');
-      return true;
+
+    if (currentRoute === 'PinCodeCheck' || currentRoute === 'Onboarding') {
+      return false;
     }
-    return false;
+    navigation.navigate('PinCodeCheck');
+    return true;
   }, [navigation]);
 
   const hidePinCodeCheck = useCallback(() => {

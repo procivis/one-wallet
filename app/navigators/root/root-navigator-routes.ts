@@ -4,10 +4,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigatorParamList } from './tabs/tabs-navigator';
 
 export type RootNavigatorParamList = {
-  PinCodeCheck: undefined;
   Onboarding: undefined;
   Tabs: {
     screen?: keyof TabNavigatorParamList;
+  };
+  PinCodeCheck?: {
+    disableBiometry: boolean;
   };
   Settings: undefined;
   PinCodeChange: undefined;

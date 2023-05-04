@@ -1,6 +1,4 @@
 export type OnboardingNavigatorParamList = {
-  Welcome: undefined;
-  PinCodeInitialization: {
-    nextScreen: keyof OnboardingNavigatorParamList;
-  };
+  PinCodeInitialization: undefined;
+  PinCodeSet: undefined;
 };
