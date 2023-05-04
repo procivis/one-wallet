@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+yarn lint
+yarn compile
+
+yarn translations:sort
+git add app/i18n/
