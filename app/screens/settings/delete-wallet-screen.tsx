@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   CheckboxAlignment,
+  GradientBackground,
   theme,
   Typography,
   useAppColorScheme,
@@ -12,7 +13,6 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { GradientBackground } from '../../components';
 import { removePin } from '../../components/pin-code/pin-code-entry';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';

@@ -2,8 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp, RootNavigatorParamList } from '../../navigators/root/root-navigator-routes';
 import { useIsAppActive } from '../../utils/appState';
+import { reportError } from '../../utils/reporting';
 
 const PIN_CODE_INACTIVE_TIMEOUT = 60000;
 
@@ -22,7 +23,7 @@ export const preventBackgroundLockScreen = () => {
 /**
  * Checks for AppState changes and shows PIN code check screen if inactive for long time
  */
-export const usePinCodeCheckLogic = (enabled: boolean) => {
+export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   const navigation = useNavigation<RootNavigationProp>();
 
   const showPinCodeCheck = useCallback(() => {
@@ -74,4 +75,30 @@ export const usePinCodeCheckLogic = (enabled: boolean) => {
       lastActiveTimestamp.current = Date.now();
     }
   }, [appActive, enabled, showPinCodeCheck, hidePinCodeCheck]);
+};
+
+type RunAfterPinCheck = (fn: () => void, params?: RootNavigatorParamList['PinCodeCheck']) => void;
+
+/**
+ * For use where a PIN code check is part of the flow
+ * Perform custom action after successfully passing the PIN code check
+ */
+export const useExplicitPinCodeCheck = (): RunAfterPinCheck => {
+  const navigation = useNavigation<RootNavigationProp>();
+
+  return useCallback<RunAfterPinCheck>(
+    (fn, params) => {
+      if (!navigation.isFocused()) {
+        reportError('Tried to run a PIN code check while not focused');
+        return;
+      }
+
+      const unsubscribe = navigation.addListener('focus', () => {
+        unsubscribe();
+        fn();
+      });
+      navigation.navigate('PinCodeCheck', params);
+    },
+    [navigation],
+  );
 };

@@ -234,8 +234,8 @@
   "transactionDetail.time": "Time",
   "transactionDetail.title": "Transaction",
   "transactionDetail.transactionType": "Transaction type",
-  "wallet.qrCodeScannerScreen.description": "Hold the QR-code inside the square to validate or share data.",
-  "wallet.qrCodeScannerScreen.title": "QR-code scanner",
+  "wallet.qrCodeScannerScreen.description": "Position the QR code within the window to validate or send evidence to third parties.",
+  "wallet.qrCodeScannerScreen.title": "Scan QR code",
   "wallet.settings.changeLanguage": "Change language",
   "wallet.settings.deleteWallet": "Delete wallet",
   "wallet.settings.general.favorites": "Manage favorites",
@@ -249,7 +249,7 @@
   "wallet.settings.security.pincode": "Change PIN code",
   "wallet.settings.security.title": "Security",
   "wallet.settings.title": "Settings",
-  "wallet.tabBar.qrCodeScanner": "QR code scanner",
+  "wallet.tabBar.qrCodeScanner": "Scan QR-Code",
   "wallet.tabBar.services": "Services",
   "wallet.tabBar.wallet": "Wallet",
   "wallet.walletScreen.card.addFavorite": "Add favorite",
@@ -267,5 +267,5 @@
   "wallet.walletScreen.sharedWith.notShared.title": "Not shared yet.",
   "wallet.walletScreen.sharedWith.title": "SHARED WITH",
   "wallet.walletScreen.subtitle": "Welcome to your wallet.",
-  "wallet.walletScreen.title": "Hello %{name}"
+  "wallet.walletScreen.title": "Wallet"
 }

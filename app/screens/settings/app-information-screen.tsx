@@ -6,11 +6,11 @@ import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
 
 const AppInformationScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<RootNavigationProp<'AppInformation'>>();
+  const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
 
   const appVersion = `v${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()}, ${Config.CONFIG_NAME})${
     Config.DEV_CONFIG === 'true' ? ' (DEV)' : ''
