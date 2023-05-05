@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
-    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#781c168624804fb53a27e7b91a8c1fcaa4d0e6a3",
+    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#5ed09744d6c50cdcf0309b6b2faa0df88895c939",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/image-editor": "^2.3.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -43,7 +43,6 @@
     "apisauce": "2.0.0",
     "buffer": "^6.0.3",
     "expo": ">=44.0.0-0 <45.0.0",
-    "expo-linear-gradient": "^11.0.3",
     "expo-local-authentication": "^12.1.1",
     "expo-localization": "^12.0.1",
     "i18n-js": "3.8.0",
