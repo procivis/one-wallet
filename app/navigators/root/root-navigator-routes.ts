@@ -1,20 +1,17 @@
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { OnboardingNavigatorParamList } from './onboarding/onboarding-routes';
+import { SettingsNavigatorParamList } from './settings/settings-routes';
 import { TabNavigatorParamList } from './tabs/tabs-navigator';
 
 export type RootNavigatorParamList = {
-  Onboarding: undefined;
-  Tabs: {
-    screen?: keyof TabNavigatorParamList;
-  };
+  Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
+  Tabs: NavigatorScreenParams<TabNavigatorParamList>;
   PinCodeCheck?: {
     disableBiometry: boolean;
   };
-  Settings: undefined;
-  PinCodeChange: undefined;
-  AppInformation: undefined;
-  DeleteWallet: undefined;
+  Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> = RouteProp<
