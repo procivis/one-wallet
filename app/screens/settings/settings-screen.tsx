@@ -14,13 +14,14 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 
 import BiometricLoginIcon from '../../../assets/images/settings/biometricLogin';
 import DeleteWalletIcon from '../../../assets/images/settings/deleteWallet';
+import InfoIcon from '../../../assets/images/settings/info';
 import LanguageIcon from '../../../assets/images/settings/language';
-import MoreIcon from '../../../assets/images/settings/more';
 import PincodeIcon from '../../../assets/images/settings/pincode';
 import { useBiometricType } from '../../components/pin-code/biometric';
+import { useExplicitPinCodeCheck } from '../../components/pin-code/pin-code-check';
 import { Locale, Locales, translate, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
 
 const LocaleNames: Record<Locale, string> = {
   en: 'English',
@@ -42,7 +43,7 @@ const SectionHeader: FunctionComponent<SectionHeaderProps> = ({ title }) => {
 
 const SettingsScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const navigation = useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
 
   const { userSettings, locale } = useStores();
   const biometry = useBiometricType();
@@ -75,15 +76,17 @@ const SettingsScreen: FunctionComponent = observer(() => {
     navigation.navigate('DeleteWallet');
   }, [navigation]);
 
+  const runAfterPinCheck = useExplicitPinCodeCheck();
   const handleBiometricLoginChange = useCallback(
     (enabled: boolean) => {
-      const unsubscribe = navigation.addListener('focus', () => {
-        unsubscribe();
-        userSettings.switchBiometricLogin(enabled);
-      });
-      navigation.navigate('PinCodeCheck', { disableBiometry: true });
+      runAfterPinCheck(
+        () => {
+          userSettings.switchBiometricLogin(enabled);
+        },
+        { disableBiometry: true },
+      );
     },
-    [navigation, userSettings],
+    [runAfterPinCheck, userSettings],
   );
 
   return (
@@ -125,7 +128,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         title={translate('wallet.settings.help.information')}
         onPress={handleAppInformation}
-        icon={<MoreIcon />}
+        icon={<InfoIcon />}
       />
 
       <SectionHeader title={'wallet.settings.profile.title'} />

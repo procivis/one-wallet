@@ -11,11 +11,11 @@ import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 
 const PinCodeSetScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'Onboarding'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
 
   const onClose = useCallback(() => {
-    navigation.replace('Tabs', { screen: 'Wallet' });
-  }, [navigation]);
+    rootNavigation.replace('Tabs', { screen: 'Wallet' });
+  }, [rootNavigation]);
 
   useBlockOSBackNavigation();
 

@@ -15,7 +15,7 @@ export const hideSplashScreen = () => {
 };
 
 /**
- * @returns Initial RootNavigation screen routeName or undefined (until initialized and splash screen hidden)
+ * @returns Initial RootNavigation screen routeName or undefined (until initialized)
  */
 export const useInitialRoute = () => {
   const pinInitialized = usePinCodeInitialized();
