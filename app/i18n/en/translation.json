@@ -261,6 +261,7 @@
   "wallet.walletScreen.credentialsList.notFound.subtitle": "None of your credentials matches the query.",
   "wallet.walletScreen.credentialsList.notFound.title": "Not found",
   "wallet.walletScreen.credentialsList.title": "ALL CREDENTIALS (%{credentialsCount})",
+  "wallet.walletScreen.credentialsList.title.empty": "All credentials",
   "wallet.walletScreen.filter.all": "All",
   "wallet.walletScreen.filter.favorites": "Favorites",
   "wallet.walletScreen.sharedWith.notShared.subtitle": "You have not shared this credential yet.",
