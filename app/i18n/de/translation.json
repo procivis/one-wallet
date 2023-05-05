@@ -261,6 +261,7 @@
   "wallet.walletScreen.credentialsList.notFound.subtitle": "Keiner Ihrer Nachweise stimmt mit der Abfrage überein.",
   "wallet.walletScreen.credentialsList.notFound.title": "Nicht gefunden",
   "wallet.walletScreen.credentialsList.title": "ALLE NACHWEISE (%{credentialsCount})",
+  "wallet.walletScreen.credentialsList.title.empty": "Alle Nachweise",
   "wallet.walletScreen.filter.all": "Alles",
   "wallet.walletScreen.filter.favorites": "Favoriten",
   "wallet.walletScreen.sharedWith.notShared.subtitle": "Sie haben diesen Nachweis noch nicht geteilt.",
