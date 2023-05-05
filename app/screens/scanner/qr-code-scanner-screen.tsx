@@ -5,7 +5,6 @@ import React, { FunctionComponent, useCallback, useEffect, useState } from 'reac
 import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
-import { FocusAwareStatusBar } from '../../components';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 
@@ -34,7 +33,6 @@ const QRCodeScannerScreen: FunctionComponent = () => {
 
   return (
     <View style={styles.screen}>
-      <FocusAwareStatusBar barStyle="light-content" />
       {isFocused && (
         <QRCodeScanner
           onBarCodeRead={handleCodeScan}
@@ -49,10 +47,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
 const styles = StyleSheet.create({
   // eslint-disable-next-line react-native/no-color-literals
   screen: {
-    alignItems: 'center',
     backgroundColor: 'black',
     height: '100%',
-    justifyContent: 'center',
     width: '100%',
   },
 });
