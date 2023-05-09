@@ -8,6 +8,7 @@
 //
 // It's easier just to leave it here.
 
+import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
 
 import { Animated, AppRegistry, Text, TextInput } from 'react-native';

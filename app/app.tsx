@@ -15,6 +15,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { AccessibilityFocusHistoryProvider, ColorSchemeProvider } from '@procivis/react-native-components';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import Config from 'react-native-ultimate-config';
 
@@ -23,7 +24,6 @@ import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator, canExit, useBackButtonHandler } from './navigators';
 import { ErrorBoundary } from './screens';
 import { AppColorScheme, useFlavorColorScheme } from './theme';
-import { initFonts } from './theme/fonts'; // expo
 import { reportException } from './utils/reporting';
 
 if (!__DEV__ && Config.DEV_CONFIG !== 'true') {
@@ -56,14 +56,11 @@ function App() {
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
-    (async () => {
-      await initFonts(); // expo
-      setupRootStore()
-        .then(setRootStore)
-        .catch((e) => {
-          reportException(e, 'setup mobx store failure');
-        });
-    })();
+    setupRootStore()
+      .then(setRootStore)
+      .catch((e) => {
+        reportException(e, 'setup mobx store failure');
+      });
   }, []);
 
   const colorScheme = useFlavorColorScheme();
@@ -93,4 +90,4 @@ function App() {
   );
 }
 
-export default App;
+export default gestureHandlerRootHOC(App);

@@ -17,7 +17,7 @@ const BlurOverlay: FunctionComponent<BlurOverlayProps> = ({ style, blurStyle }) 
   return (
     <View style={style}>
       <RNBlurOverlay
-        ref={(overlay) => overlay?.openOverlay()}
+        ref={(overlay: any) => overlay?.openOverlay()}
         customStyles={styles.overlay}
         blurStyle={blurStyle}
         brightness={brightness}

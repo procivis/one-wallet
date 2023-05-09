@@ -20,6 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+ios/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -29,6 +30,8 @@ build/
 local.properties
 *.iml
 *.hprof
+*.keystore
+!debug.keystore
 
 # node.js
 #
@@ -37,12 +40,6 @@ npm-debug.log
 yarn-error.log
 # jest coverage
 coverage/
-
-# BUCK
-buck-out/
-\.buckd/
-*.keystore
-!debug.keystore
 
 # fastlane
 #
@@ -60,8 +57,11 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-!ios/Pods/Frameworks
+/vendor/bundle/
 /ios/Wallet/LaunchScreen.storyboard
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
 
 # Ignite-specific items below
 # You can safely replace everything above this comment with whatever is
@@ -69,10 +69,6 @@ buck-out/
 
 # VS Code
 .vscode
-
-# Expo
-.expo/*
-bin/Exponent.app
 
 npm-debug.*
 *.jks

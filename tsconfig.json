@@ -1,21 +1,4 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "jsx": "react-native",
-    "module": "es2015",
-    "moduleResolution": "node",
-    "strict": true,
-    "noImplicitAny": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "sourceMap": true,
-    "target": "esnext",
-    "lib": ["esnext", "dom"],
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
+  "extends": "@tsconfig/react-native/tsconfig.json",
   "include": ["index.js", "app/**/*", "assets/**/*", "test/**/*"]
 }

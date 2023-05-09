@@ -1,5 +1,5 @@
-import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
+import { findBestLanguageTag } from 'react-native-localize';
 import { register } from 'timeago.js';
 import timeAgoDe from 'timeago.js/lib/lang/de';
 import timeAgoEn from 'timeago.js/lib/lang/en_US';
@@ -21,15 +21,20 @@ i18n.fallbacks = true;
 export type Locale = keyof typeof translations;
 export const Locales = Object.keys(translations) as Locale[];
 
-export const defaultLocale = (locale: string): Locale => {
-  const localeLanguage = locale.split('-')[0] as Locale;
+export const defaultLocale = (): Locale => {
+  const result = findBestLanguageTag(Locales);
+  if (!result) {
+    return i18n.defaultLocale as Locale;
+  }
+
+  const localeLanguage = result.languageTag.split('-')[0] as Locale;
   if (Locales.includes(localeLanguage)) {
     return localeLanguage;
   }
   return i18n.defaultLocale as Locale;
 };
 
-i18n.locale = defaultLocale(Localization.locale);
+i18n.locale = defaultLocale();
 
 /**
  * Builds up valid keypaths for translations.
