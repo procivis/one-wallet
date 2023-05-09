@@ -9,12 +9,14 @@
         <item name="colorPrimary">#F62323</item>
         <item name="colorPrimaryDark">#F62323</item>
         <item name="colorAccent">#F62323</item>
-        <item name="android:statusBarColor">#F62323</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="BootTheme.procivis" parent="AppTheme.procivis">
-        <item name="android:background">@drawable/splashscreen_procivis</item>
+    <style name="BootTheme.procivis" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FCFDFE</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
     </style>
 
 </resources>

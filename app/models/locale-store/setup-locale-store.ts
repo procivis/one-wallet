@@ -1,4 +1,3 @@
-import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 import { onSnapshot } from 'mobx-state-tree';
 
@@ -12,7 +11,7 @@ const LOCALE_STATE_STORAGE_KEY = 'locale';
 export async function setupLocaleStore(env: Environment) {
   let localeStore: LocaleStore;
   const defaultData: LocaleStoreSnapshot = {
-    locale: defaultLocale(Localization.locale),
+    locale: defaultLocale(),
   };
 
   try {

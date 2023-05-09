@@ -12,6 +12,5 @@ export type SettingsRouteProp<RouteName extends keyof SettingsNavigatorParamList
   SettingsNavigatorParamList,
   RouteName
 >;
-export type SettingsNavigationProp<
-  RouteName extends keyof SettingsNavigatorParamList = 'SettingsDashboard'
-> = NativeStackNavigationProp<SettingsNavigatorParamList, RouteName>;
+export type SettingsNavigationProp<RouteName extends keyof SettingsNavigatorParamList = 'SettingsDashboard'> =
+  NativeStackNavigationProp<SettingsNavigatorParamList, RouteName>;

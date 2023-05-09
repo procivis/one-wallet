@@ -7,6 +7,9 @@ import './mock-i18n';
 import './mock-react-native-ultimate-config';
 import './mock-rnfs';
 import './mock-sentry';
+import './mock-localize';
+
+require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests();
 
 jest.useFakeTimers();
 declare global {
