@@ -36,7 +36,7 @@ describe('convertDateToUTCTimestamp', () => {
 describe.each(['android', 'ios'] as const)('convertDateStrToLocalDate %p', (platform) => {
   beforeEach(() => {
     Platform.OS = platform;
-    Platform.select = (selection) => selection[platform] ?? selection.default;
+    Platform.select = (selection: any) => selection[platform] ?? selection.default;
   });
 
   test.each(TIMES)('converts to local date  %p', (dateStr, { utcTimestamp }) => {

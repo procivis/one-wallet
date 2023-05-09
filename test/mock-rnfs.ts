@@ -43,3 +43,5 @@ jest.mock('react-native-fs', () => {
     PicturesDirectoryPath: jest.fn(),
   };
 });
+
+export {};
