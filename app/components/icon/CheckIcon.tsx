@@ -1,8 +1,9 @@
 import React from 'react';
-import Svg, { Color, Path, SvgProps } from 'react-native-svg';
+import { ColorValue } from 'react-native';
+import Svg, { Path, SvgProps } from 'react-native-svg';
 
 type Props = SvgProps & {
-  foreground: Color;
+  foreground: ColorValue;
 };
 
 const CheckIcon: React.FunctionComponent<Props> = ({ foreground, ...props }) => (

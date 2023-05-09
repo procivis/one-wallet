@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
 import { translate } from '../../i18n';
-import { reportError } from '../../utils/reporting';
+import { reportError, reportException } from '../../utils/reporting';
 import { Sha256 } from '../../utils/sha256';
 import { loadString, remove, saveString } from '../../utils/storage';
 
@@ -61,14 +61,14 @@ function storePin(pinSha256: string): void {
   saveString(STORAGE_KEY, pinSha256)
     .then((successful) => {
       if (!successful) {
-        console.warn("Couldn't store PIN");
+        reportError("Couldn't store PIN");
       } else {
         globalPinInitialized = true;
         DeviceEventEmitter.emit(PIN_CODE_INITIALIZATION_EVENT);
       }
     })
     .catch((e) => {
-      console.warn("Couldn't store PIN", e);
+      reportException(e, "Couldn't store PIN");
     });
 }
 
