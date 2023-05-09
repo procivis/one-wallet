@@ -3,14 +3,5 @@ module.exports = {
   env: {
     production: {},
   },
-  plugins: [
-    [
-      '@babel/plugin-proposal-decorators',
-      {
-        legacy: true,
-      },
-    ],
-    ['@babel/plugin-proposal-optional-catch-binding'],
-    ['react-native-reanimated/plugin'],
-  ],
+  plugins: [['react-native-reanimated/plugin', { relativeSourceLocation: true }]],
 };
