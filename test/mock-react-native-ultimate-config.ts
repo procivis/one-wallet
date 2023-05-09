@@ -3,3 +3,5 @@
 jest.mock('react-native-ultimate-config', () => ({
   CONFIG_NAME: 'procivis',
 }));
+
+export {};

@@ -1,6 +1,6 @@
-import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
+import KeepAwake from 'react-native-keep-awake';
 
 /**
  * Returns current app state
@@ -28,8 +28,8 @@ export function useIsAppActive(): boolean {
 export function useKeepAwake(keepAwake: boolean = true) {
   useEffect(() => {
     if (keepAwake) {
-      activateKeepAwake();
-      return () => deactivateKeepAwake();
+      KeepAwake.activate();
+      return () => KeepAwake.deactivate();
     }
     return undefined;
   }, [keepAwake]);

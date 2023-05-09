@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-blur-overlay/android/build.gradle b/node_modules/react-native-blur-overlay/android/build.gradle
-index 8c6e8e8..03e00f0 100644
+index 8c6e8e8..19a624b 100644
 --- a/node_modules/react-native-blur-overlay/android/build.gradle
 +++ b/node_modules/react-native-blur-overlay/android/build.gradle
 @@ -1,23 +1,32 @@
@@ -54,8 +54,8 @@ index 8c6e8e8..03e00f0 100644
  }
  
  dependencies {
-     compile 'com.facebook.react:react-native:+'
+-    compile 'com.facebook.react:react-native:+'
++    implementation 'com.facebook.react:react-native:+'
  }
-\ No newline at end of file
 -  
 \ No newline at end of file

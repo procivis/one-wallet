@@ -1,10 +1,5 @@
-import {
-  authenticateAsync,
-  AuthenticationType,
-  isEnrolledAsync,
-  supportedAuthenticationTypesAsync,
-} from 'expo-local-authentication';
 import { useEffect, useState } from 'react';
+import TouchID from 'react-native-touch-id';
 
 import { reportException } from '../../utils/reporting';
 
@@ -15,13 +10,12 @@ export enum Biometry {
 
 export async function getBiometricType(): Promise<Biometry | null> {
   try {
-    const enrolled = await isEnrolledAsync();
-    if (!enrolled) return null;
+    const type = await TouchID.isSupported().catch(() => false);
+    if (!type) return null;
 
-    const types = await supportedAuthenticationTypesAsync();
-    if (types.includes(AuthenticationType.FACIAL_RECOGNITION)) {
+    if (type === 'FaceID') {
       return Biometry.FaceID;
-    } else if (types.length) {
+    } else {
       return Biometry.Other;
     }
   } catch (e) {
@@ -33,11 +27,7 @@ export async function getBiometricType(): Promise<Biometry | null> {
 export async function biometricAuthenticate(
   options: { cancelLabel?: string; promptMessage?: string } = {},
 ): Promise<void> {
-  await authenticateAsync({ disableDeviceFallback: true, fallbackLabel: '', ...options }).then((result) => {
-    if (!result.success && 'error' in result) {
-      throw new Error(result.error);
-    }
-  });
+  await TouchID.authenticate(options.promptMessage, { cancelText: options.cancelLabel });
 }
 
 export const useBiometricType = (): Biometry | null => {
