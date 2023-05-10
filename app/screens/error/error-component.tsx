@@ -17,7 +17,7 @@ export const ErrorComponent: React.FunctionComponent<ErrorComponentProps> = (pro
       subtitle={__DEV__ ? String(props.error) : translate('errorScreen.friendlySubtitle')}
       buttons={[
         {
-          label: translate('errorScreen.reset'),
+          label: translate('common.close'),
           onPress: props.onReset,
         },
       ]}
