@@ -5,8 +5,14 @@ const DummyCredentialAttributeModel = types.model('Attribute', {
   value: types.string,
 });
 
+export enum LogAction {
+  Issue = 'issue',
+  Share = 'share',
+  Revoke = 'revoke',
+}
+
 const DummyCredentialLogEntryModel = types.model('LogEntry', {
-  action: types.enumeration(['issue', 'share', 'revoke']),
+  action: types.enumeration(Object.values(LogAction)),
   date: types.Date,
 });
 
@@ -32,7 +38,7 @@ export interface NewCredential {
   revocation: 'mDL';
   transport: 'OpenID4VC';
   attributes: Array<{ key: string; value: string }>;
-  log: Array<{ action: 'issue' | 'share' | 'revoke'; date: Date }>;
+  log: Array<{ action: LogAction; date: Date }>;
   expiration?: Date;
 }
 

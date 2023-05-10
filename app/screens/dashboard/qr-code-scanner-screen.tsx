@@ -7,6 +7,7 @@ import { BarCodeReadEvent } from 'react-native-camera';
 
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
+import { LogAction } from '../../models/wallet-store/wallet-store-models';
 import { TabsNavigationProp } from '../../navigators/root/tabs/tabs-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
@@ -43,7 +44,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
         { key: 'firstName', value: 'Lars' },
         { key: 'dateOfBirth', value: formatDate(new Date(631580400)) ?? '' },
       ],
-      log: [{ action: 'issue', date: new Date() }],
+      log: [{ action: LogAction.Issue, date: new Date() }],
     });
     navigation.navigate('Wallet');
     setCode(undefined);
