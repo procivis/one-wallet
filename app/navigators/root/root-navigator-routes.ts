@@ -3,11 +3,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { OnboardingNavigatorParamList } from './onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from './settings/settings-routes';
-import { TabNavigatorParamList } from './tabs/tabs-navigator';
+import { TabsNavigatorParamList } from './tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
   Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
-  Tabs: NavigatorScreenParams<TabNavigatorParamList>;
+  Tabs: NavigatorScreenParams<TabsNavigatorParamList>;
   PinCodeCheck?: {
     disableBiometry: boolean;
   };
