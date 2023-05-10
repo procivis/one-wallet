@@ -19,7 +19,7 @@ import LanguageIcon from '../../../assets/images/settings/language';
 import PincodeIcon from '../../../assets/images/settings/pincode';
 import { useBiometricType } from '../../components/pin-code/biometric';
 import { useExplicitPinCodeCheck } from '../../components/pin-code/pin-code-check';
-import { Locale, Locales, translate, TxKeyPath } from '../../i18n';
+import { Locale, Locales, useUpdatedTranslate } from '../../i18n';
 import { useStores } from '../../models';
 import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
 
@@ -28,15 +28,11 @@ const LocaleNames: Record<Locale, string> = {
   de: 'Deutsch',
 };
 
-interface SectionHeaderProps {
-  title: TxKeyPath;
-}
-
-const SectionHeader: FunctionComponent<SectionHeaderProps> = ({ title }) => {
+const SectionHeader: FunctionComponent<{ title: string }> = ({ title }) => {
   const colorScheme = useAppColorScheme();
   return (
     <Typography accessibilityRole="header" size="sml" color={colorScheme.text} style={styles.sectionHeader}>
-      {translate(title)}
+      {title}
     </Typography>
   );
 };
@@ -46,6 +42,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
   const navigation = useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
 
   const { userSettings, locale } = useStores();
+  const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
 
   const { showActionSheetWithOptions } = useActionSheet();
@@ -62,7 +59,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
         locale.changeLocale(newLocale);
       }
     });
-  }, [locale, showActionSheetWithOptions]);
+  }, [locale, showActionSheetWithOptions, translate]);
 
   const handlePinCodeChange = useCallback(() => {
     navigation.navigate('PinCodeChange');
@@ -91,7 +88,6 @@ const SettingsScreen: FunctionComponent = observer(() => {
 
   return (
     <FeatureScreen
-      key={locale.locale}
       onBack={navigation.goBack}
       style={{ backgroundColor: colorScheme.white }}
       contentStyle={styles.fullWidth}
@@ -102,14 +98,14 @@ const SettingsScreen: FunctionComponent = observer(() => {
           </Typography>
         </TapGestureHandler>
       }>
-      <SectionHeader title={'wallet.settings.general.title'} />
+      <SectionHeader title={translate('wallet.settings.general.title')} />
       <ButtonSetting
         title={translate('wallet.settings.general.language')}
         onPress={handleChangeLanguage}
         icon={<LanguageIcon />}
       />
 
-      <SectionHeader title={'wallet.settings.security.title'} />
+      <SectionHeader title={translate('wallet.settings.security.title')} />
       <ButtonSetting
         title={translate('wallet.settings.security.pincode')}
         onPress={handlePinCodeChange}
@@ -124,14 +120,14 @@ const SettingsScreen: FunctionComponent = observer(() => {
         />
       ) : null}
 
-      <SectionHeader title={'wallet.settings.help.title'} />
+      <SectionHeader title={translate('wallet.settings.help.title')} />
       <ButtonSetting
         title={translate('wallet.settings.help.information')}
         onPress={handleAppInformation}
         icon={<InfoIcon />}
       />
 
-      <SectionHeader title={'wallet.settings.profile.title'} />
+      <SectionHeader title={translate('wallet.settings.profile.title')} />
       <ButtonSetting
         title={translate('wallet.settings.profile.deleteWallet')}
         onPress={handleDeleteWallet}

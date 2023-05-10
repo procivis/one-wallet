@@ -12,7 +12,8 @@ export const LocaleStoreModel = types
   })
   .actions((self) => ({
     changeLocale: (newLocale: Locale) => {
-      i18n.locale = self.locale = newLocale;
+      i18n.locale = newLocale;
+      self.locale = newLocale;
     },
   }));
 
