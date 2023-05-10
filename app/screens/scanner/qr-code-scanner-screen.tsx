@@ -6,10 +6,10 @@ import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { TabsNavigationProp } from '../../navigators/root/tabs/tabs-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'Tabs'>>();
+  const navigation = useNavigation<TabsNavigationProp<'QRCodeScanner'>>();
   const isFocused = useIsFocused();
   const [code, setCode] = useState<string>();
 
@@ -27,7 +27,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     if (!code) {
       return;
     }
-    navigation.navigate('Tabs', { screen: 'Wallet' });
+    navigation.navigate('Wallet');
     setCode(undefined);
   }, [code, navigation, setCode]);
 
