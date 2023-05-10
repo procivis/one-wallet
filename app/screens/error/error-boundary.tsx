@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
+import { OutsideTreeNavigationProvider } from '../../utils/navigation';
 import { reportException } from '../../utils/reporting';
 import { ErrorComponent } from './error-component';
 
@@ -67,7 +68,9 @@ export class ErrorBoundary extends Component<Props, State> {
   // Render an error UI if there's an error; otherwise, render children
   render() {
     return this.isEnabled() && this.state.error ? (
-      <ErrorComponent onReset={this.resetError} error={this.state.error} errorInfo={this.state.errorInfo} />
+      <OutsideTreeNavigationProvider>
+        <ErrorComponent onReset={this.resetError} error={this.state.error} errorInfo={this.state.errorInfo} />
+      </OutsideTreeNavigationProvider>
     ) : (
       this.props.children
     );
