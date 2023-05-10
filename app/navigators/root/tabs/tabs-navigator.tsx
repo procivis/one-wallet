@@ -4,23 +4,21 @@ import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { DashboardIcon, QRIcon } from '../../../../assets/images/navbar/nav-bar-icon';
-import { translate } from '../../../i18n';
+import { useUpdatedTranslate } from '../../../i18n';
 import QRCodeScannerScreen from '../../../screens/scanner/qr-code-scanner-screen';
 import WalletScreen from '../../../screens/wallet/wallet-screen';
+import { TabsNavigatorParamList } from './tabs-routes';
 
 const iconFactory = (Icon: React.ComponentType<SvgProps>) => {
   const IconImage: BottomTabNavigationOptions['tabBarIcon'] = ({ color }) => <Icon color={color} />;
   return IconImage;
 };
 
-export type TabNavigatorParamList = {
-  QRCodeScanner: undefined;
-  Wallet: undefined;
-};
-
-const Tab = createBottomTabNavigator<TabNavigatorParamList>();
+const Tab = createBottomTabNavigator<TabsNavigatorParamList>();
 
 const TabsNavigator = () => {
+  const translate = useUpdatedTranslate();
+
   return (
     <Tab.Navigator
       screenOptions={{
