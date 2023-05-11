@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { removePin } from '../../components/pin-code/pin-code-entry';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportException, reportTraceInfo } from '../../utils/reporting';
 
@@ -26,13 +27,16 @@ const DeletionConfirmScreen: FunctionComponent = () => {
   const [confirmation, setConfirmation] = useState(false);
   const [deletingWallet, setDeletingWallet] = useState(false);
 
+  const { walletStore } = useStores();
+
   const deleteAction = useCallback(async () => {
     reportTraceInfo('Wallet', 'Deleting wallet');
     setDeletingWallet(true);
+    walletStore.walletDeleted();
     await removePin().catch((e) => reportException(e, 'Failed to delete wallet'));
     navigation.popToTop();
     navigation.replace('Onboarding');
-  }, [navigation]);
+  }, [navigation, walletStore]);
 
   return (
     <>

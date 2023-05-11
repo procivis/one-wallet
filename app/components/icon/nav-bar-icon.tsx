@@ -1,6 +1,8 @@
 import React from 'react';
 import Svg, { Path, Rect, SvgProps } from 'react-native-svg';
 
+// Icons on the main navigation bar: https://www.figma.com/file/Mj9Nm9CUtauth6jt49UL7t/OTS-Developments-2023?type=design&node-id=135-32814&t=GXsNdBzYheEWxZvG-4
+
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?node-id=148-192&t=I6Q7WxDtambS2LOf-4
 export const QRIcon: React.FunctionComponent<SvgProps> = ({ color, ...props }) => {
   return (

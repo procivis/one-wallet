@@ -12,12 +12,15 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 
-import BiometricLoginIcon from '../../../assets/images/settings/biometricLogin';
-import DeleteWalletIcon from '../../../assets/images/settings/deleteWallet';
-import InfoIcon from '../../../assets/images/settings/info';
-import LanguageIcon from '../../../assets/images/settings/language';
-import PincodeIcon from '../../../assets/images/settings/pincode';
-import { useBiometricType } from '../../components/pin-code/biometric';
+import {
+  DeleteIcon,
+  FaceIDIcon,
+  InformationIcon,
+  LanguageIcon,
+  PINIcon,
+  TouchIDIcon,
+} from '../../components/icon/settings-icon';
+import { Biometry, useBiometricType } from '../../components/pin-code/biometric';
 import { useExplicitPinCodeCheck } from '../../components/pin-code/pin-code-check';
 import { Locale, Locales, useUpdatedTranslate } from '../../i18n';
 import { useStores } from '../../models';
@@ -109,14 +112,14 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         title={translate('wallet.settings.security.pincode')}
         onPress={handlePinCodeChange}
-        icon={<PincodeIcon />}
+        icon={<PINIcon />}
       />
       {biometry ? (
         <SwitchSetting
           title={translate('wallet.settings.security.biometricLogin')}
           value={userSettings.biometricLogin}
           onChange={handleBiometricLoginChange}
-          icon={<BiometricLoginIcon />}
+          icon={biometry === Biometry.FaceID ? <FaceIDIcon /> : <TouchIDIcon />}
         />
       ) : null}
 
@@ -124,14 +127,14 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         title={translate('wallet.settings.help.information')}
         onPress={handleAppInformation}
-        icon={<InfoIcon />}
+        icon={<InformationIcon />}
       />
 
       <SectionHeader title={translate('wallet.settings.profile.title')} />
       <ButtonSetting
         title={translate('wallet.settings.profile.deleteWallet')}
         onPress={handleDeleteWallet}
-        icon={<DeleteWalletIcon />}
+        icon={<DeleteIcon />}
       />
     </FeatureScreen>
   );

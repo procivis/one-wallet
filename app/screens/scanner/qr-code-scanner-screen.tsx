@@ -1,4 +1,4 @@
-import { QRCodeScanner } from '@procivis/react-native-components';
+import { formatDate, QRCodeScanner } from '@procivis/react-native-components';
 import { useIsFocused } from '@react-navigation/core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { TabsNavigationProp } from '../../navigators/root/tabs/tabs-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
@@ -23,13 +24,30 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     [code, setCode],
   );
 
+  const { walletStore } = useStores();
+
   useEffect(() => {
     if (!code) {
       return;
     }
+
+    // add dummy credential
+    walletStore.credentialAdded({
+      schema: 'Driving License',
+      issuer: 'did:key:Bbcox5wNDwShXZrt7r5ZS1:2',
+      format: 'mDL',
+      revocation: 'mDL',
+      transport: 'OpenID4VC',
+      attributes: [
+        { key: 'surname', value: 'Caduff' },
+        { key: 'firstName', value: 'Lars' },
+        { key: 'dateOfBirth', value: formatDate(new Date(631580400)) ?? '' },
+      ],
+      log: [{ action: 'issue', date: new Date() }],
+    });
     navigation.navigate('Wallet');
     setCode(undefined);
-  }, [code, navigation, setCode]);
+  }, [code, navigation, walletStore]);
 
   return (
     <View style={styles.screen}>
