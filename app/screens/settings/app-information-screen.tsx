@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
 import { translate } from '../../i18n';
-import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 const AppInformationScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
