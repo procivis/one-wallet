@@ -1,19 +1,26 @@
 import { Instance, types } from 'mobx-state-tree';
 
+import { convertNewCredential, DummyCredentialModel, NewCredential } from './wallet-store-models';
+
 /**
  * Store containing Wallet info
  */
 export const WalletStoreModel = types
   .model('WalletStore', {
-    /** whether the wallet is created */
-    exists: types.boolean,
+    credentials: types.array(DummyCredentialModel),
   })
   .actions((self) => ({
-    walletCreated: () => {
-      self.exists = true;
+    credentialAdded: (credential: NewCredential) => {
+      self.credentials.unshift(convertNewCredential(credential));
+    },
+    credentialDeleted: (credentialId: string) => {
+      const credential = self.credentials.find(({ id }) => id === credentialId);
+      if (credential) {
+        self.credentials.remove(credential);
+      }
     },
     walletDeleted: () => {
-      self.exists = false;
+      self.credentials.clear();
     },
   }));
 

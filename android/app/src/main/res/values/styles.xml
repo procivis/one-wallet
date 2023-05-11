@@ -17,6 +17,7 @@
         <item name="windowSplashScreenBackground">#FCFDFE</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
         <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 </resources>

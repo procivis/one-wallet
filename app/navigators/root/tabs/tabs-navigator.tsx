@@ -3,7 +3,7 @@ import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-nav
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
-import { DashboardIcon, QRIcon } from '../../../../assets/images/navbar/nav-bar-icon';
+import { DashboardIcon, QRIcon } from '../../../components/icon/nav-bar-icon';
 import { useUpdatedTranslate } from '../../../i18n';
 import QRCodeScannerScreen from '../../../screens/scanner/qr-code-scanner-screen';
 import WalletScreen from '../../../screens/wallet/wallet-screen';
