@@ -12,6 +12,9 @@ export type RootNavigatorParamList = {
     disableBiometry: boolean;
   };
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
+  CredentialDetail: {
+    credentialId: string;
+  };
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> = RouteProp<
