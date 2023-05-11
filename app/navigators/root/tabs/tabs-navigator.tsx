@@ -5,8 +5,8 @@ import { SvgProps } from 'react-native-svg';
 
 import { DashboardIcon, QRIcon } from '../../../components/icon/nav-bar-icon';
 import { useUpdatedTranslate } from '../../../i18n';
-import QRCodeScannerScreen from '../../../screens/scanner/qr-code-scanner-screen';
-import WalletScreen from '../../../screens/wallet/wallet-screen';
+import QRCodeScannerScreen from '../../../screens/dashboard/qr-code-scanner-screen';
+import WalletScreen from '../../../screens/dashboard/wallet-screen';
 import { TabsNavigatorParamList } from './tabs-routes';
 
 const iconFactory = (Icon: React.ComponentType<SvgProps>) => {
