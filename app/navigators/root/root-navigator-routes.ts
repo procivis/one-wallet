@@ -1,9 +1,10 @@
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { OnboardingNavigatorParamList } from './onboarding/onboarding-routes';
-import { SettingsNavigatorParamList } from './settings/settings-routes';
-import { TabsNavigatorParamList } from './tabs/tabs-routes';
+import { IssueCredentialNavigatorParamList } from '../issue-credential/issue-credential-routes';
+import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
+import { SettingsNavigatorParamList } from '../settings/settings-routes';
+import { TabsNavigatorParamList } from '../tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
   Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
@@ -15,6 +16,7 @@ export type RootNavigatorParamList = {
   CredentialDetail: {
     credentialId: string;
   };
+  IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> = RouteProp<

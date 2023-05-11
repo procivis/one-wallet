@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 
 import { PinCodeMode } from '../../components/pin-code/pin-code-entry';
 import PinCodeScreenContent from '../../components/pin-code/pin-code-screen-content';
-import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 const PinCodeChangeScreen: FunctionComponent = () => {
   const navigation = useNavigation<SettingsNavigationProp<'PinCodeChange'>>();
