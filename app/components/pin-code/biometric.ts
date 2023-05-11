@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemoAsync } from '@procivis/react-native-components';
 import TouchID from 'react-native-touch-id';
 
 import { reportException } from '../../utils/reporting';
@@ -31,9 +31,5 @@ export async function biometricAuthenticate(
 }
 
 export const useBiometricType = (): Biometry | null => {
-  const [biometry, setBiometry] = useState<Biometry | null>(null);
-  useEffect(() => {
-    getBiometricType().then(setBiometry);
-  }, []);
-  return biometry;
+  return useMemoAsync(getBiometricType, [], null);
 };
