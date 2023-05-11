@@ -7,11 +7,12 @@ import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-cod
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
+import IssueCredentialNavigator from '../issue-credential/issue-credential-navigator';
+import OnboardingNavigator from '../onboarding/onboarding-navigator';
+import SettingsNavigator from '../settings/settings-navigator';
+import TabsNavigator from '../tabs/tabs-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
-import OnboardingNavigator from './onboarding/onboarding-navigator';
 import { RootNavigatorParamList } from './root-navigator-routes';
-import SettingsNavigator from './settings/settings-navigator';
-import TabsNavigator from './tabs/tabs-navigator';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
@@ -44,6 +45,7 @@ const RootNavigator = () => {
         <RootStack.Screen name="Tabs" component={TabsNavigator} />
         <RootStack.Screen name="Settings" component={SettingsNavigator} />
         <RootStack.Screen name="CredentialDetail" component={CredentialDetailScreen} />
+        <RootStack.Screen name="IssueCredential" component={IssueCredentialNavigator} />
       </RootStack.Navigator>
     </>
   ) : null;
