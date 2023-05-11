@@ -4,6 +4,7 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 
 import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-code-check';
+import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
@@ -42,6 +43,7 @@ const RootNavigator = () => {
         <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
         <RootStack.Screen name="Tabs" component={TabsNavigator} />
         <RootStack.Screen name="Settings" component={SettingsNavigator} />
+        <RootStack.Screen name="CredentialDetail" component={CredentialDetailScreen} />
       </RootStack.Navigator>
     </>
   ) : null;
