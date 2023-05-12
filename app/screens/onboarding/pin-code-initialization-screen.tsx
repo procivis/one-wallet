@@ -3,7 +3,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 
 import { PinCodeMode } from '../../components/pin-code/pin-code-entry';
 import PinCodeScreenContent from '../../components/pin-code/pin-code-screen-content';
-import { OnboardingNavigationProp } from '../../navigators/root/onboarding/onboarding-routes';
+import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 
 const PinCodeInitializationScreen: FunctionComponent = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
