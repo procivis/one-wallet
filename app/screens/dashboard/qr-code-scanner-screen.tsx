@@ -7,11 +7,11 @@ import { BarCodeReadEvent } from 'react-native-camera';
 
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
-import { LogAction } from '../../models/wallet-store/wallet-store-models';
-import { TabsNavigationProp } from '../../navigators/root/tabs/tabs-routes';
+import { NewCredential } from '../../models/wallet-store/wallet-store-models';
+import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
-  const navigation = useNavigation<TabsNavigationProp<'QRCodeScanner'>>();
+  const navigation = useNavigation<RootNavigationProp<'Tabs'>>();
   const isFocused = useIsFocused();
   const [code, setCode] = useState<string>();
 
@@ -33,7 +33,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     }
 
     // add dummy credential
-    walletStore.credentialAdded({
+    const credential: NewCredential = {
       schema: 'Driving License',
       issuer: 'did:key:Bbcox5wNDwShXZrt7r5ZS1:2',
       format: 'mDL',
@@ -44,10 +44,9 @@ const QRCodeScannerScreen: FunctionComponent = () => {
         { key: 'firstName', value: 'Lars' },
         { key: 'dateOfBirth', value: formatDate(new Date(631580400)) ?? '' },
       ],
-      log: [{ action: LogAction.Issue, date: new Date() }],
-    });
-    navigation.navigate('Wallet');
-    setCode(undefined);
+      log: [],
+    };
+    navigation.navigate('IssueCredential', { screen: 'CredentialOffer', params: { credential } });
   }, [code, navigation, walletStore]);
 
   return (
