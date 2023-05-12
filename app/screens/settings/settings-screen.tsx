@@ -24,7 +24,7 @@ import { Biometry, useBiometricType } from '../../components/pin-code/biometric'
 import { useExplicitPinCodeCheck } from '../../components/pin-code/pin-code-check';
 import { Locale, Locales, useUpdatedTranslate } from '../../i18n';
 import { useStores } from '../../models';
-import { SettingsNavigationProp } from '../../navigators/root/settings/settings-routes';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 const LocaleNames: Record<Locale, string> = {
   en: 'English',

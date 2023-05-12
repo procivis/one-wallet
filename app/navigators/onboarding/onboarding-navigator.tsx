@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import PinCodeInitializationScreen from '../../../screens/onboarding/pin-code-initialization-screen';
-import PinCodeSetScreen from '../../../screens/onboarding/pin-code-set-screen';
+import PinCodeInitializationScreen from '../../screens/onboarding/pin-code-initialization-screen';
+import PinCodeSetScreen from '../../screens/onboarding/pin-code-set-screen';
 import { OnboardingNavigatorParamList } from './onboarding-routes';
 
 const OnboardingStack = createNativeStackNavigator<OnboardingNavigatorParamList>();
