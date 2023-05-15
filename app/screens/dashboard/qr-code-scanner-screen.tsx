@@ -6,9 +6,9 @@ import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { NewCredential } from '../../models/wallet-store/wallet-store-models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { ProofRequest } from '../../navigators/share-credential/share-credential-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'Tabs'>>();
@@ -25,13 +25,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     [code, setCode],
   );
 
-  const { walletStore } = useStores();
-
-  useEffect(() => {
-    if (!code) {
-      return;
-    }
-
+  const issueCredential = useCallback(() => {
     // add dummy credential
     const credential: NewCredential = {
       schema: 'Driving License',
@@ -47,7 +41,37 @@ const QRCodeScannerScreen: FunctionComponent = () => {
       log: [],
     };
     navigation.navigate('IssueCredential', { screen: 'CredentialOffer', params: { credential } });
-  }, [code, navigation, walletStore]);
+  }, [navigation]);
+
+  const shareCredential = useCallback(() => {
+    // dummy proof request
+    const request: ProofRequest = {
+      credentialSchema: 'Driving License',
+      verifier: 'did:key:zDnaerDaTF5BXEavCrfR',
+      credentialFormat: 'mDL',
+      revocationMethod: 'mDL',
+      transport: 'OpenID4VC',
+      attributes: [
+        { key: 'surname', mandatory: true },
+        { key: 'firstName', mandatory: true },
+        { key: 'dateOfBirth', mandatory: false },
+      ],
+    };
+    navigation.navigate('ShareCredential', { screen: 'ProofRequest', params: { request } });
+  }, [navigation]);
+
+  useEffect(() => {
+    if (!code) {
+      return;
+    }
+
+    // dummy logic: if content starts with share, run sharing flow, otherwise issuing flow
+    if (code.startsWith('share')) {
+      shareCredential();
+    } else {
+      issueCredential();
+    }
+  }, [code, issueCredential, shareCredential]);
 
   return (
     <View style={styles.screen}>
