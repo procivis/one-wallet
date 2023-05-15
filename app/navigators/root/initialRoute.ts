@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
 import { usePinCodeInitialized } from '../../components/pin-code/pin-code-entry';
@@ -19,8 +19,16 @@ export const hideSplashScreen = () => {
  */
 export const useInitialRoute = () => {
   const pinInitialized = usePinCodeInitialized();
-  const initialRoute: keyof RootNavigatorParamList | undefined =
-    pinInitialized === undefined ? undefined : pinInitialized ? 'Tabs' : 'Onboarding';
+  const initialRoute: keyof RootNavigatorParamList | undefined = useMemo(() => {
+    switch (pinInitialized) {
+      case undefined:
+        return undefined;
+      case false:
+        return 'Onboarding';
+      case true:
+        return 'Tabs';
+    }
+  }, [pinInitialized]);
 
   useEffect(() => {
     if (initialRoute === 'Onboarding') {
