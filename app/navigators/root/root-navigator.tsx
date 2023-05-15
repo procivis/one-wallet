@@ -1,6 +1,6 @@
 import { useAppColorScheme } from '@procivis/react-native-components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { StatusBar } from 'react-native';
 
 import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-code-check';
@@ -17,7 +17,7 @@ import { RootNavigatorParamList } from './root-navigator-routes';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
-const RootNavigator = () => {
+const RootNavigator: FunctionComponent = () => {
   const { darkMode } = useAppColorScheme<AppColorScheme>();
   const initialRouteName = useInitialRoute();
   useAutomaticPinCodeCoverLogic(initialRouteName === 'Tabs');
