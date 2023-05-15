@@ -1,128 +1,143 @@
 import {
+  Biometry,
   PinCodeScreen,
   TouchableOpacityRef,
   useAccessibilityAnnouncement,
   useAccessibilityFocus,
 } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { AppState } from 'react-native';
 
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportTraceInfo } from '../../utils/reporting';
-import { biometricAuthenticate, useBiometricType } from './biometric';
-import { PIN_CODE_LENGTH, PinCodeMode, usePinCodeEntry } from './pin-code-entry';
+import { biometricAuthenticate } from './biometric';
+import { PIN_CODE_LENGTH, usePinCodeEntry } from './pin-code';
 
-interface PinCodeScreenContentProps {
-  mode: PinCodeMode;
-  disableBiometry?: boolean;
-  onFinished: () => void;
-  onGoBack?: () => void;
+export type PinCodeScreenContentProps = {
+  title: string;
+  instruction?: string;
+  error?: string;
+  onPinEntered: (userEntry: string) => void;
+  onBack?: () => void;
+} & (
+  | {
+      biometry: Biometry;
+      onBiometryPassed: () => void;
+    }
+  | {
+      biometry?: undefined;
+      onBiometryPassed?: undefined;
+    }
+);
+
+export interface PinCodeScreenActions {
+  clearEntry: () => void;
 }
-const PinCodeScreenContent: FunctionComponent<PinCodeScreenContentProps> = ({
-  mode,
-  onFinished,
-  onGoBack,
-  disableBiometry,
-}) => {
-  const navigation = useNavigation<RootNavigationProp>();
 
-  const status = usePinCodeEntry(mode);
-  useEffect(() => {
-    if (status.finished) {
-      onFinished();
-    }
-  }, [onFinished, status.finished]);
+const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenContentProps>(
+  ({ title, instruction, error, onPinEntered, onBack, biometry, onBiometryPassed }, ref) => {
+    const navigation = useNavigation<RootNavigationProp>();
 
-  const biometry = useBiometricType();
-  const { userSettings } = useStores();
+    const entry = usePinCodeEntry(onPinEntered);
 
-  const runBiometricCheck = useCallback(() => {
-    biometricAuthenticate({
-      cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
-      promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
-    })
-      .then(() => onFinished())
-      .catch((e) => {
-        reportTraceInfo('Wallet', 'Biometric login failed', e);
-      });
-  }, [onFinished]);
+    useImperativeHandle(ref, () => ({ clearEntry: entry.clear }), [entry]);
 
-  const biometricCheckAvailable = mode === PinCodeMode.Check && userSettings.biometricLogin && !disableBiometry;
+    const [accessibilityAnnounced, setAccessibilityAnnounced] = useState(false);
+    const accessibilityFocus = useAccessibilityFocus<TouchableOpacityRef>(accessibilityAnnounced);
 
-  useEffect(() => {
-    if (biometricCheckAvailable) {
-      return navigation.addListener('transitionEnd', () => {
-        if (AppState.currentState === 'active') {
-          runBiometricCheck();
+    const [progressAnnouncement, setProgressAnnouncement] = useState<string>();
+    useAccessibilityAnnouncement(progressAnnouncement);
+    const onPressDigit = useCallback(
+      (digit: number) => {
+        entry.onPressDigit?.(digit);
+        if (entry.enteredLength < PIN_CODE_LENGTH - 1) {
+          setProgressAnnouncement(
+            translate('onboarding.pinCodeScreen.entry.digit', {
+              digit,
+              left: PIN_CODE_LENGTH - entry.enteredLength - 1,
+            }),
+          );
         }
-      });
-    }
-    return undefined;
-  }, [biometricCheckAvailable, navigation, runBiometricCheck]);
+      },
+      [entry],
+    );
 
-  const [accessibilityAnnounced, setAccessibilityAnnounced] = useState(false);
-  const accessibilityFocus = useAccessibilityFocus<TouchableOpacityRef>(accessibilityAnnounced);
-
-  const [progressAnnouncement, setProgressAnnouncement] = useState<string>();
-  useAccessibilityAnnouncement(progressAnnouncement);
-  const onPressDigit = useCallback(
-    (digit: number) => {
-      status.onPressDigit?.(digit);
-      if (status.enteredLength < PIN_CODE_LENGTH - 1) {
+    const onPressDelete = useCallback(() => {
+      entry.onPressDelete?.();
+      if (entry.enteredLength) {
         setProgressAnnouncement(
-          translate('onboarding.pinCodeScreen.entry.digit', {
-            digit,
-            left: PIN_CODE_LENGTH - status.enteredLength - 1,
+          translate('onboarding.pinCodeScreen.entry.delete', {
+            left: PIN_CODE_LENGTH - entry.enteredLength + 1,
           }),
         );
       }
-    },
-    [status],
-  );
+    }, [entry]);
 
-  const onPressDelete = useCallback(() => {
-    status.onPressDelete?.();
-    if (status.enteredLength) {
-      setProgressAnnouncement(
-        translate('onboarding.pinCodeScreen.entry.delete', {
-          left: PIN_CODE_LENGTH - status.enteredLength + 1,
-        }),
-      );
-    }
-  }, [status]);
+    const onPressDeleteAll = useCallback(() => {
+      entry.onPressDeleteAll?.();
+      if (entry.enteredLength) {
+        setProgressAnnouncement(
+          translate('onboarding.pinCodeScreen.entry.delete', {
+            left: PIN_CODE_LENGTH,
+          }),
+        );
+      }
+    }, [entry]);
 
-  const onPressDeleteAll = useCallback(() => {
-    status.onPressDeleteAll?.();
-    if (status.enteredLength) {
-      setProgressAnnouncement(
-        translate('onboarding.pinCodeScreen.entry.delete', {
-          left: PIN_CODE_LENGTH,
-        }),
-      );
-    }
-  }, [status]);
+    const instructionProps = instruction
+      ? {
+          instruction,
+          onAccessibilityAnnounced: setAccessibilityAnnounced,
+        }
+      : {};
 
-  const titleMode = mode === PinCodeMode.Change ? 'change.' : '';
-  return (
-    <PinCodeScreen
-      length={PIN_CODE_LENGTH}
-      title={translate(`onboarding.pinCodeScreen.${titleMode}${status.stage}.title`)}
-      instruction={translate(`onboarding.pinCodeScreen.${status.stage}.subtitle`)}
-      onAccessibilityAnnounced={setAccessibilityAnnounced}
-      onBack={onGoBack}
-      keypadRef={accessibilityFocus}
-      enteredLength={status.enteredLength}
-      error={status.error}
-      onPressDigit={onPressDigit}
-      onPressDelete={onPressDelete}
-      onDeleteAll={onPressDeleteAll}
-      biometry={biometricCheckAvailable ? biometry : null}
-      onBiometricPress={runBiometricCheck}
-    />
-  );
-};
+    const runBiometricCheck = useCallback(() => {
+      if (!biometry || !onBiometryPassed) {
+        return;
+      }
+
+      biometricAuthenticate({
+        cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
+        promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
+      })
+        .then(() => onBiometryPassed())
+        .catch((e) => {
+          reportTraceInfo('Wallet', 'Biometric login failed', e);
+        });
+    }, [biometry, onBiometryPassed]);
+
+    useEffect(() => {
+      if (biometry) {
+        return navigation.addListener('transitionEnd', () => {
+          if (AppState.currentState === 'active') {
+            runBiometricCheck();
+          }
+        });
+      }
+      return undefined;
+    }, [biometry, navigation, runBiometricCheck]);
+
+    return (
+      <PinCodeScreen
+        length={PIN_CODE_LENGTH}
+        title={title}
+        {...instructionProps}
+        onBack={onBack}
+        keypadRef={accessibilityFocus}
+        enteredLength={entry.enteredLength}
+        error={entry.enteredLength ? undefined : error}
+        onPressDigit={onPressDigit}
+        onPressDelete={onPressDelete}
+        onDeleteAll={onPressDeleteAll}
+        biometry={biometry}
+        onBiometricPress={runBiometricCheck}
+      />
+    );
+  },
+);
+
+PinCodeScreenContent.displayName = 'PinCodeScreenContent';
 
 export default PinCodeScreenContent;
