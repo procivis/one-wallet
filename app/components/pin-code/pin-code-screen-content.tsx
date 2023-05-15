@@ -1,45 +1,31 @@
 import {
-  Biometry,
   PinCodeScreen,
+  PinCodeScreenProps,
   TouchableOpacityRef,
   useAccessibilityAnnouncement,
   useAccessibilityFocus,
 } from '@procivis/react-native-components';
-import { useNavigation } from '@react-navigation/native';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
-import { AppState } from 'react-native';
+import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
-import { reportTraceInfo } from '../../utils/reporting';
-import { biometricAuthenticate } from './biometric';
 import { PIN_CODE_LENGTH, usePinCodeEntry } from './pin-code';
 
-export type PinCodeScreenContentProps = {
+export interface PinCodeScreenContentProps {
   title: string;
   instruction?: string;
   error?: string;
   onPinEntered: (userEntry: string) => void;
   onBack?: () => void;
-} & (
-  | {
-      biometry: Biometry;
-      onBiometryPassed: () => void;
-    }
-  | {
-      biometry?: undefined;
-      onBiometryPassed?: undefined;
-    }
-);
+  biometry?: PinCodeScreenProps['biometry'];
+  onBiometricPress?: PinCodeScreenProps['onBiometricPress'];
+}
 
 export interface PinCodeScreenActions {
   clearEntry: () => void;
 }
 
 const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenContentProps>(
-  ({ title, instruction, error, onPinEntered, onBack, biometry, onBiometryPassed }, ref) => {
-    const navigation = useNavigation<RootNavigationProp>();
-
+  ({ title, instruction, error, onPinEntered, onBack, biometry, onBiometricPress }, ref) => {
     const entry = usePinCodeEntry(onPinEntered);
 
     useImperativeHandle(ref, () => ({ clearEntry: entry.clear }), [entry]);
@@ -93,32 +79,6 @@ const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenConte
         }
       : {};
 
-    const runBiometricCheck = useCallback(() => {
-      if (!biometry || !onBiometryPassed) {
-        return;
-      }
-
-      biometricAuthenticate({
-        cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
-        promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
-      })
-        .then(() => onBiometryPassed())
-        .catch((e) => {
-          reportTraceInfo('Wallet', 'Biometric login failed', e);
-        });
-    }, [biometry, onBiometryPassed]);
-
-    useEffect(() => {
-      if (biometry) {
-        return navigation.addListener('transitionEnd', () => {
-          if (AppState.currentState === 'active') {
-            runBiometricCheck();
-          }
-        });
-      }
-      return undefined;
-    }, [biometry, navigation, runBiometricCheck]);
-
     return (
       <PinCodeScreen
         length={PIN_CODE_LENGTH}
@@ -132,7 +92,7 @@ const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenConte
         onPressDelete={onPressDelete}
         onDeleteAll={onPressDeleteAll}
         biometry={biometry}
-        onBiometricPress={runBiometricCheck}
+        onBiometricPress={onBiometricPress}
       />
     );
   },

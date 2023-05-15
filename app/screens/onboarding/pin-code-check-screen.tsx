@@ -1,15 +1,16 @@
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import { Platform } from 'react-native';
+import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import { AppState, Platform } from 'react-native';
 
-import { useBiometricType } from '../../components/pin-code/biometric';
+import { biometricAuthenticate, useBiometricType } from '../../components/pin-code/biometric';
 import { usePinCodeValidation } from '../../components/pin-code/pin-code';
 import PinCodeScreenContent, { PinCodeScreenActions } from '../../components/pin-code/pin-code-screen-content';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
 import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
+import { reportTraceInfo } from '../../utils/reporting';
 
 const hideSplashAndroidOnly = () => (Platform.OS === 'android' ? hideSplashScreen() : undefined);
 
@@ -46,17 +47,39 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     [onCheckPassed, validatePin],
   );
 
-  const biometricCheckAllowed = userSettings.biometricLogin && !route.params?.disableBiometry;
-  const biometryProps = biometry && biometricCheckAllowed ? { biometry, onBiometryPassed: onCheckPassed } : {};
+  const biometricCheckEnabled = Boolean(biometry && userSettings.biometricLogin && !route.params?.disableBiometry);
+
+  const runBiometricCheck = useCallback(() => {
+    biometricAuthenticate({
+      cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
+      promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
+    })
+      .then(() => onCheckPassed())
+      .catch((e) => {
+        reportTraceInfo('Wallet', 'Biometric login failed', e);
+      });
+  }, [onCheckPassed]);
+
+  useEffect(() => {
+    if (biometricCheckEnabled) {
+      return navigation.addListener('transitionEnd', () => {
+        if (AppState.currentState === 'active') {
+          runBiometricCheck();
+        }
+      });
+    }
+    return undefined;
+  }, [biometricCheckEnabled, navigation, runBiometricCheck]);
 
   return (
     <PinCodeScreenContent
       ref={screen}
       onPinEntered={onPinEntered}
-      {...biometryProps}
       title={translate('onboarding.pinCodeScreen.check.title')}
       instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
       error={error}
+      biometry={biometricCheckEnabled ? biometry : undefined}
+      onBiometricPress={runBiometricCheck}
     />
   );
 };
