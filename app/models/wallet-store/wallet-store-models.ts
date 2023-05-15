@@ -1,5 +1,7 @@
 import { Instance, protect, types, unprotect } from 'mobx-state-tree';
 
+import { generateUUID } from '../../utils/uuid';
+
 const DummyCredentialAttributeModel = types.model('Attribute', {
   key: types.identifier,
   value: types.string,
@@ -12,12 +14,13 @@ export enum LogAction {
 }
 
 const DummyCredentialLogEntryModel = types.model('LogEntry', {
+  id: types.optional(types.identifier, generateUUID),
   action: types.enumeration(Object.values(LogAction)),
-  date: types.Date,
+  date: types.optional(types.Date, () => new Date()),
 });
 
 export const DummyCredentialModel = types.model('DummyCredential', {
-  id: types.optional(types.identifier, () => `${Date.now()}_${Math.random()}`),
+  id: types.optional(types.identifier, generateUUID),
   schema: types.string,
   issuer: types.string,
   format: types.enumeration(['mDL']),
