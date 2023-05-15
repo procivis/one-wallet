@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
-import { usePinCodeInitialized } from '../../components/pin-code/pin-code-entry';
+import { usePinCodeInitialized } from '../../components/pin-code/pin-code';
 import { reportException } from '../../utils/reporting';
 import { RootNavigatorParamList } from './root-navigator-routes';
 
