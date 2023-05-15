@@ -109,9 +109,9 @@ const CredentialDetailScreen: FunctionComponent = () => {
         ))}
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
-        {credential.log.map((entry, index) => (
+        {credential.log.map((entry) => (
           <ListItem
-            key={index}
+            key={entry.id}
             title={translate(`credentialDetail.log.${entry.action}`)}
             subtitle={formatDateTime(entry.date) ?? '-'}
             style={styles.logItem}

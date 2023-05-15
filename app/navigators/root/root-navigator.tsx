@@ -10,6 +10,7 @@ import { AppColorScheme } from '../../theme';
 import IssueCredentialNavigator from '../issue-credential/issue-credential-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
+import ShareCredentialNavigator from '../share-credential/share-credential-navigator';
 import TabsNavigator from '../tabs/tabs-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
 import { RootNavigatorParamList } from './root-navigator-routes';
@@ -35,17 +36,20 @@ const RootNavigator = () => {
           animationTypeForReplace: 'push',
         }}
         initialRouteName={initialRouteName}>
-        <RootStack.Screen
-          name="PinCodeCheck"
-          component={PinCodeCheckScreen}
-          options={{ animation: 'fade' }}
-          listeners={{ transitionEnd: () => hideSplashScreen() }}
-        />
-        <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
-        <RootStack.Screen name="Tabs" component={TabsNavigator} />
+        <RootStack.Group screenOptions={{ gestureEnabled: false }}>
+          <RootStack.Screen
+            name="PinCodeCheck"
+            component={PinCodeCheckScreen}
+            options={{ animation: 'fade' }}
+            listeners={{ transitionEnd: () => hideSplashScreen() }}
+          />
+          <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
+          <RootStack.Screen name="Tabs" component={TabsNavigator} />
+          <RootStack.Screen name="IssueCredential" component={IssueCredentialNavigator} />
+          <RootStack.Screen name="ShareCredential" component={ShareCredentialNavigator} />
+        </RootStack.Group>
         <RootStack.Screen name="Settings" component={SettingsNavigator} />
         <RootStack.Screen name="CredentialDetail" component={CredentialDetailScreen} />
-        <RootStack.Screen name="IssueCredential" component={IssueCredentialNavigator} />
       </RootStack.Navigator>
     </>
   ) : null;
