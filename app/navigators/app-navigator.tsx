@@ -43,15 +43,3 @@ export const AppNavigator = (props: NavigationProps) => {
 };
 
 AppNavigator.displayName = 'AppNavigator';
-
-/**
- * A list of routes from which we're allowed to leave the app when
- * the user presses the back button on Android.
- *
- * Anything not on this list will be a standard `back` action in
- * react-navigation.
- *
- * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
- */
-const exitRoutes = ['welcome']; // TODO: Replace after adding onboarding
-export const canExit = (routeName: string) => exitRoutes.includes(routeName);
