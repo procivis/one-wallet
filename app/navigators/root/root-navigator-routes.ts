@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { IssueCredentialNavigatorParamList } from '../issue-credential/issue-credential-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
+import { ShareCredentialNavigatorParamList } from '../share-credential/share-credential-routes';
 import { TabsNavigatorParamList } from '../tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
@@ -17,6 +18,7 @@ export type RootNavigatorParamList = {
     credentialId: string;
   };
   IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
+  ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> = RouteProp<
