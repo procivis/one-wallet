@@ -2,13 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 
 import { storePin } from '../../components/pin-code/pin-code';
-import PinCodeScreenContent, { PinCodeScreenActions } from '../../components/pin-code/pin-code-screen-content';
+import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 
 const PinCodeInitializationScreen: FunctionComponent = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
-  const screen = useRef<PinCodeScreenActions>(null);
+  const screen = useRef<PinCodeActions>(null);
 
   const [pin, setPin] = useState<string>();
   const [error, setError] = useState<string>();
