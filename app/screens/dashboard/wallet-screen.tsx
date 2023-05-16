@@ -39,6 +39,7 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   return (
     <FeatureScreen
+      testID="WalletScreen"
       key={locale}
       title={translate('wallet.walletScreen.title')}
       headerBackground={colorScheme.lineargradient}
