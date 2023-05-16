@@ -142,41 +142,43 @@ const ProofRequestScreen: FunctionComponent = () => {
         }
         subtitleStyle={credential ? undefined : { color: colorScheme.alertText }}
         icon={{ component: <TextAvatar produceInitials={true} text={request.credentialSchema} innerSize={48} /> }}>
-        {request.attributes.map((attribute, index, { length }) => (
-          <DataItem
-            key={attribute.key}
-            attribute={attribute.key}
-            value={credential?.attributes.find(({ key }) => key === attribute.key)?.value}
-            last={length === index + 1}
-            status={
-              credential
-                ? attribute.mandatory
-                  ? SelectorStatus.LockedSelected
-                  : selectedAttributes.includes(attribute.key)
-                  ? SelectorStatus.SelectedCheck
-                  : SelectorStatus.Unselected
-                : SelectorStatus.LockedInvalid
-            }
-            onPress={
-              !attribute.mandatory && credential
-                ? () =>
-                    setSelectedAttributes((prev) => {
-                      return prev.includes(attribute.key)
-                        ? prev.filter((key) => attribute.key !== key)
-                        : [...prev, attribute.key];
-                    })
-                : undefined
-            }
-          />
-        ))}
+        {request.attributes.map((attribute, index, { length }) => {
+          const status = (() => {
+            if (!credential) return SelectorStatus.LockedInvalid;
+            if (attribute.mandatory) return SelectorStatus.LockedSelected;
+            return selectedAttributes.includes(attribute.key)
+              ? SelectorStatus.SelectedCheck
+              : SelectorStatus.Unselected;
+          })();
+          return (
+            <DataItem
+              key={attribute.key}
+              attribute={attribute.key}
+              value={credential?.attributes.find(({ key }) => key === attribute.key)?.value}
+              last={length === index + 1}
+              status={status}
+              onPress={
+                !attribute.mandatory && credential
+                  ? () =>
+                      setSelectedAttributes((prev) => {
+                        return prev.includes(attribute.key)
+                          ? prev.filter((key) => attribute.key !== key)
+                          : [...prev, attribute.key];
+                      })
+                  : undefined
+              }
+            />
+          );
+        })}
       </Accordion>
-      {!credential ? (
+      {!credential && (
         <View style={{ backgroundColor: colorScheme.alert }}>
           <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
             {translate('proofRequest.missingCredential.notice')}
           </Typography>
         </View>
-      ) : potentialCredentials.length > 1 ? (
+      )}
+      {potentialCredentials.length > 1 && (
         <View style={{ backgroundColor: colorScheme.notice }}>
           <Typography color={colorScheme.noticeText} align="center" style={styles.notice}>
             {translate('proofRequest.multipleCredentials.notice')}
@@ -185,7 +187,7 @@ const ProofRequestScreen: FunctionComponent = () => {
             {translate('proofRequest.multipleCredentials.select')}
           </Button>
         </View>
-      ) : null}
+      )}
     </SharingScreen>
   );
 };
