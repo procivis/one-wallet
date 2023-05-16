@@ -74,6 +74,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
 
   return (
     <PinCodeScreenContent
+      testID="PinCodeCheckScreen"
       ref={screen}
       onPinEntered={onPinEntered}
       title={translate('onboarding.pinCodeScreen.check.title')}
