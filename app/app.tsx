@@ -21,7 +21,7 @@ import Config from 'react-native-ultimate-config';
 
 import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
-import { AppNavigator, canExit, useBackButtonHandler } from './navigators';
+import { AppNavigator } from './navigators';
 import { ErrorBoundary } from './screens';
 import { AppColorScheme, useFlavorColorScheme } from './theme';
 import { reportException } from './utils/reporting';
@@ -52,7 +52,6 @@ function App() {
   useEffect(() => {
     registerTimeAgoLocales();
   }, []);
-  useBackButtonHandler(canExit);
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
