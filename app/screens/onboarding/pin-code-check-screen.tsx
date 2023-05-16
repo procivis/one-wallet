@@ -5,7 +5,7 @@ import { AppState, Platform } from 'react-native';
 
 import { biometricAuthenticate, useBiometricType } from '../../components/pin-code/biometric';
 import { usePinCodeValidation } from '../../components/pin-code/pin-code';
-import PinCodeScreenContent, { PinCodeScreenActions } from '../../components/pin-code/pin-code-screen-content';
+import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
@@ -17,7 +17,7 @@ const hideSplashAndroidOnly = () => (Platform.OS === 'android' ? hideSplashScree
 const PinCodeCheckScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'PinCodeCheck'>>();
   const route = useRoute<RootRouteProp<'PinCodeCheck'>>();
-  const screen = useRef<PinCodeScreenActions>(null);
+  const screen = useRef<PinCodeActions>(null);
 
   useFocusEffect(hideSplashAndroidOnly);
 
@@ -42,6 +42,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       } else {
         setError(translate('onboarding.pinCodeScreen.check.error'));
         screen.current?.clearEntry();
+        screen.current?.shakeKeypad();
       }
     },
     [onCheckPassed, validatePin],

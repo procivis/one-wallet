@@ -1,11 +1,12 @@
 import {
   PinCodeScreen,
+  PinCodeScreenActions,
   PinCodeScreenProps,
   TouchableOpacityRef,
   useAccessibilityAnnouncement,
   useAccessibilityFocus,
 } from '@procivis/react-native-components';
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 
 import { translate } from '../../i18n';
 import { PIN_CODE_LENGTH, usePinCodeEntry } from './pin-code';
@@ -20,15 +21,26 @@ export interface PinCodeScreenContentProps {
   onBiometricPress?: PinCodeScreenProps['onBiometricPress'];
 }
 
-export interface PinCodeScreenActions {
+export interface PinCodeActions {
   clearEntry: () => void;
+  shakeKeypad: () => Promise<void>;
 }
 
-const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenContentProps>(
+const PinCodeScreenContent = forwardRef<PinCodeActions, PinCodeScreenContentProps>(
   ({ title, instruction, error, onPinEntered, onBack, biometry, onBiometricPress }, ref) => {
     const entry = usePinCodeEntry(onPinEntered);
 
-    useImperativeHandle(ref, () => ({ clearEntry: entry.clear }), [entry]);
+    const actionsRef = useRef<PinCodeScreenActions>(null);
+    useImperativeHandle(
+      ref,
+      () => ({
+        clearEntry: entry.clear,
+        shakeKeypad: async () => {
+          await actionsRef.current?.shakeKeypad();
+        },
+      }),
+      [entry],
+    );
 
     const [accessibilityAnnounced, setAccessibilityAnnounced] = useState(false);
     const accessibilityFocus = useAccessibilityFocus<TouchableOpacityRef>(accessibilityAnnounced);
@@ -81,6 +93,7 @@ const PinCodeScreenContent = forwardRef<PinCodeScreenActions, PinCodeScreenConte
 
     return (
       <PinCodeScreen
+        ref={actionsRef}
         length={PIN_CODE_LENGTH}
         title={title}
         {...instructionProps}
