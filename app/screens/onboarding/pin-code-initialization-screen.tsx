@@ -1,18 +1,46 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 
-import { PinCodeMode } from '../../components/pin-code/pin-code-entry';
-import PinCodeScreenContent from '../../components/pin-code/pin-code-screen-content';
+import { storePin } from '../../components/pin-code/pin-code';
+import PinCodeScreenContent, { PinCodeScreenActions } from '../../components/pin-code/pin-code-screen-content';
+import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 
 const PinCodeInitializationScreen: FunctionComponent = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
+  const screen = useRef<PinCodeScreenActions>(null);
 
-  const onFinished = useCallback(() => {
-    navigation.replace('PinCodeSet');
-  }, [navigation]);
+  const [pin, setPin] = useState<string>();
+  const [error, setError] = useState<string>();
 
-  return <PinCodeScreenContent mode={PinCodeMode.Initialization} onFinished={onFinished} />;
+  const onPinEntered = useCallback(
+    (userEntry: string) => {
+      if (pin) {
+        if (pin === userEntry) {
+          storePin(pin);
+          navigation.replace('PinCodeSet');
+        } else {
+          screen.current?.clearEntry();
+          setError(translate('onboarding.pinCodeScreen.confirm.error'));
+        }
+      } else {
+        screen.current?.clearEntry();
+        setPin(userEntry);
+      }
+    },
+    [navigation, pin],
+  );
+
+  const stage = pin ? 'confirm' : 'initial';
+  return (
+    <PinCodeScreenContent
+      ref={screen}
+      onPinEntered={onPinEntered}
+      title={translate(`onboarding.pinCodeScreen.${stage}.title`)}
+      instruction={translate(`onboarding.pinCodeScreen.${stage}.subtitle`)}
+      error={error}
+    />
+  );
 };
 
 export default PinCodeInitializationScreen;

@@ -24,8 +24,9 @@ export function reportException(e: unknown, message?: string) {
       // do nothing
     }
   } else {
+    const info = message ? `(${message})` : '';
     // eslint-disable-next-line no-console
-    console.warn(`reportException${message ? `(${message})` : ''}:`, e, e instanceof Error ? e.stack : undefined);
+    console.warn(`reportException${info}:`, e, e instanceof Error ? e.stack : undefined);
   }
 }
 

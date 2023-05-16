@@ -13,7 +13,7 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { removePin } from '../../components/pin-code/pin-code-entry';
+import { removePin } from '../../components/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
