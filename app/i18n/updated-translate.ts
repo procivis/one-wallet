@@ -14,7 +14,7 @@ export function useUpdatedTranslate(): typeof translate {
   useEffect(() => {
     const dispose = observe(locale, 'locale', (event) => {
       if (event.type === 'update') {
-        setCurrentLanguage((event.newValue as any)?.value);
+        setCurrentLanguage(event.object.get());
       }
     });
     return () => {

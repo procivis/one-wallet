@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import RNBlurOverlay from 'react-native-blur-overlay';
 
@@ -13,7 +13,18 @@ interface BlurOverlayProps {
 }
 
 const BlurOverlay: FunctionComponent<BlurOverlayProps> = ({ style, blurStyle }) => {
-  const brightness = blurStyle === BlurStyle.Dark ? -180 : blurStyle === BlurStyle.ExtraLight ? 20 : 0;
+  const brightness = useMemo(() => {
+    switch (blurStyle) {
+      case BlurStyle.Dark:
+        return -180;
+      case BlurStyle.ExtraLight:
+        return 20;
+      case BlurStyle.Light:
+      default:
+        return 0;
+    }
+  }, [blurStyle]);
+
   return (
     <View style={style}>
       <RNBlurOverlay
