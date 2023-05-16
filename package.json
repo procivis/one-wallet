@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
-    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#784343b0a9556f9643174acb8f09693a3560bfce",
+    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#b6f04f57f16d77024ffdc6309c7028ba3611119f",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native/normalize-color": "^2.0.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
