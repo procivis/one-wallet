@@ -25,10 +25,10 @@ build_deps:
 # - Check & Regenerate node_modules if necessary (Cache is only best effort)
 .modules_setup:
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-    policy: pull
+    - key: ${CI_COMMIT_REF_SLUG}
+      paths:
+        - node_modules/
+      policy: pull
   before_script:
     - >
       if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
@@ -36,7 +36,7 @@ build_deps:
       else
         apk update && apk upgrade
         apk add --no-cache --virtual .env bash
-        apk add --no-cache --virtual .build-deps alpine-sdk python3 libc6-compat gcompat
+        apk add --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
         yarn config delete https-proxy
         yarn config delete proxy
         yarn global add node-gyp @mapbox/node-pre-gyp
@@ -63,20 +63,35 @@ test:
   needs: [build_deps]
   extends: .modules_setup
   script:
-    - yarn test
+    - yarn test --coverage
+  artifacts:
+    paths:
+      - coverage/*
+    expire_in: 3 days
 
 sonarqube-check:
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: ['']
+  dependencies: [ test ]
+  needs: [ test ]
   variables:
     SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
     GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
   cache:
-    key: '${CI_JOB_NAME}'
-    paths:
-      - .sonar/cache
+    - key: ${CI_JOB_NAME}
+      paths:
+        - .sonar/cache
+    - key: ${CI_COMMIT_REF_SLUG}
+      paths:
+        - node_modules/
+      policy: pull
+  before_script:
+    - >
+      if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
+        echo "node_modules exists and seems valid, not re-installing deps."
+      fi
   script:
     - sonar-scanner
   allow_failure: true
