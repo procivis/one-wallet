@@ -1,4 +1,4 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json",
+  "extends": "./node_modules/@tsconfig/react-native/tsconfig.json",
   "include": ["index.js", "app/**/*", "test/**/*"]
 }
