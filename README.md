@@ -1,4 +1,4 @@
-[![pipeline status](https://gitlab.procivis.ch/procivis/one/one-wallet/badges/master/pipeline.svg)](https://gitlab.procivis.ch/procivis/one/one-wallet/-/pipelines)
+[![pipeline status](https://gitlab.procivis.ch/procivis/one/one-wallet/badges/main/pipeline.svg)](https://gitlab.procivis.ch/procivis/one/one-wallet/-/pipelines)
 
 | Configuration |                                                                                              Build Status                                                                                               |
 | ------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -35,7 +35,7 @@ For each flavor, there is a separate set of icons and splashscreens in Android a
 
 ### Android
 
-Splashscreen under `android/src/main/res/drawable/splashscreen_{CONFIG_NAME}.png`
+Splashscreen under `android/app/src/main/res/values/styles.xml`
 Square icon under `android/src/main/res/minimap-{screen-size}/ic_launcher_{CONFIG_NAME}.png`
 Round icon under `android/src/main/res/minimap-{screen-size}/ic_launcher_{CONFIG_NAME}_round.png`
 
@@ -43,3 +43,19 @@ Round icon under `android/src/main/res/minimap-{screen-size}/ic_launcher_{CONFIG
 
 Splashscreen image is added in assets folder under `Splashscreen.{CONFIG_NAME}` image set, and in addition there is a separate Storyboard named `LaunchScreen.{CONFIG_NAME}.storyboard` for each flavor.
 Icons are in asstes folder under `AppIcon.{CONFIG_NAME}` image set.
+
+## Detox E2E
+
+In order to run the E2E tests, one needs to build a proper detox app build first:
+
+```
+npx detox build --configuration ios.sim.release
+```
+
+See the `.detoxrc.js` for all possible configurations.
+
+Then run the tests:
+
+```
+npx detox test --configuration ios.sim.release
+```

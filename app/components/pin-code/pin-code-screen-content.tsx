@@ -12,6 +12,7 @@ import { translate } from '../../i18n';
 import { PIN_CODE_LENGTH, usePinCodeEntry } from './pin-code';
 
 export interface PinCodeScreenContentProps {
+  testID?: string;
   title: string;
   instruction?: string;
   error?: string;
@@ -27,7 +28,7 @@ export interface PinCodeActions {
 }
 
 const PinCodeScreenContent = forwardRef<PinCodeActions, PinCodeScreenContentProps>(
-  ({ title, instruction, error, onPinEntered, onBack, biometry, onBiometricPress }, ref) => {
+  ({ testID, title, instruction, error, onPinEntered, onBack, biometry, onBiometricPress }, ref) => {
     const entry = usePinCodeEntry(onPinEntered);
 
     const actionsRef = useRef<PinCodeScreenActions>(null);
@@ -93,6 +94,7 @@ const PinCodeScreenContent = forwardRef<PinCodeActions, PinCodeScreenContentProp
 
     return (
       <PinCodeScreen
+        testID={testID}
         ref={actionsRef}
         length={PIN_CODE_LENGTH}
         title={title}
