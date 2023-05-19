@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { storePin, usePinCodeValidation } from '../../components/pin-code/pin-code';
-import PinCodeScreenContent, { PinCodeScreenActions } from '../../components/pin-code/pin-code-screen-content';
+import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
@@ -14,7 +14,7 @@ enum Stage {
 
 const PinCodeChangeScreen: FunctionComponent = () => {
   const navigation = useNavigation<SettingsNavigationProp<'PinCodeChange'>>();
-  const screen = useRef<PinCodeScreenActions>(null);
+  const screen = useRef<PinCodeActions>(null);
 
   const validatePin = usePinCodeValidation();
 
