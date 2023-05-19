@@ -21,6 +21,7 @@ const PinCodeSetScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
+      testID="PinCodeSetScreen"
       variation={LoadingResultVariation.Neutral}
       title={translate('onboarding.pinCodeSet.title')}
       subtitle={translate('onboarding.pinCodeSet.description')}

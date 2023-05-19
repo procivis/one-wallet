@@ -34,6 +34,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const stage = pin ? 'confirm' : 'initial';
   return (
     <PinCodeScreenContent
+      testID="PinCodeInitializationScreen"
       ref={screen}
       onPinEntered={onPinEntered}
       title={translate(`onboarding.pinCodeScreen.${stage}.title`)}
