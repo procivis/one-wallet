@@ -83,3 +83,6 @@ web-build/
 app/config/env.*.js
 !env.js
 rnuc.xcconfig
+
+# Detox
+detox-junit.xml

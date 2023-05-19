@@ -6,7 +6,18 @@ module.exports = {
   maxWorkers: 1,
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',
-  reporters: ['detox/runners/jest/reporter'],
+  reporters: [
+    'detox/runners/jest/reporter',
+    [
+      'jest-junit',
+      {
+        suiteName: 'Detox E2E',
+        outputName: 'detox-junit.xml',
+        ancestorSeparator: ' > ',
+        titleTemplate: '{classname} > {title}',
+      },
+    ],
+  ],
   testEnvironment: 'detox/runners/jest/testEnvironment',
   verbose: true,
 };
