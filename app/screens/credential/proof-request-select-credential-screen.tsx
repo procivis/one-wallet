@@ -69,6 +69,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
           <View key={credential.id} style={styles.item}>
             <Accordion
               title={credential.schema}
+              accessibilityState={{ selected }}
               expanded={selected}
               onPress={selected ? undefined : () => setCredentialId(credential.id)}
               subtitle={translate('proofRequest.selectCredential.issued', {
