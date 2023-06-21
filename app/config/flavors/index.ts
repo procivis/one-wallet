@@ -3,21 +3,23 @@ import configuration from 'react-native-ultimate-config';
 import { AssetsConfiguration } from '../../models/config/assets';
 import { Configuration, LocaleOverride } from '../../models/config/config';
 
-let configs: {
+const configs: {
   config: Configuration;
   assets: AssetsConfiguration;
   localeOverride?: LocaleOverride;
-};
-
-switch (configuration.CONFIG_NAME) {
-  case 'procivis':
-    if (configuration.DEV_CONFIG === 'true') {
-      configs = require('./procivis/dev');
-    } else {
-      configs = require('./procivis');
-    }
-    break;
-}
+} = (() => {
+  switch (configuration.CONFIG_NAME) {
+    case 'procivis':
+      switch (configuration.ENVIRONMENT) {
+        case 'dev':
+          return require('./procivis/dev');
+        case 'test':
+          return require('./procivis/test');
+        case 'demo':
+          return require('./procivis');
+      }
+  }
+})();
 
 export const config: Configuration = configs.config;
 export const assets: AssetsConfiguration = configs.assets;
