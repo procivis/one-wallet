@@ -25,6 +25,7 @@
     "translations:sort": "node ./.scripts/sort-translations.js",
     "rnuc": "$(yarn bin)/rnuc",
     "rnuc:dev": "yarn rnuc ./app/config/flavors/procivis/dev/.env",
+    "rnuc:test": "yarn rnuc ./app/config/flavors/procivis/test/.env",
     "rnuc:demo": "yarn rnuc ./app/config/flavors/procivis/.env",
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
     "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv"

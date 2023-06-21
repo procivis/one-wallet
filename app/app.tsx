@@ -26,10 +26,10 @@ import { ErrorBoundary } from './screens';
 import { AppColorScheme, useFlavorColorScheme } from './theme';
 import { reportException } from './utils/reporting';
 
-if (!__DEV__ && Config.DEV_CONFIG !== 'true') {
+if (!__DEV__) {
   Sentry.init({
     dsn: 'https://b98a05fd083c47f1a770d74d04df0425@o153694.ingest.sentry.io/4505114160201728',
-    environment: Config.CONFIG_NAME,
+    environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}`,
 
     // Sentry event payload is limited to 200KB, if exceeded, the event report is dumped -> minimize reported data
     maxBreadcrumbs: 50,
