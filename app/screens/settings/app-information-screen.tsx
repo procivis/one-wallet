@@ -12,9 +12,9 @@ const AppInformationScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
 
-  const appVersion = `v${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()}, ${Config.CONFIG_NAME})${
-    Config.DEV_CONFIG === 'true' ? ' (DEV)' : ''
-  }`;
+  const appVersion = `v${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()} (${Config.CONFIG_NAME}, ${
+    Config.ENVIRONMENT
+  })`;
 
   return (
     <DetailScreen
