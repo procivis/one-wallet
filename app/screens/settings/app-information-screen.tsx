@@ -1,8 +1,15 @@
-import { DetailScreen, Typography, useAppColorScheme } from '@procivis/react-native-components';
+import {
+  DetailScreen,
+  formatDateTime,
+  Typography,
+  useAppColorScheme,
+  useMemoAsync,
+} from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
 import { StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import ONE from 'react-native-one-core';
 import Config from 'react-native-ultimate-config';
 
 import { translate } from '../../i18n';
@@ -16,6 +23,13 @@ const AppInformationScreen: FunctionComponent = () => {
     Config.ENVIRONMENT
   })`;
 
+  const coreVersion = useMemoAsync(async () => {
+    const version = await ONE.getVersion();
+    return `ONE-core: v${version.pipelineId} (${formatDateTime(new Date(version.buildTime))}, ${version.branch}, ${
+      version.commit
+    })`;
+  }, []);
+
   return (
     <DetailScreen
       onBack={navigation.goBack}
@@ -27,6 +41,7 @@ const AppInformationScreen: FunctionComponent = () => {
       <Typography color={colorScheme.text} size="h2">
         {appVersion}
       </Typography>
+      <Typography color={colorScheme.text}>{coreVersion}</Typography>
       <Typography style={styles.contentDescription} color={colorScheme.text}>
         {translate('appInformation.app.description')}
       </Typography>
