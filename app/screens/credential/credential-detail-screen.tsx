@@ -12,6 +12,7 @@ import React, { FunctionComponent, PropsWithChildren, useCallback } from 'react'
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
+import { useCredential } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
@@ -46,10 +47,10 @@ const CredentialDetailScreen: FunctionComponent = () => {
   const route = useRoute<RootRouteProp<'CredentialDetail'>>();
 
   const {
-    walletStore: { credentials, credentialDeleted },
+    walletStore: { credentialDeleted },
   } = useStores();
   const { credentialId } = route.params;
-  const credential = credentials.find(({ id }) => id === credentialId);
+  const credential = useCredential(credentialId);
 
   const { showActionSheetWithOptions } = useActionSheet();
   const onActions = useCallback(
@@ -91,33 +92,32 @@ const CredentialDetailScreen: FunctionComponent = () => {
   return credential ? (
     <DetailScreen
       onBack={navigation.goBack}
-      title={credential.schema}
+      title={credential.schema.name}
       style={{ backgroundColor: colorScheme.background }}
       rightButton={
         <RoundButton accessibilityLabel={translate('credentialDetail.actions')} icon={MoreIcon} onPress={onActions} />
       }>
       <Section title={translate('credentialDetail.credential.title')}>
-        <DataItem attribute={translate('credentialDetail.credential.schema')} value={credential.schema} />
-        <DataItem attribute={translate('credentialDetail.credential.issuer')} value={credential.issuer} />
-        <DataItem attribute={translate('credentialDetail.credential.format')} value={credential.format} />
-        <DataItem attribute={translate('credentialDetail.credential.revocationMethod')} value={credential.revocation} />
-        <DataItem attribute={translate('credentialDetail.credential.transport')} value={credential.transport} />
+        <DataItem attribute={translate('credentialDetail.credential.schema')} value={credential.schema.name} />
+        <DataItem attribute={translate('credentialDetail.credential.issuer')} value={credential.issuerDid ?? ''} />
+        <DataItem attribute={translate('credentialDetail.credential.format')} value={credential.schema.format} />
+        <DataItem
+          attribute={translate('credentialDetail.credential.revocationMethod')}
+          value={credential.schema.revocationMethod}
+        />
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
-        {credential.attributes.map((attribute) => (
+        {credential.claims.map((attribute) => (
           <DataItem key={attribute.key} attribute={attribute.key} value={attribute.value} />
         ))}
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
-        {credential.log.map((entry) => (
-          <ListItem
-            key={entry.id}
-            title={translate(`credentialDetail.log.${entry.action}`)}
-            subtitle={formatDateTime(entry.date) ?? '-'}
-            style={styles.logItem}
-            rightAccessory={null}
-          />
-        ))}
+        <ListItem
+          title={translate('credentialDetail.log.issue')}
+          subtitle={formatDateTime(new Date(credential.issuanceDate))}
+          style={styles.logItem}
+          rightAccessory={null}
+        />
       </Section>
     </DetailScreen>
   ) : null;
