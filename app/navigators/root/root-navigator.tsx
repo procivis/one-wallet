@@ -7,6 +7,7 @@ import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-cod
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
+import InvitationNavigator from '../invitation/invitation-navigator';
 import IssueCredentialNavigator from '../issue-credential/issue-credential-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
@@ -45,6 +46,7 @@ const RootNavigator: FunctionComponent = () => {
           />
           <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
           <RootStack.Screen name="Tabs" component={TabsNavigator} />
+          <RootStack.Screen name="Invitation" component={InvitationNavigator} />
           <RootStack.Screen name="IssueCredential" component={IssueCredentialNavigator} />
           <RootStack.Screen name="ShareCredential" component={ShareCredentialNavigator} />
         </RootStack.Group>
