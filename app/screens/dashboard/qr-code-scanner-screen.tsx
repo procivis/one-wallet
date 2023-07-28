@@ -1,6 +1,5 @@
 import { QRCodeScanner } from '@procivis/react-native-components';
-import { useIsFocused } from '@react-navigation/core';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
