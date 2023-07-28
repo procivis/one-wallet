@@ -14,17 +14,25 @@ export function reportError(message: string) {
 }
 
 export function reportException(e: unknown, message?: string) {
+  // `code` can be set in the native code
+  const code = (e as any)?.code ?? '';
+
   if (!__DEV__) {
     try {
       Sentry.withScope((scope) => {
-        scope.setExtra('extra', message);
+        if (message) {
+          scope.setExtra('message', message);
+        }
+        if (code) {
+          scope.setExtra('code', code);
+        }
         Sentry.captureException(e);
       });
     } catch (error) {
       // do nothing
     }
   } else {
-    const info = message ? `(${message})` : '';
+    const info = message ? `(${message})${code ? `[${code}]` : ''}` : code;
     // eslint-disable-next-line no-console
     console.warn(`reportException${info}:`, e, e instanceof Error ? e.stack : undefined);
   }
