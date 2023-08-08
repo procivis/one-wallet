@@ -18,7 +18,9 @@ import React, { useEffect, useState } from 'react';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import Config from 'react-native-ultimate-config';
+import { QueryClientProvider } from 'react-query';
 
+import { queryClient } from './hooks/query';
 import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';
@@ -76,13 +78,15 @@ function App() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <RootStoreProvider value={rootStore}>
         <ErrorBoundary catchErrors={'always'}>
-          <ActionSheetProvider>
-            <AccessibilityFocusHistoryProvider>
-              <ColorSchemeProvider<AppColorScheme> colorScheme={colorScheme}>
-                <AppNavigator />
-              </ColorSchemeProvider>
-            </AccessibilityFocusHistoryProvider>
-          </ActionSheetProvider>
+          <QueryClientProvider client={queryClient}>
+            <ActionSheetProvider>
+              <AccessibilityFocusHistoryProvider>
+                <ColorSchemeProvider<AppColorScheme> colorScheme={colorScheme}>
+                  <AppNavigator />
+                </ColorSchemeProvider>
+              </AccessibilityFocusHistoryProvider>
+            </ActionSheetProvider>
+          </QueryClientProvider>
         </ErrorBoundary>
       </RootStoreProvider>
     </SafeAreaProvider>
