@@ -6,7 +6,7 @@ import {
   TextAvatar,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
@@ -26,8 +26,7 @@ const WalletScreen: FunctionComponent = observer(() => {
     locale: { locale },
   } = useStores();
 
-  const isFocused = useIsFocused();
-  const credentials = useCredentials([isFocused]);
+  const { data: credentials } = useCredentials();
 
   const handleWalletSettingsClick = useCallback(() => {
     navigation.navigate('Settings');
