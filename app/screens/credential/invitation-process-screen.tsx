@@ -6,8 +6,8 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import ONE from 'react-native-one-core';
 
+import { useInvitationHandler } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -19,21 +19,28 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const { invitationUrl } = route.params;
   useBlockOSBackNavigation();
 
+  const { mutateAsync: handleInvitation } = useInvitationHandler();
+
   const [state, setState] = useState(LoadingResultState.InProgress);
+  const [issuedCredentialId, setIssuedCredentialId] = useState<string>();
   useEffect(() => {
-    ONE.handleInvitation(invitationUrl)
-      .then(() => {
+    handleInvitation(invitationUrl)
+      .then((result) => {
+        setIssuedCredentialId(result);
         setState(LoadingResultState.Success);
       })
       .catch((err) => {
         reportException(err, 'Invitation failure');
         setState(LoadingResultState.Failure);
       });
-  }, [invitationUrl]);
+  }, [handleInvitation, invitationUrl]);
 
   const onConfirm = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [rootNavigation]);
+    if (state === LoadingResultState.Success && issuedCredentialId) {
+      rootNavigation.navigate('CredentialDetail', { credentialId: issuedCredentialId });
+    }
+  }, [rootNavigation, state, issuedCredentialId]);
 
   return (
     <LoadingResult
