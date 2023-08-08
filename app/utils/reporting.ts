@@ -32,7 +32,7 @@ export function reportException(e: unknown, message?: string) {
       // do nothing
     }
   } else {
-    const info = message ? `(${message})${code ? `[${code}]` : ''}` : code;
+    const info = message ? `(${message})${code ? `[${code}]` : ''}` : `[${code}]`;
     // eslint-disable-next-line no-console
     console.warn(`reportException${info}:`, e, e instanceof Error ? e.stack : undefined);
   }
