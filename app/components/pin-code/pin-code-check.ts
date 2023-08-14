@@ -52,7 +52,7 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   const lockedWhenGoingToBackground = useRef<boolean>(false);
   useEffect(() => {
     if (!enabled) return;
-    if (!appActive) {
+    if (appActive === false) {
       lockedWhenGoingToBackground.current = showPinCodeCheck();
     }
   }, [appActive, enabled, showPinCodeCheck]);
@@ -60,10 +60,12 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   const lastActiveTimestamp = useRef<number>(0);
   useEffect(() => {
     if (!enabled) return;
+    const now = Date.now();
     if (appActive) {
-      // show lockscreen when in background for a long time
-      if (lastActiveTimestamp.current + PIN_CODE_INACTIVE_TIMEOUT < Date.now()) {
+      // show lockscreen when in background for a long time or starting the app
+      if (lastActiveTimestamp.current + PIN_CODE_INACTIVE_TIMEOUT < now) {
         lockedWhenGoingToBackground.current = false;
+        lastActiveTimestamp.current = now;
         if (showPinCodeCheck()) return;
       } else if (lockedWhenGoingToBackground.current) {
         // hide lockscreen when reopening after short time
@@ -71,8 +73,8 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
       }
       lockedWhenGoingToBackground.current = false;
       hideSplashScreen();
-    } else {
-      lastActiveTimestamp.current = Date.now();
+    } else if (appActive === false && lastActiveTimestamp.current) {
+      lastActiveTimestamp.current = now;
     }
   }, [appActive, enabled, showPinCodeCheck, hidePinCodeCheck]);
 };
