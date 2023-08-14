@@ -16,9 +16,18 @@ export function useAppState() {
   return appState;
 }
 
-export function useIsAppActive(): boolean {
+export function useIsAppActive(): boolean | undefined {
   const appState = useAppState();
-  return appState === 'active';
+  switch (appState) {
+    case 'active':
+    case 'extension':
+      return true;
+    case 'inactive':
+    case 'background':
+      return false;
+    default:
+      return undefined;
+  }
 }
 
 /**
