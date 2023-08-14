@@ -1,3 +1,4 @@
+import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 
@@ -30,6 +31,8 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     },
     [navigation, pin],
   );
+
+  useBlockOSBackNavigation();
 
   const stage = pin ? 'confirm' : 'initial';
   return (

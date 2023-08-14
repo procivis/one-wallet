@@ -16,6 +16,7 @@ const PinCodeSetScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
 
   const onClose = useCallback(() => {
+    rootNavigation.popToTop();
     rootNavigation.replace('Tabs', { screen: 'Wallet' });
   }, [rootNavigation]);
 
