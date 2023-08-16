@@ -26,11 +26,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>didcomm</string>
-				<string>ssiplus</string>
-				<string>ssiplus-$(CONFIG_NAME)</string>
-			</array>
+			<array></array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -57,7 +53,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>${APP_NAME} needs access to your camera to scan QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Allow $(APP_NAME) to use FaceID</string>
+	<string>Allow $(APP_NAME) to use FaceID.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>
