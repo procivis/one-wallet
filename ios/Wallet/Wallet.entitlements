@@ -6,10 +6,5 @@
 	<array>
 		<string>applinks:${ASSOCIATED_INVITATION_DOMAIN}</string>
 	</array>
-	<key>com.apple.developer.nfc.readersession.formats</key>
-	<array>
-		<string>NDEF</string>
-		<string>TAG</string>
-	</array>
 </dict>
 </plist>
