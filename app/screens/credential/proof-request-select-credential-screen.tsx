@@ -1,5 +1,6 @@
 import {
   Accordion,
+  ActivityIndicator,
   Button,
   DetailScreen,
   formatDateTime,
@@ -12,9 +13,10 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Credential } from 'react-native-one-core';
 
+import { useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialNavigatorParamList,
@@ -40,17 +42,18 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const navigation = useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
 
-  const { request, selectedCredentialId } = route.params;
-  const {
-    walletStore: { credentials },
-  } = useStores();
+  const { preselectedCredentialId, options, request } = route.params;
+  const { data: credentials, isLoading } = useCredentials();
 
   const potentialCredentials = useMemo(
-    () => credentials.filter(({ schema }) => schema === request.credentialSchema),
-    [credentials, request],
+    () =>
+      options
+        .map((credentialId) => credentials?.find(({ id }) => id === credentialId))
+        .filter((x): x is Credential => Boolean(x)),
+    [credentials, options],
   );
 
-  const [credentialId, setCredentialId] = useState<string>(selectedCredentialId);
+  const [credentialId, setCredentialId] = useState<string>(preselectedCredentialId);
   const onConfirm = useCallback(() => {
     navigation.navigate({
       name: 'ProofRequest',
@@ -63,32 +66,38 @@ const SelectCredentialScreen: FunctionComponent = () => {
 
   return (
     <DetailScreen onBack={navigation.goBack} title={translate('proofRequest.selectCredential.title')}>
-      {potentialCredentials.map((credential) => {
-        const selected = credential.id === credentialId;
-        return (
-          <View key={credential.id} style={styles.item}>
-            <Accordion
-              title={credential.schema}
-              accessibilityState={{ selected }}
-              expanded={selected}
-              onPress={selected ? undefined : () => setCredentialId(credential.id)}
-              subtitle={translate('proofRequest.selectCredential.issued', {
-                date: formatDateTime(credential.issuedOn),
-              })}
-              icon={{ component: <TextAvatar produceInitials={true} text={credential.schema} innerSize={48} /> }}
-              rightAccessory={<Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />}
-              contentStyle={styles.itemContent}>
-              {request.attributes.map((attribute) => (
-                <DataItem
-                  key={attribute.key}
-                  attribute={attribute.key}
-                  value={credential.attributes.find(({ key }) => key === attribute.key)?.value ?? '-'}
-                />
-              ))}
-            </Accordion>
-          </View>
-        );
-      })}
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        potentialCredentials.map((credential) => {
+          const selected = credential.id === credentialId;
+          return (
+            <View key={credential.id} style={styles.item}>
+              <Accordion
+                title={credential.schema.name}
+                accessibilityState={{ selected }}
+                expanded={selected}
+                onPress={selected ? undefined : () => setCredentialId(credential.id)}
+                subtitle={translate('proofRequest.selectCredential.issued', {
+                  date: formatDateTime(new Date(credential.issuanceDate)),
+                })}
+                icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
+                rightAccessory={
+                  <Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />
+                }
+                contentStyle={styles.itemContent}>
+                {request.claims.map((claim) => (
+                  <DataItem
+                    key={claim.key}
+                    attribute={claim.key}
+                    value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
+                  />
+                ))}
+              </Accordion>
+            </View>
+          );
+        })
+      )}
 
       <View style={styles.bottom}>
         <Button onPress={onConfirm}>{translate('proofRequest.selectCredential.select')}</Button>
