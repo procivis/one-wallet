@@ -6,31 +6,32 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import ONE from 'react-native-one-core';
 
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
+import { reportException } from '../../utils/reporting';
 
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
 
-  const {
-    walletStore: { credentialShared },
-  } = useStores();
-
   useBlockOSBackNavigation();
 
   const [state, setState] = useState(LoadingResultState.InProgress);
   useEffect(() => {
-    setTimeout(() => setState(LoadingResultState.Success), 1000);
-  }, []);
+    ONE.holderSubmitProof(route.params.credentialIds)
+      .then(() => setState(LoadingResultState.Success))
+      .catch((e) => {
+        setState(LoadingResultState.Failure);
+        reportException(e, 'Submit Proof failure');
+      });
+  }, [route]);
 
-  const onConfirm = useCallback(() => {
-    credentialShared(route.params.credentialId);
+  const onClose = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [credentialShared, rootNavigation, route]);
+  }, [rootNavigation]);
 
   return (
     <LoadingResult
@@ -38,7 +39,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       state={state}
       title={translate(`proofRequest.process.${state}.title`)}
       subtitle={translate(`proofRequest.process.${state}.subtitle`)}
-      onClose={onConfirm}
+      onClose={onClose}
       successCloseButtonLabel={translate('proofRequest.process.success.close')}
       inProgressCloseButtonLabel={translate('common.cancel')}
       failureCloseButtonLabel={translate('common.close')}
