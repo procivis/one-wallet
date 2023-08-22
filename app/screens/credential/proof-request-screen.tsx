@@ -1,5 +1,6 @@
 import {
   Accordion,
+  ActivityIndicator,
   Button,
   formatDateTime,
   Selector,
@@ -15,14 +16,17 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import ONE, { Credential, CredentialSchema, CredentialState, ProofRequestClaim } from 'react-native-one-core';
 
+import { MissingCredentialIcon } from '../../components/icon/credential-icon';
+import { useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
+import { reportException } from '../../utils/reporting';
 
 const DataItem: FunctionComponent<{
   attribute: string;
@@ -54,131 +58,69 @@ const DataItem: FunctionComponent<{
   );
 };
 
-const ProofRequestScreen: FunctionComponent = () => {
+const sortByState = (a: Credential, b: Credential) => {
+  if (a.state === b.state) return 0;
+  if (a.state === CredentialState.REVOKED) return 1;
+  if (b.state === CredentialState.REVOKED) return -1;
+  return 0;
+};
+
+interface DisplayedCredential {
+  schema: CredentialSchema;
+  claims: ProofRequestClaim[];
+  options: Credential[];
+  selected: Credential | undefined;
+}
+
+const CredentialItem: FunctionComponent<{
+  data: DisplayedCredential;
+  onSelect?: () => void;
+}> = ({ data, onSelect }) => {
   const colorScheme = useAppColorScheme();
-  const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
-  const sharingNavigation = useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
-  const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
-
-  useBlockOSBackNavigation();
-
-  const { request, selectedCredentialId } = route.params;
-  const {
-    walletStore: { credentials },
-  } = useStores();
-
-  const potentialCredentials = useMemo(
-    () => credentials.filter(({ schema }) => schema === request.credentialSchema),
-    [credentials, request],
-  );
-
-  const [credentialId, setCredentialId] = useState<string | undefined>(
-    // pick first matching credential
-    () => potentialCredentials?.[0]?.id,
-  );
-
-  const credential = useMemo(() => credentials.find(({ id }) => id === credentialId), [credentialId, credentials]);
-  const [selectedAttributes, setSelectedAttributes] = useState<string[]>(() =>
-    request.attributes.map(({ key }) => key),
-  );
-
-  const onReject = useCallback(() => {
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [rootNavigation]);
-
-  const onConfirm = useCallback(() => {
-    if (credentialId) {
-      sharingNavigation.navigate('Processing', { request, credentialId });
-    }
-  }, [credentialId, request, sharingNavigation]);
-
-  const onSelect = useCallback(() => {
-    if (credentialId) {
-      sharingNavigation.navigate('SelectCredential', { selectedCredentialId: credentialId, request });
-    }
-  }, [credentialId, request, sharingNavigation]);
-  // result of selection is propagated using the navigation param `selectedCredentialId`
-  useEffect(() => {
-    if (selectedCredentialId) {
-      setCredentialId(selectedCredentialId);
-    }
-  }, [selectedCredentialId]);
-
   return (
-    <SharingScreen
-      variation={SharingScreenVariation.Neutral}
-      title={translate('proofRequest.title')}
-      contentTitle={translate('proofRequest.attributes')}
-      cancelLabel={translate('common.cancel')}
-      onCancel={onReject}
-      submitLabel={translate('proofRequest.confirm')}
-      onSubmit={credentialId && selectedAttributes.length ? onConfirm : undefined}
-      header={
-        <>
-          <View style={styles.header}>
-            <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
-              {translate('proofRequest.verifier')}
-            </Typography>
-            <Typography color={colorScheme.text}>{request.verifier}</Typography>
-          </View>
-          <View style={[styles.dataWrapper, { backgroundColor: colorScheme.background }]}>
-            <DataItem attribute={translate('credentialDetail.credential.format')} value={request.credentialFormat} />
-            <DataItem
-              attribute={translate('credentialDetail.credential.revocationMethod')}
-              value={request.revocationMethod}
-            />
-            <DataItem
-              attribute={translate('credentialDetail.credential.transport')}
-              value={request.transport}
-              last={true}
-            />
-          </View>
-        </>
-      }>
+    <View style={styles.credential}>
       <Accordion
-        title={request.credentialSchema}
+        title={data.schema.name}
         subtitle={
-          credential?.issuedOn ? formatDateTime(credential.issuedOn) : translate('proofRequest.missingCredential.title')
+          data.selected?.issuanceDate
+            ? formatDateTime(new Date(data.selected.issuanceDate))
+            : translate('proofRequest.missingCredential.title')
         }
-        subtitleStyle={credential ? undefined : { color: colorScheme.alertText }}
-        icon={{ component: <TextAvatar produceInitials={true} text={request.credentialSchema} innerSize={48} /> }}>
-        {request.attributes.map((attribute, index, { length }) => {
+        subtitleStyle={data.selected ? undefined : { color: colorScheme.alertText }}
+        icon={{
+          component: data.selected ? (
+            <TextAvatar produceInitials={true} text={data.schema.name} innerSize={48} />
+          ) : (
+            <MissingCredentialIcon style={styles.icon} />
+          ),
+        }}>
+        {data.claims.map((attribute, index, { length }) => {
           const status = (() => {
-            if (!credential) return SelectorStatus.LockedInvalid;
-            if (attribute.mandatory) return SelectorStatus.LockedSelected;
-            return selectedAttributes.includes(attribute.key)
-              ? SelectorStatus.SelectedCheck
-              : SelectorStatus.Unselected;
+            if (!data.selected) return attribute.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
+            if (attribute.required) return SelectorStatus.LockedSelected;
+            return SelectorStatus.SelectedCheck;
           })();
+
           return (
             <DataItem
               key={attribute.key}
               attribute={attribute.key}
-              value={credential?.attributes.find(({ key }) => key === attribute.key)?.value}
+              value={data.selected?.claims.find(({ key }) => key === attribute.key)?.value}
               last={length === index + 1}
               status={status}
-              onPress={
-                !attribute.mandatory && credential
-                  ? () =>
-                      setSelectedAttributes((prev) => {
-                        return prev.includes(attribute.key)
-                          ? prev.filter((key) => attribute.key !== key)
-                          : [...prev, attribute.key];
-                      })
-                  : undefined
-              }
+              onPress={undefined}
             />
           );
         })}
       </Accordion>
-      {!credential && (
+      {!data.selected && (
         <View style={{ backgroundColor: colorScheme.alert }}>
           <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
             {translate('proofRequest.missingCredential.notice')}
           </Typography>
         </View>
       )}
-      {potentialCredentials.length > 1 && (
+      {data.options.length > 1 && (
         <View style={{ backgroundColor: colorScheme.notice }}>
           <Typography color={colorScheme.noticeText} align="center" style={styles.notice}>
             {translate('proofRequest.multipleCredentials.notice')}
@@ -188,11 +130,118 @@ const ProofRequestScreen: FunctionComponent = () => {
           </Button>
         </View>
       )}
+    </View>
+  );
+};
+
+const ProofRequestScreen: FunctionComponent = () => {
+  const colorScheme = useAppColorScheme();
+  const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
+  const sharingNavigation = useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
+  const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+
+  useBlockOSBackNavigation();
+
+  const { request, selectedCredentialId } = route.params;
+
+  const { data: credentials, isLoading } = useCredentials();
+
+  const [selectedCredentials, setSelectedCredentials] = useState<Record<CredentialSchema['id'], Credential['id']>>({});
+
+  const displayedData = useMemo(() => {
+    const schemaIds = request.claims.reduce((aggr, curr) => aggr.add(curr.credentialSchema.id), new Set<string>());
+    return Array.from(schemaIds).reduce<Record<CredentialSchema['id'], DisplayedCredential>>((aggr, schemaId) => {
+      const claims = request.claims.filter((claim) => claim.credentialSchema.id === schemaId);
+      const options = credentials?.filter((credential) => credential.schema.id === schemaId) ?? [];
+      options.sort(sortByState);
+      const selectedId = selectedCredentials[schemaId];
+      return {
+        ...aggr,
+        [schemaId]: {
+          schema: claims[0].credentialSchema,
+          claims,
+          options,
+          selected: selectedId ? options.find((option) => option.id === selectedId) : options[0],
+        },
+      };
+    }, {});
+  }, [request, credentials, selectedCredentials]);
+
+  const onReject = useCallback(() => {
+    ONE.holderRejectProof().catch((e) => reportException(e, 'Reject Proof failure'));
+    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+  }, [rootNavigation]);
+
+  const onSubmit = useCallback(() => {
+    const credentialIds = Object.values(displayedData)
+      .map(({ selected }) => selected?.id)
+      .filter((x): x is string => Boolean(x));
+
+    sharingNavigation.navigate('Processing', { credentialIds });
+  }, [sharingNavigation, displayedData]);
+
+  const onSelect = useCallback(
+    (credentialSchemaId: string) => () => {
+      const { selected, options } = displayedData[credentialSchemaId];
+      sharingNavigation.navigate('SelectCredential', {
+        preselectedCredentialId: selected?.id ?? '',
+        options: options.map(({ id }) => id),
+        request,
+      });
+    },
+    [sharingNavigation, displayedData, request],
+  );
+  // result of selection is propagated using the navigation param `selectedCredentialId`
+  useEffect(() => {
+    if (selectedCredentialId) {
+      const credential = credentials?.find(({ id }) => id === selectedCredentialId);
+      if (credential) {
+        setSelectedCredentials((prev) => ({ ...prev, [credential.schema.id]: selectedCredentialId }));
+      }
+    }
+  }, [selectedCredentialId, credentials]);
+
+  const allSelectionsValid =
+    displayedData &&
+    Object.values(displayedData).every(({ selected }) => selected && selected.state !== CredentialState.REVOKED);
+
+  // temporary API missing verifier info
+  const verifierName = 'Unknown';
+
+  return (
+    <SharingScreen
+      variation={SharingScreenVariation.Neutral}
+      title={translate('proofRequest.title')}
+      contentTitle={translate('proofRequest.attributes')}
+      cancelLabel={translate('common.cancel')}
+      onCancel={onReject}
+      submitLabel={translate('proofRequest.confirm')}
+      onSubmit={allSelectionsValid ? onSubmit : undefined}
+      header={
+        <>
+          <View style={styles.header}>
+            <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
+              {translate('proofRequest.verifier')}
+            </Typography>
+            <Typography color={colorScheme.text}>{verifierName}</Typography>
+          </View>
+        </>
+      }>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        Object.entries(displayedData).map(([credentialSchemaId, data]) => (
+          <CredentialItem key={credentialSchemaId} data={data} onSelect={onSelect(credentialSchemaId)} />
+        ))
+      )}
     </SharingScreen>
   );
 };
 
 const styles = StyleSheet.create({
+  credential: {
+    marginBottom: 24,
+  },
   dataItem: {
     alignItems: 'center',
     borderBottomWidth: 1,
@@ -210,15 +259,15 @@ const styles = StyleSheet.create({
   dataItemLeft: {
     flex: 1,
   },
-  dataWrapper: {
-    paddingHorizontal: 12,
-  },
   header: {
-    marginBottom: 12,
     padding: 12,
   },
   headerLabel: {
     marginBottom: 4,
+  },
+  icon: {
+    borderRadius: 3,
+    overflow: 'hidden',
   },
   notice: {
     marginHorizontal: 12,
