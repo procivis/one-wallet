@@ -26,14 +26,18 @@ const InvitationProcessScreen: FunctionComponent = () => {
   useEffect(() => {
     handleInvitation(invitationUrl)
       .then((result) => {
-        setIssuedCredentialId(result);
-        setState(LoadingResultState.Success);
+        if ('issuedCredentialId' in result) {
+          setIssuedCredentialId(result.issuedCredentialId);
+          setState(LoadingResultState.Success);
+        } else {
+          rootNavigation.navigate('ShareCredential', { screen: 'ProofRequest', params: { request: result } });
+        }
       })
       .catch((err) => {
         reportException(err, 'Invitation failure');
         setState(LoadingResultState.Failure);
       });
-  }, [handleInvitation, invitationUrl]);
+  }, [handleInvitation, invitationUrl, rootNavigation]);
 
   const onConfirm = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
