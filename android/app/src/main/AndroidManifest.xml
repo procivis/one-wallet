@@ -28,7 +28,7 @@
           <category android:name="android.intent.category.DEFAULT" />
           <category android:name="android.intent.category.BROWSABLE" />
           <data android:scheme="https" />
-          <data android:host="${ASSOCIATED_INVITATION_DOMAIN}" android:path="/invitation" />
+          <data android:host="${ASSOCIATED_INVITATION_DOMAIN}" android:path="/ssi" />
         </intent-filter>
 
         <!-- Accepts magic links (that begin with "didcomm:// etc.) -->

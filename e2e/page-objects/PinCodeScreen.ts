@@ -4,6 +4,9 @@ export default abstract class PinCodeScreen {
       get screen() {
         return element(by.id(screenTestID));
       },
+      get error() {
+        return element(by.id(`${screenTestID}.error`));
+      },
       digit(digit: number) {
         return element(by.id(`${screenTestID}.keypad.${digit}`));
       },

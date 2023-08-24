@@ -48,6 +48,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
+      testID="InvitationProcessScreen"
       variation={LoadingResultVariation.Neutral}
       state={state}
       title={translate(`invitation.process.${state}.title`)}

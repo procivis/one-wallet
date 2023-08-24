@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
-    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#44e533ba933dd8177981c7d1cad7d904b8d4988f",
+    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#a5b964d31b3c4325ff2b6ed14375dedd4676cfe7",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native/normalize-color": "^2.0.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -109,6 +109,7 @@
     "jetifier": "1.6.6",
     "license-checker-rseidelsohn": "^3.1.0",
     "metro-react-native-babel-preset": "^0.73.7",
+    "node-fetch": "^3.3.2",
     "npm-run-all": "4.1.5",
     "patch-package": "6.4.7",
     "postinstall-prepare": "1.0.1",
