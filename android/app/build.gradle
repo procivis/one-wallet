@@ -192,6 +192,7 @@ android {
 dependencies {
     // detox
     androidTestImplementation('com.wix:detox:+')
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
     // The version of react-native is set by the React Native Gradle Plugin

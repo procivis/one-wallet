@@ -18,6 +18,7 @@ module.exports = {
       },
     ],
   ],
+  transformIgnorePatterns: ['node_modules/(?!(jest-)?node-fetch|fetch-blob|formdata-polyfill|data-uri-to-buffer)'],
   testEnvironment: 'detox/runners/jest/testEnvironment',
   verbose: true,
 };

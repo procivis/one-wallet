@@ -1,34 +1,31 @@
 import { QRCodeScanner } from '@procivis/react-native-components';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
+import { useInvitationHandling } from '../../hooks/deep-link';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 
 const QRCodeScannerScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'Tabs'>>();
   const isFocused = useIsFocused();
   const [code, setCode] = useState<string>();
 
   const handleCodeScan = useCallback(
     (event: BarCodeReadEvent) => {
-      if (code) {
-        return;
+      if (!code) {
+        setCode(event.data);
       }
-      setCode(event.data);
     },
     [code, setCode],
   );
 
+  const handleInvitationUrl = useInvitationHandling();
   useEffect(() => {
-    if (!code) {
-      return;
+    if (code) {
+      handleInvitationUrl(code);
     }
-
-    navigation.navigate('Invitation', { screen: 'Processing', params: { invitationUrl: code } });
-  }, [code, navigation]);
+  }, [code, handleInvitationUrl]);
 
   return (
     <View style={styles.screen}>
