@@ -27,4 +27,12 @@ describe('Onboarding', () => {
     await PinCodeScreen.Check.digit(1).multiTap(6);
     await expect(WalletScreen.screen).toBeVisible();
   });
+
+  it('wrong PIN entry keeps the Lock screen open', async () => {
+    await device.reloadReactNative();
+    await expect(PinCodeScreen.Check.screen).toBeVisible();
+    await expect(PinCodeScreen.Check.error).toHaveText('');
+    await PinCodeScreen.Check.digit(2).multiTap(6);
+    await expect(PinCodeScreen.Check.error).not.toHaveText('');
+  });
 });
