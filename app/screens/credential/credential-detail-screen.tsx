@@ -91,6 +91,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
 
   return credential ? (
     <DetailScreen
+      testID="CredentialDetailScreen"
       onBack={navigation.goBack}
       title={credential.schema.name}
       style={{ backgroundColor: colorScheme.background }}
