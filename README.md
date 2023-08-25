@@ -1,7 +1,6 @@
 [![pipeline status](https://gitlab.procivis.ch/procivis/one/one-wallet/badges/main/pipeline.svg)](https://gitlab.procivis.ch/procivis/one/one-wallet/-/pipelines)
 [![Quality Gate Status](https://sonarqube.dev.one-trust-solution.com/api/project_badges/measure?project=procivis_one_one-wallet_AYkBxpGkdVNN7RCpme_C&metric=alert_status&token=sqb_52546ead3f93d6a17d8ccd313032280bfca69b3d)](https://sonarqube.dev.one-trust-solution.com/dashboard?id=procivis_one_one-wallet_AYkBxpGkdVNN7RCpme_C)
 
-
 | Configuration |                                                                                              Build Status                                                                                               |
 | ------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Demo          | [![Build Status](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687/status.svg?token=asgEvbNJgYbMPW707rocOA&branch=main)](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687) |
