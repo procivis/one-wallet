@@ -3,46 +3,71 @@ image: node:16-alpine
 stages:
   - prepare
   - test
+  - e2e_tests
 
-build_deps:
-  stage: prepare
+.only_main_or_manual:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_BRANCH == 'main'
+      when: on_success
+    - when: manual
+
+.bitrise_builder:
+  stage: e2e_tests
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  needs: [build_deps, test]
+  variables:
+    # ONE-wallet project on Bitrise
+    BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
+    BITRISE_WORKFLOW: ""
+  script:
+    - >
+      /etc/gitrise.sh
+      --access-token $BITRISE_API_ACCESS_TOKEN
+      --slug $BITRISE_PROJECT_SLUG
+      --workflow $BITRISE_WORKFLOW
+      --branch "$CI_COMMIT_REF_NAME"
+      --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
+      --output "artifacts"
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 10 days
+
+.install-node-modules: &install-node-modules
+  - >
+    if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
+      echo "node_modules exists and seems valid, not re-installing deps."
+    else
+      echo "node_modules does not exist or is not valid, re-installing deps."
+      apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
+      yarn global add node-gyp @mapbox/node-pre-gyp --network-concurrency 1
+      yarn install --frozen-lockfile --network-concurrency 1
+      yarn rnuc:dev
+    fi
+
+.modules_setup:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - node_modules/
+    policy: pull
   before_script:
-    - apk update && apk upgrade
-    - apk add --no-cache --virtual .build-deps alpine-sdk python3 libc6-compat gcompat
-  script:
-    - yarn config delete https-proxy
-    - yarn config delete proxy
-    - yarn global add --cache-folder .yarn-cache-global node-gyp node-pre-gyp
-    - yarn install --frozen-lockfile --cache-folder .yarn-cache --prefer-offline --network-timeout=100000 --network-concurrency=1
-    - yarn rnuc:dev
+    - *install-node-modules
 
-# Job Setup
-# - Setup Bash
-# - Check & Regenerate node_modules if necessary (Cache is only best effort)
-.modules_setup:
+
+build_deps:
+  stage: prepare
+  extends:
+    - .modules_setup
+  script:
+    - ''
   cache:
-    - key: ${CI_COMMIT_REF_SLUG}
-      paths:
-        - node_modules/
-      policy: pull
-  before_script:
-    - >
-      if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
-        echo "node_modules exists and seems valid, not re-installing deps."
-      else
-        apk update && apk upgrade
-        apk add --no-cache --virtual .env bash
-        apk add --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
-        yarn config delete https-proxy
-        yarn config delete proxy
-        yarn global add node-gyp @mapbox/node-pre-gyp
-        yarn install --frozen-lockfile --network-concurrency 1
-        yarn rnuc:dev
-      fi
+    policy: pull-push
+    fallback_keys:
+      - $CI_DEFAULT_BRANCH
+
 
 lint:
   stage: test
@@ -95,9 +120,20 @@ sonarqube-check:
   script:
     - sonar-scanner
   allow_failure: true
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - if: $CI_COMMIT_BRANCH == 'main'
-      when: on_success
-    - when: manual
+  extends:
+    - .only_main_or_manual
+
+
+bitrise_ios_e2e:
+  variables:
+    BITRISE_WORKFLOW: E2E_iOS
+  extends:
+    - .bitrise_builder
+    - .only_main_or_manual
+
+bitrise_android_e2e:
+  variables:
+    BITRISE_WORKFLOW: E2E_Android
+  extends:
+    - .bitrise_builder
+    - .only_main_or_manual
