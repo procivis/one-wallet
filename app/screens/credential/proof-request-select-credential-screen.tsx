@@ -13,9 +13,9 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Credential } from 'react-native-one-core';
+import { CredentialListItem, InvitationResultProofRequest } from 'react-native-one-core';
 
-import { useCredentials } from '../../hooks/credentials';
+import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
@@ -38,6 +38,36 @@ const DataItem: FunctionComponent<{
   );
 };
 
+const Credential: FunctionComponent<{
+  credentialId: string;
+  selected: boolean;
+  request: InvitationResultProofRequest;
+  onPress?: () => void;
+}> = ({ credentialId, selected, request, onPress }) => {
+  const { data: credential } = useCredentialDetail(credentialId);
+  return credential ? (
+    <Accordion
+      title={credential.schema.name}
+      accessibilityState={{ selected }}
+      expanded={selected}
+      onPress={onPress}
+      subtitle={translate('proofRequest.selectCredential.issued', {
+        date: formatDateTime(new Date(credential.issuanceDate)),
+      })}
+      icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
+      rightAccessory={<Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />}
+      contentStyle={styles.itemContent}>
+      {request.claims.map((claim) => (
+        <DataItem
+          key={claim.key}
+          attribute={claim.key}
+          value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
+        />
+      ))}
+    </Accordion>
+  ) : null;
+};
+
 const SelectCredentialScreen: FunctionComponent = () => {
   const navigation = useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
@@ -49,7 +79,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
     () =>
       options
         .map((credentialId) => credentials?.find(({ id }) => id === credentialId))
-        .filter((x): x is Credential => Boolean(x)),
+        .filter((x): x is CredentialListItem => Boolean(x)),
     [credentials, options],
   );
 
@@ -73,27 +103,12 @@ const SelectCredentialScreen: FunctionComponent = () => {
           const selected = credential.id === credentialId;
           return (
             <View key={credential.id} style={styles.item}>
-              <Accordion
-                title={credential.schema.name}
-                accessibilityState={{ selected }}
-                expanded={selected}
+              <Credential
+                selected={selected}
                 onPress={selected ? undefined : () => setCredentialId(credential.id)}
-                subtitle={translate('proofRequest.selectCredential.issued', {
-                  date: formatDateTime(new Date(credential.issuanceDate)),
-                })}
-                icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
-                rightAccessory={
-                  <Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />
-                }
-                contentStyle={styles.itemContent}>
-                {request.claims.map((claim) => (
-                  <DataItem
-                    key={claim.key}
-                    attribute={claim.key}
-                    value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
-                  />
-                ))}
-              </Accordion>
+                credentialId={credential.id}
+                request={request}
+              />
             </View>
           );
         })
