@@ -12,7 +12,7 @@ import React, { FunctionComponent, PropsWithChildren, useCallback } from 'react'
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
-import { useCredential } from '../../hooks/credentials';
+import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
@@ -50,7 +50,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
     walletStore: { credentialDeleted },
   } = useStores();
   const { credentialId } = route.params;
-  const credential = useCredential(credentialId);
+  const { data: credential } = useCredentialDetail(credentialId);
 
   const { showActionSheetWithOptions } = useActionSheet();
   const onActions = useCallback(

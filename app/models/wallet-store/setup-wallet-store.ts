@@ -10,6 +10,7 @@ export async function setupWalletStore(env: Environment) {
   let walletStore: WalletStore;
   const defaultData = {
     exists: false,
+    holderDidId: '',
   };
 
   try {

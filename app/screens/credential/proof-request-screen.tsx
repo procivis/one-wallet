@@ -16,10 +16,16 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ONE, { Credential, CredentialSchema, CredentialState, ProofRequestClaim } from 'react-native-one-core';
+import ONE, {
+  CredentialDetail,
+  CredentialListItem,
+  CredentialSchema,
+  CredentialStateEnum,
+  ProofRequestClaim,
+} from 'react-native-one-core';
 
 import { MissingCredentialIcon } from '../../components/icon/credential-icon';
-import { useCredentials } from '../../hooks/credentials';
+import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import {
@@ -58,18 +64,18 @@ const DataItem: FunctionComponent<{
   );
 };
 
-const sortByState = (a: Credential, b: Credential) => {
+const sortByState = (a: CredentialListItem, b: CredentialListItem) => {
   if (a.state === b.state) return 0;
-  if (a.state === CredentialState.REVOKED) return 1;
-  if (b.state === CredentialState.REVOKED) return -1;
+  if (a.state === CredentialStateEnum.REVOKED) return 1;
+  if (b.state === CredentialStateEnum.REVOKED) return -1;
   return 0;
 };
 
 interface DisplayedCredential {
   schema: CredentialSchema;
   claims: ProofRequestClaim[];
-  options: Credential[];
-  selected: Credential | undefined;
+  options: CredentialListItem[];
+  selected: CredentialListItem | undefined;
 }
 
 const CredentialItem: FunctionComponent<{
@@ -77,18 +83,19 @@ const CredentialItem: FunctionComponent<{
   onSelect?: () => void;
 }> = ({ data, onSelect }) => {
   const colorScheme = useAppColorScheme();
+  const { data: credential } = useCredentialDetail(data.selected?.id);
   return (
     <View style={styles.credential}>
       <Accordion
         title={data.schema.name}
         subtitle={
-          data.selected?.issuanceDate
-            ? formatDateTime(new Date(data.selected.issuanceDate))
+          credential?.issuanceDate
+            ? formatDateTime(new Date(credential.issuanceDate))
             : translate('proofRequest.missingCredential.title')
         }
-        subtitleStyle={data.selected ? undefined : { color: colorScheme.alertText }}
+        subtitleStyle={credential ? undefined : { color: colorScheme.alertText }}
         icon={{
-          component: data.selected ? (
+          component: credential ? (
             <TextAvatar produceInitials={true} text={data.schema.name} innerSize={48} />
           ) : (
             <MissingCredentialIcon style={styles.icon} />
@@ -96,7 +103,7 @@ const CredentialItem: FunctionComponent<{
         }}>
         {data.claims.map((attribute, index, { length }) => {
           const status = (() => {
-            if (!data.selected) return attribute.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
+            if (!credential) return attribute.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
             if (attribute.required) return SelectorStatus.LockedSelected;
             return SelectorStatus.SelectedCheck;
           })();
@@ -105,7 +112,7 @@ const CredentialItem: FunctionComponent<{
             <DataItem
               key={attribute.key}
               attribute={attribute.key}
-              value={data.selected?.claims.find(({ key }) => key === attribute.key)?.value}
+              value={credential?.claims.find(({ key }) => key === attribute.key)?.value}
               last={length === index + 1}
               status={status}
               onPress={undefined}
@@ -113,7 +120,7 @@ const CredentialItem: FunctionComponent<{
           );
         })}
       </Accordion>
-      {!data.selected && (
+      {!credential && (
         <View style={{ backgroundColor: colorScheme.alert }}>
           <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
             {translate('proofRequest.missingCredential.notice')}
@@ -146,7 +153,9 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const { data: credentials, isLoading } = useCredentials();
 
-  const [selectedCredentials, setSelectedCredentials] = useState<Record<CredentialSchema['id'], Credential['id']>>({});
+  const [selectedCredentials, setSelectedCredentials] = useState<
+    Record<CredentialSchema['id'], CredentialDetail['id']>
+  >({});
 
   const displayedData = useMemo(() => {
     const schemaIds = request.claims.reduce((aggr, curr) => aggr.add(curr.credentialSchema.id), new Set<string>());
@@ -203,7 +212,7 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const allSelectionsValid =
     displayedData &&
-    Object.values(displayedData).every(({ selected }) => selected && selected.state !== CredentialState.REVOKED);
+    Object.values(displayedData).every(({ selected }) => selected && selected.state !== CredentialStateEnum.REVOKED);
 
   // temporary API missing verifier info
   const verifierName = 'Unknown';
