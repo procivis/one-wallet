@@ -8,6 +8,7 @@ import { convertNewCredential, DummyCredentialModel, LogAction, NewCredential } 
 export const WalletStoreModel = types
   .model('WalletStore', {
     credentials: types.array(DummyCredentialModel),
+    holderDidId: types.string,
   })
   .actions((self) => ({
     credentialAdded: (credential: NewCredential) => {
@@ -25,8 +26,12 @@ export const WalletStoreModel = types
         self.credentials.remove(credential);
       }
     },
+    walletSetup: (holderDidId: string) => {
+      self.holderDidId = holderDidId;
+    },
     walletDeleted: () => {
       self.credentials.clear();
+      self.holderDidId = '';
     },
   }));
 
