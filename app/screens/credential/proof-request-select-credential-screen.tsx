@@ -57,13 +57,15 @@ const Credential: FunctionComponent<{
       icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
       rightAccessory={<Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />}
       contentStyle={styles.itemContent}>
-      {request.claims.map((claim) => (
-        <DataItem
-          key={claim.key}
-          attribute={claim.key}
-          value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
-        />
-      ))}
+      {request.claims
+        .filter((claim) => claim.credentialSchema.id === credential.schema.id)
+        .map((claim) => (
+          <DataItem
+            key={claim.id}
+            attribute={claim.key}
+            value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
+          />
+        ))}
     </Accordion>
   ) : null;
 };
