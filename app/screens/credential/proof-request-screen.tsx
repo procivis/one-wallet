@@ -17,7 +17,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ONE, {
-  CredentialDetail,
   CredentialListItem,
   CredentialSchema,
   CredentialStateEnum,
@@ -37,12 +36,12 @@ import { reportException } from '../../utils/reporting';
 const DataItem: FunctionComponent<{
   attribute: string;
   value: string | undefined;
+  status: SelectorStatus;
   last?: boolean;
-  status?: SelectorStatus;
   onPress?: () => void;
 }> = ({ attribute, value, last, status, onPress }) => {
   const colorScheme = useAppColorScheme();
-  const selector = status || !value ? <Selector status={status ?? SelectorStatus.LockedInvalid} /> : null;
+  const selector = <Selector status={status} />;
   return (
     <View style={[styles.dataItem, last && styles.dataItemLast, { borderColor: colorScheme.lighterGrey }]}>
       <View style={styles.dataItemLeft}>
@@ -80,8 +79,10 @@ interface DisplayedCredential {
 
 const CredentialItem: FunctionComponent<{
   data: DisplayedCredential;
-  onSelect?: () => void;
-}> = ({ data, onSelect }) => {
+  onSelectCredential: () => void;
+  selectedClaims: Set<ProofRequestClaim['id']>;
+  onSelectClaim: (id: ProofRequestClaim['id'], selected: boolean) => void;
+}> = ({ data, onSelectCredential, selectedClaims, onSelectClaim }) => {
   const colorScheme = useAppColorScheme();
   const { data: credential } = useCredentialDetail(data.selected?.id);
   return (
@@ -102,20 +103,21 @@ const CredentialItem: FunctionComponent<{
           ),
         }}>
         {data.claims.map((attribute, index, { length }) => {
+          const selected = selectedClaims.has(attribute.id);
           const status = (() => {
             if (!credential) return attribute.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
             if (attribute.required) return SelectorStatus.LockedSelected;
-            return SelectorStatus.SelectedCheck;
+            return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
           })();
 
           return (
             <DataItem
-              key={attribute.key}
+              key={attribute.id}
               attribute={attribute.key}
               value={credential?.claims.find(({ key }) => key === attribute.key)?.value}
               last={length === index + 1}
               status={status}
-              onPress={undefined}
+              onPress={credential && !attribute.required ? () => onSelectClaim(attribute.id, !selected) : undefined}
             />
           );
         })}
@@ -132,7 +134,7 @@ const CredentialItem: FunctionComponent<{
           <Typography color={colorScheme.noticeText} align="center" style={styles.notice}>
             {translate('proofRequest.multipleCredentials.notice')}
           </Typography>
-          <Button type="light" onPress={onSelect} style={styles.noticeButton}>
+          <Button type="light" onPress={onSelectCredential} style={styles.noticeButton}>
             {translate('proofRequest.multipleCredentials.select')}
           </Button>
         </View>
@@ -154,7 +156,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { data: credentials, isLoading } = useCredentials();
 
   const [selectedCredentials, setSelectedCredentials] = useState<
-    Record<CredentialSchema['id'], CredentialDetail['id']>
+    Record<CredentialSchema['id'], CredentialListItem['id']>
   >({});
 
   const displayedData = useMemo(() => {
@@ -176,21 +178,8 @@ const ProofRequestScreen: FunctionComponent = () => {
     }, {});
   }, [request, credentials, selectedCredentials]);
 
-  const onReject = useCallback(() => {
-    ONE.holderRejectProof().catch((e) => reportException(e, 'Reject Proof failure'));
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [rootNavigation]);
-
-  const onSubmit = useCallback(() => {
-    const credentialIds = Object.values(displayedData)
-      .map(({ selected }) => selected?.id)
-      .filter((x): x is string => Boolean(x));
-
-    sharingNavigation.navigate('Processing', { credentialIds });
-  }, [sharingNavigation, displayedData]);
-
-  const onSelect = useCallback(
-    (credentialSchemaId: string) => () => {
+  const onSelectCredential = useCallback(
+    (credentialSchemaId: CredentialSchema['id']) => () => {
       const { selected, options } = displayedData[credentialSchemaId];
       sharingNavigation.navigate('SelectCredential', {
         preselectedCredentialId: selected?.id ?? '',
@@ -210,9 +199,51 @@ const ProofRequestScreen: FunctionComponent = () => {
     }
   }, [selectedCredentialId, credentials]);
 
+  const [selectedClaims, setSelectedClaims] = useState<Record<CredentialSchema['id'], Set<ProofRequestClaim['id']>>>(
+    () =>
+      // initially all claims selected
+      Object.entries(displayedData).reduce(
+        (aggr, [credentialSchemaId, { claims }]) => ({
+          ...aggr,
+          [credentialSchemaId]: new Set(claims.map((claim) => claim.id)),
+        }),
+        {},
+      ),
+  );
+  const onSelectClaim = useCallback(
+    (credentialSchemaId: CredentialSchema['id']) => (id: ProofRequestClaim['id'], selected: boolean) => {
+      setSelectedClaims((prev) => {
+        const newlySelected = new Set(prev[credentialSchemaId]);
+        if (selected) {
+          newlySelected.add(id);
+        } else {
+          newlySelected.delete(id);
+        }
+        return { ...prev, [credentialSchemaId]: newlySelected };
+      });
+    },
+    [],
+  );
+
+  const onReject = useCallback(() => {
+    ONE.holderRejectProof().catch((e) => reportException(e, 'Reject Proof failure'));
+    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+  }, [rootNavigation]);
+
+  const onSubmit = useCallback(() => {
+    const credentialIds = Object.entries(displayedData)
+      .map(([credentialSchemaId, { selected }]) => (selectedClaims[credentialSchemaId].size ? selected?.id : undefined))
+      .filter((x): x is string => Boolean(x));
+
+    sharingNavigation.navigate('Processing', { credentialIds });
+  }, [sharingNavigation, displayedData, selectedClaims]);
+
   const allSelectionsValid =
     displayedData &&
-    Object.values(displayedData).every(({ selected }) => selected && selected.state !== CredentialStateEnum.REVOKED);
+    Object.values(displayedData).every(
+      ({ selected, claims }) =>
+        (selected && selected.state !== CredentialStateEnum.REVOKED) || claims.every((claim) => !claim.required),
+    );
 
   // temporary API missing verifier info
   const verifierName = 'Unknown';
@@ -240,7 +271,13 @@ const ProofRequestScreen: FunctionComponent = () => {
         <ActivityIndicator />
       ) : (
         Object.entries(displayedData).map(([credentialSchemaId, data]) => (
-          <CredentialItem key={credentialSchemaId} data={data} onSelect={onSelect(credentialSchemaId)} />
+          <CredentialItem
+            key={credentialSchemaId}
+            data={data}
+            onSelectCredential={onSelectCredential(credentialSchemaId)}
+            selectedClaims={selectedClaims[credentialSchemaId]}
+            onSelectClaim={onSelectClaim(credentialSchemaId)}
+          />
         ))
       )}
     </SharingScreen>
