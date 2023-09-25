@@ -59,6 +59,10 @@ target 'Wallet' do
             config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
       end
+
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
+      end
     end
   end
 end

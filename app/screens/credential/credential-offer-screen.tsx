@@ -1,5 +1,6 @@
 import {
   Accordion,
+  ActivityIndicator,
   SharingScreen,
   SharingScreenVariation,
   TextAvatar,
@@ -11,12 +12,14 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { useCredentialDetail, useCredentialReject } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { reportException } from '../../utils/reporting';
 
 const DataItem: FunctionComponent<{ attribute: string; value: string; last?: boolean }> = ({
   attribute,
@@ -35,24 +38,32 @@ const DataItem: FunctionComponent<{ attribute: string; value: string; last?: boo
 };
 
 const CredentialOfferScreen: FunctionComponent = () => {
-  const colorScheme = useAppColorScheme();
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
   const issuanceNavigation = useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
 
-  const { credential } = route.params;
+  const { credentialId, interactionId } = route.params;
+
+  const { data: credential } = useCredentialDetail(credentialId);
+
+  const { mutateAsync: rejectCredential } = useCredentialReject();
 
   useBlockOSBackNavigation();
 
+  const onIssuerDetail = useCallback(() => {
+    issuanceNavigation.navigate('CredentialOfferDetail', { credentialId });
+  }, [credentialId, issuanceNavigation]);
+
   const onReject = useCallback(() => {
+    rejectCredential(interactionId).catch((e) => reportException(e, 'Reject credential offer failed'));
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [rootNavigation]);
+  }, [interactionId, rejectCredential, rootNavigation]);
 
   const onAccept = useCallback(() => {
-    issuanceNavigation.navigate('Processing', { credential });
-  }, [credential, issuanceNavigation]);
+    issuanceNavigation.navigate('Processing', { interactionId });
+  }, [interactionId, issuanceNavigation]);
 
-  return (
+  return credential ? (
     <SharingScreen
       variation={SharingScreenVariation.Neutral}
       title={translate('credentialOffer.title')}
@@ -61,36 +72,19 @@ const CredentialOfferScreen: FunctionComponent = () => {
       onCancel={onReject}
       submitLabel={translate('credentialOffer.accept')}
       onSubmit={onAccept}
-      header={
-        <>
-          <View style={styles.header}>
-            <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
-              {translate('credentialDetail.credential.issuer')}
-            </Typography>
-            <Typography color={colorScheme.text}>{credential.issuer}</Typography>
-          </View>
-          <View style={[styles.dataWrapper, { backgroundColor: colorScheme.background }]}>
-            <DataItem attribute={translate('credentialDetail.credential.format')} value={credential.format} />
-            <DataItem
-              attribute={translate('credentialDetail.credential.revocationMethod')}
-              value={credential.revocation}
-            />
-            <DataItem
-              attribute={translate('credentialDetail.credential.transport')}
-              value={credential.transport}
-              last={true}
-            />
-          </View>
-        </>
-      }>
+      receiverTitle={translate('credentialDetail.credential.issuer')}
+      receiverLabel={credential.issuerDid ?? ''}
+      onDetail={onIssuerDetail}>
       <Accordion
-        title={credential.schema}
-        icon={{ component: <TextAvatar produceInitials={true} text={credential.schema} innerSize={48} /> }}>
-        {credential.attributes.map((attribute, index, { length }) => (
-          <DataItem key={attribute.key} attribute={attribute.key} value={attribute.value} last={length === index + 1} />
+        title={credential.schema.name}
+        icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}>
+        {credential.claims.map((claim, index, { length }) => (
+          <DataItem key={claim.id} attribute={claim.key} value={claim.value} last={length === index + 1} />
         ))}
       </Accordion>
     </SharingScreen>
+  ) : (
+    <ActivityIndicator />
   );
 };
 
@@ -106,16 +100,6 @@ const styles = StyleSheet.create({
   dataItemLast: {
     borderBottomWidth: 0,
     marginBottom: 6,
-  },
-  dataWrapper: {
-    paddingHorizontal: 12,
-  },
-  header: {
-    marginBottom: 12,
-    padding: 12,
-  },
-  headerLabel: {
-    marginBottom: 4,
   },
 });
 

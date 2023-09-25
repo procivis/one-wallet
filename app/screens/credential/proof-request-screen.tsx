@@ -245,9 +245,6 @@ const ProofRequestScreen: FunctionComponent = () => {
         (selected && selected.state !== CredentialStateEnum.REVOKED) || claims.every((claim) => !claim.required),
     );
 
-  // temporary API missing verifier info
-  const verifierName = 'Unknown';
-
   return (
     <SharingScreen
       variation={SharingScreenVariation.Neutral}
@@ -263,7 +260,7 @@ const ProofRequestScreen: FunctionComponent = () => {
             <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
               {translate('proofRequest.verifier')}
             </Typography>
-            <Typography color={colorScheme.text}>{verifierName}</Typography>
+            <Typography color={colorScheme.text}>{request.verifierDid}</Typography>
           </View>
         </>
       }>
