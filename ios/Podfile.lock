@@ -345,7 +345,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-one-core (1.0.8153):
+  - react-native-one-core (1.0.8627):
     - React-Core
   - react-native-picker (5.0.0):
     - React-Core
@@ -751,7 +751,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-one-core: 65138f70e7c7c5f563336632f861e754da877c73
+  react-native-one-core: 851ef74afde5633a2bbff672b900f418c31c533d
   react-native-picker: 3470d4d2bda63e0a19a00c627efc14475879993f
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-ultimate-config: 26275a1a4f2e7af5914942ebebbd8df52b5a375e
@@ -786,6 +786,6 @@ SPEC CHECKSUMS:
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 32401f7e137ba367e8016d8daf18c16e3bee1526
+PODFILE CHECKSUM: 8514b5d1238742dbaea85daf8062f00dea9ea4fe
 
 COCOAPODS: 1.12.0
