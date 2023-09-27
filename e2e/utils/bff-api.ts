@@ -42,7 +42,10 @@ async function apiRequest(
 }
 
 async function getCredentialSchema(authToken: string) {
-  return apiRequest('/api/credential-schema/v1?page=0&pageSize=1', authToken).then((res) => res?.values?.[0]);
+  const schemaId = await apiRequest('/api/credential-schema/v1?page=0&pageSize=1', authToken).then(
+    (res) => res?.values?.[0]?.id,
+  );
+  return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
 async function getDid(authToken: string) {
