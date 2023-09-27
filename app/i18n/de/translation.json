@@ -56,8 +56,6 @@
   "invitation.process.failure.title": "Issuance failed",
   "invitation.process.inProgress.subtitle": "Nachweis(e) werden übertragen...",
   "invitation.process.inProgress.title": "Ausstellen des Nachweises",
-  "invitation.process.success.subtitle": "Ihr Nachweis wurde erfolgreich ausgestellt.",
-  "invitation.process.success.title": "Nachweis ausgestellt",
   "onboarding.pinCodeScreen.biometric.cancel": "PIN-Code verwenden",
   "onboarding.pinCodeScreen.biometric.prompt": "Bestätigen Sie Ihre Identität",
   "onboarding.pinCodeScreen.change.check.title": "Aktuellen PIN-Code eingeben",

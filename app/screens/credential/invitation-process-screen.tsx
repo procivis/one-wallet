@@ -21,14 +21,17 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
 
-  const [state, setState] = useState(LoadingResultState.InProgress);
-  const [issuedCredentialId, setIssuedCredentialId] = useState<string>();
+  const [state, setState] = useState<LoadingResultState.InProgress | LoadingResultState.Failure>(
+    LoadingResultState.InProgress,
+  );
   useEffect(() => {
     handleInvitation(invitationUrl)
       .then((result) => {
-        if ('issuedCredentialId' in result) {
-          setIssuedCredentialId(result.issuedCredentialId);
-          setState(LoadingResultState.Success);
+        if ('credentials' in result) {
+          rootNavigation.navigate('IssueCredential', {
+            screen: 'CredentialOffer',
+            params: { credentialId: result.credentials[0].id, interactionId: result.interactionId },
+          });
         } else {
           rootNavigation.navigate('ShareCredential', { screen: 'ProofRequest', params: { request: result } });
         }
@@ -41,10 +44,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const onConfirm = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-    if (state === LoadingResultState.Success && issuedCredentialId) {
-      rootNavigation.navigate('CredentialDetail', { credentialId: issuedCredentialId });
-    }
-  }, [rootNavigation, state, issuedCredentialId]);
+  }, [rootNavigation]);
 
   return (
     <LoadingResult

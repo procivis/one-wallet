@@ -1,4 +1,4 @@
-import ONE, { InvitationResult } from 'react-native-one-core';
+import ONE, { CredentialStateEnum, InvitationResult } from 'react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useStores } from '../models';
@@ -16,7 +16,7 @@ export const useCredentials = () => {
         // TODO: workaround pagination for now, until it's supported by UI
         pageSize: 10000,
         organisationId: ONE_CORE_ORGANISATION_ID,
-      }).then(({ values }) => values),
+      }).then(({ values }) => values.filter((credential) => credential.state === CredentialStateEnum.ACCEPTED)),
     {
       keepPreviousData: true,
     },
@@ -39,9 +39,29 @@ export const useInvitationHandler = () => {
   const { walletStore } = useStores();
   return useMutation(async (invitationUrl: string) => ONE.handleInvitation(invitationUrl, walletStore.holderDidId), {
     onSuccess: (result: InvitationResult) => {
-      if ('issuedCredentialId' in result) {
+      if ('credentials' in result) {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
       }
+    },
+  });
+};
+
+export const useCredentialAccept = () => {
+  const queryClient = useQueryClient();
+  return useMutation(async (interactionId: string) => ONE.holderAcceptCredential(interactionId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+    },
+  });
+};
+
+export const useCredentialReject = () => {
+  const queryClient = useQueryClient();
+  return useMutation(async (interactionId: string) => ONE.holderRejectCredential(interactionId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
     },
   });
 };
