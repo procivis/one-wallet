@@ -1,7 +1,7 @@
 import { expect } from 'detox';
 
-import CredentialDetailScreen from './page-objects/CredentialDetailScreen';
-import InvitationProcessScreen from './page-objects/InvitationProcessScreen';
+import CredentialAcceptProcessScreen from './page-objects/CredentialAcceptProcessScreen';
+import CredentialOfferScreen from './page-objects/CredentialOfferScreen';
 import WalletScreen from './page-objects/WalletScreen';
 import { bffLogin, createCredential, offerCredential } from './utils/bff-api';
 import { pinSetup } from './utils/init';
@@ -19,11 +19,11 @@ describe('Credential issuance', () => {
     const invitationUrl = await offerCredential(credentialId, authToken);
     await scanURL(invitationUrl);
 
-    await expect(InvitationProcessScreen.screen).toBeVisible();
-    await InvitationProcessScreen.closeButton.tap();
+    await expect(CredentialOfferScreen.screen).toBeVisible();
+    await CredentialOfferScreen.acceptButton.tap();
 
-    await expect(CredentialDetailScreen.screen).toBeVisible();
-    await CredentialDetailScreen.backButton.tap();
+    await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+    await CredentialAcceptProcessScreen.closeButton.tap();
 
     await expect(WalletScreen.screen).toBeVisible();
   });
