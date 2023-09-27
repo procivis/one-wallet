@@ -65,6 +65,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   return credential ? (
     <SharingScreen
+      testID="CredentialOfferScreen"
       variation={SharingScreenVariation.Neutral}
       title={translate('credentialOffer.title')}
       contentTitle={translate('credentialOffer.credential')}
