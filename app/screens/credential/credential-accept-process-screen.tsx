@@ -40,6 +40,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
+      testID="CredentialAcceptProcessScreen"
       variation={LoadingResultVariation.Neutral}
       state={state}
       title={translate(`credentialAccept.${state}.title`)}
