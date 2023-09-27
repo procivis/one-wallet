@@ -1464,9 +1464,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#a5b964d31b3c4325ff2b6ed14375dedd4676cfe7":
+"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#5ccb55eed9c1d5ffb44c1bcab38db4b1706370fe":
   version "0.1.0"
-  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#a5b964d31b3c4325ff2b6ed14375dedd4676cfe7"
+  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#5ccb55eed9c1d5ffb44c1bcab38db4b1706370fe"
 
 "@react-native-async-storage/async-storage@^1.14.1":
   version "1.18.1"
@@ -3892,10 +3892,10 @@ detect-node@^2.0.4, detect-node@^2.1.0:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
-detox@^20.9.0:
-  version "20.9.0"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.9.0.tgz#936050d7d72e141aebd92483e8893598686aa76a"
-  integrity sha512-juf0UQLcdk+CsggD25y8sDu0bYzJL9VWmwPKKtW2jsjOigI16jO1xwKCCYsuPYjprQmH+cJWXQ5k03zF1+JvXQ==
+detox@^20.12.1:
+  version "20.12.1"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-20.12.1.tgz#2d2d52abcecb214e8bb587ce4a0157da271ae480"
+  integrity sha512-qe56xeqRTE3v6WVKBKqiXtqlj0ZcnklbFlzyQAcICOCXWNZvRjtXZhKyBq0PzKjxInH1RajjsEJQWe5iYVX/9Q==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
