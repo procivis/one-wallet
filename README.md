@@ -49,6 +49,18 @@ Icons are in asstes folder under `AppIcon.{CONFIG_NAME}` image set.
 
 In order to run the E2E tests, one needs to build a proper detox app build first:
 
+- Android build (once)
+
+```shell
+npx detox build --configuration android.emu.release
+```
+
+- Android run tests
+
+```shell
+npx detox test --configuration android.emu.release
+```
+
 ```
 npx detox build --configuration ios.sim.release
 ```
