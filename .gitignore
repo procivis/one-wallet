@@ -86,3 +86,5 @@ rnuc.xcconfig
 
 # Detox
 detox-junit.xml
+
+*.log
