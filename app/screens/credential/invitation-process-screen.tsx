@@ -27,10 +27,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
   useEffect(() => {
     handleInvitation(invitationUrl)
       .then((result) => {
-        if ('credentials' in result) {
+        if ('credentialIds' in result) {
           rootNavigation.navigate('IssueCredential', {
             screen: 'CredentialOffer',
-            params: { credentialId: result.credentials[0].id, interactionId: result.interactionId },
+            params: { credentialId: result.credentialIds[0], interactionId: result.interactionId },
           });
         } else {
           rootNavigation.navigate('ShareCredential', { screen: 'ProofRequest', params: { request: result } });

@@ -39,7 +39,7 @@ export const useInvitationHandler = () => {
   const { walletStore } = useStores();
   return useMutation(async (invitationUrl: string) => ONE.handleInvitation(invitationUrl, walletStore.holderDidId), {
     onSuccess: (result: InvitationResult) => {
-      if ('credentials' in result) {
+      if ('credentialIds' in result) {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
       }
     },

@@ -21,7 +21,7 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   const [state, setState] = useState(LoadingResultState.InProgress);
   useEffect(() => {
-    ONE.holderSubmitProof(route.params.credentialIds)
+    ONE.holderSubmitProof(route.params.interactionId, route.params.credentials)
       .then(() => setState(LoadingResultState.Success))
       .catch((e) => {
         setState(LoadingResultState.Failure);
