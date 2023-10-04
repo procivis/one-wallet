@@ -1,6 +1,5 @@
 import {
   Accordion,
-  ActivityIndicator,
   Button,
   DetailScreen,
   formatDateTime,
@@ -11,11 +10,11 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CredentialListItem, InvitationResultProofRequest } from 'react-native-one-core';
+import { PresentationDefinitionRequestedCredential } from 'react-native-one-core';
 
-import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
+import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
@@ -41,7 +40,7 @@ const DataItem: FunctionComponent<{
 const Credential: FunctionComponent<{
   credentialId: string;
   selected: boolean;
-  request: InvitationResultProofRequest;
+  request: PresentationDefinitionRequestedCredential;
   onPress?: () => void;
 }> = ({ credentialId, selected, request, onPress }) => {
   const { data: credential } = useCredentialDetail(credentialId);
@@ -57,15 +56,12 @@ const Credential: FunctionComponent<{
       icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
       rightAccessory={<Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />}
       contentStyle={styles.itemContent}>
-      {request.claims
-        .filter((claim) => claim.credentialSchema.id === credential.schema.id)
-        .map((claim) => (
-          <DataItem
-            key={claim.id}
-            attribute={claim.key}
-            value={credential.claims.find(({ key }) => key === claim.key)?.value ?? '-'}
-          />
-        ))}
+      {request.fields.map((field) => {
+        const claim = credential.claims.find(({ key }) => key === field.keyMap[credentialId]);
+        return (
+          <DataItem key={field.id} attribute={field.name ?? claim?.key ?? field.id ?? ''} value={claim?.value ?? '-'} />
+        );
+      })}
     </Accordion>
   ) : null;
 };
@@ -74,47 +70,34 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const navigation = useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
 
-  const { preselectedCredentialId, options, request } = route.params;
-  const { data: credentials, isLoading } = useCredentials();
+  const { preselectedCredentialId, request } = route.params;
 
-  const potentialCredentials = useMemo(
-    () =>
-      options
-        .map((credentialId) => credentials?.find(({ id }) => id === credentialId))
-        .filter((x): x is CredentialListItem => Boolean(x)),
-    [credentials, options],
-  );
-
-  const [credentialId, setCredentialId] = useState<string>(preselectedCredentialId);
+  const [selectedCredentialId, setSelectedCredentialId] = useState<string>(preselectedCredentialId);
   const onConfirm = useCallback(() => {
     navigation.navigate({
       name: 'ProofRequest',
       merge: true,
       params: {
-        selectedCredentialId: credentialId,
+        selectedCredentialId,
       } as ShareCredentialNavigatorParamList['ProofRequest'],
     });
-  }, [navigation, credentialId]);
+  }, [navigation, selectedCredentialId]);
 
   return (
     <DetailScreen onBack={navigation.goBack} title={translate('proofRequest.selectCredential.title')}>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        potentialCredentials.map((credential) => {
-          const selected = credential.id === credentialId;
-          return (
-            <View key={credential.id} style={styles.item}>
-              <Credential
-                selected={selected}
-                onPress={selected ? undefined : () => setCredentialId(credential.id)}
-                credentialId={credential.id}
-                request={request}
-              />
-            </View>
-          );
-        })
-      )}
+      {request.applicableCredentials.map((credentialId) => {
+        const selected = selectedCredentialId === credentialId;
+        return (
+          <View key={credentialId} style={styles.item}>
+            <Credential
+              selected={selected}
+              onPress={selected ? undefined : () => setSelectedCredentialId(credentialId)}
+              credentialId={credentialId}
+              request={request}
+            />
+          </View>
+        );
+      })}
 
       <View style={styles.bottom}>
         <Button onPress={onConfirm}>{translate('proofRequest.selectCredential.select')}</Button>
