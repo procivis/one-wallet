@@ -1,15 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { InvitationResultProofRequest } from 'react-native-one-core';
+import {
+  InvitationResultProofRequest,
+  PresentationDefinitionRequestedCredential,
+  PresentationSubmitCredentialRequest,
+} from 'react-native-one-core';
 
 export type ShareCredentialNavigatorParamList = {
   ProofRequest: { request: InvitationResultProofRequest; selectedCredentialId?: string };
   SelectCredential: {
-    request: InvitationResultProofRequest;
+    request: PresentationDefinitionRequestedCredential;
     preselectedCredentialId: string;
-    options: string[]; // credential ids
   };
-  Processing: { credentialIds: string[] };
+  Processing: {
+    interactionId: string;
+    credentials: Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest>;
+  };
 };
 
 export type ShareCredentialRouteProp<RouteName extends keyof ShareCredentialNavigatorParamList> = RouteProp<
