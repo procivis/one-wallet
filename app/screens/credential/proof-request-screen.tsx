@@ -132,7 +132,6 @@ const ProofRequestScreen: FunctionComponent = () => {
     <SharingScreen
       variation={SharingScreenVariation.Neutral}
       title={translate('proofRequest.title')}
-      contentTitle={translate('proofRequest.attributes')}
       cancelLabel={translate('common.cancel')}
       onCancel={onReject}
       submitLabel={translate('proofRequest.confirm')}

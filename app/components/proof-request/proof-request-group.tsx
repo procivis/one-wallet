@@ -3,6 +3,8 @@ import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PresentationDefinitionRequestGroup } from 'react-native-one-core';
 
+import { translate } from '../../i18n';
+
 export const ProofRequestGroup: FunctionComponent<
   PropsWithChildren<{
     request: PresentationDefinitionRequestGroup;
@@ -10,13 +12,18 @@ export const ProofRequestGroup: FunctionComponent<
   }>
 > = ({ request, last, children }) => {
   const colorScheme = useAppColorScheme();
+  const title = request.name || translate('proofRequest.attributes');
   return (
     <View style={[styles.group, last && styles.last, { borderColor: colorScheme.lighterGrey }]}>
-      {request.name ? (
-        <Typography color={colorScheme.text} size="sml" bold={true} style={styles.title}>
-          {request.name}
-        </Typography>
-      ) : null}
+      <Typography
+        color={colorScheme.text}
+        size="sml"
+        bold={true}
+        caps={true}
+        accessibilityRole="header"
+        style={styles.title}>
+        {title}
+      </Typography>
       {request.purpose ? (
         <Typography color={colorScheme.textSecondary} size="sml" style={styles.subtitle}>
           {request.purpose}
