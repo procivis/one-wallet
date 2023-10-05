@@ -49,7 +49,9 @@ stages:
 
 .modules_setup:
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key:
+      files:
+        - yarn.lock
     paths:
       - node_modules/
     policy: pull
@@ -59,15 +61,11 @@ stages:
 
 build_deps:
   stage: prepare
-  extends:
-    - .modules_setup
+  extends: .modules_setup
   script:
     - ''
   cache:
     policy: pull-push
-    fallback_keys:
-      - $CI_DEFAULT_BRANCH
-
 
 lint:
   stage: test
@@ -104,25 +102,13 @@ sonarqube-check:
   variables:
     SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
     GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    - key: ${CI_JOB_NAME}
-      paths:
-        - .sonar/cache
-    - key: ${CI_COMMIT_REF_SLUG}
-      paths:
-        - node_modules/
-      policy: pull
-  before_script:
-    - >
-      if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
-        echo "node_modules exists and seems valid, not re-installing deps."
-      fi
   script:
     - sonar-scanner
   allow_failure: true
   extends:
+    - .modules_setup
     - .only_main_or_manual
-
+  before_script: [] # disable node_module fetching, yarn not available in the image
 
 bitrise_ios_e2e:
   variables:
