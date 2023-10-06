@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import ONE, { OneError, OneErrorCode } from 'react-native-one-core';
+import ONE, { DidTypeEnum, OneError, OneErrorCode } from 'react-native-one-core';
 
 import { useStores } from '../models';
 import { reportException } from '../utils/reporting';
@@ -19,7 +19,31 @@ export const useInitializeONECore = () => {
         }
         throw err;
       })
-      .then(() => ONE.createLocalDid(`did:key:${Math.floor(Math.random() * 10000000)}`, ONE_CORE_ORGANISATION_ID))
+      .then(() =>
+        ONE.generateKey({
+          organisationId: ONE_CORE_ORGANISATION_ID,
+          keyType: 'EDDSA',
+          keyParams: {},
+          name: 'holder-key',
+          storageType: 'INTERNAL',
+          storageParams: {},
+        }),
+      )
+      .then((keyId) =>
+        ONE.createDid({
+          organisationId: ONE_CORE_ORGANISATION_ID,
+          name: 'holder-did',
+          didType: DidTypeEnum.LOCAL,
+          didMethod: 'KEY',
+          keys: {
+            authentication: [keyId],
+            assertion: [keyId],
+            keyAgreement: [keyId],
+            capabilityInvocation: [keyId],
+            capabilityDelegation: [keyId],
+          },
+        }),
+      )
       .then((holderDidId) => {
         walletStore.walletSetup(holderDidId);
       })
