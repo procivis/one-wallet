@@ -35,6 +35,7 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
+      testID="ProofRequestAcceptProcessScreen"
       variation={LoadingResultVariation.Neutral}
       state={state}
       title={translate(`proofRequest.process.${state}.title`)}
