@@ -85,6 +85,7 @@
     "@types/react-native-keep-awake": "^2.0.3",
     "@types/react-native-touch-id": "^4.4.0",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/uuid": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "5.59.2",
     "@typescript-eslint/parser": "5.59.2",
     "babel-jest": "^29.2.1",
@@ -122,7 +123,8 @@
     "shelljs": "^0.8.4",
     "solidarity": "2.3.1",
     "sort-json": "^2.0.0",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "uuid": "^9.0.1"
   },
   "jest": {
     "preset": "react-native",

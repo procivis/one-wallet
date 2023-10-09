@@ -84,7 +84,10 @@ const SelectCredentialScreen: FunctionComponent = () => {
   }, [navigation, selectedCredentialId]);
 
   return (
-    <DetailScreen onBack={navigation.goBack} title={translate('proofRequest.selectCredential.title')}>
+    <DetailScreen
+      testID="ProofRequestSelectCredentialScreen"
+      onBack={navigation.goBack}
+      title={translate('proofRequest.selectCredential.title')}>
       {request.applicableCredentials.map((credentialId) => {
         const selected = selectedCredentialId === credentialId;
         return (

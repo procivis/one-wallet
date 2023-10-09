@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { v4 as uuidv4 } from 'uuid';
 
 const BFF_BASE_URL = 'https://desk.dev.one-trust-solution.com';
 const LOGIN = {
@@ -48,6 +49,10 @@ async function getCredentialSchema(authToken: string) {
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
+async function getProofSchemaDetail(proofSchemaId: string, authToken: string) {
+  return apiRequest(`/api/proof-schema/v1/${proofSchemaId}`, authToken);
+}
+
 async function getDid(authToken: string) {
   return apiRequest('/api/did/v1?page=0&pageSize=1', authToken).then((res) => res?.values?.[0]);
 }
@@ -87,6 +92,36 @@ export async function createCredential(authToken: string): Promise<string> {
   }).then((res) => res.id);
 }
 
+export async function createProofSchema(authToken: string): Promise<Record<string, any>> {
+  const credentialSchema: Record<string, any> = await getCredentialSchema(authToken);
+  const schemaClaim = credentialSchema.claims[0];
+  const proofSchemaData = {
+    name: `detox-e2e-test-${uuidv4()}`,
+    expireDuration: 0,
+    claimSchemas: [
+      {
+        id: schemaClaim.id,
+        required: true,
+      },
+    ],
+  };
+  return await apiRequest('/api/proof-schema/v1', authToken, 'POST', proofSchemaData).then((res) =>
+    getProofSchemaDetail(res.id, authToken),
+  );
+}
+
+export async function createProofRequest(authToken: string) {
+  const did: Record<string, any> = await getDid(authToken);
+  const proofSchema: Record<string, any> = await createProofSchema(authToken);
+  await createCredential(authToken);
+  const proofRequestData = {
+    proofSchemaId: proofSchema.id,
+    transport: 'PROCIVIS_TEMPORARY',
+    verifierDid: did.id,
+  };
+  return await apiRequest('/api/proof-request/v1', authToken, 'POST', proofRequestData).then((res) => res.id);
+}
+
 /**
  * Get credential issuance invitation URL
  * @param credentialId
@@ -95,4 +130,8 @@ export async function createCredential(authToken: string): Promise<string> {
  */
 export async function offerCredential(credentialId: string, authToken: string): Promise<string> {
   return apiRequest(`/api/credential/v1/${credentialId}/share`, authToken, 'POST').then((res) => res.url);
+}
+
+export async function requestProof(proofRequestId: string, authToken: string): Promise<string> {
+  return apiRequest(`/api/proof-request/v1/${proofRequestId}/share`, authToken, 'POST').then((res) => res.url);
 }
