@@ -72,3 +72,12 @@ Then run the tests:
 ```
 npx detox test --configuration ios.sim.release
 ```
+
+### Useful command:
+
+- Restart adb server
+
+```shell
+adb kill-server
+adb start-server
+```
