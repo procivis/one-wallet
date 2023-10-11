@@ -1464,9 +1464,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#806ec21ca4d940c2b61c76a3173a89503b883653":
+"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#478eb2b03a9c57fb6a7ef66086789f63c81a8f89":
   version "0.1.0"
-  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#806ec21ca4d940c2b61c76a3173a89503b883653"
+  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#478eb2b03a9c57fb6a7ef66086789f63c81a8f89"
 
 "@react-native-async-storage/async-storage@^1.14.1":
   version "1.18.1"

@@ -6,17 +6,15 @@ import ProofRequestAcceptProcessScreen from './page-objects/ProofRequestAcceptPr
 import ProofRequestSharingScreen from './page-objects/ProofRequestScreen';
 import WalletScreen from './page-objects/WalletScreen';
 import { bffLogin, createCredential, createProofRequest, offerCredential, requestProof } from './utils/bff-api';
+import { verifyButtonEnabled } from './utils/button';
 import { pinSetup } from './utils/init';
 import { scanURL } from './utils/scan';
 
 describe('ONE-614: Proof request', () => {
-  beforeAll(async () => {
-    await device.launchApp({ permissions: { camera: 'YES' } });
-    await pinSetup();
-  });
-
   describe('Proof request with Credentials', () => {
     beforeAll(async () => {
+      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await pinSetup();
       const authToken = await bffLogin();
       const credentialId = await createCredential(authToken);
       const invitationUrl = await offerCredential(credentialId, authToken);
@@ -51,17 +49,18 @@ describe('ONE-614: Proof request', () => {
   });
 
   describe('Proof request without credentials', () => {
+    beforeEach(async () => {
+      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await pinSetup();
+    });
+
     it('Without credentials', async () => {
       const authToken = await bffLogin();
       const proofRequestId = await createProofRequest(authToken);
       const invitationUrl = await requestProof(proofRequestId, authToken);
       await scanURL(invitationUrl);
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
-      await expect(ProofRequestSharingScreen.shareButton);
-      // TODO: Verify is the share button disabled
-      // await ProofRequestSharingScreen.shareButton.getAttributes().then((attrs) => {
-      //   console.log('attrs', attrs); //attrs.enabled always true
-      // });
+      await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);
     });
   });
 });
