@@ -35,7 +35,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   useBlockOSBackNavigation();
 
   const { request, selectedCredentialId } = route.params;
-  const presentationDefintion = useMemoAsync(() => ONE.getPresentationDefinition(request.proofId), [request]);
+  const presentationDefinition = useMemoAsync(() => ONE.getPresentationDefinition(request.proofId), [request]);
   const proof = useMemoAsync(() => ONE.getProof(request.proofId), [request]);
 
   const [selectedCredentials, setSelectedCredentials] = useState<
@@ -44,13 +44,13 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   // initial selection of credentials/claims
   useEffect(() => {
-    if (!presentationDefintion) return;
+    if (!presentationDefinition) return;
 
     const preselected: Record<
       PresentationDefinitionRequestedCredential['id'],
       PresentationSubmitCredentialRequest | undefined
     > = {};
-    presentationDefintion.requestGroups.forEach((group) =>
+    presentationDefinition.requestGroups.forEach((group) =>
       group.requestedCredentials.forEach((credential) => {
         const credentialId = credential.applicableCredentials[0];
         if (!credentialId) {
@@ -64,12 +64,12 @@ const ProofRequestScreen: FunctionComponent = () => {
     );
 
     setSelectedCredentials(preselected);
-  }, [presentationDefintion]);
+  }, [presentationDefinition]);
 
   const [activeSelection, setActiveSelection] = useState<PresentationDefinitionRequestedCredential['id']>();
   const onSelectCredential = useCallback(
     (requestCredentialId: PresentationDefinitionRequestedCredential['id']) => () => {
-      const requestedCredential = presentationDefintion?.requestGroups[0].requestedCredentials.find(
+      const requestedCredential = presentationDefinition?.requestGroups[0].requestedCredentials.find(
         (credential) => credential.id === requestCredentialId,
       ) as PresentationDefinitionRequestedCredential;
 
@@ -79,7 +79,7 @@ const ProofRequestScreen: FunctionComponent = () => {
         request: requestedCredential,
       });
     },
-    [sharingNavigation, presentationDefintion, selectedCredentials],
+    [sharingNavigation, presentationDefinition, selectedCredentials],
   );
   // result of selection is propagated using the navigation param `selectedCredentialId`
   useEffect(() => {
@@ -126,7 +126,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, [sharingNavigation, request, selectedCredentials]);
 
   const allSelectionsValid =
-    presentationDefintion && Object.values(selectedCredentials).every((selection) => selection?.credentialId);
+    presentationDefinition && Object.values(selectedCredentials).every((selection) => selection?.credentialId);
 
   return (
     <SharingScreen
@@ -145,10 +145,10 @@ const ProofRequestScreen: FunctionComponent = () => {
           <Typography color={colorScheme.text}>{proof?.verifierDid}</Typography>
         </View>
       }>
-      {!presentationDefintion ? (
+      {!presentationDefinition ? (
         <ActivityIndicator />
       ) : (
-        presentationDefintion.requestGroups.map((group, index, { length }) => (
+        presentationDefinition.requestGroups.map((group, index, { length }) => (
           <ProofRequestGroup key={group.id} request={group} last={length === index + 1}>
             {group.requestedCredentials.map((credential) => (
               <ProofRequestCredential
