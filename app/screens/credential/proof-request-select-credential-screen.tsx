@@ -10,11 +10,11 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { PresentationDefinitionRequestedCredential } from 'react-native-one-core';
+import { CredentialStateEnum, PresentationDefinitionRequestedCredential } from 'react-native-one-core';
 
-import { useCredentialDetail } from '../../hooks/credentials';
+import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
@@ -69,6 +69,7 @@ const Credential: FunctionComponent<{
 const SelectCredentialScreen: FunctionComponent = () => {
   const navigation = useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
+  const { data: allCredentials } = useCredentials();
 
   const { preselectedCredentialId, request } = route.params;
 
@@ -83,12 +84,20 @@ const SelectCredentialScreen: FunctionComponent = () => {
     });
   }, [navigation, selectedCredentialId]);
 
+  const selectionOptions = useMemo(
+    () =>
+      request.applicableCredentials.filter((credentialId) =>
+        allCredentials?.some(({ id, state }) => id === credentialId && state === CredentialStateEnum.ACCEPTED),
+      ),
+    [allCredentials, request],
+  );
+
   return (
     <DetailScreen
       testID="ProofRequestSelectCredentialScreen"
       onBack={navigation.goBack}
       title={translate('proofRequest.selectCredential.title')}>
-      {request.applicableCredentials.map((credentialId) => {
+      {selectionOptions.map((credentialId) => {
         const selected = selectedCredentialId === credentialId;
         return (
           <View key={credentialId} style={styles.item}>

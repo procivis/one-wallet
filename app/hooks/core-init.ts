@@ -42,6 +42,7 @@ export const useInitializeONECore = () => {
             capabilityInvocation: [keyId],
             capabilityDelegation: [keyId],
           },
+          params: {},
         }),
       )
       .then((holderDidId) => {
