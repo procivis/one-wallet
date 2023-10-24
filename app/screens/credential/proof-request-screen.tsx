@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ONE, {
+  CredentialStateEnum,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
@@ -18,6 +19,7 @@ import ONE, {
 
 import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
+import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import {
@@ -34,8 +36,23 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   useBlockOSBackNavigation();
 
+  const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
+  const { data: allCredentials } = useCredentials();
+
   const { request, selectedCredentialId } = route.params;
-  const presentationDefinition = useMemoAsync(() => ONE.getPresentationDefinition(request.proofId), [request]);
+  const presentationDefinition = useMemoAsync(async () => {
+    const definition = await ONE.getPresentationDefinition(request.proofId);
+
+    // refresh revocation status of the applicable credentials
+    const credentialIds = new Set<string>(
+      definition.requestGroups.flatMap(({ requestedCredentials }) =>
+        requestedCredentials.flatMap(({ applicableCredentials }) => applicableCredentials),
+      ),
+    );
+    await checkRevocation(Array.from(credentialIds)).catch((e) => reportException(e, 'Revocation check failed'));
+
+    return definition;
+  }, [checkRevocation, request]);
   const proof = useMemoAsync(() => ONE.getProof(request.proofId), [request]);
 
   const [selectedCredentials, setSelectedCredentials] = useState<
@@ -44,7 +61,7 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   // initial selection of credentials/claims
   useEffect(() => {
-    if (!presentationDefinition) return;
+    if (!presentationDefinition || !allCredentials) return;
 
     const preselected: Record<
       PresentationDefinitionRequestedCredential['id'],
@@ -52,7 +69,10 @@ const ProofRequestScreen: FunctionComponent = () => {
     > = {};
     presentationDefinition.requestGroups.forEach((group) =>
       group.requestedCredentials.forEach((credential) => {
-        const credentialId = credential.applicableCredentials[0];
+        const credentialId =
+          credential.applicableCredentials.find((credId) =>
+            allCredentials.some(({ id, state }) => id === credId && state === CredentialStateEnum.ACCEPTED),
+          ) || credential.applicableCredentials[0];
         if (!credentialId) {
           preselected[credential.id] = undefined;
           return;
@@ -64,7 +84,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     );
 
     setSelectedCredentials(preselected);
-  }, [presentationDefinition]);
+  }, [presentationDefinition, allCredentials]);
 
   const [activeSelection, setActiveSelection] = useState<PresentationDefinitionRequestedCredential['id']>();
   const onSelectCredential = useCallback(
@@ -126,7 +146,14 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, [sharingNavigation, request, selectedCredentials]);
 
   const allSelectionsValid =
-    presentationDefinition && Object.values(selectedCredentials).every((selection) => selection?.credentialId);
+    presentationDefinition &&
+    Object.values(selectedCredentials).every(
+      (selection) =>
+        selection?.credentialId &&
+        allCredentials?.some(
+          ({ id, state }) => id === selection.credentialId && state === CredentialStateEnum.ACCEPTED,
+        ),
+    );
 
   return (
     <SharingScreen
@@ -145,7 +172,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           <Typography color={colorScheme.text}>{proof?.verifierDid}</Typography>
         </View>
       }>
-      {!presentationDefinition ? (
+      {!presentationDefinition || !allCredentials ? (
         <ActivityIndicator />
       ) : (
         presentationDefinition.requestGroups.map((group, index, { length }) => (
@@ -154,6 +181,7 @@ const ProofRequestScreen: FunctionComponent = () => {
               <ProofRequestCredential
                 key={credential.id}
                 request={credential}
+                allCredentials={allCredentials}
                 selectedCredentialId={selectedCredentials[credential.id]?.credentialId}
                 onSelectCredential={onSelectCredential(credential.id)}
                 selectedFields={selectedCredentials[credential.id]?.submitClaims}
