@@ -10,6 +10,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, PropsWithChildren, useCallback } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import { CredentialStateEnum } from 'react-native-one-core';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
@@ -106,6 +107,12 @@ const CredentialDetailScreen: FunctionComponent = () => {
           attribute={translate('credentialDetail.credential.revocationMethod')}
           value={credential.schema.revocationMethod}
         />
+        {credential.state === CredentialStateEnum.REVOKED ? (
+          <DataItem
+            attribute={translate('credentialDetail.credential.status')}
+            value={translate('credentialDetail.log.revoke')}
+          />
+        ) : null}
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
         {credential.claims.map((attribute) => (
@@ -113,6 +120,15 @@ const CredentialDetailScreen: FunctionComponent = () => {
         ))}
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
+        <View style={styles.logTitlePadding} />
+        {credential.revocationDate ? (
+          <ListItem
+            title={translate('credentialDetail.log.revoke')}
+            subtitle={formatDateTime(new Date(credential.revocationDate))}
+            style={styles.logItem}
+            rightAccessory={null}
+          />
+        ) : null}
         <ListItem
           title={translate('credentialDetail.log.issue')}
           subtitle={formatDateTime(new Date(credential.issuanceDate))}
@@ -134,8 +150,10 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   logItem: {
-    marginTop: 12,
     paddingHorizontal: 0,
+  },
+  logTitlePadding: {
+    marginBottom: 12,
   },
   section: {
     borderRadius: 20,
