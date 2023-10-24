@@ -8,15 +8,17 @@ import {
 } from '@procivis/react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
+import { CredentialStateEnum } from 'react-native-one-core';
 
 import { EmptyIcon, NextIcon, SettingsIcon } from '../../components/icon/wallet-icon';
-import { useCredentials } from '../../hooks/credentials';
+import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
 import { useDeepLink } from '../../hooks/deep-link';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { reportException } from '../../utils/reporting';
 import TabBarAwareContainer from './tab-bar-aware-container';
 
 const WalletScreen: FunctionComponent = observer(() => {
@@ -31,6 +33,15 @@ const WalletScreen: FunctionComponent = observer(() => {
   } = useStores();
 
   const { data: credentials } = useCredentials();
+  const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
+
+  const revocationCheckPerformed = useRef<boolean>(false);
+  useEffect(() => {
+    if (!revocationCheckPerformed.current && credentials?.length) {
+      revocationCheckPerformed.current = true;
+      checkRevocation(credentials.map(({ id }) => id)).catch((e) => reportException(e, 'Revocation check failed'));
+    }
+  }, [checkRevocation, credentials]);
 
   const handleWalletSettingsClick = useCallback(() => {
     navigation.navigate('Settings');
@@ -74,13 +85,19 @@ const WalletScreen: FunctionComponent = observer(() => {
             emptyListIconStyle={styles.emptyIcon}
             emptyListTitle={translate('wallet.walletScreen.credentialsList.empty.title')}
             emptyListSubtitle={translate('wallet.walletScreen.credentialsList.empty.subtitle')}
-            items={credentials.map((credential) => ({
-              title: credential.schema.name,
-              subtitle: formatDateTime(new Date(credential.issuanceDate)),
-              icon: { component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> },
-              iconStyle: styles.itemIcon,
-              rightAccessory: <NextIcon color={colorScheme.text} />,
-            }))}
+            items={credentials.map((credential) => {
+              const revoked = credential.state === CredentialStateEnum.REVOKED;
+              return {
+                title: credential.schema.name,
+                subtitle: revoked
+                  ? translate('credentialDetail.log.revoke')
+                  : formatDateTime(new Date(credential.issuanceDate)),
+                subtitleStyle: { color: revoked ? colorScheme.alertText : colorScheme.text },
+                icon: { component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> },
+                iconStyle: styles.itemIcon,
+                rightAccessory: <NextIcon color={colorScheme.text} />,
+              };
+            })}
             onItemSelected={handleCredentialPress}
           />
         ) : (
