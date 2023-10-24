@@ -9,10 +9,11 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   CredentialListItem,
+  CredentialStateEnum,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
 } from 'react-native-one-core';
@@ -53,30 +54,43 @@ const DataItem: FunctionComponent<{
 
 export const ProofRequestCredential: FunctionComponent<{
   request: PresentationDefinitionRequestedCredential;
+  allCredentials: CredentialListItem[];
   selectedCredentialId?: CredentialListItem['id'];
   onSelectCredential?: () => void;
   selectedFields?: Array<PresentationDefinitionField['id']>;
   onSelectField: (id: PresentationDefinitionField['id'], selected: boolean) => void;
-}> = ({ request, selectedCredentialId, onSelectCredential, selectedFields, onSelectField }) => {
+}> = ({ request, allCredentials, selectedCredentialId, onSelectCredential, selectedFields, onSelectField }) => {
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } = useCredentialDetail(selectedCredentialId);
 
   const name = request.name ?? credential?.schema.name ?? request.id;
 
+  const selectionOptions = useMemo(
+    () =>
+      request.applicableCredentials.filter((credentialId) =>
+        allCredentials.some(({ id, state }) => id === credentialId && state === CredentialStateEnum.ACCEPTED),
+      ),
+    [allCredentials, request],
+  );
+
   if (isLoading) {
     return null;
   }
+
+  const revoked = credential?.state === CredentialStateEnum.REVOKED;
 
   return (
     <>
       <Accordion
         title={name}
         subtitle={
-          credential?.issuanceDate
+          revoked
+            ? translate('credentialDetail.log.revoke')
+            : credential?.issuanceDate
             ? formatDateTime(new Date(credential.issuanceDate))
             : translate('proofRequest.missingCredential.title')
         }
-        subtitleStyle={credential ? undefined : { color: colorScheme.alertText }}
+        subtitleStyle={!credential || revoked ? { color: colorScheme.alertText } : undefined}
         icon={{
           component: credential ? (
             <TextAvatar produceInitials={true} text={name} innerSize={48} />
@@ -87,7 +101,7 @@ export const ProofRequestCredential: FunctionComponent<{
         {request.fields.map((field, index, { length }) => {
           const selected = selectedFields?.includes(field.id);
           const status = (() => {
-            if (!credential) return field.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
+            if (!credential || revoked) return field.required ? SelectorStatus.LockedInvalid : SelectorStatus.Invalid;
             if (field.required) return SelectorStatus.LockedSelected;
             return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
           })();
@@ -114,7 +128,14 @@ export const ProofRequestCredential: FunctionComponent<{
           </Typography>
         </View>
       )}
-      {request.applicableCredentials.length > 1 && (
+      {revoked && (
+        <View style={{ backgroundColor: colorScheme.alert }}>
+          <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
+            {translate('proofRequest.revokedCredential.notice')}
+          </Typography>
+        </View>
+      )}
+      {selectionOptions.length > 1 && (
         <View style={{ backgroundColor: colorScheme.notice }}>
           <Typography color={colorScheme.noticeText} align="center" style={styles.notice}>
             {translate('proofRequest.multipleCredentials.notice')}

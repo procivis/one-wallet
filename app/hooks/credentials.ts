@@ -16,7 +16,9 @@ export const useCredentials = () => {
         // TODO: workaround pagination for now, until it's supported by UI
         pageSize: 10000,
         organisationId: ONE_CORE_ORGANISATION_ID,
-      }).then(({ values }) => values.filter((credential) => credential.state === CredentialStateEnum.ACCEPTED)),
+      }).then(({ values }) =>
+        values.filter(({ state }) => state === CredentialStateEnum.ACCEPTED || state === CredentialStateEnum.REVOKED),
+      ),
     {
       keepPreviousData: true,
     },
@@ -59,6 +61,16 @@ export const useCredentialAccept = () => {
 export const useCredentialReject = () => {
   const queryClient = useQueryClient();
   return useMutation(async (interactionId: string) => ONE.holderRejectCredential(interactionId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+    },
+  });
+};
+
+export const useCredentialRevocationCheck = () => {
+  const queryClient = useQueryClient();
+  return useMutation(async (credentialIds: string[]) => ONE.checkRevocation(credentialIds), {
     onSuccess: () => {
       queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
       queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
