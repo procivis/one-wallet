@@ -19,6 +19,7 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { formatClaimValue } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const DataItem: FunctionComponent<{ attribute: string; value: string; last?: boolean }> = ({
@@ -80,7 +81,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         title={credential.schema.name}
         icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}>
         {credential.claims.map((claim, index, { length }) => (
-          <DataItem key={claim.id} attribute={claim.key} value={claim.value} last={length === index + 1} />
+          <DataItem key={claim.id} attribute={claim.key} value={formatClaimValue(claim)} last={length === index + 1} />
         ))}
       </Accordion>
     </SharingScreen>

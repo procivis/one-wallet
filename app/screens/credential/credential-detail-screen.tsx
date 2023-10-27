@@ -17,6 +17,7 @@ import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
+import { formatClaimValue } from '../../utils/credential';
 
 const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({ title, children }) => {
   const colorScheme = useAppColorScheme();
@@ -116,7 +117,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
         {credential.claims.map((attribute) => (
-          <DataItem key={attribute.key} attribute={attribute.key} value={attribute.value} />
+          <DataItem key={attribute.key} attribute={attribute.key} value={formatClaimValue(attribute)} />
         ))}
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
