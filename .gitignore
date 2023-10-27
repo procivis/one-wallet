@@ -88,3 +88,9 @@ rnuc.xcconfig
 detox-junit.xml
 
 *.log
+
+
+# Android build stuff 
+node_modules_*.png
+index.android.bundle
+modules.json
