@@ -1,14 +1,14 @@
 import { expect } from 'detox';
 
-import CredentialAcceptProcessScreen from './page-objects/CredentialAcceptProcessScreen';
-import CredentialOfferScreen from './page-objects/CredentialOfferScreen';
-import ProofRequestAcceptProcessScreen from './page-objects/ProofRequestAcceptProcessScreen';
-import ProofRequestSharingScreen from './page-objects/ProofRequestScreen';
-import WalletScreen from './page-objects/WalletScreen';
-import { bffLogin, createCredential, createProofRequest, offerCredential, requestProof } from './utils/bff-api';
-import { verifyButtonEnabled } from './utils/button';
-import { pinSetup } from './utils/init';
-import { scanURL } from './utils/scan';
+import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
+import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
+import ProofRequestAcceptProcessScreen from '../page-objects/ProofRequestAcceptProcessScreen';
+import ProofRequestSharingScreen from '../page-objects/ProofRequestScreen';
+import WalletScreen from '../page-objects/WalletScreen';
+import { bffLogin, createCredential, createProofRequest, offerCredential, requestProof } from '../utils/bff-api';
+import { verifyButtonEnabled } from '../utils/button';
+import { pinSetup } from '../utils/init';
+import { scanURL } from '../utils/scan';
 
 describe('ONE-614: Proof request', () => {
   describe('Proof request with Credentials', () => {
