@@ -21,6 +21,7 @@ import {
   ShareCredentialNavigatorParamList,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
+import { formatClaimValue } from '../../utils/credential';
 
 const DataItem: FunctionComponent<{
   attribute: string;
@@ -59,7 +60,11 @@ const Credential: FunctionComponent<{
       {request.fields.map((field) => {
         const claim = credential.claims.find(({ key }) => key === field.keyMap[credentialId]);
         return (
-          <DataItem key={field.id} attribute={field.name ?? claim?.key ?? field.id ?? ''} value={claim?.value ?? '-'} />
+          <DataItem
+            key={field.id}
+            attribute={field.name ?? claim?.key ?? field.id ?? ''}
+            value={claim ? formatClaimValue(claim) : '-'}
+          />
         );
       })}
     </Accordion>

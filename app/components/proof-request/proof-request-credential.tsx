@@ -20,6 +20,7 @@ import {
 
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
+import { formatClaimValue } from '../../utils/credential';
 import { MissingCredentialIcon } from '../icon/credential-icon';
 
 const DataItem: FunctionComponent<{
@@ -113,7 +114,7 @@ export const ProofRequestCredential: FunctionComponent<{
             <DataItem
               key={field.id}
               attribute={attributeName}
-              value={claim?.value}
+              value={claim ? formatClaimValue(claim) : undefined}
               last={length === index + 1}
               status={status}
               onPress={credential && !field.required ? () => onSelectField(field.id, !selected) : undefined}
