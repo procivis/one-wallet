@@ -8,6 +8,11 @@ const LOGIN = {
   method: 'PASSWORD',
 };
 
+export enum DidType {
+  LOCAL = 'LOCAL',
+  REMOTE = 'REMOTE',
+}
+
 /**
  * Login to BFF
  * @returns {string} authToken
@@ -38,6 +43,9 @@ async function apiRequest(
     body: body ? JSON.stringify(body) : undefined,
   }).then((res) => {
     if (!res.ok) throw Error('HTTP error: ' + res.status);
+    if (res.status === 204) {
+      return undefined;
+    }
     return res.json();
   });
 }
@@ -54,7 +62,14 @@ async function getProofSchemaDetail(proofSchemaId: string, authToken: string) {
 }
 
 async function getDid(authToken: string) {
-  return apiRequest('/api/did/v1?page=0&pageSize=1', authToken).then((res) => res?.values?.[0]);
+  // TODO: filter DIDs by local type
+  return apiRequest('/api/did/v1?page=0&pageSize=100', authToken).then((response) => {
+    for (const did of response.values) {
+      if (did.type === DidType.LOCAL) {
+        return did;
+      }
+    }
+  });
 }
 
 /**
@@ -130,6 +145,10 @@ export async function createProofRequest(authToken: string) {
  */
 export async function offerCredential(credentialId: string, authToken: string): Promise<string> {
   return apiRequest(`/api/credential/v1/${credentialId}/share`, authToken, 'POST').then((res) => res.url);
+}
+
+export async function revokeCredential(credentialId: string, authToken: string): Promise<undefined> {
+  return apiRequest(`/api/credential/v1/${credentialId}/revoke`, authToken, 'POST');
 }
 
 export async function requestProof(proofRequestId: string, authToken: string): Promise<string> {
