@@ -1,8 +1,8 @@
 import { expect } from 'detox';
 
-import PinCodeScreen from './page-objects/PinCodeScreen';
-import PinCodeSetScreen from './page-objects/PinCodeSetScreen';
-import WalletScreen from './page-objects/WalletScreen';
+import PinCodeScreen from '../page-objects/PinCodeScreen';
+import PinCodeSetScreen from '../page-objects/PinCodeSetScreen';
+import WalletScreen from '../page-objects/WalletScreen';
 
 describe('Onboarding', () => {
   beforeAll(async () => {
