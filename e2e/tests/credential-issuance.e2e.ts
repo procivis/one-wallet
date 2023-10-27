@@ -1,11 +1,11 @@
 import { expect } from 'detox';
 
-import CredentialAcceptProcessScreen from './page-objects/CredentialAcceptProcessScreen';
-import CredentialOfferScreen from './page-objects/CredentialOfferScreen';
-import WalletScreen from './page-objects/WalletScreen';
-import { bffLogin, createCredential, offerCredential } from './utils/bff-api';
-import { pinSetup } from './utils/init';
-import { scanURL } from './utils/scan';
+import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
+import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
+import WalletScreen from '../page-objects/WalletScreen';
+import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
+import { pinSetup } from '../utils/init';
+import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
   beforeAll(async () => {
