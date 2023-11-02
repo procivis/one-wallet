@@ -13,14 +13,14 @@ Each flavor has a separate configuration script defined in `package.json` file, 
 
 To build the app using one of flavors, configuration script needs to be called before strting bundler and compiling the app. For example, to build Dev Wallet flavor for iOS, run:
 
-```
+```shell
 yarn rnuc:dev
 yarn build-ios
 ```
 
 or to debug same flavor:
 
-```
+```shell
 yarn rnuc:dev
 yarn start
 yarn ios
@@ -61,7 +61,7 @@ npx detox build --configuration android.emu.release
 npx detox test --configuration android.emu.release
 ```
 
-```
+```shell
 npx detox build --configuration ios.sim.release
 ```
 
@@ -69,7 +69,7 @@ See the `.detoxrc.js` for all possible configurations.
 
 Then run the tests:
 
-```
+```shell
 npx detox test --configuration ios.sim.release
 ```
 
