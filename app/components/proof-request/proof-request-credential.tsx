@@ -1,6 +1,7 @@
 import {
   Accordion,
   Button,
+  concatTestID,
   formatDateTime,
   Selector,
   SelectorStatus,
@@ -54,13 +55,14 @@ const DataItem: FunctionComponent<{
 };
 
 export const ProofRequestCredential: FunctionComponent<{
+  testID?: string;
   request: PresentationDefinitionRequestedCredential;
   allCredentials: CredentialListItem[];
   selectedCredentialId?: CredentialListItem['id'];
   onSelectCredential?: () => void;
   selectedFields?: Array<PresentationDefinitionField['id']>;
   onSelectField: (id: PresentationDefinitionField['id'], selected: boolean) => void;
-}> = ({ request, allCredentials, selectedCredentialId, onSelectCredential, selectedFields, onSelectField }) => {
+}> = ({ testID, request, allCredentials, selectedCredentialId, onSelectCredential, selectedFields, onSelectField }) => {
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } = useCredentialDetail(selectedCredentialId);
 
@@ -83,7 +85,9 @@ export const ProofRequestCredential: FunctionComponent<{
   return (
     <>
       <Accordion
+        testID={testID}
         title={name}
+        titleStyle={{ testID: concatTestID(testID, 'title', credential?.id) }}
         subtitle={
           revoked
             ? translate('credentialDetail.log.revoke')
@@ -91,7 +95,14 @@ export const ProofRequestCredential: FunctionComponent<{
             ? formatDateTime(new Date(credential.issuanceDate))
             : translate('proofRequest.missingCredential.title')
         }
-        subtitleStyle={!credential || revoked ? { color: colorScheme.alertText } : undefined}
+        subtitleStyle={
+          !credential || revoked
+            ? {
+                testID: concatTestID(testID, 'subtitle', revoked ? 'revoked' : 'missing'),
+                color: colorScheme.alertText,
+              }
+            : undefined
+        }
         icon={{
           component: credential ? (
             <TextAvatar produceInitials={true} text={name} innerSize={48} />
@@ -123,25 +134,29 @@ export const ProofRequestCredential: FunctionComponent<{
         })}
       </Accordion>
       {!credential && (
-        <View style={{ backgroundColor: colorScheme.alert }}>
+        <View testID={concatTestID(testID, 'notice.missing')} style={{ backgroundColor: colorScheme.alert }}>
           <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
             {translate('proofRequest.missingCredential.notice')}
           </Typography>
         </View>
       )}
       {revoked && (
-        <View style={{ backgroundColor: colorScheme.alert }}>
+        <View testID={concatTestID(testID, 'notice.revoked')} style={{ backgroundColor: colorScheme.alert }}>
           <Typography color={colorScheme.alertText} align="center" style={styles.notice}>
             {translate('proofRequest.revokedCredential.notice')}
           </Typography>
         </View>
       )}
       {selectionOptions.length > 1 && (
-        <View style={{ backgroundColor: colorScheme.notice }}>
+        <View testID={concatTestID(testID, 'notice.multiple')} style={{ backgroundColor: colorScheme.notice }}>
           <Typography color={colorScheme.noticeText} align="center" style={styles.notice}>
             {translate('proofRequest.multipleCredentials.notice')}
           </Typography>
-          <Button type="light" onPress={onSelectCredential} style={styles.noticeButton}>
+          <Button
+            testID={concatTestID(testID, 'notice.multiple.button')}
+            type="light"
+            onPress={onSelectCredential}
+            style={styles.noticeButton}>
             {translate('proofRequest.multipleCredentials.select')}
           </Button>
         </View>

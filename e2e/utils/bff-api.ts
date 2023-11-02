@@ -50,10 +50,27 @@ async function apiRequest(
   });
 }
 
-async function getCredentialSchema(authToken: string) {
+async function getCredentialSchema(authToken: string): Promise<Record<string, any>> {
   const schemaId = await apiRequest('/api/credential-schema/v1?page=0&pageSize=1', authToken).then(
     (res) => res?.values?.[0]?.id,
   );
+  return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
+}
+
+export async function createCredentialSchema(authToken: string): Promise<Record<string, any>> {
+  const schemaData = {
+    name: `detox-e2e-revocable-${uuidv4()}`,
+    format: 'SDJWT',
+    revocationMethod: 'STATUSLIST2021',
+    claims: [
+      {
+        datatype: 'STRING',
+        key: 'field',
+        required: true,
+      },
+    ],
+  };
+  const schemaId = await apiRequest('/api/credential-schema/v1', authToken, 'POST', schemaData).then((res) => res?.id);
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
@@ -61,14 +78,9 @@ async function getProofSchemaDetail(proofSchemaId: string, authToken: string) {
   return apiRequest(`/api/proof-schema/v1/${proofSchemaId}`, authToken);
 }
 
-async function getDid(authToken: string) {
-  // TODO: filter DIDs by local type
-  return apiRequest('/api/did/v1?page=0&pageSize=100', authToken).then((response) => {
-    for (const did of response.values) {
-      if (did.type === DidType.LOCAL) {
-        return did;
-      }
-    }
+async function getLocalDid(authToken: string) {
+  return apiRequest('/api/did/v1?page=0&pageSize=1&type=LOCAL', authToken).then((response) => {
+    return response.values[0];
   });
 }
 
@@ -77,10 +89,10 @@ async function getDid(authToken: string) {
  * @param authToken
  * @returns {string} credentialId
  */
-export async function createCredential(authToken: string): Promise<string> {
-  const schema: Record<string, any> = await getCredentialSchema(authToken);
-  const did: Record<string, any> = await getDid(authToken);
-  const claimValues = schema.claims.map(({ id, datatype }: { id: string; datatype: string }) => {
+export async function createCredential(authToken: string, schema?: Record<string, any>): Promise<string> {
+  const credentialSchema: Record<string, any> = schema ?? (await getCredentialSchema(authToken));
+  const did: Record<string, any> = await getLocalDid(authToken);
+  const claimValues = credentialSchema.claims.map(({ id, datatype }: { id: string; datatype: string }) => {
     let value: string = '';
     switch (datatype) {
       case 'STRING':
@@ -100,16 +112,19 @@ export async function createCredential(authToken: string): Promise<string> {
   });
 
   return await apiRequest('/api/credential/v1', authToken, 'POST', {
-    credentialSchemaId: schema.id,
+    credentialSchemaId: credentialSchema.id,
     issuerDid: did.id,
     transport: 'PROCIVIS_TEMPORARY',
     claimValues,
   }).then((res) => res.id);
 }
 
-export async function createProofSchema(authToken: string): Promise<Record<string, any>> {
-  const credentialSchema: Record<string, any> = await getCredentialSchema(authToken);
-  const schemaClaim = credentialSchema.claims[0];
+export async function createProofSchema(
+  authToken: string,
+  credentialSchema?: Record<string, any>,
+): Promise<Record<string, any>> {
+  const credSchema: Record<string, any> = credentialSchema ?? (await getCredentialSchema(authToken));
+  const schemaClaim = credSchema.claims[0];
   const proofSchemaData = {
     name: `detox-e2e-test-${uuidv4()}`,
     expireDuration: 0,
@@ -125,12 +140,11 @@ export async function createProofSchema(authToken: string): Promise<Record<strin
   );
 }
 
-export async function createProofRequest(authToken: string) {
-  const did: Record<string, any> = await getDid(authToken);
-  const proofSchema: Record<string, any> = await createProofSchema(authToken);
-  await createCredential(authToken);
+export async function createProofRequest(authToken: string, proofSchema?: Record<string, any>): Promise<string> {
+  const did: Record<string, any> = await getLocalDid(authToken);
+  const schema: Record<string, any> = proofSchema ?? (await createProofSchema(authToken));
   const proofRequestData = {
-    proofSchemaId: proofSchema.id,
+    proofSchemaId: schema.id,
     transport: 'PROCIVIS_TEMPORARY',
     verifierDid: did.id,
   };
