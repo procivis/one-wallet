@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  concatTestID,
   SharingScreen,
   SharingScreenVariation,
   Typography,
@@ -70,9 +71,9 @@ const ProofRequestScreen: FunctionComponent = () => {
     presentationDefinition.requestGroups.forEach((group) =>
       group.requestedCredentials.forEach((credential) => {
         const credentialId =
-          credential.applicableCredentials.find((credId) =>
-            allCredentials.some(({ id, state }) => id === credId && state === CredentialStateEnum.ACCEPTED),
-          ) || credential.applicableCredentials[0];
+          allCredentials.find(
+            ({ id, state }) => state === CredentialStateEnum.ACCEPTED && credential.applicableCredentials.includes(id),
+          )?.id || credential.applicableCredentials[0];
         if (!credentialId) {
           preselected[credential.id] = undefined;
           return;
@@ -179,6 +180,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           <ProofRequestGroup key={group.id} request={group} last={length === index + 1}>
             {group.requestedCredentials.map((credential) => (
               <ProofRequestCredential
+                testID={concatTestID('ProofRequestSharingScreen.credential', credential.id)}
                 key={credential.id}
                 request={credential}
                 allCredentials={allCredentials}

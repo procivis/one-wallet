@@ -1,6 +1,7 @@
 import {
   Accordion,
   Button,
+  concatTestID,
   DetailScreen,
   formatDateTime,
   Selector,
@@ -39,15 +40,18 @@ const DataItem: FunctionComponent<{
 };
 
 const Credential: FunctionComponent<{
+  testID?: string;
   credentialId: string;
   selected: boolean;
   request: PresentationDefinitionRequestedCredential;
   onPress?: () => void;
-}> = ({ credentialId, selected, request, onPress }) => {
+}> = ({ testID, credentialId, selected, request, onPress }) => {
   const { data: credential } = useCredentialDetail(credentialId);
   return credential ? (
     <Accordion
+      testID={testID}
       title={credential.schema.name}
+      titleStyle={{ testID: concatTestID(testID, selected ? 'selected' : 'unselected') }}
       accessibilityState={{ selected }}
       expanded={selected}
       onPress={onPress}
@@ -107,6 +111,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
         return (
           <View key={credentialId} style={styles.item}>
             <Credential
+              testID={concatTestID('ProofRequestSelectCredentialScreen.credential', credentialId)}
               selected={selected}
               onPress={selected ? undefined : () => setSelectedCredentialId(credentialId)}
               credentialId={credentialId}
@@ -117,7 +122,9 @@ const SelectCredentialScreen: FunctionComponent = () => {
       })}
 
       <View style={styles.bottom}>
-        <Button onPress={onConfirm}>{translate('proofRequest.selectCredential.select')}</Button>
+        <Button testID="ProofRequestSelectCredentialScreen.confirm" onPress={onConfirm}>
+          {translate('proofRequest.selectCredential.select')}
+        </Button>
       </View>
     </DetailScreen>
   );

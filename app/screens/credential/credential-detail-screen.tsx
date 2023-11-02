@@ -1,5 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
+  concatTestID,
   DetailScreen,
   formatDateTime,
   ListItem,
@@ -31,14 +32,20 @@ const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({ titl
   );
 };
 
-const DataItem: FunctionComponent<{ attribute: string; value: string }> = ({ attribute, value }) => {
+const DataItem: FunctionComponent<{ attribute: string; value: string; testID?: string }> = ({
+  attribute,
+  value,
+  testID,
+}) => {
   const colorScheme = useAppColorScheme();
   return (
-    <View style={[styles.dataItem, { borderColor: colorScheme.background }]}>
+    <View testID={testID} style={[styles.dataItem, { borderColor: colorScheme.background }]}>
       <Typography color={colorScheme.textSecondary} size="sml" style={styles.dataItemLabel}>
         {attribute}
       </Typography>
-      <Typography color={colorScheme.text}>{value}</Typography>
+      <Typography testID={concatTestID(testID, 'value')} color={colorScheme.text}>
+        {value}
+      </Typography>
     </View>
   );
 };
@@ -110,6 +117,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
         />
         {credential.state === CredentialStateEnum.REVOKED ? (
           <DataItem
+            testID="CredentialDetailScreen.status"
             attribute={translate('credentialDetail.credential.status')}
             value={translate('credentialDetail.log.revoke')}
           />
@@ -124,6 +132,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
         <View style={styles.logTitlePadding} />
         {credential.revocationDate ? (
           <ListItem
+            testID="CredentialDetailScreen.log.revoked"
             title={translate('credentialDetail.log.revoke')}
             subtitle={formatDateTime(new Date(credential.revocationDate))}
             style={styles.logItem}
@@ -131,6 +140,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
           />
         ) : null}
         <ListItem
+          testID="CredentialDetailScreen.log.issued"
           title={translate('credentialDetail.log.issue')}
           subtitle={formatDateTime(new Date(credential.issuanceDate))}
           style={styles.logItem}

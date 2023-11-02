@@ -6,4 +6,23 @@ export default abstract class CredentialDetailScreen {
   static get backButton() {
     return element(by.id('CredentialDetailScreen.header.back'));
   }
+
+  private static dataItem(id: string) {
+    return {
+      get element() {
+        return element(by.id(id));
+      },
+      get value() {
+        return element(by.id(`${id}.value`));
+      },
+    };
+  }
+
+  static get status() {
+    return this.dataItem('CredentialDetailScreen.status');
+  }
+
+  static log(itemId: string) {
+    return element(by.id(`CredentialDetailScreen.log.${itemId}`));
+  }
 }
