@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  concatTestID,
   FeatureScreen,
   formatDateTime,
   ListView,
@@ -86,13 +87,20 @@ const WalletScreen: FunctionComponent = observer(() => {
             emptyListTitle={translate('wallet.walletScreen.credentialsList.empty.title')}
             emptyListSubtitle={translate('wallet.walletScreen.credentialsList.empty.subtitle')}
             items={credentials.map((credential) => {
+              const testID = concatTestID('WalletScreen.credential', credential.id);
               const revoked = credential.state === CredentialStateEnum.REVOKED;
               return {
+                testID,
                 title: credential.schema.name,
                 subtitle: revoked
                   ? translate('credentialDetail.log.revoke')
                   : formatDateTime(new Date(credential.issuanceDate)),
-                subtitleStyle: { color: revoked ? colorScheme.alertText : colorScheme.text },
+                subtitleStyle: revoked
+                  ? {
+                      testID: concatTestID(testID, 'revoked'),
+                      color: colorScheme.alertText,
+                    }
+                  : undefined,
                 icon: { component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> },
                 iconStyle: styles.itemIcon,
                 rightAccessory: <NextIcon color={colorScheme.text} />,
