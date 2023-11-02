@@ -75,7 +75,7 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Credential revoked remotely', async () => {
       await revokeCredential(credentialId, authToken);
-      await device.reloadReactNative();
+      await device.launchApp({ newInstance: true });
       await expect(PinCodeScreen.Check.screen).toBeVisible();
       await PinCodeScreen.Check.digit(1).multiTap(6);
       await expect(WalletScreen.screen).toBeVisible();
