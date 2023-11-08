@@ -1,4 +1,4 @@
-import ONE, { CredentialStateEnum, InvitationResult } from 'react-native-one-core';
+import ONE, { CredentialStateEnum, InvitationResult, OneError, OneErrorCode } from 'react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useStores } from '../models';
@@ -60,12 +60,21 @@ export const useCredentialAccept = () => {
 
 export const useCredentialReject = () => {
   const queryClient = useQueryClient();
-  return useMutation(async (interactionId: string) => ONE.holderRejectCredential(interactionId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+  return useMutation(
+    async (interactionId: string) =>
+      ONE.holderRejectCredential(interactionId).catch((err) => {
+        if (err instanceof OneError && err.code === OneErrorCode.NotSupported) {
+          return;
+        }
+        throw err;
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+        queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+      },
     },
-  });
+  );
 };
 
 export const useCredentialRevocationCheck = () => {
