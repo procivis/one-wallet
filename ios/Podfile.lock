@@ -485,15 +485,15 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (5.4.1):
+  - RNSentry (5.12.0):
     - React-Core
-    - Sentry/HybridSDK (= 8.6.0)
+    - Sentry/HybridSDK (= 8.14.2)
   - RNSVG (13.9.0):
     - React-Core
-  - Sentry/HybridSDK (8.6.0):
-    - SentryPrivate (= 8.6.0)
-  - SentryPrivate (8.6.0)
-  - SocketRocket (0.6.0)
+  - Sentry/HybridSDK (8.14.2):
+    - SentryPrivate (= 8.14.2)
+  - SentryPrivate (8.14.2)
+  - SocketRocket (0.6.1)
   - TouchID (4.4.1):
     - React
   - Yoga (1.14.0)
@@ -777,11 +777,11 @@ SPEC CHECKSUMS:
   RNLocalize: 5944c97d2fe8150913a51ddd5eab4e23a82bd80d
   RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNSentry: 60f2359d2859591cae2d6731ae9a7ac1595ff8c2
+  RNSentry: 22ec5cbcdfffeea7fae88695467a3af5f8d94790
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
-  Sentry: d80553ff85ea72def75b792aaa5a71c158e51595
-  SentryPrivate: ef1c5b3dfe44ec0c70e2eb343a5be2689164c021
-  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Sentry: e0ea366f95ebb68f26d6030d8c22d6b2e6d23dd0
+  SentryPrivate: 949a21fa59872427edc73b524c3ec8456761d97f
+  SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

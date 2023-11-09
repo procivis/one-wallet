@@ -37,7 +37,7 @@
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "~6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
-    "@sentry/react-native": "^5.4.1",
+    "@sentry/react-native": "^5.12.0",
     "apisauce": "2.0.0",
     "buffer": "^6.0.3",
     "i18n-js": "3.8.0",
