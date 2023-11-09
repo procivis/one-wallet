@@ -12,25 +12,32 @@ import {
   offerCredential,
   revokeCredential,
 } from '../utils/bff-api';
+import { CredentialFormat, Transport } from '../utils/enums';
 import { pinSetup } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
-  let credentialSchema: Record<string, any>;
+  let credentialSchemaJWT: Record<string, any>;
+  let credentialSchemaSD_JWT: Record<string, any>;
 
   beforeAll(async () => {
     await device.launchApp({ permissions: { camera: 'YES' } });
     await pinSetup();
     authToken = await bffLogin();
-    credentialSchema = await createCredentialSchema(authToken);
+    credentialSchemaJWT = await createCredentialSchema(authToken, {
+      format: CredentialFormat.JWT,
+    });
+    credentialSchemaSD_JWT = await createCredentialSchema(authToken, {
+      format: CredentialFormat.SDJWT,
+    });
   });
 
   describe('Credential offer', () => {
     let credentialId: string;
 
     beforeEach(async () => {
-      credentialId = await createCredential(authToken, credentialSchema);
+      credentialId = await createCredential(authToken, credentialSchemaJWT);
       const invitationUrl = await offerCredential(credentialId, authToken);
       await scanURL(invitationUrl);
 
@@ -57,7 +64,7 @@ describe('ONE-601: Credential issuance', () => {
     let credentialId: string;
 
     beforeAll(async () => {
-      credentialId = await createCredential(authToken, credentialSchema);
+      credentialId = await createCredential(authToken, credentialSchemaJWT);
       const invitationUrl = await offerCredential(credentialId, authToken);
       await scanURL(invitationUrl);
 
@@ -90,6 +97,35 @@ describe('ONE-601: Credential issuance', () => {
       await expect(CredentialDetailScreen.status.element).toBeVisible();
       await expect(CredentialDetailScreen.status.value).toHaveText('Revoked');
       await expect(CredentialDetailScreen.log('revoked')).toExist();
+    });
+  });
+
+  describe('ONE-796: OpenID4VC Credential transport', () => {
+    const issueCredentialTestCase = async (credentialSchema: Record<string, any>) => {
+      const credentialId = await createCredential(authToken, credentialSchema, { transport: Transport.OPENID4VC });
+
+      const invitationUrl = await offerCredential(credentialId, authToken);
+      await scanURL(invitationUrl);
+
+      await expect(CredentialOfferScreen.screen).toBeVisible();
+      await CredentialOfferScreen.acceptButton.tap();
+
+      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+
+      await expect(WalletScreen.screen).toBeVisible();
+      // TODO: Find a way how to determine OpenID4VC credential in list.
+      // await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+    };
+
+    // eslint-disable-next-line jest/expect-expect
+    it('Issue credential: JWT schema', async () => {
+      await issueCredentialTestCase(credentialSchemaJWT);
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    it('Issue credential: SD_JWT schema', async () => {
+      await issueCredentialTestCase(credentialSchemaSD_JWT);
     });
   });
 });
