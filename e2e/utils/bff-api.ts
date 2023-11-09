@@ -1,6 +1,8 @@
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CredentialFormat, RevocationMethod, Transport } from './enums';
+
 const BFF_BASE_URL = 'https://desk.dev.one-trust-solution.com';
 const LOGIN = {
   email: 'test@test.com',
@@ -31,7 +33,7 @@ async function apiRequest(
   path: string,
   authToken: string,
   method = 'GET',
-  body?: Record<string, unknown>,
+  body?: Record<string, unknown> | object,
 ): Promise<any> {
   const headers: RequestInit['headers'] = { Authorization: `Bearer ${authToken}` };
   if (body) {
@@ -57,19 +59,25 @@ async function getCredentialSchema(authToken: string): Promise<Record<string, an
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
-export async function createCredentialSchema(authToken: string): Promise<Record<string, any>> {
-  const schemaData = {
-    name: `detox-e2e-revocable-${uuidv4()}`,
-    format: 'SDJWT',
-    revocationMethod: 'STATUSLIST2021',
-    claims: [
-      {
-        datatype: 'STRING',
-        key: 'field',
-        required: true,
-      },
-    ],
-  };
+export interface CredentialSchemaData {
+  name?: string;
+  format?: CredentialFormat;
+  revocationMethod?: RevocationMethod;
+}
+
+export async function createCredentialSchema(
+  authToken: string,
+  data?: CredentialSchemaData,
+): Promise<Record<string, any>> {
+  const schemaData = Object.assign(
+    {
+      name: `detox-e2e-revocable-${uuidv4()}`,
+      format: CredentialFormat.SDJWT,
+      revocationMethod: RevocationMethod.STATUSLIST2021,
+      claims: [{ key: 'field', datatype: 'STRING', required: true }],
+    },
+    data,
+  );
   const schemaId = await apiRequest('/api/credential-schema/v1', authToken, 'POST', schemaData).then((res) => res?.id);
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
@@ -84,12 +92,19 @@ async function getLocalDid(authToken: string) {
   });
 }
 
+export interface CredentialData {
+  transport?: Transport;
+}
 /**
  * Create a new credential to be issued
  * @param authToken
  * @returns {string} credentialId
  */
-export async function createCredential(authToken: string, schema?: Record<string, any>): Promise<string> {
+export async function createCredential(
+  authToken: string,
+  schema?: Record<string, any>,
+  credentialData?: CredentialData,
+): Promise<string> {
   const credentialSchema: Record<string, any> = schema ?? (await getCredentialSchema(authToken));
   const did: Record<string, any> = await getLocalDid(authToken);
   const claimValues = credentialSchema.claims.map(({ id, datatype }: { id: string; datatype: string }) => {
@@ -110,13 +125,16 @@ export async function createCredential(authToken: string, schema?: Record<string
       value,
     };
   });
-
-  return await apiRequest('/api/credential/v1', authToken, 'POST', {
-    credentialSchemaId: credentialSchema.id,
-    issuerDid: did.id,
-    transport: 'PROCIVIS_TEMPORARY',
-    claimValues,
-  }).then((res) => res.id);
+  const data = Object.assign(
+    {
+      credentialSchemaId: credentialSchema.id,
+      issuerDid: did.id,
+      transport: Transport.PROCIVIS,
+      claimValues,
+    },
+    credentialData,
+  );
+  return await apiRequest('/api/credential/v1', authToken, 'POST', data).then((res) => res.id);
 }
 
 export async function createProofSchema(
