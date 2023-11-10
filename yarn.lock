@@ -8569,9 +8569,9 @@ react-native-localize@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.0.0.tgz#41536e8aca8a148fd96d495d3d5cf710e25b2855"
   integrity sha512-B8taYRLuLIYDzBTKIglA3K6ntjaEwbk6mwQ72ogZYl5ovM00NnpbiZ3sRq8KRVe/V1NGczxT33uVqG6BUWGWhg==
 
-"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#66062405bebb9529da4099676d5ff94b5c031ede":
-  version "1.0.10101"
-  resolved "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#66062405bebb9529da4099676d5ff94b5c031ede"
+"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#04efc3bc7772bed646f53cb83647c73b9bded4bc":
+  version "1.0.10176"
+  resolved "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#04efc3bc7772bed646f53cb83647c73b9bded4bc"
 
 "react-native-picker@git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9":
   version "5.0.0"
