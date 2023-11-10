@@ -11,7 +11,7 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import React, { FunctionComponent, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   CredentialListItem,
   CredentialStateEnum,
@@ -56,13 +56,23 @@ const DataItem: FunctionComponent<{
 
 export const ProofRequestCredential: FunctionComponent<{
   testID?: string;
+  style?: StyleProp<ViewStyle>;
   request: PresentationDefinitionRequestedCredential;
   allCredentials: CredentialListItem[];
   selectedCredentialId?: CredentialListItem['id'];
   onSelectCredential?: () => void;
   selectedFields?: Array<PresentationDefinitionField['id']>;
   onSelectField: (id: PresentationDefinitionField['id'], selected: boolean) => void;
-}> = ({ testID, request, allCredentials, selectedCredentialId, onSelectCredential, selectedFields, onSelectField }) => {
+}> = ({
+  testID,
+  style,
+  request,
+  allCredentials,
+  selectedCredentialId,
+  onSelectCredential,
+  selectedFields,
+  onSelectField,
+}) => {
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } = useCredentialDetail(selectedCredentialId);
 
@@ -83,7 +93,7 @@ export const ProofRequestCredential: FunctionComponent<{
   const revoked = credential?.state === CredentialStateEnum.REVOKED;
 
   return (
-    <>
+    <View style={style}>
       <Accordion
         testID={testID}
         title={name}
@@ -161,7 +171,7 @@ export const ProofRequestCredential: FunctionComponent<{
           </Button>
         </View>
       )}
-    </>
+    </View>
   );
 };
 
