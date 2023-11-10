@@ -178,9 +178,13 @@ const ProofRequestScreen: FunctionComponent = () => {
       ) : (
         presentationDefinition.requestGroups.map((group, index, { length }) => (
           <ProofRequestGroup key={group.id} request={group} last={length === index + 1}>
-            {group.requestedCredentials.map((credential) => (
+            {group.requestedCredentials.map((credential, credentialIndex, { length: credentialsLength }) => (
               <ProofRequestCredential
                 testID={concatTestID('ProofRequestSharingScreen.credential', credential.id)}
+                style={[
+                  styles.requestedCredential,
+                  credentialsLength === credentialIndex + 1 && styles.requestedCredentialLast,
+                ]}
                 key={credential.id}
                 request={credential}
                 allCredentials={allCredentials}
@@ -203,6 +207,12 @@ const styles = StyleSheet.create({
   },
   headerLabel: {
     marginBottom: 4,
+  },
+  requestedCredential: {
+    marginBottom: 24,
+  },
+  requestedCredentialLast: {
+    marginBottom: 0,
   },
 });
 
