@@ -158,15 +158,25 @@ export async function createProofSchema(
   );
 }
 
-export async function createProofRequest(authToken: string, proofSchema?: Record<string, any>): Promise<string> {
+export interface ProofRequestData {
+  transport?: Transport;
+}
+export async function createProofRequest(
+  authToken: string,
+  proofSchema?: Record<string, any>,
+  proofRequestData?: ProofRequestData,
+): Promise<string> {
   const did: Record<string, any> = await getLocalDid(authToken);
   const schema: Record<string, any> = proofSchema ?? (await createProofSchema(authToken));
-  const proofRequestData = {
-    proofSchemaId: schema.id,
-    transport: 'PROCIVIS_TEMPORARY',
-    verifierDid: did.id,
-  };
-  return await apiRequest('/api/proof-request/v1', authToken, 'POST', proofRequestData).then((res) => res.id);
+  const data = Object.assign(
+    {
+      proofSchemaId: schema.id,
+      transport: Transport.PROCIVIS,
+      verifierDid: did.id,
+    },
+    proofRequestData,
+  );
+  return await apiRequest('/api/proof-request/v1', authToken, 'POST', data).then((res) => res.id);
 }
 
 /**

@@ -48,6 +48,7 @@ describe('ONE-601: Credential issuance', () => {
       await CredentialOfferScreen.acceptButton.tap();
 
       await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
       await CredentialAcceptProcessScreen.closeButton.tap();
 
       await expect(WalletScreen.screen).toBeVisible();
@@ -71,6 +72,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(CredentialOfferScreen.screen).toBeVisible();
       await CredentialOfferScreen.acceptButton.tap();
       await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
       await CredentialAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
@@ -111,6 +113,7 @@ describe('ONE-601: Credential issuance', () => {
       await CredentialOfferScreen.acceptButton.tap();
 
       await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
       await CredentialAcceptProcessScreen.closeButton.tap();
 
       await expect(WalletScreen.screen).toBeVisible();

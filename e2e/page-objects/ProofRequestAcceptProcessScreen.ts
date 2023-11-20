@@ -1,9 +1,3 @@
-export default abstract class ProofRequestAcceptProcessScreen {
-  static get screen() {
-    return element(by.id('ProofRequestAcceptProcessScreen'));
-  }
+import LoadingResult from './components/LoadingResult';
 
-  static get closeButton() {
-    return element(by.id('ProofRequestAcceptProcessScreen.close'));
-  }
-}
+export default LoadingResult('ProofRequestAcceptProcessScreen');
