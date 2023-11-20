@@ -1,9 +1,3 @@
-export default abstract class CredentialAcceptProcessScreen {
-  static get screen() {
-    return element(by.id('CredentialAcceptProcessScreen'));
-  }
+import LoadingResult from './components/LoadingResult';
 
-  static get closeButton() {
-    return element(by.id('CredentialAcceptProcessScreen.close'));
-  }
-}
+export default LoadingResult('CredentialAcceptProcessScreen');
