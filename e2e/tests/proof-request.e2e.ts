@@ -17,6 +17,7 @@ import {
   revokeCredential,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
+import { CredentialFormat, Transport } from '../utils/enums';
 import { pinSetup } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -41,6 +42,7 @@ describe('ONE-614: Proof request', () => {
       await expect(CredentialOfferScreen.screen).toBeVisible();
       await CredentialOfferScreen.acceptButton.tap();
       await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
       await CredentialAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
@@ -56,6 +58,7 @@ describe('ONE-614: Proof request', () => {
     it('Confirm proof request', async () => {
       await ProofRequestSharingScreen.shareButton.tap();
       await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
       await ProofRequestAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
@@ -94,6 +97,7 @@ describe('ONE-614: Proof request', () => {
         await expect(CredentialOfferScreen.screen).toBeVisible();
         await CredentialOfferScreen.acceptButton.tap();
         await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+        await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
         await CredentialAcceptProcessScreen.closeButton.tap();
         credentialIds.push(credentialId);
       }
@@ -157,6 +161,86 @@ describe('ONE-614: Proof request', () => {
       await expect(ProofRequestSharingScreen.credential(0).notice.revoked).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
+  describe('Proof request Transport Protocol TestCase', () => {
+    beforeAll(async () => {
+      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await pinSetup();
+    });
+
+    const proofRequestSharingTestCase = async (
+      credentialSchemaFormat: CredentialFormat,
+      credentialTransport: Transport,
+      proofRequestTransport: Transport,
+    ) => {
+      const credentialSchema = await createCredentialSchema(authToken, { format: credentialSchemaFormat });
+      const credentialId = await createCredential(authToken, credentialSchema, { transport: credentialTransport });
+      const credentialInvitationUrl = await offerCredential(credentialId, authToken);
+
+      await scanURL(credentialInvitationUrl);
+      await expect(CredentialOfferScreen.screen).toBeVisible();
+      await CredentialOfferScreen.acceptButton.tap();
+      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
+
+      const proofSchema = await createProofSchema(authToken, credentialSchema);
+      const proofRequestId = await createProofRequest(authToken, proofSchema, { transport: proofRequestTransport });
+      const proofInvitationUrl = await requestProof(proofRequestId, authToken);
+
+      await scanURL(proofInvitationUrl);
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await ProofRequestSharingScreen.shareButton.tap();
+      await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+      await ProofRequestAcceptProcessScreen.closeButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
+    };
+
+    describe('Procivis Proof request transport', () => {
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.PROCIVIS, Transport.PROCIVIS);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.PROCIVIS, Transport.PROCIVIS);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.OPENID4VC, Transport.PROCIVIS);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.OPENID4VC, Transport.PROCIVIS);
+      });
+    });
+
+    describe('ONE-795: OpenID4VC Proof request transport', () => {
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.PROCIVIS, Transport.OPENID4VC);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.PROCIVIS, Transport.OPENID4VC);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.OPENID4VC, Transport.OPENID4VC);
+      });
+
+      // eslint-disable-next-line jest/expect-expect
+      it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
+        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.OPENID4VC, Transport.OPENID4VC);
+      });
     });
   });
 });
