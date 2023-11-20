@@ -13,6 +13,8 @@ import React, { FunctionComponent, useCallback, useEffect, useState } from 'reac
 import { StyleSheet, View } from 'react-native';
 import ONE, {
   CredentialStateEnum,
+  OneError,
+  OneErrorCode,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
@@ -135,7 +137,11 @@ const ProofRequestScreen: FunctionComponent = () => {
   );
 
   const onReject = useCallback(() => {
-    ONE.holderRejectProof(request.interactionId).catch((e) => reportException(e, 'Reject Proof failure'));
+    ONE.holderRejectProof(request.interactionId).catch((err) => {
+      if (!(err instanceof OneError) || err.code !== OneErrorCode.NotSupported) {
+        reportException(err, 'Reject Proof failure');
+      }
+    });
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
   }, [rootNavigation, request]);
 
