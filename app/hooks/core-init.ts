@@ -22,12 +22,21 @@ export const useInitializeONECore = () => {
       .then(() =>
         ONE.generateKey({
           organisationId: ONE_CORE_ORGANISATION_ID,
-          keyType: 'EDDSA',
+          keyType: 'ES256',
           keyParams: {},
           name: 'holder-key',
-          storageType: 'INTERNAL',
+          storageType: 'SECURE_ELEMENT',
           storageParams: {},
-        }),
+        }).catch(() =>
+          ONE.generateKey({
+            organisationId: ONE_CORE_ORGANISATION_ID,
+            keyType: 'EDDSA',
+            keyParams: {},
+            name: 'holder-key',
+            storageType: 'INTERNAL',
+            storageParams: {},
+          }),
+        ),
       )
       .then((keyId) =>
         ONE.createDid({
