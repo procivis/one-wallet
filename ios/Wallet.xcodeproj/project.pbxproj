@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,8 +21,6 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* WalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WalletTests.m; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Procivis Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Procivis Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Wallet/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Wallet/Images.xcassets; sourceTree = "<group>"; };
@@ -60,23 +58,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* WalletTests */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F21AD99517003FC87E /* WalletTests.m */,
-				00E356F01AD99517003FC87E /* Supporting Files */,
-			);
-			path = WalletTests;
-			sourceTree = "<group>";
-		};
-		00E356F01AD99517003FC87E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F11AD99517003FC87E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,7 +123,6 @@
 				158D69E92785F1AA00D5359B /* rnuc.xcconfig */,
 				13B07FAE1A68108700A75B9A /* Wallet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* WalletTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				71ED362ACEA45F9F60DCD285 /* Pods */,
@@ -383,7 +363,10 @@
 				);
 				INFOPLIST_FILE = Wallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -414,7 +397,10 @@
 				);
 				INFOPLIST_FILE = Wallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -478,7 +464,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SDKROOT)/usr/lib/swift\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -540,7 +529,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SDKROOT)/usr/lib/swift\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
