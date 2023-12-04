@@ -87,7 +87,7 @@ async function getProofSchemaDetail(proofSchemaId: string, authToken: string) {
 }
 
 async function getLocalDid(authToken: string) {
-  return apiRequest('/api/did/v1?page=0&pageSize=1&type=LOCAL', authToken).then((response) => {
+  return apiRequest('/api/did/v1?page=0&pageSize=1&type=LOCAL&deactivated=false', authToken).then((response) => {
     return response.values[0];
   });
 }
