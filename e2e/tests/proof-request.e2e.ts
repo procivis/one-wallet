@@ -174,8 +174,10 @@ describe('ONE-614: Proof request', () => {
       credentialTransport: Transport,
       proofRequestTransport: Transport,
     ) => {
-      const credentialSchema = await createCredentialSchema(authToken, { format: credentialSchemaFormat });
-      const credentialId = await createCredential(authToken, credentialSchema, { transport: credentialTransport });
+      const specificCredentialSchema = await createCredentialSchema(authToken, { format: credentialSchemaFormat });
+      const credentialId = await createCredential(authToken, specificCredentialSchema, {
+        transport: credentialTransport,
+      });
       const credentialInvitationUrl = await offerCredential(credentialId, authToken);
 
       await scanURL(credentialInvitationUrl);
@@ -186,8 +188,10 @@ describe('ONE-614: Proof request', () => {
       await CredentialAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
 
-      const proofSchema = await createProofSchema(authToken, credentialSchema);
-      const proofRequestId = await createProofRequest(authToken, proofSchema, { transport: proofRequestTransport });
+      const specificProofSchema = await createProofSchema(authToken, specificCredentialSchema);
+      const proofRequestId = await createProofRequest(authToken, specificProofSchema, {
+        transport: proofRequestTransport,
+      });
       const proofInvitationUrl = await requestProof(proofRequestId, authToken);
 
       await scanURL(proofInvitationUrl);
