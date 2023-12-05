@@ -3,24 +3,34 @@ image: node:16-alpine
 stages:
   - prepare
   - test
+  - build
   - e2e_tests
+
+variables:
+  # ONE-wallet project on Bitrise
+  BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
 
 .only_main_or_manual:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
     - if: $CI_COMMIT_BRANCH == 'main'
       when: on_success
     - when: manual
 
-.bitrise_builder:
+.only_main_manual:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+      when: manual
+    - when: never
+
+.bitrise_e2e:
   stage: e2e_tests
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
-  needs: [build_deps, test]
-  variables:
-    # ONE-wallet project on Bitrise
-    BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
-    BITRISE_WORKFLOW: ""
+  needs: [test]
   script:
     - >
       /etc/gitrise.sh
@@ -34,6 +44,19 @@ stages:
     paths:
       - artifacts
     expire_in: 10 days
+
+.bitrise_build:
+  stage: build
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  needs: [test]
+  script:
+    - >
+      /etc/gitrise.sh
+      --access-token $BITRISE_API_ACCESS_TOKEN
+      --slug $BITRISE_PROJECT_SLUG
+      --workflow $BITRISE_WORKFLOW
+      --branch "$CI_COMMIT_REF_NAME"
+      --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
 
 .install-node-modules: &install-node-modules
   - >
@@ -58,7 +81,7 @@ stages:
   before_script:
     - *install-node-modules
 
-
+# CODE CHECKS
 build_deps:
   stage: prepare
   extends: .modules_setup
@@ -97,8 +120,8 @@ sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: ['']
-  dependencies: [ test ]
-  needs: [ test ]
+  dependencies: [test]
+  needs: [test]
   variables:
     SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
     GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
@@ -110,16 +133,60 @@ sonarqube-check:
     - .only_main_or_manual
   before_script: [] # disable node_module fetching, yarn not available in the image
 
+# APP BUILDs
+build_android_dev:
+  variables:
+    BITRISE_WORKFLOW: Android_DEV
+  extends:
+    - .bitrise_build
+    - .only_main_or_manual
+
+build_ios_dev:
+  variables:
+    BITRISE_WORKFLOW: iOS_DEV
+  extends:
+    - .bitrise_build
+    - .only_main_or_manual
+
+build_android_test:
+  variables:
+    BITRISE_WORKFLOW: Android_TEST
+  extends:
+    - .bitrise_build
+    - .only_main_manual
+
+build_ios_test:
+  variables:
+    BITRISE_WORKFLOW: iOS_TEST
+  extends:
+    - .bitrise_build
+    - .only_main_manual
+
+build_android_demo:
+  variables:
+    BITRISE_WORKFLOW: Android_DEMO
+  extends:
+    - .bitrise_build
+    - .only_main_manual
+
+build_ios_demo:
+  variables:
+    BITRISE_WORKFLOW: iOS_DEMO
+  extends:
+    - .bitrise_build
+    - .only_main_manual
+
+# E2E
 bitrise_ios_e2e:
   variables:
     BITRISE_WORKFLOW: E2E_iOS
   extends:
-    - .bitrise_builder
+    - .bitrise_e2e
     - .only_main_or_manual
 
 bitrise_android_e2e:
   variables:
     BITRISE_WORKFLOW: E2E_Android
   extends:
-    - .bitrise_builder
+    - .bitrise_e2e
     - .only_main_or_manual
