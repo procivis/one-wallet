@@ -21,12 +21,6 @@ workflow:
       when: on_success
     - when: manual
 
-.only_main_manual:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-      when: manual
-    - when: never
-
 .bitrise_e2e:
   stage: e2e_tests
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
@@ -134,59 +128,32 @@ sonarqube-check:
   before_script: [] # disable node_module fetching, yarn not available in the image
 
 # APP BUILDs
-build_android_dev:
-  variables:
-    BITRISE_WORKFLOW: Android_DEV
+build:
+  parallel:
+    matrix:
+      - BITRISE_WORKFLOW:
+          - Android_DEV
+          - iOS_DEV
+          - Android_TEST
+          - iOS_TEST
+          - Android_DEMO
+          - iOS_DEMO
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
+      when: on_success
+    - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
+      when: never
+    - when: manual
   extends:
     - .bitrise_build
-    - .only_main_or_manual
-
-build_ios_dev:
-  variables:
-    BITRISE_WORKFLOW: iOS_DEV
-  extends:
-    - .bitrise_build
-    - .only_main_or_manual
-
-build_android_test:
-  variables:
-    BITRISE_WORKFLOW: Android_TEST
-  extends:
-    - .bitrise_build
-    - .only_main_manual
-
-build_ios_test:
-  variables:
-    BITRISE_WORKFLOW: iOS_TEST
-  extends:
-    - .bitrise_build
-    - .only_main_manual
-
-build_android_demo:
-  variables:
-    BITRISE_WORKFLOW: Android_DEMO
-  extends:
-    - .bitrise_build
-    - .only_main_manual
-
-build_ios_demo:
-  variables:
-    BITRISE_WORKFLOW: iOS_DEMO
-  extends:
-    - .bitrise_build
-    - .only_main_manual
 
 # E2E
-bitrise_ios_e2e:
-  variables:
-    BITRISE_WORKFLOW: E2E_iOS
-  extends:
-    - .bitrise_e2e
-    - .only_main_or_manual
-
-bitrise_android_e2e:
-  variables:
-    BITRISE_WORKFLOW: E2E_Android
+e2e:
+  parallel:
+    matrix:
+      - BITRISE_WORKFLOW:
+          - E2E_iOS
+          - E2E_Android
   extends:
     - .bitrise_e2e
     - .only_main_or_manual
