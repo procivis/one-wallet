@@ -9,6 +9,7 @@ import { DefaultTheme, NavigationContainer, NavigationState, PartialState } from
 import i18n from 'i18n-js';
 import React from 'react';
 
+import { ONECoreContextProvider } from '../hooks/core-context';
 import { useStores } from '../models';
 import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';
@@ -35,9 +36,11 @@ export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
   return (
     <AccessibilityLanguageProvider language={locale.locale ?? i18n.defaultLocale ?? 'en'}>
-      <NavigationContainer ref={navigationRef} theme={DefaultTheme} onStateChange={onNavigationChange} {...props}>
-        <RootNavigator />
-      </NavigationContainer>
+      <ONECoreContextProvider>
+        <NavigationContainer ref={navigationRef} theme={DefaultTheme} onStateChange={onNavigationChange} {...props}>
+          <RootNavigator />
+        </NavigationContainer>
+      </ONECoreContextProvider>
     </AccessibilityLanguageProvider>
   );
 };
