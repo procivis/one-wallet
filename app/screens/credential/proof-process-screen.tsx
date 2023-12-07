@@ -6,8 +6,8 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import ONE from 'react-native-one-core';
 
+import { useGetONECore } from '../../hooks/core-context';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
@@ -16,18 +16,20 @@ import { reportException } from '../../utils/reporting';
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
+  const getCore = useGetONECore();
 
   useBlockOSBackNavigation();
 
   const [state, setState] = useState(LoadingResultState.InProgress);
   useEffect(() => {
-    ONE.holderSubmitProof(route.params.interactionId, route.params.credentials)
+    getCore()
+      .holderSubmitProof(route.params.interactionId, route.params.credentials)
       .then(() => setState(LoadingResultState.Success))
       .catch((e) => {
         setState(LoadingResultState.Failure);
         reportException(e, 'Submit Proof failure');
       });
-  }, [route]);
+  }, [getCore, route]);
 
   const onClose = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });

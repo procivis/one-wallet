@@ -9,7 +9,6 @@ const WALLET_STATE_STORAGE_KEY = 'wallet';
 export async function setupWalletStore(env: Environment) {
   let walletStore: WalletStore;
   const defaultData = {
-    exists: false,
     holderDidId: '',
   };
 
