@@ -16,7 +16,6 @@ import { CredentialStateEnum } from 'react-native-one-core';
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
 import { formatClaimValue } from '../../utils/credential';
 
@@ -55,9 +54,6 @@ const CredentialDetailScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const route = useRoute<RootRouteProp<'CredentialDetail'>>();
 
-  const {
-    walletStore: { credentialDeleted },
-  } = useStores();
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
 
@@ -85,7 +81,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
                   text: translate('common.delete'),
                   style: 'destructive',
                   onPress: () => {
-                    credentialDeleted(credentialId);
+                    //   credentialDeleted(credentialId);
                     navigation.goBack();
                   },
                 },
@@ -95,7 +91,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
           }
         },
       ),
-    [credentialDeleted, credentialId, navigation, showActionSheetWithOptions],
+    [navigation, showActionSheetWithOptions],
   );
 
   return credential ? (
