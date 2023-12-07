@@ -5,9 +5,9 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 
-import { useInitializeONECore } from '../../hooks/core-init';
+import { useInitializeONECoreIdentifiers } from '../../hooks/core-init';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 
@@ -21,10 +21,13 @@ const PinCodeSetScreen: FunctionComponent = () => {
     rootNavigation.replace('Tabs', { screen: 'Wallet' });
   }, [rootNavigation]);
 
-  const initializeONECore = useInitializeONECore();
+  const [status, setStatus] = useState(LoadingResultState.InProgress);
+  const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers();
   useEffect(() => {
-    initializeONECore();
-  }, [initializeONECore]);
+    initializeONECoreIdentifiers()
+      .then(() => setStatus(LoadingResultState.Success))
+      .catch(() => setStatus(LoadingResultState.Failure));
+  }, [initializeONECoreIdentifiers]);
 
   useBlockOSBackNavigation();
 
@@ -34,7 +37,7 @@ const PinCodeSetScreen: FunctionComponent = () => {
       variation={LoadingResultVariation.Neutral}
       title={translate('onboarding.pinCodeSet.title')}
       subtitle={translate('onboarding.pinCodeSet.description')}
-      state={LoadingResultState.Success}
+      state={status}
       inProgressCloseButtonLabel={translate('common.close')}
       successCloseButtonLabel={translate('common.continue')}
       failureCloseButtonLabel={translate('common.close')}
