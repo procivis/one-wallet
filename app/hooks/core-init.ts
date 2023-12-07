@@ -1,18 +1,22 @@
 import { useCallback } from 'react';
-import ONE, { DidTypeEnum, OneError, OneErrorCode } from 'react-native-one-core';
+import { DidTypeEnum, OneError, OneErrorCode } from 'react-native-one-core';
 
 import { useStores } from '../models';
 import { reportException } from '../utils/reporting';
+import { useGetONECore } from './core-context';
 
 // using single static organisation within the wallet for all entries
 export const ONE_CORE_ORGANISATION_ID = '11111111-2222-3333-a444-ffffffffffff';
 
 // create base local identifiers in the wallet
-export const useInitializeONECore = () => {
+export const useInitializeONECoreIdentifiers = () => {
   const { walletStore } = useStores();
+  const getCore = useGetONECore();
 
-  return useCallback(() => {
-    ONE.createOrganisation(ONE_CORE_ORGANISATION_ID)
+  return useCallback(async () => {
+    const core = getCore();
+    await core
+      .createOrganisation(ONE_CORE_ORGANISATION_ID)
       .catch((err) => {
         if (err instanceof OneError && err.code === OneErrorCode.AlreadyExists) {
           return;
@@ -20,26 +24,28 @@ export const useInitializeONECore = () => {
         throw err;
       })
       .then(() =>
-        ONE.generateKey({
-          organisationId: ONE_CORE_ORGANISATION_ID,
-          keyType: 'ES256',
-          keyParams: {},
-          name: 'holder-key',
-          storageType: 'SECURE_ELEMENT',
-          storageParams: {},
-        }).catch(() =>
-          ONE.generateKey({
+        core
+          .generateKey({
             organisationId: ONE_CORE_ORGANISATION_ID,
-            keyType: 'EDDSA',
+            keyType: 'ES256',
             keyParams: {},
             name: 'holder-key',
-            storageType: 'INTERNAL',
+            storageType: 'SECURE_ELEMENT',
             storageParams: {},
-          }),
-        ),
+          })
+          .catch(() =>
+            core.generateKey({
+              organisationId: ONE_CORE_ORGANISATION_ID,
+              keyType: 'EDDSA',
+              keyParams: {},
+              name: 'holder-key',
+              storageType: 'INTERNAL',
+              storageParams: {},
+            }),
+          ),
       )
       .then((keyId) =>
-        ONE.createDid({
+        core.createDid({
           organisationId: ONE_CORE_ORGANISATION_ID,
           name: 'holder-did',
           didType: DidTypeEnum.LOCAL,
@@ -59,6 +65,7 @@ export const useInitializeONECore = () => {
       })
       .catch((err) => {
         reportException(err, 'Failed to create base identifiers');
+        throw err;
       });
-  }, [walletStore]);
+  }, [walletStore, getCore]);
 };

@@ -11,7 +11,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ONE, {
+import {
   CredentialStateEnum,
   OneError,
   OneErrorCode,
@@ -22,6 +22,7 @@ import ONE, {
 
 import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
+import { useGetONECore } from '../../hooks/core-context';
 import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -36,6 +37,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
   const sharingNavigation = useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const getCore = useGetONECore();
 
   useBlockOSBackNavigation();
 
@@ -44,7 +46,7 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const { request, selectedCredentialId } = route.params;
   const presentationDefinition = useMemoAsync(async () => {
-    const definition = await ONE.getPresentationDefinition(request.proofId);
+    const definition = await getCore().getPresentationDefinition(request.proofId);
 
     // refresh revocation status of the applicable credentials
     const credentialIds = new Set<string>(
@@ -55,8 +57,8 @@ const ProofRequestScreen: FunctionComponent = () => {
     await checkRevocation(Array.from(credentialIds)).catch((e) => reportException(e, 'Revocation check failed'));
 
     return definition;
-  }, [checkRevocation, request]);
-  const proof = useMemoAsync(() => ONE.getProof(request.proofId), [request]);
+  }, [checkRevocation, request, getCore]);
+  const proof = useMemoAsync(() => getCore().getProof(request.proofId), [request, getCore]);
 
   const [selectedCredentials, setSelectedCredentials] = useState<
     Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest | undefined>
@@ -137,13 +139,15 @@ const ProofRequestScreen: FunctionComponent = () => {
   );
 
   const onReject = useCallback(() => {
-    ONE.holderRejectProof(request.interactionId).catch((err) => {
-      if (!(err instanceof OneError) || err.code !== OneErrorCode.NotSupported) {
-        reportException(err, 'Reject Proof failure');
-      }
-    });
+    getCore()
+      .holderRejectProof(request.interactionId)
+      .catch((err) => {
+        if (!(err instanceof OneError) || err.code !== OneErrorCode.NotSupported) {
+          reportException(err, 'Reject Proof failure');
+        }
+      });
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [rootNavigation, request]);
+  }, [rootNavigation, request, getCore]);
 
   const onSubmit = useCallback(() => {
     sharingNavigation.navigate('Processing', {
