@@ -1,9 +1,11 @@
 import { navigationTabsDecorator, NavigationTabsLayoutVariant } from '@procivis/react-native-components';
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { DashboardIcon, QRIcon } from '../../components/icon/nav-bar-icon';
+import { useRuntimeDeepLinkHandling } from '../../hooks/deep-link';
 import { useUpdatedTranslate } from '../../i18n';
 import QRCodeScannerScreen from '../../screens/dashboard/qr-code-scanner-screen';
 import WalletScreen from '../../screens/dashboard/wallet-screen';
@@ -18,6 +20,9 @@ const Tab = createBottomTabNavigator<TabsNavigatorParamList>();
 
 const TabsNavigator = () => {
   const translate = useUpdatedTranslate();
+
+  const isFocused = useIsFocused();
+  useRuntimeDeepLinkHandling(isFocused);
 
   return (
     <Tab.Navigator

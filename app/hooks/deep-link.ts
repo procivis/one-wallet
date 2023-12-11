@@ -3,39 +3,45 @@ import { useCallback, useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
 import { RootNavigationProp } from '../navigators/root/root-navigator-routes';
-import { reportTraceInfo } from '../utils/reporting';
+import { reportException, reportTraceInfo } from '../utils/reporting';
 
-export const useDeepLink = (enabled = true) => {
+export const useRuntimeDeepLinkHandling = (enabled: boolean) => {
   const handleInvitationUrl = useInvitationHandling();
 
-  const handleDeepLink = useCallback(
-    (url: string) => {
-      reportTraceInfo('Connection', 'Handling deep link');
-      handleInvitationUrl(url);
-    },
-    [handleInvitationUrl],
-  );
-
   const [deepLinkURL, setDeepLinkURL] = useState<string>();
-
   useEffect(() => {
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        setDeepLinkURL(url);
-      }
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      reportTraceInfo('Connection', 'Runtime deep link');
+      setDeepLinkURL(url);
     });
-  }, []);
-
-  useEffect(() => {
-    const subscription = Linking.addEventListener('url', ({ url }) => setDeepLinkURL(url));
     return () => subscription.remove();
   }, []);
 
   useEffect(() => {
-    if (!deepLinkURL || !enabled) return;
-    handleDeepLink(deepLinkURL);
-    setDeepLinkURL(undefined);
-  }, [deepLinkURL, enabled, handleDeepLink]);
+    if (deepLinkURL && enabled) {
+      setDeepLinkURL(undefined);
+      handleInvitationUrl(deepLinkURL);
+    }
+  }, [deepLinkURL, enabled, handleInvitationUrl]);
+};
+
+let initialDeepLinkHandled = false;
+export const useInitialDeepLinkHandling = () => {
+  const handleInvitationUrl = useInvitationHandling();
+
+  return useCallback(() => {
+    if (!initialDeepLinkHandled) {
+      Linking.getInitialURL()
+        .then((url) => {
+          initialDeepLinkHandled = true;
+          if (url) {
+            reportTraceInfo('Connection', 'Initial deep link');
+            handleInvitationUrl(url);
+          }
+        })
+        .catch((e) => reportException(e, 'Failed to get initial deep link'));
+    }
+  }, [handleInvitationUrl]);
 };
 
 export const useInvitationHandling = () => {
