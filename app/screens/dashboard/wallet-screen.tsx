@@ -7,7 +7,7 @@ import {
   TextAvatar,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
@@ -15,7 +15,6 @@ import { CredentialStateEnum } from 'react-native-one-core';
 
 import { EmptyIcon, NextIcon, SettingsIcon } from '../../components/icon/wallet-icon';
 import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
-import { useDeepLink } from '../../hooks/deep-link';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -25,9 +24,6 @@ import TabBarAwareContainer from './tab-bar-aware-container';
 const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
-
-  const isFocused = useIsFocused();
-  useDeepLink(isFocused);
 
   const {
     locale: { locale },
