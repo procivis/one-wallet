@@ -6,6 +6,7 @@ import { AppState, Platform } from 'react-native';
 import { biometricAuthenticate, useBiometricType } from '../../components/pin-code/biometric';
 import { usePinCodeValidation } from '../../components/pin-code/pin-code';
 import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
+import { useInitialDeepLinkHandling } from '../../hooks/deep-link';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
@@ -30,10 +31,12 @@ const PinCodeCheckScreen: FunctionComponent = () => {
 
   const validatePin = usePinCodeValidation();
 
+  const handleInitialDeepLink = useInitialDeepLinkHandling();
   const onCheckPassed = useCallback(() => {
     // the entry was correct (biometric or manual) -> hide the lock screen
     navigation.pop();
-  }, [navigation]);
+    handleInitialDeepLink();
+  }, [handleInitialDeepLink, navigation]);
 
   const onPinEntered = useCallback(
     (userEntry: string) => {
