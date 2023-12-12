@@ -1,7 +1,7 @@
 export enum KeyType {
   EDDSA = 'EDDSA',
-  ECDSA = 'ECDSA',
-  BSS = 'BBS+',
+  ES256 = 'ES256',
+  BBS = 'BBS+',
 }
 
 export enum StorageType {
@@ -19,6 +19,7 @@ export enum DidMethod {
   KEY = 'KEY',
   WEB = 'WEB',
   X509 = 'X509',
+  JWK = 'JWK',
 }
 
 export enum Transport {
