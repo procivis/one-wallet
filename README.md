@@ -83,3 +83,35 @@ npx detox test --configuration ios.sim.release
 adb kill-server
 adb start-server
 ```
+
+## SBOM
+
+Source:
+
+- [https://github.com/CycloneDX/cdxgen](https://github.com/CycloneDX/cdxgen)
+
+Installation:
+
+```shell
+npm install -g @cyclonedx/cdxgen
+```
+
+- Prepare env
+
+```shell
+export FETCH_LICENSE=true
+```
+
+- ReactNative SBOM
+
+```shell
+export DEPENDENCY_TRACK_PROJECT_NAME="ONE-Wallet"
+cdxgen --required-only -p -t js -o bom-rn.xml
+```
+
+- Android SBOM
+
+```shell
+export DEPENDENCY_TRACK_PROJECT_NAME="ONE-Wallet-Android"
+cdxgen --required-only -p -t java -o bom-android.xml android/
+```
