@@ -7,7 +7,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 
-import { useGetONECore } from '../../hooks/core-context';
+import { useONECore } from '../../hooks/core-context';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
@@ -16,20 +16,20 @@ import { reportException } from '../../utils/reporting';
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
-  const getCore = useGetONECore();
+  const { core } = useONECore();
 
   useBlockOSBackNavigation();
 
   const [state, setState] = useState(LoadingResultState.InProgress);
   useEffect(() => {
-    getCore()
+    core
       .holderSubmitProof(route.params.interactionId, route.params.credentials)
       .then(() => setState(LoadingResultState.Success))
       .catch((e) => {
         setState(LoadingResultState.Failure);
         reportException(e, 'Submit Proof failure');
       });
-  }, [getCore, route]);
+  }, [core, route]);
 
   const onClose = useCallback(() => {
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
