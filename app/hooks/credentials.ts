@@ -2,14 +2,15 @@ import { CredentialStateEnum, InvitationResult, OneError, OneErrorCode } from 'r
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useStores } from '../models';
-import { useGetONECore, useONECore } from './core-context';
+import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 
 const CREDENTIAL_LIST_QUERY_KEY = 'credential-list';
 const CREDENTIAL_DETAIL_QUERY_KEY = 'credential-detail';
 
 export const useCredentials = () => {
-  const core = useONECore();
+  const { core } = useONECore();
+
   return useQuery(
     [CREDENTIAL_LIST_QUERY_KEY],
     () =>
@@ -25,19 +26,19 @@ export const useCredentials = () => {
         ),
     {
       keepPreviousData: true,
-      enabled: Boolean(core),
     },
   );
 };
 
 export const useCredentialDetail = (credentialId: string | undefined) => {
-  const core = useONECore();
+  const { core } = useONECore();
+
   return useQuery(
     [CREDENTIAL_DETAIL_QUERY_KEY, credentialId],
-    () => (credentialId ? core?.getCredential(credentialId) : undefined),
+    () => (credentialId ? core.getCredential(credentialId) : undefined),
     {
       keepPreviousData: true,
-      enabled: Boolean(credentialId && core),
+      enabled: Boolean(credentialId),
     },
   );
 };
@@ -45,23 +46,22 @@ export const useCredentialDetail = (credentialId: string | undefined) => {
 export const useInvitationHandler = () => {
   const queryClient = useQueryClient();
   const { walletStore } = useStores();
-  const getCore = useGetONECore();
-  return useMutation(
-    async (invitationUrl: string) => getCore().handleInvitation(invitationUrl, walletStore.holderDidId),
-    {
-      onSuccess: (result: InvitationResult) => {
-        if ('credentialIds' in result) {
-          queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-        }
-      },
+  const { core } = useONECore();
+
+  return useMutation(async (invitationUrl: string) => core.handleInvitation(invitationUrl, walletStore.holderDidId), {
+    onSuccess: (result: InvitationResult) => {
+      if ('credentialIds' in result) {
+        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+      }
     },
-  );
+  });
 };
 
 export const useCredentialAccept = () => {
   const queryClient = useQueryClient();
-  const getCore = useGetONECore();
-  return useMutation(async (interactionId: string) => getCore().holderAcceptCredential(interactionId), {
+  const { core } = useONECore();
+
+  return useMutation(async (interactionId: string) => core.holderAcceptCredential(interactionId), {
     onSuccess: () => {
       queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
       queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
@@ -71,17 +71,15 @@ export const useCredentialAccept = () => {
 
 export const useCredentialReject = () => {
   const queryClient = useQueryClient();
-  const getCore = useGetONECore();
+  const { core } = useONECore();
   return useMutation(
     async (interactionId: string) =>
-      getCore()
-        .holderRejectCredential(interactionId)
-        .catch((err) => {
-          if (err instanceof OneError && err.code === OneErrorCode.NotSupported) {
-            return;
-          }
-          throw err;
-        }),
+      core.holderRejectCredential(interactionId).catch((err) => {
+        if (err instanceof OneError && err.code === OneErrorCode.NotSupported) {
+          return;
+        }
+        throw err;
+      }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
@@ -93,8 +91,9 @@ export const useCredentialReject = () => {
 
 export const useCredentialRevocationCheck = () => {
   const queryClient = useQueryClient();
-  const getCore = useGetONECore();
-  return useMutation(async (credentialIds: string[]) => getCore().checkRevocation(credentialIds), {
+  const { core } = useONECore();
+
+  return useMutation(async (credentialIds: string[]) => core.checkRevocation(credentialIds), {
     onSuccess: () => {
       queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
       queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
