@@ -11,25 +11,25 @@ import { StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
-import { useGetONECore } from '../../hooks/core-context';
+import { useONECore } from '../../hooks/core-context';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 const AppInformationScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
-  const getCore = useGetONECore();
+  const { core } = useONECore();
 
   const appVersion = `v${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()} (${Config.CONFIG_NAME}, ${
     Config.ENVIRONMENT
   })`;
 
   const coreVersion = useMemoAsync(async () => {
-    const version = await getCore().getVersion();
+    const version = await core.getVersion();
     return `ONE-core: v${version.pipelineId} (${formatDateTime(new Date(version.buildTime))}, ${version.branch}, ${
       version.commit
     })`;
-  }, [getCore]);
+  }, [core]);
 
   return (
     <DetailScreen
