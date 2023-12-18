@@ -3,22 +3,31 @@ image: node:16-alpine
 stages:
   - prepare
   - test
+  - scan
+  - scan_validation
   - build
   - e2e_tests
 
 variables:
   # ONE-wallet project on Bitrise
   BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
+  DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
+
 
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH
     - if: $CI_COMMIT_TAG
 
-.only_main_or_manual:
+
+.only_main:
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
       when: on_success
+
+.only_main_or_manual:
+  rules:
+    - !reference [.only_main, rules]
     - when: manual
 
 .bitrise_e2e:
@@ -124,7 +133,7 @@ sonarqube-check:
   allow_failure: true
   extends:
     - .modules_setup
-    - .only_main_or_manual
+    - .only_main
   before_script: [] # disable node_module fetching, yarn not available in the image
 
 # APP BUILDs
@@ -157,3 +166,161 @@ e2e:
   extends:
     - .bitrise_e2e
     - .only_main_or_manual
+
+
+.dTrack_metrics: &dTrack_metrics
+  - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
+  - apk add --update curl jq
+  - base_url=${DEPENDENCY_TRACK_BASE_URL}/api/v1/project/lookup
+  - url="${base_url}?name=${DEPENDENCY_TRACK_PROJECT_NAME}&version=${D_TRACK_PROJECT_VERSION}"
+  - echo "URL=$url"
+  - >
+    result=$(curl -X GET "${url}" \
+      -H "X-Api-Key: ${DEPENDENCY_TRACK_API_KEY}" \
+      -H "Accept: application/json")
+  - metrics=$(echo $result | jq -r .metrics)
+  - echo "Dependency Track Project Version metrics=${metrics}"
+
+.dTrack_metrics_validation:
+  stage: scan_validation
+  allow_failure: true
+  script:
+    - *dTrack_metrics
+    - critical=$(echo ${metrics} | jq -r .critical)
+    - high=$(echo ${metrics} | jq -r .high)
+    - echo "Critical vulnerabilities=${critical}"
+    - echo "High vulnerabilities=${high}"
+    - >
+      if [[ ${critical} -gt 0  || ${high} -gt 0  ]]; then
+          echo "Lib vulnerabilities more that 0."
+          exit 1;
+      fi
+
+.dTrack_policy_validation:
+  stage: scan_validation
+  allow_failure: true
+  script:
+    - *dTrack_metrics
+    - violated_licences=$(echo ${metrics} | jq -r .policyViolationsFail)
+    - echo "Count of violated_licences=${violated_licences}"
+    - >
+      if [[ ${violated_licences} -gt 0 ]]; then
+        echo "Violated licences more that 0."
+        exit 1;
+      fi
+
+.upload_bom:
+  stage: scan
+  needs: [build_deps]
+  when: manual
+  variables:
+    SBOM_FILE_PATH: "bom.json"
+    FETCH_LICENSE: "true"
+    PROJECT: "js"
+    PROJECT_PATH: "."
+  before_script:
+    - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
+    - npm install -g @cyclonedx/cdxgen
+  script:
+    - yarn rnuc:dev
+    - >
+      cdxgen --required-only -p -t ${PROJECT} -o ${SBOM_FILE_PATH}
+      --server-url ${DEPENDENCY_TRACK_BASE_URL}
+      --api-key ${DEPENDENCY_TRACK_API_KEY}
+      --project-name ${DEPENDENCY_TRACK_PROJECT_NAME}
+      --project-version ${D_TRACK_PROJECT_VERSION}
+      ${PROJECT_PATH}
+  artifacts:
+    reports:
+      cyclonedx:
+        - ${SBOM_FILE_PATH}
+
+
+dependency_track:android:upload-bom:
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.74.0
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
+    SBOM_FILE_PATH: "android-bom.json"
+    PROJECT: "java"
+    PROJECT_PATH: "android/"
+  extends:
+      - .modules_setup
+      - .upload_bom
+      - .only_main_or_manual
+
+dependency_track:ios:upload-bom:
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  variables:
+    D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
+    SBOM_FILE_PATH: "artifacts/bom.xml"
+  before_script:
+    - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
+  script:
+    - >
+      /etc/gitrise.sh
+      --access-token $BITRISE_API_ACCESS_TOKEN
+      --slug $BITRISE_PROJECT_SLUG
+      --workflow iOS_SBOM
+      --branch "$CI_COMMIT_REF_NAME"
+      --output "artifacts"
+    # remove authors from OpenSSL entry, because it breaks parsing when uploaded
+    - grep -v 'mark\@openssl\.org' ${SBOM_FILE_PATH} >temp.xml
+    - mv temp.xml ${SBOM_FILE_PATH}
+    - >
+      curl -X "POST" "${D_TRACK_PATH}" \
+        -H "Content-Type: multipart/form-data" \
+        -H "X-API-Key: ${DEPENDENCY_TRACK_API_KEY}" \
+        -F "autoCreate=true" \
+        -F "projectName=${DEPENDENCY_TRACK_PROJECT_NAME}" \
+        -F "projectVersion=${D_TRACK_PROJECT_VERSION}" \
+        -F "bom=@${SBOM_FILE_PATH}"
+  extends:
+    - .upload_bom
+    - .only_main_or_manual
+
+dependency_track:react-native:upload-bom:
+  variables:
+    SBOM_FILE_PATH: "rn-bom.xml"
+  extends:
+    - .modules_setup
+    - .upload_bom
+    - .only_main_or_manual
+
+dependency_track:android:metrics:
+  needs: [dependency_track:android:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
+  extends:
+    - .dTrack_metrics_validation
+
+dependency_track:android:policy_violations:
+  needs: [dependency_track:android:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
+  extends:
+    - .dTrack_policy_validation
+
+dependency_track:ios:metrics:
+  needs: [dependency_track:ios:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
+  extends:
+    - .dTrack_metrics_validation
+
+dependency_track:ios:policy_violations:
+  needs: [dependency_track:ios:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
+  extends:
+    - .dTrack_policy_validation
+
+dependency_track:react-native:metrics:
+  needs: [dependency_track:react-native:upload-bom]
+  extends:
+    - .dTrack_metrics_validation
+
+dependency_track:react-native:policy_violations:
+  needs: [dependency_track:react-native:upload-bom]
+  extends:
+    - .dTrack_policy_validation
