@@ -248,6 +248,36 @@ dependency_track:android:upload-bom:
       - .upload_bom
       - .only_main_or_manual
 
+dependency_track:ios:upload-bom:
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  variables:
+    D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
+    SBOM_FILE_PATH: "artifacts/bom.xml"
+  before_script:
+    - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
+  script:
+    - >
+      /etc/gitrise.sh
+      --access-token $BITRISE_API_ACCESS_TOKEN
+      --slug $BITRISE_PROJECT_SLUG
+      --workflow iOS_SBOM
+      --branch "$CI_COMMIT_REF_NAME"
+      --output "artifacts"
+    # remove authors from OpenSSL entry, because it breaks parsing when uploaded
+    - grep -v 'mark\@openssl\.org' ${SBOM_FILE_PATH} >temp.xml
+    - mv temp.xml ${SBOM_FILE_PATH}
+    - >
+      curl -X "POST" "${D_TRACK_PATH}" \
+        -H "Content-Type: multipart/form-data" \
+        -H "X-API-Key: ${DEPENDENCY_TRACK_API_KEY}" \
+        -F "autoCreate=true" \
+        -F "projectName=${DEPENDENCY_TRACK_PROJECT_NAME}" \
+        -F "projectVersion=${D_TRACK_PROJECT_VERSION}" \
+        -F "bom=@${SBOM_FILE_PATH}"
+  extends:
+    - .upload_bom
+    - .only_main_or_manual
 
 dependency_track:react-native:upload-bom:
   variables:
@@ -268,6 +298,20 @@ dependency_track:android:policy_violations:
   needs: [dependency_track:android:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
+  extends:
+    - .dTrack_policy_validation
+
+dependency_track:ios:metrics:
+  needs: [dependency_track:ios:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
+  extends:
+    - .dTrack_metrics_validation
+
+dependency_track:ios:policy_violations:
+  needs: [dependency_track:ios:upload-bom]
+  variables:
+    DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
   extends:
     - .dTrack_policy_validation
 
