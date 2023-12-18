@@ -3,7 +3,7 @@ import { DidTypeEnum, OneError, OneErrorCode } from 'react-native-one-core';
 
 import { useStores } from '../models';
 import { reportException } from '../utils/reporting';
-import { useGetONECore } from './core-context';
+import { useONECore } from './core-context';
 
 // using single static organisation within the wallet for all entries
 export const ONE_CORE_ORGANISATION_ID = '11111111-2222-3333-a444-ffffffffffff';
@@ -11,10 +11,9 @@ export const ONE_CORE_ORGANISATION_ID = '11111111-2222-3333-a444-ffffffffffff';
 // create base local identifiers in the wallet
 export const useInitializeONECoreIdentifiers = () => {
   const { walletStore } = useStores();
-  const getCore = useGetONECore();
+  const { core } = useONECore();
 
   return useCallback(async () => {
-    const core = getCore();
     await core
       .createOrganisation(ONE_CORE_ORGANISATION_ID)
       .catch((err) => {
@@ -67,5 +66,5 @@ export const useInitializeONECoreIdentifiers = () => {
         reportException(err, 'Failed to create base identifiers');
         throw err;
       });
-  }, [walletStore, getCore]);
+  }, [core, walletStore]);
 };
