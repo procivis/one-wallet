@@ -94,3 +94,7 @@ detox-junit.xml
 node_modules_*.png
 index.android.bundle
 modules.json
+
+# SBOM
+bom*.json
+bom*.xml
