@@ -1,25 +1,37 @@
-import React, { FunctionComponent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { initializeCore, ONECore } from 'react-native-one-core';
 
-import { reportError, reportException } from '../utils/reporting';
+import { reportException } from '../utils/reporting';
 
 interface ContextValue {
-  core?: ONECore;
-  reinitialize: () => Promise<void>;
+  core: ONECore;
+  initialize: (force?: boolean) => Promise<void>;
 }
-const ONECoreContext = React.createContext<ContextValue>({ reinitialize: async () => undefined });
 
-export const ONECoreContextProvider: FunctionComponent = ({ children }) => {
+const defaultContextValue: ContextValue = {
+  core: {} as ONECore,
+  initialize: () => Promise.resolve(),
+};
+
+const ONECoreContext = createContext<ContextValue>(defaultContextValue);
+
+export const ONECoreContextProvider: FC = ({ children }) => {
   const [core, setCore] = useState<ONECore>();
 
-  const initialize = useCallback(() => {
-    setCore(undefined);
-    return initializeCore()
-      .then(setCore)
-      .catch((e) => {
-        reportException(e, "Couldn't initialize core");
-      });
-  }, []);
+  const initialize = useCallback(
+    async (force?: boolean) => {
+      if (core && !force) {
+        return;
+      }
+
+      try {
+        setCore(await initializeCore());
+      } catch (e) {
+        reportException(e, 'Failed to initialize core');
+      }
+    },
+    [core],
+  );
 
   useEffect(
     () => {
@@ -29,22 +41,19 @@ export const ONECoreContextProvider: FunctionComponent = ({ children }) => {
     [],
   );
 
-  const contextValue = useMemo<ContextValue>(() => ({ core, reinitialize: initialize }), [core, initialize]);
+  const contextValue = useMemo(
+    () => ({
+      core: core ?? defaultContextValue.core,
+      initialize,
+    }),
+    [core, initialize],
+  );
+
+  if (!core) {
+    return null;
+  }
+
   return <ONECoreContext.Provider value={contextValue}>{children}</ONECoreContext.Provider>;
 };
 
-export const useONECore = () => useContext(ONECoreContext).core;
-
-export const useReinitializeONECore = () => useContext(ONECoreContext).reinitialize;
-
-export const useGetONECore = () => {
-  const core = useONECore();
-
-  return useCallback(() => {
-    if (!core) {
-      reportError('Core not initialized');
-      throw new Error('Core not initialized');
-    }
-    return core;
-  }, [core]);
-};
+export const useONECore = () => useContext(ONECoreContext);

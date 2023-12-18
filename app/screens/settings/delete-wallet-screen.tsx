@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from 'react-query';
 
 import { removePin } from '../../components/pin-code/pin-code';
-import { useGetONECore, useReinitializeONECore } from '../../hooks/core-context';
+import { useONECore } from '../../hooks/core-context';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -25,8 +25,7 @@ const DeletionConfirmScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const { top, bottom } = useSafeAreaInsets();
-  const getCore = useGetONECore();
-  const reinitializeONECore = useReinitializeONECore();
+  const { core, initialize } = useONECore();
   const queryClient = useQueryClient();
 
   const [confirmation, setConfirmation] = useState(false);
@@ -37,21 +36,32 @@ const DeletionConfirmScreen: FunctionComponent = () => {
   const deleteAction = useCallback(async () => {
     reportTraceInfo('Wallet', 'Deleting wallet');
     setDeletingWallet(true);
-    await getCore()
-      .uninitialize(true)
-      .then(reinitializeONECore)
-      .then(() => queryClient.invalidateQueries())
-      .catch((e) => reportException(e, 'Failed to uninitialize core'));
 
+    try {
+      await core.uninitialize(true);
+    } catch (e) {
+      reportException(e, 'Failed to uninitialize core');
+    }
+
+    await initialize(true);
+
+    try {
+      await removePin();
+    } catch (e) {
+      reportException(e, 'Failed to remove PIN');
+    }
+
+    await queryClient.invalidateQueries();
     walletStore.walletDeleted();
-    await removePin().catch((e) => reportException(e, 'Failed to remove PIN'));
+
     navigation.popToTop();
     navigation.replace('Onboarding');
-  }, [getCore, navigation, queryClient, reinitializeONECore, walletStore]);
+  }, [core, initialize, navigation, queryClient, walletStore]);
 
   return (
     <>
       <GradientBackground />
+
       {deletingWallet ? (
         <ActivityIndicator />
       ) : (

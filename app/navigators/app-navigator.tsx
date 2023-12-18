@@ -37,7 +37,7 @@ export const AppNavigator = (props: NavigationProps) => {
   return (
     <AccessibilityLanguageProvider language={locale.locale ?? i18n.defaultLocale ?? 'en'}>
       <ONECoreContextProvider>
-        <NavigationContainer ref={navigationRef} theme={DefaultTheme} onStateChange={onNavigationChange} {...props}>
+        <NavigationContainer onStateChange={onNavigationChange} ref={navigationRef} theme={DefaultTheme} {...props}>
           <RootNavigator />
         </NavigationContainer>
       </ONECoreContextProvider>
