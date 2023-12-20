@@ -24,6 +24,7 @@ import { ProofRequestCredential } from '../../components/proof-request/proof-req
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
 import { useONECore } from '../../hooks/core-context';
 import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
+import { useProofDetail, useProofReject } from '../../hooks/proofs';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import {
@@ -44,9 +45,16 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
   const { data: allCredentials } = useCredentials();
 
-  const { request, selectedCredentialId } = route.params;
+  const {
+    request: { interactionId, proofId },
+    selectedCredentialId,
+  } = route.params;
+
+  const { mutateAsync: rejectProof } = useProofReject();
+  const { data: proof } = useProofDetail(proofId);
+
   const presentationDefinition = useMemoAsync(async () => {
-    const definition = await core.getPresentationDefinition(request.proofId);
+    const definition = await core.getPresentationDefinition(proofId);
 
     // refresh revocation status of the applicable credentials
     const credentialIds = new Set<string>(
@@ -57,9 +65,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     await checkRevocation(Array.from(credentialIds)).catch((e) => reportException(e, 'Revocation check failed'));
 
     return definition;
-  }, [checkRevocation, core, request]);
-
-  const proof = useMemoAsync(() => core.getProof(request.proofId), [core, request]);
+  }, [checkRevocation, core, proofId]);
 
   const [selectedCredentials, setSelectedCredentials] = useState<
     Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest | undefined>
@@ -140,20 +146,21 @@ const ProofRequestScreen: FunctionComponent = () => {
   );
 
   const onReject = useCallback(() => {
-    core.holderRejectProof(request.interactionId).catch((err) => {
+    rejectProof(interactionId).catch((err) => {
       if (!(err instanceof OneError) || err.code !== OneErrorCode.NotSupported) {
         reportException(err, 'Reject Proof failure');
       }
     });
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [core, rootNavigation, request]);
+  }, [interactionId, rejectProof, rootNavigation]);
 
   const onSubmit = useCallback(() => {
     sharingNavigation.navigate('Processing', {
-      interactionId: request.interactionId,
       credentials: selectedCredentials as Record<string, PresentationSubmitCredentialRequest>,
+      interactionId: interactionId,
+      proofId,
     });
-  }, [sharingNavigation, request, selectedCredentials]);
+  }, [interactionId, proofId, selectedCredentials, sharingNavigation]);
 
   const allSelectionsValid =
     presentationDefinition &&
@@ -167,13 +174,7 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   return (
     <SharingScreen
-      testID="ProofRequestSharingScreen"
-      variation={SharingScreenVariation.Neutral}
-      title={translate('proofRequest.title')}
       cancelLabel={translate('common.cancel')}
-      onCancel={onReject}
-      submitLabel={translate('proofRequest.confirm')}
-      onSubmit={allSelectionsValid ? onSubmit : undefined}
       header={
         <View style={styles.header}>
           <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
@@ -181,7 +182,13 @@ const ProofRequestScreen: FunctionComponent = () => {
           </Typography>
           <Typography color={colorScheme.text}>{proof?.verifierDid}</Typography>
         </View>
-      }>
+      }
+      onCancel={onReject}
+      onSubmit={allSelectionsValid ? onSubmit : undefined}
+      submitLabel={translate('proofRequest.confirm')}
+      testID="ProofRequestSharingScreen"
+      title={translate('proofRequest.title')}
+      variation={SharingScreenVariation.Neutral}>
       {!presentationDefinition || !allCredentials ? (
         <ActivityIndicator />
       ) : (
