@@ -1464,9 +1464,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#478eb2b03a9c57fb6a7ef66086789f63c81a8f89":
+"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#ecbaf948226eb13a00df0242efd4fdba8307a6a6":
   version "0.1.0"
-  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#478eb2b03a9c57fb6a7ef66086789f63c81a8f89"
+  resolved "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#ecbaf948226eb13a00df0242efd4fdba8307a6a6"
 
 "@react-native-async-storage/async-storage@^1.14.1":
   version "1.18.1"
@@ -8569,9 +8569,9 @@ react-native-localize@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.0.0.tgz#41536e8aca8a148fd96d495d3d5cf710e25b2855"
   integrity sha512-B8taYRLuLIYDzBTKIglA3K6ntjaEwbk6mwQ72ogZYl5ovM00NnpbiZ3sRq8KRVe/V1NGczxT33uVqG6BUWGWhg==
 
-"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#93ebe6e0a2f9f831517099111b24e4cd42986936":
-  version "1.0.11903"
-  resolved "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#93ebe6e0a2f9f831517099111b24e4cd42986936"
+"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#0598469247697adc793bc1a46afbe84113c31998":
+  version "1.0.12029"
+  resolved "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#0598469247697adc793bc1a46afbe84113c31998"
 
 "react-native-picker@git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9":
   version "5.0.0"

@@ -72,13 +72,14 @@ export const useCredentialAccept = () => {
 export const useCredentialReject = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
+
   return useMutation(
     async (interactionId: string) =>
-      core.holderRejectCredential(interactionId).catch((err) => {
-        if (err instanceof OneError && err.code === OneErrorCode.NotSupported) {
+      core.holderRejectCredential(interactionId).catch((e) => {
+        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
           return;
         }
-        throw err;
+        throw e;
       }),
     {
       onSuccess: () => {
