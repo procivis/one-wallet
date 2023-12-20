@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useONECore } from './core-context';
 
-const PROOF_DETAIL_QUERY_KEY = 'credential-detail';
+const PROOF_DETAIL_QUERY_KEY = 'proof-detail';
 
 export const useProofDetail = (proofId: string | undefined) => {
   const { core } = useONECore();
