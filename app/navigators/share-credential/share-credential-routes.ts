@@ -7,14 +7,18 @@ import {
 } from 'react-native-one-core';
 
 export type ShareCredentialNavigatorParamList = {
-  ProofRequest: { request: InvitationResultProofRequest; selectedCredentialId?: string };
+  ProofRequest: {
+    request: InvitationResultProofRequest;
+    selectedCredentialId?: string;
+  };
   SelectCredential: {
-    request: PresentationDefinitionRequestedCredential;
     preselectedCredentialId: string;
+    request: PresentationDefinitionRequestedCredential;
   };
   Processing: {
-    interactionId: string;
     credentials: Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest>;
+    interactionId: string;
+    proofId: string;
   };
 };
 

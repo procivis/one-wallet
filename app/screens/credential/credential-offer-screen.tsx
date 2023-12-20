@@ -42,11 +42,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
   const issuanceNavigation = useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
-
   const { credentialId, interactionId } = route.params;
-
   const { data: credential } = useCredentialDetail(credentialId);
-
   const { mutateAsync: rejectCredential } = useCredentialReject();
 
   useBlockOSBackNavigation();
@@ -61,22 +58,22 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [interactionId, rejectCredential, rootNavigation]);
 
   const onAccept = useCallback(() => {
-    issuanceNavigation.navigate('Processing', { interactionId });
-  }, [interactionId, issuanceNavigation]);
+    issuanceNavigation.navigate('Processing', { credentialId, interactionId });
+  }, [credentialId, interactionId, issuanceNavigation]);
 
   return credential ? (
     <SharingScreen
-      testID="CredentialOfferScreen"
-      variation={SharingScreenVariation.Neutral}
-      title={translate('credentialOffer.title')}
-      contentTitle={translate('credentialOffer.credential')}
       cancelLabel={translate('credentialOffer.reject')}
+      contentTitle={translate('credentialOffer.credential')}
       onCancel={onReject}
-      submitLabel={translate('credentialOffer.accept')}
+      onDetail={onIssuerDetail}
       onSubmit={onAccept}
-      receiverTitle={translate('credentialDetail.credential.issuer')}
       receiverLabel={credential.issuerDid ?? ''}
-      onDetail={onIssuerDetail}>
+      receiverTitle={translate('credentialDetail.credential.issuer')}
+      submitLabel={translate('credentialOffer.accept')}
+      testID="CredentialOfferScreen"
+      title={translate('credentialOffer.title')}
+      variation={SharingScreenVariation.Neutral}>
       <Accordion
         title={credential.schema.name}
         icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}>
