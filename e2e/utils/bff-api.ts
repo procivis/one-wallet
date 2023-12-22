@@ -93,8 +93,10 @@ async function getLocalDid(authToken: string) {
 }
 
 export interface CredentialData {
+  redirectUri?: string | null;
   transport?: Transport;
 }
+
 /**
  * Create a new credential to be issued
  * @param authToken
@@ -159,8 +161,10 @@ export async function createProofSchema(
 }
 
 export interface ProofRequestData {
+  redirectUri?: string | null;
   transport?: Transport;
 }
+
 export async function createProofRequest(
   authToken: string,
   proofSchema?: Record<string, any>,
