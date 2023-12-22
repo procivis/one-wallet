@@ -1,5 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
+  ActivityIndicator,
   concatTestID,
   DetailScreen,
   formatDateTime,
@@ -81,8 +82,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
                   text: translate('common.delete'),
                   style: 'destructive',
                   onPress: () => {
-                    //   credentialDeleted(credentialId);
-                    navigation.goBack();
+                    navigation.replace('CredentialDeleteProcessing', { credentialId });
                   },
                 },
               ],
@@ -91,10 +91,14 @@ const CredentialDetailScreen: FunctionComponent = () => {
           }
         },
       ),
-    [navigation, showActionSheetWithOptions],
+    [navigation, showActionSheetWithOptions, credentialId],
   );
 
-  return credential ? (
+  if (!credential) {
+    return <ActivityIndicator />;
+  }
+
+  return (
     <DetailScreen
       testID="CredentialDetailScreen"
       onBack={navigation.goBack}
@@ -144,7 +148,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
         />
       </Section>
     </DetailScreen>
-  ) : null;
+  );
 };
 
 const styles = StyleSheet.create({

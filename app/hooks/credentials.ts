@@ -101,3 +101,15 @@ export const useCredentialRevocationCheck = () => {
     },
   });
 };
+
+export const useCredentialDelete = () => {
+  const queryClient = useQueryClient();
+  const { core } = useONECore();
+
+  return useMutation(async (credentialId: string) => core.deleteCredential(credentialId), {
+    onSuccess: (_, credentialId) => {
+      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+      queryClient.invalidateQueries([CREDENTIAL_DETAIL_QUERY_KEY, credentialId]);
+    },
+  });
+};
