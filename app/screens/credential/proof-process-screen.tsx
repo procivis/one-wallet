@@ -19,7 +19,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
   const { credentials, interactionId, proofId } = route.params;
   const [state, setState] = useState(LoadingResultState.InProgress);
-  const { mutate: acceptProof } = useProofAccept();
+  const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof, refetch: refetchProof } = useProofDetail(proofId);
 
   useBlockOSBackNavigation();
