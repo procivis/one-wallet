@@ -47,23 +47,35 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
     });
 
-    beforeEach(async () => {
-      const proofRequestId = await createProofRequest(authToken, proofSchema);
+    const proofRequestSharingTestCase = async (redirectUri?: string | null) => {
+      const proofRequestId = await createProofRequest(authToken, proofSchema, { redirectUri });
       const invitationUrl = await requestProof(proofRequestId, authToken);
       await scanURL(invitationUrl);
-
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
-    });
+    };
 
     it('Confirm proof request', async () => {
+      await proofRequestSharingTestCase();
       await ProofRequestSharingScreen.shareButton.tap();
+
       await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
       await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+
       await ProofRequestAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
 
+    it('Confirm proof request with redirect URI', async () => {
+      await proofRequestSharingTestCase('https://example.com');
+      await ProofRequestSharingScreen.shareButton.tap();
+
+      await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+      await expect(ProofRequestAcceptProcessScreen.ctaButton).toBeVisible();
+    });
+
     it('Reject proof request', async () => {
+      await proofRequestSharingTestCase();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
