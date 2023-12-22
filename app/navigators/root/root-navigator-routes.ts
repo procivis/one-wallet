@@ -18,6 +18,9 @@ export type RootNavigatorParamList = {
   CredentialDetail: {
     credentialId: string;
   };
+  CredentialDeleteProcessing: {
+    credentialId: string;
+  };
   Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
   IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
   ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
