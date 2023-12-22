@@ -17,6 +17,9 @@ export default function LoadingResult(screenTestID: string) {
     get closeButton() {
       return element(by.id(`${screenTestID}.close`));
     },
+    get retryButton() {
+      return element(by.id(`${screenTestID}.retry`));
+    },
     get status() {
       const res = {} as Record<LoadingResultState, Detox.IndexableNativeElement>;
       Object.values(LoadingResultState).forEach((state) =>

@@ -1,6 +1,7 @@
 import { expect } from 'detox';
 
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
+import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import PinCodeScreen from '../page-objects/PinCodeScreen';
@@ -109,6 +110,48 @@ describe('ONE-601: Credential issuance', () => {
       await expect(CredentialDetailScreen.status.element).toBeVisible();
       await expect(CredentialDetailScreen.status.value).toHaveText('Revoked');
       await expect(CredentialDetailScreen.log('revoked')).toExist();
+    });
+  });
+
+  describe('ONE-618: Credential deletion', () => {
+    let credentialId: string;
+
+    beforeAll(async () => {
+      credentialId = await createCredential(authToken, credentialSchemaJWT);
+      const invitationUrl = await offerCredential(credentialId, authToken);
+      await scanURL(invitationUrl);
+
+      await expect(CredentialOfferScreen.screen).toBeVisible();
+      await CredentialOfferScreen.acceptButton.tap();
+      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
+    });
+
+    beforeEach(async () => {
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await CredentialDetailScreen.actionButton.tap();
+      await CredentialDetailScreen.action('Delete credential').tap();
+    });
+
+    it('Cancel confirmation', async () => {
+      await CredentialDetailScreen.action('Cancel').tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.status.element).not.toExist();
+      await CredentialDetailScreen.backButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+    });
+
+    it('Accept confirmation', async () => {
+      await CredentialDetailScreen.action('Delete').tap();
+      await expect(CredentialDeleteProcessScreen.screen).toBeVisible();
+      await expect(CredentialDeleteProcessScreen.status.success).toBeVisible();
+      await CredentialDeleteProcessScreen.closeButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.credential(credentialId).element).not.toExist();
     });
   });
 
