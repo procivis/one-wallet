@@ -36,26 +36,36 @@ describe('ONE-601: Credential issuance', () => {
   describe('Credential offer', () => {
     let credentialId: string;
 
-    beforeEach(async () => {
-      credentialId = await createCredential(authToken, credentialSchemaJWT);
+    const issueCredentialTestCase = async (redirectUri?: string | null) => {
+      credentialId = await createCredential(authToken, credentialSchemaJWT, { redirectUri });
       const invitationUrl = await offerCredential(credentialId, authToken);
       await scanURL(invitationUrl);
-
       await expect(CredentialOfferScreen.screen).toBeVisible();
-    });
+    };
 
     it('Accept credential issuance', async () => {
+      await issueCredentialTestCase();
       await CredentialOfferScreen.acceptButton.tap();
 
       await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
       await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
 
+      await CredentialAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
     });
 
+    it('Accept credential issuance with redirect URI', async () => {
+      await issueCredentialTestCase('https://example.com');
+      await CredentialOfferScreen.acceptButton.tap();
+
+      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
+    });
+
     it('Reject credential issuance', async () => {
+      await issueCredentialTestCase();
       await CredentialOfferScreen.rejectButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
