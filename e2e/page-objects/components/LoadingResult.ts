@@ -11,6 +11,9 @@ export default function LoadingResult(screenTestID: string) {
     get screen() {
       return element(by.id(screenTestID));
     },
+    get ctaButton() {
+      return element(by.id(`${screenTestID}.cta`));
+    },
     get closeButton() {
       return element(by.id(`${screenTestID}.close`));
     },
