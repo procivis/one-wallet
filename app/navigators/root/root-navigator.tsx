@@ -4,6 +4,7 @@ import React, { FunctionComponent } from 'react';
 import { StatusBar } from 'react-native';
 
 import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-code-check';
+import CredentialDeleteProcessScreen from '../../screens/credential/credential-delete-process-screen';
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
@@ -52,6 +53,7 @@ const RootNavigator: FunctionComponent = () => {
         </RootStack.Group>
         <RootStack.Screen name="Settings" component={SettingsNavigator} />
         <RootStack.Screen name="CredentialDetail" component={CredentialDetailScreen} />
+        <RootStack.Screen name="CredentialDeleteProcessing" component={CredentialDeleteProcessScreen} />
       </RootStack.Navigator>
     </>
   ) : null;
