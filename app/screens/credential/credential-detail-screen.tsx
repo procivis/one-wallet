@@ -105,7 +105,12 @@ const CredentialDetailScreen: FunctionComponent = () => {
       title={credential.schema.name}
       style={{ backgroundColor: colorScheme.background }}
       rightButton={
-        <RoundButton accessibilityLabel={translate('credentialDetail.actions')} icon={MoreIcon} onPress={onActions} />
+        <RoundButton
+          testID="CredentialDetailScreen.header.action"
+          accessibilityLabel={translate('credentialDetail.actions')}
+          icon={MoreIcon}
+          onPress={onActions}
+        />
       }>
       <Section title={translate('credentialDetail.credential.title')}>
         <DataItem attribute={translate('credentialDetail.credential.schema')} value={credential.schema.name} />
