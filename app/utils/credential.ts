@@ -6,7 +6,8 @@ import { Claim } from 'react-native-one-core';
  */
 export const formatClaimValue = (claim: Claim) => {
   switch (claim.dataType) {
-    case 'DATE': {
+    case 'DATE':
+    case 'BIRTH_DATE': {
       return formatDate(new Date(claim.value)) ?? claim.value;
     }
     default:
