@@ -3,7 +3,10 @@ import { onSnapshot } from 'mobx-state-tree';
 import { config } from '../../config';
 import * as storage from '../../utils/storage';
 import { Environment } from '../environment';
-import { BackendConfigStore, BackendConfigStoreModel } from './backend-config-store';
+import {
+  BackendConfigStore,
+  BackendConfigStoreModel,
+} from './backend-config-store';
 
 const BACKEND_CONFIG_STATE_STORAGE_KEY = 'backend-config';
 
@@ -14,7 +17,10 @@ export async function setupBackendConfigStore(env: Environment) {
   };
 
   try {
-    const data = { ...defaultData, ...(await storage.load(BACKEND_CONFIG_STATE_STORAGE_KEY)) };
+    const data = {
+      ...defaultData,
+      ...(await storage.load(BACKEND_CONFIG_STATE_STORAGE_KEY)),
+    };
     backendConfigStore = BackendConfigStoreModel.create(data, env);
   } catch (e) {
     backendConfigStore = BackendConfigStoreModel.create(defaultData, env);

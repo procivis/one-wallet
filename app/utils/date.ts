@@ -46,7 +46,9 @@ const pad = (x: number) => (x >= 0 && x < 10 ? `0${x}` : String(x));
  * @returns {number} the same day, but UTC timezone with midnight time
  */
 export const convertDateToUTCTimestamp = (date: Date) =>
-  Date.parse(`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`);
+  Date.parse(
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+  );
 
 /**
  * Utility function to deal with `date`-type attributes
@@ -55,13 +57,13 @@ export const convertDateToUTCTimestamp = (date: Date) =>
  */
 export const convertDateStrToLocalDate = (date: string) =>
   Platform.select({
-    default: new Date(`${date}T00:00:00`),
     // android conversion using the standard date parsing doesn't work, computing the timestamp manually
     android: (() => {
       const timestamp = Date.parse(date);
       const timezoneOffset = new Date(date).getTimezoneOffset();
       return new Date(timestamp + timezoneOffset * 60 * 1000);
     })(),
+    default: new Date(`${date}T00:00:00`),
   });
 
 /**
@@ -74,7 +76,9 @@ export const formatDateOnlyFromUTCTimestamp = (utcTimestamp: number) => {
   return (
     formatDate(
       convertDateStrToLocalDate(
-        `${utcDate.getUTCFullYear()}-${pad(utcDate.getUTCMonth() + 1)}-${pad(utcDate.getUTCDate())}`,
+        `${utcDate.getUTCFullYear()}-${pad(utcDate.getUTCMonth() + 1)}-${pad(
+          utcDate.getUTCDate(),
+        )}`,
       ),
     ) ?? ''
   );

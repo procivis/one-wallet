@@ -12,7 +12,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useCredentialDetail, useCredentialReject } from '../../hooks/credentials';
+import {
+  useCredentialDetail,
+  useCredentialReject,
+} from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
@@ -22,15 +25,25 @@ import { RootNavigationProp } from '../../navigators/root/root-navigator-routes'
 import { formatClaimValue } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
-const DataItem: FunctionComponent<{ attribute: string; value: string; last?: boolean }> = ({
-  attribute,
-  value,
-  last,
-}) => {
+const DataItem: FunctionComponent<{
+  attribute: string;
+  last?: boolean;
+  value: string;
+}> = ({ attribute, value, last }) => {
   const colorScheme = useAppColorScheme();
   return (
-    <View style={[styles.dataItem, last && styles.dataItemLast, { borderColor: colorScheme.lighterGrey }]}>
-      <Typography color={colorScheme.textSecondary} size="sml" style={styles.dataItemLabel}>
+    <View
+      style={[
+        styles.dataItem,
+        last && styles.dataItemLast,
+        { borderColor: colorScheme.lighterGrey },
+      ]}
+    >
+      <Typography
+        color={colorScheme.textSecondary}
+        size="sml"
+        style={styles.dataItemLabel}
+      >
         {attribute}
       </Typography>
       <Typography color={colorScheme.text}>{value}</Typography>
@@ -40,7 +53,8 @@ const DataItem: FunctionComponent<{ attribute: string; value: string; last?: boo
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
-  const issuanceNavigation = useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
+  const issuanceNavigation =
+    useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
@@ -53,7 +67,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [credentialId, issuanceNavigation]);
 
   const onReject = useCallback(() => {
-    rejectCredential(interactionId).catch((e) => reportException(e, 'Reject credential offer failed'));
+    rejectCredential(interactionId).catch((e) =>
+      reportException(e, 'Reject credential offer failed'),
+    );
     rootNavigation.navigate('Tabs', { screen: 'Wallet' });
   }, [interactionId, rejectCredential, rootNavigation]);
 
@@ -73,12 +89,27 @@ const CredentialOfferScreen: FunctionComponent = () => {
       submitLabel={translate('credentialOffer.accept')}
       testID="CredentialOfferScreen"
       title={translate('credentialOffer.title')}
-      variation={SharingScreenVariation.Neutral}>
+      variation={SharingScreenVariation.Neutral}
+    >
       <Accordion
+        icon={{
+          component: (
+            <TextAvatar
+              innerSize={48}
+              produceInitials={true}
+              text={credential.schema.name}
+            />
+          ),
+        }}
         title={credential.schema.name}
-        icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}>
+      >
         {credential.claims.map((claim, index, { length }) => (
-          <DataItem key={claim.id} attribute={claim.key} value={formatClaimValue(claim)} last={length === index + 1} />
+          <DataItem
+            attribute={claim.key}
+            key={claim.id}
+            last={length === index + 1}
+            value={formatClaimValue(claim)}
+          />
         ))}
       </Accordion>
     </SharingScreen>

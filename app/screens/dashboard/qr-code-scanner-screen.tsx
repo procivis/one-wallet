@@ -1,6 +1,11 @@
 import { QRCodeScanner } from '@procivis/react-native-components';
 import { useIsFocused } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
@@ -31,9 +36,9 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     <View style={styles.screen}>
       {isFocused && (
         <QRCodeScanner
+          description={translate('wallet.qrCodeScannerScreen.description')}
           onBarCodeRead={handleCodeScan}
           title={translate('wallet.qrCodeScannerScreen.title')}
-          description={translate('wallet.qrCodeScannerScreen.description')}
         />
       )}
     </View>

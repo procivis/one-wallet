@@ -1,4 +1,8 @@
-import { createNavigationContainerRef, NavigationState, PartialState } from '@react-navigation/native';
+import {
+  createNavigationContainerRef,
+  NavigationState,
+  PartialState,
+} from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 
@@ -7,12 +11,18 @@ export const navigationRef = createNavigationContainerRef();
 /**
  * Gets the current screen from any navigation state.
  */
-export function getActiveRouteName(state: NavigationState | PartialState<NavigationState>): string | undefined {
-  if (state.index === undefined) return undefined;
+export function getActiveRouteName(
+  state: NavigationState | PartialState<NavigationState>,
+): string | undefined {
+  if (state.index === undefined) {
+    return undefined;
+  }
   const route = state.routes[state.index];
 
   // Found the active route -- return the name
-  if (!route.state) return route.name;
+  if (!route.state) {
+    return route.name;
+  }
 
   // Recursive call to deal with nested routers
   return getActiveRouteName(route.state);
@@ -25,7 +35,10 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
 export function useDisableBackButton(buttonDisabled: boolean = true) {
   useEffect(() => {
     if (buttonDisabled) {
-      const subscription = BackHandler.addEventListener('hardwareBackPress', () => true);
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => true,
+      );
       return () => subscription.remove();
     }
     return undefined;
@@ -72,7 +85,8 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
     // Unsubscribe when we're done
-    return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, []);
 }
 
@@ -88,7 +102,9 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
   // in production, remove the __DEV__ and set the state to true
   const [isRestored, setIsRestored] = useState(!__DEV__);
 
-  const onNavigationStateChange = (state: NavigationState | PartialState<NavigationState>) => {
+  const onNavigationStateChange = (
+    state: NavigationState | PartialState<NavigationState>,
+  ) => {
     // Persist state to storage
     storage.save(persistenceKey, state);
   };
@@ -96,21 +112,25 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
   const restoreState = useCallback(async () => {
     try {
       const state = await storage.load(persistenceKey);
-      if (state) setInitialNavigationState(state);
+      if (state) {
+        setInitialNavigationState(state);
+      }
     } finally {
       setIsRestored(true);
     }
   }, [persistenceKey, storage]);
 
   useEffect(() => {
-    if (!isRestored) restoreState();
+    if (!isRestored) {
+      restoreState();
+    }
   }, [isRestored, restoreState]);
 
   return {
+    initialNavigationState,
+    isRestored,
     onNavigationStateChange,
     restoreState,
-    isRestored,
-    initialNavigationState,
   };
 }
 
@@ -131,7 +151,12 @@ export function goBack() {
   }
 }
 
-export function resetRoot(params: PartialState<NavigationState> | NavigationState = { index: 0, routes: [] }) {
+export function resetRoot(
+  params: PartialState<NavigationState> | NavigationState = {
+    index: 0,
+    routes: [],
+  },
+) {
   if (navigationRef.isReady()) {
     navigationRef.resetRoot(params);
   }

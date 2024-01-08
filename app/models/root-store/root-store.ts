@@ -10,10 +10,10 @@ import { WalletStoreModel } from '../wallet-store/wallet-store';
  */
 // prettier-ignore
 export const RootStoreModel = types.model("RootStore", {
-  walletStore: WalletStoreModel,
   backendConfigStore: BackendConfigStoreModel,
   locale: LocaleStoreModel,
   userSettings: UserSettingsStoreModel,
+  walletStore: WalletStoreModel,
 })
 
 /**

@@ -50,7 +50,9 @@ function ByteStringBuffer(b) {
     }
   } else if (
     b instanceof ByteStringBuffer ||
-    (typeof b === 'object' && typeof b.data === 'string' && typeof b.read === 'number')
+    (typeof b === 'object' &&
+      typeof b.data === 'string' &&
+      typeof b.read === 'number')
   ) {
     // copy existing buffer
     this.data = b.data;
@@ -168,7 +170,9 @@ util.ByteStringBuffer.prototype.putString = function (str) {
  * @return this buffer.
  */
 util.ByteStringBuffer.prototype.putInt16 = function (i) {
-  return this.putBytes(String.fromCharCode((i >> 8) & 0xff) + String.fromCharCode(i & 0xff));
+  return this.putBytes(
+    String.fromCharCode((i >> 8) & 0xff) + String.fromCharCode(i & 0xff),
+  );
 };
 
 /**
@@ -180,7 +184,9 @@ util.ByteStringBuffer.prototype.putInt16 = function (i) {
  */
 util.ByteStringBuffer.prototype.putInt24 = function (i) {
   return this.putBytes(
-    String.fromCharCode((i >> 16) & 0xff) + String.fromCharCode((i >> 8) & 0xff) + String.fromCharCode(i & 0xff),
+    String.fromCharCode((i >> 16) & 0xff) +
+      String.fromCharCode((i >> 8) & 0xff) +
+      String.fromCharCode(i & 0xff),
   );
 };
 
@@ -208,7 +214,9 @@ util.ByteStringBuffer.prototype.putInt32 = function (i) {
  * @return this buffer.
  */
 util.ByteStringBuffer.prototype.putInt16Le = function (i) {
-  return this.putBytes(String.fromCharCode(i & 0xff) + String.fromCharCode((i >> 8) & 0xff));
+  return this.putBytes(
+    String.fromCharCode(i & 0xff) + String.fromCharCode((i >> 8) & 0xff),
+  );
 };
 
 /**
@@ -220,7 +228,9 @@ util.ByteStringBuffer.prototype.putInt16Le = function (i) {
  */
 util.ByteStringBuffer.prototype.putInt24Le = function (i) {
   return this.putBytes(
-    String.fromCharCode(i & 0xff) + String.fromCharCode((i >> 8) & 0xff) + String.fromCharCode((i >> 16) & 0xff),
+    String.fromCharCode(i & 0xff) +
+      String.fromCharCode((i >> 8) & 0xff) +
+      String.fromCharCode((i >> 16) & 0xff),
   );
 };
 
@@ -300,7 +310,9 @@ util.ByteStringBuffer.prototype.getByte = function () {
  * @return the uint16.
  */
 util.ByteStringBuffer.prototype.getInt16 = function () {
-  const rval = (this.data.charCodeAt(this.read) << 8) ^ this.data.charCodeAt(this.read + 1);
+  const rval =
+    (this.data.charCodeAt(this.read) << 8) ^
+    this.data.charCodeAt(this.read + 1);
   this.read += 2;
   return rval;
 };
@@ -343,7 +355,9 @@ util.ByteStringBuffer.prototype.getInt32 = function () {
  * @return the uint16.
  */
 util.ByteStringBuffer.prototype.getInt16Le = function () {
-  const rval = this.data.charCodeAt(this.read) ^ (this.data.charCodeAt(this.read + 1) << 8);
+  const rval =
+    this.data.charCodeAt(this.read) ^
+    (this.data.charCodeAt(this.read + 1) << 8);
   this.read += 2;
   return rval;
 };
@@ -446,7 +460,9 @@ util.ByteStringBuffer.prototype.getBytes = function (count) {
  * @return a string full of UTF-8 encoded characters.
  */
 util.ByteStringBuffer.prototype.bytes = function (count) {
-  return typeof count === 'undefined' ? this.data.slice(this.read) : this.data.slice(this.read, this.read + count);
+  return typeof count === 'undefined'
+    ? this.data.slice(this.read)
+    : this.data.slice(this.read, this.read + count);
 };
 
 /**
@@ -469,7 +485,10 @@ util.ByteStringBuffer.prototype.at = function (i) {
  * @return this buffer.
  */
 util.ByteStringBuffer.prototype.setAt = function (i, b) {
-  this.data = this.data.substr(0, this.read + i) + String.fromCharCode(b) + this.data.substr(this.read + i + 1);
+  this.data =
+    this.data.substr(0, this.read + i) +
+    String.fromCharCode(b) +
+    this.data.substr(this.read + i + 1);
   return this;
 };
 
@@ -790,12 +809,16 @@ sha256.create = function () {
     const padBytes = forge.util.createBuffer();
     padBytes.putBytes(_input.bytes());
     // 64 - (remaining msg + 8 bytes msg length) mod 64
-    padBytes.putBytes(_padding.substr(0, 64 - ((md.messageLength64[1] + 8) & 0x3f)));
+    padBytes.putBytes(
+      _padding.substr(0, 64 - ((md.messageLength64[1] + 8) & 0x3f)),
+    );
 
     /* Now append length of the message. The length is appended in bits
     as a 64-bit number in big-endian order. Since we store the length in
     bytes, we must multiply the 64-bit length by 8 (or left shift by 3). */
-    padBytes.putInt32((md.messageLength64[0] << 3) | (md.messageLength64[0] >>> 28));
+    padBytes.putInt32(
+      (md.messageLength64[0] << 3) | (md.messageLength64[0] >>> 28),
+    );
     padBytes.putInt32(md.messageLength64[1] << 3);
     const s2 = {
       h0: _state.h0,
@@ -840,14 +863,17 @@ function _init() {
 
   // create K table for SHA-256
   _k = [
-    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98,
-    0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
-    0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8,
-    0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
-    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819,
-    0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
-    0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
-    0xc67178f2,
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+    0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+    0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+    0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+    0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+    0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
   ];
 
   // now initialized
@@ -874,7 +900,8 @@ function _update(s, w, bytes) {
     for (; i < 64; ++i) {
       // XOR word 2 words ago rot right 17, rot right 19, shft right 10
       t1 = w[i - 2];
-      t1 = ((t1 >>> 17) | (t1 << 15)) ^ ((t1 >>> 19) | (t1 << 13)) ^ (t1 >>> 10);
+      t1 =
+        ((t1 >>> 17) | (t1 << 15)) ^ ((t1 >>> 19) | (t1 << 13)) ^ (t1 >>> 10);
       // XOR word 15 words ago rot right 7, rot right 18, shft right 3
       t2 = w[i - 15];
       t2 = ((t2 >>> 7) | (t2 << 25)) ^ ((t2 >>> 18) | (t2 << 14)) ^ (t2 >>> 3);
@@ -895,11 +922,17 @@ function _update(s, w, bytes) {
     // round function
     for (i = 0; i < 64; ++i) {
       // Sum1(e)
-      s1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+      s1 =
+        ((e >>> 6) | (e << 26)) ^
+        ((e >>> 11) | (e << 21)) ^
+        ((e >>> 25) | (e << 7));
       // Ch(e, f, g) (optimized the same way as SHA-1)
       ch = g ^ (e & (f ^ g));
       // Sum0(a)
-      s0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+      s0 =
+        ((a >>> 2) | (a << 30)) ^
+        ((a >>> 13) | (a << 19)) ^
+        ((a >>> 22) | (a << 10));
       // Maj(a, b, c) (optimized the same way as SHA-1)
       maj = (a & b) | (c & (a ^ b));
 
@@ -936,7 +969,9 @@ function _update(s, w, bytes) {
 /* custom written function to determine if string is ASCII or UTF-8 */
 util.hasWideChar = function (str) {
   for (let i = 0; i < str.length; i++) {
-    if (str.charCodeAt(i) >>> 8) return true;
+    if (str.charCodeAt(i) >>> 8) {
+      return true;
+    }
   }
   return false;
 };
