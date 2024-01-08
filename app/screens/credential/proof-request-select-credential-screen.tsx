@@ -11,9 +11,17 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CredentialStateEnum, PresentationDefinitionRequestedCredential } from 'react-native-one-core';
+import {
+  CredentialStateEnum,
+  PresentationDefinitionRequestedCredential,
+} from 'react-native-one-core';
 
 import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
@@ -31,7 +39,11 @@ const DataItem: FunctionComponent<{
   const colorScheme = useAppColorScheme();
   return (
     <View style={styles.dataItem}>
-      <Typography color={colorScheme.textSecondary} size="sml" style={styles.dataItemLabel}>
+      <Typography
+        color={colorScheme.textSecondary}
+        size="sml"
+        style={styles.dataItemLabel}
+      >
         {attribute}
       </Typography>
       <Typography color={colorScheme.text}>{value}</Typography>
@@ -40,33 +52,52 @@ const DataItem: FunctionComponent<{
 };
 
 const Credential: FunctionComponent<{
-  testID?: string;
   credentialId: string;
-  selected: boolean;
-  request: PresentationDefinitionRequestedCredential;
   onPress?: () => void;
+  request: PresentationDefinitionRequestedCredential;
+  selected: boolean;
+  testID?: string;
 }> = ({ testID, credentialId, selected, request, onPress }) => {
   const { data: credential } = useCredentialDetail(credentialId);
   return credential ? (
     <Accordion
-      testID={testID}
-      title={credential.schema.name}
-      titleStyle={{ testID: concatTestID(testID, selected ? 'selected' : 'unselected') }}
       accessibilityState={{ selected }}
+      contentStyle={styles.itemContent}
       expanded={selected}
+      icon={{
+        component: (
+          <TextAvatar
+            innerSize={48}
+            produceInitials={true}
+            text={credential.schema.name}
+          />
+        ),
+      }}
       onPress={onPress}
+      rightAccessory={
+        <Selector
+          status={
+            selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected
+          }
+        />
+      }
       subtitle={translate('proofRequest.selectCredential.issued', {
         date: formatDateTime(new Date(credential.issuanceDate)),
       })}
-      icon={{ component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> }}
-      rightAccessory={<Selector status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected} />}
-      contentStyle={styles.itemContent}>
+      testID={testID}
+      title={credential.schema.name}
+      titleStyle={{
+        testID: concatTestID(testID, selected ? 'selected' : 'unselected'),
+      }}
+    >
       {request.fields.map((field) => {
-        const claim = credential.claims.find(({ key }) => key === field.keyMap[credentialId]);
+        const claim = credential.claims.find(
+          ({ key }) => key === field.keyMap[credentialId],
+        );
         return (
           <DataItem
-            key={field.id}
             attribute={field.name ?? claim?.key ?? field.id ?? ''}
+            key={field.id}
             value={claim ? formatClaimValue(claim) : '-'}
           />
         );
@@ -76,17 +107,20 @@ const Credential: FunctionComponent<{
 };
 
 const SelectCredentialScreen: FunctionComponent = () => {
-  const navigation = useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
+  const navigation =
+    useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
   const { data: allCredentials } = useCredentials();
 
   const { preselectedCredentialId, request } = route.params;
 
-  const [selectedCredentialId, setSelectedCredentialId] = useState<string>(preselectedCredentialId);
+  const [selectedCredentialId, setSelectedCredentialId] = useState<string>(
+    preselectedCredentialId,
+  );
   const onConfirm = useCallback(() => {
     navigation.navigate({
-      name: 'ProofRequest',
       merge: true,
+      name: 'ProofRequest',
       params: {
         selectedCredentialId,
       } as ShareCredentialNavigatorParamList['ProofRequest'],
@@ -96,33 +130,47 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const selectionOptions = useMemo(
     () =>
       request.applicableCredentials.filter((credentialId) =>
-        allCredentials?.some(({ id, state }) => id === credentialId && state === CredentialStateEnum.ACCEPTED),
+        allCredentials?.some(
+          ({ id, state }) =>
+            id === credentialId && state === CredentialStateEnum.ACCEPTED,
+        ),
       ),
     [allCredentials, request],
   );
 
   return (
     <DetailScreen
-      testID="ProofRequestSelectCredentialScreen"
       onBack={navigation.goBack}
-      title={translate('proofRequest.selectCredential.title')}>
+      testID="ProofRequestSelectCredentialScreen"
+      title={translate('proofRequest.selectCredential.title')}
+    >
       {selectionOptions.map((credentialId) => {
         const selected = selectedCredentialId === credentialId;
         return (
           <View key={credentialId} style={styles.item}>
             <Credential
-              testID={concatTestID('ProofRequestSelectCredentialScreen.credential', credentialId)}
-              selected={selected}
-              onPress={selected ? undefined : () => setSelectedCredentialId(credentialId)}
               credentialId={credentialId}
+              onPress={
+                selected
+                  ? undefined
+                  : () => setSelectedCredentialId(credentialId)
+              }
               request={request}
+              selected={selected}
+              testID={concatTestID(
+                'ProofRequestSelectCredentialScreen.credential',
+                credentialId,
+              )}
             />
           </View>
         );
       })}
 
       <View style={styles.bottom}>
-        <Button testID="ProofRequestSelectCredentialScreen.confirm" onPress={onConfirm}>
+        <Button
+          onPress={onConfirm}
+          testID="ProofRequestSelectCredentialScreen.confirm"
+        >
           {translate('proofRequest.selectCredential.select')}
         </Button>
       </View>

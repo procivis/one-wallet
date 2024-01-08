@@ -5,7 +5,12 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Linking } from 'react-native';
 
 import { useProofAccept, useProofDetail } from '../../hooks/proofs';
@@ -26,7 +31,7 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   const handleProofSubmit = useCallback(async () => {
     try {
-      await acceptProof({ interactionId, credentials });
+      await acceptProof({ credentials, interactionId });
       await refetchProof();
       setState(LoadingResultState.Success);
     } catch (e) {
@@ -56,8 +61,8 @@ const ProofProcessScreen: FunctionComponent = () => {
       ctaButtonLabel={translate('proofRequest.process.success.cta')}
       failureCloseButtonLabel={translate('common.close')}
       inProgressCloseButtonLabel={translate('common.cancel')}
-      onClose={onClose}
       onCTA={proof?.redirectUri ? onCTA : undefined}
+      onClose={onClose}
       state={state}
       subtitle={translate(`proofRequest.process.${state}.subtitle`)}
       successCloseButtonLabel={translate('common.close')}

@@ -9,7 +9,6 @@ jest.doMock('react-native', () => {
     {
       Image: {
         ...ReactNative.Image,
-        resolveAssetSource: jest.fn((source) => mockFile), // eslint-disable-line @typescript-eslint/no-unused-vars
         getSize: jest.fn(
           (
             uri: string,
@@ -17,6 +16,7 @@ jest.doMock('react-native', () => {
             failure?: (error: unknown) => void, // eslint-disable-line @typescript-eslint/no-unused-vars
           ) => success(100, 100),
         ),
+        resolveAssetSource: jest.fn((source) => mockFile), // eslint-disable-line @typescript-eslint/no-unused-vars
       },
     },
     ReactNative,

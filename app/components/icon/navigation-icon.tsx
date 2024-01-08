@@ -8,7 +8,7 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 export const MoreIcon: React.FunctionComponent<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
       <Path
         d="M8.41393 12.0002C8.41393 12.5939 7.93184 13.076 7.3381 13.076C6.74227 13.076 6.26123 12.5939 6.26123 12.0002C6.26123 11.4054 6.74227 10.9233 7.3381 10.9233C7.93184 10.9233 8.41393 11.4054 8.41393 12.0002Z"
         fill={colorScheme.text}

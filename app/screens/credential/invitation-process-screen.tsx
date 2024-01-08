@@ -5,7 +5,12 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import { useInvitationHandler } from '../../hooks/credentials';
 import { translate } from '../../i18n';
@@ -21,19 +26,25 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
 
-  const [state, setState] = useState<LoadingResultState.InProgress | LoadingResultState.Failure>(
-    LoadingResultState.InProgress,
-  );
+  const [state, setState] = useState<
+    LoadingResultState.InProgress | LoadingResultState.Failure
+  >(LoadingResultState.InProgress);
   useEffect(() => {
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
           rootNavigation.navigate('IssueCredential', {
+            params: {
+              credentialId: result.credentialIds[0],
+              interactionId: result.interactionId,
+            },
             screen: 'CredentialOffer',
-            params: { credentialId: result.credentialIds[0], interactionId: result.interactionId },
           });
         } else {
-          rootNavigation.navigate('ShareCredential', { screen: 'ProofRequest', params: { request: result } });
+          rootNavigation.navigate('ShareCredential', {
+            params: { request: result },
+            screen: 'ProofRequest',
+          });
         }
       })
       .catch((err) => {
@@ -48,15 +59,15 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
-      testID="InvitationProcessScreen"
-      variation={LoadingResultVariation.Neutral}
-      state={state}
-      title={translate(`invitation.process.${state}.title`)}
-      subtitle={translate(`invitation.process.${state}.subtitle`)}
-      onClose={onConfirm}
-      successCloseButtonLabel={translate('invitation.process.close')}
-      inProgressCloseButtonLabel={translate('common.cancel')}
       failureCloseButtonLabel={translate('invitation.process.close')}
+      inProgressCloseButtonLabel={translate('common.cancel')}
+      onClose={onConfirm}
+      state={state}
+      subtitle={translate(`invitation.process.${state}.subtitle`)}
+      successCloseButtonLabel={translate('invitation.process.close')}
+      testID="InvitationProcessScreen"
+      title={translate(`invitation.process.${state}.title`)}
+      variation={LoadingResultVariation.Neutral}
     />
   );
 };

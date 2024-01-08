@@ -4,8 +4,8 @@ import { AssetsConfiguration } from '../../models/config/assets';
 import { Configuration, LocaleOverride } from '../../models/config/config';
 
 const configs: {
-  config: Configuration;
   assets: AssetsConfiguration;
+  config: Configuration;
   localeOverride?: LocaleOverride;
 } = (() => {
   switch (configuration.CONFIG_NAME) {
@@ -23,4 +23,5 @@ const configs: {
 
 export const config: Configuration = configs.config;
 export const assets: AssetsConfiguration = configs.assets;
-export const localeOverride: LocaleOverride | undefined = configs.localeOverride;
+export const localeOverride: LocaleOverride | undefined =
+  configs.localeOverride;
