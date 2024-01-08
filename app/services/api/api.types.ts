@@ -6,4 +6,6 @@ export interface Invitation {
   invitation_url: string;
 }
 
-export type GetInvitationResult = { kind: 'ok'; invitation: Invitation } | GeneralApiProblem;
+export type GetInvitationResult =
+  | { invitation: Invitation; kind: 'ok' }
+  | GeneralApiProblem;

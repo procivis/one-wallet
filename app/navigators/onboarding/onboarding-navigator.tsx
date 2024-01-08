@@ -5,13 +5,20 @@ import PinCodeInitializationScreen from '../../screens/onboarding/pin-code-initi
 import PinCodeSetScreen from '../../screens/onboarding/pin-code-set-screen';
 import { OnboardingNavigatorParamList } from './onboarding-routes';
 
-const OnboardingStack = createNativeStackNavigator<OnboardingNavigatorParamList>();
+const OnboardingStack =
+  createNativeStackNavigator<OnboardingNavigatorParamList>();
 
 const OnboardingNavigator = () => {
   return (
-    <OnboardingStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'PinCodeInitialization'}>
-      <OnboardingStack.Screen name="PinCodeInitialization" component={PinCodeInitializationScreen} />
-      <OnboardingStack.Screen name="PinCodeSet" component={PinCodeSetScreen} />
+    <OnboardingStack.Navigator
+      initialRouteName={'PinCodeInitialization'}
+      screenOptions={{ headerShown: false }}
+    >
+      <OnboardingStack.Screen
+        component={PinCodeInitializationScreen}
+        name="PinCodeInitialization"
+      />
+      <OnboardingStack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
     </OnboardingStack.Navigator>
   );
 };

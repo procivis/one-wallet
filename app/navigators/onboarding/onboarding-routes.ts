@@ -6,11 +6,9 @@ export type OnboardingNavigatorParamList = {
   PinCodeSet: undefined;
 };
 
-export type OnboardingRouteProp<RouteName extends keyof OnboardingNavigatorParamList> = RouteProp<
-  OnboardingNavigatorParamList,
-  RouteName
->;
-export type OnboardingNavigationProp<RouteName extends keyof OnboardingNavigatorParamList> = NativeStackNavigationProp<
-  OnboardingNavigatorParamList,
-  RouteName
->;
+export type OnboardingRouteProp<
+  RouteName extends keyof OnboardingNavigatorParamList,
+> = RouteProp<OnboardingNavigatorParamList, RouteName>;
+export type OnboardingNavigationProp<
+  RouteName extends keyof OnboardingNavigatorParamList,
+> = NativeStackNavigationProp<OnboardingNavigatorParamList, RouteName>;

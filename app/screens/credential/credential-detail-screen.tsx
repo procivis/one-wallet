@@ -10,21 +10,37 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, PropsWithChildren, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+} from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { CredentialStateEnum } from 'react-native-one-core';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
+import {
+  RootNavigationProp,
+  RootRouteProp,
+} from '../../navigators/root/root-navigator-routes';
 import { formatClaimValue } from '../../utils/credential';
 
-const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({ title, children }) => {
+const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({
+  title,
+  children,
+}) => {
   const colorScheme = useAppColorScheme();
   return (
     <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
-      <Typography accessibilityRole="header" color={colorScheme.text} size="sml" bold={true} caps={true}>
+      <Typography
+        accessibilityRole="header"
+        bold={true}
+        caps={true}
+        color={colorScheme.text}
+        size="sml"
+      >
         {title}
       </Typography>
       {children}
@@ -32,18 +48,28 @@ const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({ titl
   );
 };
 
-const DataItem: FunctionComponent<{ attribute: string; value: string; testID?: string }> = ({
-  attribute,
-  value,
-  testID,
-}) => {
+const DataItem: FunctionComponent<{
+  attribute: string;
+  testID?: string;
+  value: string;
+}> = ({ attribute, value, testID }) => {
   const colorScheme = useAppColorScheme();
   return (
-    <View testID={testID} style={[styles.dataItem, { borderColor: colorScheme.background }]}>
-      <Typography color={colorScheme.textSecondary} size="sml" style={styles.dataItemLabel}>
+    <View
+      style={[styles.dataItem, { borderColor: colorScheme.background }]}
+      testID={testID}
+    >
+      <Typography
+        color={colorScheme.textSecondary}
+        size="sml"
+        style={styles.dataItemLabel}
+      >
         {attribute}
       </Typography>
-      <Typography testID={concatTestID(testID, 'value')} color={colorScheme.text}>
+      <Typography
+        color={colorScheme.text}
+        testID={concatTestID(testID, 'value')}
+      >
         {value}
       </Typography>
     </View>
@@ -63,9 +89,12 @@ const CredentialDetailScreen: FunctionComponent = () => {
     () =>
       showActionSheetWithOptions(
         {
-          options: [translate('credentialDetail.action.delete'), translate('common.close')],
           cancelButtonIndex: 1,
           destructiveButtonIndex: 0,
+          options: [
+            translate('credentialDetail.action.delete'),
+            translate('common.close'),
+          ],
         },
         (selectedIndex) => {
           if (selectedIndex === 0) {
@@ -74,16 +103,18 @@ const CredentialDetailScreen: FunctionComponent = () => {
               translate('credentialDetail.action.delete.confirmation.message'),
               [
                 {
-                  text: translate('common.cancel'),
                   isPreferred: true,
                   style: 'cancel',
+                  text: translate('common.cancel'),
                 },
                 {
-                  text: translate('common.delete'),
-                  style: 'destructive',
                   onPress: () => {
-                    navigation.replace('CredentialDeleteProcessing', { credentialId });
+                    navigation.replace('CredentialDeleteProcessing', {
+                      credentialId,
+                    });
                   },
+                  style: 'destructive',
+                  text: translate('common.delete'),
                 },
               ],
               { cancelable: true },
@@ -100,56 +131,70 @@ const CredentialDetailScreen: FunctionComponent = () => {
 
   return (
     <DetailScreen
-      testID="CredentialDetailScreen"
       onBack={navigation.goBack}
-      title={credential.schema.name}
-      style={{ backgroundColor: colorScheme.background }}
       rightButton={
         <RoundButton
-          testID="CredentialDetailScreen.header.action"
           accessibilityLabel={translate('credentialDetail.actions')}
           icon={MoreIcon}
           onPress={onActions}
+          testID="CredentialDetailScreen.header.action"
         />
-      }>
+      }
+      style={{ backgroundColor: colorScheme.background }}
+      testID="CredentialDetailScreen"
+      title={credential.schema.name}
+    >
       <Section title={translate('credentialDetail.credential.title')}>
-        <DataItem attribute={translate('credentialDetail.credential.schema')} value={credential.schema.name} />
-        <DataItem attribute={translate('credentialDetail.credential.issuer')} value={credential.issuerDid ?? ''} />
-        <DataItem attribute={translate('credentialDetail.credential.format')} value={credential.schema.format} />
+        <DataItem
+          attribute={translate('credentialDetail.credential.schema')}
+          value={credential.schema.name}
+        />
+        <DataItem
+          attribute={translate('credentialDetail.credential.issuer')}
+          value={credential.issuerDid ?? ''}
+        />
+        <DataItem
+          attribute={translate('credentialDetail.credential.format')}
+          value={credential.schema.format}
+        />
         <DataItem
           attribute={translate('credentialDetail.credential.revocationMethod')}
           value={credential.schema.revocationMethod}
         />
         {credential.state === CredentialStateEnum.REVOKED ? (
           <DataItem
-            testID="CredentialDetailScreen.status"
             attribute={translate('credentialDetail.credential.status')}
+            testID="CredentialDetailScreen.status"
             value={translate('credentialDetail.log.revoke')}
           />
         ) : null}
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
         {credential.claims.map((attribute) => (
-          <DataItem key={attribute.key} attribute={attribute.key} value={formatClaimValue(attribute)} />
+          <DataItem
+            attribute={attribute.key}
+            key={attribute.key}
+            value={formatClaimValue(attribute)}
+          />
         ))}
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
         <View style={styles.logTitlePadding} />
         {credential.revocationDate ? (
           <ListItem
+            rightAccessory={null}
+            style={styles.logItem}
+            subtitle={formatDateTime(new Date(credential.revocationDate))}
             testID="CredentialDetailScreen.log.revoked"
             title={translate('credentialDetail.log.revoke')}
-            subtitle={formatDateTime(new Date(credential.revocationDate))}
-            style={styles.logItem}
-            rightAccessory={null}
           />
         ) : null}
         <ListItem
+          rightAccessory={null}
+          style={styles.logItem}
+          subtitle={formatDateTime(new Date(credential.issuanceDate))}
           testID="CredentialDetailScreen.log.issued"
           title={translate('credentialDetail.log.issue')}
-          subtitle={formatDateTime(new Date(credential.issuanceDate))}
-          style={styles.logItem}
-          rightAccessory={null}
         />
       </Section>
     </DetailScreen>

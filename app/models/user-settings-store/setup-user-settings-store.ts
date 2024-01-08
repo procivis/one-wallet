@@ -2,7 +2,11 @@ import { onSnapshot } from 'mobx-state-tree';
 
 import * as storage from '../../utils/storage';
 import { Environment } from '../environment';
-import { UserSettingsStore, UserSettingsStoreModel, UserSettingsStoreSnapshot } from './user-settings-store';
+import {
+  UserSettingsStore,
+  UserSettingsStoreModel,
+  UserSettingsStoreSnapshot,
+} from './user-settings-store';
 
 const USER_SETTINGS_STATE_STORAGE_KEY = 'user_settings';
 

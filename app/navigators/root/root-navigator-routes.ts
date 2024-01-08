@@ -9,28 +9,25 @@ import { ShareCredentialNavigatorParamList } from '../share-credential/share-cre
 import { TabsNavigatorParamList } from '../tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
-  Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
-  Tabs: NavigatorScreenParams<TabsNavigatorParamList>;
-  PinCodeCheck?: {
-    disableBiometry: boolean;
-  };
-  Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
-  CredentialDetail: {
+  CredentialDeleteProcessing: {
     credentialId: string;
   };
-  CredentialDeleteProcessing: {
+  CredentialDetail: {
     credentialId: string;
   };
   Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
   IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
+  Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
+  PinCodeCheck?: {
+    disableBiometry: boolean;
+  };
+  Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
   ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
+  Tabs: NavigatorScreenParams<TabsNavigatorParamList>;
 };
 
-export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> = RouteProp<
-  RootNavigatorParamList,
-  RouteName
->;
-export type RootNavigationProp<RouteName extends keyof RootNavigatorParamList = 'Tabs'> = NativeStackNavigationProp<
-  RootNavigatorParamList,
-  RouteName
->;
+export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =
+  RouteProp<RootNavigatorParamList, RouteName>;
+export type RootNavigationProp<
+  RouteName extends keyof RootNavigatorParamList = 'Tabs',
+> = NativeStackNavigationProp<RootNavigatorParamList, RouteName>;

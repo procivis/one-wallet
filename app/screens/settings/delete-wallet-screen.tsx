@@ -66,33 +66,49 @@ const DeletionConfirmScreen: FunctionComponent = () => {
         <ActivityIndicator />
       ) : (
         <View style={{ paddingTop: top }}>
-          <ScrollView contentContainerStyle={styles.scrollContent} alwaysBounceVertical={false}>
+          <ScrollView
+            alwaysBounceVertical={false}
+            contentContainerStyle={styles.scrollContent}
+          >
             <Typography
               accessibilityRole="header"
-              style={styles.contentTitle}
+              align="center"
               bold={true}
               color={colorScheme.text}
-              align="center"
-              size="h1">
+              size="h1"
+              style={styles.contentTitle}
+            >
               {translate('deleteWalletScreen.title')}
             </Typography>
-            <Typography style={styles.contentDescription} align="center" color={colorScheme.text}>
+            <Typography
+              align="center"
+              color={colorScheme.text}
+              style={styles.contentDescription}
+            >
               {translate('deleteWalletScreen.explainer')}
             </Typography>
 
             <Checkbox
-              style={styles.checkbox}
               alignment={CheckboxAlignment.centered}
+              onValueChanged={setConfirmation}
+              style={styles.checkbox}
               text={translate('deleteWalletScreen.confirm')}
               value={confirmation}
-              onValueChanged={setConfirmation}
             />
             <View style={[styles.buttonContainer, { paddingBottom: bottom }]}>
-              <Button style={styles.button} onPress={navigation.goBack} type="light">
+              <Button
+                onPress={navigation.goBack}
+                style={styles.button}
+                type="light"
+              >
                 {translate('common.cancel')}
               </Button>
               <View style={styles.buttonsSpacing} />
-              <Button style={styles.button} disabled={!confirmation} onPress={deleteAction}>
+              <Button
+                disabled={!confirmation}
+                onPress={deleteAction}
+                style={styles.button}
+              >
                 {translate('common.delete')}
               </Button>
             </View>

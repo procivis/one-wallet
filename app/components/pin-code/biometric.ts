@@ -11,7 +11,9 @@ export enum Biometry {
 export async function getBiometricType(): Promise<Biometry | null> {
   try {
     const type = await TouchID.isSupported().catch(() => false);
-    if (!type) return null;
+    if (!type) {
+      return null;
+    }
 
     if (type === 'FaceID') {
       return Biometry.FaceID;
@@ -27,7 +29,9 @@ export async function getBiometricType(): Promise<Biometry | null> {
 export async function biometricAuthenticate(
   options: { cancelLabel?: string; promptMessage?: string } = {},
 ): Promise<void> {
-  await TouchID.authenticate(options.promptMessage, { cancelText: options.cancelLabel });
+  await TouchID.authenticate(options.promptMessage, {
+    cancelText: options.cancelLabel,
+  });
 }
 
 export const useBiometricType = (): Biometry | null => {

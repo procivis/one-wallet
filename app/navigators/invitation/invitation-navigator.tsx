@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator<InvitationNavigatorParamList>();
 const InvitationNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Processing" component={InvitationProcessScreen} />
+      <Stack.Screen component={InvitationProcessScreen} name="Processing" />
     </Stack.Navigator>
   );
 };

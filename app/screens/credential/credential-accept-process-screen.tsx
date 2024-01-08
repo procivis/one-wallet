@@ -5,10 +5,18 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Linking } from 'react-native';
 
-import { useCredentialAccept, useCredentialDetail } from '../../hooks/credentials';
+import {
+  useCredentialAccept,
+  useCredentialDetail,
+} from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -18,11 +26,14 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const [state, setState] = useState<
-    LoadingResultState.InProgress | LoadingResultState.Success | LoadingResultState.Failure
+    | LoadingResultState.InProgress
+    | LoadingResultState.Success
+    | LoadingResultState.Failure
   >(LoadingResultState.InProgress);
   const { credentialId, interactionId } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
-  const { data: credential, refetch: refetchCredential } = useCredentialDetail(credentialId);
+  const { data: credential, refetch: refetchCredential } =
+    useCredentialDetail(credentialId);
 
   useBlockOSBackNavigation();
 
@@ -58,8 +69,8 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       ctaButtonLabel={translate('credentialAccept.success.cta')}
       failureCloseButtonLabel={translate('common.close')}
       inProgressCloseButtonLabel={translate('common.cancel')}
-      onClose={onClose}
       onCTA={credential?.redirectUri ? onCTA : undefined}
+      onClose={onClose}
       state={state}
       subtitle={translate(`credentialAccept.${state}.subtitle`)}
       successCloseButtonLabel={translate('common.close')}

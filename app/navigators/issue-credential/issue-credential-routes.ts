@@ -15,9 +15,9 @@ export type IssueCredentialNavigatorParamList = {
   };
 };
 
-export type IssueCredentialRouteProp<RouteName extends keyof IssueCredentialNavigatorParamList> = RouteProp<
-  IssueCredentialNavigatorParamList,
-  RouteName
->;
-export type IssueCredentialNavigationProp<RouteName extends keyof IssueCredentialNavigatorParamList> =
-  NativeStackNavigationProp<IssueCredentialNavigatorParamList, RouteName>;
+export type IssueCredentialRouteProp<
+  RouteName extends keyof IssueCredentialNavigatorParamList,
+> = RouteProp<IssueCredentialNavigatorParamList, RouteName>;
+export type IssueCredentialNavigationProp<
+  RouteName extends keyof IssueCredentialNavigatorParamList,
+> = NativeStackNavigationProp<IssueCredentialNavigatorParamList, RouteName>;

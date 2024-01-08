@@ -1,0 +1,124 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-native",
+    "react-hooks",
+    "simple-import-sort",
+    "sort-keys",
+    "typescript-sort-keys"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "@react-native-community",
+    "plugin:react/recommended",
+    "plugin:react-native/all",
+    "plugin:react-hooks/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "ecmaFeatures": {
+      "legacyDecorators": true,
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "__DEV__": false,
+    "fetch": false,
+    "requestAnimationFrame": false,
+    "jasmine": false,
+    "beforeAll": false,
+    "afterAll": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "test": false,
+    "expect": false,
+    "describe": false,
+    "jest": false,
+    "it": false
+  },
+  "rules": {
+    "space-before-function-paren": "off",
+    "react/prop-types": "off",
+    "react/jsx-handler-names": "off",
+    "react/jsx-fragments": "off",
+    "react/jsx-sort-props": "warn",
+    "react/no-unused-prop-types": "off",
+    "react-native/no-color-literals": "error",
+    "import/export": "off",
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
+    "comma-dangle": "off",
+    "multiline-ternary": "off",
+    "no-unused-vars": "warn",
+    "no-use-before-define": "off",
+    "quotes": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "semi": "off",
+    "indent": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "property",
+        "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
+        "leadingUnderscore": "allow"
+      }
+    ],
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "no-duplicate-imports": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "react-native",
+            "importNames": [
+              "SafeAreaView"
+            ],
+            "message": "Please use SafeAreaView from 'react-native-safe-area-context' instead."
+          },
+          {
+            "name": "@procivis/react-native-components",
+            "importNames": [
+              "BackButton"
+            ],
+            "message": "Please use the accessible wrapper version from components"
+          },
+          {
+            "name": "@react-navigation/core",
+            "message": "Please use '@react-navigation/native'"
+          }
+        ],
+        "patterns": [
+          "**/theme/flavors/**/*"
+        ]
+      }
+    ],
+    "sort-keys": "off",
+    "sort-keys/sort-keys-fix": "warn",
+    "typescript-sort-keys/interface": "warn",
+    "typescript-sort-keys/string-enum": "warn"
+  }
+}

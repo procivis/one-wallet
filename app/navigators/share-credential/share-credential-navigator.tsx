@@ -11,9 +11,12 @@ const Stack = createNativeStackNavigator<ShareCredentialNavigatorParamList>();
 const ShareCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ProofRequest" component={ProofRequestScreen} />
-      <Stack.Screen name="SelectCredential" component={SelectCredentialScreen} />
-      <Stack.Screen name="Processing" component={ProofProcessScreen} />
+      <Stack.Screen component={ProofRequestScreen} name="ProofRequest" />
+      <Stack.Screen
+        component={SelectCredentialScreen}
+        name="SelectCredential"
+      />
+      <Stack.Screen component={ProofProcessScreen} name="Processing" />
     </Stack.Navigator>
   );
 };

@@ -49,7 +49,10 @@ export const useInvitationHandling = () => {
 
   return useCallback(
     (invitationUrl: string) => {
-      navigation.navigate('Invitation', { screen: 'Processing', params: { invitationUrl } });
+      navigation.navigate('Invitation', {
+        params: { invitationUrl },
+        screen: 'Processing',
+      });
     },
     [navigation],
   );
