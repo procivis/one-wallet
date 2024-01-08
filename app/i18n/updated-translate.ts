@@ -24,6 +24,9 @@ export function useUpdatedTranslate(): typeof translate {
 
   // For the hook to work and update the translate function, we need to generate a new function each time the `currentLanguage` changes.
   // disabling the eslint rule to allow additional dependency
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback<typeof translate>((...args) => translate(...args), [currentLanguage]);
+  return useCallback<typeof translate>(
+    (...args) => translate(...args),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentLanguage],
+  );
 }

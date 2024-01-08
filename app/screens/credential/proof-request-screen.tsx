@@ -9,7 +9,12 @@ import {
   useMemoAsync,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   CredentialStateEnum,
@@ -23,7 +28,10 @@ import {
 import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
 import { useONECore } from '../../hooks/core-context';
-import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
+import {
+  useCredentialRevocationCheck,
+  useCredentials,
+} from '../../hooks/credentials';
 import { useProofDetail, useProofReject } from '../../hooks/proofs';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -36,7 +44,8 @@ import { reportException } from '../../utils/reporting';
 const ProofRequestScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
-  const sharingNavigation = useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
+  const sharingNavigation =
+    useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
   const { core } = useONECore();
 
@@ -59,21 +68,30 @@ const ProofRequestScreen: FunctionComponent = () => {
     // refresh revocation status of the applicable credentials
     const credentialIds = new Set<string>(
       definition.requestGroups.flatMap(({ requestedCredentials }) =>
-        requestedCredentials.flatMap(({ applicableCredentials }) => applicableCredentials),
+        requestedCredentials.flatMap(
+          ({ applicableCredentials }) => applicableCredentials,
+        ),
       ),
     );
-    await checkRevocation(Array.from(credentialIds)).catch((e) => reportException(e, 'Revocation check failed'));
+    await checkRevocation(Array.from(credentialIds)).catch((e) =>
+      reportException(e, 'Revocation check failed'),
+    );
 
     return definition;
   }, [checkRevocation, core, proofId]);
 
   const [selectedCredentials, setSelectedCredentials] = useState<
-    Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest | undefined>
+    Record<
+      PresentationDefinitionRequestedCredential['id'],
+      PresentationSubmitCredentialRequest | undefined
+    >
   >({});
 
   // initial selection of credentials/claims
   useEffect(() => {
-    if (!presentationDefinition || !allCredentials) return;
+    if (!presentationDefinition || !allCredentials) {
+      return;
+    }
 
     const preselected: Record<
       PresentationDefinitionRequestedCredential['id'],
@@ -83,44 +101,60 @@ const ProofRequestScreen: FunctionComponent = () => {
       group.requestedCredentials.forEach((credential) => {
         const credentialId =
           allCredentials.find(
-            ({ id, state }) => state === CredentialStateEnum.ACCEPTED && credential.applicableCredentials.includes(id),
+            ({ id, state }) =>
+              state === CredentialStateEnum.ACCEPTED &&
+              credential.applicableCredentials.includes(id),
           )?.id || credential.applicableCredentials[0];
         if (!credentialId) {
           preselected[credential.id] = undefined;
           return;
         }
 
-        const requiredClaims = credential.fields.filter((field) => field.required).map((field) => field.id);
-        preselected[credential.id] = { credentialId, submitClaims: requiredClaims };
+        const requiredClaims = credential.fields
+          .filter((field) => field.required)
+          .map((field) => field.id);
+        preselected[credential.id] = {
+          credentialId,
+          submitClaims: requiredClaims,
+        };
       }),
     );
 
     setSelectedCredentials(preselected);
   }, [presentationDefinition, allCredentials]);
 
-  const [activeSelection, setActiveSelection] = useState<PresentationDefinitionRequestedCredential['id']>();
+  const [activeSelection, setActiveSelection] =
+    useState<PresentationDefinitionRequestedCredential['id']>();
   const onSelectCredential = useCallback(
-    (requestCredentialId: PresentationDefinitionRequestedCredential['id']) => () => {
-      const requestedCredential = presentationDefinition?.requestGroups[0].requestedCredentials.find(
-        (credential) => credential.id === requestCredentialId,
-      ) as PresentationDefinitionRequestedCredential;
+    (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
+      () => {
+        const requestedCredential =
+          presentationDefinition?.requestGroups[0].requestedCredentials.find(
+            (credential) => credential.id === requestCredentialId,
+          ) as PresentationDefinitionRequestedCredential;
 
-      setActiveSelection(requestCredentialId);
-      sharingNavigation.navigate('SelectCredential', {
-        preselectedCredentialId: selectedCredentials[requestCredentialId]?.credentialId as string,
-        request: requestedCredential,
-      });
-    },
+        setActiveSelection(requestCredentialId);
+        sharingNavigation.navigate('SelectCredential', {
+          preselectedCredentialId: selectedCredentials[requestCredentialId]
+            ?.credentialId as string,
+          request: requestedCredential,
+        });
+      },
     [sharingNavigation, presentationDefinition, selectedCredentials],
   );
   // result of selection is propagated using the navigation param `selectedCredentialId`
   useEffect(() => {
     if (selectedCredentialId && activeSelection) {
       setSelectedCredentials((prev) => {
-        const prevSelection = prev[activeSelection] as PresentationSubmitCredentialRequest;
+        const prevSelection = prev[
+          activeSelection
+        ] as PresentationSubmitCredentialRequest;
         return {
           ...prev,
-          [activeSelection]: { ...prevSelection, credentialId: selectedCredentialId },
+          [activeSelection]: {
+            ...prevSelection,
+            credentialId: selectedCredentialId,
+          },
         };
       });
     }
@@ -132,14 +166,19 @@ const ProofRequestScreen: FunctionComponent = () => {
     (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
       (id: PresentationDefinitionField['id'], selected: boolean) => {
         setSelectedCredentials((prev) => {
-          const prevSelection = prev[requestCredentialId] as PresentationSubmitCredentialRequest;
+          const prevSelection = prev[
+            requestCredentialId
+          ] as PresentationSubmitCredentialRequest;
           let submitClaims = [...prevSelection.submitClaims];
           if (selected) {
             submitClaims.push(id);
           } else {
             submitClaims = submitClaims.filter((claimId) => claimId !== id);
           }
-          return { ...prev, [requestCredentialId]: { ...prevSelection, submitClaims } };
+          return {
+            ...prev,
+            [requestCredentialId]: { ...prevSelection, submitClaims },
+          };
         });
       },
     [],
@@ -147,7 +186,10 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const onReject = useCallback(() => {
     rejectProof(interactionId).catch((err) => {
-      if (!(err instanceof OneError) || err.code !== OneErrorCode.NotSupported) {
+      if (
+        !(err instanceof OneError) ||
+        err.code !== OneErrorCode.NotSupported
+      ) {
         reportException(err, 'Reject Proof failure');
       }
     });
@@ -156,7 +198,10 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const onSubmit = useCallback(() => {
     sharingNavigation.navigate('Processing', {
-      credentials: selectedCredentials as Record<string, PresentationSubmitCredentialRequest>,
+      credentials: selectedCredentials as Record<
+        string,
+        PresentationSubmitCredentialRequest
+      >,
       interactionId: interactionId,
       proofId,
     });
@@ -168,7 +213,9 @@ const ProofRequestScreen: FunctionComponent = () => {
       (selection) =>
         selection?.credentialId &&
         allCredentials?.some(
-          ({ id, state }) => id === selection.credentialId && state === CredentialStateEnum.ACCEPTED,
+          ({ id, state }) =>
+            id === selection.credentialId &&
+            state === CredentialStateEnum.ACCEPTED,
         ),
     );
 
@@ -177,7 +224,13 @@ const ProofRequestScreen: FunctionComponent = () => {
       cancelLabel={translate('common.cancel')}
       header={
         <View style={styles.header}>
-          <Typography size="sml" bold={true} caps={true} style={styles.headerLabel} accessibilityRole="header">
+          <Typography
+            accessibilityRole="header"
+            bold={true}
+            caps={true}
+            size="sml"
+            style={styles.headerLabel}
+          >
             {translate('proofRequest.verifier')}
           </Typography>
           <Typography color={colorScheme.text}>{proof?.verifierDid}</Typography>
@@ -188,28 +241,43 @@ const ProofRequestScreen: FunctionComponent = () => {
       submitLabel={translate('proofRequest.confirm')}
       testID="ProofRequestSharingScreen"
       title={translate('proofRequest.title')}
-      variation={SharingScreenVariation.Neutral}>
+      variation={SharingScreenVariation.Neutral}
+    >
       {!presentationDefinition || !allCredentials ? (
         <ActivityIndicator />
       ) : (
         presentationDefinition.requestGroups.map((group, index, { length }) => (
-          <ProofRequestGroup key={group.id} request={group} last={length === index + 1}>
-            {group.requestedCredentials.map((credential, credentialIndex, { length: credentialsLength }) => (
-              <ProofRequestCredential
-                testID={concatTestID('ProofRequestSharingScreen.credential', credential.id)}
-                style={[
-                  styles.requestedCredential,
-                  credentialsLength === credentialIndex + 1 && styles.requestedCredentialLast,
-                ]}
-                key={credential.id}
-                request={credential}
-                allCredentials={allCredentials}
-                selectedCredentialId={selectedCredentials[credential.id]?.credentialId}
-                onSelectCredential={onSelectCredential(credential.id)}
-                selectedFields={selectedCredentials[credential.id]?.submitClaims}
-                onSelectField={onSelectField(credential.id)}
-              />
-            ))}
+          <ProofRequestGroup
+            key={group.id}
+            last={length === index + 1}
+            request={group}
+          >
+            {group.requestedCredentials.map(
+              (credential, credentialIndex, { length: credentialsLength }) => (
+                <ProofRequestCredential
+                  allCredentials={allCredentials}
+                  key={credential.id}
+                  onSelectCredential={onSelectCredential(credential.id)}
+                  onSelectField={onSelectField(credential.id)}
+                  request={credential}
+                  selectedCredentialId={
+                    selectedCredentials[credential.id]?.credentialId
+                  }
+                  selectedFields={
+                    selectedCredentials[credential.id]?.submitClaims
+                  }
+                  style={[
+                    styles.requestedCredential,
+                    credentialsLength === credentialIndex + 1 &&
+                      styles.requestedCredentialLast,
+                  ]}
+                  testID={concatTestID(
+                    'ProofRequestSharingScreen.credential',
+                    credential.id,
+                  )}
+                />
+              ),
+            )}
           </ProofRequestGroup>
         ))
       )}

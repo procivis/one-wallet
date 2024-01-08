@@ -27,33 +27,46 @@ const RootNavigator: FunctionComponent = () => {
   return initialRouteName ? (
     <>
       <StatusBar
-        translucent={true}
+        animated={true}
         backgroundColor="transparent"
         barStyle={darkMode ? 'light-content' : 'dark-content'}
-        animated={true}
+        translucent={true}
       />
       <RootStack.Navigator
+        initialRouteName={initialRouteName}
         screenOptions={{
-          headerShown: false,
           animationTypeForReplace: 'push',
+          headerShown: false,
         }}
-        initialRouteName={initialRouteName}>
+      >
         <RootStack.Group screenOptions={{ gestureEnabled: false }}>
           <RootStack.Screen
-            name="PinCodeCheck"
             component={PinCodeCheckScreen}
-            options={{ animation: 'fade' }}
             listeners={{ transitionEnd: () => hideSplashScreen() }}
+            name="PinCodeCheck"
+            options={{ animation: 'fade' }}
           />
-          <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
-          <RootStack.Screen name="Tabs" component={TabsNavigator} />
-          <RootStack.Screen name="Invitation" component={InvitationNavigator} />
-          <RootStack.Screen name="IssueCredential" component={IssueCredentialNavigator} />
-          <RootStack.Screen name="ShareCredential" component={ShareCredentialNavigator} />
+          <RootStack.Screen component={OnboardingNavigator} name="Onboarding" />
+          <RootStack.Screen component={TabsNavigator} name="Tabs" />
+          <RootStack.Screen component={InvitationNavigator} name="Invitation" />
+          <RootStack.Screen
+            component={IssueCredentialNavigator}
+            name="IssueCredential"
+          />
+          <RootStack.Screen
+            component={ShareCredentialNavigator}
+            name="ShareCredential"
+          />
         </RootStack.Group>
-        <RootStack.Screen name="Settings" component={SettingsNavigator} />
-        <RootStack.Screen name="CredentialDetail" component={CredentialDetailScreen} />
-        <RootStack.Screen name="CredentialDeleteProcessing" component={CredentialDeleteProcessScreen} />
+        <RootStack.Screen component={SettingsNavigator} name="Settings" />
+        <RootStack.Screen
+          component={CredentialDetailScreen}
+          name="CredentialDetail"
+        />
+        <RootStack.Screen
+          component={CredentialDeleteProcessScreen}
+          name="CredentialDeleteProcessing"
+        />
       </RootStack.Navigator>
     </>
   ) : null;

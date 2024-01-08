@@ -13,7 +13,10 @@ export async function setupWalletStore(env: Environment) {
   };
 
   try {
-    const data = { ...defaultData, ...(await storage.load(WALLET_STATE_STORAGE_KEY)) };
+    const data = {
+      ...defaultData,
+      ...(await storage.load(WALLET_STATE_STORAGE_KEY)),
+    };
     walletStore = WalletStoreModel.create(data, env);
   } catch (e) {
     walletStore = WalletStoreModel.create(defaultData, env);

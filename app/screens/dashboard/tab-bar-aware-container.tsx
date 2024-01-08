@@ -14,7 +14,8 @@ const TabBarAwareContainer: FunctionComponent = ({ children }) => {
         {
           marginBottom: Math.max(safeAreaInsets.bottom, 20) + tabBarHeight,
         },
-      ]}>
+      ]}
+    >
       {children}
     </View>
   );

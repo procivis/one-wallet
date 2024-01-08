@@ -4,7 +4,11 @@ import { onSnapshot } from 'mobx-state-tree';
 import { defaultLocale } from '../../i18n';
 import * as storage from '../../utils/storage';
 import { Environment } from '../environment';
-import { LocaleStore, LocaleStoreModel, LocaleStoreSnapshot } from './locale-store';
+import {
+  LocaleStore,
+  LocaleStoreModel,
+  LocaleStoreSnapshot,
+} from './locale-store';
 
 const LOCALE_STATE_STORAGE_KEY = 'locale';
 
@@ -15,7 +19,10 @@ export async function setupLocaleStore(env: Environment) {
   };
 
   try {
-    const data: LocaleStoreSnapshot = { ...defaultData, ...(await storage.load(LOCALE_STATE_STORAGE_KEY)) };
+    const data: LocaleStoreSnapshot = {
+      ...defaultData,
+      ...(await storage.load(LOCALE_STATE_STORAGE_KEY)),
+    };
     localeStore = LocaleStoreModel.create(data, env);
     i18n.locale = data.locale;
   } catch (e) {
