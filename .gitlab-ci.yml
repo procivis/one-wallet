@@ -1,4 +1,4 @@
-image: node:16-alpine
+image: node:18.16.0-alpine
 
 stages:
   - prepare
@@ -68,8 +68,8 @@ workflow:
     else
       echo "node_modules does not exist or is not valid, re-installing deps."
       apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
-      yarn global add node-gyp @mapbox/node-pre-gyp --network-concurrency 1
-      yarn install --frozen-lockfile --network-concurrency 1
+      yarn dlx node-gyp @mapbox/node-pre-gyp
+      YARN_NETWORK_CONCURRENCY=1 yarn install --immutable
       yarn rnuc:dev
     fi
 

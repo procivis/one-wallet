@@ -8,11 +8,11 @@ export const WalletStoreModel = types
     holderDidId: types.string,
   })
   .actions((self) => ({
-    walletSetup: (holderDidId: string) => {
-      self.holderDidId = holderDidId;
-    },
     walletDeleted: () => {
       self.holderDidId = '';
+    },
+    walletSetup: (holderDidId: string) => {
+      self.holderDidId = holderDidId;
     },
   }));
 

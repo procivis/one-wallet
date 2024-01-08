@@ -5,11 +5,9 @@ export type InvitationNavigatorParamList = {
   Processing: { invitationUrl: string };
 };
 
-export type InvitationRouteProp<RouteName extends keyof InvitationNavigatorParamList> = RouteProp<
-  InvitationNavigatorParamList,
-  RouteName
->;
-export type InvitationNavigationProp<RouteName extends keyof InvitationNavigatorParamList> = NativeStackNavigationProp<
-  InvitationNavigatorParamList,
-  RouteName
->;
+export type InvitationRouteProp<
+  RouteName extends keyof InvitationNavigatorParamList,
+> = RouteProp<InvitationNavigatorParamList, RouteName>;
+export type InvitationNavigationProp<
+  RouteName extends keyof InvitationNavigatorParamList,
+> = NativeStackNavigationProp<InvitationNavigatorParamList, RouteName>;

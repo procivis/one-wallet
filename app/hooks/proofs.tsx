@@ -1,4 +1,8 @@
-import { OneError, OneErrorCode, PresentationSubmitCredentialRequest } from 'react-native-one-core';
+import {
+  OneError,
+  OneErrorCode,
+  PresentationSubmitCredentialRequest,
+} from 'react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useONECore } from './core-context';
@@ -8,10 +12,14 @@ const PROOF_DETAIL_QUERY_KEY = 'proof-detail';
 export const useProofDetail = (proofId: string | undefined) => {
   const { core } = useONECore();
 
-  return useQuery([PROOF_DETAIL_QUERY_KEY, proofId], () => (proofId ? core.getProof(proofId) : undefined), {
-    keepPreviousData: true,
-    enabled: Boolean(proofId),
-  });
+  return useQuery(
+    [PROOF_DETAIL_QUERY_KEY, proofId],
+    () => (proofId ? core.getProof(proofId) : undefined),
+    {
+      enabled: Boolean(proofId),
+      keepPreviousData: true,
+    },
+  );
 };
 
 export const useProofAccept = () => {
@@ -23,8 +31,8 @@ export const useProofAccept = () => {
       interactionId,
       credentials,
     }: {
-      interactionId: string;
       credentials: Record<string, PresentationSubmitCredentialRequest>;
+      interactionId: string;
     }) => core.holderSubmitProof(interactionId, credentials),
     {
       onSuccess: () => {

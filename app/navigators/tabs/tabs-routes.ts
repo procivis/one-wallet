@@ -6,11 +6,7 @@ export type TabsNavigatorParamList = {
   Wallet: undefined;
 };
 
-export type TabsRouteProp<RouteName extends keyof TabsNavigatorParamList> = RouteProp<
-  TabsNavigatorParamList,
-  RouteName
->;
-export type TabsNavigationProp<RouteName extends keyof TabsNavigatorParamList> = BottomTabNavigationProp<
-  TabsNavigatorParamList,
-  RouteName
->;
+export type TabsRouteProp<RouteName extends keyof TabsNavigatorParamList> =
+  RouteProp<TabsNavigatorParamList, RouteName>;
+export type TabsNavigationProp<RouteName extends keyof TabsNavigatorParamList> =
+  BottomTabNavigationProp<TabsNavigatorParamList, RouteName>;
