@@ -11,11 +11,14 @@ const Stack = createNativeStackNavigator<SettingsNavigatorParamList>();
 
 const SettingsNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SettingsDashboard">
-      <Stack.Screen name="SettingsDashboard" component={SettingsScreen} />
-      <Stack.Screen name="AppInformation" component={AppInformationScreen} />
-      <Stack.Screen name="DeleteWallet" component={DeleteWalletScreen} />
-      <Stack.Screen name="PinCodeChange" component={PinCodeChangeScreen} />
+    <Stack.Navigator
+      initialRouteName="SettingsDashboard"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen component={SettingsScreen} name="SettingsDashboard" />
+      <Stack.Screen component={AppInformationScreen} name="AppInformation" />
+      <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
+      <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
     </Stack.Navigator>
   );
 };

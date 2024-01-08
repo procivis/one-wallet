@@ -5,7 +5,12 @@
  * and a "main" flow which the user will use once logged in.
  */
 import { AccessibilityLanguageProvider } from '@procivis/react-native-components';
-import { DefaultTheme, NavigationContainer, NavigationState, PartialState } from '@react-navigation/native';
+import {
+  DefaultTheme,
+  NavigationContainer,
+  NavigationState,
+  PartialState,
+} from '@react-navigation/native';
 import i18n from 'i18n-js';
 import React from 'react';
 
@@ -15,9 +20,14 @@ import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';
 import RootNavigator from './root/root-navigator';
 
-const getNavigationPathRecursive = (state?: NavigationState | PartialState<NavigationState>): string | null => {
-  const route = state?.index !== undefined ? state.routes[state.index] : undefined;
-  if (!route) return null;
+const getNavigationPathRecursive = (
+  state?: NavigationState | PartialState<NavigationState>,
+): string | null => {
+  const route =
+    state?.index !== undefined ? state.routes[state.index] : undefined;
+  if (!route) {
+    return null;
+  }
   const childRouteNames = getNavigationPathRecursive(route.state);
   if (childRouteNames) {
     return `${route.name}>${childRouteNames}`;
@@ -27,17 +37,27 @@ const getNavigationPathRecursive = (state?: NavigationState | PartialState<Navig
 
 const onNavigationChange = (state?: NavigationState) => {
   const currentRouteName = getNavigationPathRecursive(state);
-  if (currentRouteName) reportTraceInfo('Navigation', currentRouteName);
+  if (currentRouteName) {
+    reportTraceInfo('Navigation', currentRouteName);
+  }
 };
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps
+  extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
   return (
-    <AccessibilityLanguageProvider language={locale.locale ?? i18n.defaultLocale ?? 'en'}>
+    <AccessibilityLanguageProvider
+      language={locale.locale ?? i18n.defaultLocale ?? 'en'}
+    >
       <ONECoreContextProvider>
-        <NavigationContainer onStateChange={onNavigationChange} ref={navigationRef} theme={DefaultTheme} {...props}>
+        <NavigationContainer
+          onStateChange={onNavigationChange}
+          ref={navigationRef}
+          theme={DefaultTheme}
+          {...props}
+        >
           <RootNavigator />
         </NavigationContainer>
       </ONECoreContextProvider>

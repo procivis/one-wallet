@@ -1,19 +1,38 @@
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AppState, Platform } from 'react-native';
 
-import { biometricAuthenticate, useBiometricType } from '../../components/pin-code/biometric';
+import {
+  biometricAuthenticate,
+  useBiometricType,
+} from '../../components/pin-code/biometric';
 import { usePinCodeValidation } from '../../components/pin-code/pin-code';
-import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
+import PinCodeScreenContent, {
+  PinCodeActions,
+} from '../../components/pin-code/pin-code-screen-content';
 import { useInitialDeepLinkHandling } from '../../hooks/deep-link';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
-import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
+import {
+  RootNavigationProp,
+  RootRouteProp,
+} from '../../navigators/root/root-navigator-routes';
 import { reportTraceInfo } from '../../utils/reporting';
 
-const hideSplashAndroidOnly = () => (Platform.OS === 'android' ? hideSplashScreen() : undefined);
+const hideSplashAndroidOnly = () =>
+  Platform.OS === 'android' ? hideSplashScreen() : undefined;
 
 const PinCodeCheckScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'PinCodeCheck'>>();
@@ -51,7 +70,9 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     [onCheckPassed, validatePin],
   );
 
-  const biometricCheckEnabled = Boolean(biometry && userSettings.biometricLogin && !route.params?.disableBiometry);
+  const biometricCheckEnabled = Boolean(
+    biometry && userSettings.biometricLogin && !route.params?.disableBiometry,
+  );
 
   const runBiometricCheck = useCallback(() => {
     biometricAuthenticate({
@@ -77,14 +98,14 @@ const PinCodeCheckScreen: FunctionComponent = () => {
 
   return (
     <PinCodeScreenContent
-      testID="PinCodeCheckScreen"
-      ref={screen}
-      onPinEntered={onPinEntered}
-      title={translate('onboarding.pinCodeScreen.check.title')}
-      instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
-      error={error}
       biometry={biometricCheckEnabled ? biometry : undefined}
+      error={error}
+      instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
       onBiometricPress={runBiometricCheck}
+      onPinEntered={onPinEntered}
+      ref={screen}
+      testID="PinCodeCheckScreen"
+      title={translate('onboarding.pinCodeScreen.check.title')}
     />
   );
 };

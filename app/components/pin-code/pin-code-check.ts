@@ -2,7 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
-import { RootNavigationProp, RootNavigatorParamList } from '../../navigators/root/root-navigator-routes';
+import {
+  RootNavigationProp,
+  RootNavigatorParamList,
+} from '../../navigators/root/root-navigator-routes';
 import { useIsAppActive } from '../../utils/appState';
 import { reportError } from '../../utils/reporting';
 
@@ -27,7 +30,9 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   const navigation = useNavigation<RootNavigationProp>();
 
   const showPinCodeCheck = useCallback(() => {
-    if (!backgroundPinLockEnabled) return false;
+    if (!backgroundPinLockEnabled) {
+      return false;
+    }
     const { routes, index } = navigation.getState?.() || {};
     const currentRoute = routes?.[index ?? 0]?.name;
 
@@ -51,7 +56,9 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   // show lockscreen when app going to background
   const lockedWhenGoingToBackground = useRef<boolean>(false);
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      return;
+    }
     if (appActive === false) {
       lockedWhenGoingToBackground.current = showPinCodeCheck();
     }
@@ -59,14 +66,18 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
 
   const lastActiveTimestamp = useRef<number>(0);
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      return;
+    }
     const now = Date.now();
     if (appActive) {
       // show lockscreen when in background for a long time or starting the app
       if (lastActiveTimestamp.current + PIN_CODE_INACTIVE_TIMEOUT < now) {
         lockedWhenGoingToBackground.current = false;
         lastActiveTimestamp.current = now;
-        if (showPinCodeCheck()) return;
+        if (showPinCodeCheck()) {
+          return;
+        }
       } else if (lockedWhenGoingToBackground.current) {
         // hide lockscreen when reopening after short time
         hidePinCodeCheck();
@@ -79,7 +90,10 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   }, [appActive, enabled, showPinCodeCheck, hidePinCodeCheck]);
 };
 
-type RunAfterPinCheck = (fn: () => void, params?: RootNavigatorParamList['PinCodeCheck']) => void;
+type RunAfterPinCheck = (
+  fn: () => void,
+  params?: RootNavigatorParamList['PinCodeCheck'],
+) => void;
 
 /**
  * For use where a PIN code check is part of the flow

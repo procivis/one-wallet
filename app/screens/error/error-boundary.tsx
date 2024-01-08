@@ -5,8 +5,8 @@ import { reportException } from '../../utils/reporting';
 import { ErrorComponent } from './error-component';
 
 interface Props {
-  children: ReactNode;
   catchErrors: 'always' | 'dev' | 'prod' | 'never';
+  children: ReactNode;
 }
 
 type State =
@@ -69,7 +69,11 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     return this.isEnabled() && this.state.error ? (
       <OutsideTreeNavigationProvider>
-        <ErrorComponent onReset={this.resetError} error={this.state.error} errorInfo={this.state.errorInfo} />
+        <ErrorComponent
+          error={this.state.error}
+          errorInfo={this.state.errorInfo}
+          onReset={this.resetError}
+        />
       </OutsideTreeNavigationProvider>
     ) : (
       this.props.children

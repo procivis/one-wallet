@@ -17,7 +17,10 @@ export const useInitializeONECoreIdentifiers = () => {
     await core
       .createOrganisation(ONE_CORE_ORGANISATION_ID)
       .catch((err) => {
-        if (err instanceof OneError && err.code === OneErrorCode.AlreadyExists) {
+        if (
+          err instanceof OneError &&
+          err.code === OneErrorCode.AlreadyExists
+        ) {
           return;
         }
         throw err;
@@ -25,37 +28,37 @@ export const useInitializeONECoreIdentifiers = () => {
       .then(() =>
         core
           .generateKey({
-            organisationId: ONE_CORE_ORGANISATION_ID,
-            keyType: 'ES256',
             keyParams: {},
+            keyType: 'ES256',
             name: 'holder-key',
-            storageType: 'SECURE_ELEMENT',
+            organisationId: ONE_CORE_ORGANISATION_ID,
             storageParams: {},
+            storageType: 'SECURE_ELEMENT',
           })
           .catch(() =>
             core.generateKey({
-              organisationId: ONE_CORE_ORGANISATION_ID,
-              keyType: 'EDDSA',
               keyParams: {},
+              keyType: 'EDDSA',
               name: 'holder-key',
-              storageType: 'INTERNAL',
+              organisationId: ONE_CORE_ORGANISATION_ID,
               storageParams: {},
+              storageType: 'INTERNAL',
             }),
           ),
       )
       .then((keyId) =>
         core.createDid({
-          organisationId: ONE_CORE_ORGANISATION_ID,
-          name: 'holder-did',
-          didType: DidTypeEnum.LOCAL,
           didMethod: 'KEY',
+          didType: DidTypeEnum.LOCAL,
           keys: {
-            authentication: [keyId],
             assertion: [keyId],
-            keyAgreement: [keyId],
-            capabilityInvocation: [keyId],
+            authentication: [keyId],
             capabilityDelegation: [keyId],
+            capabilityInvocation: [keyId],
+            keyAgreement: [keyId],
           },
+          name: 'holder-did',
+          organisationId: ONE_CORE_ORGANISATION_ID,
           params: {},
         }),
       )
