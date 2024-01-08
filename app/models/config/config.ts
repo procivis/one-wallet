@@ -3,8 +3,8 @@ export interface EndpointsConfiguration {
 }
 
 export interface BackendConfiguration {
-  host: string;
   endpoints: EndpointsConfiguration;
+  host: string;
 }
 
 export interface FeatureFlags {}
