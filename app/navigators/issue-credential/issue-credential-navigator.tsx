@@ -11,9 +11,15 @@ const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
 const IssueCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="CredentialOffer" component={CredentialOfferScreen} />
-      <Stack.Screen name="CredentialOfferDetail" component={CredentialOfferDetailScreen} />
-      <Stack.Screen name="Processing" component={CredentialAcceptProcessScreen} />
+      <Stack.Screen component={CredentialOfferScreen} name="CredentialOffer" />
+      <Stack.Screen
+        component={CredentialOfferDetailScreen}
+        name="CredentialOfferDetail"
+      />
+      <Stack.Screen
+        component={CredentialAcceptProcessScreen}
+        name="Processing"
+      />
     </Stack.Navigator>
   );
 };

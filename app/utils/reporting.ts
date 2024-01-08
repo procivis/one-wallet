@@ -8,7 +8,6 @@ export function reportError(message: string) {
       // do nothing
     }
   } else {
-    // eslint-disable-next-line no-console
     console.warn('reportError:', message);
   }
 }
@@ -32,28 +31,41 @@ export function reportException(e: unknown, message?: string) {
       // do nothing
     }
   } else {
-    const info = message ? `(${message})${code ? `[${code}]` : ''}` : `[${code}]`;
-    // eslint-disable-next-line no-console
-    console.warn(`reportException${info}:`, e, e instanceof Error ? e.stack : undefined);
+    const info = message
+      ? `(${message})${code ? `[${code}]` : ''}`
+      : `[${code}]`;
+
+    console.warn(
+      `reportException${info}:`,
+      e,
+      e instanceof Error ? e.stack : undefined,
+    );
   }
 }
 
-export function reportTraceInfo(category: string, message?: string, data?: Sentry.Breadcrumb['data']) {
+export function reportTraceInfo(
+  category: string,
+  message?: string,
+  data?: Sentry.Breadcrumb['data'],
+) {
   if (!__DEV__) {
     try {
       Sentry.addBreadcrumb({
-        level: 'log',
         category,
-        message,
         data,
+        level: 'log',
+        message,
       });
     } catch (error) {
       // do nothing
     }
   } else {
     const logged: unknown[] = [category, message];
-    if (data) logged.push(data);
-    // eslint-disable-next-line no-console
+
+    if (data) {
+      logged.push(data);
+    }
+
     console.log(...logged);
   }
 }

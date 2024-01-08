@@ -9,14 +9,14 @@ import { getGeneralApiProblem } from './api-problem';
  */
 export interface ApiConfig {
   /**
-   * The URL of the api.
-   */
-  url: string;
-
-  /**
    * Milliseconds before we timeout the request.
    */
   timeout: number;
+
+  /**
+   * The URL of the api.
+   */
+  url: string;
 }
 
 /**
@@ -40,17 +40,17 @@ export class Api {
    */
   constructor(url: string) {
     this.config = {
-      url,
       timeout: 10000,
+      url,
     };
 
     // construct the apisauce instance
     this.apisauce = create({
       baseURL: this.config.url,
-      timeout: this.config.timeout,
       headers: {
         Accept: 'application/json',
       },
+      timeout: this.config.timeout,
     });
   }
 
@@ -59,12 +59,16 @@ export class Api {
    */
   async createInvitation(): Promise<Types.GetInvitationResult> {
     // make the api call
-    const response: ApiResponse<any> = await this.apisauce.post(config.backendConfig.endpoints.onboardingInvitation);
+    const response: ApiResponse<any> = await this.apisauce.post(
+      config.backendConfig.endpoints.onboardingInvitation,
+    );
 
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
-      if (problem) return problem;
+      if (problem) {
+        return problem;
+      }
     }
 
     // transform the data into the format we are expecting
@@ -74,7 +78,7 @@ export class Api {
         invitation: response.data.invitation,
         invitation_url: response.data.invitation_url,
       };
-      return { kind: 'ok', invitation: resultInvitation };
+      return { invitation: resultInvitation, kind: 'ok' };
     } catch {
       return { kind: 'bad-data' };
     }

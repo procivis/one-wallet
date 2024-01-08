@@ -14,27 +14,41 @@ test('handles connection errors', () => {
 });
 
 test('handles network errors', () => {
-  expect(getGeneralApiProblem({ problem: 'NETWORK_ERROR' } as ApiErrorResponse<null>)).toEqual({
+  expect(
+    getGeneralApiProblem({
+      problem: 'NETWORK_ERROR',
+    } as ApiErrorResponse<null>),
+  ).toEqual({
     kind: 'cannot-connect',
     temporary: true,
   });
 });
 
 test('handles timeouts', () => {
-  expect(getGeneralApiProblem({ problem: 'TIMEOUT_ERROR' } as ApiErrorResponse<null>)).toEqual({
+  expect(
+    getGeneralApiProblem({
+      problem: 'TIMEOUT_ERROR',
+    } as ApiErrorResponse<null>),
+  ).toEqual({
     kind: 'timeout',
     temporary: true,
   });
 });
 
 test('handles server errors', () => {
-  expect(getGeneralApiProblem({ problem: 'SERVER_ERROR' } as ApiErrorResponse<null>)).toEqual({
+  expect(
+    getGeneralApiProblem({ problem: 'SERVER_ERROR' } as ApiErrorResponse<null>),
+  ).toEqual({
     kind: 'server',
   });
 });
 
 test('handles unknown errors', () => {
-  expect(getGeneralApiProblem({ problem: 'UNKNOWN_ERROR' } as ApiErrorResponse<null>)).toEqual({
+  expect(
+    getGeneralApiProblem({
+      problem: 'UNKNOWN_ERROR',
+    } as ApiErrorResponse<null>),
+  ).toEqual({
     kind: 'unknown',
     temporary: true,
   });
@@ -85,5 +99,7 @@ test('handles other client errors', () => {
 });
 
 test('handles cancellation errors', () => {
-  expect(getGeneralApiProblem({ problem: 'CANCEL_ERROR' } as ApiErrorResponse<null>)).toBeNull();
+  expect(
+    getGeneralApiProblem({ problem: 'CANCEL_ERROR' } as ApiErrorResponse<null>),
+  ).toBeNull();
 });

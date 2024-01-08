@@ -6,8 +6,12 @@ const Validate = ValidateJS.default ? ValidateJS.default : ValidateJS;
 /**
  * Validates that 1 attribute doesn't appear in another's attributes content.
  */
-// @ts-ignore
-Validate.validators.excludes = function custom(value, options, key, attributes) {
+Validate.validators.excludes = function custom(
+  value: any,
+  options: Record<string, any>,
+  key: string,
+  attributes: Record<string, any>,
+) {
   const list = attributes[options.attribute] || [];
   if (value && list.includes(value)) {
     return options.message || `${value} is in the list`;
@@ -17,8 +21,12 @@ Validate.validators.excludes = function custom(value, options, key, attributes) 
 /**
  * Validates that another attribute isn't true.
  */
-// @ts-ignore
-Validate.validators.tripped = function custom(value, options, key, attributes) {
+Validate.validators.tripped = function custom(
+  value: any,
+  options: Record<string, any>,
+  key: string,
+  attributes: Record<string, any>,
+) {
   if (value && attributes[options.attribute] === true) {
     return options.message || `${options.attribute} is true`;
   }
@@ -71,7 +79,10 @@ export interface ValidationErrors {
  * @param rules The rules to apply.
  * @param data The object to validate.
  */
-export function validate(rules: ValidationRules, data: Record<string, unknown>): ValidationErrors {
+export function validate(
+  rules: ValidationRules,
+  data: Record<string, unknown>,
+): ValidationErrors {
   if (typeof data !== 'object') {
     return {} as ValidationErrors;
   }

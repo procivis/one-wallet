@@ -5,18 +5,29 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import { useCredentialDelete } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { RootNavigationProp, RootRouteProp } from '../../navigators/root/root-navigator-routes';
+import {
+  RootNavigationProp,
+  RootRouteProp,
+} from '../../navigators/root/root-navigator-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'CredentialDeleteProcessing'>>();
+  const navigation =
+    useNavigation<RootNavigationProp<'CredentialDeleteProcessing'>>();
   const route = useRoute<RootRouteProp<'CredentialDeleteProcessing'>>();
   const [state, setState] = useState<
-    LoadingResultState.InProgress | LoadingResultState.Success | LoadingResultState.Failure
+    | LoadingResultState.InProgress
+    | LoadingResultState.Success
+    | LoadingResultState.Failure
   >(LoadingResultState.InProgress);
   const { credentialId } = route.params;
   const { mutateAsync: deleteCredential } = useCredentialDelete();
@@ -45,17 +56,17 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResult
-      testID="CredentialDeleteProcessScreen"
-      variation={LoadingResultVariation.Neutral}
-      title={translate(`credentialDelete.${state}.title`)}
-      subtitle={translate(`credentialDelete.${state}.subtitle`)}
-      state={state}
-      inProgressCloseButtonLabel={translate('common.cancel')}
-      successCloseButtonLabel={translate('common.close')}
       failureCloseButtonLabel={translate('common.cancel')}
-      retryButtonLabel={translate('common.retry')}
+      inProgressCloseButtonLabel={translate('common.cancel')}
       onClose={onClose}
       onRetry={handleCredentialDelete}
+      retryButtonLabel={translate('common.retry')}
+      state={state}
+      subtitle={translate(`credentialDelete.${state}.subtitle`)}
+      successCloseButtonLabel={translate('common.close')}
+      testID="CredentialDeleteProcessScreen"
+      title={translate(`credentialDelete.${state}.title`)}
+      variation={LoadingResultVariation.Neutral}
     />
   );
 };

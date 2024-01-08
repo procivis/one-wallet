@@ -1,4 +1,7 @@
-import { Typography, useAppColorScheme } from '@procivis/react-native-components';
+import {
+  Typography,
+  useAppColorScheme,
+} from '@procivis/react-native-components';
 import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PresentationDefinitionRequestGroup } from 'react-native-one-core';
@@ -7,25 +10,36 @@ import { translate } from '../../i18n';
 
 export const ProofRequestGroup: FunctionComponent<
   PropsWithChildren<{
-    request: PresentationDefinitionRequestGroup;
     last: boolean;
+    request: PresentationDefinitionRequestGroup;
   }>
 > = ({ request, last, children }) => {
   const colorScheme = useAppColorScheme();
   const title = request.name || translate('proofRequest.attributes');
   return (
-    <View style={[styles.group, last && styles.last, { borderColor: colorScheme.lighterGrey }]}>
+    <View
+      style={[
+        styles.group,
+        last && styles.last,
+        { borderColor: colorScheme.lighterGrey },
+      ]}
+    >
       <Typography
-        color={colorScheme.text}
-        size="sml"
+        accessibilityRole="header"
         bold={true}
         caps={true}
-        accessibilityRole="header"
-        style={styles.title}>
+        color={colorScheme.text}
+        size="sml"
+        style={styles.title}
+      >
         {title}
       </Typography>
       {request.purpose ? (
-        <Typography color={colorScheme.textSecondary} size="sml" style={styles.subtitle}>
+        <Typography
+          color={colorScheme.textSecondary}
+          size="sml"
+          style={styles.subtitle}
+        >
           {request.purpose}
         </Typography>
       ) : null}

@@ -9,8 +9,8 @@ import de from './de/translation.json';
 import en from './en/translation.json';
 
 const translations = {
-  en: Object.assign(en, localeOverride?.en),
   de: Object.assign(de, localeOverride?.de),
+  en: Object.assign(en, localeOverride?.en),
 };
 
 i18n.defaultSeparator = '_';

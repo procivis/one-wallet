@@ -1,5 +1,11 @@
-import { navigationTabsDecorator, NavigationTabsLayoutVariant } from '@procivis/react-native-components';
-import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  navigationTabsDecorator,
+  NavigationTabsLayoutVariant,
+} from '@procivis/react-native-components';
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
@@ -12,7 +18,9 @@ import WalletScreen from '../../screens/dashboard/wallet-screen';
 import { TabsNavigatorParamList } from './tabs-routes';
 
 const iconFactory = (Icon: React.ComponentType<SvgProps>) => {
-  const IconImage: BottomTabNavigationOptions['tabBarIcon'] = ({ color }) => <Icon color={color} />;
+  const IconImage: BottomTabNavigationOptions['tabBarIcon'] = ({ color }) => (
+    <Icon color={color} />
+  );
   return IconImage;
 };
 
@@ -26,28 +34,29 @@ const TabsNavigator = () => {
 
   return (
     <Tab.Navigator
+      backBehavior="initialRoute"
+      initialRouteName="Wallet"
       screenOptions={{
         headerShown: false,
         unmountOnBlur: true,
       }}
       tabBar={navigationTabsDecorator(NavigationTabsLayoutVariant.Floating)}
-      backBehavior="initialRoute"
-      initialRouteName="Wallet">
+    >
       <Tab.Screen
+        component={QRCodeScannerScreen}
         name="QRCodeScanner"
         options={{
-          tabBarLabel: translate('wallet.tabBar.qrCodeScanner'),
           tabBarIcon: iconFactory(QRIcon),
+          tabBarLabel: translate('wallet.tabBar.qrCodeScanner'),
         }}
-        component={QRCodeScannerScreen}
       />
       <Tab.Screen
+        component={WalletScreen}
         name="Wallet"
         options={{
-          tabBarLabel: translate('wallet.tabBar.wallet'),
           tabBarIcon: iconFactory(DashboardIcon),
+          tabBarLabel: translate('wallet.tabBar.wallet'),
         }}
-        component={WalletScreen}
       />
     </Tab.Navigator>
   );

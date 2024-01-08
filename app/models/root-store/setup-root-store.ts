@@ -26,10 +26,10 @@ export async function setupRootStore() {
   const env = await createEnvironment();
 
   const rootStoreData = {
-    walletStore: await setupWalletStore(env),
     backendConfigStore: await setupBackendConfigStore(env),
     locale: await setupLocaleStore(env),
     userSettings: await setupUserSettingsStore(env),
+    walletStore: await setupWalletStore(env),
   };
   const rootStore = RootStoreModel.create(rootStoreData, env);
   return rootStore;

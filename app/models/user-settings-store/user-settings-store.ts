@@ -13,4 +13,5 @@ export const UserSettingsStoreModel = types
 type UserSettingsStoreType = Instance<typeof UserSettingsStoreModel>;
 export interface UserSettingsStore extends UserSettingsStoreType {}
 type UserSettingsStoreSnapshotType = SnapshotOut<typeof UserSettingsStoreModel>;
-export interface UserSettingsStoreSnapshot extends UserSettingsStoreSnapshotType {}
+export interface UserSettingsStoreSnapshot
+  extends UserSettingsStoreSnapshotType {}

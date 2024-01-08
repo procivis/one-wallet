@@ -3,16 +3,19 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import RNBlurOverlay from 'react-native-blur-overlay';
 
 export enum BlurStyle {
-  Light = 'light',
-  ExtraLight = 'extraLight',
   Dark = 'dark',
+  ExtraLight = 'extraLight',
+  Light = 'light',
 }
 interface BlurOverlayProps {
-  style: StyleProp<ViewStyle>;
   blurStyle: BlurStyle;
+  style: StyleProp<ViewStyle>;
 }
 
-const BlurOverlay: FunctionComponent<BlurOverlayProps> = ({ style, blurStyle }) => {
+const BlurOverlay: FunctionComponent<BlurOverlayProps> = ({
+  style,
+  blurStyle,
+}) => {
   const brightness = useMemo(() => {
     switch (blurStyle) {
       case BlurStyle.Dark:
@@ -28,12 +31,12 @@ const BlurOverlay: FunctionComponent<BlurOverlayProps> = ({ style, blurStyle }) 
   return (
     <View style={style}>
       <RNBlurOverlay
-        ref={(overlay: any) => overlay?.openOverlay()}
-        customStyles={styles.overlay}
         blurStyle={blurStyle}
         brightness={brightness}
-        radius={34}
+        customStyles={styles.overlay}
         downsampling={50}
+        radius={34}
+        ref={(overlay: any) => overlay?.openOverlay()}
       />
     </View>
   );

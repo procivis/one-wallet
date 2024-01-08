@@ -1,4 +1,12 @@
-import React, { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { initializeCore, ONECore } from 'react-native-one-core';
 
 import { reportException } from '../utils/reporting';
@@ -53,7 +61,11 @@ export const ONECoreContextProvider: FC = ({ children }) => {
     return null;
   }
 
-  return <ONECoreContext.Provider value={contextValue}>{children}</ONECoreContext.Provider>;
+  return (
+    <ONECoreContext.Provider value={contextValue}>
+      {children}
+    </ONECoreContext.Provider>
+  );
 };
 
 export const useONECore = () => useContext(ONECoreContext);

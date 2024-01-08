@@ -9,12 +9,24 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback, useEffect, useRef } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import { StyleSheet } from 'react-native';
 import { CredentialStateEnum } from 'react-native-one-core';
 
-import { EmptyIcon, NextIcon, SettingsIcon } from '../../components/icon/wallet-icon';
-import { useCredentialRevocationCheck, useCredentials } from '../../hooks/credentials';
+import {
+  EmptyIcon,
+  NextIcon,
+  SettingsIcon,
+} from '../../components/icon/wallet-icon';
+import {
+  useCredentialRevocationCheck,
+  useCredentials,
+} from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
@@ -36,7 +48,9 @@ const WalletScreen: FunctionComponent = observer(() => {
   useEffect(() => {
     if (!revocationCheckPerformed.current && credentials?.length) {
       revocationCheckPerformed.current = true;
-      checkRevocation(credentials.map(({ id }) => id)).catch((e) => reportException(e, 'Revocation check failed'));
+      checkRevocation(credentials.map(({ id }) => id)).catch((e) =>
+        reportException(e, 'Revocation check failed'),
+      );
     }
   }, [checkRevocation, credentials]);
 
@@ -56,53 +70,71 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   return (
     <FeatureScreen
-      testID="WalletScreen"
-      key={locale}
-      title={translate('wallet.walletScreen.title')}
-      headerBackground={colorScheme.lineargradient}
-      style={{ backgroundColor: colorScheme.background }}
       actionButtons={[
         {
-          key: 'settings',
           accessibilityLabel: translate('wallet.settings.title'),
           content: SettingsIcon,
+          key: 'settings',
           onPress: handleWalletSettingsClick,
         },
-      ]}>
+      ]}
+      headerBackground={colorScheme.lineargradient}
+      key={locale}
+      style={{ backgroundColor: colorScheme.background }}
+      testID="WalletScreen"
+      title={translate('wallet.walletScreen.title')}
+    >
       <TabBarAwareContainer>
         {credentials ? (
           <ListView
+            emptyListIcon={{
+              component: <EmptyIcon color={colorScheme.lightGrey} />,
+            }}
+            emptyListIconStyle={styles.emptyIcon}
+            emptyListSubtitle={translate(
+              'wallet.walletScreen.credentialsList.empty.subtitle',
+            )}
+            emptyListTitle={translate(
+              'wallet.walletScreen.credentialsList.empty.title',
+            )}
+            items={credentials.map((credential) => {
+              const testID = concatTestID(
+                'WalletScreen.credential',
+                credential.id,
+              );
+              const revoked = credential.state === CredentialStateEnum.REVOKED;
+              return {
+                icon: {
+                  component: (
+                    <TextAvatar
+                      innerSize={48}
+                      produceInitials={true}
+                      text={credential.schema.name}
+                    />
+                  ),
+                },
+                iconStyle: styles.itemIcon,
+                rightAccessory: <NextIcon color={colorScheme.text} />,
+                subtitle: revoked
+                  ? translate('credentialDetail.log.revoke')
+                  : formatDateTime(new Date(credential.issuanceDate)),
+                subtitleStyle: revoked
+                  ? {
+                      color: colorScheme.alertText,
+                      testID: concatTestID(testID, 'revoked'),
+                    }
+                  : undefined,
+                testID,
+                title: credential.schema.name,
+              };
+            })}
+            onItemSelected={handleCredentialPress}
             title={translate(
               credentials.length
                 ? 'wallet.walletScreen.credentialsList.title'
                 : 'wallet.walletScreen.credentialsList.title.empty',
               { credentialsCount: credentials.length },
             )}
-            emptyListIcon={{ component: <EmptyIcon color={colorScheme.lightGrey} /> }}
-            emptyListIconStyle={styles.emptyIcon}
-            emptyListTitle={translate('wallet.walletScreen.credentialsList.empty.title')}
-            emptyListSubtitle={translate('wallet.walletScreen.credentialsList.empty.subtitle')}
-            items={credentials.map((credential) => {
-              const testID = concatTestID('WalletScreen.credential', credential.id);
-              const revoked = credential.state === CredentialStateEnum.REVOKED;
-              return {
-                testID,
-                title: credential.schema.name,
-                subtitle: revoked
-                  ? translate('credentialDetail.log.revoke')
-                  : formatDateTime(new Date(credential.issuanceDate)),
-                subtitleStyle: revoked
-                  ? {
-                      testID: concatTestID(testID, 'revoked'),
-                      color: colorScheme.alertText,
-                    }
-                  : undefined,
-                icon: { component: <TextAvatar produceInitials={true} text={credential.schema.name} innerSize={48} /> },
-                iconStyle: styles.itemIcon,
-                rightAccessory: <NextIcon color={colorScheme.text} />,
-              };
-            })}
-            onItemSelected={handleCredentialPress}
           />
         ) : (
           <ActivityIndicator />

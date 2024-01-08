@@ -12,11 +12,17 @@
 import './utils/ignore-warnings';
 
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { AccessibilityFocusHistoryProvider, ColorSchemeProvider } from '@procivis/react-native-components';
+import {
+  AccessibilityFocusHistoryProvider,
+  ColorSchemeProvider,
+} from '@procivis/react-native-components';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
-import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 import Config from 'react-native-ultimate-config';
 import { QueryClientProvider } from 'react-query';
 
@@ -30,11 +36,6 @@ import { reportException } from './utils/reporting';
 
 if (!__DEV__) {
   Sentry.init({
-    dsn: 'https://b98a05fd083c47f1a770d74d04df0425@o153694.ingest.sentry.io/4505114160201728',
-    environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}`,
-
-    // Sentry event payload is limited to 200KB, if exceeded, the event report is dumped -> minimize reported data
-    maxBreadcrumbs: 50,
     beforeBreadcrumb: (breadcrumb: Sentry.Breadcrumb) => {
       if (breadcrumb.category === 'console') {
         breadcrumb.data = {};
@@ -42,6 +43,11 @@ if (!__DEV__) {
       }
       return breadcrumb;
     },
+    dsn: 'https://b98a05fd083c47f1a770d74d04df0425@o153694.ingest.sentry.io/4505114160201728',
+    environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}`,
+
+    // Sentry event payload is limited to 200KB, if exceeded, the event report is dumped -> minimize reported data
+    maxBreadcrumbs: 50,
   });
 }
 
@@ -72,7 +78,9 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!rootStore) return null;
+  if (!rootStore) {
+    return null;
+  }
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

@@ -10,17 +10,23 @@ import { SvgProps } from 'react-native-svg';
  */
 export function svgResizer(
   SvgComponent: React.ComponentType<SvgProps>,
-  svgProportions: { width: number; height: number },
+  svgProportions: { height: number; width: number },
 ) {
   const SvgResizer: React.FunctionComponent<ViewProps> = (props) => {
     const [layout, setLayout] = useState<LayoutRectangle>();
     const scaleRatio = layout
-      ? Math.min(layout.width / svgProportions.width, layout.height / svgProportions.height)
+      ? Math.min(
+          layout.width / svgProportions.width,
+          layout.height / svgProportions.height,
+        )
       : undefined;
     return (
       <View {...props} onLayout={(e) => setLayout(e.nativeEvent.layout)}>
         {scaleRatio ? (
-          <SvgComponent width={svgProportions.width * scaleRatio} height={svgProportions.height * scaleRatio} />
+          <SvgComponent
+            height={svgProportions.height * scaleRatio}
+            width={svgProportions.width * scaleRatio}
+          />
         ) : null}
       </View>
     );
