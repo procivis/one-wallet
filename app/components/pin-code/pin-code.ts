@@ -16,7 +16,9 @@ async function loadPinCode(): Promise<string | null> {
 const PIN_CODE_INITIALIZATION_EVENT = 'pin-code-initialization';
 let globalPinInitialized: boolean | undefined;
 export function usePinCodeInitialized(): boolean | undefined {
-  const [initialized, setInitialized] = useState<boolean | undefined>(globalPinInitialized);
+  const [initialized, setInitialized] = useState<boolean | undefined>(
+    globalPinInitialized,
+  );
   useEffect(() => {
     if (globalPinInitialized === undefined) {
       loadPinCode().then((loaded) => {
@@ -25,8 +27,9 @@ export function usePinCodeInitialized(): boolean | undefined {
       });
     }
 
-    const subscription = DeviceEventEmitter.addListener(PIN_CODE_INITIALIZATION_EVENT, () =>
-      setInitialized(globalPinInitialized),
+    const subscription = DeviceEventEmitter.addListener(
+      PIN_CODE_INITIALIZATION_EVENT,
+      () => setInitialized(globalPinInitialized),
     );
     return () => subscription.remove();
   }, []);
@@ -81,11 +84,12 @@ export const usePinCodeEntry = (onPinEntered: (userEntry: string) => void) => {
   }, [onPinEntered, userEntry, finished]);
 
   return {
-    enteredLength,
     clear: onDeleteAll,
-    onPressDigit: !finished && enteredLength < PIN_CODE_LENGTH ? onPressDigit : undefined,
+    enteredLength,
     onPressDelete: !finished && enteredLength ? onPressDelete : undefined,
     onPressDeleteAll: !finished && enteredLength ? onDeleteAll : undefined,
+    onPressDigit:
+      !finished && enteredLength < PIN_CODE_LENGTH ? onPressDigit : undefined,
   };
 };
 
@@ -107,5 +111,8 @@ export const usePinCodeValidation = (): ValidatePin => {
     });
   }, []);
 
-  return useCallback<ValidatePin>((entry) => storedEntry === entry, [storedEntry]);
+  return useCallback<ValidatePin>(
+    (entry) => storedEntry === entry,
+    [storedEntry],
+  );
 };

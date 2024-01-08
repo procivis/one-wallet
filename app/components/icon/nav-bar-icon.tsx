@@ -4,35 +4,71 @@ import Svg, { Path, Rect, SvgProps } from 'react-native-svg';
 // Icons on the main navigation bar: https://www.figma.com/file/Mj9Nm9CUtauth6jt49UL7t/OTS-Developments-2023?type=design&node-id=135-32814&t=GXsNdBzYheEWxZvG-4
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?node-id=148-192&t=I6Q7WxDtambS2LOf-4
-export const QRIcon: React.FunctionComponent<SvgProps> = ({ color, ...props }) => {
+export const QRIcon: React.FunctionComponent<SvgProps> = ({
+  color,
+  ...props
+}) => {
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
       <Path
-        fillRule="evenodd"
         d="M6.40369 10.8773V6.95637C6.40369 6.65111 6.65115 6.40364 6.95641 6.40364H10.8773V10.8773H6.40369ZM9.77187 7.52637H7.52641V9.75455H9.77187V7.52637Z"
         fill={color}
+        fillRule="evenodd"
       />
       <Path
-        fillRule="evenodd"
         d="M17.5963 6.95637V10.8773H15.3509V12.5527H13.1227V6.40364H17.0436C17.3489 6.40364 17.5963 6.65111 17.5963 6.95637ZM16.4736 7.52637H14.2281V9.75455H16.4736V7.52637Z"
         fill={color}
-      />
-      <Rect x="14.7982" y="8.07909" width="1.12273" height="1.12273" fill={color} />
-      <Rect x="16.4564" y="11.43" width="1.12273" height="1.12273" fill={color} />
-      <Rect x="8.0791" y="8.07909" width="1.12273" height="1.12273" fill={color} />
-      <Path
         fillRule="evenodd"
+      />
+      <Rect
+        fill={color}
+        height="1.12273"
+        width="1.12273"
+        x="14.7982"
+        y="8.07909"
+      />
+      <Rect
+        fill={color}
+        height="1.12273"
+        width="1.12273"
+        x="16.4564"
+        y="11.43"
+      />
+      <Rect
+        fill={color}
+        height="1.12273"
+        width="1.12273"
+        x="8.0791"
+        y="8.07909"
+      />
+      <Path
         d="M16.4563 17.0264H15.3509V17.5791H13.1227V16.4564H14.2281V15.9036H13.1227V14.7809H14.2281V14.2282H13.1227V13.1055H17.5963V17.0264C17.5964 17.176 17.5358 17.3193 17.4284 17.4234C17.3209 17.5276 17.1759 17.5838 17.0263 17.5791H16.4563V17.0264ZM16.4563 14.7982H15.3509V15.9036H16.4563V14.7982Z"
         fill={color}
+        fillRule="evenodd"
       />
       <Path
-        fillRule="evenodd"
         d="M6.40369 11.43H11.4301V8.64909H12.5701V12.5527H8.64914V13.1055H10.8773V17.5791H6.95641C6.65115 17.5791 6.40369 17.3316 6.40369 17.0264V11.43ZM9.70278 16.4736V14.2282H7.52641V16.4736H9.70278Z"
         fill={color}
+        fillRule="evenodd"
       />
-      <Rect x="11.4301" y="6.40364" width="1.12273" height="1.12273" fill={color} />
-      <Rect x="8.0791" y="14.7809" width="1.12273" height="1.12273" fill={color} />
-      <Path d="M11.4301 13.1055H12.5528V17.5791H11.4301V13.1055Z" fill={color} />
+      <Rect
+        fill={color}
+        height="1.12273"
+        width="1.12273"
+        x="11.4301"
+        y="6.40364"
+      />
+      <Rect
+        fill={color}
+        height="1.12273"
+        width="1.12273"
+        x="8.0791"
+        y="14.7809"
+      />
+      <Path
+        d="M11.4301 13.1055H12.5528V17.5791H11.4301V13.1055Z"
+        fill={color}
+      />
       <Path
         d="M2.93182 9.58182H3.79545C4.03394 9.58182 4.22727 9.38849 4.22727 9.15V4.65909C4.22727 4.4206 4.4206 4.22727 4.65909 4.22727H9.16727C9.2818 4.22727 9.39163 4.18178 9.47261 4.1008C9.5536 4.01981 9.59909 3.90998 9.59909 3.79545V2.93182C9.59909 2.81729 9.5536 2.70746 9.47261 2.62648C9.39163 2.54549 9.2818 2.5 9.16727 2.5H3.36364C2.88666 2.5 2.5 2.88666 2.5 3.36364V9.15C2.5 9.38849 2.69333 9.58182 2.93182 9.58182Z"
         fill={color}
@@ -54,13 +90,32 @@ export const QRIcon: React.FunctionComponent<SvgProps> = ({ color, ...props }) =
 };
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?node-id=145-1591&t=I6Q7WxDtambS2LOf-4
-export const DashboardIcon: React.FunctionComponent<SvgProps> = ({ color, ...props }) => {
+export const DashboardIcon: React.FunctionComponent<SvgProps> = ({
+  color,
+  ...props
+}) => {
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
-      <Path d="M3 4C3 3.44772 3.44772 3 4 3H9V9H3V4Z" stroke={color} strokeWidth="2" />
-      <Path d="M14 3H19C19.5523 3 20 3.44772 20 4V9H14V3Z" stroke={color} strokeWidth="2" />
-      <Path d="M14 14H20V19C20 19.5523 19.5523 20 19 20H14V14Z" stroke={color} strokeWidth="2" />
-      <Path d="M3 14H9V20H4C3.44772 20 3 19.5523 3 19V14Z" stroke={color} strokeWidth="2" />
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <Path
+        d="M3 4C3 3.44772 3.44772 3 4 3H9V9H3V4Z"
+        stroke={color}
+        strokeWidth="2"
+      />
+      <Path
+        d="M14 3H19C19.5523 3 20 3.44772 20 4V9H14V3Z"
+        stroke={color}
+        strokeWidth="2"
+      />
+      <Path
+        d="M14 14H20V19C20 19.5523 19.5523 20 19 20H14V14Z"
+        stroke={color}
+        strokeWidth="2"
+      />
+      <Path
+        d="M3 14H9V20H4C3.44772 20 3 19.5523 3 19V14Z"
+        stroke={color}
+        strokeWidth="2"
+      />
     </Svg>
   );
 };
