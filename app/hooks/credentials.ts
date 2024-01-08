@@ -1,4 +1,9 @@
-import { CredentialStateEnum, InvitationResult, OneError, OneErrorCode } from 'react-native-one-core';
+import {
+  CredentialStateEnum,
+  InvitationResult,
+  OneError,
+  OneErrorCode,
+} from 'react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useStores } from '../models';
@@ -16,13 +21,17 @@ export const useCredentials = () => {
     () =>
       core
         ?.getCredentials({
+          organisationId: ONE_CORE_ORGANISATION_ID,
           page: 0,
           // TODO: workaround pagination for now, until it's supported by UI
           pageSize: 10000,
-          organisationId: ONE_CORE_ORGANISATION_ID,
         })
         .then(({ values }) =>
-          values.filter(({ state }) => state === CredentialStateEnum.ACCEPTED || state === CredentialStateEnum.REVOKED),
+          values.filter(
+            ({ state }) =>
+              state === CredentialStateEnum.ACCEPTED ||
+              state === CredentialStateEnum.REVOKED,
+          ),
         ),
     {
       keepPreviousData: true,
@@ -37,8 +46,8 @@ export const useCredentialDetail = (credentialId: string | undefined) => {
     [CREDENTIAL_DETAIL_QUERY_KEY, credentialId],
     () => (credentialId ? core.getCredential(credentialId) : undefined),
     {
-      keepPreviousData: true,
       enabled: Boolean(credentialId),
+      keepPreviousData: true,
     },
   );
 };
@@ -48,25 +57,32 @@ export const useInvitationHandler = () => {
   const { walletStore } = useStores();
   const { core } = useONECore();
 
-  return useMutation(async (invitationUrl: string) => core.handleInvitation(invitationUrl, walletStore.holderDidId), {
-    onSuccess: (result: InvitationResult) => {
-      if ('credentialIds' in result) {
-        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-      }
+  return useMutation(
+    async (invitationUrl: string) =>
+      core.handleInvitation(invitationUrl, walletStore.holderDidId),
+    {
+      onSuccess: (result: InvitationResult) => {
+        if ('credentialIds' in result) {
+          queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+        }
+      },
     },
-  });
+  );
 };
 
 export const useCredentialAccept = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(async (interactionId: string) => core.holderAcceptCredential(interactionId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+  return useMutation(
+    async (interactionId: string) => core.holderAcceptCredential(interactionId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+        queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+      },
     },
-  });
+  );
 };
 
 export const useCredentialReject = () => {
@@ -94,22 +110,31 @@ export const useCredentialRevocationCheck = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(async (credentialIds: string[]) => core.checkRevocation(credentialIds), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-      queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+  return useMutation(
+    async (credentialIds: string[]) => core.checkRevocation(credentialIds),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+        queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+      },
     },
-  });
+  );
 };
 
 export const useCredentialDelete = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(async (credentialId: string) => core.deleteCredential(credentialId), {
-    onSuccess: (_, credentialId) => {
-      queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-      queryClient.invalidateQueries([CREDENTIAL_DETAIL_QUERY_KEY, credentialId]);
+  return useMutation(
+    async (credentialId: string) => core.deleteCredential(credentialId),
+    {
+      onSuccess: (_, credentialId) => {
+        queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+        queryClient.invalidateQueries([
+          CREDENTIAL_DETAIL_QUERY_KEY,
+          credentialId,
+        ]);
+      },
     },
-  });
+  );
 };

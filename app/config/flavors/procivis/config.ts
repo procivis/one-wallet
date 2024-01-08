@@ -5,9 +5,9 @@ export const config: Configuration = {
   ...commonConfig,
   appName: 'ONE+ Wallet',
   backendConfig: {
-    host: 'TODO',
     endpoints: {
       onboardingInvitation: '/api/v1/onboarding/invitation',
     },
+    host: 'TODO',
   },
 };

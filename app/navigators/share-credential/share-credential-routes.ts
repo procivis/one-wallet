@@ -7,6 +7,14 @@ import {
 } from 'react-native-one-core';
 
 export type ShareCredentialNavigatorParamList = {
+  Processing: {
+    credentials: Record<
+      PresentationDefinitionRequestedCredential['id'],
+      PresentationSubmitCredentialRequest
+    >;
+    interactionId: string;
+    proofId: string;
+  };
   ProofRequest: {
     request: InvitationResultProofRequest;
     selectedCredentialId?: string;
@@ -15,16 +23,11 @@ export type ShareCredentialNavigatorParamList = {
     preselectedCredentialId: string;
     request: PresentationDefinitionRequestedCredential;
   };
-  Processing: {
-    credentials: Record<PresentationDefinitionRequestedCredential['id'], PresentationSubmitCredentialRequest>;
-    interactionId: string;
-    proofId: string;
-  };
 };
 
-export type ShareCredentialRouteProp<RouteName extends keyof ShareCredentialNavigatorParamList> = RouteProp<
-  ShareCredentialNavigatorParamList,
-  RouteName
->;
-export type ShareCredentialNavigationProp<RouteName extends keyof ShareCredentialNavigatorParamList> =
-  NativeStackNavigationProp<ShareCredentialNavigatorParamList, RouteName>;
+export type ShareCredentialRouteProp<
+  RouteName extends keyof ShareCredentialNavigatorParamList,
+> = RouteProp<ShareCredentialNavigatorParamList, RouteName>;
+export type ShareCredentialNavigationProp<
+  RouteName extends keyof ShareCredentialNavigatorParamList,
+> = NativeStackNavigationProp<ShareCredentialNavigatorParamList, RouteName>;

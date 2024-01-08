@@ -1,15 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-import { storePin, usePinCodeValidation } from '../../components/pin-code/pin-code';
-import PinCodeScreenContent, { PinCodeActions } from '../../components/pin-code/pin-code-screen-content';
+import {
+  storePin,
+  usePinCodeValidation,
+} from '../../components/pin-code/pin-code';
+import PinCodeScreenContent, {
+  PinCodeActions,
+} from '../../components/pin-code/pin-code-screen-content';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 enum Stage {
   Check = 'check',
-  Set = 'initial',
   Confirm = 'confirm',
+  Set = 'initial',
 }
 
 const PinCodeChangeScreen: FunctionComponent = () => {
@@ -61,12 +72,12 @@ const PinCodeChangeScreen: FunctionComponent = () => {
 
   return (
     <PinCodeScreenContent
-      ref={screen}
+      error={error}
+      instruction={translate(`onboarding.pinCodeScreen.${stage}.subtitle`)}
       onBack={navigation.goBack}
       onPinEntered={onPinEntered}
+      ref={screen}
       title={translate(`onboarding.pinCodeScreen.change.${stage}.title`)}
-      instruction={translate(`onboarding.pinCodeScreen.${stage}.subtitle`)}
-      error={error}
     />
   );
 };

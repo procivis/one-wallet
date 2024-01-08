@@ -29,6 +29,9 @@ export function useFlavorColorScheme(): AppColorScheme {
   return useMemo(() => {
     const darkMode = Boolean(osDarkMode && darkModeColorScheme);
     const nativePickerText = osDarkMode ? '#FFFFFF' : '#000000';
-    return Object.assign({ darkMode, nativePickerText }, darkMode ? darkModeColorScheme : colorScheme);
+    return Object.assign(
+      { darkMode, nativePickerText },
+      darkMode ? darkModeColorScheme : colorScheme,
+    );
   }, [osDarkMode]);
 }
