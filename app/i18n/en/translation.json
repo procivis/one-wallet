@@ -109,6 +109,7 @@
   "proofRequest.selectCredential.issued": "Issued on %{date}",
   "proofRequest.selectCredential.select": "Select",
   "proofRequest.selectCredential.title": "Select credential",
+  "proofRequest.selectiveDisclosure.notice": "This credential requires you to share all attributes to work.",
   "proofRequest.title": "Share data",
   "proofRequest.verifier": "Verifier",
   "wallet.qrCodeScannerScreen.description": "Position the QR code within the window to validate or send evidence to third parties.",
