@@ -1,14 +1,14 @@
 export default abstract class PinCodeScreen {
   private static screen(screenTestID: string) {
     return {
-      get screen() {
-        return element(by.id(screenTestID));
+      digit(digit: number) {
+        return element(by.id(`${screenTestID}.keypad.${digit}`));
       },
       get error() {
         return element(by.id(`${screenTestID}.error`));
       },
-      digit(digit: number) {
-        return element(by.id(`${screenTestID}.keypad.${digit}`));
+      get screen() {
+        return element(by.id(screenTestID));
       },
     };
   }

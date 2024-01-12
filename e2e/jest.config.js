@@ -1,24 +1,26 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
-  rootDir: '..',
-  testMatch: ['<rootDir>/e2e/**/*.e2e.ts'],
-  testTimeout: 120000,
-  maxWorkers: 1,
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',
+  maxWorkers: 1,
   reporters: [
     'detox/runners/jest/reporter',
     [
       'jest-junit',
       {
-        suiteName: 'Detox E2E',
-        outputName: 'detox-junit.xml',
         ancestorSeparator: ' > ',
+        outputName: 'detox-junit.xml',
+        suiteName: 'Detox E2E',
         titleTemplate: '{classname} > {title}',
       },
     ],
   ],
-  transformIgnorePatterns: ['node_modules/(?!(jest-)?node-fetch|fetch-blob|formdata-polyfill|data-uri-to-buffer)'],
+  rootDir: '..',
   testEnvironment: 'detox/runners/jest/testEnvironment',
+  testMatch: ['<rootDir>/e2e/**/*.e2e.ts'],
+  testTimeout: 120000,
+  transformIgnorePatterns: [
+    'node_modules/(?!(jest-)?node-fetch|fetch-blob|formdata-polyfill|data-uri-to-buffer)',
+  ],
   verbose: true,
 };
