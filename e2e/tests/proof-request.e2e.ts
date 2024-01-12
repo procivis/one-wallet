@@ -12,6 +12,7 @@ import {
   createCredentialSchema,
   createProofRequest,
   createProofSchema,
+  CredentialSchemaData,
   offerCredential,
   requestProof,
   revokeCredential,
@@ -47,7 +48,7 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
     });
 
-    const proofRequestSharingTestCase = async (redirectUri?: string | null) => {
+    const proofRequestSharingTestCase = async (redirectUri?: string) => {
       const proofRequestId = await createProofRequest(authToken, proofSchema, {
         redirectUri,
       });
@@ -84,6 +85,120 @@ describe('ONE-614: Proof request', () => {
       await proofRequestSharingTestCase();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
+
+  describe('ONE-1182: Selective disclosure', () => {
+    let jwtCredentialSchema: Record<string, any>;
+    let sdjwtCredentialSchema: Record<string, any>;
+    let jwtProofSchema: Record<string, any>;
+    let jwtCredentialId: string;
+
+    beforeAll(async () => {
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
+      await pinSetup();
+
+      const claims: CredentialSchemaData['claims'] = [
+        { datatype: 'STRING', key: 'field1', required: true },
+        { datatype: 'STRING', key: 'field2', required: true },
+      ];
+      jwtCredentialSchema = await createCredentialSchema(authToken, {
+        claims,
+        format: CredentialFormat.JWT,
+      });
+      sdjwtCredentialSchema = await createCredentialSchema(authToken, {
+        claims,
+        format: CredentialFormat.SDJWT,
+      });
+
+      jwtProofSchema = await createProofSchema(authToken, jwtCredentialSchema, {
+        claimSchemas: [
+          {
+            id: jwtCredentialSchema.claims[0].id,
+            required: true,
+          },
+        ],
+      });
+
+      jwtCredentialId = await createCredential(authToken, jwtCredentialSchema, {
+        claimValues: [
+          { claimId: jwtCredentialSchema.claims[0].id, value: 'value1' },
+          { claimId: jwtCredentialSchema.claims[1].id, value: 'value2' },
+        ],
+      });
+      const invitationUrl = await offerCredential(jwtCredentialId, authToken);
+      await scanURL(invitationUrl);
+      await CredentialOfferScreen.acceptButton.tap();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+    });
+
+    it('displays selective disclosure notice and all claims', async () => {
+      const proofRequestId = await createProofRequest(
+        authToken,
+        jwtProofSchema,
+      );
+      const invitationUrl = await requestProof(proofRequestId, authToken);
+      await scanURL(invitationUrl);
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(
+        ProofRequestSharingScreen.credential(0).notice.selectiveDisclosure,
+      ).toBeVisible();
+
+      await expect(element(by.text('field1'))).toBeVisible();
+      await expect(element(by.text('value1'))).toBeVisible();
+      await expect(element(by.text('field2'))).toBeVisible();
+      await expect(element(by.text('value2'))).toBeVisible();
+
+      await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
+    });
+
+    it('displays selective disclosure notice on affected options', async () => {
+      const sdjwtCredentialId = await createCredential(
+        authToken,
+        sdjwtCredentialSchema,
+        {
+          claimValues: [
+            { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
+            { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
+          ],
+        },
+      );
+      const sdjwtCredentialInvitationUrl = await offerCredential(
+        sdjwtCredentialId,
+        authToken,
+      );
+      await scanURL(sdjwtCredentialInvitationUrl);
+      await CredentialOfferScreen.acceptButton.tap();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+
+      const proofRequestId = await createProofRequest(
+        authToken,
+        jwtProofSchema,
+      );
+      const invitationUrl = await requestProof(proofRequestId, authToken);
+      await scanURL(invitationUrl);
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await ProofRequestSharingScreen.credential(
+        0,
+      ).notice.multiple.selectButton.tap();
+
+      await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(jwtCredentialId).element,
+      ).toBeVisible();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(jwtCredentialId).notice
+          .selectiveDisclosure,
+      ).toBeVisible();
+
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(sdjwtCredentialId)
+          .element,
+      ).toBeVisible();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(sdjwtCredentialId).notice
+          .selectiveDisclosure,
+      ).not.toExist();
     });
   });
 
@@ -218,6 +333,7 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
     });
   });
+
   describe('Proof request Transport Protocol TestCase', () => {
     beforeAll(async () => {
       await device.launchApp({ delete: true, permissions: { camera: 'YES' } });

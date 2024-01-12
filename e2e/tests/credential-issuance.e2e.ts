@@ -37,7 +37,7 @@ describe('ONE-601: Credential issuance', () => {
   describe('Credential offer', () => {
     let credentialId: string;
 
-    const issueCredentialTestCase = async (redirectUri?: string | null) => {
+    const issueCredentialTestCase = async (redirectUri?: string) => {
       credentialId = await createCredential(authToken, credentialSchemaJWT, {
         redirectUri,
       });
