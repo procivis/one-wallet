@@ -18,8 +18,30 @@ export default abstract class ProofRequestSharingScreen {
         return element(by.id(id));
       },
 
-      title(credentialId: string) {
-        return element(by.id(`${id}.title.${credentialId}`));
+      get notice() {
+        const noticeId = `${id}.notice`;
+        return {
+          get missing() {
+            return element(by.id(`${noticeId}.missing`));
+          },
+          get multiple() {
+            const multipleId = `${noticeId}.multiple`;
+            return {
+              get element() {
+                return element(by.id(multipleId));
+              },
+              get selectButton() {
+                return element(by.id(`${multipleId}.button`));
+              },
+            };
+          },
+          get revoked() {
+            return element(by.id(`${noticeId}.revoked`));
+          },
+          get selectiveDisclosure() {
+            return element(by.id(`${noticeId}.selectiveDisclosure`));
+          },
+        };
       },
 
       get subtitle() {
@@ -34,27 +56,8 @@ export default abstract class ProofRequestSharingScreen {
         };
       },
 
-      get notice() {
-        const noticeId = `${id}.notice`;
-        return {
-          get missing() {
-            return element(by.id(`${noticeId}.missing`));
-          },
-          get revoked() {
-            return element(by.id(`${noticeId}.revoked`));
-          },
-          get multiple() {
-            const multipleId = `${noticeId}.multiple`;
-            return {
-              get element() {
-                return element(by.id(multipleId));
-              },
-              get selectButton() {
-                return element(by.id(`${multipleId}.button`));
-              },
-            };
-          },
-        };
+      title(credentialId: string) {
+        return element(by.id(`${id}.title.${credentialId}`));
       },
     };
   }
