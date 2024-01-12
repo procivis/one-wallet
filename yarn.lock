@@ -11201,7 +11201,7 @@ __metadata:
     react-native-keep-awake: "npm:^4.0.0"
     react-native-keychain: "npm:^8.0.0"
     react-native-localize: "npm:^3.0.0"
-    react-native-one-core: "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#4c111cfa02f22ac290ac370d279fc3f9c586e96b"
+    react-native-one-core: "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#5e81e72455b4898cb01e7ef65999a7f79b96785c"
     react-native-picker: "git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9"
     react-native-reanimated: "npm:^2.17.0"
     react-native-safe-area-context: "npm:4.5.2"
@@ -12409,12 +12409,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#4c111cfa02f22ac290ac370d279fc3f9c586e96b":
-  version: 1.0.12245
-  resolution: "react-native-one-core@https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#commit=4c111cfa02f22ac290ac370d279fc3f9c586e96b"
+"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#5e81e72455b4898cb01e7ef65999a7f79b96785c":
+  version: 1.0.12685
+  resolution: "react-native-one-core@https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#commit=5e81e72455b4898cb01e7ef65999a7f79b96785c"
   peerDependencies:
     react-native: "*"
-  checksum: 960e37949fd9f0ff7c00bca772c76f3fc3973c0075fafc9afcef9ffc4ece582a2520d9162f13eb5a1cd0d82e39331b0efbd36fc9f7bf4fe80234c7275a92539d
+  checksum: 13beff4f01bda2ddb87e5382173640f305754045619f1ffc928eab46a7c73df138dab63b2e1b5ffb350e687558768c452eb34e17d84d181cad3503b55884af11
   languageName: node
   linkType: hard
 
