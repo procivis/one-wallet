@@ -38,7 +38,9 @@ describe('ONE-601: Credential issuance', () => {
     let credentialId: string;
 
     const issueCredentialTestCase = async (redirectUri?: string | null) => {
-      credentialId = await createCredential(authToken, credentialSchemaJWT, { redirectUri });
+      credentialId = await createCredential(authToken, credentialSchemaJWT, {
+        redirectUri,
+      });
       const invitationUrl = await offerCredential(credentialId, authToken);
       await scanURL(invitationUrl);
       await expect(CredentialOfferScreen.screen).toBeVisible();
@@ -90,7 +92,9 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Credential not revoked initially', async () => {
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).revokedLabel).not.toExist();
+      await expect(
+        WalletScreen.credential(credentialId).revokedLabel,
+      ).not.toExist();
     });
 
     it('Credential revoked remotely', async () => {
@@ -101,7 +105,9 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.screen).toBeVisible();
 
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).revokedLabel).toExist();
+      await expect(
+        WalletScreen.credential(credentialId).revokedLabel,
+      ).toExist();
     });
 
     it('Revoked credential detail screen', async () => {
@@ -156,8 +162,12 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   describe('ONE-796: OpenID4VC Credential transport', () => {
-    const issueCredentialTestCase = async (credentialSchema: Record<string, any>) => {
-      const credentialId = await createCredential(authToken, credentialSchema, { transport: Transport.OPENID4VC });
+    const issueCredentialTestCase = async (
+      credentialSchema: Record<string, any>,
+    ) => {
+      const credentialId = await createCredential(authToken, credentialSchema, {
+        transport: Transport.OPENID4VC,
+      });
 
       const invitationUrl = await offerCredential(credentialId, authToken);
       await scanURL(invitationUrl);
@@ -174,12 +184,10 @@ describe('ONE-601: Credential issuance', () => {
       // await expect(WalletScreen.credential(credentialId).element).toBeVisible();
     };
 
-    // eslint-disable-next-line jest/expect-expect
     it('Issue credential: JWT schema', async () => {
       await issueCredentialTestCase(credentialSchemaJWT);
     });
 
-    // eslint-disable-next-line jest/expect-expect
     it('Issue credential: SD_JWT schema', async () => {
       await issueCredentialTestCase(credentialSchemaSD_JWT);
     });
