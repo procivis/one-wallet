@@ -3,65 +3,86 @@ import {
   Button,
   concatTestID,
   formatDateTime,
-  Selector,
   SelectorStatus,
   TextAvatar,
-  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import React, { FunctionComponent, useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import {
+  Claim,
+  CredentialDetail,
   CredentialListItem,
   CredentialStateEnum,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
 } from 'react-native-one-core';
 
+import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { formatClaimValue } from '../../utils/credential';
+import {
+  formatClaimValue,
+  supportsSelectiveDisclosure,
+} from '../../utils/credential';
 import { MissingCredentialIcon } from '../icon/credential-icon';
+import { ProofRequestAttribute } from './proof-request-attribute';
+import { SelectiveDislosureNotice } from './selective-disclosure-notice';
 
-const DataItem: FunctionComponent<{
-  attribute: string;
-  last?: boolean;
-  onPress?: () => void;
+interface DisplayedAttribute {
+  claim?: Claim;
+  field?: PresentationDefinitionField;
+  id: string;
+  selected?: boolean;
   status: SelectorStatus;
-  value: string | undefined;
-}> = ({ attribute, value, last, status, onPress }) => {
-  const colorScheme = useAppColorScheme();
-  const selector = <Selector status={status} />;
-  return (
-    <View
-      style={[
-        styles.dataItem,
-        last && styles.dataItemLast,
-        { borderColor: colorScheme.lighterGrey },
-      ]}
-    >
-      <View style={styles.dataItemLeft}>
-        <Typography
-          color={colorScheme.textSecondary}
-          size="sml"
-          style={styles.dataItemLabel}
-        >
-          {attribute}
-        </Typography>
-        <Typography color={value ? colorScheme.text : colorScheme.alertText}>
-          {value ?? translate('proofRequest.missingAttribute')}
-        </Typography>
-      </View>
-      {selector && onPress ? (
-        <TouchableOpacity accessibilityRole="button" onPress={onPress}>
-          {selector}
-        </TouchableOpacity>
-      ) : (
-        selector
-      )}
-    </View>
-  );
+}
+
+const getDisplayedAttributes = (
+  request: PresentationDefinitionRequestedCredential,
+  revoked: boolean,
+  credential?: CredentialDetail,
+  selectiveDisclosureSupported?: boolean,
+  selectedFields?: string[],
+): DisplayedAttribute[] => {
+  if (credential && selectiveDisclosureSupported === false) {
+    return credential.claims.map((claim) => ({
+      claim,
+      id: claim.id,
+      status: SelectorStatus.LockedSelected,
+    }));
+  }
+
+  return request.fields.map((field) => {
+    const selected = selectedFields?.includes(field.id);
+    const status = getAttributeSelectorStatus(
+      field,
+      revoked,
+      credential,
+      selected,
+    );
+    const claim = credential?.claims.find(
+      ({ key }) => key === field.keyMap[credential.id],
+    );
+    return { claim, field, id: field.id, selected, status };
+  });
+};
+
+const getAttributeSelectorStatus = (
+  field: PresentationDefinitionField,
+  revoked: boolean,
+  credential?: CredentialDetail,
+  selected?: boolean,
+): SelectorStatus => {
+  if (!credential || revoked) {
+    return field.required
+      ? SelectorStatus.LockedInvalid
+      : SelectorStatus.Invalid;
+  }
+  if (field.required) {
+    return SelectorStatus.LockedSelected;
+  }
+  return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
 };
 
 export const ProofRequestCredential: FunctionComponent<{
@@ -89,6 +110,7 @@ export const ProofRequestCredential: FunctionComponent<{
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } =
     useCredentialDetail(selectedCredentialId);
+  const { data: config } = useCoreConfig();
 
   const name = request.name ?? credential?.schema.name ?? request.id;
 
@@ -103,15 +125,27 @@ export const ProofRequestCredential: FunctionComponent<{
     [allCredentials, request],
   );
 
-  if (isLoading) {
+  if (isLoading || !config) {
     return null;
   }
 
   const revoked = credential?.state === CredentialStateEnum.REVOKED;
+  const selectiveDisclosureSupported = supportsSelectiveDisclosure(
+    credential,
+    config,
+  );
 
   return (
     <View style={style}>
       <Accordion
+        headerNotice={
+          selectiveDisclosureSupported === false && (
+            <SelectiveDislosureNotice
+              style={styles.headerNotice}
+              testID={concatTestID(testID, 'notice.selectiveDisclosure')}
+            />
+          )
+        }
         icon={{
           component: credential ? (
             <TextAvatar innerSize={48} produceInitials={true} text={name} />
@@ -142,39 +176,26 @@ export const ProofRequestCredential: FunctionComponent<{
         title={name}
         titleStyle={{ testID: concatTestID(testID, 'title', credential?.id) }}
       >
-        {request.fields.map((field, index, { length }) => {
-          const selected = selectedFields?.includes(field.id);
-          const status = (() => {
-            if (!credential || revoked) {
-              return field.required
-                ? SelectorStatus.LockedInvalid
-                : SelectorStatus.Invalid;
-            }
-            if (field.required) {
-              return SelectorStatus.LockedSelected;
-            }
-            return selected
-              ? SelectorStatus.SelectedCheck
-              : SelectorStatus.Unselected;
-          })();
-
-          const claim = credential?.claims.find(
-            ({ key }) => key === field.keyMap[credential.id],
-          );
-          const attributeName = field.name ?? claim?.key ?? field.id;
-
+        {getDisplayedAttributes(
+          request,
+          revoked,
+          credential,
+          selectiveDisclosureSupported,
+          selectedFields,
+        ).map(({ claim, field, id, selected, status }, index, { length }) => {
+          const attributeName = field?.name ?? claim?.key ?? id;
           return (
-            <DataItem
+            <ProofRequestAttribute
               attribute={attributeName}
-              key={field.id}
+              key={id}
               last={length === index + 1}
               onPress={
-                credential && !field.required
-                  ? () => onSelectField(field.id, !selected)
+                credential && field && !field.required
+                  ? () => onSelectField(id, !selected)
                   : undefined
               }
               status={status}
-              value={claim ? formatClaimValue(claim) : undefined}
+              value={claim ? formatClaimValue(claim, config) : undefined}
             />
           );
         })}
@@ -234,22 +255,8 @@ export const ProofRequestCredential: FunctionComponent<{
 };
 
 const styles = StyleSheet.create({
-  dataItem: {
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    marginTop: 12,
-    paddingBottom: 6,
-  },
-  dataItemLabel: {
-    marginBottom: 2,
-  },
-  dataItemLast: {
-    borderBottomWidth: 0,
-    marginBottom: 6,
-  },
-  dataItemLeft: {
-    flex: 1,
+  headerNotice: {
+    marginTop: 8,
   },
   icon: {
     borderRadius: 3,

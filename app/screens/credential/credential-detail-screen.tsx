@@ -19,6 +19,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { CredentialStateEnum } from 'react-native-one-core';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
+import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
@@ -83,6 +84,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
 
   const { showActionSheetWithOptions } = useActionSheet();
   const onActions = useCallback(
@@ -125,7 +127,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
     [navigation, showActionSheetWithOptions, credentialId],
   );
 
-  if (!credential) {
+  if (!credential || !config) {
     return <ActivityIndicator />;
   }
 
@@ -174,7 +176,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
           <DataItem
             attribute={attribute.key}
             key={attribute.key}
-            value={formatClaimValue(attribute)}
+            value={formatClaimValue(attribute, config)}
           />
         ))}
       </Section>
