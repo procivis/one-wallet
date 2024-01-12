@@ -34,7 +34,7 @@ describe('ONE-614: Proof request', () => {
 
   describe('Proof request with valid credential', () => {
     beforeAll(async () => {
-      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
       const credentialId = await createCredential(authToken, credentialSchema);
       const invitationUrl = await offerCredential(credentialId, authToken);
@@ -48,7 +48,9 @@ describe('ONE-614: Proof request', () => {
     });
 
     const proofRequestSharingTestCase = async (redirectUri?: string | null) => {
-      const proofRequestId = await createProofRequest(authToken, proofSchema, { redirectUri });
+      const proofRequestId = await createProofRequest(authToken, proofSchema, {
+        redirectUri,
+      });
       const invitationUrl = await requestProof(proofRequestId, authToken);
       await scanURL(invitationUrl);
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
@@ -59,7 +61,9 @@ describe('ONE-614: Proof request', () => {
       await ProofRequestSharingScreen.shareButton.tap();
 
       await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
-      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+      await expect(
+        ProofRequestAcceptProcessScreen.status.success,
+      ).toBeVisible();
 
       await ProofRequestAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
@@ -70,7 +74,9 @@ describe('ONE-614: Proof request', () => {
       await ProofRequestSharingScreen.shareButton.tap();
 
       await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
-      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+      await expect(
+        ProofRequestAcceptProcessScreen.status.success,
+      ).toBeVisible();
       await expect(ProofRequestAcceptProcessScreen.ctaButton).toBeVisible();
     });
 
@@ -83,7 +89,7 @@ describe('ONE-614: Proof request', () => {
 
   describe('Proof request without credentials', () => {
     beforeEach(async () => {
-      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
     });
 
@@ -99,17 +105,22 @@ describe('ONE-614: Proof request', () => {
   describe('ONE-620: Revoked credentials', () => {
     const credentialIds: string[] = [];
     beforeAll(async () => {
-      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
 
       for (let i = 0; i < 3; i++) {
-        const credentialId = await createCredential(authToken, credentialSchema);
+        const credentialId = await createCredential(
+          authToken,
+          credentialSchema,
+        );
         const invitationUrl = await offerCredential(credentialId, authToken);
         await scanURL(invitationUrl);
         await expect(CredentialOfferScreen.screen).toBeVisible();
         await CredentialOfferScreen.acceptButton.tap();
         await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-        await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+        await expect(
+          CredentialAcceptProcessScreen.status.success,
+        ).toBeVisible();
         await CredentialAcceptProcessScreen.closeButton.tap();
         credentialIds.push(credentialId);
       }
@@ -124,19 +135,39 @@ describe('ONE-614: Proof request', () => {
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
 
-      await expect(ProofRequestSharingScreen.credential(0).element).toBeVisible();
-      await expect(ProofRequestSharingScreen.credential(0).title(credentialIds[1])).toExist();
-      await expect(ProofRequestSharingScreen.credential(0).notice.multiple.element).toBeVisible();
-      await ProofRequestSharingScreen.credential(0).notice.multiple.selectButton.tap();
+      await expect(
+        ProofRequestSharingScreen.credential(0).element,
+      ).toBeVisible();
+      await expect(
+        ProofRequestSharingScreen.credential(0).title(credentialIds[1]),
+      ).toExist();
+      await expect(
+        ProofRequestSharingScreen.credential(0).notice.multiple.element,
+      ).toBeVisible();
+      await ProofRequestSharingScreen.credential(
+        0,
+      ).notice.multiple.selectButton.tap();
 
       await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
-      await expect(ProofRequestSelectCredentialScreen.credential(credentialIds[0]).element).toExist();
-      await expect(ProofRequestSelectCredentialScreen.credential(credentialIds[0]).unselected).toExist();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(credentialIds[0]).element,
+      ).toExist();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(credentialIds[0])
+          .unselected,
+      ).toExist();
       // latest valid item is selected
-      await expect(ProofRequestSelectCredentialScreen.credential(credentialIds[1]).element).toExist();
-      await expect(ProofRequestSelectCredentialScreen.credential(credentialIds[1]).selected).toExist();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(credentialIds[1]).element,
+      ).toExist();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(credentialIds[1])
+          .selected,
+      ).toExist();
 
-      await expect(ProofRequestSelectCredentialScreen.credential(credentialIds[2]).element).not.toExist();
+      await expect(
+        ProofRequestSelectCredentialScreen.credential(credentialIds[2]).element,
+      ).not.toExist();
       await ProofRequestSelectCredentialScreen.backButton.tap();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
@@ -151,10 +182,16 @@ describe('ONE-614: Proof request', () => {
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
 
-      await expect(ProofRequestSharingScreen.credential(0).element).toBeVisible();
+      await expect(
+        ProofRequestSharingScreen.credential(0).element,
+      ).toBeVisible();
       // no selection possible
-      await expect(ProofRequestSharingScreen.credential(0).notice.multiple.element).not.toExist();
-      await expect(ProofRequestSharingScreen.credential(0).title(credentialIds[0])).toExist();
+      await expect(
+        ProofRequestSharingScreen.credential(0).notice.multiple.element,
+      ).not.toExist();
+      await expect(
+        ProofRequestSharingScreen.credential(0).title(credentialIds[0]),
+      ).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
@@ -168,16 +205,22 @@ describe('ONE-614: Proof request', () => {
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);
 
-      await expect(ProofRequestSharingScreen.credential(0).element).toBeVisible();
-      await expect(ProofRequestSharingScreen.credential(0).subtitle.revoked).toExist();
-      await expect(ProofRequestSharingScreen.credential(0).notice.revoked).toExist();
+      await expect(
+        ProofRequestSharingScreen.credential(0).element,
+      ).toBeVisible();
+      await expect(
+        ProofRequestSharingScreen.credential(0).subtitle.revoked,
+      ).toExist();
+      await expect(
+        ProofRequestSharingScreen.credential(0).notice.revoked,
+      ).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
   });
   describe('Proof request Transport Protocol TestCase', () => {
     beforeAll(async () => {
-      await device.launchApp({ permissions: { camera: 'YES' }, delete: true });
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
     });
 
@@ -186,11 +229,20 @@ describe('ONE-614: Proof request', () => {
       credentialTransport: Transport,
       proofRequestTransport: Transport,
     ) => {
-      const specificCredentialSchema = await createCredentialSchema(authToken, { format: credentialSchemaFormat });
-      const credentialId = await createCredential(authToken, specificCredentialSchema, {
-        transport: credentialTransport,
+      const specificCredentialSchema = await createCredentialSchema(authToken, {
+        format: credentialSchemaFormat,
       });
-      const credentialInvitationUrl = await offerCredential(credentialId, authToken);
+      const credentialId = await createCredential(
+        authToken,
+        specificCredentialSchema,
+        {
+          transport: credentialTransport,
+        },
+      );
+      const credentialInvitationUrl = await offerCredential(
+        credentialId,
+        authToken,
+      );
 
       await scanURL(credentialInvitationUrl);
       await expect(CredentialOfferScreen.screen).toBeVisible();
@@ -200,62 +252,95 @@ describe('ONE-614: Proof request', () => {
       await CredentialAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
 
-      const specificProofSchema = await createProofSchema(authToken, specificCredentialSchema);
-      const proofRequestId = await createProofRequest(authToken, specificProofSchema, {
-        transport: proofRequestTransport,
-      });
+      const specificProofSchema = await createProofSchema(
+        authToken,
+        specificCredentialSchema,
+      );
+      const proofRequestId = await createProofRequest(
+        authToken,
+        specificProofSchema,
+        {
+          transport: proofRequestTransport,
+        },
+      );
       const proofInvitationUrl = await requestProof(proofRequestId, authToken);
 
       await scanURL(proofInvitationUrl);
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await ProofRequestSharingScreen.shareButton.tap();
       await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
-      await expect(ProofRequestAcceptProcessScreen.status.success).toBeVisible();
+      await expect(
+        ProofRequestAcceptProcessScreen.status.success,
+      ).toBeVisible();
       await ProofRequestAcceptProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     };
 
     describe('Procivis Proof request transport', () => {
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.PROCIVIS, Transport.PROCIVIS);
+        await proofRequestSharingTestCase(
+          CredentialFormat.JWT,
+          Transport.PROCIVIS,
+          Transport.PROCIVIS,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.PROCIVIS, Transport.PROCIVIS);
+        await proofRequestSharingTestCase(
+          CredentialFormat.SDJWT,
+          Transport.PROCIVIS,
+          Transport.PROCIVIS,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.OPENID4VC, Transport.PROCIVIS);
+        await proofRequestSharingTestCase(
+          CredentialFormat.JWT,
+          Transport.OPENID4VC,
+          Transport.PROCIVIS,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.OPENID4VC, Transport.PROCIVIS);
+        await proofRequestSharingTestCase(
+          CredentialFormat.SDJWT,
+          Transport.OPENID4VC,
+          Transport.PROCIVIS,
+        );
       });
     });
 
     describe('ONE-795: OpenID4VC Proof request transport', () => {
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.PROCIVIS, Transport.OPENID4VC);
+        await proofRequestSharingTestCase(
+          CredentialFormat.JWT,
+          Transport.PROCIVIS,
+          Transport.OPENID4VC,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.PROCIVIS, Transport.OPENID4VC);
+        await proofRequestSharingTestCase(
+          CredentialFormat.SDJWT,
+          Transport.PROCIVIS,
+          Transport.OPENID4VC,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.JWT, Transport.OPENID4VC, Transport.OPENID4VC);
+        await proofRequestSharingTestCase(
+          CredentialFormat.JWT,
+          Transport.OPENID4VC,
+          Transport.OPENID4VC,
+        );
       });
 
-      // eslint-disable-next-line jest/expect-expect
       it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(CredentialFormat.SDJWT, Transport.OPENID4VC, Transport.OPENID4VC);
+        await proofRequestSharingTestCase(
+          CredentialFormat.SDJWT,
+          Transport.OPENID4VC,
+          Transport.OPENID4VC,
+        );
       });
     });
   });
