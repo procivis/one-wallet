@@ -23,6 +23,8 @@ import {
   PresentationDefinitionRequestedCredential,
 } from 'react-native-one-core';
 
+import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
+import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
@@ -30,7 +32,10 @@ import {
   ShareCredentialNavigatorParamList,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
-import { formatClaimValue } from '../../utils/credential';
+import {
+  formatClaimValue,
+  supportsSelectiveDisclosure,
+} from '../../utils/credential';
 
 const DataItem: FunctionComponent<{
   attribute: string;
@@ -59,11 +64,29 @@ const Credential: FunctionComponent<{
   testID?: string;
 }> = ({ testID, credentialId, selected, request, onPress }) => {
   const { data: credential } = useCredentialDetail(credentialId);
-  return credential ? (
+  const { data: config } = useCoreConfig();
+  if (!credential || !config) {
+    return null;
+  }
+
+  const selectiveDisclosureSupported = supportsSelectiveDisclosure(
+    credential,
+    config,
+  );
+
+  return (
     <Accordion
       accessibilityState={{ selected }}
       contentStyle={styles.itemContent}
       expanded={selected}
+      headerNotice={
+        selectiveDisclosureSupported === false && (
+          <SelectiveDislosureNotice
+            style={styles.headerNotice}
+            testID={concatTestID(testID, 'notice.selectiveDisclosure')}
+          />
+        )
+      }
       icon={{
         component: (
           <TextAvatar
@@ -96,14 +119,14 @@ const Credential: FunctionComponent<{
         );
         return (
           <DataItem
-            attribute={field.name ?? claim?.key ?? field.id ?? ''}
+            attribute={field.name ?? claim?.key ?? field.id}
             key={field.id}
-            value={claim ? formatClaimValue(claim) : '-'}
+            value={claim ? formatClaimValue(claim, config) : '-'}
           />
         );
       })}
     </Accordion>
-  ) : null;
+  );
 };
 
 const SelectCredentialScreen: FunctionComponent = () => {
@@ -189,6 +212,9 @@ const styles = StyleSheet.create({
   },
   dataItemLabel: {
     marginBottom: 2,
+  },
+  headerNotice: {
+    marginTop: 8,
   },
   item: {
     marginBottom: 12,
