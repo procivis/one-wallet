@@ -12,6 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { useCoreConfig } from '../../hooks/core-config';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -58,6 +59,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
 
   useBlockOSBackNavigation();
@@ -77,7 +79,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     issuanceNavigation.navigate('Processing', { credentialId, interactionId });
   }, [credentialId, interactionId, issuanceNavigation]);
 
-  return credential ? (
+  return credential && config ? (
     <SharingScreen
       cancelLabel={translate('credentialOffer.reject')}
       contentTitle={translate('credentialOffer.credential')}
@@ -108,7 +110,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
             attribute={claim.key}
             key={claim.id}
             last={length === index + 1}
-            value={formatClaimValue(claim)}
+            value={formatClaimValue(claim, config)}
           />
         ))}
       </Accordion>
