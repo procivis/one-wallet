@@ -10,6 +10,10 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import {
+  CredentialStateEnum,
+  PresentationDefinitionRequestedCredential,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -18,10 +22,6 @@ import React, {
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
-import {
-  CredentialStateEnum,
-  PresentationDefinitionRequestedCredential,
-} from 'react-native-one-core';
 
 import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
 import { useCoreConfig } from '../../hooks/core-config';

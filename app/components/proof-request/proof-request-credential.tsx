@@ -8,8 +8,6 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import React, { FunctionComponent, useMemo } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   Claim,
   CredentialDetail,
@@ -17,7 +15,9 @@ import {
   CredentialStateEnum,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
+import React, { FunctionComponent, useMemo } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';

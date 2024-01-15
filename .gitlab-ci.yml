@@ -12,6 +12,7 @@ variables:
   # ONE-wallet project on Bitrise
   BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
   DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
+  YARN_NPM_AUTH_TOKEN: ${CI_JOB_TOKEN}
 
 
 workflow:
@@ -68,6 +69,7 @@ workflow:
     else
       echo "node_modules does not exist or is not valid, re-installing deps."
       apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
+      yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
       yarn dlx node-gyp @mapbox/node-pre-gyp
       YARN_NETWORK_CONCURRENCY=1 yarn install --immutable
       yarn rnuc:dev
@@ -80,6 +82,7 @@ workflow:
         - yarn.lock
     paths:
       - node_modules/
+      - ${YARN_CACHE_FOLDER}
     policy: pull
   before_script:
     - *install-node-modules

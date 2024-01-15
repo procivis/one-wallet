@@ -5,6 +5,24 @@
 | ------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Demo          | [![Build Status](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687/status.svg?token=asgEvbNJgYbMPW707rocOA&branch=main)](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687) |
 
+
+# Installation
+
+### Prerequisites
+
+For using private Procivis registry you need to create [Personal Access token](https://gitlab.procivis.ch/-/profile/personal_access_tokens)
+with `read_api` permissions
+
+* Edit (or create) file `~/.yarnrc.yml` (home directory) with:
+```yaml
+npmScopes:
+  procivis:
+    npmRegistryServer: "https://gitlab.procivis.ch/api/v4/packages/npm/"
+    npmAuthToken: <YOUR_PERSONAL_TOKEN>
+```
+
+
+
 # App Flavors
 
 ## Building

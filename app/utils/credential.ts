@@ -4,7 +4,7 @@ import {
   Config,
   CredentialListItem,
   FormatFeatureEnum,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 
 /**
  * Format claim value for UI presentation

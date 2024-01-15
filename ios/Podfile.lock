@@ -345,9 +345,9 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-one-core (1.0.12685):
+  - react-native-one-core (1.0.12686):
     - React-Core
-  - react-native-picker (5.0.0):
+  - react-native-picker (5.0.3):
     - React-Core
   - react-native-safe-area-context (4.5.2):
     - RCT-Folly
@@ -550,8 +550,8 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
-  - react-native-one-core (from `../node_modules/react-native-one-core`)
-  - react-native-picker (from `../node_modules/react-native-picker`)
+  - "react-native-one-core (from `../node_modules/@procivis/react-native-one-core`)"
+  - "react-native-picker (from `../node_modules/@procivis/react-native-picker`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-ultimate-config (from `../node_modules/react-native-ultimate-config`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -652,9 +652,9 @@ EXTERNAL SOURCES:
   react-native-keep-awake:
     :path: "../node_modules/react-native-keep-awake"
   react-native-one-core:
-    :path: "../node_modules/react-native-one-core"
+    :path: "../node_modules/@procivis/react-native-one-core"
   react-native-picker:
-    :path: "../node_modules/react-native-picker"
+    :path: "../node_modules/@procivis/react-native-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-ultimate-config:
@@ -751,8 +751,8 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-one-core: be1a5f4669b71fea93aaf53f3fe3961e85870984
-  react-native-picker: 3470d4d2bda63e0a19a00c627efc14475879993f
+  react-native-one-core: 78a73d16004af8dedb510d1c593733f9c352927e
+  react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-ultimate-config: 26275a1a4f2e7af5914942ebebbd8df52b5a375e
   React-perflogger: 2d505bbe298e3b7bacdd9e542b15535be07220f6

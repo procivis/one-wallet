@@ -9,6 +9,7 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -16,7 +17,6 @@ import React, {
   useCallback,
 } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { CredentialStateEnum } from 'react-native-one-core';
 
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCoreConfig } from '../../hooks/core-config';

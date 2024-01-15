@@ -5,3 +5,4 @@ android
 ignite/ignite.json
 package.json
 .gitlab-ci.yml
+.yarnrc.yml
