@@ -17,7 +17,7 @@ import {
   CredentialStateEnum,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
