@@ -2,7 +2,7 @@ import {
   OneError,
   OneErrorCode,
   PresentationSubmitCredentialRequest,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useONECore } from './core-context';

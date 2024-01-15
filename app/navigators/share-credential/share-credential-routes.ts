@@ -1,10 +1,10 @@
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   InvitationResultProofRequest,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type ShareCredentialNavigatorParamList = {
   Processing: {

@@ -2,9 +2,9 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import { PresentationDefinitionRequestGroup } from '@procivis/react-native-one-core';
 import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { PresentationDefinitionRequestGroup } from 'react-native-one-core';
 
 import { translate } from '../../i18n';
 
