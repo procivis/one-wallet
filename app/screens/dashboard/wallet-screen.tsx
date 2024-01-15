@@ -7,6 +7,7 @@ import {
   TextAvatar,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, {
@@ -16,7 +17,6 @@ import React, {
   useRef,
 } from 'react';
 import { StyleSheet } from 'react-native';
-import { CredentialStateEnum } from '@procivis/react-native-one-core';
 
 import {
   EmptyIcon,

@@ -8,14 +8,6 @@ import {
   useBlockOSBackNavigation,
   useMemoAsync,
 } from '@procivis/react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import { StyleSheet, View } from 'react-native';
 import {
   CredentialStateEnum,
   OneError,
@@ -24,6 +16,14 @@ import {
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
 } from '@procivis/react-native-one-core';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
