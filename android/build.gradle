@@ -27,6 +27,6 @@ allprojects {
             url("$rootDir/../node_modules/detox/Detox-android")
          }
 
-         flatDir { dirs "$rootDir/../node_modules/react-native-one-core/android/libs" }
+         flatDir { dirs "$rootDir/../node_modules/@procivis/react-native-one-core/android/libs" }
     }
 }
