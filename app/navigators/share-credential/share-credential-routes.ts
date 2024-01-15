@@ -4,7 +4,7 @@ import {
   InvitationResultProofRequest,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 
 export type ShareCredentialNavigatorParamList = {
   Processing: {
