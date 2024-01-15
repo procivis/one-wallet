@@ -67,14 +67,15 @@ async function getCredentialSchema(
 }
 
 export interface CredentialSchemaData {
-  format?: CredentialFormat;
-  name?: string;
-  revocationMethod?: RevocationMethod;
+  claims: Array<{ datatype: string; key: string; required: boolean }>;
+  format: CredentialFormat;
+  name: string;
+  revocationMethod: RevocationMethod;
 }
 
 export async function createCredentialSchema(
   authToken: string,
-  data?: CredentialSchemaData,
+  data?: Partial<CredentialSchemaData>,
 ): Promise<Record<string, any>> {
   const schemaData = Object.assign(
     {
@@ -108,8 +109,9 @@ async function getLocalDid(authToken: string) {
 }
 
 export interface CredentialData {
-  redirectUri?: string | null;
-  transport?: Transport;
+  claimValues: Array<{ claimId: string; value: string }>;
+  redirectUri: string;
+  transport: Transport;
 }
 
 /**
@@ -120,7 +122,7 @@ export interface CredentialData {
 export async function createCredential(
   authToken: string,
   schema?: Record<string, any>,
-  credentialData?: CredentialData,
+  credentialData?: Partial<CredentialData>,
 ): Promise<string> {
   const credentialSchema: Record<string, any> =
     schema ?? (await getCredentialSchema(authToken));
@@ -159,23 +161,30 @@ export async function createCredential(
   );
 }
 
+export interface ProofSchemaData {
+  claimSchemas: Array<{ id: string; required: boolean }>;
+  expireDuration: number;
+  name: string;
+}
+
 export async function createProofSchema(
   authToken: string,
-  credentialSchema?: Record<string, any>,
+  credentialSchema: Record<string, any>,
+  data?: Partial<ProofSchemaData>,
 ): Promise<Record<string, any>> {
-  const credSchema: Record<string, any> =
-    credentialSchema ?? (await getCredentialSchema(authToken));
-  const schemaClaim = credSchema.claims[0];
-  const proofSchemaData = {
-    claimSchemas: [
-      {
-        id: schemaClaim.id,
-        required: true,
-      },
-    ],
-    expireDuration: 0,
-    name: `detox-e2e-test-${uuidv4()}`,
-  };
+  const proofSchemaData = Object.assign(
+    {
+      claimSchemas: [
+        {
+          id: credentialSchema.claims[0].id,
+          required: true,
+        },
+      ],
+      expireDuration: 0,
+      name: `detox-e2e-test-${uuidv4()}`,
+    },
+    data,
+  );
   return await apiRequest(
     '/api/proof-schema/v1',
     authToken,
@@ -185,18 +194,19 @@ export async function createProofSchema(
 }
 
 export interface ProofRequestData {
-  redirectUri?: string | null;
-  transport?: Transport;
+  redirectUri: string;
+  transport: Transport;
 }
 
 export async function createProofRequest(
   authToken: string,
   proofSchema?: Record<string, any>,
-  proofRequestData?: ProofRequestData,
+  proofRequestData?: Partial<ProofRequestData>,
 ): Promise<string> {
   const did: Record<string, any> = await getLocalDid(authToken);
+  const credentialSchema = await getCredentialSchema(authToken);
   const schema: Record<string, any> =
-    proofSchema ?? (await createProofSchema(authToken));
+    proofSchema ?? (await createProofSchema(authToken, credentialSchema));
   const data = Object.assign(
     {
       proofSchemaId: schema.id,
