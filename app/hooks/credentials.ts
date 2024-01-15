@@ -3,7 +3,7 @@ import {
   InvitationResult,
   OneError,
   OneErrorCode,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useStores } from '../models';

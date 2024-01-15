@@ -31,7 +31,9 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
-    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#ecbaf948226eb13a00df0242efd4fdba8307a6a6",
+    "@procivis/react-native-components": "0.1.2",
+    "@procivis/react-native-one-core": "1.0.12686",
+    "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native/normalize-color": "^2.0.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -58,8 +60,6 @@
     "react-native-keep-awake": "^4.0.0",
     "react-native-keychain": "^8.0.0",
     "react-native-localize": "^3.0.0",
-    "react-native-one-core": "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#5e81e72455b4898cb01e7ef65999a7f79b96785c",
-    "react-native-picker": "git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9",
     "react-native-reanimated": "^2.17.0",
     "react-native-safe-area-context": "4.5.2",
     "react-native-screens": "^3.20.0",
@@ -135,7 +135,7 @@
       "/e2e"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@react-native|@react-native-async-storage|@react-navigation|@react-native-community|rn-material-ui-textfiel|react-native-screens|react-native-reanimated|expo-)"
+      "node_modules/(?!(jest-)?react-native|@procivis|@react-native|@react-native-async-storage|@react-navigation|@react-native-community|rn-material-ui-textfiel|react-native-screens|react-native-reanimated|expo-)"
     ],
     "moduleNameMapper": {
       "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/mock-file.ts",
