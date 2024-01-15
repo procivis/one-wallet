@@ -18,6 +18,14 @@ export default abstract class ProofRequestSelectCredentialScreen {
         return element(by.id(id));
       },
 
+      get notice() {
+        const noticeId = `${id}.notice`;
+        return {
+          get selectiveDisclosure() {
+            return element(by.id(`${noticeId}.selectiveDisclosure`));
+          },
+        };
+      },
       get selected() {
         return element(by.id(`${id}.selected`));
       },
