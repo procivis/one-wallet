@@ -2074,10 +2074,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-components@git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#ecbaf948226eb13a00df0242efd4fdba8307a6a6":
-  version: 0.1.0
-  resolution: "@procivis/react-native-components@https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#commit=ecbaf948226eb13a00df0242efd4fdba8307a6a6"
+"@procivis/react-native-components@npm:0.1.2":
+  version: 0.1.2
+  resolution: "@procivis/react-native-components@npm:0.1.2::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F45%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-components%2F-%2F%40procivis%2Freact-native-components-0.1.2.tgz"
   peerDependencies:
+    "@procivis/react-native-picker": "*"
     "@react-native/normalize-color": "*"
     "@react-navigation/bottom-tabs": "*"
     "@react-navigation/native": "*"
@@ -2086,10 +2087,27 @@ __metadata:
     react-native: "*"
     react-native-camera: "*"
     react-native-draggable-flatlist: "*"
-    react-native-picker: "*"
     react-native-safe-area-context: "*"
     react-native-svg: "*"
-  checksum: 1ed05460bb5010f2a10934bde445fff985aa7a7473179082992e97f48fe2f6977238acd5b2eaed8992bdd9ca4508eea2727ea446f3ec4685dccfbd0f8e351416
+  checksum: 798577027962f230a6fcc89b649f4fafec8acc99aa881ef8c7c5b2dfbc4acf3d7cbe227eaf4fab9237d76cf0a852bec5376189257b182f27f01dc961edf010d7
+  languageName: node
+  linkType: hard
+
+"@procivis/react-native-one-core@npm:1.0.12686":
+  version: 1.0.12686
+  resolution: "@procivis/react-native-one-core@npm:1.0.12686::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.0.12686.tgz"
+  peerDependencies:
+    react-native: "*"
+  checksum: 9f8cbf99e35fb036c651abc3f790162b5cf47cf460e3348fdf15353be2ca387282da6e195f884560b3ac380c4c30c95654347824d4c640cad5158a0f45accc91
+  languageName: node
+  linkType: hard
+
+"@procivis/react-native-picker@npm:5.0.3":
+  version: 5.0.3
+  resolution: "@procivis/react-native-picker@npm:5.0.3::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F76%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-picker%2F-%2F%40procivis%2Freact-native-picker-5.0.3.tgz"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+  checksum: af916022d29e2425378075aac490f8a7cd1bfef5ad5de84ca0dcddbb143fa8d160743fb7fd2275520595ecc4270e1948ca551afcee719310b900cd1cd07478b4
   languageName: node
   linkType: hard
 
@@ -11135,7 +11153,9 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/react-native-components": "git+https://gitlab+deploy-token-1:ZDtywH2vsxxN4_xheZyY@gitlab.procivis.ch/procivis/components/react-native.git#ecbaf948226eb13a00df0242efd4fdba8307a6a6"
+    "@procivis/react-native-components": "npm:0.1.2"
+    "@procivis/react-native-one-core": "npm:1.0.12686"
+    "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-community/eslint-config": "npm:^3.2.0"
     "@react-native/normalize-color": "npm:^2.0.0"
@@ -11201,8 +11221,6 @@ __metadata:
     react-native-keep-awake: "npm:^4.0.0"
     react-native-keychain: "npm:^8.0.0"
     react-native-localize: "npm:^3.0.0"
-    react-native-one-core: "git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#5e81e72455b4898cb01e7ef65999a7f79b96785c"
-    react-native-picker: "git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9"
     react-native-reanimated: "npm:^2.17.0"
     react-native-safe-area-context: "npm:4.5.2"
     react-native-screens: "npm:^3.20.0"
@@ -12406,24 +12424,6 @@ __metadata:
     react-native-macos:
       optional: true
   checksum: 263a387ec3af21d2aae48272da32a59585c1b28ea0af5f05d3e07cbccdbe14fbfdd8e61dffc22f40317022b68ccd732f4dace67d7f16b867b59b198599698442
-  languageName: node
-  linkType: hard
-
-"react-native-one-core@git+https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#5e81e72455b4898cb01e7ef65999a7f79b96785c":
-  version: 1.0.12685
-  resolution: "react-native-one-core@https://gitlab+deploy-token-20:N-Kyy23NaGCryKyFnLPv@gitlab.procivis.ch/procivis/one/react-native-one-core.git#commit=5e81e72455b4898cb01e7ef65999a7f79b96785c"
-  peerDependencies:
-    react-native: "*"
-  checksum: 13beff4f01bda2ddb87e5382173640f305754045619f1ffc928eab46a7c73df138dab63b2e1b5ffb350e687558768c452eb34e17d84d181cad3503b55884af11
-  languageName: node
-  linkType: hard
-
-"react-native-picker@git+https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#8a834ce43a70622b53995ed968342a494c8cbfb9":
-  version: 5.0.0
-  resolution: "react-native-picker@https://gitlab+deploy-token-9:F2skvy6yGB5XhEf1oivN@gitlab.procivis.ch/procivis/components/react-native-picker.git#commit=8a834ce43a70622b53995ed968342a494c8cbfb9"
-  dependencies:
-    prop-types: "npm:^15.8.1"
-  checksum: b9987f95a9e6d044b62bdca5361a387d3b5c579c89516e4442a292afe29856d6e8aad761083d0e7e547e381cb7cdcbf2c1ed9139d4983a8d55c968d8619a56b5
   languageName: node
   linkType: hard
 
