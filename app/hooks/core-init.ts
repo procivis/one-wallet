@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { DidTypeEnum, OneError, OneErrorCode } from 'react-native-one-core';
+import { DidTypeEnum, OneError, OneErrorCode } from '@procivis/react-native-one-core';
 
 import { useStores } from '../models';
 import { reportException } from '../utils/reporting';

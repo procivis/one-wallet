@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { initializeCore, ONECore } from 'react-native-one-core';
+import { initializeCore, ONECore } from '@procivis/react-native-one-core';
 
 import { reportException } from '../utils/reporting';
 

@@ -21,7 +21,7 @@ import { StyleSheet, View } from 'react-native';
 import {
   CredentialStateEnum,
   PresentationDefinitionRequestedCredential,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 
 import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
 import { useCoreConfig } from '../../hooks/core-config';
