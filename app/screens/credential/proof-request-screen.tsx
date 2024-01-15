@@ -23,7 +23,7 @@ import {
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
-} from 'react-native-one-core';
+} from '@procivis/react-native-one-core';
 
 import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
 import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';

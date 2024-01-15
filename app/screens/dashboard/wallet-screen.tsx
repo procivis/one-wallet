@@ -16,7 +16,7 @@ import React, {
   useRef,
 } from 'react';
 import { StyleSheet } from 'react-native';
-import { CredentialStateEnum } from 'react-native-one-core';
+import { CredentialStateEnum } from '@procivis/react-native-one-core';
 
 import {
   EmptyIcon,
