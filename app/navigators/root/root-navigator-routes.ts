@@ -15,6 +15,10 @@ export type RootNavigatorParamList = {
   CredentialDetail: {
     credentialId: string;
   };
+  ImagePreview: {
+    image: string;
+    title: string;
+  };
   Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
   IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
   Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
