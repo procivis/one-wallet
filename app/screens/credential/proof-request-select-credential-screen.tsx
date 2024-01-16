@@ -7,11 +7,8 @@ import {
   Selector,
   SelectorStatus,
   TextAvatar,
-  Typography,
-  useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
-  Claim,
   CredentialStateEnum,
   PresentationDefinitionRequestedCredential,
 } from '@procivis/react-native-one-core';
@@ -24,7 +21,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ClaimValue } from '../../components/credential/claim-value';
+import { Claim } from '../../components/credential/claim';
 import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
@@ -35,31 +32,6 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { supportsSelectiveDisclosure } from '../../utils/credential';
-
-const DataItem: FunctionComponent<{
-  attribute: string;
-  claim: Claim | undefined;
-}> = ({ attribute, claim }) => {
-  const colorScheme = useAppColorScheme();
-  return (
-    <View style={styles.dataItem}>
-      <Typography
-        color={colorScheme.textSecondary}
-        size="sml"
-        style={styles.dataItemLabel}
-      >
-        {attribute}
-      </Typography>
-      {claim ? (
-        <ClaimValue claim={claim} />
-      ) : (
-        <Typography color={colorScheme.alertText}>
-          {translate('proofRequest.missingAttribute')}
-        </Typography>
-      )}
-    </View>
-  );
-};
 
 const Credential: FunctionComponent<{
   credentialId: string;
@@ -118,15 +90,16 @@ const Credential: FunctionComponent<{
         testID: concatTestID(testID, selected ? 'selected' : 'unselected'),
       }}
     >
-      {request.fields.map((field) => {
+      {request.fields.map((field, index, { length }) => {
         const claim = credential.claims.find(
           ({ key }) => key === field.keyMap[credentialId],
         );
         return (
-          <DataItem
-            attribute={field.name ?? claim?.key ?? field.id}
+          <Claim
             claim={claim}
             key={field.id}
+            last={length === index + 1}
+            title={field.name ?? claim?.key ?? field.id}
           />
         );
       })}
@@ -210,13 +183,6 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
-  },
-  dataItem: {
-    marginBottom: 3,
-    marginTop: 12,
-  },
-  dataItemLabel: {
-    marginBottom: 2,
   },
   headerNotice: {
     marginTop: 8,
