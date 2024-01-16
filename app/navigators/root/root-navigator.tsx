@@ -6,6 +6,7 @@ import { StatusBar } from 'react-native';
 import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-code-check';
 import CredentialDeleteProcessScreen from '../../screens/credential/credential-delete-process-screen';
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
+import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
 import InvitationNavigator from '../invitation/invitation-navigator';
@@ -67,6 +68,7 @@ const RootNavigator: FunctionComponent = () => {
           component={CredentialDeleteProcessScreen}
           name="CredentialDeleteProcessing"
         />
+        <RootStack.Screen component={ImagePreviewScreen} name="ImagePreview" />
       </RootStack.Navigator>
     </>
   ) : null;

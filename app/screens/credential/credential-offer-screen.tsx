@@ -8,11 +8,12 @@ import {
   useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
+import { Claim } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useCoreConfig } from '../../hooks/core-config';
+import { ClaimValue } from '../../components/credential/claim-value';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -23,14 +24,13 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
-import { formatClaimValue } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const DataItem: FunctionComponent<{
   attribute: string;
+  claim: Claim;
   last?: boolean;
-  value: string;
-}> = ({ attribute, value, last }) => {
+}> = ({ attribute, claim, last }) => {
   const colorScheme = useAppColorScheme();
   return (
     <View
@@ -47,7 +47,7 @@ const DataItem: FunctionComponent<{
       >
         {attribute}
       </Typography>
-      <Typography color={colorScheme.text}>{value}</Typography>
+      <ClaimValue claim={claim} />
     </View>
   );
 };
@@ -59,7 +59,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
-  const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
 
   useBlockOSBackNavigation();
@@ -79,7 +78,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     issuanceNavigation.navigate('Processing', { credentialId, interactionId });
   }, [credentialId, interactionId, issuanceNavigation]);
 
-  return credential && config ? (
+  return credential ? (
     <SharingScreen
       cancelLabel={translate('credentialOffer.reject')}
       contentTitle={translate('credentialOffer.credential')}
@@ -108,9 +107,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
         {credential.claims.map((claim, index, { length }) => (
           <DataItem
             attribute={claim.key}
+            claim={claim}
             key={claim.id}
             last={length === index + 1}
-            value={formatClaimValue(claim, config)}
           />
         ))}
       </Accordion>
