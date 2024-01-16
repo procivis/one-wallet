@@ -3,13 +3,15 @@ import {
   Button,
   concatTestID,
   formatDateTime,
+  Selector,
   SelectorStatus,
   TextAvatar,
+  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
-  Claim,
+  Claim as CredentialClaim,
   CredentialDetail,
   CredentialListItem,
   CredentialStateEnum,
@@ -23,12 +25,12 @@ import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { supportsSelectiveDisclosure } from '../../utils/credential';
+import { Claim } from '../credential/claim';
 import { MissingCredentialIcon } from '../icon/credential-icon';
-import { ProofRequestAttribute } from './proof-request-attribute';
 import { SelectiveDislosureNotice } from './selective-disclosure-notice';
 
 interface DisplayedAttribute {
-  claim?: Claim;
+  claim?: CredentialClaim;
   field?: PresentationDefinitionField;
   id: string;
   selected?: boolean;
@@ -180,19 +182,26 @@ export const ProofRequestCredential: FunctionComponent<{
           selectiveDisclosureSupported,
           selectedFields,
         ).map(({ claim, field, id, selected, status }, index, { length }) => {
-          const attributeName = field?.name ?? claim?.key ?? id;
+          const selector = <Selector status={status} />;
           return (
-            <ProofRequestAttribute
-              attribute={attributeName}
+            <Claim
               claim={claim}
               key={id}
               last={length === index + 1}
-              onPress={
-                credential && field && !field.required
-                  ? () => onSelectField(id, !selected)
-                  : undefined
+              rightAccessory={
+                credential && field && !field.required ? (
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    onPress={() => onSelectField(id, !selected)}
+                  >
+                    {selector}
+                  </TouchableOpacity>
+                ) : (
+                  selector
+                )
               }
-              status={status}
+              style={[styles.claim, index === 0 && styles.firstClaim]}
+              title={field?.name ?? claim?.key ?? id}
             />
           );
         })}
@@ -252,6 +261,12 @@ export const ProofRequestCredential: FunctionComponent<{
 };
 
 const styles = StyleSheet.create({
+  claim: {
+    paddingBottom: 14,
+  },
+  firstClaim: {
+    marginTop: 24,
+  },
   headerNotice: {
     marginTop: 8,
   },
