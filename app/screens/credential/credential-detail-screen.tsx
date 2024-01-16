@@ -14,19 +14,19 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
   PropsWithChildren,
+  ReactNode,
   useCallback,
 } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
+import { ClaimValue } from '../../components/credential/claim-value';
 import { MoreIcon } from '../../components/icon/navigation-icon';
-import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   RootNavigationProp,
   RootRouteProp,
 } from '../../navigators/root/root-navigator-routes';
-import { formatClaimValue } from '../../utils/credential';
 
 const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({
   title,
@@ -52,7 +52,7 @@ const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({
 const DataItem: FunctionComponent<{
   attribute: string;
   testID?: string;
-  value: string;
+  value: string | ReactNode;
 }> = ({ attribute, value, testID }) => {
   const colorScheme = useAppColorScheme();
   return (
@@ -67,12 +67,16 @@ const DataItem: FunctionComponent<{
       >
         {attribute}
       </Typography>
-      <Typography
-        color={colorScheme.text}
-        testID={concatTestID(testID, 'value')}
-      >
-        {value}
-      </Typography>
+      {typeof value === 'string' ? (
+        <Typography
+          color={colorScheme.text}
+          testID={concatTestID(testID, 'value')}
+        >
+          {value}
+        </Typography>
+      ) : (
+        value
+      )}
     </View>
   );
 };
@@ -84,7 +88,6 @@ const CredentialDetailScreen: FunctionComponent = () => {
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
-  const { data: config } = useCoreConfig();
 
   const { showActionSheetWithOptions } = useActionSheet();
   const onActions = useCallback(
@@ -127,7 +130,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
     [navigation, showActionSheetWithOptions, credentialId],
   );
 
-  if (!credential || !config) {
+  if (!credential) {
     return <ActivityIndicator />;
   }
 
@@ -176,7 +179,7 @@ const CredentialDetailScreen: FunctionComponent = () => {
           <DataItem
             attribute={attribute.key}
             key={attribute.key}
-            value={formatClaimValue(attribute, config)}
+            value={<ClaimValue claim={attribute} />}
           />
         ))}
       </Section>

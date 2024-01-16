@@ -11,6 +11,7 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
+  Claim,
   CredentialStateEnum,
   PresentationDefinitionRequestedCredential,
 } from '@procivis/react-native-one-core';
@@ -23,6 +24,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { ClaimValue } from '../../components/credential/claim-value';
 import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
@@ -32,15 +34,12 @@ import {
   ShareCredentialNavigatorParamList,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
-import {
-  formatClaimValue,
-  supportsSelectiveDisclosure,
-} from '../../utils/credential';
+import { supportsSelectiveDisclosure } from '../../utils/credential';
 
 const DataItem: FunctionComponent<{
   attribute: string;
-  value: string;
-}> = ({ attribute, value }) => {
+  claim: Claim | undefined;
+}> = ({ attribute, claim }) => {
   const colorScheme = useAppColorScheme();
   return (
     <View style={styles.dataItem}>
@@ -51,7 +50,13 @@ const DataItem: FunctionComponent<{
       >
         {attribute}
       </Typography>
-      <Typography color={colorScheme.text}>{value}</Typography>
+      {claim ? (
+        <ClaimValue claim={claim} />
+      ) : (
+        <Typography color={colorScheme.alertText}>
+          {translate('proofRequest.missingAttribute')}
+        </Typography>
+      )}
     </View>
   );
 };
@@ -120,8 +125,8 @@ const Credential: FunctionComponent<{
         return (
           <DataItem
             attribute={field.name ?? claim?.key ?? field.id}
+            claim={claim}
             key={field.id}
-            value={claim ? formatClaimValue(claim, config) : '-'}
           />
         );
       })}
