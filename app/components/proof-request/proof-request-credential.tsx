@@ -22,10 +22,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import {
-  formatClaimValue,
-  supportsSelectiveDisclosure,
-} from '../../utils/credential';
+import { supportsSelectiveDisclosure } from '../../utils/credential';
 import { MissingCredentialIcon } from '../icon/credential-icon';
 import { ProofRequestAttribute } from './proof-request-attribute';
 import { SelectiveDislosureNotice } from './selective-disclosure-notice';
@@ -187,6 +184,7 @@ export const ProofRequestCredential: FunctionComponent<{
           return (
             <ProofRequestAttribute
               attribute={attributeName}
+              claim={claim}
               key={id}
               last={length === index + 1}
               onPress={
@@ -195,7 +193,6 @@ export const ProofRequestCredential: FunctionComponent<{
                   : undefined
               }
               status={status}
-              value={claim ? formatClaimValue(claim, config) : undefined}
             />
           );
         })}
