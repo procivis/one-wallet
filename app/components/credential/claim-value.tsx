@@ -56,7 +56,7 @@ export const ClaimValue: FunctionComponent<{
 
   return (
     <Typography color={colorScheme.text} numberOfLines={10} testID={testID}>
-      {stringValue ?? '-'}
+      {stringValue}
     </Typography>
   );
 };
