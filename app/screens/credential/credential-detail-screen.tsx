@@ -14,12 +14,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
   PropsWithChildren,
-  ReactNode,
   useCallback,
 } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
-import { ClaimValue } from '../../components/credential/claim-value';
+import { Claim } from '../../components/credential/claim';
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
@@ -52,7 +51,7 @@ const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({
 const DataItem: FunctionComponent<{
   attribute: string;
   testID?: string;
-  value: string | ReactNode;
+  value: string;
 }> = ({ attribute, value, testID }) => {
   const colorScheme = useAppColorScheme();
   return (
@@ -67,16 +66,12 @@ const DataItem: FunctionComponent<{
       >
         {attribute}
       </Typography>
-      {typeof value === 'string' ? (
-        <Typography
-          color={colorScheme.text}
-          testID={concatTestID(testID, 'value')}
-        >
-          {value}
-        </Typography>
-      ) : (
-        value
-      )}
+      <Typography
+        color={colorScheme.text}
+        testID={concatTestID(testID, 'value')}
+      >
+        {value}
+      </Typography>
     </View>
   );
 };
@@ -175,11 +170,13 @@ const CredentialDetailScreen: FunctionComponent = () => {
         ) : null}
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
-        {credential.claims.map((attribute) => (
-          <DataItem
-            attribute={attribute.key}
-            key={attribute.key}
-            value={<ClaimValue claim={attribute} />}
+        {credential.claims.map((claim, index, { length }) => (
+          <Claim
+            claim={claim}
+            key={claim.key}
+            last={length === index + 1}
+            style={{ borderColor: colorScheme.background }}
+            testID={`CredentialDetailScreen.claim.${claim.key}`}
           />
         ))}
       </Section>
