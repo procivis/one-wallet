@@ -5,18 +5,20 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import { Claim } from '@procivis/react-native-one-core';
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
+import { ClaimValue } from '../credential/claim-value';
 
 export const ProofRequestAttribute: FunctionComponent<{
   attribute: string;
+  claim: Claim | undefined;
   last?: boolean;
   onPress?: () => void;
   status: SelectorStatus;
-  value: string | undefined;
-}> = ({ attribute, value, last, status, onPress }) => {
+}> = ({ attribute, claim, last, status, onPress }) => {
   const colorScheme = useAppColorScheme();
   const selector = <Selector status={status} />;
   return (
@@ -35,9 +37,13 @@ export const ProofRequestAttribute: FunctionComponent<{
         >
           {attribute}
         </Typography>
-        <Typography color={value ? colorScheme.text : colorScheme.alertText}>
-          {value ?? translate('proofRequest.missingAttribute')}
-        </Typography>
+        {claim ? (
+          <ClaimValue claim={claim} />
+        ) : (
+          <Typography color={colorScheme.alertText}>
+            {translate('proofRequest.missingAttribute')}
+          </Typography>
+        )}
       </View>
       {selector && onPress ? (
         <TouchableOpacity accessibilityRole="button" onPress={onPress}>
