@@ -4,16 +4,13 @@ import {
   SharingScreen,
   SharingScreenVariation,
   TextAvatar,
-  Typography,
-  useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
-import { Claim } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ClaimValue } from '../../components/credential/claim-value';
+import { Claim } from '../../components/credential/claim';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -25,32 +22,6 @@ import {
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportException } from '../../utils/reporting';
-
-const DataItem: FunctionComponent<{
-  attribute: string;
-  claim: Claim;
-  last?: boolean;
-}> = ({ attribute, claim, last }) => {
-  const colorScheme = useAppColorScheme();
-  return (
-    <View
-      style={[
-        styles.dataItem,
-        last && styles.dataItemLast,
-        { borderColor: colorScheme.lighterGrey },
-      ]}
-    >
-      <Typography
-        color={colorScheme.textSecondary}
-        size="sml"
-        style={styles.dataItemLabel}
-      >
-        {attribute}
-      </Typography>
-      <ClaimValue claim={claim} />
-    </View>
-  );
-};
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
@@ -104,14 +75,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
         }}
         title={credential.schema.name}
       >
-        {credential.claims.map((claim, index, { length }) => (
-          <DataItem
-            attribute={claim.key}
-            claim={claim}
-            key={claim.id}
-            last={length === index + 1}
-          />
-        ))}
+        <View style={styles.claims}>
+          {credential.claims.map((claim, index, { length }) => (
+            <Claim claim={claim} key={claim.id} last={length === index + 1} />
+          ))}
+        </View>
       </Accordion>
     </SharingScreen>
   ) : (
@@ -120,17 +88,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
 };
 
 const styles = StyleSheet.create({
-  dataItem: {
-    borderBottomWidth: 1,
-    marginTop: 12,
-    paddingBottom: 6,
-  },
-  dataItemLabel: {
-    marginBottom: 2,
-  },
-  dataItemLast: {
-    borderBottomWidth: 0,
-    marginBottom: 6,
+  claims: {
+    paddingBottom: 12,
   },
 });
 
