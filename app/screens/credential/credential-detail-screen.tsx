@@ -68,6 +68,8 @@ const DataItem: FunctionComponent<{
       </Typography>
       <Typography
         color={colorScheme.text}
+        ellipsizeMode="tail"
+        numberOfLines={1}
         testID={concatTestID(testID, 'value')}
       >
         {value}

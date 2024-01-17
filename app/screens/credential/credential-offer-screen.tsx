@@ -4,13 +4,17 @@ import {
   SharingScreen,
   SharingScreenVariation,
   TextAvatar,
+  TouchableOpacity,
+  Typography,
+  useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Insets, StyleSheet, View } from 'react-native';
 
 import { Claim } from '../../components/credential/claim';
+import { HelpIcon } from '../../components/icon/navigation-icon';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -23,7 +27,15 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportException } from '../../utils/reporting';
 
+const detailButtonHitslop: Insets = {
+  bottom: 10,
+  left: 10,
+  right: 10,
+  top: 10,
+};
+
 const CredentialOfferScreen: FunctionComponent = () => {
+  const colorScheme = useAppColorScheme();
   const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
   const issuanceNavigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
@@ -53,11 +65,42 @@ const CredentialOfferScreen: FunctionComponent = () => {
     <SharingScreen
       cancelLabel={translate('credentialOffer.reject')}
       contentTitle={translate('credentialOffer.credential')}
+      header={
+        <View style={styles.header}>
+          <View style={styles.headerTopRow}>
+            <Typography
+              accessibilityRole="header"
+              bold={true}
+              caps={true}
+              size="sml"
+              style={styles.headerLabel}
+            >
+              {translate('credentialDetail.credential.issuer')}
+            </Typography>
+            <TouchableOpacity
+              accessibilityLabel={translate('common.info')}
+              accessibilityRole="button"
+              hitSlop={detailButtonHitslop}
+              onPress={onIssuerDetail}
+              style={[
+                styles.detailButton,
+                { backgroundColor: colorScheme.background },
+              ]}
+            >
+              <HelpIcon />
+            </TouchableOpacity>
+          </View>
+          <Typography
+            color={colorScheme.text}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {credential.issuerDid}
+          </Typography>
+        </View>
+      }
       onCancel={onReject}
-      onDetail={onIssuerDetail}
       onSubmit={onAccept}
-      receiverLabel={credential.issuerDid ?? ''}
-      receiverTitle={translate('credentialDetail.credential.issuer')}
       submitLabel={translate('credentialOffer.accept')}
       testID="CredentialOfferScreen"
       title={translate('credentialOffer.title')}
@@ -90,6 +133,23 @@ const CredentialOfferScreen: FunctionComponent = () => {
 const styles = StyleSheet.create({
   claims: {
     paddingBottom: 12,
+  },
+  detailButton: {
+    borderRadius: 12,
+    height: 24,
+    width: 24,
+  },
+  header: {
+    padding: 12,
+  },
+  headerLabel: {
+    marginBottom: 4,
+  },
+  headerTopRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
   },
 });
 
