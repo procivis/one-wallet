@@ -1,18 +1,11 @@
 import { ColorScheme } from '@procivis/react-native-components';
 import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import config from 'react-native-ultimate-config';
 
-let flavor: {
+const flavor: {
   colorScheme: ColorScheme;
   darkModeColorScheme?: ColorScheme;
-};
-
-switch (config.CONFIG_NAME) {
-  case 'procivis':
-    flavor = require('./procivis');
-    break;
-}
+} = require('./procivis');
 
 const colorScheme: ColorScheme = flavor.colorScheme;
 const darkModeColorScheme: ColorScheme | undefined = flavor.darkModeColorScheme;
@@ -29,9 +22,9 @@ export function useFlavorColorScheme(): AppColorScheme {
   return useMemo(() => {
     const darkMode = Boolean(osDarkMode && darkModeColorScheme);
     const nativePickerText = osDarkMode ? '#FFFFFF' : '#000000';
-    return Object.assign(
-      { darkMode, nativePickerText },
-      darkMode ? darkModeColorScheme : colorScheme,
-    );
+    const scheme = darkMode
+      ? (darkModeColorScheme as ColorScheme)
+      : colorScheme;
+    return { darkMode, nativePickerText, ...scheme };
   }, [osDarkMode]);
 }
