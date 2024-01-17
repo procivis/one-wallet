@@ -201,6 +201,7 @@ export const ProofRequestCredential: FunctionComponent<{
                 )
               }
               style={[styles.claim, index === 0 && styles.firstClaim]}
+              testID={concatTestID(testID, 'claim', `${index}`)}
               title={field?.name ?? claim?.key ?? id}
             />
           );

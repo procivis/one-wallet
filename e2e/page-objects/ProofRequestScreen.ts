@@ -14,6 +14,21 @@ export default abstract class ProofRequestSharingScreen {
   static credential(credentialItemIndex: number) {
     const id = `ProofRequestSharingScreen.credential.input_${credentialItemIndex}`;
     return {
+      claim(index: number) {
+        const claimId = `${id}.claim.${index}`;
+        return {
+          get element() {
+            return element(by.id(claimId));
+          },
+          get title() {
+            return element(by.id(`${claimId}.title`));
+          },
+          get value() {
+            return element(by.id(`${claimId}.value`));
+          },
+        };
+      },
+
       get element() {
         return element(by.id(id));
       },

@@ -2,6 +2,7 @@ import { expect } from 'detox';
 
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
+import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/ProofRequestAcceptProcessScreen';
 import ProofRequestSharingScreen from '../page-objects/ProofRequestScreen';
 import ProofRequestSelectCredentialScreen from '../page-objects/ProofRequestSelectCredentialScreen';
@@ -331,6 +332,52 @@ describe('ONE-614: Proof request', () => {
       ).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
+
+  describe('ONE-1233: Picture claim', () => {
+    const pictureKey = 'picture';
+    let credentialId: string;
+    let pictureProofSchema: Record<string, any>;
+    beforeAll(async () => {
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
+      await pinSetup();
+
+      const pictureCredentialSchema = await createCredentialSchema(authToken, {
+        claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
+      });
+      pictureProofSchema = await createProofSchema(
+        authToken,
+        pictureCredentialSchema,
+      );
+
+      credentialId = await createCredential(authToken, pictureCredentialSchema);
+      const invitationUrl = await offerCredential(credentialId, authToken);
+      await scanURL(invitationUrl);
+      await CredentialOfferScreen.acceptButton.tap();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+    });
+
+    it('displays picture link on sharing screen', async () => {
+      const proofRequestId = await createProofRequest(
+        authToken,
+        pictureProofSchema,
+      );
+      const invitationUrl = await requestProof(proofRequestId, authToken);
+      await scanURL(invitationUrl);
+
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
+
+      const credential = ProofRequestSharingScreen.credential(0);
+      await expect(credential.element).toBeVisible();
+      const pictureClaim = credential.claim(0);
+      await expect(pictureClaim.element).toBeVisible();
+      await expect(pictureClaim.title).toHaveText(pictureKey);
+      await pictureClaim.value.tap();
+      await expect(ImagePreviewScreen.screen).toBeVisible();
+      await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
     });
   });
 
