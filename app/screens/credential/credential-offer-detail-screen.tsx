@@ -47,7 +47,13 @@ const DataItem: FunctionComponent<{
       >
         {attribute}
       </Typography>
-      <Typography color={colorScheme.text}>{value}</Typography>
+      <Typography
+        color={colorScheme.text}
+        ellipsizeMode="tail"
+        numberOfLines={1}
+      >
+        {value}
+      </Typography>
     </View>
   );
 };
