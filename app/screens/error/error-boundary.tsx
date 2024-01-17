@@ -69,11 +69,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     return this.isEnabled() && this.state.error ? (
       <OutsideTreeNavigationProvider>
-        <ErrorComponent
-          error={this.state.error}
-          errorInfo={this.state.errorInfo}
-          onReset={this.resetError}
-        />
+        <ErrorComponent error={this.state.error} onReset={this.resetError} />
       </OutsideTreeNavigationProvider>
     ) : (
       this.props.children

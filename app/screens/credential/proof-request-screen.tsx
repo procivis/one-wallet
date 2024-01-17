@@ -104,7 +104,7 @@ const ProofRequestScreen: FunctionComponent = () => {
             ({ id, state }) =>
               state === CredentialStateEnum.ACCEPTED &&
               credential.applicableCredentials.includes(id),
-          )?.id || credential.applicableCredentials[0];
+          )?.id ?? credential.applicableCredentials[0];
         if (!credentialId) {
           preselected[credential.id] = undefined;
           return;
