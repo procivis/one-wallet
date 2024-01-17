@@ -8,16 +8,15 @@ const configs: {
   config: Configuration;
   localeOverride?: LocaleOverride;
 } = (() => {
-  switch (configuration.CONFIG_NAME) {
-    case 'procivis':
-      switch (configuration.ENVIRONMENT) {
-        case 'dev':
-          return require('./procivis/dev');
-        case 'test':
-          return require('./procivis/test');
-        case 'demo':
-          return require('./procivis');
-      }
+  if (configuration.CONFIG_NAME === 'procivis') {
+    switch (configuration.ENVIRONMENT) {
+      case 'dev':
+        return require('./procivis/dev');
+      case 'test':
+        return require('./procivis/test');
+      case 'demo':
+        return require('./procivis');
+    }
   }
 })();
 
