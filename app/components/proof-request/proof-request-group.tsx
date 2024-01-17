@@ -15,7 +15,7 @@ export const ProofRequestGroup: FunctionComponent<
   }>
 > = ({ request, last, children }) => {
   const colorScheme = useAppColorScheme();
-  const title = request.name || translate('proofRequest.attributes');
+  const title = request.name ?? translate('proofRequest.attributes');
   return (
     <View
       style={[
