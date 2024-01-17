@@ -2,13 +2,12 @@ import {
   ErrorScreen,
   ErrorScreenVariation,
 } from '@procivis/react-native-components';
-import React, { ErrorInfo } from 'react';
+import React from 'react';
 
 import { translate } from '../../i18n';
 
 export interface ErrorComponentProps {
   error: Error;
-  errorInfo: ErrorInfo;
   onReset(): void;
 }
 

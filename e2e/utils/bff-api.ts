@@ -77,15 +77,13 @@ export async function createCredentialSchema(
   authToken: string,
   data?: Partial<CredentialSchemaData>,
 ): Promise<Record<string, any>> {
-  const schemaData = Object.assign(
-    {
-      claims: [{ datatype: 'STRING', key: 'field', required: true }],
-      format: CredentialFormat.SDJWT,
-      name: `detox-e2e-revocable-${uuidv4()}`,
-      revocationMethod: RevocationMethod.STATUSLIST2021,
-    },
-    data,
-  );
+  const schemaData = {
+    claims: [{ datatype: 'STRING', key: 'field', required: true }],
+    format: CredentialFormat.SDJWT,
+    name: `detox-e2e-revocable-${uuidv4()}`,
+    revocationMethod: RevocationMethod.STATUSLIST2021,
+    ...data,
+  };
   const schemaId = await apiRequest(
     '/api/credential-schema/v1',
     authToken,
@@ -151,15 +149,13 @@ export async function createCredential(
       };
     },
   );
-  const data = Object.assign(
-    {
-      claimValues,
-      credentialSchemaId: credentialSchema.id,
-      issuerDid: did.id,
-      transport: Transport.PROCIVIS,
-    },
-    credentialData,
-  );
+  const data = {
+    claimValues,
+    credentialSchemaId: credentialSchema.id,
+    issuerDid: did.id,
+    transport: Transport.PROCIVIS,
+    ...credentialData,
+  };
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );
@@ -176,19 +172,17 @@ export async function createProofSchema(
   credentialSchema: Record<string, any>,
   data?: Partial<ProofSchemaData>,
 ): Promise<Record<string, any>> {
-  const proofSchemaData = Object.assign(
-    {
-      claimSchemas: [
-        {
-          id: credentialSchema.claims[0].id,
-          required: true,
-        },
-      ],
-      expireDuration: 0,
-      name: `detox-e2e-test-${uuidv4()}`,
-    },
-    data,
-  );
+  const proofSchemaData = {
+    claimSchemas: [
+      {
+        id: credentialSchema.claims[0].id,
+        required: true,
+      },
+    ],
+    expireDuration: 0,
+    name: `detox-e2e-test-${uuidv4()}`,
+    ...data,
+  };
   return await apiRequest(
     '/api/proof-schema/v1',
     authToken,
@@ -211,14 +205,12 @@ export async function createProofRequest(
   const credentialSchema = await getCredentialSchema(authToken);
   const schema: Record<string, any> =
     proofSchema ?? (await createProofSchema(authToken, credentialSchema));
-  const data = Object.assign(
-    {
-      proofSchemaId: schema.id,
-      transport: Transport.PROCIVIS,
-      verifierDid: did.id,
-    },
-    proofRequestData,
-  );
+  const data = {
+    proofSchemaId: schema.id,
+    transport: Transport.PROCIVIS,
+    verifierDid: did.id,
+    ...proofRequestData,
+  };
   return await apiRequest(
     '/api/proof-request/v1',
     authToken,

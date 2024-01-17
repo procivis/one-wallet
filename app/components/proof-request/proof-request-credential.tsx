@@ -124,11 +124,20 @@ export const ProofRequestCredential: FunctionComponent<{
     [allCredentials, request],
   );
 
+  const revoked = credential?.state === CredentialStateEnum.REVOKED;
+  const subtitle = useMemo(() => {
+    if (revoked) {
+      return translate('credentialDetail.log.revoke');
+    }
+    return credential?.issuanceDate
+      ? formatDateTime(new Date(credential.issuanceDate))
+      : translate('proofRequest.missingCredential.title');
+  }, [credential, revoked]);
+
   if (isLoading || !config) {
     return null;
   }
 
-  const revoked = credential?.state === CredentialStateEnum.REVOKED;
   const selectiveDisclosureSupported = supportsSelectiveDisclosure(
     credential,
     config,
@@ -152,13 +161,7 @@ export const ProofRequestCredential: FunctionComponent<{
             <MissingCredentialIcon style={styles.icon} />
           ),
         }}
-        subtitle={
-          revoked
-            ? translate('credentialDetail.log.revoke')
-            : credential?.issuanceDate
-            ? formatDateTime(new Date(credential.issuanceDate))
-            : translate('proofRequest.missingCredential.title')
-        }
+        subtitle={subtitle}
         subtitleStyle={
           !credential || revoked
             ? {
