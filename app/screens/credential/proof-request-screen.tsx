@@ -233,7 +233,13 @@ const ProofRequestScreen: FunctionComponent = () => {
           >
             {translate('proofRequest.verifier')}
           </Typography>
-          <Typography color={colorScheme.text}>{proof?.verifierDid}</Typography>
+          <Typography
+            color={colorScheme.text}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {proof?.verifierDid}
+          </Typography>
         </View>
       }
       onCancel={onReject}
