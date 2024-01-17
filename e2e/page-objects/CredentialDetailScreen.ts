@@ -33,4 +33,8 @@ export default abstract class CredentialDetailScreen {
   static action(actionText: string) {
     return element(by.text(actionText));
   }
+
+  static claim(key: string) {
+    return this.dataItem(`CredentialDetailScreen.claim.${key}`);
+  }
 }
