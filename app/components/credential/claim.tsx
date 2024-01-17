@@ -34,6 +34,7 @@ export const Claim: FunctionComponent<{
           color={colorScheme.textSecondary}
           size="sml"
           style={styles.dataItemLabel}
+          testID={concatTestID(testID, 'title')}
         >
           {title ?? claim?.key}
         </Typography>

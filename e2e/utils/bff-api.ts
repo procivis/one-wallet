@@ -140,6 +140,10 @@ export async function createCredential(
         case 'DATE':
           value = '2023-08-21T07:29:27.850Z';
           break;
+        case 'PICTURE':
+          value =
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+          break;
       }
       return {
         claimId: id,

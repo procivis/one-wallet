@@ -4,6 +4,7 @@ import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProce
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
+import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import PinCodeScreen from '../page-objects/PinCodeScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import {
@@ -190,6 +191,41 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Issue credential: SD_JWT schema', async () => {
       await issueCredentialTestCase(credentialSchemaSD_JWT);
+    });
+  });
+
+  describe('ONE-1233: Picture claim', () => {
+    let credentialId: string;
+    const pictureKey = 'picture';
+
+    beforeAll(async () => {
+      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
+      await pinSetup();
+      const credentialSchema = await createCredentialSchema(authToken, {
+        claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
+      });
+
+      credentialId = await createCredential(authToken, credentialSchema);
+      const invitationUrl = await offerCredential(credentialId, authToken);
+      await scanURL(invitationUrl);
+
+      await expect(CredentialOfferScreen.screen).toBeVisible();
+      await CredentialOfferScreen.acceptButton.tap();
+
+      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+      await CredentialAcceptProcessScreen.closeButton.tap();
+    });
+
+    it('display picture link in credential detail', async () => {
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(
+        CredentialDetailScreen.claim(pictureKey).element,
+      ).toBeVisible();
+      await CredentialDetailScreen.claim(pictureKey).value.tap();
+      await expect(ImagePreviewScreen.screen).toBeVisible();
+      await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
     });
   });
 });
