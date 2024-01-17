@@ -12,6 +12,14 @@ export function reportError(message: string) {
   }
 }
 
+const getDebugExceptionInfo = (message: string | undefined, code: unknown) => {
+  if (message) {
+    const codeInfo = code ? `[${code}]` : '';
+    return `(${message})${codeInfo}`;
+  }
+  return `[${code}]`;
+};
+
 export function reportException(e: unknown, message?: string) {
   // `code` can be set in the native code
   const code = (e as any)?.code ?? '';
@@ -31,10 +39,7 @@ export function reportException(e: unknown, message?: string) {
       // do nothing
     }
   } else {
-    const info = message
-      ? `(${message})${code ? `[${code}]` : ''}`
-      : `[${code}]`;
-
+    const info = getDebugExceptionInfo(message, code);
     console.warn(
       `reportException${info}:`,
       e,
