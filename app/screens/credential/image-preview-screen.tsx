@@ -16,6 +16,7 @@ const ImagePreviewScreen: FunctionComponent = () => {
     <ImagePreviewLayout
       image={{ uri: image }}
       onBack={navigation.goBack}
+      testID="ImagePreviewScreen"
       title={title}
     />
   );
