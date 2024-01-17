@@ -1,33 +1,33 @@
 import {
-  Selector,
-  SelectorStatus,
-  TouchableOpacity,
+  concatTestID,
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { Claim } from '@procivis/react-native-one-core';
-import React, { FunctionComponent } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Claim as CredentialClaim } from '@procivis/react-native-one-core';
+import React, { FunctionComponent, ReactNode } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
-import { ClaimValue } from '../credential/claim-value';
+import { ClaimValue } from './claim-value';
 
-export const ProofRequestAttribute: FunctionComponent<{
-  attribute: string;
-  claim: Claim | undefined;
-  last?: boolean;
-  onPress?: () => void;
-  status: SelectorStatus;
-}> = ({ attribute, claim, last, status, onPress }) => {
+export const Claim: FunctionComponent<{
+  claim: CredentialClaim | undefined;
+  last: boolean | undefined;
+  rightAccessory?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  testID?: string;
+  title?: string;
+}> = ({ style, claim, last, rightAccessory, testID, title }) => {
   const colorScheme = useAppColorScheme();
-  const selector = <Selector status={status} />;
   return (
     <View
       style={[
         styles.dataItem,
-        last && styles.dataItemLast,
         { borderColor: colorScheme.lighterGrey },
+        last && styles.dataItemLast,
+        style,
       ]}
+      testID={testID}
     >
       <View style={styles.dataItemLeft}>
         <Typography
@@ -35,23 +35,17 @@ export const ProofRequestAttribute: FunctionComponent<{
           size="sml"
           style={styles.dataItemLabel}
         >
-          {attribute}
+          {title ?? claim?.key}
         </Typography>
         {claim ? (
-          <ClaimValue claim={claim} />
+          <ClaimValue claim={claim} testID={concatTestID(testID, 'value')} />
         ) : (
           <Typography color={colorScheme.alertText}>
             {translate('proofRequest.missingAttribute')}
           </Typography>
         )}
       </View>
-      {selector && onPress ? (
-        <TouchableOpacity accessibilityRole="button" onPress={onPress}>
-          {selector}
-        </TouchableOpacity>
-      ) : (
-        selector
-      )}
+      {rightAccessory}
     </View>
   );
 };
@@ -62,14 +56,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     marginTop: 12,
-    paddingBottom: 6,
+    paddingBottom: 4,
   },
   dataItemLabel: {
     marginBottom: 2,
   },
   dataItemLast: {
     borderBottomWidth: 0,
-    marginBottom: 6,
+    paddingBottom: 0,
   },
   dataItemLeft: {
     flex: 1,
