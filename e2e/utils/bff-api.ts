@@ -5,7 +5,7 @@ import { CredentialFormat, RevocationMethod, Transport } from './enums';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
-  email: 'test@test.com',
+  email: 'e2e_user@procivis.ch',
   method: 'PASSWORD',
   password: 'tester26',
 };
