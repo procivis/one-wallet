@@ -12,7 +12,10 @@ export function reportError(message: string) {
   }
 }
 
-const getDebugExceptionInfo = (message: string | undefined, code: unknown) => {
+const getDebugExceptionInfo = (
+  message: string | undefined,
+  code: string | number | undefined,
+) => {
   if (message) {
     const codeInfo = code ? `[${code}]` : '';
     return `(${message})${codeInfo}`;
