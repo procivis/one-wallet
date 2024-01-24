@@ -137,7 +137,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         icon={<PINIcon />}
         onPress={handlePinCodeChange}
-        title={translate('wallet.settings.security.pincode')}
+        title={translate('wallet.settings.security.pinCode')}
       />
       {biometry ? (
         <SwitchSetting

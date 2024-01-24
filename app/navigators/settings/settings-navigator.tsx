@@ -4,6 +4,7 @@ import React from 'react';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import DeleteWalletScreen from '../../screens/settings/delete-wallet-screen';
 import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
+import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
 import SettingsScreen from '../../screens/settings/settings-screen';
 import { SettingsNavigatorParamList } from './settings-routes';
 
@@ -19,6 +20,7 @@ const SettingsNavigator = () => {
       <Stack.Screen component={AppInformationScreen} name="AppInformation" />
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
+      <Stack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
     </Stack.Navigator>
   );
 };
