@@ -59,7 +59,7 @@ const PinCodeChangeScreen: FunctionComponent = () => {
         case Stage.Confirm:
           if (newPin === userEntry) {
             storePin(newPin);
-            navigation.goBack();
+            navigation.replace('PinCodeSet');
           } else {
             screen.current?.clearEntry();
             setError(translate('onboarding.pinCodeScreen.confirm.error'));
