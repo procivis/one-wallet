@@ -5,6 +5,7 @@ export type SettingsNavigatorParamList = {
   AppInformation: undefined;
   DeleteWallet: undefined;
   PinCodeChange: undefined;
+  PinCodeSet: undefined;
   SettingsDashboard: undefined;
 };
 
