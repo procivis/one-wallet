@@ -96,16 +96,17 @@ const SettingsScreen: FunctionComponent = observer(() => {
   }, [navigation]);
 
   const runAfterPinCheck = useExplicitPinCodeCheck();
-  const handleBiometricLoginChange = useCallback(
+  const handleBiometricsChange = useCallback(
     (enabled: boolean) => {
       runAfterPinCheck(
         () => {
-          userSettings.switchBiometricLogin(enabled);
+          userSettings.switchBiometrics(enabled);
+          navigation.navigate('BiometricsSet', { enabled });
         },
         { disableBiometry: true },
       );
     },
-    [runAfterPinCheck, userSettings],
+    [navigation, runAfterPinCheck, userSettings],
   );
 
   return (
@@ -142,9 +143,9 @@ const SettingsScreen: FunctionComponent = observer(() => {
       {biometry ? (
         <SwitchSetting
           icon={biometry === Biometry.FaceID ? <FaceIDIcon /> : <TouchIDIcon />}
-          onChange={handleBiometricLoginChange}
-          title={translate('wallet.settings.security.biometricLogin')}
-          value={userSettings.biometricLogin}
+          onChange={handleBiometricsChange}
+          title={translate('wallet.settings.security.biometrics')}
+          value={userSettings.biometrics}
         />
       ) : null}
 
