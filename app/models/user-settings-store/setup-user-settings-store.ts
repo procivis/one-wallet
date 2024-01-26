@@ -13,7 +13,7 @@ const USER_SETTINGS_STATE_STORAGE_KEY = 'user_settings';
 export async function setupUserSettingsStore(env: Environment) {
   let userSettingsStore: UserSettingsStore;
   const defaultData: UserSettingsStoreSnapshot = {
-    biometricLogin: true,
+    biometrics: true,
   };
 
   try {

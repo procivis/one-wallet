@@ -2,11 +2,11 @@ import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 
 export const UserSettingsStoreModel = types
   .model('UserSettingsStore', {
-    biometricLogin: types.boolean,
+    biometrics: types.boolean,
   })
   .actions((self) => ({
-    switchBiometricLogin: (enabled: boolean) => {
-      self.biometricLogin = enabled;
+    switchBiometrics: (enabled: boolean) => {
+      self.biometrics = enabled;
     },
   }));
 
