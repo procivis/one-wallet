@@ -105,7 +105,7 @@
   "wallet.settings.help.title": "Hilfe & Informationen",
   "wallet.settings.profile.deleteWallet": "Wallet löschen",
   "wallet.settings.profile.title": "Profil",
-  "wallet.settings.security.biometricLogin": "Biometrische Authentifizierung aktivieren",
+  "wallet.settings.security.biometrics": "Biometrische Authentifizierung aktivieren",
   "wallet.settings.security.pincode": "PIN-Code ändern",
   "wallet.settings.security.title": "Sicherheit",
   "wallet.settings.title": "Einstellungen",
