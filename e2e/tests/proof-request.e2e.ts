@@ -382,129 +382,87 @@ describe('ONE-614: Proof request', () => {
   });
 
   describe('Proof request Transport Protocol TestCase', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
     });
 
-    const proofRequestSharingTestCase = async (
-      credentialSchemaFormat: CredentialFormat,
-      credentialTransport: Transport,
-      proofRequestTransport: Transport,
-    ) => {
-      const specificCredentialSchema = await createCredentialSchema(authToken, {
-        format: credentialSchemaFormat,
-      });
-      const credentialId = await createCredential(
-        authToken,
-        specificCredentialSchema,
-        {
-          transport: credentialTransport,
-        },
-      );
-      const credentialInvitationUrl = await offerCredential(
-        credentialId,
-        authToken,
-      );
+    interface TestCombination {
+      credentialFormat: CredentialFormat;
+      issuanceTransport: Transport;
+      proofTransport: Transport;
+    }
 
-      await scanURL(credentialInvitationUrl);
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
-
-      const specificProofSchema = await createProofSchema(
-        authToken,
-        specificCredentialSchema,
-      );
-      const proofRequestId = await createProofRequest(
-        authToken,
-        specificProofSchema,
-        {
-          transport: proofRequestTransport,
-        },
-      );
-      const proofInvitationUrl = await requestProof(proofRequestId, authToken);
-
-      await scanURL(proofInvitationUrl);
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
-      await ProofRequestSharingScreen.shareButton.tap();
-      await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
-      await expect(
-        ProofRequestAcceptProcessScreen.status.success,
-      ).toBeVisible();
-      await ProofRequestAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+    const SUPPORTED = {
+      credentialFormat: [CredentialFormat.JWT, CredentialFormat.SDJWT],
+      issuanceTransport: [Transport.PROCIVIS, Transport.OPENID4VC],
+      proofTransport: [Transport.PROCIVIS, Transport.OPENID4VC],
     };
 
-    describe('Procivis Proof request transport', () => {
-      it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.JWT,
-          Transport.PROCIVIS,
-          Transport.PROCIVIS,
-        );
-      });
+    const COMBINATIONS = SUPPORTED.credentialFormat.flatMap(
+      (credentialFormat) =>
+        SUPPORTED.issuanceTransport.flatMap((issuanceTransport) =>
+          SUPPORTED.proofTransport.flatMap<TestCombination>(
+            (proofTransport) => ({
+              credentialFormat,
+              issuanceTransport,
+              proofTransport,
+            }),
+          ),
+        ),
+    );
 
-      it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.SDJWT,
-          Transport.PROCIVIS,
-          Transport.PROCIVIS,
+    it.each(COMBINATIONS)(
+      'Proof request: %o',
+      async ({ credentialFormat, issuanceTransport, proofTransport }) => {
+        const specificCredentialSchema = await createCredentialSchema(
+          authToken,
+          { format: credentialFormat },
         );
-      });
+        const credentialId = await createCredential(
+          authToken,
+          specificCredentialSchema,
+          { transport: issuanceTransport },
+        );
+        const credentialInvitationUrl = await offerCredential(
+          credentialId,
+          authToken,
+        );
 
-      it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.JWT,
-          Transport.OPENID4VC,
-          Transport.PROCIVIS,
-        );
-      });
+        await scanURL(credentialInvitationUrl);
+        await expect(CredentialOfferScreen.screen).toBeVisible();
+        await CredentialOfferScreen.acceptButton.tap();
+        await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+        await expect(
+          CredentialAcceptProcessScreen.status.success,
+        ).toBeVisible();
+        await CredentialAcceptProcessScreen.closeButton.tap();
+        await expect(WalletScreen.screen).toBeVisible();
 
-      it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: Procivis', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.SDJWT,
-          Transport.OPENID4VC,
-          Transport.PROCIVIS,
+        const specificProofSchema = await createProofSchema(
+          authToken,
+          specificCredentialSchema,
         );
-      });
-    });
+        const proofRequestId = await createProofRequest(
+          authToken,
+          specificProofSchema,
+          { transport: proofTransport },
+        );
+        const proofInvitationUrl = await requestProof(
+          proofRequestId,
+          authToken,
+        );
 
-    describe('ONE-795: OpenID4VC Proof request transport', () => {
-      it('Proof request: JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.JWT,
-          Transport.PROCIVIS,
-          Transport.OPENID4VC,
-        );
-      });
-
-      it('Proof request: SD-JWT schema; Credential transport Procivis; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.SDJWT,
-          Transport.PROCIVIS,
-          Transport.OPENID4VC,
-        );
-      });
-
-      it('Proof request: JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.JWT,
-          Transport.OPENID4VC,
-          Transport.OPENID4VC,
-        );
-      });
-
-      it('Proof request: SD-JWT schema; Credential transport OpenID4VC; Proof Transport: OpenID4VC', async () => {
-        await proofRequestSharingTestCase(
-          CredentialFormat.SDJWT,
-          Transport.OPENID4VC,
-          Transport.OPENID4VC,
-        );
-      });
-    });
+        await scanURL(proofInvitationUrl);
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await ProofRequestSharingScreen.shareButton.tap();
+        await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+        await expect(
+          ProofRequestAcceptProcessScreen.status.success,
+        ).toBeVisible();
+        await ProofRequestAcceptProcessScreen.closeButton.tap();
+        await expect(WalletScreen.screen).toBeVisible();
+      },
+    );
   });
 });
