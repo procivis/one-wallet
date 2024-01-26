@@ -71,7 +71,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   );
 
   const biometricCheckEnabled = Boolean(
-    biometry && userSettings.biometricLogin && !route.params?.disableBiometry,
+    biometry && userSettings.biometrics && !route.params?.disableBiometry,
   );
 
   const runBiometricCheck = useCallback(() => {
