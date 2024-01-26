@@ -1,7 +1,12 @@
+import {
+  LoadingResult,
+  LoadingResultState,
+  LoadingResultVariation,
+  useBlockOSBackNavigation,
+} from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 
-import PinCodeSet from '../../components/pin-code/pin-code-set';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
@@ -12,11 +17,19 @@ const PinCodeSetScreen: FC = () => {
     navigation.goBack();
   }, [navigation]);
 
+  useBlockOSBackNavigation();
+
   return (
-    <PinCodeSet
+    <LoadingResult
+      failureCloseButtonLabel={translate('common.close')}
+      inProgressCloseButtonLabel={translate('common.close')}
       onClose={onClose}
+      state={LoadingResultState.Success}
       subtitle={translate('wallet.settings.security.pinCodeSet.description')}
+      successCloseButtonLabel={translate('common.continue')}
+      testID="PinCodeSetScreen"
       title={translate('wallet.settings.security.pinCodeSet.title')}
+      variation={LoadingResultVariation.Neutral}
     />
   );
 };
