@@ -3,6 +3,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type SettingsNavigatorParamList = {
   AppInformation: undefined;
+  BiometricsSet: {
+    enabled: boolean;
+  };
   DeleteWallet: undefined;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
