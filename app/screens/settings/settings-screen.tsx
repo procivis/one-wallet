@@ -15,6 +15,7 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 import {
   DeleteIcon,
   FaceIDIcon,
+  HistoryIcon,
   InformationIcon,
   LanguageIcon,
   PINIcon,
@@ -52,12 +53,11 @@ const SettingsScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation =
     useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
-
   const { userSettings, locale } = useStores();
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
-
   const { showActionSheetWithOptions } = useActionSheet();
+
   const handleChangeLanguage = useCallback(() => {
     // all locales, currently selected as first
     const allLocales = Locales.filter((x) => x !== locale.locale);
@@ -82,6 +82,10 @@ const SettingsScreen: FunctionComponent = observer(() => {
       },
     );
   }, [locale, showActionSheetWithOptions, translate]);
+
+  const handleHistory = useCallback(() => {
+    navigation.navigate('History');
+  }, [navigation]);
 
   const handlePinCodeChange = useCallback(() => {
     navigation.navigate('PinCodeChange');
@@ -132,6 +136,11 @@ const SettingsScreen: FunctionComponent = observer(() => {
         icon={<LanguageIcon />}
         onPress={handleChangeLanguage}
         title={translate('wallet.settings.general.language')}
+      />
+      <ButtonSetting
+        icon={<HistoryIcon />}
+        onPress={handleHistory}
+        title={translate('wallet.settings.general.history')}
       />
 
       <SectionHeader title={translate('wallet.settings.security.title')} />

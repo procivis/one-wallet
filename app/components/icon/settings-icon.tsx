@@ -1,11 +1,11 @@
 import { useAppColorScheme } from '@procivis/react-native-components';
-import React from 'react';
-import Svg, { Path, SvgProps } from 'react-native-svg';
+import React, { FC } from 'react';
+import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 
 // Icons used on the settings screen: https://www.figma.com/file/Mj9Nm9CUtauth6jt49UL7t/OTS-Developments-2023?type=design&node-id=13-15689&t=GXsNdBzYheEWxZvG-4
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-901&t=v3fZr6gOFMtdEYcy-4
-export const LanguageIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const LanguageIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
@@ -18,8 +18,31 @@ export const LanguageIcon: React.FunctionComponent<SvgProps> = (props) => {
   );
 };
 
+// https://www.figma.com/file/RVk1ou3IWFWuRHZQgC0f7e/Procivis-One-Developments-2024?type=design&node-id=4185-112703
+export const HistoryIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <Circle cx="16" cy="16" r="4" stroke={colorScheme.text} />
+      <Path
+        d="M16 13.8177V15.9996"
+        stroke={colorScheme.text}
+        stroke-linecap="square"
+      />
+      <Path
+        d="M16.5091 16.0004H17.6727"
+        stroke={colorScheme.text}
+        stroke-linecap="square"
+      />
+      <Path d="M18 8L6 8" stroke={colorScheme.text} />
+      <Path d="M12 12H6" stroke={colorScheme.text} />
+      <Path d="M10 16H6" stroke={colorScheme.text} />
+    </Svg>
+  );
+};
+
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-632&t=ExFCur2RDCznJCXv-4
-export const FaceIDIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const FaceIDIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
@@ -33,7 +56,7 @@ export const FaceIDIcon: React.FunctionComponent<SvgProps> = (props) => {
 };
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-928&t=1XVJ4i2rfKHLPOK7-4
-export const TouchIDIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const TouchIDIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
@@ -54,7 +77,7 @@ export const TouchIDIcon: React.FunctionComponent<SvgProps> = (props) => {
 };
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-886&t=1XVJ4i2rfKHLPOK7-4
-export const PINIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const PINIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
@@ -101,7 +124,7 @@ export const PINIcon: React.FunctionComponent<SvgProps> = (props) => {
 };
 
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-998&t=E25vUMKOIFYpFAuM-4
-export const InformationIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const InformationIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
@@ -119,7 +142,7 @@ export const InformationIcon: React.FunctionComponent<SvgProps> = (props) => {
 };
 
 //https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=124-192&t=v3fZr6gOFMtdEYcy-4
-export const DeleteIcon: React.FunctionComponent<SvgProps> = (props) => {
+export const DeleteIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
