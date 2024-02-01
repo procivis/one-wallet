@@ -1,0 +1,40 @@
+import { HistoryListItem } from '@procivis/react-native-one-core';
+
+import { translate } from '../i18n';
+
+export interface HistoryListItemGroup {
+  date: string;
+  entries: HistoryListItem[];
+}
+
+export const groupEntriesByMonth = (
+  entries: HistoryListItem[],
+): HistoryListItemGroup[] => {
+  const groupedEntries = entries.reduce(
+    (result: Record<string, HistoryListItem[]>, entry: HistoryListItem) => {
+      const [year, month] = entry.createdDate.split('-');
+      const date = `${year}-${month}`;
+
+      if (!result[date]) {
+        result[date] = [];
+      }
+
+      result[date].push(entry);
+      return result;
+    },
+    {},
+  );
+
+  return Object.keys(groupedEntries).map((date) => {
+    return {
+      date,
+      entries: groupedEntries[date],
+    };
+  });
+};
+
+export const getEntryTitle = (entry: HistoryListItem) => {
+  return `${translate(`history.entity.${entry.entityType}`)} ${translate(
+    `history.action.${entry.action}`,
+  )}`;
+};

@@ -18,11 +18,8 @@ import React, {
 } from 'react';
 import { StyleSheet } from 'react-native';
 
-import {
-  EmptyIcon,
-  NextIcon,
-  SettingsIcon,
-} from '../../components/icon/wallet-icon';
+import { NextIcon } from '../../components/icon/common-icon';
+import { EmptyIcon, SettingsIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
   useCredentials,
