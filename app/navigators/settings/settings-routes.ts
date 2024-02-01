@@ -7,6 +7,7 @@ export type SettingsNavigatorParamList = {
     enabled: boolean;
   };
   DeleteWallet: undefined;
+  History: undefined;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
   SettingsDashboard: undefined;
