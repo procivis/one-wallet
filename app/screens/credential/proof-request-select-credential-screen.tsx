@@ -1,17 +1,9 @@
 import {
-  Accordion,
   Button,
   concatTestID,
   DetailScreen,
-  formatDateTime,
-  Selector,
-  SelectorStatus,
-  TextAvatar,
 } from '@procivis/react-native-components';
-import {
-  CredentialStateEnum,
-  PresentationDefinitionRequestedCredential,
-} from '@procivis/react-native-one-core';
+import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -21,91 +13,14 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Claim } from '../../components/credential/claim';
-import { SelectiveDislosureNotice } from '../../components/proof-request/selective-disclosure-notice';
-import { useCoreConfig } from '../../hooks/core-config';
-import { useCredentialDetail, useCredentials } from '../../hooks/credentials';
+import { Credential } from '../../components/proof-request/credential';
+import { useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialNavigatorParamList,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
-import { supportsSelectiveDisclosure } from '../../utils/credential';
-
-const Credential: FunctionComponent<{
-  credentialId: string;
-  onPress?: () => void;
-  request: PresentationDefinitionRequestedCredential;
-  selected: boolean;
-  testID?: string;
-}> = ({ testID, credentialId, selected, request, onPress }) => {
-  const { data: credential } = useCredentialDetail(credentialId);
-  const { data: config } = useCoreConfig();
-  if (!credential || !config) {
-    return null;
-  }
-
-  const selectiveDisclosureSupported = supportsSelectiveDisclosure(
-    credential,
-    config,
-  );
-
-  return (
-    <Accordion
-      accessibilityState={{ selected }}
-      contentStyle={styles.itemContent}
-      expanded={selected}
-      headerNotice={
-        selectiveDisclosureSupported === false && (
-          <SelectiveDislosureNotice
-            style={styles.headerNotice}
-            testID={concatTestID(testID, 'notice.selectiveDisclosure')}
-          />
-        )
-      }
-      icon={{
-        component: (
-          <TextAvatar
-            innerSize={48}
-            produceInitials={true}
-            text={credential.schema.name}
-          />
-        ),
-      }}
-      onPress={onPress}
-      rightAccessory={
-        <Selector
-          status={
-            selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected
-          }
-        />
-      }
-      subtitle={translate('proofRequest.selectCredential.issued', {
-        date: formatDateTime(new Date(credential.issuanceDate)),
-      })}
-      testID={testID}
-      title={credential.schema.name}
-      titleStyle={{
-        testID: concatTestID(testID, selected ? 'selected' : 'unselected'),
-      }}
-    >
-      {request.fields.map((field, index, { length }) => {
-        const claim = credential.claims.find(
-          ({ key }) => key === field.keyMap[credentialId],
-        );
-        return (
-          <Claim
-            claim={claim}
-            key={field.id}
-            last={length === index + 1}
-            title={field.name ?? claim?.key ?? field.id}
-          />
-        );
-      })}
-    </Accordion>
-  );
-};
 
 const SelectCredentialScreen: FunctionComponent = () => {
   const navigation =
@@ -184,14 +99,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  headerNotice: {
-    marginTop: 8,
-  },
   item: {
     marginBottom: 12,
-  },
-  itemContent: {
-    paddingBottom: 12,
   },
 });
 

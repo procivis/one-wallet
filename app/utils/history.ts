@@ -34,7 +34,7 @@ export const groupEntriesByMonth = (
 };
 
 export const getEntryTitle = (entry: HistoryListItem) => {
-  return `${translate(`history.entity.${entry.entityType}`)} ${translate(
+  return `${translate(`history.entityType.${entry.entityType}`)} ${translate(
     `history.action.${entry.action}`,
   )}`;
 };
