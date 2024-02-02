@@ -1,23 +1,19 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
   ActivityIndicator,
-  concatTestID,
   DetailScreen,
   formatDateTime,
   ListItem,
   RoundButton,
-  Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {
-  FunctionComponent,
-  PropsWithChildren,
-  useCallback,
-} from 'react';
+import React, { FC, useCallback } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
+import { DataItem } from '../../components/common/data-item';
+import { Section } from '../../components/common/section';
 import { Claim } from '../../components/credential/claim';
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
@@ -27,58 +23,7 @@ import {
   RootRouteProp,
 } from '../../navigators/root/root-navigator-routes';
 
-const Section: FunctionComponent<PropsWithChildren<{ title: string }>> = ({
-  title,
-  children,
-}) => {
-  const colorScheme = useAppColorScheme();
-  return (
-    <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
-      <Typography
-        accessibilityRole="header"
-        bold={true}
-        caps={true}
-        color={colorScheme.text}
-        size="sml"
-      >
-        {title}
-      </Typography>
-      {children}
-    </View>
-  );
-};
-
-const DataItem: FunctionComponent<{
-  attribute: string;
-  testID?: string;
-  value: string;
-}> = ({ attribute, value, testID }) => {
-  const colorScheme = useAppColorScheme();
-  return (
-    <View
-      style={[styles.dataItem, { borderColor: colorScheme.background }]}
-      testID={testID}
-    >
-      <Typography
-        color={colorScheme.textSecondary}
-        size="sml"
-        style={styles.dataItemLabel}
-      >
-        {attribute}
-      </Typography>
-      <Typography
-        color={colorScheme.text}
-        ellipsizeMode="tail"
-        numberOfLines={1}
-        testID={concatTestID(testID, 'value')}
-      >
-        {value}
-      </Typography>
-    </View>
-  );
-};
-
-const CredentialDetailScreen: FunctionComponent = () => {
+const CredentialDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const route = useRoute<RootRouteProp<'CredentialDetail'>>();
@@ -206,25 +151,11 @@ const CredentialDetailScreen: FunctionComponent = () => {
 };
 
 const styles = StyleSheet.create({
-  dataItem: {
-    borderBottomWidth: 1,
-    marginTop: 12,
-    paddingBottom: 6,
-  },
-  dataItemLabel: {
-    marginBottom: 2,
-  },
   logItem: {
     paddingHorizontal: 0,
   },
   logTitlePadding: {
     marginBottom: 12,
-  },
-  section: {
-    borderRadius: 20,
-    marginBottom: 12,
-    padding: 24,
-    paddingTop: 12,
   },
 });
 
