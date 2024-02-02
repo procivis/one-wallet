@@ -25,8 +25,8 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ProofRequestCredential } from '../../components/proof-request/proof-request-credential';
-import { ProofRequestGroup } from '../../components/proof-request/proof-request-group';
+import { CredentialSelect } from '../../components/proof-request/credential-select';
+import { Group } from '../../components/proof-request/group';
 import { useONECore } from '../../hooks/core-context';
 import {
   useCredentialRevocationCheck,
@@ -253,14 +253,10 @@ const ProofRequestScreen: FunctionComponent = () => {
         <ActivityIndicator />
       ) : (
         presentationDefinition.requestGroups.map((group, index, { length }) => (
-          <ProofRequestGroup
-            key={group.id}
-            last={length === index + 1}
-            request={group}
-          >
+          <Group key={group.id} last={length === index + 1} request={group}>
             {group.requestedCredentials.map(
               (credential, credentialIndex, { length: credentialsLength }) => (
-                <ProofRequestCredential
+                <CredentialSelect
                   allCredentials={allCredentials}
                   key={credential.id}
                   onSelectCredential={onSelectCredential(credential.id)}
@@ -284,7 +280,7 @@ const ProofRequestScreen: FunctionComponent = () => {
                 />
               ),
             )}
-          </ProofRequestGroup>
+          </Group>
         ))
       )}
     </SharingScreen>
