@@ -7,7 +7,7 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { NextIcon } from '../../components/icon/common-icon';
 import { useHistory } from '../../hooks/history';
@@ -18,24 +18,27 @@ import { getEntryTitle } from '../../utils/history';
 
 const HistoryScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
+  const navigation = useNavigation<SettingsNavigationProp<'History'>>();
   const { data: history, isLoading } = useHistory();
 
   const handleItemPress = useCallback(
     (entryGroupIndex: number) => (_: ListItemProps, index: number) => {
-      console.log(history?.[entryGroupIndex].entries[index]);
+      navigation.navigate('HistoryDetail', {
+        entry: history![entryGroupIndex].entries[index],
+      });
     },
-    [history],
+    [history, navigation],
   );
 
   if (isLoading || !history) {
-    return null;
+    return <ActivityIndicator />;
   }
 
   return (
     <DetailScreen
       onBack={navigation.goBack}
       style={{ backgroundColor: colorScheme.background }}
+      testID="HistoryScreen"
       title={translate('history.title')}
     >
       {history.length === 0 ? (
@@ -59,34 +62,25 @@ const HistoryScreen: FC = () => {
         </View>
       ) : (
         history.map((entryGroup, entryGroupIndex) => (
-          <View key={entryGroup.date}>
-            <Typography
-              accessibilityRole="header"
-              bold
-              color={colorScheme.text}
-              size="sml"
-              style={styles.sectionHeader}
-            >
-              {formatMonth(new Date(entryGroup.date))}
-            </Typography>
-
-            <ListView
-              emptyListSubtitle={translate('history.empty.subtitle')}
-              emptyListTitle={translate('history.empty.title')}
-              items={entryGroup.entries.map((entry) => {
-                return {
-                  rightAccessory: <NextIcon color={colorScheme.text} />,
-                  style: styles.entry,
-                  subtitle: `${formatTimestamp(
-                    new Date(entry.createdDate),
-                  )} - ${entry.entityId}`,
-                  title: getEntryTitle(entry),
-                };
-              })}
-              onItemSelected={handleItemPress(entryGroupIndex)}
-              style={styles.entryList}
-            />
-          </View>
+          <ListView
+            emptyListSubtitle={translate('history.empty.subtitle')}
+            emptyListTitle={translate('history.empty.title')}
+            items={entryGroup.entries.map((entry) => {
+              return {
+                rightAccessory: <NextIcon color={colorScheme.text} />,
+                style: styles.entry,
+                subtitle: `${formatTimestamp(new Date(entry.createdDate))} - ${
+                  entry.entityId
+                }`,
+                title: getEntryTitle(entry),
+              };
+            })}
+            key={entryGroup.date}
+            onItemSelected={handleItemPress(entryGroupIndex)}
+            style={styles.entryList}
+            title={formatMonth(new Date(entryGroup.date))}
+            titleStyle={styles.entryListTitle}
+          />
         ))
       )}
     </DetailScreen>
@@ -104,22 +98,19 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   entry: {
-    paddingBottom: 12,
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 12,
+    marginHorizontal: -24,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
   },
   // eslint-disable-next-line react-native/no-color-literals
   entryList: {
     backgroundColor: 'transparent',
     borderRadius: 0,
-    marginLeft: -24,
-    marginRight: -24,
-    paddingLeft: 0,
-    paddingRight: 0,
+    paddingHorizontal: 0,
   },
-  sectionHeader: {
-    textTransform: 'uppercase',
+  entryListTitle: {
+    marginBottom: 18,
+    marginTop: -12,
   },
 });
 

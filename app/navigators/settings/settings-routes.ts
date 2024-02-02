@@ -1,3 +1,4 @@
+import { HistoryListItem } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -8,6 +9,9 @@ export type SettingsNavigatorParamList = {
   };
   DeleteWallet: undefined;
   History: undefined;
+  HistoryDetail: {
+    entry: HistoryListItem;
+  };
   PinCodeChange: undefined;
   PinCodeSet: undefined;
   SettingsDashboard: undefined;
