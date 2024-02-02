@@ -8,7 +8,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
 
-export const ProofRequestGroup: FunctionComponent<
+export const Group: FunctionComponent<
   PropsWithChildren<{
     last: boolean;
     request: PresentationDefinitionRequestGroup;

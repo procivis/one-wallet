@@ -84,7 +84,7 @@ const getAttributeSelectorStatus = (
   return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
 };
 
-export const ProofRequestCredential: FunctionComponent<{
+export const CredentialSelect: FunctionComponent<{
   allCredentials: CredentialListItem[];
   onSelectCredential?: () => void;
   onSelectField: (
