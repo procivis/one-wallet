@@ -16,23 +16,37 @@ const TARGET_PLATFORM = process.env.CI_TARGET_RN_PLATFORM;
   { command: 'npx patch-package' },
 
   // Make sure we're set up correctly
-  { command: 'solidarity' },
+  { command: 'npx solidarity' },
 
   // Kill the metro bundler if it's running.
-  { command: 'pkill -f "cli.js start" || set exit 0', onlyPlatforms: ['darwin', 'linux'] },
+  {
+    command: 'pkill -f "cli.js start" || set exit 0',
+    onlyPlatforms: ['darwin', 'linux'],
+  },
   // Help wanted: Add the windows version here. { command: "????", onlyPlatforms: ["win32"] },
 
   // Make sure our native modules are androidX-happy
-  { command: 'jetify', targetPlatform: 'android' },
+  { command: 'npx jetify', targetPlatform: 'android' },
 
   // on iOS, make sure our native modules are installed
-  { command: 'pod install', cwd: 'ios', onlyPlatforms: ['darwin'], targetPlatform: 'ios' },
+  {
+    command: 'pod install',
+    cwd: 'ios',
+    onlyPlatforms: ['darwin'],
+    targetPlatform: 'ios',
+  },
 
   // Install husky git hooks
   { command: 'yarn husky install' },
 ]
-  .filter(({ onlyPlatforms }) => !onlyPlatforms || onlyPlatforms.includes(os.platform()))
-  .filter(({ targetPlatform }) => !targetPlatform || !TARGET_PLATFORM || targetPlatform === TARGET_PLATFORM)
+  .filter(
+    ({ onlyPlatforms }) =>
+      !onlyPlatforms || onlyPlatforms.includes(os.platform()),
+  )
+  .filter(
+    ({ targetPlatform }) =>
+      !targetPlatform || !TARGET_PLATFORM || targetPlatform === TARGET_PLATFORM,
+  )
   .forEach((commandAndOptions) => {
     const { command, onlyPlatform: _, ...options } = commandAndOptions;
     try {
