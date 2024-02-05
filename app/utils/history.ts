@@ -1,4 +1,7 @@
-import { HistoryListItem } from '@procivis/react-native-one-core';
+import {
+  HistoryListItem,
+  HistoryListQuery,
+} from '@procivis/react-native-one-core';
 
 import { translate } from '../i18n';
 
@@ -6,6 +9,13 @@ export interface HistoryListItemGroup {
   date: string;
   entries: HistoryListItem[];
 }
+
+export const getQueryKeyFromListQueryParams = (
+  queryParams: HistoryListQuery,
+) => {
+  const { organisationId, page, pageSize, searchText } = queryParams;
+  return [organisationId, page, pageSize, searchText];
+};
 
 export const groupEntriesByMonth = (
   entries: HistoryListItem[],
