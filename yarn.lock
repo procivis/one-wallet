@@ -2093,12 +2093,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-one-core@npm:1.0.13690":
-  version: 1.0.13690
-  resolution: "@procivis/react-native-one-core@npm:1.0.13690::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.0.13690.tgz"
+"@procivis/react-native-one-core@npm:1.0.13841":
+  version: 1.0.13841
+  resolution: "@procivis/react-native-one-core@npm:1.0.13841::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.0.13841.tgz"
   peerDependencies:
     react-native: "*"
-  checksum: f58714cf063bb94a55e37c2f8f341726e9fc922aa6c245937e148b4e51ab7fcd055b21bc13d15b004075ba7fd1b1566cf169720762237b0dc1d031f45465e511
+  checksum: 9a09e0dd458a8450aaec8bf1f72f13c4978246652b6ca0c4776f42b79b727c2da441c62a2fa5f8c5841af17d573152097a735b5791fd5d0a6060d02ce641a3f7
   languageName: node
   linkType: hard
 
@@ -2916,6 +2916,13 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: 6bf5337bc447b706bb5b4431d37686aa2ea6d07cfd6f79cc31de80170d6ff9b1c7384a9c0ccbc45b3f512bae9e9f75c2e12109806a15331dc94e8a8db6dbb4ac
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4":
+  version: 4.14.202
+  resolution: "@types/lodash@npm:4.14.202"
+  checksum: 6064d43c8f454170841bd67c8266cc9069d9e570a72ca63f06bceb484cb4a3ee60c9c1f305c1b9e3a87826049fd41124b8ef265c4dd08b00f6766609c7fe9973
   languageName: node
   linkType: hard
 
@@ -11154,7 +11161,7 @@ __metadata:
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
     "@procivis/react-native-components": "npm:0.1.2"
-    "@procivis/react-native-one-core": "npm:1.0.13690"
+    "@procivis/react-native-one-core": "npm:1.0.13841"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-community/eslint-config": "npm:^3.2.0"
@@ -11166,6 +11173,7 @@ __metadata:
     "@tsconfig/react-native": "npm:^2.0.2"
     "@types/i18n-js": "npm:3.0.3"
     "@types/jest": "npm:^29.2.1"
+    "@types/lodash": "npm:^4"
     "@types/react": "npm:^17.0.41"
     "@types/react-native": "npm:0.71.6"
     "@types/react-native-keep-awake": "npm:^2.0.3"
@@ -11195,6 +11203,7 @@ __metadata:
     jest-junit: "npm:^16.0.0"
     jetifier: "npm:1.6.6"
     license-checker-rseidelsohn: "npm:^3.1.0"
+    lodash: "npm:^4.17.21"
     lottie-react-native: "npm:^5.1.5"
     metro-react-native-babel-preset: "npm:^0.73.7"
     mobx: "npm:6.9.0"
@@ -11203,7 +11212,6 @@ __metadata:
     node-fetch: "npm:^3.3.2"
     npm-run-all: "npm:4.1.5"
     patch-package: "npm:6.4.7"
-    postinstall-prepare: "npm:1.0.1"
     prettier: "npm:^2.4.1"
     react: "npm:18.2.0"
     react-devtools-core: "npm:4.10.1"
@@ -11643,13 +11651,6 @@ __metadata:
   version: 0.1.1
   resolution: "posix-character-classes@npm:0.1.1"
   checksum: cce88011548a973b4af58361cd8f5f7b5a6faff8eef0901565802f067bcabf82597e920d4c97c22068464be3cbc6447af589f6cc8a7d813ea7165be60a0395bc
-  languageName: node
-  linkType: hard
-
-"postinstall-prepare@npm:1.0.1":
-  version: 1.0.1
-  resolution: "postinstall-prepare@npm:1.0.1"
-  checksum: 04593ce21bda898e6cfd245d35d312e1e4a03b6e316ac552408b479eb9093038c5c8b685147b658f6881ee5e0d5fce20a5a45cf22c9f9d346342e93a7defcbad
   languageName: node
   linkType: hard
 
