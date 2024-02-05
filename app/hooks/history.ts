@@ -23,11 +23,10 @@ export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
 
   return useQuery(
     [HISTORY_LIST_QUERY_KEY, ...getQueryKeyFromListQueryParams(queryParams)],
-    async () => {
-      return core
+    async () =>
+      core
         .getHistory(queryParams)
-        .then(({ values }) => groupEntriesByMonth(values));
-    },
+        .then(({ values }) => groupEntriesByMonth(values)),
     { keepPreviousData: true },
   );
 };

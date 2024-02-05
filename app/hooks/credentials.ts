@@ -20,7 +20,7 @@ export const useCredentials = () => {
     [CREDENTIAL_LIST_QUERY_KEY],
     () =>
       core
-        ?.getCredentials({
+        .getCredentials({
           organisationId: ONE_CORE_ORGANISATION_ID,
           page: 0,
           // TODO: workaround pagination for now, until it's supported by UI
