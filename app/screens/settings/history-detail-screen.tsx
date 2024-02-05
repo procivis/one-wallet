@@ -2,10 +2,7 @@ import {
   DetailScreen,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import {
-  CredentialDetail,
-  HistoryEntityTypeEnum,
-} from '@procivis/react-native-one-core';
+import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -23,11 +20,6 @@ import {
 import { formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
 import { capitalizeFirstLetter } from '../../utils/string';
-
-const filterUniqueCredentials = (credentials: CredentialDetail[]) =>
-  credentials.filter((credential, index) => {
-    return credentials.findIndex((c) => credential.id === c.id) === index;
-  });
 
 const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
@@ -89,19 +81,17 @@ const HistoryDetailScreen: FC = () => {
 
       {proof && (
         <Section title={translate('historyDetail.credential')}>
-          {filterUniqueCredentials(proof.credentials).map(
-            (proofCredential, index, { length }) => (
-              <View
-                key={proofCredential.id}
-                style={[
-                  styles.credential,
-                  length === index + 1 && styles.credentialLast,
-                ]}
-              >
-                <Credential credential={proofCredential} />
-              </View>
-            ),
-          )}
+          {proof.credentials.map((proofCredential, index, { length }) => (
+            <View
+              key={proofCredential.id}
+              style={[
+                styles.credential,
+                length === index + 1 && styles.credentialLast,
+              ]}
+            >
+              <Credential credential={proofCredential} />
+            </View>
+          ))}
         </Section>
       )}
     </DetailScreen>
