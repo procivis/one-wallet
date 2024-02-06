@@ -7,12 +7,12 @@ import {
   TextAvatar,
 } from '@procivis/react-native-components';
 import { PresentationDefinitionRequestedCredential } from '@procivis/react-native-one-core';
-import { translate } from 'i18n-js';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
+import { translate } from '../../i18n';
 import { supportsSelectiveDisclosure } from '../../utils/credential';
 import { Claim } from '../credential/claim';
 import { SelectiveDislosureNotice } from './selective-disclosure-notice';
