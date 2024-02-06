@@ -60,7 +60,7 @@ const DeletionConfirmScreen: FunctionComponent = () => {
 
   return (
     <>
-      <GradientBackground />
+      <GradientBackground style={{ backgroundColor: colorScheme.background }} />
 
       {deletingWallet ? (
         <ActivityIndicator />
