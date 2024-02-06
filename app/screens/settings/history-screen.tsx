@@ -15,7 +15,7 @@ import { HistoryListQuery } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Section } from '../../components/common/section';
 import { NextIcon } from '../../components/icon/common-icon';
@@ -139,37 +139,39 @@ const HistoryScreen: FC = () => {
         contentStyle={styles.filterModalContent}
         visible={isFilterModalOpened}
       >
-        <Section
-          title={translate('history.filter.title')}
-          titleStyle={styles.filterModalTitle}
-        >
-          <RadioGroup
-            items={[
-              {
-                key: '',
-                label: translate('common.all'),
-                style: styles.filterGroupItem,
-              },
-              ...credentialSchemas.map((credentialSchema) => ({
-                key: credentialSchema.id,
-                label: credentialSchema.name,
-                style: styles.filterGroupItem,
-              })),
-            ]}
-            onDeselected={handleCredentialSchemaChange}
-            onSelected={handleCredentialSchemaChange}
-            selectedItems={
-              queryParams.credentialSchemaId
-                ? [queryParams.credentialSchemaId]
-                : ['']
-            }
-            style={styles.filterGroup}
-          />
+        <ScrollView>
+          <Section
+            title={translate('history.filter.title')}
+            titleStyle={styles.filterModalTitle}
+          >
+            <RadioGroup
+              items={[
+                {
+                  key: '',
+                  label: translate('common.all'),
+                  style: styles.filterGroupItem,
+                },
+                ...credentialSchemas.map((credentialSchema) => ({
+                  key: credentialSchema.id,
+                  label: credentialSchema.name,
+                  style: styles.filterGroupItem,
+                })),
+              ]}
+              onDeselected={handleCredentialSchemaChange}
+              onSelected={handleCredentialSchemaChange}
+              selectedItems={
+                queryParams.credentialSchemaId
+                  ? [queryParams.credentialSchemaId]
+                  : ['']
+              }
+              style={styles.filterGroup}
+            />
 
-          <Button onPress={() => setIsFilterModalOpened(false)} type="light">
-            {translate('common.close')}
-          </Button>
-        </Section>
+            <Button onPress={() => setIsFilterModalOpened(false)} type="light">
+              {translate('common.close')}
+            </Button>
+          </Section>
+        </ScrollView>
       </ActionModal>
     </>
   );
@@ -214,7 +216,9 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   filterModalContent: {
-    borderRadius: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    maxHeight: '85%',
     paddingVertical: 12,
   },
   filterModalTitle: {
