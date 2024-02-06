@@ -56,7 +56,12 @@ const HistoryScreen: FC = () => {
   const handleSearchTextChange = debounce(setQueryParams, 500);
 
   useEffect(
-    () => handleSearchTextChange({ ...queryParams, searchText }),
+    () => {
+      handleSearchTextChange({
+        ...queryParams,
+        searchText: searchText || undefined,
+      });
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchText],
   );
