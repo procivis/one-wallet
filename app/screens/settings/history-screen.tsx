@@ -12,7 +12,10 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { HistoryListQuery } from '@procivis/react-native-one-core';
+import {
+  HistoryEntityTypeEnum,
+  HistoryListQuery,
+} from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -33,7 +36,12 @@ const HistoryScreen: FC = () => {
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
-  const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({});
+  const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
+    entityTypes: [
+      HistoryEntityTypeEnum.CREDENTIAL,
+      HistoryEntityTypeEnum.PROOF,
+    ],
+  });
   const { data: credentialSchemas } = useCredentialSchemas();
   const { data: history } = useHistory(queryParams);
 

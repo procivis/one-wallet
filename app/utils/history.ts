@@ -13,9 +13,22 @@ export interface HistoryListItemGroup {
 export const getQueryKeyFromListQueryParams = (
   queryParams: HistoryListQuery,
 ) => {
-  const { credentialSchemaId, organisationId, page, pageSize, searchText } =
-    queryParams;
-  return [credentialSchemaId, organisationId, page, pageSize, searchText];
+  const {
+    credentialSchemaId,
+    organisationId,
+    page,
+    pageSize,
+    searchText,
+    entityTypes,
+  } = queryParams;
+  return [
+    credentialSchemaId,
+    organisationId,
+    page,
+    pageSize,
+    searchText,
+    entityTypes,
+  ];
 };
 
 export const groupEntriesByMonth = (
