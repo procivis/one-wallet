@@ -156,7 +156,12 @@ export const CredentialSelect: FunctionComponent<{
         }
         icon={{
           component: credential ? (
-            <TextAvatar innerSize={48} produceInitials={true} text={name} />
+            <TextAvatar
+              innerSize={48}
+              produceInitials={true}
+              shape="rect"
+              text={name}
+            />
           ) : (
             <MissingCredentialIcon style={styles.icon} />
           ),
