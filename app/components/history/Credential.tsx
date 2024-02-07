@@ -17,6 +17,7 @@ const Credential: FC<CredentialProps> = ({ credential }) => {
           <TextAvatar
             innerSize={48}
             produceInitials={true}
+            shape="rect"
             text={credential.schema.name}
           />
         ),
