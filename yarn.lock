@@ -2093,12 +2093,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-one-core@npm:1.0.13945":
-  version: 1.0.13945
-  resolution: "@procivis/react-native-one-core@npm:1.0.13945::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.0.13945.tgz"
+"@procivis/react-native-one-core@npm:1.0.14071":
+  version: 1.0.14071
+  resolution: "@procivis/react-native-one-core@npm:1.0.14071::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.0.14071.tgz"
   peerDependencies:
     react-native: "*"
-  checksum: ecf7ddad903e29e0c1a40ab49868d296ac0257b35892bee1002242aa407b0e351fa108b54d4bf841f2cafbcc5d063434922d9784e8231318c3f14ad223545836
+  checksum: 61610a2abd869d774663cefa2871d2d0d488b64e84d0de128957c72b80af27528262e88b209fb80623481a742d07bee50b74c3725471955d2755ffdf3037b389
   languageName: node
   linkType: hard
 
@@ -11161,7 +11161,7 @@ __metadata:
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
     "@procivis/react-native-components": "npm:0.1.7"
-    "@procivis/react-native-one-core": "npm:1.0.13945"
+    "@procivis/react-native-one-core": "npm:1.0.14071"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-community/eslint-config": "npm:^3.2.0"
