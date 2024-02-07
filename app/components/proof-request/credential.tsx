@@ -54,6 +54,7 @@ export const Credential: FC<{
           <TextAvatar
             innerSize={48}
             produceInitials={true}
+            shape="rect"
             text={credential.schema.name}
           />
         ),
