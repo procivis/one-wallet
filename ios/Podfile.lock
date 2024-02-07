@@ -345,7 +345,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-one-core (1.0.13945):
+  - react-native-one-core (1.0.14071):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -751,7 +751,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-one-core: bda2eb0a22fc5edc410f30adefc57082a30103d3
+  react-native-one-core: a4a8e27c5f7aee7d764690c2e6923c8088fc4347
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-ultimate-config: 26275a1a4f2e7af5914942ebebbd8df52b5a375e
