@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 
-const CREDENTIAL_SCHEMA_LIST_QUERY_KEY = 'credential-schema-list';
+export const CREDENTIAL_SCHEMA_LIST_QUERY_KEY = 'credential-schema-list';
 
 export const useCredentialSchemas = () => {
   const { core } = useONECore();
