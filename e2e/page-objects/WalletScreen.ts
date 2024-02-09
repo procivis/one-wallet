@@ -3,6 +3,10 @@ export default abstract class WalletScreen {
     return element(by.id('WalletScreen'));
   }
 
+  static get settingsButton() {
+    return element(by.id('WalletScreen.header.action-settings'));
+  }
+
   private static credentialEntry(credentialId: string) {
     const id = `WalletScreen.credential.${credentialId}`;
     return {
