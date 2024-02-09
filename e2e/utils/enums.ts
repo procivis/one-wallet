@@ -40,3 +40,13 @@ export enum CredentialFormat {
   MDOC = 'MDOC',
   SDJWT = 'SDJWT',
 }
+
+export declare enum HistoryEntityTypeEnum {
+  CREDENTIAL = 'CREDENTIAL',
+  CREDENTIAL_SCHEMA = 'CREDENTIAL_SCHEMA',
+  DID = 'DID',
+  KEY = 'KEY',
+  ORGANISATION = 'ORGANISATION',
+  PROOF = 'PROOF',
+  PROOF_SCHEMA = 'PROOF_SCHEMA',
+}
