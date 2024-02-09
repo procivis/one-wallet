@@ -6,6 +6,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useONECore } from './core-context';
+import { HISTORY_LIST_QUERY_KEY } from './history';
 
 const PROOF_DETAIL_QUERY_KEY = 'proof-detail';
 
@@ -37,6 +38,7 @@ export const useProofAccept = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
@@ -57,6 +59,7 @@ export const useProofReject = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );

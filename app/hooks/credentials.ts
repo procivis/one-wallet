@@ -9,6 +9,8 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useStores } from '../models';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
+import { CREDENTIAL_SCHEMA_LIST_QUERY_KEY } from './credential-schemas';
+import { HISTORY_LIST_QUERY_KEY } from './history';
 
 const CREDENTIAL_LIST_QUERY_KEY = 'credential-list';
 const CREDENTIAL_DETAIL_QUERY_KEY = 'credential-detail';
@@ -64,6 +66,8 @@ export const useInvitationHandler = () => {
       onSuccess: (result: InvitationResult) => {
         if ('credentialIds' in result) {
           queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
+          queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
+          queryClient.invalidateQueries(CREDENTIAL_SCHEMA_LIST_QUERY_KEY);
         }
       },
     },
@@ -80,6 +84,7 @@ export const useCredentialAccept = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
         queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
@@ -101,6 +106,7 @@ export const useCredentialReject = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
         queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
@@ -116,6 +122,7 @@ export const useCredentialRevocationCheck = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
         queryClient.invalidateQueries(CREDENTIAL_DETAIL_QUERY_KEY);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
@@ -134,6 +141,7 @@ export const useCredentialDelete = () => {
           CREDENTIAL_DETAIL_QUERY_KEY,
           credentialId,
         ]);
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
