@@ -8,7 +8,7 @@ import {
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 
-const HISTORY_LIST_QUERY_KEY = 'history-list';
+export const HISTORY_LIST_QUERY_KEY = 'history-list';
 
 export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
   const { core } = useONECore();
