@@ -1,6 +1,7 @@
 import {
   ActionModal,
   Button,
+  concatTestID,
   DetailScreen,
   FilterButton,
   ListItemProps,
@@ -87,11 +88,13 @@ const HistoryScreen: FC = () => {
               placeholder={translate('common.search')}
               searchPhrase={searchText}
               style={styles.searchBar}
+              testID="HistoryScreen.search"
             />
 
             <FilterButton
               enabled={isFilterModalOpened || !!queryParams.credentialSchemaId}
               onPress={() => setIsFilterModalOpened(true)}
+              testID="HistoryScreen.filter"
             />
           </View>
         )}
@@ -120,19 +123,24 @@ const HistoryScreen: FC = () => {
             <ListView
               emptyListSubtitle={translate('history.empty.subtitle')}
               emptyListTitle={translate('history.empty.title')}
-              items={entryGroup.entries.map((entry) => {
+              items={entryGroup.entries.map((entry, index) => {
                 return {
                   rightAccessory: <NextIcon color={colorScheme.text} />,
                   style: styles.entry,
                   subtitle: `${formatTimestamp(
                     new Date(entry.createdDate),
                   )} - ${entry.entityId}`,
+                  testID: concatTestID(
+                    'HistoryScreen.history',
+                    index.toString(),
+                  ),
                   title: getEntryTitle(entry),
                 };
               })}
               key={entryGroup.date}
               onItemSelected={handleItemPress(entryGroupIndex)}
               style={styles.entryList}
+              testID="HistoryScreen.list"
               title={formatMonth(new Date(entryGroup.date))}
               titleStyle={styles.entryListTitle}
             />
@@ -144,7 +152,7 @@ const HistoryScreen: FC = () => {
         contentStyle={styles.filterModalContent}
         visible={isFilterModalOpened}
       >
-        <ScrollView>
+        <ScrollView testID="HistoryScreen.filter.scroll">
           <Section
             title={translate('history.filter.title')}
             titleStyle={styles.filterModalTitle}
@@ -172,7 +180,11 @@ const HistoryScreen: FC = () => {
               style={styles.filterGroup}
             />
 
-            <Button onPress={() => setIsFilterModalOpened(false)} type="light">
+            <Button
+              onPress={() => setIsFilterModalOpened(false)}
+              testID="HistoryScreen.filter.close"
+              type="light"
+            >
               {translate('common.close')}
             </Button>
           </Section>
