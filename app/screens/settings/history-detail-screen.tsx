@@ -19,7 +19,10 @@ import {
 } from '../../navigators/settings/settings-routes';
 import { formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
-import { capitalizeFirstLetter } from '../../utils/string';
+import {
+  capitalizeFirstLetter,
+  replaceBreakingHyphens,
+} from '../../utils/string';
 
 const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
@@ -37,6 +40,7 @@ const HistoryDetailScreen: FC = () => {
       : undefined,
   );
 
+  const from = credential?.issuerDid ?? proof?.verifierDid;
   return (
     <DetailScreen
       onBack={navigation.goBack}
@@ -48,10 +52,13 @@ const HistoryDetailScreen: FC = () => {
         title={translate('historyDetail.entity')}
         titleStyle={styles.entityTitle}
       >
-        <DataItem
-          attribute={translate('historyDetail.id')}
-          value={entry.entityId}
-        />
+        {from && (
+          <DataItem
+            attribute={translate('historyDetail.from')}
+            multiline={true}
+            value={replaceBreakingHyphens(from)}
+          />
+        )}
 
         <DataItem
           attribute={translate('historyDetail.type')}
