@@ -92,7 +92,7 @@
   "historyDetail.credential": "Credential",
   "historyDetail.date": "Date",
   "historyDetail.entity": "Entity",
-  "historyDetail.id": "ID",
+  "historyDetail.from": "From",
   "historyDetail.type": "Type",
   "invitation.process.close": "Back to wallet",
   "invitation.process.failure.subtitle": "Something went wrong. Please contact the provider and try again.",
