@@ -118,6 +118,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       contentStyle={styles.fullWidth}
       onBack={navigation.goBack}
       style={{ backgroundColor: colorScheme.white }}
+      testID="SettingsScreen"
       title={
         <TapGestureHandler numberOfTaps={5}>
           <Typography
@@ -135,11 +136,13 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         icon={<LanguageIcon />}
         onPress={handleChangeLanguage}
+        testID="SettingsScreen.languageChange"
         title={translate('wallet.settings.general.language')}
       />
       <ButtonSetting
         icon={<HistoryIcon />}
         onPress={handleHistory}
+        testID="SettingsScreen.history"
         title={translate('wallet.settings.general.history')}
       />
 
@@ -147,6 +150,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         icon={<PINIcon />}
         onPress={handlePinCodeChange}
+        testID="SettingsScreen.changePIN"
         title={translate('wallet.settings.security.pinCode')}
       />
       {biometry ? (
@@ -162,6 +166,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         icon={<InformationIcon />}
         onPress={handleAppInformation}
+        testID="SettingsScreen.help"
         title={translate('wallet.settings.help.information')}
       />
 
@@ -169,6 +174,7 @@ const SettingsScreen: FunctionComponent = observer(() => {
       <ButtonSetting
         icon={<DeleteIcon />}
         onPress={handleDeleteWallet}
+        testID="SettingsScreen.deleteWallet"
         title={translate('wallet.settings.profile.deleteWallet')}
       />
     </FeatureScreen>
