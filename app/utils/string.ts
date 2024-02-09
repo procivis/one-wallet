@@ -8,3 +8,6 @@ export const capitalize = (str: string): string =>
     .filter((x) => x)
     .map((x) => x.charAt(0).toUpperCase() + x.substring(1).toLowerCase())
     .join(' ');
+
+export const replaceBreakingHyphens = (str: string): string =>
+  str.replace(/-/g, '\u2011');
