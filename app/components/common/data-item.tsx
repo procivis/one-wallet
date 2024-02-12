@@ -8,10 +8,11 @@ import React, { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 export const DataItem: FC<{
   attribute: string;
+  multiline?: boolean;
   style?: StyleProp<ViewStyle>;
   testID?: string;
   value: string;
-}> = ({ attribute, style, value, testID }) => {
+}> = ({ attribute, multiline, style, value, testID }) => {
   const colorScheme = useAppColorScheme();
 
   return (
@@ -30,7 +31,7 @@ export const DataItem: FC<{
       <Typography
         color={colorScheme.text}
         ellipsizeMode="tail"
-        numberOfLines={1}
+        numberOfLines={multiline ? 0 : 1}
         testID={concatTestID(testID, 'value')}
       >
         {value}
