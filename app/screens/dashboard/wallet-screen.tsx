@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   concatTestID,
   FlatListView,
   formatDateTime,
@@ -17,7 +16,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
@@ -40,11 +39,23 @@ const WalletScreen: FunctionComponent = observer(() => {
     locale: { locale },
   } = useStores();
 
-  const { data: credentialsData, fetchNextPage } = usePagedCredentials();
+  const {
+    data: credentialsData,
+    fetchNextPage,
+    hasNextPage,
+  } = usePagedCredentials();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
 
   const credentials = useMemo(
-    () => credentialsData?.pages.flat(),
+    () =>
+      credentialsData?.pages
+        .map((page) => page.values)
+        .flat()
+        .filter(
+          ({ state }) =>
+            state === CredentialStateEnum.ACCEPTED ||
+            state === CredentialStateEnum.REVOKED,
+        ),
     [credentialsData?.pages],
   );
 
@@ -134,6 +145,13 @@ const WalletScreen: FunctionComponent = observer(() => {
         }) ?? []
       }
       key={locale}
+      listFooter={
+        hasNextPage ? (
+          <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
+            <ActivityIndicator color={colorScheme.accent} />
+          </View>
+        ) : undefined
+      }
       listHeader={
         <Header
           actionButtons={[
@@ -150,6 +168,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       }
       listHeaderStyle={[styles.header, { paddingTop: safeAreaInsets.top }]}
       onEndReached={handleEndReached}
+      onEndReachedThreshold={0.1}
       onItemSelected={handleCredentialPress}
       staticContent={false}
       stickySectionHeadersEnabled={false}
@@ -172,6 +191,12 @@ const WalletScreen: FunctionComponent = observer(() => {
 const styles = StyleSheet.create({
   emptyIcon: {
     marginBottom: 2,
+  },
+  footer: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -20,
+    paddingVertical: 20,
   },
   header: {
     marginHorizontal: -24,
