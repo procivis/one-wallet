@@ -54,22 +54,14 @@ export const usePagedCredentials = () => {
   return useInfiniteQuery(
     [CREDENTIAL_LIST_QUERY_KEY, PAGED_CREDENTIAL_LIST_QUERY_KEY],
     ({ pageParam = 0 }) =>
-      core
-        .getCredentials({
-          organisationId: ONE_CORE_ORGANISATION_ID,
-          page: pageParam,
-          pageSize: PAGE_SIZE,
-        })
-        .then(({ values }) =>
-          values.filter(
-            ({ state }) =>
-              state === CredentialStateEnum.ACCEPTED ||
-              state === CredentialStateEnum.REVOKED,
-          ),
-        ),
+      core.getCredentials({
+        organisationId: ONE_CORE_ORGANISATION_ID,
+        page: pageParam,
+        pageSize: PAGE_SIZE,
+      }),
     {
       getNextPageParam: (lastPage, allPages) =>
-        lastPage.length === PAGE_SIZE ? allPages.length : undefined,
+        allPages.length < lastPage.totalPages ? allPages.length : undefined,
       keepPreviousData: true,
     },
   );
