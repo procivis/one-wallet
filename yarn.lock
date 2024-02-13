@@ -2074,9 +2074,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-components@npm:0.1.8":
-  version: 0.1.8
-  resolution: "@procivis/react-native-components@npm:0.1.8::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F45%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-components%2F-%2F%40procivis%2Freact-native-components-0.1.8.tgz"
+"@procivis/react-native-components@npm:0.1.12":
+  version: 0.1.12
+  resolution: "@procivis/react-native-components@npm:0.1.12::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F45%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-components%2F-%2F%40procivis%2Freact-native-components-0.1.12.tgz"
   peerDependencies:
     "@procivis/react-native-picker": "*"
     "@react-native/normalize-color": "*"
@@ -2089,7 +2089,7 @@ __metadata:
     react-native-draggable-flatlist: "*"
     react-native-safe-area-context: "*"
     react-native-svg: "*"
-  checksum: e63a9bbac736b115b91052d2cb77d8155beb224302e656e304b7b5a12670cafd34aef33c5efd71b92d4ee596035b66f733b8fe9d34c53021344701dddfcde022
+  checksum: e51bbce65105bc7870df38a66d4afbd727ff2e42931e9d4ef269a91d676657b01c6f8a761823c37173348570c5718be60b748750631db48e1e060dde4bce9cb2
   languageName: node
   linkType: hard
 
@@ -11160,7 +11160,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/react-native-components": "npm:0.1.8"
+    "@procivis/react-native-components": "npm:0.1.12"
     "@procivis/react-native-one-core": "npm:1.0.14266"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
