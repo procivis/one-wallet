@@ -18,10 +18,9 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Section } from '../../components/common/section';
 import { NextIcon } from '../../components/icon/common-icon';
 import { useCredentialSchemas } from '../../hooks/credential-schemas';
 import { useHistory } from '../../hooks/history';
@@ -43,8 +42,10 @@ const HistoryScreen: FC = () => {
       HistoryEntityTypeEnum.PROOF,
     ],
   });
-  const { data: credentialSchemas } = useCredentialSchemas();
-  const { data: historyData, fetchNextPage } = useHistory(queryParams);
+  const { data: credentialSchemas, fetchNextPage: fetchNextSchemasPage } =
+    useCredentialSchemas();
+  const { data: historyData, fetchNextPage: fetchNextHistoryPage } =
+    useHistory(queryParams);
 
   const history = useMemo(() => {
     const items = historyData?.pages
@@ -76,13 +77,21 @@ const HistoryScreen: FC = () => {
     });
   }, [colorScheme.text, history]);
 
-  const handleEndReached = useCallback(() => {
+  const handleHistoryEndReached = useCallback(() => {
     const pageParam = historyData?.pages.length;
     if (!pageParam) {
       return;
     }
-    fetchNextPage({ pageParam });
-  }, [fetchNextPage, historyData?.pages.length]);
+    fetchNextHistoryPage({ pageParam });
+  }, [fetchNextHistoryPage, historyData?.pages.length]);
+
+  const handleSchemasEndReached = useCallback(() => {
+    const pageParam = credentialSchemas?.pages.length;
+    if (!pageParam) {
+      return;
+    }
+    fetchNextSchemasPage({ pageParam });
+  }, [fetchNextSchemasPage, credentialSchemas?.pages?.length]);
 
   const handleItemPress = useCallback(
     (_: ListItemProps, entryGroupIndex: number, index: number) => {
@@ -153,7 +162,7 @@ const HistoryScreen: FC = () => {
             title: translate('history.empty.title'),
           }}
           listHeader={header}
-          onEndReached={handleEndReached}
+          onEndReached={handleHistoryEndReached}
           onItemSelected={handleItemPress}
           sections={sections ?? []}
           style={styles.entryList}
@@ -162,46 +171,44 @@ const HistoryScreen: FC = () => {
       </DetailScreen>
 
       <ActionModal
-        contentStyle={styles.filterModalContent}
+        contentStyle={[
+          styles.filterModalContent,
+          { paddingBottom: bottomInset },
+        ]}
         visible={isFilterModalOpened}
       >
-        <ScrollView testID="HistoryScreen.filter.scroll">
-          <Section
-            title={translate('history.filter.title')}
-            titleStyle={styles.filterModalTitle}
-          >
-            <RadioGroup
-              items={[
-                {
-                  key: '',
-                  label: translate('common.all'),
-                  style: styles.filterGroupItem,
-                },
-                ...credentialSchemas.map((credentialSchema) => ({
-                  key: credentialSchema.id,
-                  label: credentialSchema.name,
-                  style: styles.filterGroupItem,
-                })),
-              ]}
-              onDeselected={handleCredentialSchemaChange}
-              onSelected={handleCredentialSchemaChange}
-              selectedItems={
-                queryParams.credentialSchemaId
-                  ? [queryParams.credentialSchemaId]
-                  : ['']
-              }
-              style={styles.filterGroup}
-            />
-
-            <Button
-              onPress={() => setIsFilterModalOpened(false)}
-              testID="HistoryScreen.filter.close"
-              type="light"
-            >
-              {translate('common.close')}
-            </Button>
-          </Section>
-        </ScrollView>
+        <RadioGroup
+          items={[
+            {
+              key: '',
+              label: translate('common.all'),
+              style: styles.filterGroupItem,
+            },
+            ...credentialSchemas.pages.flat().map((credentialSchema) => ({
+              key: credentialSchema.id,
+              label: credentialSchema.name,
+              style: styles.filterGroupItem,
+            })),
+          ]}
+          onDeselected={handleCredentialSchemaChange}
+          onEndReached={handleSchemasEndReached}
+          onSelected={handleCredentialSchemaChange}
+          selectedItems={
+            queryParams.credentialSchemaId
+              ? [queryParams.credentialSchemaId]
+              : ['']
+          }
+          staticContent={false}
+          style={styles.filterGroup}
+          title={translate('history.filter.title')}
+        />
+        <Button
+          onPress={() => setIsFilterModalOpened(false)}
+          testID="HistoryScreen.filter.close"
+          type="light"
+        >
+          {translate('common.close')}
+        </Button>
       </ActionModal>
     </>
   );
@@ -246,10 +253,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     maxHeight: '85%',
+    paddingHorizontal: 24,
     paddingVertical: 12,
-  },
-  filterModalTitle: {
-    marginBottom: 18,
   },
   searchBar: {
     flex: 1,
