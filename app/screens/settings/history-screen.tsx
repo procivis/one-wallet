@@ -5,11 +5,10 @@ import {
   DetailScreen,
   FilterButton,
   ListItemProps,
-  ListView,
   RadioGroup,
   RadioGroupItem,
   SearchBar,
-  Typography,
+  SectionListView,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
@@ -18,8 +17,9 @@ import {
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Section } from '../../components/common/section';
 import { NextIcon } from '../../components/icon/common-icon';
@@ -28,11 +28,12 @@ import { useHistory } from '../../hooks/history';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { formatMonth, formatTimestamp } from '../../utils/date';
-import { getEntryTitle } from '../../utils/history';
+import { getEntryTitle, groupEntriesByMonth } from '../../utils/history';
 
 const HistoryScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'History'>>();
+  const { bottom: bottomInset } = useSafeAreaInsets();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
@@ -43,10 +44,48 @@ const HistoryScreen: FC = () => {
     ],
   });
   const { data: credentialSchemas } = useCredentialSchemas();
-  const { data: history } = useHistory(queryParams);
+  const { data: historyData, fetchNextPage } = useHistory(queryParams);
+
+  const history = useMemo(() => {
+    const items = historyData?.pages
+      .flat()
+      .map((page) => page.values)
+      .flat();
+    if (!items) {
+      return undefined;
+    }
+    return groupEntriesByMonth(items);
+  }, [historyData?.pages]);
+
+  const sections = useMemo(() => {
+    return history?.map((section) => {
+      const data = section.entries.map((entry, index) => ({
+        rightAccessory: <NextIcon color={colorScheme.text} />,
+        style: styles.entry,
+        subtitle: `${formatTimestamp(new Date(entry.createdDate))} - ${
+          entry.entityId
+        }`,
+        testID: concatTestID('HistoryScreen.history', index.toString()),
+        title: getEntryTitle(entry),
+      }));
+      return {
+        data,
+        title: formatMonth(new Date(section.date)),
+        titleStyle: styles.entryListTitle,
+      };
+    });
+  }, [colorScheme.text, history]);
+
+  const handleEndReached = useCallback(() => {
+    const pageParam = historyData?.pages.length;
+    if (!pageParam) {
+      return;
+    }
+    fetchNextPage({ pageParam });
+  }, [fetchNextPage, historyData?.pages.length]);
 
   const handleItemPress = useCallback(
-    (entryGroupIndex: number) => (_: ListItemProps, index: number) => {
+    (_: ListItemProps, entryGroupIndex: number, index: number) => {
       navigation.navigate('HistoryDetail', {
         entry: history![entryGroupIndex].entries[index],
       });
@@ -79,81 +118,47 @@ const HistoryScreen: FC = () => {
     return <ActivityIndicator />;
   }
 
+  const header =
+    sections || queryParams.searchText || queryParams.credentialSchemaId ? (
+      <View style={styles.actions}>
+        <SearchBar
+          onSearchPhraseChange={setSearchText}
+          placeholder={translate('common.search')}
+          searchPhrase={searchText}
+          style={styles.searchBar}
+          testID="HistoryScreen.search"
+        />
+
+        <FilterButton
+          enabled={isFilterModalOpened || !!queryParams.credentialSchemaId}
+          onPress={() => setIsFilterModalOpened(true)}
+          testID="HistoryScreen.filter"
+        />
+      </View>
+    ) : undefined;
+
   return (
     <>
       <DetailScreen
         onBack={navigation.goBack}
-        style={{ backgroundColor: colorScheme.background }}
+        staticContent={true}
+        style={[styles.container, { backgroundColor: colorScheme.background }]}
         testID="HistoryScreen"
         title={translate('history.title')}
       >
-        {(history.length > 0 ||
-          queryParams.searchText ||
-          queryParams.credentialSchemaId) && (
-          <View style={styles.actions}>
-            <SearchBar
-              onSearchPhraseChange={setSearchText}
-              placeholder={translate('common.search')}
-              searchPhrase={searchText}
-              style={styles.searchBar}
-              testID="HistoryScreen.search"
-            />
-
-            <FilterButton
-              enabled={isFilterModalOpened || !!queryParams.credentialSchemaId}
-              onPress={() => setIsFilterModalOpened(true)}
-              testID="HistoryScreen.filter"
-            />
-          </View>
-        )}
-
-        {history.length === 0 ? (
-          <View style={styles.empty}>
-            <Typography
-              align="center"
-              bold
-              color={colorScheme.textSecondary}
-              size="sml"
-              style={styles.emptyTitle}
-            >
-              {translate('history.empty.title')}
-            </Typography>
-            <Typography
-              align="center"
-              color={colorScheme.textSecondary}
-              size="sml"
-            >
-              {translate('history.empty.subtitle')}
-            </Typography>
-          </View>
-        ) : (
-          history.map((entryGroup, entryGroupIndex) => (
-            <ListView
-              emptyListSubtitle={translate('history.empty.subtitle')}
-              emptyListTitle={translate('history.empty.title')}
-              items={entryGroup.entries.map((entry, index) => {
-                return {
-                  rightAccessory: <NextIcon color={colorScheme.text} />,
-                  style: styles.entry,
-                  subtitle: `${formatTimestamp(
-                    new Date(entry.createdDate),
-                  )} - ${entry.entityId}`,
-                  testID: concatTestID(
-                    'HistoryScreen.history',
-                    index.toString(),
-                  ),
-                  title: getEntryTitle(entry),
-                };
-              })}
-              key={entryGroup.date}
-              onItemSelected={handleItemPress(entryGroupIndex)}
-              style={styles.entryList}
-              testID="HistoryScreen.list"
-              title={formatMonth(new Date(entryGroup.date))}
-              titleStyle={styles.entryListTitle}
-            />
-          ))
-        )}
+        <SectionListView
+          contentContainerStyle={{ paddingBottom: bottomInset }}
+          emptyListView={{
+            subtitle: translate('history.empty.subtitle'),
+            title: translate('history.empty.title'),
+          }}
+          listHeader={header}
+          onEndReached={handleEndReached}
+          onItemSelected={handleItemPress}
+          sections={sections ?? []}
+          style={styles.entryList}
+          testID="HistoryScreen.list"
+        />
       </DetailScreen>
 
       <ActionModal
@@ -207,19 +212,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 16,
+    marginHorizontal: 24,
+    marginTop: 8,
   },
-  empty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-    padding: 24,
-  },
-  emptyTitle: {
-    marginBottom: 2,
+  container: {
+    paddingHorizontal: 0,
+    paddingTop: 0,
   },
   entry: {
-    marginHorizontal: -24,
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
@@ -231,7 +232,8 @@ const styles = StyleSheet.create({
   },
   entryListTitle: {
     marginBottom: 18,
-    marginTop: -12,
+    marginLeft: 24,
+    marginTop: 4,
   },
   filterGroup: {
     marginBottom: 12,
