@@ -42,10 +42,16 @@ const HistoryScreen: FC = () => {
       HistoryEntityTypeEnum.PROOF,
     ],
   });
-  const { data: credentialSchemas, fetchNextPage: fetchNextSchemasPage } =
-    useCredentialSchemas();
-  const { data: historyData, fetchNextPage: fetchNextHistoryPage } =
-    useHistory(queryParams);
+  const {
+    data: credentialSchemas,
+    fetchNextPage: fetchNextSchemasPage,
+    hasNextPage: hasNextSchemasPage,
+  } = useCredentialSchemas();
+  const {
+    data: historyData,
+    fetchNextPage: fetchNextHistoryPage,
+    hasNextPage: hasNextHistoryPage,
+  } = useHistory(queryParams);
 
   const history = useMemo(() => {
     const items = historyData?.pages
@@ -161,6 +167,13 @@ const HistoryScreen: FC = () => {
             subtitle: translate('history.empty.subtitle'),
             title: translate('history.empty.title'),
           }}
+          listFooter={
+            hasNextHistoryPage ? (
+              <View style={styles.footer}>
+                <ActivityIndicator color={colorScheme.accent} />
+              </View>
+            ) : undefined
+          }
           listHeader={header}
           onEndReached={handleHistoryEndReached}
           onItemSelected={handleItemPress}
@@ -190,6 +203,13 @@ const HistoryScreen: FC = () => {
               style: styles.filterGroupItem,
             })),
           ]}
+          listFooter={
+            hasNextSchemasPage ? (
+              <View style={styles.footer}>
+                <ActivityIndicator color={colorScheme.accent} />
+              </View>
+            ) : undefined
+          }
           onDeselected={handleCredentialSchemaChange}
           onEndReached={handleSchemasEndReached}
           onSelected={handleCredentialSchemaChange}
@@ -255,6 +275,9 @@ const styles = StyleSheet.create({
     maxHeight: '85%',
     paddingHorizontal: 24,
     paddingVertical: 12,
+  },
+  footer: {
+    paddingVertical: 20,
   },
   searchBar: {
     flex: 1,
