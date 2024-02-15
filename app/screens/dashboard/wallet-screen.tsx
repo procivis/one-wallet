@@ -1,12 +1,18 @@
 import {
   concatTestID,
-  FlatListView,
+  EmptyListView,
   formatDateTime,
   Header,
+  ListItem,
+  ListItemProps,
+  ListSectionHeader,
   TextAvatar,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { CredentialStateEnum } from '@procivis/react-native-one-core';
+import {
+  CredentialListItem,
+  CredentialStateEnum,
+} from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, {
@@ -16,7 +22,14 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  SectionList,
+  SectionListProps,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
@@ -91,68 +104,106 @@ const WalletScreen: FunctionComponent = observer(() => {
     [credentials, navigation],
   );
 
+  const renderTitle: SectionListProps<CredentialListItem>['renderSectionHeader'] =
+    useCallback(
+      () => (
+        <View
+          style={[styles.titleWrapper, { backgroundColor: colorScheme.white }]}
+        >
+          <ListSectionHeader
+            title={translate(
+              credentials?.length
+                ? 'wallet.walletScreen.credentialsList.title'
+                : 'wallet.walletScreen.credentialsList.title.empty',
+              { credentialsCount: credentials?.length },
+            )}
+            titleStyle={styles.title}
+          />
+        </View>
+      ),
+      [colorScheme.white, credentials?.length],
+    );
+
+  const renderItem: SectionListProps<CredentialListItem>['renderItem'] =
+    useCallback(
+      ({ item, index }) => {
+        const credential = item;
+        const testID = concatTestID('WalletScreen.credential', credential.id);
+        const revoked = credential.state === CredentialStateEnum.REVOKED;
+        const listItemProps: ListItemProps = {
+          icon: {
+            component: (
+              <TextAvatar
+                innerSize={48}
+                produceInitials={true}
+                shape="rect"
+                text={credential.schema.name}
+              />
+            ),
+          },
+          iconStyle: styles.itemIcon,
+          onPress: () => handleCredentialPress(undefined, index),
+          rightAccessory: <NextIcon color={colorScheme.text} />,
+          style: styles.listItem,
+          subtitle: revoked
+            ? translate('credentialDetail.log.revoke')
+            : formatDateTime(new Date(credential.issuanceDate)),
+          subtitleStyle: revoked
+            ? {
+                color: colorScheme.alertText,
+                testID: concatTestID(testID, 'revoked'),
+              }
+            : undefined,
+          testID,
+          title: credential.schema.name,
+        };
+        return (
+          <View style={{ backgroundColor: colorScheme.white }}>
+            <ListItem {...listItemProps} />
+          </View>
+        );
+      },
+      [
+        colorScheme.alertText,
+        colorScheme.text,
+        colorScheme.white,
+        handleCredentialPress,
+      ],
+    );
+
   const containerStyle: ViewStyle = {
     marginBottom: Math.max(safeAreaInsets.bottom, 20) + 99,
   };
 
   return (
-    <FlatListView
-      contentContainerStyle={containerStyle}
-      emptyListIcon={{
-        component: credentials ? (
-          <EmptyIcon color={colorScheme.lightGrey} />
-        ) : (
-          <ActivityIndicator />
-        ),
-      }}
-      emptyListIconStyle={styles.emptyIcon}
-      emptyListSubtitle={translate(
-        'wallet.walletScreen.credentialsList.empty.subtitle',
-      )}
-      emptyListTitle={translate(
-        'wallet.walletScreen.credentialsList.empty.title',
-      )}
-      items={
-        credentials?.map((credential) => {
-          const testID = concatTestID('WalletScreen.credential', credential.id);
-          const revoked = credential.state === CredentialStateEnum.REVOKED;
-          return {
-            icon: {
-              component: (
-                <TextAvatar
-                  innerSize={48}
-                  produceInitials={true}
-                  shape="rect"
-                  text={credential.schema.name}
-                />
-              ),
-            },
-            iconStyle: styles.itemIcon,
-            rightAccessory: <NextIcon color={colorScheme.text} />,
-            style: [styles.listItem, { backgroundColor: colorScheme.white }],
-            subtitle: revoked
-              ? translate('credentialDetail.log.revoke')
-              : formatDateTime(new Date(credential.issuanceDate)),
-            subtitleStyle: revoked
-              ? {
-                  color: colorScheme.alertText,
-                  testID: concatTestID(testID, 'revoked'),
-                }
-              : undefined,
-            testID,
-            title: credential.schema.name,
-          };
-        }) ?? []
+    <SectionList
+      ListEmptyComponent={
+        <EmptyListView
+          icon={{
+            component: credentials ? (
+              <EmptyIcon color={colorScheme.lightGrey} />
+            ) : (
+              <ActivityIndicator />
+            ),
+          }}
+          iconStyle={styles.emptyIcon}
+          subtitle={translate(
+            'wallet.walletScreen.credentialsList.empty.subtitle',
+          )}
+          title={translate('wallet.walletScreen.credentialsList.empty.title')}
+        />
       }
-      key={locale}
-      listFooter={
-        hasNextPage ? (
-          <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
-            <ActivityIndicator color={colorScheme.accent} />
-          </View>
-        ) : undefined
+      ListFooterComponent={
+        <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
+          {hasNextPage ? (
+            <ActivityIndicator
+              color={colorScheme.accent}
+              style={styles.loadingIndicator}
+            />
+          ) : undefined}
+        </View>
       }
-      listHeader={
+      ListHeaderComponent={
         <Header
           actionButtons={[
             {
@@ -166,24 +217,24 @@ const WalletScreen: FunctionComponent = observer(() => {
           title={translate('wallet.walletScreen.title')}
         />
       }
-      listHeaderStyle={[styles.header, { paddingTop: safeAreaInsets.top }]}
+      ListHeaderComponentStyle={[
+        styles.header,
+        { paddingTop: safeAreaInsets.top },
+      ]}
+      contentContainerStyle={containerStyle}
+      key={locale}
       onEndReached={handleEndReached}
       onEndReachedThreshold={0.1}
-      onItemSelected={handleCredentialPress}
-      staticContent={false}
+      renderItem={renderItem}
+      renderSectionHeader={renderTitle}
+      sections={credentials ? [{ data: credentials }] : []}
+      showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
       style={[
         styles.list,
         containerStyle,
         { backgroundColor: colorScheme.background },
       ]}
-      title={translate(
-        credentials?.length
-          ? 'wallet.walletScreen.credentialsList.title'
-          : 'wallet.walletScreen.credentialsList.title.empty',
-        { credentialsCount: credentials?.length },
-      )}
-      titleStyle={[styles.title, { backgroundColor: colorScheme.white }]}
     />
   );
 });
@@ -195,8 +246,7 @@ const styles = StyleSheet.create({
   footer: {
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    marginTop: -20,
-    paddingVertical: 20,
+    minHeight: 20,
   },
   header: {
     marginHorizontal: -24,
@@ -212,21 +262,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   listItem: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    marginBottom: 0,
-    marginTop: -20,
-    paddingBottom: 20,
+    paddingBottom: 8,
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 8,
+  },
+  loadingIndicator: {
+    marginBottom: 20,
+    marginTop: 12,
   },
   title: {
     borderRadius: 20,
     marginBottom: 0,
-    overflow: 'hidden',
-    paddingBottom: 20,
+    paddingBottom: 4,
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 12,
+  },
+  titleWrapper: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
 
