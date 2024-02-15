@@ -4,7 +4,12 @@ import {
   OneError,
   OneErrorCode,
 } from '@procivis/react-native-one-core';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { useStores } from '../models';
 import { useONECore } from './core-context';
@@ -12,7 +17,9 @@ import { ONE_CORE_ORGANISATION_ID } from './core-init';
 import { CREDENTIAL_SCHEMA_LIST_QUERY_KEY } from './credential-schemas';
 import { HISTORY_LIST_QUERY_KEY } from './history';
 
+const PAGE_SIZE = 20;
 const CREDENTIAL_LIST_QUERY_KEY = 'credential-list';
+const PAGED_CREDENTIAL_LIST_QUERY_KEY = 'paged';
 const CREDENTIAL_DETAIL_QUERY_KEY = 'credential-detail';
 
 export const useCredentials = () => {
@@ -36,6 +43,25 @@ export const useCredentials = () => {
           ),
         ),
     {
+      keepPreviousData: true,
+    },
+  );
+};
+
+export const usePagedCredentials = () => {
+  const { core } = useONECore();
+
+  return useInfiniteQuery(
+    [CREDENTIAL_LIST_QUERY_KEY, PAGED_CREDENTIAL_LIST_QUERY_KEY],
+    ({ pageParam = 0 }) =>
+      core.getCredentials({
+        organisationId: ONE_CORE_ORGANISATION_ID,
+        page: pageParam,
+        pageSize: PAGE_SIZE,
+      }),
+    {
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length < lastPage.totalPages ? allPages.length : undefined,
       keepPreviousData: true,
     },
   );

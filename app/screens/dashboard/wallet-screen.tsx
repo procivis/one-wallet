@@ -1,45 +1,84 @@
 import {
-  ActivityIndicator,
   concatTestID,
-  FeatureScreen,
+  EmptyListView,
   formatDateTime,
-  ListView,
+  Header,
+  ListItem,
+  ListItemProps,
+  ListSectionHeader,
   TextAvatar,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { CredentialStateEnum } from '@procivis/react-native-one-core';
+import {
+  CredentialListItem,
+  CredentialStateEnum,
+} from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
 } from 'react';
-import { StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  SectionList,
+  SectionListProps,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
 import { EmptyIcon, SettingsIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
-  useCredentials,
+  usePagedCredentials,
 } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportException } from '../../utils/reporting';
-import TabBarAwareContainer from './tab-bar-aware-container';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
+  const safeAreaInsets = useSafeAreaInsets();
 
   const {
     locale: { locale },
   } = useStores();
 
-  const { data: credentials } = useCredentials();
+  const {
+    data: credentialsData,
+    fetchNextPage,
+    hasNextPage,
+  } = usePagedCredentials();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
+
+  const credentials = useMemo(
+    () =>
+      credentialsData?.pages
+        .map((page) => page.values)
+        .flat()
+        .filter(
+          ({ state }) =>
+            state === CredentialStateEnum.ACCEPTED ||
+            state === CredentialStateEnum.REVOKED,
+        ),
+    [credentialsData?.pages],
+  );
+
+  const handleEndReached = useCallback(() => {
+    const pageParam = credentialsData?.pages.length;
+    if (!pageParam) {
+      return;
+    }
+    fetchNextPage({ pageParam });
+  }, [fetchNextPage, credentialsData?.pages.length]);
 
   const revocationCheckPerformed = useRef<boolean>(false);
   useEffect(() => {
@@ -65,80 +104,138 @@ const WalletScreen: FunctionComponent = observer(() => {
     [credentials, navigation],
   );
 
-  return (
-    <FeatureScreen
-      actionButtons={[
-        {
-          accessibilityLabel: translate('wallet.settings.title'),
-          content: SettingsIcon,
-          key: 'settings',
-          onPress: handleWalletSettingsClick,
-        },
-      ]}
-      headerBackground={colorScheme.lineargradient}
-      key={locale}
-      style={{ backgroundColor: colorScheme.background }}
-      testID="WalletScreen"
-      title={translate('wallet.walletScreen.title')}
-    >
-      <TabBarAwareContainer>
-        {credentials ? (
-          <ListView
-            emptyListIcon={{
-              component: <EmptyIcon color={colorScheme.lightGrey} />,
-            }}
-            emptyListIconStyle={styles.emptyIcon}
-            emptyListSubtitle={translate(
-              'wallet.walletScreen.credentialsList.empty.subtitle',
-            )}
-            emptyListTitle={translate(
-              'wallet.walletScreen.credentialsList.empty.title',
-            )}
-            items={credentials.map((credential) => {
-              const testID = concatTestID(
-                'WalletScreen.credential',
-                credential.id,
-              );
-              const revoked = credential.state === CredentialStateEnum.REVOKED;
-              return {
-                icon: {
-                  component: (
-                    <TextAvatar
-                      innerSize={48}
-                      produceInitials={true}
-                      shape="rect"
-                      text={credential.schema.name}
-                    />
-                  ),
-                },
-                iconStyle: styles.itemIcon,
-                rightAccessory: <NextIcon color={colorScheme.text} />,
-                subtitle: revoked
-                  ? translate('credentialDetail.log.revoke')
-                  : formatDateTime(new Date(credential.issuanceDate)),
-                subtitleStyle: revoked
-                  ? {
-                      color: colorScheme.alertText,
-                      testID: concatTestID(testID, 'revoked'),
-                    }
-                  : undefined,
-                testID,
-                title: credential.schema.name,
-              };
-            })}
-            onItemSelected={handleCredentialPress}
+  const renderTitle: SectionListProps<CredentialListItem>['renderSectionHeader'] =
+    useCallback(
+      () => (
+        <View
+          style={[styles.titleWrapper, { backgroundColor: colorScheme.white }]}
+        >
+          <ListSectionHeader
             title={translate(
-              credentials.length
+              credentials?.length
                 ? 'wallet.walletScreen.credentialsList.title'
                 : 'wallet.walletScreen.credentialsList.title.empty',
-              { credentialsCount: credentials.length },
+              { credentialsCount: credentials?.length },
             )}
+            titleStyle={styles.title}
           />
-        ) : (
-          <ActivityIndicator />
-        )}
-      </TabBarAwareContainer>
-    </FeatureScreen>
+        </View>
+      ),
+      [colorScheme.white, credentials?.length],
+    );
+
+  const renderItem: SectionListProps<CredentialListItem>['renderItem'] =
+    useCallback(
+      ({ item, index }) => {
+        const credential = item;
+        const testID = concatTestID('WalletScreen.credential', credential.id);
+        const revoked = credential.state === CredentialStateEnum.REVOKED;
+        const listItemProps: ListItemProps = {
+          icon: {
+            component: (
+              <TextAvatar
+                innerSize={48}
+                produceInitials={true}
+                shape="rect"
+                text={credential.schema.name}
+              />
+            ),
+          },
+          iconStyle: styles.itemIcon,
+          onPress: () => handleCredentialPress(undefined, index),
+          rightAccessory: <NextIcon color={colorScheme.text} />,
+          style: styles.listItem,
+          subtitle: revoked
+            ? translate('credentialDetail.log.revoke')
+            : formatDateTime(new Date(credential.issuanceDate)),
+          subtitleStyle: revoked
+            ? {
+                color: colorScheme.alertText,
+                testID: concatTestID(testID, 'revoked'),
+              }
+            : undefined,
+          testID,
+          title: credential.schema.name,
+        };
+        return (
+          <View style={{ backgroundColor: colorScheme.white }}>
+            <ListItem {...listItemProps} />
+          </View>
+        );
+      },
+      [
+        colorScheme.alertText,
+        colorScheme.text,
+        colorScheme.white,
+        handleCredentialPress,
+      ],
+    );
+
+  const containerStyle: ViewStyle = {
+    marginBottom: Math.max(safeAreaInsets.bottom, 20) + 99,
+  };
+
+  return (
+    <SectionList
+      ListEmptyComponent={
+        <EmptyListView
+          icon={{
+            component: credentials ? (
+              <EmptyIcon color={colorScheme.lightGrey} />
+            ) : (
+              <ActivityIndicator />
+            ),
+          }}
+          iconStyle={styles.emptyIcon}
+          subtitle={translate(
+            'wallet.walletScreen.credentialsList.empty.subtitle',
+          )}
+          title={translate('wallet.walletScreen.credentialsList.empty.title')}
+        />
+      }
+      ListFooterComponent={
+        <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
+          {hasNextPage ? (
+            <ActivityIndicator
+              color={colorScheme.accent}
+              style={styles.loadingIndicator}
+            />
+          ) : undefined}
+        </View>
+      }
+      ListHeaderComponent={
+        <Header
+          actionButtons={[
+            {
+              accessibilityLabel: translate('wallet.settings.title'),
+              content: SettingsIcon,
+              key: 'settings',
+              onPress: handleWalletSettingsClick,
+            },
+          ]}
+          testID={'WalletScreen.header'}
+          title={translate('wallet.walletScreen.title')}
+        />
+      }
+      ListHeaderComponentStyle={[
+        styles.header,
+        { paddingTop: safeAreaInsets.top },
+      ]}
+      contentContainerStyle={containerStyle}
+      key={locale}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.1}
+      renderItem={renderItem}
+      renderSectionHeader={renderTitle}
+      sections={credentials ? [{ data: credentials }] : []}
+      showsVerticalScrollIndicator={false}
+      stickySectionHeadersEnabled={false}
+      style={[
+        styles.list,
+        containerStyle,
+        { backgroundColor: colorScheme.background },
+      ]}
+    />
   );
 });
 
@@ -146,9 +243,43 @@ const styles = StyleSheet.create({
   emptyIcon: {
     marginBottom: 2,
   },
+  footer: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    minHeight: 20,
+  },
+  header: {
+    marginHorizontal: -24,
+  },
   itemIcon: {
     borderRadius: 0,
     borderWidth: 0,
+  },
+  list: {
+    flex: 1,
+    marginHorizontal: 24,
+    overflow: 'visible',
+    paddingHorizontal: 0,
+  },
+  listItem: {
+    paddingBottom: 8,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+  },
+  loadingIndicator: {
+    marginBottom: 20,
+    marginTop: 12,
+  },
+  title: {
+    borderRadius: 20,
+    marginBottom: 0,
+    paddingBottom: 4,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+  },
+  titleWrapper: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
 

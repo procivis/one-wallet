@@ -11,12 +11,11 @@ export interface HistoryListItemGroup {
 }
 
 export const getQueryKeyFromListQueryParams = (
-  queryParams: HistoryListQuery,
+  queryParams: Omit<HistoryListQuery, 'page'>,
 ) => {
   const {
     credentialSchemaId,
     organisationId,
-    page,
     pageSize,
     searchText,
     entityTypes,
@@ -24,7 +23,6 @@ export const getQueryKeyFromListQueryParams = (
   return [
     credentialSchemaId,
     organisationId,
-    page,
     pageSize,
     searchText,
     entityTypes,
