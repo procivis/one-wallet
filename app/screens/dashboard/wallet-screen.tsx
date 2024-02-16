@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   concatTestID,
   EmptyListView,
   formatDateTime,
@@ -23,7 +24,7 @@ import React, {
   useRef,
 } from 'react';
 import {
-  ActivityIndicator,
+  ActivityIndicator as LoadingIndicator,
   SectionList,
   SectionListProps,
   StyleSheet,
@@ -111,12 +112,9 @@ const WalletScreen: FunctionComponent = observer(() => {
           style={[styles.titleWrapper, { backgroundColor: colorScheme.white }]}
         >
           <ListSectionHeader
-            title={translate(
-              credentials?.length
-                ? 'wallet.walletScreen.credentialsList.title'
-                : 'wallet.walletScreen.credentialsList.title.empty',
-              { credentialsCount: credentials?.length },
-            )}
+            title={translate('wallet.walletScreen.credentialsList.title', {
+              credentialsCount: credentials?.length,
+            })}
             titleStyle={styles.title}
           />
         </View>
@@ -172,36 +170,51 @@ const WalletScreen: FunctionComponent = observer(() => {
     );
 
   const containerStyle: ViewStyle = {
+    flex: !credentials ? 1 : undefined,
     marginBottom: Math.max(safeAreaInsets.bottom, 20) + 99,
   };
 
   return (
     <SectionList
       ListEmptyComponent={
-        <EmptyListView
-          icon={{
-            component: credentials ? (
-              <EmptyIcon color={colorScheme.lightGrey} />
-            ) : (
-              <ActivityIndicator />
-            ),
-          }}
-          iconStyle={styles.emptyIcon}
-          subtitle={translate(
-            'wallet.walletScreen.credentialsList.empty.subtitle',
-          )}
-          title={translate('wallet.walletScreen.credentialsList.empty.title')}
-        />
+        credentials ? (
+          <View style={[styles.empty, { backgroundColor: colorScheme.white }]}>
+            <ListSectionHeader
+              title={translate(
+                'wallet.walletScreen.credentialsList.title.empty',
+              )}
+              titleStyle={styles.title}
+            />
+            <EmptyListView
+              icon={{
+                component: <EmptyIcon color={colorScheme.lightGrey} />,
+              }}
+              iconStyle={styles.emptyIcon}
+              subtitle={translate(
+                'wallet.walletScreen.credentialsList.empty.subtitle',
+              )}
+              title={translate(
+                'wallet.walletScreen.credentialsList.empty.title',
+              )}
+            />
+          </View>
+        ) : (
+          <View style={styles.loadingIndicator}>
+            <ActivityIndicator />
+          </View>
+        )
       }
       ListFooterComponent={
-        <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
-          {hasNextPage ? (
-            <ActivityIndicator
-              color={colorScheme.accent}
-              style={styles.loadingIndicator}
-            />
-          ) : undefined}
-        </View>
+        credentials && credentials.length > 0 ? (
+          <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
+            {hasNextPage ? (
+              <LoadingIndicator
+                color={colorScheme.accent}
+                style={styles.pageLoadingIndicator}
+              />
+            ) : undefined}
+          </View>
+        ) : undefined
       }
       ListHeaderComponent={
         <Header
@@ -227,7 +240,9 @@ const WalletScreen: FunctionComponent = observer(() => {
       onEndReachedThreshold={0.1}
       renderItem={renderItem}
       renderSectionHeader={renderTitle}
-      sections={credentials ? [{ data: credentials }] : []}
+      sections={
+        credentials && credentials.length > 0 ? [{ data: credentials }] : []
+      }
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
       style={[
@@ -240,6 +255,9 @@ const WalletScreen: FunctionComponent = observer(() => {
 });
 
 const styles = StyleSheet.create({
+  empty: {
+    borderRadius: 20,
+  },
   emptyIcon: {
     marginBottom: 2,
   },
@@ -267,6 +285,9 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   loadingIndicator: {
+    height: '100%',
+  },
+  pageLoadingIndicator: {
     marginBottom: 20,
     marginTop: 12,
   },
