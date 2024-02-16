@@ -4,10 +4,11 @@ import {
 } from '@procivis/react-native-one-core';
 
 import { translate } from '../i18n';
+import { HistoryListItemWithDid } from '../models/core/history';
 
 export interface HistoryListItemGroup {
   date: string;
-  entries: HistoryListItem[];
+  entries: HistoryListItemWithDid[];
 }
 
 export const getQueryKeyFromListQueryParams = (
@@ -30,10 +31,13 @@ export const getQueryKeyFromListQueryParams = (
 };
 
 export const groupEntriesByMonth = (
-  entries: HistoryListItem[],
+  entries: HistoryListItemWithDid[],
 ): HistoryListItemGroup[] => {
   const groupedEntries = entries.reduce(
-    (result: Record<string, HistoryListItem[]>, entry: HistoryListItem) => {
+    (
+      result: Record<string, HistoryListItemWithDid[]>,
+      entry: HistoryListItemWithDid,
+    ) => {
       const [year, month] = entry.createdDate.split('-');
       const date = `${year}-${month}`;
 
