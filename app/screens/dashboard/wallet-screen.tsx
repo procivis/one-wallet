@@ -81,15 +81,21 @@ const WalletScreen: FunctionComponent = observer(() => {
     fetchNextPage({ pageParam });
   }, [fetchNextPage, credentialsData?.pages.length]);
 
-  const revocationCheckPerformed = useRef<boolean>(false);
+  const revocationCheckPerformedForPage = useRef<number>();
   useEffect(() => {
-    if (!revocationCheckPerformed.current && credentials?.length) {
-      revocationCheckPerformed.current = true;
-      checkRevocation(credentials.map(({ id }) => id)).catch((e) =>
-        reportException(e, 'Revocation check failed'),
-      );
+    if (!credentialsData) {
+      return;
     }
-  }, [checkRevocation, credentials]);
+    const page = credentialsData.pages.length - 1;
+    if (revocationCheckPerformedForPage.current !== page) {
+      revocationCheckPerformedForPage.current = page;
+      checkRevocation(
+        credentialsData.pages[page].values
+          .filter(({ state }) => state === CredentialStateEnum.ACCEPTED)
+          .map(({ id }) => id),
+      ).catch((e) => reportException(e, 'Revocation check failed'));
+    }
+  }, [checkRevocation, credentialsData]);
 
   const handleWalletSettingsClick = useCallback(() => {
     navigation.navigate('Settings');
