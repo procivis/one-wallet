@@ -92,9 +92,9 @@ export const useInvitationHandler = () => {
       onSuccess: (result: InvitationResult) => {
         if ('credentialIds' in result) {
           queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
-          queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
           queryClient.invalidateQueries(CREDENTIAL_SCHEMA_LIST_QUERY_KEY);
         }
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
       },
     },
   );
