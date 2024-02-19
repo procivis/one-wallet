@@ -66,12 +66,15 @@ const HistoryScreen: FC = () => {
 
   const sections = useMemo(() => {
     return history?.map((section) => {
-      const data = section.entries.map((entry, index) => ({
+      const data: ListItemProps[] = section.entries.map((entry, index) => ({
         rightAccessory: <NextIcon color={colorScheme.text} />,
         style: styles.entry,
         subtitle: `${formatTimestamp(new Date(entry.createdDate))} - ${
-          entry.entityId
+          entry.did
         }`,
+        subtitleStyle: {
+          ellipsizeMode: 'middle',
+        },
         testID: concatTestID('HistoryScreen.history', index.toString()),
         title: getEntryTitle(entry),
       }));
