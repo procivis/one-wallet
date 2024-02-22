@@ -181,86 +181,97 @@ const WalletScreen: FunctionComponent = observer(() => {
   };
 
   return (
-    <SectionList
-      ListEmptyComponent={
-        credentials ? (
-          <View style={[styles.empty, { backgroundColor: colorScheme.white }]}>
-            <ListSectionHeader
-              title={translate(
-                'wallet.walletScreen.credentialsList.title.empty',
-              )}
-              titleStyle={styles.title}
-            />
-            <EmptyListView
-              icon={{
-                component: <EmptyIcon color={colorScheme.lightGrey} />,
-              }}
-              iconStyle={styles.emptyIcon}
-              subtitle={translate(
-                'wallet.walletScreen.credentialsList.empty.subtitle',
-              )}
-              title={translate(
-                'wallet.walletScreen.credentialsList.empty.title',
-              )}
-            />
-          </View>
-        ) : (
-          <View style={styles.loadingIndicator}>
-            <ActivityIndicator />
-          </View>
-        )
-      }
-      ListFooterComponent={
-        credentials && credentials.length > 0 ? (
-          <View style={[styles.footer, { backgroundColor: colorScheme.white }]}>
-            {hasNextPage ? (
-              <LoadingIndicator
-                color={colorScheme.accent}
-                style={styles.pageLoadingIndicator}
+    <View
+      style={[styles.background, { backgroundColor: colorScheme.background }]}
+    >
+      <SectionList
+        ListEmptyComponent={
+          credentials ? (
+            <View
+              style={[styles.empty, { backgroundColor: colorScheme.white }]}
+            >
+              <ListSectionHeader
+                title={translate(
+                  'wallet.walletScreen.credentialsList.title.empty',
+                )}
+                titleStyle={styles.title}
               />
-            ) : undefined}
-          </View>
-        ) : undefined
-      }
-      ListHeaderComponent={
-        <Header
-          actionButtons={[
-            {
-              accessibilityLabel: translate('wallet.settings.title'),
-              content: SettingsIcon,
-              key: 'settings',
-              onPress: handleWalletSettingsClick,
-            },
-          ]}
-          testID={'WalletScreen.header'}
-          title={translate('wallet.walletScreen.title')}
-        />
-      }
-      ListHeaderComponentStyle={[
-        styles.header,
-        { paddingTop: safeAreaInsets.top },
-      ]}
-      contentContainerStyle={containerStyle}
-      key={locale}
-      onEndReached={handleEndReached}
-      onEndReachedThreshold={0.1}
-      renderItem={renderItem}
-      renderSectionHeader={renderTitle}
-      sections={
-        credentials && credentials.length > 0 ? [{ data: credentials }] : []
-      }
-      showsVerticalScrollIndicator={false}
-      stickySectionHeadersEnabled={false}
-      style={[
-        styles.list,
-        containerStyle,
-        { backgroundColor: colorScheme.background },
-      ]}
-    />
+              <EmptyListView
+                icon={{
+                  component: <EmptyIcon color={colorScheme.lightGrey} />,
+                }}
+                iconStyle={styles.emptyIcon}
+                subtitle={translate(
+                  'wallet.walletScreen.credentialsList.empty.subtitle',
+                )}
+                title={translate(
+                  'wallet.walletScreen.credentialsList.empty.title',
+                )}
+              />
+            </View>
+          ) : (
+            <View style={styles.loadingIndicator}>
+              <ActivityIndicator />
+            </View>
+          )
+        }
+        ListFooterComponent={
+          credentials && credentials.length > 0 ? (
+            <View
+              style={[styles.footer, { backgroundColor: colorScheme.white }]}
+            >
+              {hasNextPage ? (
+                <LoadingIndicator
+                  color={colorScheme.accent}
+                  style={styles.pageLoadingIndicator}
+                />
+              ) : undefined}
+            </View>
+          ) : undefined
+        }
+        ListHeaderComponent={
+          <Header
+            actionButtons={[
+              {
+                accessibilityLabel: translate('wallet.settings.title'),
+                content: SettingsIcon,
+                key: 'settings',
+                onPress: handleWalletSettingsClick,
+              },
+            ]}
+            testID={'WalletScreen.header'}
+            title={translate('wallet.walletScreen.title')}
+          />
+        }
+        ListHeaderComponentStyle={[
+          styles.header,
+          { paddingTop: safeAreaInsets.top },
+        ]}
+        contentContainerStyle={containerStyle}
+        key={locale}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.1}
+        renderItem={renderItem}
+        renderSectionHeader={renderTitle}
+        sections={
+          credentials && credentials.length > 0 ? [{ data: credentials }] : []
+        }
+        showsVerticalScrollIndicator={false}
+        stickySectionHeadersEnabled={false}
+        style={[
+          styles.list,
+          containerStyle,
+          { backgroundColor: colorScheme.background },
+        ]}
+      />
+    </View>
   );
 });
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
   empty: {
     borderRadius: 20,
   },
