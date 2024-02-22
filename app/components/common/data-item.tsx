@@ -4,7 +4,13 @@ import {
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import { FC } from 'react';
-import React, { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import React, {
+  ColorValue,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 export const DataItem: FC<{
   attribute: string;
@@ -12,7 +18,8 @@ export const DataItem: FC<{
   style?: StyleProp<ViewStyle>;
   testID?: string;
   value: string;
-}> = ({ attribute, multiline, style, value, testID }) => {
+  valueColor?: ColorValue;
+}> = ({ attribute, multiline, style, value, valueColor, testID }) => {
   const colorScheme = useAppColorScheme();
 
   return (
@@ -29,7 +36,7 @@ export const DataItem: FC<{
       </Typography>
 
       <Typography
-        color={colorScheme.text}
+        color={valueColor ?? colorScheme.text}
         ellipsizeMode="tail"
         numberOfLines={multiline ? 0 : 1}
         testID={concatTestID(testID, 'value')}
