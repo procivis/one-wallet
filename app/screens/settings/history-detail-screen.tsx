@@ -2,7 +2,10 @@ import {
   DetailScreen,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
+import {
+  HistoryActionEnum,
+  HistoryEntityTypeEnum,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -41,6 +44,15 @@ const HistoryDetailScreen: FC = () => {
   );
 
   const from = credential?.issuerDid ?? proof?.verifierDid;
+  const destructiveActions = [
+    HistoryActionEnum.DEACTIVATED,
+    HistoryActionEnum.DELETED,
+    HistoryActionEnum.REJECTED,
+    HistoryActionEnum.REVOKED,
+  ];
+  const actionValueColor = destructiveActions.includes(entry.action)
+    ? colorScheme.alertText
+    : colorScheme.text;
   return (
     <DetailScreen
       onBack={navigation.goBack}
@@ -77,6 +89,7 @@ const HistoryDetailScreen: FC = () => {
           value={capitalizeFirstLetter(
             translate(`history.action.${entry.action}` as TxKeyPath),
           )}
+          valueColor={actionValueColor}
         />
       </Section>
 
