@@ -105,7 +105,10 @@ const WalletScreen: FunctionComponent = observer(() => {
     (_, index: number) => {
       const credentialId = credentials?.[index]?.id;
       if (credentialId) {
-        navigation.navigate('CredentialDetail', { credentialId });
+        navigation.navigate('CredentialDetail', {
+          params: { credentialId },
+          screen: 'Detail',
+        });
       }
     },
     [credentials, navigation],

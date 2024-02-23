@@ -14,16 +14,14 @@ import React, {
 
 import { useCredentialDelete } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import {
-  RootNavigationProp,
-  RootRouteProp,
-} from '../../navigators/root/root-navigator-routes';
+import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
+import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {
-  const navigation =
-    useNavigation<RootNavigationProp<'CredentialDeleteProcessing'>>();
-  const route = useRoute<RootRouteProp<'CredentialDeleteProcessing'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+  const route = useRoute<CredentialDetailRouteProp<'DeleteProcessing'>>();
   const [state, setState] = useState<
     | LoadingResultState.InProgress
     | LoadingResultState.Success
@@ -51,8 +49,8 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   }, []);
 
   const onClose = useCallback(() => {
-    navigation.navigate('Tabs', { screen: 'Wallet' });
-  }, [navigation]);
+    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+  }, [rootNavigation]);
 
   return (
     <LoadingResult

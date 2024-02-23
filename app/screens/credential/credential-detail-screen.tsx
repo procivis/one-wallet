@@ -7,9 +7,8 @@ import {
   RoundButton,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { DataItem } from '../../components/common/data-item';
@@ -19,57 +18,121 @@ import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
-  RootNavigationProp,
-  RootRouteProp,
-} from '../../navigators/root/root-navigator-routes';
+  CredentialDetailNavigationProp,
+  CredentialDetailRouteProp,
+} from '../../navigators/credential-detail/credential-detail-routes';
+import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { getValidityState, ValidityState } from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
-  const route = useRoute<RootRouteProp<'CredentialDetail'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+  const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
+  const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
 
+  const validityState = getValidityState(credential);
+  const validityStateValueColor =
+    validityState === ValidityState.Revoked
+      ? colorScheme.alertText
+      : colorScheme.text;
+
+  const isRevokable = useMemo(
+    () =>
+      credential?.schema.revocationMethod !== 'NONE' &&
+      validityState === ValidityState.Valid,
+    [credential?.schema.revocationMethod, validityState],
+  );
+
   const { showActionSheetWithOptions } = useActionSheet();
+
+  const options = useMemo(() => {
+    const commonOptions = [
+      translate('credentialDetail.action.delete'),
+      translate('common.close'),
+    ];
+
+    if (isRevokable) {
+      return {
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 1,
+        options: [
+          translate('credentialDetail.action.checkValidity'),
+          ...commonOptions,
+        ],
+      };
+    }
+
+    return {
+      cancelButtonIndex: 1,
+      destructiveButtonIndex: 0,
+      options: commonOptions,
+    };
+  }, [isRevokable]);
+
+  const handleCheckValidity = useCallback(() => {
+    navigation.replace('ValidityProcessing', {
+      credentialId,
+    });
+  }, [credentialId, navigation]);
+
+  const handleDelete = useCallback(() => {
+    Alert.alert(
+      translate('credentialDetail.action.delete.confirmation.title'),
+      translate('credentialDetail.action.delete.confirmation.message'),
+      [
+        {
+          isPreferred: true,
+          style: 'cancel',
+          text: translate('common.cancel'),
+        },
+        {
+          onPress: () => {
+            navigation.replace('DeleteProcessing', {
+              credentialId,
+            });
+          },
+          style: 'destructive',
+          text: translate('common.delete'),
+        },
+      ],
+      { cancelable: true },
+    );
+  }, [credentialId, navigation]);
+
   const onActions = useCallback(
     () =>
-      showActionSheetWithOptions(
-        {
-          cancelButtonIndex: 1,
-          destructiveButtonIndex: 0,
-          options: [
-            translate('credentialDetail.action.delete'),
-            translate('common.close'),
-          ],
-        },
-        (selectedIndex) => {
-          if (selectedIndex === 0) {
-            Alert.alert(
-              translate('credentialDetail.action.delete.confirmation.title'),
-              translate('credentialDetail.action.delete.confirmation.message'),
-              [
-                {
-                  isPreferred: true,
-                  style: 'cancel',
-                  text: translate('common.cancel'),
-                },
-                {
-                  onPress: () => {
-                    navigation.replace('CredentialDeleteProcessing', {
-                      credentialId,
-                    });
-                  },
-                  style: 'destructive',
-                  text: translate('common.delete'),
-                },
-              ],
-              { cancelable: true },
-            );
+      showActionSheetWithOptions(options, (selectedIndex) => {
+        if (isRevokable) {
+          switch (selectedIndex) {
+            case 0:
+              handleCheckValidity();
+              return;
+            case 1:
+              handleDelete();
+              return;
+            default:
+              return;
           }
-        },
-      ),
-    [navigation, showActionSheetWithOptions, credentialId],
+        }
+        switch (selectedIndex) {
+          case 0:
+            handleDelete();
+            return;
+          default:
+            return;
+        }
+      }),
+    [
+      handleCheckValidity,
+      handleDelete,
+      isRevokable,
+      options,
+      showActionSheetWithOptions,
+    ],
   );
 
   if (!credential) {
@@ -78,7 +141,7 @@ const CredentialDetailScreen: FC = () => {
 
   return (
     <DetailScreen
-      onBack={navigation.goBack}
+      onBack={() => rootNavigation.navigate('Tabs', { screen: 'Wallet' })}
       rightButton={
         <RoundButton
           accessibilityLabel={translate('credentialDetail.actions')}
@@ -108,13 +171,14 @@ const CredentialDetailScreen: FC = () => {
           attribute={translate('credentialDetail.credential.revocationMethod')}
           value={credential.schema.revocationMethod}
         />
-        {credential.state === CredentialStateEnum.REVOKED ? (
+        {validityState && (
           <DataItem
             attribute={translate('credentialDetail.credential.status')}
             testID="CredentialDetailScreen.status"
-            value={translate('credentialDetail.log.revoke')}
+            value={translate(`credentialDetail.validity.${validityState}`)}
+            valueColor={validityStateValueColor}
           />
-        ) : null}
+        )}
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
         {credential.claims.map((claim, index, { length }) => (
@@ -129,7 +193,7 @@ const CredentialDetailScreen: FC = () => {
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
         <View style={styles.logTitlePadding} />
-        {credential.revocationDate ? (
+        {credential.revocationDate && (
           <ListItem
             rightAccessory={null}
             style={styles.logItem}
@@ -137,7 +201,7 @@ const CredentialDetailScreen: FC = () => {
             testID="CredentialDetailScreen.log.revoked"
             title={translate('credentialDetail.log.revoke')}
           />
-        ) : null}
+        )}
         <ListItem
           rightAccessory={null}
           style={styles.logItem}
