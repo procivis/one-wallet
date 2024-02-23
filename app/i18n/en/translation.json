@@ -57,6 +57,7 @@
   "credentialDetail.log.revoke": "Revoked",
   "credentialDetail.log.share": "Shared",
   "credentialDetail.log.title": "Log",
+  "credentialDetail.log.validityUpdated": "Validity updated",
   "credentialDetail.validity.revoked": "Revoked",
   "credentialDetail.validity.valid": "Valid",
   "credentialOffer.accept": "Accept",
