@@ -1,6 +1,7 @@
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
 import { InvitationNavigatorParamList } from '../invitation/invitation-routes';
 import { IssueCredentialNavigatorParamList } from '../issue-credential/issue-credential-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
@@ -9,12 +10,7 @@ import { ShareCredentialNavigatorParamList } from '../share-credential/share-cre
 import { TabsNavigatorParamList } from '../tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
-  CredentialDeleteProcessing: {
-    credentialId: string;
-  };
-  CredentialDetail: {
-    credentialId: string;
-  };
+  CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   ImagePreview: {
     image: string;
     title: string;
