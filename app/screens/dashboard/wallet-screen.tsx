@@ -186,6 +186,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   return (
     <View
       style={[styles.background, { backgroundColor: colorScheme.background }]}
+      testID="WalletScreen"
     >
       <SectionList
         ListEmptyComponent={

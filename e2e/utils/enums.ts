@@ -31,7 +31,7 @@ export enum Transport {
 export enum RevocationMethod {
   LVVC = 'LVVC',
   NONE = 'NONE',
-  STATUSLIST2021 = 'STATUSLIST2021',
+  STATUSLIST2021 = 'BITSTRINGSTATUSLIST',
 }
 
 export enum CredentialFormat {
