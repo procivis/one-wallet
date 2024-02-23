@@ -66,7 +66,7 @@ export default abstract class HistoryScreen {
     const element = this.historyEntry(index).element;
     return waitFor(element)
       .toBeVisible()
-      .whileElement(by.id('HistoryScreen.content'))
-      .scroll(500, 'down', NaN, 0.85);
+      .whileElement(by.id('HistoryScreen.list'))
+      .scroll(600, 'down', NaN, 0.85);
   }
 }
