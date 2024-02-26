@@ -193,6 +193,15 @@ const CredentialDetailScreen: FC = () => {
       </Section>
       <Section title={translate('credentialDetail.log.title')}>
         <View style={styles.logTitlePadding} />
+        {credential.lvvcIssuanceDate && (
+          <ListItem
+            rightAccessory={null}
+            style={styles.logItem}
+            subtitle={formatDateTime(new Date(credential.lvvcIssuanceDate))}
+            testID="CredentialDetailScreen.log.validityUpdated"
+            title={translate('credentialDetail.log.validityUpdated')}
+          />
+        )}
         {credential.revocationDate && (
           <ListItem
             rightAccessory={null}
