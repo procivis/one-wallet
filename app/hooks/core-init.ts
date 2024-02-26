@@ -55,7 +55,7 @@ export const useInitializeONECoreIdentifiers = () => {
           didMethod: 'KEY',
           didType: DidTypeEnum.LOCAL,
           keys: {
-            assertion: [keyId],
+            assertionMethod: [keyId],
             authentication: [keyId],
             capabilityDelegation: [keyId],
             capabilityInvocation: [keyId],
