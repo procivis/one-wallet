@@ -37,7 +37,7 @@ export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
               (historyItem) =>
                 historyItem.entityType === HistoryEntityTypeEnum.CREDENTIAL,
             )
-            .map((historyItem) => historyItem.entityId),
+            .map((historyItem) => historyItem.entityId!),
         ),
       );
       const proofIds = Array.from(
@@ -47,7 +47,7 @@ export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
               (historyItem) =>
                 historyItem.entityType === HistoryEntityTypeEnum.PROOF,
             )
-            .map((historyItem) => historyItem.entityId),
+            .map((historyItem) => historyItem.entityId!),
         ),
       );
 
@@ -78,8 +78,8 @@ export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
         values: historyPage.values.map((item) => {
           const did =
             item.entityType === HistoryEntityTypeEnum.CREDENTIAL
-              ? credentialDidsMap[item.entityId]
-              : proofDidsMap[item.entityId];
+              ? credentialDidsMap[item.entityId!]
+              : proofDidsMap[item.entityId!];
           return {
             ...item,
             did,
