@@ -15,7 +15,7 @@ import React, {
 import { useCredentialDelete } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {

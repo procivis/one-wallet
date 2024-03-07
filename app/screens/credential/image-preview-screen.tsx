@@ -5,7 +5,7 @@ import React, { FunctionComponent } from 'react';
 import {
   RootNavigationProp,
   RootRouteProp,
-} from '../../navigators/root/root-navigator-routes';
+} from '../../navigators/root/root-routes';
 
 const ImagePreviewScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'ImagePreview'>>();

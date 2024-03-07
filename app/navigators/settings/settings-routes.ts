@@ -1,25 +1,25 @@
-import { HistoryListItem } from '@procivis/react-native-one-core';
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { CreateBackupNavigatorParamList } from '../create-backup/create-backup-routes';
+import { HistoryNavigatorParamList } from '../history/history-routes';
 
 export type SettingsNavigatorParamList = {
   AppInformation: undefined;
   BiometricsSet: {
     enabled: boolean;
   };
+  CreateBackup: NavigatorScreenParams<CreateBackupNavigatorParamList>;
+  Dashboard: undefined;
   DeleteWallet: undefined;
-  History: undefined;
-  HistoryDetail: {
-    entry: HistoryListItem;
-  };
+  History: NavigatorScreenParams<HistoryNavigatorParamList>;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
-  SettingsDashboard: undefined;
 };
 
 export type SettingsRouteProp<
   RouteName extends keyof SettingsNavigatorParamList,
 > = RouteProp<SettingsNavigatorParamList, RouteName>;
 export type SettingsNavigationProp<
-  RouteName extends keyof SettingsNavigatorParamList = 'SettingsDashboard',
+  RouteName extends keyof SettingsNavigatorParamList = 'Dashboard',
 > = NativeStackNavigationProp<SettingsNavigatorParamList, RouteName>;

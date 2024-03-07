@@ -31,12 +31,12 @@ const BiometricsSetScreen: FC = () => {
       onClose={onClose}
       state={LoadingResultState.Success}
       subtitle={translate(
-        `wallet.settings.security.biometricsSet.${biometricsStateKey}.description`,
+        `settings.security.biometricsSet.${biometricsStateKey}.description`,
       )}
       successCloseButtonLabel={translate('common.continue')}
       testID="BiometricsSetScreen"
       title={translate(
-        `wallet.settings.security.biometricsSet.${biometricsStateKey}.title`,
+        `settings.security.biometricsSet.${biometricsStateKey}.title`,
       )}
       variation={LoadingResultVariation.Neutral}
     />
