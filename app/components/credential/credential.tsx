@@ -1,15 +1,25 @@
 import { Accordion, TextAvatar } from '@procivis/react-native-components';
-import { CredentialDetail } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Claim } from '../credential/claim';
+import { useCredentialDetail } from '../../hooks/credentials';
+import { Claim } from './claim';
 
 interface CredentialProps {
-  credential: CredentialDetail;
+  credentialId: string;
+  expanded?: boolean;
 }
 
-const Credential: FC<CredentialProps> = ({ credential }) => {
+export const Credential: FC<CredentialProps> = ({
+  credentialId,
+  expanded = false,
+}) => {
+  const { data: credential } = useCredentialDetail(credentialId);
+
+  if (!credential) {
+    return null;
+  }
+
   return (
     <Accordion
       icon={{
@@ -22,6 +32,7 @@ const Credential: FC<CredentialProps> = ({ credential }) => {
           />
         ),
       }}
+      initiallyExpanded={expanded}
       title={credential.schema.name}
     >
       <View style={styles.claims}>
@@ -38,5 +49,3 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
 });
-
-export default Credential;
