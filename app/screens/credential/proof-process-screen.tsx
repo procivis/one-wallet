@@ -15,7 +15,7 @@ import { Linking } from 'react-native';
 
 import { useProofAccept, useProofDetail } from '../../hooks/proofs';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
 import { reportException } from '../../utils/reporting';
 

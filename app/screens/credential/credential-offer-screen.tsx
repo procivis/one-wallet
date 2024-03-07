@@ -24,7 +24,7 @@ import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const detailButtonHitslop: Insets = {

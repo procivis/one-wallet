@@ -34,7 +34,7 @@ import {
 } from '../../hooks/credentials';
 import { useProofDetail, useProofReject } from '../../hooks/proofs';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,

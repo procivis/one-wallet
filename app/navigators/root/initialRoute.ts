@@ -3,7 +3,7 @@ import RNBootSplash from 'react-native-bootsplash';
 
 import { usePinCodeInitialized } from '../../components/pin-code/pin-code';
 import { reportException } from '../../utils/reporting';
-import { RootNavigatorParamList } from './root-navigator-routes';
+import { RootNavigatorParamList } from './root-routes';
 
 /**
  * To be called from the initial screen once displayed
