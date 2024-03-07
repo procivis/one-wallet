@@ -1,5 +1,5 @@
 import {
-  DetailScreen,
+  DetailScreen as DetailScreenComponent,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
@@ -12,14 +12,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
-import Credential from '../../components/history/Credential';
+import { Credential } from '../../components/credential/credential';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { useProofDetail } from '../../hooks/proofs';
 import { translate, TxKeyPath } from '../../i18n';
 import {
-  SettingsNavigationProp,
-  SettingsRouteProp,
-} from '../../navigators/settings/settings-routes';
+  HistoryNavigationProp,
+  HistoryRouteProp,
+} from '../../navigators/history/history-routes';
 import { formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
 import {
@@ -27,10 +27,10 @@ import {
   replaceBreakingHyphens,
 } from '../../utils/string';
 
-const HistoryDetailScreen: FC = () => {
+const DetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'HistoryDetail'>>();
-  const route = useRoute<SettingsRouteProp<'HistoryDetail'>>();
+  const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
+  const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
   const { data: credential } = useCredentialDetail(
     entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
@@ -53,8 +53,9 @@ const HistoryDetailScreen: FC = () => {
   const actionValueColor = destructiveActions.includes(entry.action)
     ? colorScheme.alertText
     : colorScheme.text;
+
   return (
-    <DetailScreen
+    <DetailScreenComponent
       onBack={navigation.goBack}
       style={{ backgroundColor: colorScheme.background }}
       testID="HistoryDetailScreen"
@@ -95,39 +96,36 @@ const HistoryDetailScreen: FC = () => {
 
       {credential && (
         <Section title={translate('historyDetail.credential')}>
-          <Credential credential={credential} />
+          <Credential credentialId={credential.id} expanded />
         </Section>
       )}
 
       {proof && (
         <Section title={translate('historyDetail.credential')}>
-          {proof.credentials.map((proofCredential, index, { length }) => (
+          {proof.credentials.map((proofCredential, index) => (
             <View
               key={proofCredential.id}
-              style={[
-                styles.credential,
-                length === index + 1 && styles.credentialLast,
-              ]}
+              style={[styles.credential, index === 0 && styles.credentialFirst]}
             >
-              <Credential credential={proofCredential} />
+              <Credential credentialId={proofCredential.id} expanded />
             </View>
           ))}
         </Section>
       )}
-    </DetailScreen>
+    </DetailScreenComponent>
   );
 };
 
 const styles = StyleSheet.create({
   credential: {
-    marginBottom: 12,
+    marginTop: 12,
   },
-  credentialLast: {
-    marginBottom: 0,
+  credentialFirst: {
+    marginTop: 0,
   },
   entityTitle: {
     marginBottom: 0,
   },
 });
 
-export default HistoryDetailScreen;
+export default DetailScreen;

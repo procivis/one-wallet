@@ -15,7 +15,7 @@ import React, {
 import { useInvitationHandler } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
