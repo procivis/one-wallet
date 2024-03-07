@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
-import { RootNavigationProp } from '../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../navigators/root/root-routes';
 import { reportException, reportTraceInfo } from '../utils/reporting';
 
 export const useRuntimeDeepLinkHandling = (enabled: boolean) => {

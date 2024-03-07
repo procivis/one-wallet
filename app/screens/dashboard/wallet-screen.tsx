@@ -41,7 +41,7 @@ import {
 } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const WalletScreen: FunctionComponent = observer(() => {
@@ -121,7 +121,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           style={[styles.titleWrapper, { backgroundColor: colorScheme.white }]}
         >
           <ListSectionHeader
-            title={translate('wallet.walletScreen.credentialsList.title', {
+            title={translate('wallet.credentialsList.title', {
               credentialsCount: credentials?.length,
             })}
             titleStyle={styles.title}
@@ -195,9 +195,7 @@ const WalletScreen: FunctionComponent = observer(() => {
               style={[styles.empty, { backgroundColor: colorScheme.white }]}
             >
               <ListSectionHeader
-                title={translate(
-                  'wallet.walletScreen.credentialsList.title.empty',
-                )}
+                title={translate('wallet.credentialsList.title.empty')}
                 titleStyle={styles.title}
               />
               <EmptyListView
@@ -205,12 +203,8 @@ const WalletScreen: FunctionComponent = observer(() => {
                   component: <EmptyIcon color={colorScheme.lightGrey} />,
                 }}
                 iconStyle={styles.emptyIcon}
-                subtitle={translate(
-                  'wallet.walletScreen.credentialsList.empty.subtitle',
-                )}
-                title={translate(
-                  'wallet.walletScreen.credentialsList.empty.title',
-                )}
+                subtitle={translate('wallet.credentialsList.empty.subtitle')}
+                title={translate('wallet.credentialsList.empty.title')}
               />
             </View>
           ) : (
@@ -237,14 +231,14 @@ const WalletScreen: FunctionComponent = observer(() => {
           <Header
             actionButtons={[
               {
-                accessibilityLabel: translate('wallet.settings.title'),
+                accessibilityLabel: translate('wallet.settings'),
                 content: SettingsIcon,
                 key: 'settings',
                 onPress: handleWalletSettingsClick,
               },
             ]}
             testID={'WalletScreen.header'}
-            title={translate('wallet.walletScreen.title')}
+            title={translate('wallet.title')}
           />
         }
         ListHeaderComponentStyle={[

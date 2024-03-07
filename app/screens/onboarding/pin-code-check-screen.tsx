@@ -28,7 +28,7 @@ import { hideSplashScreen } from '../../navigators/root/initialRoute';
 import {
   RootNavigationProp,
   RootRouteProp,
-} from '../../navigators/root/root-navigator-routes';
+} from '../../navigators/root/root-routes';
 import { reportTraceInfo } from '../../utils/reporting';
 
 const hideSplashAndroidOnly = () =>

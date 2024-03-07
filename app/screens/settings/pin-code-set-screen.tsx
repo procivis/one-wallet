@@ -25,10 +25,10 @@ const PinCodeSetScreen: FC = () => {
       inProgressCloseButtonLabel={translate('common.close')}
       onClose={onClose}
       state={LoadingResultState.Success}
-      subtitle={translate('wallet.settings.security.pinCodeSet.description')}
+      subtitle={translate('settings.security.pinCodeSet.description')}
       successCloseButtonLabel={translate('common.continue')}
       testID="PinCodeSetScreen"
-      title={translate('wallet.settings.security.pinCodeSet.title')}
+      title={translate('settings.security.pinCodeSet.title')}
       variation={LoadingResultVariation.Neutral}
     />
   );
