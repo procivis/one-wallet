@@ -25,13 +25,13 @@ import { NextIcon } from '../../components/icon/common-icon';
 import { useCredentialSchemas } from '../../hooks/credential-schemas';
 import { useHistory } from '../../hooks/history';
 import { translate } from '../../i18n';
-import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 import { formatMonth, formatTimestamp } from '../../utils/date';
 import { getEntryTitle, groupEntriesByMonth } from '../../utils/history';
 
-const HistoryScreen: FC = () => {
+const DashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'History'>>();
+  const navigation = useNavigation<HistoryNavigationProp<'Dashboard'>>();
   const { bottom: bottomInset } = useSafeAreaInsets();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
@@ -104,7 +104,7 @@ const HistoryScreen: FC = () => {
 
   const handleItemPress = useCallback(
     (_: ListItemProps, entryGroupIndex: number, index: number) => {
-      navigation.navigate('HistoryDetail', {
+      navigation.navigate('Detail', {
         entry: history![entryGroupIndex].entries[index],
       });
     },
@@ -288,4 +288,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HistoryScreen;
+export default DashboardScreen;

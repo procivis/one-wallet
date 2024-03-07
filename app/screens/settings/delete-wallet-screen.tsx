@@ -18,7 +18,7 @@ import { removePin } from '../../components/pin-code/pin-code';
 import { useONECore } from '../../hooks/core-context';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException, reportTraceInfo } from '../../utils/reporting';
 
 const DeletionConfirmScreen: FunctionComponent = () => {

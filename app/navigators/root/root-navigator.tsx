@@ -15,7 +15,7 @@ import SettingsNavigator from '../settings/settings-navigator';
 import ShareCredentialNavigator from '../share-credential/share-credential-navigator';
 import TabsNavigator from '../tabs/tabs-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
-import { RootNavigatorParamList } from './root-navigator-routes';
+import { RootNavigatorParamList } from './root-routes';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
