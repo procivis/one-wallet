@@ -10,7 +10,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 
 import { useCoreConfig } from '../../hooks/core-config';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 export const ClaimValue: FunctionComponent<{
   claim: Claim;

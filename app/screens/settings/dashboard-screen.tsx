@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 
 import {
+  BackupIcon,
   DeleteIcon,
   FaceIDIcon,
   HistoryIcon,
@@ -49,10 +50,9 @@ const SectionHeader: FunctionComponent<{ title: string }> = ({ title }) => {
   );
 };
 
-const SettingsScreen: FunctionComponent = observer(() => {
+const DashboardScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
-  const navigation =
-    useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
+  const navigation = useNavigation<SettingsNavigationProp<'Dashboard'>>();
   const { userSettings, locale } = useStores();
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
@@ -84,23 +84,19 @@ const SettingsScreen: FunctionComponent = observer(() => {
   }, [locale, showActionSheetWithOptions, translate]);
 
   const handleHistory = useCallback(() => {
-    navigation.navigate('History');
+    navigation.navigate('History', { screen: 'Dashboard' });
   }, [navigation]);
 
-  const handlePinCodeChange = useCallback(() => {
+  const handleCreateBackup = useCallback(() => {
+    navigation.navigate('CreateBackup', { screen: 'Dashboard' });
+  }, [navigation]);
+
+  const handleChangePinCode = useCallback(() => {
     navigation.navigate('PinCodeChange');
   }, [navigation]);
 
-  const handleAppInformation = useCallback(() => {
-    navigation.navigate('AppInformation');
-  }, [navigation]);
-
-  const handleDeleteWallet = useCallback(() => {
-    navigation.navigate('DeleteWallet');
-  }, [navigation]);
-
   const runAfterPinCheck = useExplicitPinCodeCheck();
-  const handleBiometricsChange = useCallback(
+  const handleBiometrics = useCallback(
     (enabled: boolean) => {
       runAfterPinCheck(
         () => {
@@ -112,6 +108,14 @@ const SettingsScreen: FunctionComponent = observer(() => {
     },
     [navigation, runAfterPinCheck, userSettings],
   );
+
+  const handleAppInformation = useCallback(() => {
+    navigation.navigate('AppInformation');
+  }, [navigation]);
+
+  const handleDeleteWallet = useCallback(() => {
+    navigation.navigate('DeleteWallet');
+  }, [navigation]);
 
   return (
     <FeatureScreen
@@ -127,55 +131,63 @@ const SettingsScreen: FunctionComponent = observer(() => {
             color={colorScheme.text}
             size="h1"
           >
-            {translate('wallet.settings.title')}
+            {translate('settings.title')}
           </Typography>
         </TapGestureHandler>
       }
     >
-      <SectionHeader title={translate('wallet.settings.general.title')} />
+      <SectionHeader title={translate('settings.general.title')} />
       <ButtonSetting
         icon={<LanguageIcon />}
         onPress={handleChangeLanguage}
         testID="SettingsScreen.languageChange"
-        title={translate('wallet.settings.general.language')}
+        title={translate('settings.general.language')}
       />
       <ButtonSetting
         icon={<HistoryIcon />}
         onPress={handleHistory}
         testID="SettingsScreen.history"
-        title={translate('wallet.settings.general.history')}
+        title={translate('settings.general.history')}
       />
 
-      <SectionHeader title={translate('wallet.settings.security.title')} />
+      <SectionHeader title={translate('settings.backup.title')} />
+      <ButtonSetting
+        icon={<BackupIcon />}
+        onPress={handleCreateBackup}
+        testID="SettingsScreen.createBackup"
+        title={translate('settings.backup.createBackup')}
+      />
+
+      <SectionHeader title={translate('settings.security.title')} />
       <ButtonSetting
         icon={<PINIcon />}
-        onPress={handlePinCodeChange}
+        onPress={handleChangePinCode}
         testID="SettingsScreen.changePIN"
-        title={translate('wallet.settings.security.pinCode')}
+        title={translate('settings.security.pinCode')}
       />
       {biometry ? (
         <SwitchSetting
           icon={biometry === Biometry.FaceID ? <FaceIDIcon /> : <TouchIDIcon />}
-          onChange={handleBiometricsChange}
-          title={translate('wallet.settings.security.biometrics')}
+          onChange={handleBiometrics}
+          title={translate('settings.security.biometrics')}
           value={userSettings.biometrics}
         />
       ) : null}
 
-      <SectionHeader title={translate('wallet.settings.help.title')} />
+      <SectionHeader title={translate('settings.help.title')} />
       <ButtonSetting
         icon={<InformationIcon />}
         onPress={handleAppInformation}
         testID="SettingsScreen.help"
-        title={translate('wallet.settings.help.information')}
+        title={translate('settings.help.information')}
       />
 
-      <SectionHeader title={translate('wallet.settings.profile.title')} />
+      <SectionHeader title={translate('settings.profile.title')} />
       <ButtonSetting
         icon={<DeleteIcon />}
         onPress={handleDeleteWallet}
         testID="SettingsScreen.deleteWallet"
-        title={translate('wallet.settings.profile.deleteWallet')}
+        title={translate('settings.profile.deleteWallet')}
       />
     </FeatureScreen>
   );
@@ -191,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsScreen;
+export default DashboardScreen;
