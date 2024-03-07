@@ -21,7 +21,7 @@ import {
   CredentialDetailNavigationProp,
   CredentialDetailRouteProp,
 } from '../../navigators/credential-detail/credential-detail-routes';
-import { RootNavigationProp } from '../../navigators/root/root-navigator-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getValidityState, ValidityState } from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {

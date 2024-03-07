@@ -5,7 +5,7 @@ import { hideSplashScreen } from '../../navigators/root/initialRoute';
 import {
   RootNavigationProp,
   RootNavigatorParamList,
-} from '../../navigators/root/root-navigator-routes';
+} from '../../navigators/root/root-routes';
 import { useIsAppActive } from '../../utils/appState';
 import { reportError } from '../../utils/reporting';
 
