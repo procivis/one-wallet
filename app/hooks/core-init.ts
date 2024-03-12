@@ -30,44 +30,66 @@ export const useInitializeONECoreIdentifiers = () => {
         throw err;
       })
       .then(() =>
-        core
-          .generateKey({
-            keyParams: {},
-            keyType: 'ES256',
-            name: 'holder-key',
-            organisationId: ONE_CORE_ORGANISATION_ID,
-            storageParams: {},
-            storageType: 'SECURE_ELEMENT',
-          })
-          .catch(() =>
-            core.generateKey({
+        Promise.all([
+          core
+            .generateKey({
               keyParams: {},
-              keyType: 'EDDSA',
-              name: 'holder-key',
+              keyType: 'ES256',
+              name: 'holder-key-hw',
               organisationId: ONE_CORE_ORGANISATION_ID,
               storageParams: {},
-              storageType: 'INTERNAL',
-            }),
-          ),
+              storageType: 'SECURE_ELEMENT',
+            })
+            // ignore if HW key cannot be created
+            .catch(() => null),
+          core.generateKey({
+            keyParams: {},
+            keyType: 'EDDSA',
+            name: 'holder-key-sw',
+            organisationId: ONE_CORE_ORGANISATION_ID,
+            storageParams: {},
+            storageType: 'INTERNAL',
+          }),
+        ]),
       )
-      .then((keyId) =>
-        core.createDid({
+      .then(async ([hwKeyId, swKeyId]) => {
+        let hwDidId: string | null = null;
+        if (hwKeyId) {
+          hwDidId = await core.createDid({
+            didMethod: 'KEY',
+            didType: DidTypeEnum.LOCAL,
+            keys: {
+              assertionMethod: [hwKeyId],
+              authentication: [hwKeyId],
+              capabilityDelegation: [hwKeyId],
+              capabilityInvocation: [hwKeyId],
+              keyAgreement: [hwKeyId],
+            },
+            name: 'holder-did-hw-key',
+            organisationId: ONE_CORE_ORGANISATION_ID,
+            params: {},
+          });
+        }
+
+        const swDidId = await core.createDid({
           didMethod: 'KEY',
           didType: DidTypeEnum.LOCAL,
           keys: {
-            assertionMethod: [keyId],
-            authentication: [keyId],
-            capabilityDelegation: [keyId],
-            capabilityInvocation: [keyId],
-            keyAgreement: [keyId],
+            assertionMethod: [swKeyId],
+            authentication: [swKeyId],
+            capabilityDelegation: [swKeyId],
+            capabilityInvocation: [swKeyId],
+            keyAgreement: [swKeyId],
           },
-          name: 'holder-did',
+          name: 'holder-did-sw-key',
           organisationId: ONE_CORE_ORGANISATION_ID,
           params: {},
-        }),
-      )
-      .then((holderDidId) => {
-        walletStore.walletSetup(holderDidId);
+        });
+
+        return [hwDidId, swDidId] as const;
+      })
+      .then(([hwDidId, swDidId]) => {
+        walletStore.walletSetup(hwDidId, swDidId);
       })
       .catch((err) => {
         reportException(err, 'Failed to create base identifiers');
