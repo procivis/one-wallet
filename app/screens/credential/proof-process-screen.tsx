@@ -15,6 +15,7 @@ import { Linking } from 'react-native';
 
 import { useProofAccept, useProofDetail } from '../../hooks/proofs';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
 import { reportException } from '../../utils/reporting';
@@ -26,19 +27,24 @@ const ProofProcessScreen: FunctionComponent = () => {
   const [state, setState] = useState(LoadingResultState.InProgress);
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof, refetch: refetchProof } = useProofDetail(proofId);
+  const { walletStore } = useStores();
 
   useBlockOSBackNavigation();
 
   const handleProofSubmit = useCallback(async () => {
     try {
-      await acceptProof({ credentials, interactionId });
+      await acceptProof({
+        credentials,
+        didId: walletStore.holderDidId,
+        interactionId,
+      });
       await refetchProof();
       setState(LoadingResultState.Success);
     } catch (e) {
       reportException(e, 'Submit Proof failure');
       setState(LoadingResultState.Failure);
     }
-  }, [acceptProof, credentials, interactionId, refetchProof]);
+  }, [acceptProof, credentials, interactionId, refetchProof, walletStore]);
 
   useEffect(() => {
     handleProofSubmit();
