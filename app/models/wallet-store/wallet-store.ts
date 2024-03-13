@@ -5,14 +5,25 @@ import { Instance, types } from 'mobx-state-tree';
  */
 export const WalletStoreModel = types
   .model('WalletStore', {
-    holderDidId: types.string,
+    holderDidHwId: types.string,
+    holderDidSwId: types.string,
   })
+  .views((self) => ({
+    /** returns the did with most secure available key backing */
+    get holderDidId() {
+      return self.holderDidHwId ? self.holderDidHwId : self.holderDidSwId;
+    },
+  }))
   .actions((self) => ({
     walletDeleted: () => {
-      self.holderDidId = '';
+      self.holderDidHwId = '';
+      self.holderDidSwId = '';
     },
-    walletSetup: (holderDidId: string) => {
-      self.holderDidId = holderDidId;
+    walletSetup: (holderDidHwId: string | null, holderDidSwId: string) => {
+      if (holderDidHwId) {
+        self.holderDidHwId = holderDidHwId;
+      }
+      self.holderDidSwId = holderDidSwId;
     },
   }));
 
