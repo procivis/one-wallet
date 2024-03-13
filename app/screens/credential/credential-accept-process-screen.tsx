@@ -18,6 +18,7 @@ import {
   useCredentialDetail,
 } from '../../hooks/credentials';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
@@ -34,19 +35,20 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const { mutateAsync: acceptCredential } = useCredentialAccept();
   const { data: credential, refetch: refetchCredential } =
     useCredentialDetail(credentialId);
+  const { walletStore } = useStores();
 
   useBlockOSBackNavigation();
 
   const handleCredentialAccept = useCallback(async () => {
     try {
-      await acceptCredential(interactionId);
+      await acceptCredential({ didId: walletStore.holderDidId, interactionId });
       await refetchCredential();
       setState(LoadingResultState.Success);
     } catch (e) {
       reportException(e, 'Accept credential failure');
       setState(LoadingResultState.Failure);
     }
-  }, [acceptCredential, interactionId, refetchCredential]);
+  }, [acceptCredential, interactionId, refetchCredential, walletStore]);
 
   useEffect(() => {
     handleCredentialAccept();
