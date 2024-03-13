@@ -105,7 +105,15 @@ export const useCredentialAccept = () => {
   const { core } = useONECore();
 
   return useMutation(
-    async (interactionId: string) => core.holderAcceptCredential(interactionId),
+    async ({
+      interactionId,
+      didId,
+      keyId,
+    }: {
+      didId: string;
+      interactionId: string;
+      keyId?: string;
+    }) => core.holderAcceptCredential(interactionId, didId, keyId),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
