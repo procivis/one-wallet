@@ -1,5 +1,6 @@
 import { expect } from 'detox';
 
+import OnboardingSetupScreen from '../page-objects/OnboardingSetupScreen';
 import PinCodeScreen from '../page-objects/PinCodeScreen';
 import PinCodeSetScreen from '../page-objects/PinCodeSetScreen';
 import WalletScreen from '../page-objects/WalletScreen';
@@ -10,6 +11,8 @@ describe('Onboarding', () => {
   });
 
   it('shows PIN init screen', async () => {
+    await expect(OnboardingSetupScreen.screen).toBeVisible();
+    await OnboardingSetupScreen.setupButton.tap();
     await expect(PinCodeScreen.Initialization.screen).toBeVisible();
   });
 
