@@ -125,14 +125,54 @@ export const CredentialSelect: FunctionComponent<{
   );
 
   const revoked = credential?.state === CredentialStateEnum.REVOKED;
+
+  const invalid = useMemo(() => {
+    if (!credential?.lvvcIssuanceDate || !request.validityCredentialNbf) {
+      return false;
+    }
+    return (
+      new Date(credential.lvvcIssuanceDate) <
+      new Date(request.validityCredentialNbf)
+    );
+  }, [credential, request]);
+
   const subtitle = useMemo(() => {
     if (revoked) {
-      return translate('credentialDetail.log.revoke');
+      return translate('proofRequest.revokedCredential.title');
+    }
+    if (invalid) {
+      return translate('proofRequest.invalidCredential.title');
     }
     return credential?.issuanceDate
       ? formatDateTime(new Date(credential.issuanceDate))
       : translate('proofRequest.missingCredential.title');
-  }, [credential, revoked]);
+  }, [credential, invalid, revoked]);
+
+  const subtitleStyle = useMemo(() => {
+    if (!credential || revoked) {
+      return {
+        color: colorScheme.alertText,
+        testID: concatTestID(
+          testID,
+          'subtitle',
+          revoked ? 'revoked' : 'missing',
+        ),
+      };
+    }
+    if (invalid) {
+      return {
+        color: colorScheme.noticeText,
+        testID: concatTestID(testID, 'subtitle', 'invalid'),
+      };
+    }
+  }, [
+    colorScheme.alertText,
+    colorScheme.noticeText,
+    credential,
+    invalid,
+    revoked,
+    testID,
+  ]);
 
   if (isLoading || !config) {
     return null;
@@ -167,18 +207,7 @@ export const CredentialSelect: FunctionComponent<{
           ),
         }}
         subtitle={subtitle}
-        subtitleStyle={
-          !credential || revoked
-            ? {
-                color: colorScheme.alertText,
-                testID: concatTestID(
-                  testID,
-                  'subtitle',
-                  revoked ? 'revoked' : 'missing',
-                ),
-              }
-            : undefined
-        }
+        subtitleStyle={subtitleStyle}
         testID={testID}
         title={name}
         titleStyle={{ testID: concatTestID(testID, 'title', credential?.id) }}
@@ -240,6 +269,20 @@ export const CredentialSelect: FunctionComponent<{
             style={styles.notice}
           >
             {translate('proofRequest.revokedCredential.notice')}
+          </Typography>
+        </View>
+      )}
+      {invalid && (
+        <View
+          style={{ backgroundColor: colorScheme.notice }}
+          testID={concatTestID(testID, 'notice.invalid')}
+        >
+          <Typography
+            align="center"
+            color={colorScheme.noticeText}
+            style={styles.notice}
+          >
+            {translate('proofRequest.invalidCredential.notice')}
           </Typography>
         </View>
       )}
