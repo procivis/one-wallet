@@ -1,3 +1,4 @@
+import OnboardingSetupScreen from '../page-objects/OnboardingSetupScreen';
 import PinCodeScreen from '../page-objects/PinCodeScreen';
 import PinCodeSetScreen from '../page-objects/PinCodeSetScreen';
 
@@ -7,6 +8,7 @@ import PinCodeSetScreen from '../page-objects/PinCodeSetScreen';
 export const CORRECT_PIN_DIGIT = 1;
 
 export async function pinSetup() {
+  await OnboardingSetupScreen.setupButton.tap();
   await PinCodeScreen.Initialization.digit(CORRECT_PIN_DIGIT).multiTap(6);
   await PinCodeScreen.Initialization.digit(CORRECT_PIN_DIGIT).multiTap(6);
   await PinCodeSetScreen.closeButton.tap();
