@@ -13,11 +13,13 @@ const SetupScreen: FC = () => {
       buttons={[
         {
           onPress: () => navigation.navigate('PinCodeInitialization'),
+          testID: 'OnboardingSetupScreen.setup',
           title: translate('onboarding.setup.getStarted'),
         },
         {
           // TODO: navigate to restore from backup screen
           onPress: () => navigation.navigate('PinCodeInitialization'),
+          testID: 'OnboardingSetupScreen.restore',
           title: translate('onboarding.setup.restoreFromBackup'),
         },
       ]}
