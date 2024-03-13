@@ -10,14 +10,12 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import { useCredentialRevocationCheck } from '../../hooks/credentials';
 import { translate, TxKeyPath } from '../../i18n';
-import {
-  CredentialDetailNavigationProp,
-  CredentialDetailRouteProp,
-} from '../../navigators/credential-detail/credential-detail-routes';
+import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialValidityProcessingScreen: FC = () => {
-  const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
+  const navigation = useNavigation<RootNavigationProp>();
   const route = useRoute<CredentialDetailRouteProp<'ValidityProcessing'>>();
   const [state, setState] = useState<
     | LoadingResultState.InProgress
@@ -50,8 +48,8 @@ const CredentialValidityProcessingScreen: FC = () => {
   }, []);
 
   const onClose = useCallback(() => {
-    navigation.navigate('Detail', { credentialId });
-  }, [credentialId, navigation]);
+    navigation.popToTop();
+  }, [navigation]);
 
   const getTranslationKey = useCallback(
     (key: string): TxKeyPath => {
