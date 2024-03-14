@@ -1,4 +1,5 @@
 import {
+  formatDateTime,
   LoadingResult,
   LoadingResultState,
   LoadingResultVariation,
@@ -8,7 +9,11 @@ import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { useCredentialRevocationCheck } from '../../hooks/credentials';
+import {
+  useCredentialDetail,
+  useCredentialRevocationCheck,
+  useInvalidateCredentialDetails,
+} from '../../hooks/credentials';
 import { translate, TxKeyPath } from '../../i18n';
 import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -24,14 +29,21 @@ const CredentialValidityProcessingScreen: FC = () => {
     | LoadingResultState.Error
   >(LoadingResultState.InProgress);
   const { credentialId } = route.params;
+  const { data: credential } = useCredentialDetail(credentialId);
+  const invalidateCredentialDetails = useInvalidateCredentialDetails();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
 
   useBlockOSBackNavigation();
 
-  const handleCredentialRevocationCheck = useCallback(async () => {
+  const handleCredentialValidityCheck = useCallback(async () => {
     try {
       const [{ status }] = await checkRevocation([credentialId]);
-      if (status === CredentialStateEnum.REVOKED) {
+      if (
+        [CredentialStateEnum.REVOKED, CredentialStateEnum.SUSPENDED].includes(
+          status,
+        )
+      ) {
+        await invalidateCredentialDetails(credentialId);
         setState(LoadingResultState.Error);
         return;
       }
@@ -40,10 +52,10 @@ const CredentialValidityProcessingScreen: FC = () => {
       reportException(e, 'Credential revocation check failure');
       setState(LoadingResultState.Failure);
     }
-  }, [checkRevocation, credentialId, setState]);
+  }, [checkRevocation, credentialId, invalidateCredentialDetails, setState]);
 
   useEffect(() => {
-    handleCredentialRevocationCheck();
+    handleCredentialValidityCheck();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,14 +63,32 @@ const CredentialValidityProcessingScreen: FC = () => {
     navigation.popToTop();
   }, [navigation]);
 
-  const getTranslationKey = useCallback(
-    (key: string): TxKeyPath => {
-      if (state === LoadingResultState.Error) {
-        return `credentialValidity.${state}.revoked.${key}` as TxKeyPath;
+  const getTranslation = useCallback(
+    (key: string): string => {
+      if (credential?.state === CredentialStateEnum.SUSPENDED) {
+        if (credential.suspendEndDate) {
+          return translate(
+            `credentialValidity.${state}.suspendedUntil.${key}` as TxKeyPath,
+            {
+              date: formatDateTime(new Date(credential.suspendEndDate)),
+            },
+          );
+        }
+
+        return translate(
+          `credentialValidity.${state}.suspended.${key}` as TxKeyPath,
+        );
       }
-      return `credentialValidity.${state}.${key}` as TxKeyPath;
+
+      if (credential?.state === CredentialStateEnum.REVOKED) {
+        return translate(
+          `credentialValidity.${state}.revoked.${key}` as TxKeyPath,
+        );
+      }
+
+      return translate(`credentialValidity.${state}.${key}` as TxKeyPath);
     },
-    [state],
+    [credential, state],
   );
 
   return (
@@ -67,10 +97,10 @@ const CredentialValidityProcessingScreen: FC = () => {
       inProgressCloseButtonLabel={translate('common.cancel')}
       onClose={onClose}
       state={state}
-      subtitle={translate(getTranslationKey('subtitle'))}
+      subtitle={getTranslation('subtitle')}
       successCloseButtonLabel={translate('common.close')}
       testID="CredentialValidityProcessingScreen"
-      title={translate(getTranslationKey('title'))}
+      title={getTranslation('title')}
       variation={LoadingResultVariation.Neutral}
     />
   );

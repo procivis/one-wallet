@@ -7,6 +7,7 @@ import {
 
 export enum ValidityState {
   Revoked = 'revoked',
+  Suspended = 'suspended',
   Valid = 'valid',
 }
 
@@ -15,6 +16,9 @@ export const getValidityState = (
 ) => {
   if (credential?.state === CredentialStateEnum.REVOKED) {
     return ValidityState.Revoked;
+  }
+  if (credential?.state === CredentialStateEnum.SUSPENDED) {
+    return ValidityState.Suspended;
   }
   return ValidityState.Valid;
 };
