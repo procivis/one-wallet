@@ -20,10 +20,12 @@ const PreviewScreen: FC = () => {
   const { data: backupInfo } = useBackupInfo();
   const nonExportableCredentials = backupInfo?.credentials;
 
-  const exportableCredentials = credentials?.filter((credential) =>
-    nonExportableCredentials?.every(
-      (nonExportableCredential) => nonExportableCredential.id !== credential.id,
-    ),
+  const exportableCredentials = credentials?.filter(
+    (credential) =>
+      !nonExportableCredentials?.find(
+        (nonExportableCredential) =>
+          nonExportableCredential.id === credential.id,
+      ),
   );
 
   return (
