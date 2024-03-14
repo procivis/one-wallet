@@ -179,3 +179,10 @@ export const useCredentialDelete = () => {
     },
   );
 };
+
+export const useInvalidateCredentialDetails = () => {
+  const queryClient = useQueryClient();
+
+  return (credentialId: string | undefined) =>
+    queryClient.invalidateQueries([CREDENTIAL_DETAIL_QUERY_KEY, credentialId]);
+};
