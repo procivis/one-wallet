@@ -5,9 +5,9 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import DocumentPicker from 'react-native-document-picker';
-import { DocumentDirectoryPath, moveFile } from 'react-native-fs';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { DocumentDirectoryPath, unlink } from 'react-native-fs';
+import Share from 'react-native-share';
 
 import { useCreateBackup } from '../../hooks/backup';
 import { translate } from '../../i18n';
@@ -28,14 +28,19 @@ const ProcessingScreen: FC = () => {
     | LoadingResultState.Failure
   >(LoadingResultState.InProgress);
   const { mutateAsync: createBackup } = useCreateBackup();
-  const fileName = useRef<string>(getBackupFileName());
 
   useBlockOSBackNavigation();
+
+  const backupFileName = useMemo(() => getBackupFileName(), []);
+  const backupFilePath = useMemo(
+    () => `${DocumentDirectoryPath}/${backupFileName}`,
+    [backupFileName],
+  );
 
   const handleBackupCreate = useCallback(async () => {
     try {
       await createBackup({
-        outputPath: `${DocumentDirectoryPath}/${fileName.current}`,
+        outputPath: backupFilePath,
         password: recoveryPassword,
       });
       setState(LoadingResultState.Success);
@@ -43,7 +48,7 @@ const ProcessingScreen: FC = () => {
       reportException(e, 'Backup creation failure');
       setState(LoadingResultState.Failure);
     }
-  }, [createBackup, recoveryPassword]);
+  }, [createBackup, recoveryPassword, backupFilePath]);
 
   useEffect(() => {
     handleBackupCreate();
@@ -59,21 +64,21 @@ const ProcessingScreen: FC = () => {
   }, [navigation, state]);
 
   const handleCta = useCallback(async () => {
-    const directory = await DocumentPicker.pickDirectory();
-    if (directory) {
-      try {
-        await moveFile(
-          `${DocumentDirectoryPath}/${fileName.current}`,
-          decodeURIComponent(`${directory.uri}${fileName.current}`),
-        );
-      } catch (e) {
-        reportException(e, 'Backup move failure');
-        setState(LoadingResultState.Failure);
-        return;
+    try {
+      const shareResponse = await Share.open({
+        failOnCancel: false,
+        filename: backupFileName,
+        url: `file://${backupFilePath}`,
+      });
+      if (shareResponse.success) {
+        await unlink(backupFilePath);
+        navigation.navigate('Dashboard');
       }
+    } catch (e) {
+      reportException(e, 'Backup move failure');
+      setState(LoadingResultState.Failure);
     }
-    navigation.navigate('Dashboard');
-  }, [navigation]);
+  }, [navigation, backupFilePath, backupFileName]);
 
   return (
     <LoadingResult
