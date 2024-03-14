@@ -68,6 +68,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         .filter(
           ({ state }) =>
             state === CredentialStateEnum.ACCEPTED ||
+            state === CredentialStateEnum.SUSPENDED ||
             state === CredentialStateEnum.REVOKED,
         ),
     [credentialsData?.pages],
