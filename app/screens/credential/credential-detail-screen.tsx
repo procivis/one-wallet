@@ -35,10 +35,27 @@ const CredentialDetailScreen: FC = () => {
   const { data: credential } = useCredentialDetail(credentialId);
 
   const validityState = getValidityState(credential);
-  const validityStateValueColor =
-    validityState === ValidityState.Revoked
-      ? colorScheme.alertText
-      : colorScheme.text;
+
+  const validityStateValue = useMemo(() => {
+    if (
+      validityState === ValidityState.Suspended &&
+      credential?.suspendEndDate
+    ) {
+      return translate(`credentialDetail.validity.suspendedUntil`, {
+        date: formatDateTime(new Date(credential.suspendEndDate)),
+      });
+    }
+
+    return translate(`credentialDetail.validity.${validityState}`);
+  }, [credential?.suspendEndDate, validityState]);
+
+  const validityStateValueColor = useMemo(
+    () =>
+      [ValidityState.Revoked, ValidityState.Suspended].includes(validityState)
+        ? colorScheme.alertText
+        : colorScheme.text,
+    [colorScheme.alertText, colorScheme.text, validityState],
+  );
 
   const isRevokable = useMemo(
     () =>
@@ -171,14 +188,12 @@ const CredentialDetailScreen: FC = () => {
           attribute={translate('credentialDetail.credential.revocationMethod')}
           value={credential.schema.revocationMethod}
         />
-        {validityState && (
-          <DataItem
-            attribute={translate('credentialDetail.credential.status')}
-            testID="CredentialDetailScreen.status"
-            value={translate(`credentialDetail.validity.${validityState}`)}
-            valueColor={validityStateValueColor}
-          />
-        )}
+        <DataItem
+          attribute={translate('credentialDetail.credential.status')}
+          testID="CredentialDetailScreen.status"
+          value={validityStateValue}
+          valueColor={validityStateValueColor}
+        />
       </Section>
       <Section title={translate('credentialDetail.attributes.title')}>
         {credential.claims.map((claim, index, { length }) => (
@@ -200,6 +215,15 @@ const CredentialDetailScreen: FC = () => {
             subtitle={formatDateTime(new Date(credential.lvvcIssuanceDate))}
             testID="CredentialDetailScreen.log.validityUpdated"
             title={translate('credentialDetail.log.validityUpdated')}
+          />
+        )}
+        {validityState === ValidityState.Suspended && (
+          <ListItem
+            rightAccessory={null}
+            style={styles.logItem}
+            subtitle={formatDateTime(new Date(credential.lastModified))}
+            testID="CredentialDetailScreen.log.suspended"
+            title={translate('credentialDetail.log.suspended')}
           />
         )}
         {credential.revocationDate && (
