@@ -1,7 +1,4 @@
-import {
-  FlatListView,
-  formatDateTime,
-} from '@procivis/react-native-components';
+import { FlatListView } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
@@ -13,12 +10,8 @@ import { CreateBackupNavigationProp } from '../../navigators/create-backup/creat
 
 const DashboardScreen: FC = () => {
   const navigation = useNavigation<CreateBackupNavigationProp<'Dashboard'>>();
-
   // TODO: replace with real data
-  const lastBackup = {
-    subtitle: formatDateTime(new Date()),
-    title: translate('createBackup.dashboard.backupCreated'),
-  };
+  const lastBackupItems: any[] = [];
 
   return (
     <BackupScreen
@@ -36,7 +29,7 @@ const DashboardScreen: FC = () => {
         <FlatListView
           emptyListSubtitle={translate('createBackup.dashboard.empty.subtitle')}
           emptyListTitle={translate('createBackup.dashboard.empty.title')}
-          items={[lastBackup]}
+          items={lastBackupItems}
           style={styles.noHorizontalPadding}
         />
       </Section>
