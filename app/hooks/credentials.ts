@@ -11,7 +11,6 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { useStores } from '../models';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 import { CREDENTIAL_SCHEMA_LIST_QUERY_KEY } from './credential-schemas';
@@ -39,6 +38,7 @@ export const useCredentials = () => {
           values.filter(
             ({ state }) =>
               state === CredentialStateEnum.ACCEPTED ||
+              state === CredentialStateEnum.SUSPENDED ||
               state === CredentialStateEnum.REVOKED,
           ),
         ),
@@ -82,12 +82,11 @@ export const useCredentialDetail = (credentialId: string | undefined) => {
 
 export const useInvitationHandler = () => {
   const queryClient = useQueryClient();
-  const { walletStore } = useStores();
   const { core } = useONECore();
 
   return useMutation(
     async (invitationUrl: string) =>
-      core.handleInvitation(invitationUrl, walletStore.holderDidId),
+      core.handleInvitation(invitationUrl, ONE_CORE_ORGANISATION_ID),
     {
       onSuccess: (result: InvitationResult) => {
         if ('credentialIds' in result) {
