@@ -14,7 +14,6 @@ export const useBackupInfo = () => {
 };
 
 export const useCreateBackup = () => {
-  const queryClient = useQueryClient();
   const { core } = useONECore();
 
   return useMutation(
@@ -31,10 +30,50 @@ export const useCreateBackup = () => {
         }
         throw e;
       }),
+  );
+};
+
+export const useUnpackBackup = () => {
+  const { core } = useONECore();
+
+  return useMutation(
+    async ({ password, inputPath }: { inputPath: string; password: string }) =>
+      core.unpackBackup(password, inputPath).catch((e) => {
+        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+          return;
+        }
+        throw e;
+      }),
+  );
+};
+
+export const useFinalizeImport = () => {
+  const queryClient = useQueryClient();
+  const { core } = useONECore();
+
+  return useMutation(
+    async () =>
+      core.finalizeImport().catch((e) => {
+        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+          return;
+        }
+        throw e;
+      }),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(BACKUP_INFO_QUERY_KEY);
-      },
+      onSuccess: () => queryClient.resetQueries(),
     },
+  );
+};
+
+export const useRollbackImport = () => {
+  const { core } = useONECore();
+
+  return useMutation(async () =>
+    core.rollbackImport().catch((e) => {
+      if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+        return;
+      }
+      throw e;
+    }),
   );
 };

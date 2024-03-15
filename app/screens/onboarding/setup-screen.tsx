@@ -4,9 +4,11 @@ import React, { FC } from 'react';
 
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const SetupScreen: FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'Setup'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
 
   return (
     <ConsentScreen
@@ -17,15 +19,19 @@ const SetupScreen: FC = () => {
           title: translate('onboarding.setup.getStarted'),
         },
         {
-          // TODO: navigate to restore from backup screen
-          onPress: () => navigation.navigate('PinCodeInitialization'),
+          onPress: () =>
+            rootNavigation.navigate('Settings', {
+              params: {
+                screen: 'Dashboard',
+              },
+              screen: 'RestoreBackup',
+            }),
           testID: 'OnboardingSetupScreen.restore',
           title: translate('onboarding.setup.restoreFromBackup'),
         },
       ]}
       description={translate('onboarding.setup.description')}
       illustration={{
-        // TODO: replace with actual illustration
         imageSource: require('./assets/setup-illustration.png'),
       }}
       testID="OnboardingSetupScreen"
