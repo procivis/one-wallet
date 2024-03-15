@@ -232,7 +232,7 @@ const CredentialDetailScreen: FC = () => {
             style={styles.logItem}
             subtitle={formatDateTime(new Date(credential.revocationDate))}
             testID="CredentialDetailScreen.log.revoked"
-            title={translate('credentialDetail.log.revoke')}
+            title={translate('credentialDetail.log.revoked')}
           />
         )}
         <ListItem
@@ -240,7 +240,7 @@ const CredentialDetailScreen: FC = () => {
           style={styles.logItem}
           subtitle={formatDateTime(new Date(credential.issuanceDate))}
           testID="CredentialDetailScreen.log.issued"
-          title={translate('credentialDetail.log.issue')}
+          title={translate('credentialDetail.log.issued')}
         />
       </Section>
     </DetailScreen>
