@@ -67,6 +67,7 @@ const CredentialOfferDetailScreen: FunctionComponent = () => {
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
 
+  const keyStorageType = credential?.schema.walletStorageType;
   return credential ? (
     <DetailScreen
       onBack={navigation.goBack}
@@ -83,6 +84,12 @@ const CredentialOfferDetailScreen: FunctionComponent = () => {
           attribute={translate('credentialDetail.credential.format')}
           value={credential.schema.format}
         />
+        {keyStorageType && (
+          <DataItem
+            attribute={translate('credentialDetail.credential.keyStorageType')}
+            value={translate(`keyStorageType.${keyStorageType}`)}
+          />
+        )}
         <DataItem
           attribute={translate('credentialDetail.credential.revocationMethod')}
           last={true}
