@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { CreateBackupNavigatorParamList } from '../create-backup/create-backup-routes';
 import { HistoryNavigatorParamList } from '../history/history-routes';
+import { RestoreBackupNavigatorParamList } from '../restore-backup/restore-backup-routes';
 
 export type SettingsNavigatorParamList = {
   AppInformation: undefined;
@@ -15,6 +16,7 @@ export type SettingsNavigatorParamList = {
   History: NavigatorScreenParams<HistoryNavigatorParamList>;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
+  RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
 };
 
 export type SettingsRouteProp<

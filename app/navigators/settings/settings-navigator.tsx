@@ -9,6 +9,7 @@ import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
 import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
 import CreateBackupNavigator from '../create-backup/create-backup-navigator';
 import HistoryNavigator from '../history/history-navigator';
+import RestoreBackupNavigator from '../restore-backup/restore-backup-navigator';
 import { SettingsNavigatorParamList } from './settings-routes';
 
 const Stack = createNativeStackNavigator<SettingsNavigatorParamList>();
@@ -22,6 +23,7 @@ const SettingsNavigator = () => {
       <Stack.Screen component={AppInformationScreen} name="AppInformation" />
       <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
+      <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
       <Stack.Screen component={DashboardScreen} name="Dashboard" />
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
       <Stack.Screen component={HistoryNavigator} name="History" />
