@@ -137,6 +137,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       ({ item, index }) => {
         const credential = item;
         const testID = concatTestID('WalletScreen.credential', credential.id);
+        const suspended = credential.state === CredentialStateEnum.SUSPENDED;
         const revoked = credential.state === CredentialStateEnum.REVOKED;
         const listItemProps: ListItemProps = {
           icon: {
@@ -153,15 +154,30 @@ const WalletScreen: FunctionComponent = observer(() => {
           onPress: () => handleCredentialPress(undefined, index),
           rightAccessory: <NextIcon color={colorScheme.text} />,
           style: styles.listItem,
-          subtitle: revoked
-            ? translate('credentialDetail.log.revoke')
-            : formatDateTime(new Date(credential.issuanceDate)),
-          subtitleStyle: revoked
-            ? {
+          subtitle: (() => {
+            if (suspended) {
+              return translate('credentialDetail.log.suspended');
+            }
+            if (revoked) {
+              return translate('credentialDetail.log.revoked');
+            }
+            return formatDateTime(new Date(credential.issuanceDate));
+          })(),
+          subtitleStyle: (() => {
+            if (suspended) {
+              return {
+                color: colorScheme.alertText,
+                testID: concatTestID(testID, 'suspended'),
+              };
+            }
+            if (revoked) {
+              return {
                 color: colorScheme.alertText,
                 testID: concatTestID(testID, 'revoked'),
-              }
-            : undefined,
+              };
+            }
+            return undefined;
+          })(),
           testID,
           title: credential.schema.name,
         };
