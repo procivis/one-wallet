@@ -34,6 +34,7 @@ export const useCreateBackup = () => {
 };
 
 export const useUnpackBackup = () => {
+  const queryClient = useQueryClient();
   const { core } = useONECore();
 
   return useMutation(
@@ -44,6 +45,9 @@ export const useUnpackBackup = () => {
         }
         throw e;
       }),
+    {
+      onSuccess: () => queryClient.resetQueries(),
+    },
   );
 };
 
@@ -66,14 +70,19 @@ export const useFinalizeImport = () => {
 };
 
 export const useRollbackImport = () => {
+  const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(async () =>
-    core.rollbackImport().catch((e) => {
-      if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
-        return;
-      }
-      throw e;
-    }),
+  return useMutation(
+    async () =>
+      core.rollbackImport().catch((e) => {
+        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+          return;
+        }
+        throw e;
+      }),
+    {
+      onSuccess: () => queryClient.resetQueries(),
+    },
   );
 };
