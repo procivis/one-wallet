@@ -91,6 +91,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
     navigation.navigate('CreateBackup', { screen: 'Dashboard' });
   }, [navigation]);
 
+  const handleRestoreBackup = useCallback(() => {
+    navigation.navigate('RestoreBackup', { screen: 'Dashboard' });
+  }, [navigation]);
+
   const handleChangePinCode = useCallback(() => {
     navigation.navigate('PinCodeChange');
   }, [navigation]);
@@ -156,6 +160,12 @@ const DashboardScreen: FunctionComponent = observer(() => {
         onPress={handleCreateBackup}
         testID="SettingsScreen.createBackup"
         title={translate('settings.backup.createBackup')}
+      />
+      <ButtonSetting
+        icon={<BackupIcon />}
+        onPress={handleRestoreBackup}
+        testID="SettingsScreen.restoreBackup"
+        title={translate('settings.backup.restoreBackup')}
       />
 
       <SectionHeader title={translate('settings.security.title')} />
