@@ -92,7 +92,12 @@ const WalletScreen: FunctionComponent = observer(() => {
       revocationCheckPerformedForPage.current = page;
       checkRevocation(
         credentialsData.pages[page].values
-          .filter(({ state }) => state === CredentialStateEnum.ACCEPTED)
+          .filter(({ state }) =>
+            [
+              CredentialStateEnum.ACCEPTED,
+              CredentialStateEnum.SUSPENDED,
+            ].includes(state),
+          )
           .map(({ id }) => id),
       ).catch((e) => reportException(e, 'Revocation check failed'));
     }
