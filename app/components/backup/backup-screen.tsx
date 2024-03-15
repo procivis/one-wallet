@@ -19,6 +19,7 @@ type BackupScreenProps = PropsWithChildren<{
   cta: string;
   description: string;
   isCtaDisabled?: boolean;
+  onBack?: () => void;
   onCta: () => void;
   screenTitle: string;
   testID: string;
@@ -30,19 +31,23 @@ const BackupScreen: FC<BackupScreenProps> = ({
   cta,
   description,
   isCtaDisabled,
+  onBack,
   onCta,
   screenTitle,
   testID,
   title,
 }) => {
   const colorScheme = useAppColorScheme();
-  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const navigation = useNavigation<RootNavigationProp<'Settings'>>();
+
+  const handleBack = () => {
+    onBack?.();
+    navigation.goBack();
+  };
 
   return (
     <DetailScreen
-      onBack={() =>
-        rootNavigation.navigate('Settings', { screen: 'Dashboard' })
-      }
+      onBack={handleBack}
       style={styles.container}
       testID={testID}
       title={screenTitle}
