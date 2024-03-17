@@ -31,7 +31,7 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
     "@procivis/react-native-components": "0.1.18",
-    "@procivis/react-native-one-core": "1.0.15564",
+    "@procivis/react-native-one-core": "1.15651.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native/normalize-color": "^2.0.0",
