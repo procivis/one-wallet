@@ -26,7 +26,7 @@ type BackupScreenProps = PropsWithChildren<{
   title: string;
 }>;
 
-const BackupScreen: FC<BackupScreenProps> = ({
+export const BackupScreen: FC<BackupScreenProps> = ({
   children,
   cta,
   description,
@@ -91,5 +91,3 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 });
-
-export default BackupScreen;
