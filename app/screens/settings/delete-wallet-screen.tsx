@@ -51,7 +51,7 @@ const DeletionConfirmScreen: FunctionComponent = () => {
       reportException(e, 'Failed to remove PIN');
     }
 
-    await queryClient.invalidateQueries();
+    await queryClient.resetQueries();
     walletStore.walletDeleted();
 
     navigation.popToTop();
