@@ -38,6 +38,7 @@ const DashboardScreen: FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
     entityTypes: [
+      HistoryEntityTypeEnum.BACKUP,
       HistoryEntityTypeEnum.CREDENTIAL,
       HistoryEntityTypeEnum.PROOF,
     ],
@@ -69,9 +70,13 @@ const DashboardScreen: FC = () => {
       const data: ListItemProps[] = section.entries.map((entry, index) => ({
         rightAccessory: <NextIcon color={colorScheme.text} />,
         style: styles.entry,
-        subtitle: `${formatTimestamp(new Date(entry.createdDate))} - ${
-          entry.did
-        }`,
+        subtitle: (() => {
+          const createdDate = formatTimestamp(new Date(entry.createdDate));
+          if (entry.did) {
+            return `${createdDate} - ${entry.did}`;
+          }
+          return createdDate;
+        })(),
         subtitleStyle: {
           ellipsizeMode: 'middle',
         },
