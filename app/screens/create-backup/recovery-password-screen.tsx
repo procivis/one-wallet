@@ -2,7 +2,7 @@ import { Input } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 
-import BackupScreen from '../../components/backup/backup-screen';
+import { BackupScreen } from '../../components/backup/backup-screen';
 import { translate } from '../../i18n';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
 
