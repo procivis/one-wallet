@@ -1,8 +1,4 @@
-import {
-  DidTypeEnum,
-  OneError,
-  OneErrorCode,
-} from '@procivis/react-native-one-core';
+import { OneError, OneErrorCode } from '@procivis/react-native-one-core';
 import { useCallback } from 'react';
 
 import { useStores } from '../models';
@@ -57,7 +53,6 @@ export const useInitializeONECoreIdentifiers = () => {
         if (hwKeyId) {
           hwDidId = await core.createDid({
             didMethod: 'KEY',
-            didType: DidTypeEnum.LOCAL,
             keys: {
               assertionMethod: [hwKeyId],
               authentication: [hwKeyId],
@@ -73,7 +68,6 @@ export const useInitializeONECoreIdentifiers = () => {
 
         const swDidId = await core.createDid({
           didMethod: 'KEY',
-          didType: DidTypeEnum.LOCAL,
           keys: {
             assertionMethod: [swKeyId],
             authentication: [swKeyId],
