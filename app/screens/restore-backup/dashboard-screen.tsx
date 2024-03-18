@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { FC } from 'react';
 
-import BackupScreen from '../../components/backup/backup-screen';
+import { BackupScreen } from '../../components/backup/backup-screen';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 
