@@ -6,7 +6,7 @@ import DocumentPicker, {
 } from 'react-native-document-picker';
 import { DocumentDirectoryPath, moveFile } from 'react-native-fs';
 
-import BackupScreen from '../../components/backup/backup-screen';
+import { BackupScreen } from '../../components/backup/backup-screen';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';
