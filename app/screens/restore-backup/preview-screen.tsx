@@ -3,9 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import BackupScreen from '../../components/backup/backup-screen';
-import { Section } from '../../components/common/section';
-import { Credential } from '../../components/credential/credential';
+import { BackupScreen } from '../../components/backup/backup-screen';
+import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { useRollbackImport } from '../../hooks/backup';
 import { useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
@@ -38,22 +37,11 @@ const PreviewScreen: FC = () => {
       title={translate('restoreBackup.preview.title')}
     >
       <View style={styles.content}>
-        <Section
-          style={styles.credentials}
-          title={translate('createBackup.preview.backedUp')}
-        >
-          {credentials?.map((credential, index) => (
-            <View
-              key={credential.id}
-              style={[
-                styles.credential,
-                index === credentials.length - 1 && styles.credentialLast,
-              ]}
-            >
-              <Credential credentialId={credential.id} key={credential.id} />
-            </View>
-          ))}
-        </Section>
+        <PreviewCredentials
+          credentials={credentials}
+          fullWidth
+          title={translate('restoreBackup.preview.backedUp')}
+        />
 
         <Checkbox
           onValueChanged={setIsConsentChecked}
@@ -72,16 +60,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     marginBottom: 24,
-  },
-  credential: {
-    marginBottom: 12,
-  },
-  credentialLast: {
-    marginBottom: 0,
-  },
-  credentials: {
-    marginBottom: 0,
-    paddingHorizontal: 0,
   },
 });
 

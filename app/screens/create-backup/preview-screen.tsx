@@ -1,10 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
 
-import BackupScreen from '../../components/backup/backup-screen';
-import { Section } from '../../components/common/section';
-import { Credential } from '../../components/credential/credential';
+import { BackupScreen } from '../../components/backup/backup-screen';
+import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { useBackupInfo } from '../../hooks/backup';
 import { useCredentials } from '../../hooks/credentials';
 import { translate } from '../../i18n';
@@ -37,52 +35,19 @@ const PreviewScreen: FC = () => {
       testID="CreateBackupPreviewScreen"
       title={translate('createBackup.preview.title')}
     >
-      {exportableCredentials && exportableCredentials.length > 0 && (
-        <Section
-          style={styles.credentials}
-          title={translate('createBackup.preview.backedUp')}
-        >
-          {exportableCredentials?.map((credential, index) => (
-            <View
-              key={credential.id}
-              style={[styles.credential, index === 0 && styles.credentialFirst]}
-            >
-              <Credential credentialId={credential.id} key={credential.id} />
-            </View>
-          ))}
-        </Section>
-      )}
+      <PreviewCredentials
+        credentials={exportableCredentials}
+        fullWidth
+        title={translate('createBackup.preview.backedUp')}
+      />
 
-      {nonExportableCredentials && nonExportableCredentials.length > 0 && (
-        <Section
-          style={styles.credentials}
-          title={translate('createBackup.preview.notBackedUp')}
-        >
-          {backupInfo?.credentials.map((credential, index) => (
-            <View
-              key={credential.id}
-              style={[styles.credential, index === 0 && styles.credentialFirst]}
-            >
-              <Credential credentialId={credential.id} />
-            </View>
-          ))}
-        </Section>
-      )}
+      <PreviewCredentials
+        credentials={nonExportableCredentials}
+        fullWidth
+        title={translate('createBackup.preview.notBackedUp')}
+      />
     </BackupScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  credential: {
-    marginTop: 12,
-  },
-  credentialFirst: {
-    marginTop: 0,
-  },
-  credentials: {
-    marginBottom: 0,
-    paddingHorizontal: 0,
-  },
-});
 
 export default PreviewScreen;

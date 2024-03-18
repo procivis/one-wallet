@@ -3,7 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import { unlink } from 'react-native-fs';
 
-import BackupScreen from '../../components/backup/backup-screen';
+import { BackupScreen } from '../../components/backup/backup-screen';
 import { useUnpackBackup } from '../../hooks/backup';
 import { translate } from '../../i18n';
 import {

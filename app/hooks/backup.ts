@@ -2,6 +2,7 @@ import { OneError, OneErrorCode } from '@procivis/react-native-one-core';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { useONECore } from './core-context';
+import { HISTORY_LIST_QUERY_KEY } from './history';
 
 const BACKUP_INFO_QUERY_KEY = 'backup-info';
 
@@ -14,6 +15,7 @@ export const useBackupInfo = () => {
 };
 
 export const useCreateBackup = () => {
+  const queryClient = useQueryClient();
   const { core } = useONECore();
 
   return useMutation(
@@ -30,6 +32,9 @@ export const useCreateBackup = () => {
         }
         throw e;
       }),
+    {
+      onSuccess: () => queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY),
+    },
   );
 };
 

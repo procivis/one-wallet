@@ -10,6 +10,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
 import { Credential } from '../../components/credential/credential';
@@ -32,6 +33,7 @@ const DetailScreen: FC = () => {
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
+  const { metadata: backupInfo } = entry;
   const { data: credential } = useCredentialDetail(
     entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
       ? entry.entityId
@@ -93,6 +95,13 @@ const DetailScreen: FC = () => {
           valueColor={actionValueColor}
         />
       </Section>
+
+      {backupInfo && (
+        <PreviewCredentials
+          credentials={backupInfo.credentials}
+          title={translate('historyDetail.backedUp')}
+        />
+      )}
 
       {credential && (
         <Section title={translate('historyDetail.credential')}>

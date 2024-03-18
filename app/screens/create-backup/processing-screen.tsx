@@ -78,7 +78,7 @@ const ProcessingScreen: FC = () => {
       reportException(e, 'Backup move failure');
       setState(LoadingResultState.Failure);
     }
-  }, [navigation, backupFilePath, backupFileName]);
+  }, [backupFileName, backupFilePath, navigation]);
 
   return (
     <LoadingResult
