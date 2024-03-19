@@ -1,4 +1,5 @@
 import {
+  CredentialCard,
   formatDateTime,
   Header,
   OptionsIcon,
@@ -9,10 +10,8 @@ import {
   ActivityIndicator,
   concatTestID,
   EmptyListView,
-  ListItem,
-  ListItemProps,
   ListSectionHeader,
-  TextAvatar,
+  TouchableOpacity,
   useAppColorScheme as useAppColorScheme__OLD,
 } from '@procivis/react-native-components';
 import {
@@ -34,15 +33,13 @@ import React, {
 import {
   ActivityIndicator as LoadingIndicator,
   SectionList,
-  SectionListProps,
+  SectionListRenderItemInfo,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { NextIcon } from '../../components/icon/common-icon';
 import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
@@ -134,8 +131,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   );
 
   const handleCredentialPress = useCallback(
-    (_, index: number) => {
-      const credentialId = credentials?.[index]?.id;
+    (credentialId: string) => {
       if (credentialId) {
         navigation.navigate('CredentialDetail', {
           params: { credentialId },
@@ -143,92 +139,56 @@ const WalletScreen: FunctionComponent = observer(() => {
         });
       }
     },
-    [credentials, navigation],
+    [navigation],
   );
 
   const handleScanPress = useCallback(() => {
     navigation.navigate('Dashboard', { screen: 'QRCodeScanner' });
   }, [navigation]);
 
-  const renderTitle: SectionListProps<CredentialListItem>['renderSectionHeader'] =
-    useCallback(
-      () => (
-        <View
-          style={[styles.titleWrapper, { backgroundColor: colorScheme.white }]}
+  const renderItem = useCallback(
+    ({
+      item,
+      index,
+      section,
+    }: SectionListRenderItemInfo<CredentialListItem>) => {
+      const credential = item;
+      const testID = concatTestID('WalletScreen.credential', credential.id);
+      let credentialDetail;
+      switch (credential.state) {
+        case CredentialStateEnum.SUSPENDED:
+          credentialDetail = translate('credentialDetail.log.suspended');
+          break;
+        case CredentialStateEnum.REVOKED:
+          credentialDetail = translate('credentialDetail.log.revoked');
+          break;
+        default:
+          credentialDetail =
+            formatDateTime(new Date(credential.issuanceDate)) ?? '';
+          break;
+      }
+      return (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => handleCredentialPress(credential.id)}
+          style={[
+            styles.listItem,
+            index === section.data.length - 1 ? styles.listItemLast : undefined,
+          ]}
         >
-          <ListSectionHeader
-            title={translate('wallet.credentialsList.title', {
-              credentialsCount: credentials?.length,
-            })}
-            titleStyle={styles.title}
+          <CredentialCard
+            header={{
+              credentialDetail,
+              credentialName: credential.schema.name,
+            }}
+            style={styles.card}
+            testID={testID}
           />
-        </View>
-      ),
-      [colorScheme.white, credentials?.length],
-    );
-
-  const renderItem: SectionListProps<CredentialListItem>['renderItem'] =
-    useCallback(
-      ({ item, index }) => {
-        const credential = item;
-        const testID = concatTestID('WalletScreen.credential', credential.id);
-        const suspended = credential.state === CredentialStateEnum.SUSPENDED;
-        const revoked = credential.state === CredentialStateEnum.REVOKED;
-        const listItemProps: ListItemProps = {
-          icon: {
-            component: (
-              <TextAvatar
-                innerSize={48}
-                produceInitials={true}
-                shape="rect"
-                text={credential.schema.name}
-              />
-            ),
-          },
-          iconStyle: styles.itemIcon,
-          onPress: () => handleCredentialPress(undefined, index),
-          rightAccessory: <NextIcon color={colorScheme.text} />,
-          style: styles.listItem,
-          subtitle: (() => {
-            if (suspended) {
-              return translate('credentialDetail.log.suspended');
-            }
-            if (revoked) {
-              return translate('credentialDetail.log.revoked');
-            }
-            return formatDateTime(new Date(credential.issuanceDate));
-          })(),
-          subtitleStyle: (() => {
-            if (suspended) {
-              return {
-                color: colorScheme__OLD.alertText,
-                testID: concatTestID(testID, 'suspended'),
-              };
-            }
-            if (revoked) {
-              return {
-                color: colorScheme__OLD.alertText,
-                testID: concatTestID(testID, 'revoked'),
-              };
-            }
-            return undefined;
-          })(),
-          testID,
-          title: credential.schema.name,
-        };
-        return (
-          <View style={{ backgroundColor: colorScheme.white }}>
-            <ListItem {...listItemProps} />
-          </View>
-        );
-      },
-      [
-        colorScheme__OLD.alertText,
-        colorScheme.text,
-        colorScheme.white,
-        handleCredentialPress,
-      ],
-    );
+        </TouchableOpacity>
+      );
+    },
+    [handleCredentialPress],
+  );
 
   const containerStyle: ViewStyle = {
     flex: !credentials ? 1 : undefined,
@@ -269,12 +229,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         }
         ListFooterComponent={
           credentials && credentials.length > 0 ? (
-            <View
-              style={[
-                styles.footer,
-                { backgroundColor: colorScheme__OLD.white },
-              ]}
-            >
+            <View style={styles.footer}>
               {hasNextPage && (
                 <LoadingIndicator
                   color={colorScheme__OLD.accent}
@@ -313,7 +268,6 @@ const WalletScreen: FunctionComponent = observer(() => {
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.1}
         renderItem={renderItem}
-        renderSectionHeader={renderTitle}
         sections={
           credentials && credentials.length > 0 ? [{ data: credentials }] : []
         }
@@ -334,6 +288,10 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
+  card: {
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
   empty: {
     borderRadius: 20,
   },
@@ -341,8 +299,6 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   footer: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
     minHeight: 20,
   },
   header: {
@@ -359,9 +315,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   listItem: {
-    paddingBottom: 8,
-    paddingHorizontal: 24,
-    paddingTop: 8,
+    height: 60,
+    marginBottom: 8,
+  },
+  listItemLast: {
+    height: 'auto',
   },
   loadingIndicator: {
     height: '100%',
