@@ -1,6 +1,5 @@
 import {
   CredentialCard,
-  formatDateTime,
   Header,
   OptionsIcon,
   ScanButton,
@@ -40,6 +39,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { cardFromCredentialListItem } from '../../components/credential/parsers';
 import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
@@ -154,19 +154,6 @@ const WalletScreen: FunctionComponent = observer(() => {
     }: SectionListRenderItemInfo<CredentialListItem>) => {
       const credential = item;
       const testID = concatTestID('WalletScreen.credential', credential.id);
-      let credentialDetail;
-      switch (credential.state) {
-        case CredentialStateEnum.SUSPENDED:
-          credentialDetail = translate('credentialDetail.log.suspended');
-          break;
-        case CredentialStateEnum.REVOKED:
-          credentialDetail = translate('credentialDetail.log.revoked');
-          break;
-        default:
-          credentialDetail =
-            formatDateTime(new Date(credential.issuanceDate)) ?? '';
-          break;
-      }
       return (
         <TouchableOpacity
           activeOpacity={1}
@@ -177,11 +164,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           ]}
         >
           <CredentialCard
-            header={{
-              credentialDetail,
-              credentialName: credential.schema.name,
-            }}
-            style={styles.card}
+            {...cardFromCredentialListItem(credential)}
             testID={testID}
           />
         </TouchableOpacity>
@@ -287,10 +270,6 @@ const WalletScreen: FunctionComponent = observer(() => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-  },
-  card: {
-    borderRadius: 10,
-    overflow: 'hidden',
   },
   empty: {
     borderRadius: 20,
