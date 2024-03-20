@@ -1,20 +1,20 @@
+import { CredentialDetailsCard } from '@procivis/one-react-native-components';
 import {
-  Accordion,
   ActivityIndicator,
   SharingScreen,
   SharingScreenVariation,
-  TextAvatar,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback } from 'react';
-import { Insets, StyleSheet, View } from 'react-native';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import { ImageSourcePropType, Insets, StyleSheet, View } from 'react-native';
 
-import { Claim } from '../../components/credential/claim';
+import { detailsCardFromCredential } from '../../components/credential/parsers';
 import { HelpIcon } from '../../components/icon/navigation-icon';
+import { useCoreConfig } from '../../hooks/core-config';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -42,9 +42,15 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
+  const [expanded, setExpanded] = useState(true);
 
   useBlockOSBackNavigation();
+
+  const onHeaderPress = useCallback(() => {
+    setExpanded((oldValue) => !oldValue);
+  }, []);
 
   const onIssuerDetail = useCallback(() => {
     issuanceNavigation.navigate('CredentialOfferDetail', { credentialId });
@@ -61,7 +67,23 @@ const CredentialOfferScreen: FunctionComponent = () => {
     issuanceNavigation.navigate('Processing', { credentialId, interactionId });
   }, [credentialId, interactionId, issuanceNavigation]);
 
-  return credential ? (
+  const onImagePreview = useCallback(
+    (title: string, image: ImageSourcePropType) => {
+      rootNavigation.navigate('ImagePreview', {
+        image,
+        title,
+      });
+    },
+    [rootNavigation],
+  );
+
+  if (!credential) {
+    return <ActivityIndicator />;
+  }
+
+  const { card, attributes } = detailsCardFromCredential(credential, config);
+
+  return (
     <SharingScreen
       cancelLabel={translate('credentialOffer.reject')}
       contentTitle={translate('credentialOffer.credential')}
@@ -106,35 +128,20 @@ const CredentialOfferScreen: FunctionComponent = () => {
       title={translate('credentialOffer.title')}
       variation={SharingScreenVariation.Neutral}
     >
-      <Accordion
-        icon={{
-          component: (
-            <TextAvatar
-              innerSize={48}
-              produceInitials={true}
-              shape="rect"
-              text={credential.schema.name}
-            />
-          ),
+      <CredentialDetailsCard
+        attributes={attributes}
+        card={{
+          ...card,
+          onHeaderPress,
         }}
-        title={credential.schema.name}
-      >
-        <View style={styles.claims}>
-          {credential.claims.map((claim, index, { length }) => (
-            <Claim claim={claim} key={claim.id} last={length === index + 1} />
-          ))}
-        </View>
-      </Accordion>
+        expanded={expanded}
+        onImagePreview={onImagePreview}
+      />
     </SharingScreen>
-  ) : (
-    <ActivityIndicator />
   );
 };
 
 const styles = StyleSheet.create({
-  claims: {
-    paddingBottom: 12,
-  },
   detailButton: {
     borderRadius: 12,
     height: 24,
