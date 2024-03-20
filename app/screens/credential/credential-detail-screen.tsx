@@ -60,7 +60,8 @@ const CredentialDetailScreen: FC = () => {
   const isRevokable = useMemo(
     () =>
       credential?.schema.revocationMethod !== 'NONE' &&
-      validityState === ValidityState.Valid,
+      (validityState === ValidityState.Valid ||
+        validityState === ValidityState.Suspended),
     [credential?.schema.revocationMethod, validityState],
   );
 

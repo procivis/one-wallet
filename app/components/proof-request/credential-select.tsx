@@ -24,7 +24,11 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { supportsSelectiveDisclosure } from '../../utils/credential';
+import {
+  getValidityState,
+  supportsSelectiveDisclosure,
+  ValidityState,
+} from '../../utils/credential';
 import { Claim } from '../credential/claim';
 import { MissingCredentialIcon } from '../icon/credential-icon';
 import { SelectiveDislosureNotice } from './selective-disclosure-notice';
@@ -39,7 +43,7 @@ interface DisplayedAttribute {
 
 const getDisplayedAttributes = (
   request: PresentationDefinitionRequestedCredential,
-  revoked: boolean,
+  validityState: ValidityState,
   credential?: CredentialDetail,
   selectiveDisclosureSupported?: boolean,
   selectedFields?: string[],
@@ -56,7 +60,7 @@ const getDisplayedAttributes = (
     const selected = selectedFields?.includes(field.id);
     const status = getAttributeSelectorStatus(
       field,
-      revoked,
+      validityState,
       credential,
       selected,
     );
@@ -69,11 +73,11 @@ const getDisplayedAttributes = (
 
 const getAttributeSelectorStatus = (
   field: PresentationDefinitionField,
-  revoked: boolean,
+  validityState: ValidityState,
   credential?: CredentialDetail,
   selected?: boolean,
 ): SelectorStatus => {
-  if (!credential || revoked) {
+  if (!credential || validityState !== ValidityState.Valid) {
     return field.required
       ? SelectorStatus.LockedInvalid
       : SelectorStatus.Invalid;
@@ -124,7 +128,7 @@ export const CredentialSelect: FunctionComponent<{
     [allCredentials, request],
   );
 
-  const revoked = credential?.state === CredentialStateEnum.REVOKED;
+  const validityState = getValidityState(credential);
 
   const invalid = useMemo(() => {
     if (!credential?.lvvcIssuanceDate || !request.validityCredentialNbf) {
@@ -137,8 +141,11 @@ export const CredentialSelect: FunctionComponent<{
   }, [credential, request]);
 
   const subtitle = useMemo(() => {
-    if (revoked) {
+    if (validityState === ValidityState.Revoked) {
       return translate('proofRequest.revokedCredential.title');
+    }
+    if (validityState === ValidityState.Suspended) {
+      return translate('proofRequest.suspendedCredential.title');
     }
     if (invalid) {
       return translate('proofRequest.invalidCredential.title');
@@ -146,17 +153,19 @@ export const CredentialSelect: FunctionComponent<{
     return credential?.issuanceDate
       ? formatDateTime(new Date(credential.issuanceDate))
       : translate('proofRequest.missingCredential.title');
-  }, [credential, invalid, revoked]);
+  }, [credential, invalid, validityState]);
 
   const subtitleStyle = useMemo(() => {
-    if (!credential || revoked) {
+    if (!credential) {
       return {
         color: colorScheme.alertText,
-        testID: concatTestID(
-          testID,
-          'subtitle',
-          revoked ? 'revoked' : 'missing',
-        ),
+        testID: concatTestID(testID, 'subtitle', 'missing'),
+      };
+    }
+    if (validityState !== ValidityState.Valid) {
+      return {
+        color: colorScheme.alertText,
+        testID: concatTestID(testID, 'subtitle', validityState),
       };
     }
     if (invalid) {
@@ -170,7 +179,7 @@ export const CredentialSelect: FunctionComponent<{
     colorScheme.noticeText,
     credential,
     invalid,
-    revoked,
+    validityState,
     testID,
   ]);
 
@@ -214,7 +223,7 @@ export const CredentialSelect: FunctionComponent<{
       >
         {getDisplayedAttributes(
           request,
-          revoked,
+          validityState,
           credential,
           selectiveDisclosureSupported,
           selectedFields,
@@ -258,7 +267,7 @@ export const CredentialSelect: FunctionComponent<{
           </Typography>
         </View>
       )}
-      {revoked && (
+      {validityState === ValidityState.Revoked && (
         <View
           style={{ backgroundColor: colorScheme.alert }}
           testID={concatTestID(testID, 'notice.revoked')}
@@ -269,6 +278,20 @@ export const CredentialSelect: FunctionComponent<{
             style={styles.notice}
           >
             {translate('proofRequest.revokedCredential.notice')}
+          </Typography>
+        </View>
+      )}
+      {validityState === ValidityState.Suspended && (
+        <View
+          style={{ backgroundColor: colorScheme.alert }}
+          testID={concatTestID(testID, 'notice.suspended')}
+        >
+          <Typography
+            align="center"
+            color={colorScheme.alertText}
+            style={styles.notice}
+          >
+            {translate('proofRequest.suspendedCredential.notice')}
           </Typography>
         </View>
       )}
