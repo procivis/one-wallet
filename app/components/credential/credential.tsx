@@ -1,51 +1,64 @@
-import { Accordion, TextAvatar } from '@procivis/react-native-components';
-import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
+import { useNavigation } from '@react-navigation/native';
+import React, { FC, useCallback } from 'react';
+import { ImageSourcePropType, StyleSheet } from 'react-native';
 
+import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
-import { Claim } from './claim';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { detailsCardFromCredential } from './parsers';
 
 interface CredentialProps {
   credentialId: string;
   expanded?: boolean;
+  lastItem?: boolean;
+  onHeaderPress?: (credentialId?: string) => void;
 }
 
 export const Credential: FC<CredentialProps> = ({
   credentialId,
   expanded = false,
+  lastItem,
+  onHeaderPress,
 }) => {
+  const rootNavigation = useNavigation<RootNavigationProp<any>>();
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
 
-  if (!credential) {
+  const onImagePreview = useCallback(
+    (title: string, image: ImageSourcePropType) => {
+      rootNavigation.navigate('ImagePreview', {
+        image,
+        title,
+      });
+    },
+    [rootNavigation],
+  );
+
+  if (!credential || !config) {
     return null;
   }
 
+  const { card, attributes } = detailsCardFromCredential(credential, config);
+
   return (
-    <Accordion
-      icon={{
-        component: (
-          <TextAvatar
-            innerSize={48}
-            produceInitials={true}
-            shape="rect"
-            text={credential.schema.name}
-          />
-        ),
+    <CredentialDetailsCardListItem
+      attributes={attributes}
+      card={{
+        ...card,
+        credentialId,
+        onHeaderPress,
       }}
-      initiallyExpanded={expanded}
-      title={credential.schema.name}
-    >
-      <View style={styles.claims}>
-        {credential.claims.map((claim, index, { length }) => (
-          <Claim claim={claim} key={claim.id} last={length === index + 1} />
-        ))}
-      </View>
-    </Accordion>
+      expanded={expanded}
+      lastItem={lastItem}
+      onImagePreview={onImagePreview}
+      style={styles.credential}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  claims: {
-    paddingBottom: 12,
+  credential: {
+    marginBottom: 8,
   },
 });

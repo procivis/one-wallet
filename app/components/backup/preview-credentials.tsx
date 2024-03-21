@@ -1,5 +1,5 @@
 import { CredentialListItem } from '@procivis/react-native-one-core';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Section } from '../common/section';
@@ -16,6 +16,20 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
   fullWidth = false,
   title,
 }) => {
+  const [expandedCredential, setExpandedCredential] = useState<string>();
+
+  const onHeaderPress = useCallback((credentialId?: string) => {
+    if (!credentialId) {
+      return;
+    }
+    setExpandedCredential((oldValue) => {
+      if (credentialId === oldValue) {
+        return undefined;
+      }
+      return credentialId;
+    });
+  }, []);
+
   if (!credentials || credentials.length === 0) {
     return null;
   }
@@ -25,12 +39,14 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
       style={[styles.credentials, fullWidth && styles.credentialsFullWidth]}
       title={title}
     >
-      {credentials.map((credential, index) => (
-        <View
-          key={credential.id}
-          style={[styles.credential, index === 0 && styles.credentialFirst]}
-        >
-          <Credential credentialId={credential.id} />
+      {credentials.map((credential, index, { length }) => (
+        <View key={credential.id}>
+          <Credential
+            credentialId={credential.id}
+            expanded={expandedCredential === credential.id}
+            lastItem={index === length - 1}
+            onHeaderPress={onHeaderPress}
+          />
         </View>
       ))}
     </Section>
@@ -38,12 +54,6 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
 };
 
 const styles = StyleSheet.create({
-  credential: {
-    marginTop: 12,
-  },
-  credentialFirst: {
-    marginTop: 0,
-  },
   credentials: {
     marginBottom: 0,
   },

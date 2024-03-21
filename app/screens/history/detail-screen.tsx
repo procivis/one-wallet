@@ -7,7 +7,7 @@ import {
   HistoryEntityTypeEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
@@ -44,6 +44,19 @@ const DetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
+  const [expandedCredential, setExpandedCredential] = useState<string>();
+
+  const onCredentialHeaderPress = useCallback((credentialId?: string) => {
+    if (!credentialId) {
+      return;
+    }
+    setExpandedCredential((oldValue) => {
+      if (credentialId === oldValue) {
+        return undefined;
+      }
+      return credentialId;
+    });
+  }, []);
 
   const from = credential?.issuerDid ?? proof?.verifierDid;
   const destructiveActions = [
@@ -104,19 +117,35 @@ const DetailScreen: FC = () => {
       )}
 
       {credential && (
-        <Section title={translate('historyDetail.credential')}>
-          <Credential credentialId={credential.id} expanded />
+        <Section
+          style={styles.credentialSection}
+          title={translate('historyDetail.credential')}
+        >
+          <Credential
+            credentialId={credential.id}
+            expanded={expandedCredential === credential.id}
+            lastItem
+            onHeaderPress={onCredentialHeaderPress}
+          />
         </Section>
       )}
 
       {proof && (
-        <Section title={translate('historyDetail.credential')}>
-          {proof.credentials.map((proofCredential, index) => (
+        <Section
+          style={styles.credentialSection}
+          title={translate('historyDetail.credential')}
+        >
+          {proof.credentials.map((proofCredential, index, { length }) => (
             <View
               key={proofCredential.id}
               style={[styles.credential, index === 0 && styles.credentialFirst]}
             >
-              <Credential credentialId={proofCredential.id} expanded />
+              <Credential
+                credentialId={proofCredential.id}
+                expanded={expandedCredential === proofCredential.id}
+                lastItem={index === length - 1}
+                onHeaderPress={onCredentialHeaderPress}
+              />
             </View>
           ))}
         </Section>
@@ -131,6 +160,11 @@ const styles = StyleSheet.create({
   },
   credentialFirst: {
     marginTop: 0,
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  credentialSection: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
   },
   entityTitle: {
     marginBottom: 0,
