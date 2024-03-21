@@ -62,6 +62,20 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { mutateAsync: rejectProof } = useProofReject();
   const { data: proof } = useProofDetail(proofId);
 
+  const [expandedCredential, setExpandedCredential] = useState<string>();
+
+  const onCredentialHeaderPress = useCallback((credentialId?: string) => {
+    if (!credentialId) {
+      return;
+    }
+    setExpandedCredential((oldValue) => {
+      if (credentialId === oldValue) {
+        return undefined;
+      }
+      return credentialId;
+    });
+  }, []);
+
   const presentationDefinition = useMemoAsync(async () => {
     const definition = await core.getPresentationDefinition(proofId);
 
@@ -258,7 +272,11 @@ const ProofRequestScreen: FunctionComponent = () => {
               (credential, credentialIndex, { length: credentialsLength }) => (
                 <CredentialSelect
                   allCredentials={allCredentials}
+                  credentialId={credential.id}
+                  expanded={expandedCredential === credential.id}
                   key={credential.id}
+                  lastItem={credentialIndex === credentialsLength - 1}
+                  onHeaderPress={onCredentialHeaderPress}
                   onSelectCredential={onSelectCredential(credential.id)}
                   onSelectField={onSelectField(credential.id)}
                   request={credential}
