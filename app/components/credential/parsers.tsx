@@ -4,6 +4,7 @@ import {
   CredentialCardProps,
   CredentialDetailsCardProps,
   CredentialHeaderProps,
+  RequiredAttributeIcon,
 } from '@procivis/one-react-native-components';
 import {
   concatTestID,
@@ -74,7 +75,7 @@ export const cardHeaderFromCredentialListItem = (
 export const cardFromCredentialListItem = (
   credential: CredentialListItem,
   notice?: {
-    notice?: string;
+    notice: string;
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
   },
   testID?: string,
@@ -136,10 +137,12 @@ export const detailsCardFromCredential = (
 export const validityCheckedCardFromCredentialListItem = (
   credential: CredentialListItem,
   invalid: boolean,
-  notice?: {
-    notice?: string;
-    noticeIcon?: React.ComponentType<any> | React.ReactElement;
-  },
+  notice:
+    | {
+        notice: string;
+        noticeIcon?: React.ComponentType<any> | React.ReactElement;
+      }
+    | undefined,
   testID?: string,
 ): Omit<CredentialCardProps, 'onHeaderPress' | 'style' | 'testID'> => {
   let invalidCredentialHeaderDetail;
@@ -165,7 +168,7 @@ export const missingCredentialCardFromRequest = (
   request: PresentationDefinitionRequestedCredential,
   notice:
     | {
-        notice?: string;
+        notice: string;
         noticeIcon?: React.ComponentType<any> | React.ReactElement;
       }
     | undefined,
@@ -315,6 +318,85 @@ export const shareCredentialCardFromCredential = (
       testID: concatTestID(testID, 'claim', `${index}`),
     };
     return attribute;
+  });
+  return {
+    attributes,
+    card,
+  };
+};
+
+export const selectCredentialCardAttributeFromClaim = (
+  id: string,
+  claim?: Claim,
+  field?: PresentationDefinitionField,
+  config?: Config,
+): CredentialAttribute => {
+  const attribute = shareCredentialCardAttributeFromClaim(
+    id,
+    claim,
+    field,
+    config,
+  );
+  if (!claim) {
+    return attribute;
+  }
+  return {
+    ...attribute,
+    rightAccessory: RequiredAttributeIcon,
+  };
+};
+
+export const selectCredentialCardFromCredential = (
+  credential: CredentialDetail,
+  selected: boolean,
+  request: PresentationDefinitionRequestedCredential,
+  config: Config,
+  testID?: string,
+): Omit<CredentialDetailsCardProps, 'expanded'> => {
+  const selectiveDisclosureSupported = supportsSelectiveDisclosure(
+    credential,
+    config,
+  );
+  const rightAccessory = (
+    <Selector
+      status={
+        selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected
+      }
+    />
+  );
+  const notice =
+    selectiveDisclosureSupported === false
+      ? {
+          notice: translate('proofRequest.selectiveDisclosure.notice'),
+          noticeIcon: AlertOutlineIcon,
+        }
+      : undefined;
+  const { header, ...cardProps } = cardFromCredentialListItem(
+    credential,
+    notice,
+    testID,
+  );
+  const card = {
+    header: {
+      ...header,
+      accessory: rightAccessory,
+    },
+    ...cardProps,
+  };
+  const attributes: CredentialAttribute[] = request.fields.map((field) => {
+    const claim = credential.claims.find(
+      ({ key }) => key === field.keyMap[credential.id],
+    );
+    const attribute = selectCredentialCardAttributeFromClaim(
+      field.id,
+      claim,
+      field,
+      config,
+    );
+    return {
+      ...attribute,
+      rightAccessory: RequiredAttributeIcon,
+    };
   });
   return {
     attributes,
