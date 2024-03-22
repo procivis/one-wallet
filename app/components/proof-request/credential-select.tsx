@@ -98,7 +98,7 @@ export const CredentialSelect: FunctionComponent<{
     );
   }, [credential, request]);
 
-  if (isLoading || !credential || !config) {
+  if (isLoading || !config) {
     return null;
   }
 
@@ -196,26 +196,30 @@ export const CredentialSelect: FunctionComponent<{
   );
 
   return (
-    <View style={style}>
-      <CredentialDetailsCardListItem
-        attributes={attributes}
-        card={{
-          ...card,
-          credentialId,
-          onHeaderPress,
-        }}
-        expanded={expanded}
-        footer={footer}
-        lastItem={lastItem}
-        onImagePreview={onImagePreview}
-        style={styles.credential}
-      />
-    </View>
+    <CredentialDetailsCardListItem
+      attributes={attributes}
+      card={{
+        ...card,
+        credentialId,
+        onHeaderPress,
+      }}
+      expanded={expanded}
+      footer={footer}
+      lastItem={lastItem}
+      onImagePreview={onImagePreview}
+      style={[
+        styles.credential,
+        { borderColor: colorScheme.lighterGrey },
+        style,
+      ]}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   credential: {
+    borderRadius: 10,
+    borderWidth: 1,
     marginBottom: 8,
   },
   notice: {
