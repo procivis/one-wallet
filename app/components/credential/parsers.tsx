@@ -3,7 +3,9 @@ import {
   CredentialAttributeItemProps,
   CredentialCardProps,
   CredentialDetailsCardProps,
+  CredentialErrorIcon,
   CredentialHeaderProps,
+  CredentialWarningIcon,
   RequiredAttributeIcon,
 } from '@procivis/one-react-native-components';
 import {
@@ -45,15 +47,18 @@ export const cardHeaderFromCredentialListItem = (
   let credentialDetail;
   let credentialDetailErrorColor;
   let credentialDetailTestID;
+  let statusIcon;
   switch (credential.state) {
     case CredentialStateEnum.SUSPENDED:
       credentialDetail = translate('credentialDetail.log.suspended');
       credentialDetailTestID = concatTestID(testID, 'suspended');
+      statusIcon = CredentialWarningIcon;
       break;
     case CredentialStateEnum.REVOKED:
       credentialDetail = translate('credentialDetail.log.revoked');
       credentialDetailErrorColor = true;
       credentialDetailTestID = concatTestID(testID, 'revoked');
+      statusIcon = CredentialErrorIcon;
       break;
     default:
       credentialDetail =
@@ -68,6 +73,7 @@ export const cardHeaderFromCredentialListItem = (
     credentialName: credential.schema.name,
     icon: undefined,
     iconLabelColor: undefined,
+    statusIcon,
     testID,
   };
 };
