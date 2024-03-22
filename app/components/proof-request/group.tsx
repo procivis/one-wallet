@@ -21,7 +21,9 @@ export const Group: FunctionComponent<
       style={[
         styles.group,
         last && styles.last,
-        { borderColor: colorScheme.lighterGrey },
+        {
+          borderColor: colorScheme.lighterGrey,
+        },
       ]}
     >
       <Typography
