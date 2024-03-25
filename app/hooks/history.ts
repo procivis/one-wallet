@@ -13,21 +13,17 @@ import { ONE_CORE_ORGANISATION_ID } from './core-init';
 const PAGE_SIZE = 20;
 export const HISTORY_LIST_QUERY_KEY = 'history-list';
 
-export const useHistory = (extraQueryParams?: Partial<HistoryListQuery>) => {
+export const useHistory = (queryParams?: Partial<HistoryListQuery>) => {
   const { core } = useONECore();
-
-  const queryParams = {
-    organisationId: ONE_CORE_ORGANISATION_ID,
-    pageSize: PAGE_SIZE,
-    ...extraQueryParams,
-  };
 
   return useInfiniteQuery(
     [HISTORY_LIST_QUERY_KEY, ...getQueryKeyFromListQueryParams(queryParams)],
     async ({ pageParam = 0 }) => {
       const historyPage = await core.getHistory({
-        ...queryParams,
+        organisationId: ONE_CORE_ORGANISATION_ID,
         page: pageParam,
+        pageSize: PAGE_SIZE,
+        ...queryParams,
       });
 
       const credentialIds = Array.from(

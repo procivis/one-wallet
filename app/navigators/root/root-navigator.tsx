@@ -1,4 +1,4 @@
-import { useAppColorScheme } from '@procivis/react-native-components';
+import { useAppColorScheme } from '@procivis/one-react-native-components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
 import { StatusBar } from 'react-native';
@@ -8,12 +8,12 @@ import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
+import DashboardNavigator from '../dashboard/dashboard-navigator';
 import InvitationNavigator from '../invitation/invitation-navigator';
 import IssueCredentialNavigator from '../issue-credential/issue-credential-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
 import ShareCredentialNavigator from '../share-credential/share-credential-navigator';
-import TabsNavigator from '../tabs/tabs-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
 import { RootNavigatorParamList } from './root-routes';
 
@@ -22,7 +22,7 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 const RootNavigator: FunctionComponent = () => {
   const { darkMode } = useAppColorScheme<AppColorScheme>();
   const initialRouteName = useInitialRoute();
-  useAutomaticPinCodeCoverLogic(initialRouteName === 'Tabs');
+  useAutomaticPinCodeCoverLogic(initialRouteName === 'Dashboard');
 
   return initialRouteName ? (
     <>
@@ -47,7 +47,7 @@ const RootNavigator: FunctionComponent = () => {
             options={{ animation: 'fade' }}
           />
           <RootStack.Screen component={OnboardingNavigator} name="Onboarding" />
-          <RootStack.Screen component={TabsNavigator} name="Tabs" />
+          <RootStack.Screen component={DashboardNavigator} name="Dashboard" />
           <RootStack.Screen component={InvitationNavigator} name="Invitation" />
           <RootStack.Screen
             component={IssueCredentialNavigator}
