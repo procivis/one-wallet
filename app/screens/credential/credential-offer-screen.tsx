@@ -54,7 +54,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     rejectCredential(interactionId).catch((e) =>
       reportException(e, 'Reject credential offer failed'),
     );
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [interactionId, rejectCredential, rootNavigation]);
 
   const onAccept = useCallback(() => {

@@ -193,7 +193,7 @@ const ProofRequestScreen: FunctionComponent = () => {
         reportException(err, 'Reject Proof failure');
       }
     });
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [interactionId, rejectProof, rootNavigation]);
 
   const onSubmit = useCallback(() => {

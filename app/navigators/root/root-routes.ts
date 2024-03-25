@@ -2,15 +2,16 @@ import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
+import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
 import { InvitationNavigatorParamList } from '../invitation/invitation-routes';
 import { IssueCredentialNavigatorParamList } from '../issue-credential/issue-credential-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
 import { ShareCredentialNavigatorParamList } from '../share-credential/share-credential-routes';
-import { TabsNavigatorParamList } from '../tabs/tabs-routes';
 
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
+  Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;
   ImagePreview: {
     image: string;
     title: string;
@@ -23,11 +24,10 @@ export type RootNavigatorParamList = {
   };
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
   ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
-  Tabs: NavigatorScreenParams<TabsNavigatorParamList>;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =
   RouteProp<RootNavigatorParamList, RouteName>;
 export type RootNavigationProp<
-  RouteName extends keyof RootNavigatorParamList = 'Tabs',
+  RouteName extends keyof RootNavigatorParamList = 'Dashboard',
 > = NativeStackNavigationProp<RootNavigatorParamList, RouteName>;

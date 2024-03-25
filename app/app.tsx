@@ -15,6 +15,10 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import {
   AccessibilityFocusHistoryProvider,
   ColorSchemeProvider,
+} from '@procivis/one-react-native-components';
+import {
+  AccessibilityFocusHistoryProvider as AccessibilityFocusHistoryProvider___OLD,
+  ColorSchemeProvider as ColorSchemeProvider__OLD,
 } from '@procivis/react-native-components';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
@@ -31,7 +35,12 @@ import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';
 import { ErrorBoundary } from './screens';
-import { AppColorScheme, useFlavorColorScheme } from './theme';
+import {
+  AppColorScheme,
+  AppColorScheme__OLD,
+  useFlavorColorScheme,
+  useFlavorColorScheme__OLD,
+} from './theme';
 import { reportException } from './utils/reporting';
 
 if (!__DEV__) {
@@ -70,6 +79,7 @@ function App() {
       });
   }, []);
 
+  const colorScheme__OLD = useFlavorColorScheme__OLD();
   const colorScheme = useFlavorColorScheme();
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -88,11 +98,19 @@ function App() {
         <ErrorBoundary catchErrors={'always'}>
           <QueryClientProvider client={queryClient}>
             <ActionSheetProvider>
-              <AccessibilityFocusHistoryProvider>
-                <ColorSchemeProvider<AppColorScheme> colorScheme={colorScheme}>
-                  <AppNavigator />
-                </ColorSchemeProvider>
-              </AccessibilityFocusHistoryProvider>
+              <AccessibilityFocusHistoryProvider___OLD>
+                <AccessibilityFocusHistoryProvider>
+                  <ColorSchemeProvider__OLD<AppColorScheme__OLD>
+                    colorScheme={colorScheme__OLD}
+                  >
+                    <ColorSchemeProvider<AppColorScheme>
+                      colorScheme={colorScheme}
+                    >
+                      <AppNavigator />
+                    </ColorSchemeProvider>
+                  </ColorSchemeProvider__OLD>
+                </AccessibilityFocusHistoryProvider>
+              </AccessibilityFocusHistoryProvider___OLD>
             </ActionSheetProvider>
           </QueryClientProvider>
         </ErrorBoundary>
