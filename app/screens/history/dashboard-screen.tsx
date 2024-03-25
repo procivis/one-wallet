@@ -35,7 +35,7 @@ const DashboardScreen: FC = () => {
   const { bottom: bottomInset } = useSafeAreaInsets();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
     entityTypes: [
       HistoryEntityTypeEnum.BACKUP,
@@ -124,17 +124,17 @@ const DashboardScreen: FC = () => {
     [queryParams],
   );
 
-  const handleSearchTextChange = debounce(setQueryParams, 500);
+  const handleSearchPhraseChange = debounce(setQueryParams, 500);
 
   useEffect(
     () => {
-      handleSearchTextChange({
+      handleSearchPhraseChange({
         ...queryParams,
-        searchText: searchText || undefined,
+        searchText: searchPhrase || undefined,
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchText],
+    [searchPhrase],
   );
 
   if (!history || !credentialSchemas) {
@@ -145,9 +145,9 @@ const DashboardScreen: FC = () => {
     sections || queryParams.searchText || queryParams.credentialSchemaId ? (
       <View style={styles.actions}>
         <SearchBar
-          onSearchPhraseChange={setSearchText}
+          onSearchPhraseChange={setSearchPhrase}
           placeholder={translate('common.search')}
-          searchPhrase={searchText}
+          searchPhrase={searchPhrase}
           style={styles.searchBar}
           testID="HistoryScreen.search"
         />
