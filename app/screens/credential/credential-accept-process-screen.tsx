@@ -18,7 +18,7 @@ import { Linking } from 'react-native';
 import {
   useCredentialAccept,
   useCredentialDetail,
-} from '../../hooks/credentials';
+} from '../../hooks/core/credentials';
 import { translate, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
 import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';
