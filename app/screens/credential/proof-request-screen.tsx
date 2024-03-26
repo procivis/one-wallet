@@ -34,6 +34,7 @@ import {
 } from '../../hooks/core/credentials';
 import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
+import { useBeforeRemove } from '../../hooks/navigation/beforeRemove';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
@@ -44,7 +45,8 @@ import { reportException } from '../../utils/reporting';
 
 const ProofRequestScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
-  const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
@@ -187,7 +189,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     [],
   );
 
-  const onReject = useCallback(() => {
+  const reject = useCallback(() => {
     rejectProof(interactionId).catch((err) => {
       if (
         !(err instanceof OneError) ||
@@ -196,8 +198,12 @@ const ProofRequestScreen: FunctionComponent = () => {
         reportException(err, 'Reject Proof failure');
       }
     });
+  }, [interactionId, rejectProof]);
+
+  const onReject = useCallback(() => {
+    reject();
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [interactionId, rejectProof, rootNavigation]);
+  }, [reject, rootNavigation]);
 
   const onSubmit = useCallback(() => {
     sharingNavigation.navigate('Processing', {
@@ -209,6 +215,8 @@ const ProofRequestScreen: FunctionComponent = () => {
       proofId,
     });
   }, [interactionId, proofId, selectedCredentials, sharingNavigation]);
+
+  useBeforeRemove(reject);
 
   const allSelectionsValid =
     presentationDefinition &&
