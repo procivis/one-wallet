@@ -83,7 +83,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   }, [redirectUri]);
 
   const onClose = useCallback(() => {
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
   const subtitle: TxKeyPath =

@@ -37,7 +37,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -58,10 +58,12 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(APP_NAME) to use FaceID.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>IBMPlexMono-Regular.ttf</string>
 		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-Medium.ttf</string>
 		<string>OpenSans-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

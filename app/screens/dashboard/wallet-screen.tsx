@@ -1,20 +1,27 @@
 import {
+  formatDateTime,
+  Header,
+  OptionsIcon,
+  ScanButton,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
+import {
   ActivityIndicator,
   concatTestID,
   EmptyListView,
-  formatDateTime,
-  Header,
   ListItem,
   ListItemProps,
   ListSectionHeader,
   TextAvatar,
-  useAppColorScheme,
+  useAppColorScheme as useAppColorScheme__OLD,
 } from '@procivis/react-native-components';
 import {
   CredentialListItem,
+  CredentialListQuery,
   CredentialStateEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
+import { debounce } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
@@ -22,6 +29,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import {
   ActivityIndicator as LoadingIndicator,
@@ -31,10 +39,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
-import { EmptyIcon, SettingsIcon } from '../../components/icon/wallet-icon';
+import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
   usePagedCredentials,
@@ -45,19 +54,22 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const WalletScreen: FunctionComponent = observer(() => {
+  const colorScheme__OLD = useAppColorScheme__OLD();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const safeAreaInsets = useSafeAreaInsets();
-
   const {
     locale: { locale },
   } = useStores();
-
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
+  const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>(
+    {},
+  );
   const {
     data: credentialsData,
     fetchNextPage,
     hasNextPage,
-  } = usePagedCredentials();
+  } = usePagedCredentials(queryParams);
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
 
   const credentials = useMemo(
@@ -83,6 +95,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   }, [fetchNextPage, credentialsData?.pages.length]);
 
   const revocationCheckPerformedForPage = useRef<number>();
+
   useEffect(() => {
     if (!credentialsData) {
       return;
@@ -107,6 +120,19 @@ const WalletScreen: FunctionComponent = observer(() => {
     navigation.navigate('Settings');
   }, [navigation]);
 
+  const handleSearchPhraseChange = debounce(setQueryParams, 500);
+
+  useEffect(
+    () => {
+      handleSearchPhraseChange({
+        ...queryParams,
+        name: searchPhrase || undefined,
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [searchPhrase],
+  );
+
   const handleCredentialPress = useCallback(
     (_, index: number) => {
       const credentialId = credentials?.[index]?.id;
@@ -119,6 +145,10 @@ const WalletScreen: FunctionComponent = observer(() => {
     },
     [credentials, navigation],
   );
+
+  const handleScanPress = useCallback(() => {
+    navigation.navigate('Dashboard', { screen: 'QRCodeScanner' });
+  }, [navigation]);
 
   const renderTitle: SectionListProps<CredentialListItem>['renderSectionHeader'] =
     useCallback(
@@ -171,13 +201,13 @@ const WalletScreen: FunctionComponent = observer(() => {
           subtitleStyle: (() => {
             if (suspended) {
               return {
-                color: colorScheme.alertText,
+                color: colorScheme__OLD.alertText,
                 testID: concatTestID(testID, 'suspended'),
               };
             }
             if (revoked) {
               return {
-                color: colorScheme.alertText,
+                color: colorScheme__OLD.alertText,
                 testID: concatTestID(testID, 'revoked'),
               };
             }
@@ -193,7 +223,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         );
       },
       [
-        colorScheme.alertText,
+        colorScheme__OLD.alertText,
         colorScheme.text,
         colorScheme.white,
         handleCredentialPress,
@@ -202,7 +232,6 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const containerStyle: ViewStyle = {
     flex: !credentials ? 1 : undefined,
-    marginBottom: Math.max(safeAreaInsets.bottom, 20) + 99,
   };
 
   return (
@@ -214,7 +243,10 @@ const WalletScreen: FunctionComponent = observer(() => {
         ListEmptyComponent={
           credentials ? (
             <View
-              style={[styles.empty, { backgroundColor: colorScheme.white }]}
+              style={[
+                styles.empty,
+                { backgroundColor: colorScheme__OLD.white },
+              ]}
             >
               <ListSectionHeader
                 title={translate('wallet.credentialsList.title.empty')}
@@ -222,7 +254,7 @@ const WalletScreen: FunctionComponent = observer(() => {
               />
               <EmptyListView
                 icon={{
-                  component: <EmptyIcon color={colorScheme.lightGrey} />,
+                  component: <EmptyIcon color={colorScheme__OLD.lightGrey} />,
                 }}
                 iconStyle={styles.emptyIcon}
                 subtitle={translate('wallet.credentialsList.empty.subtitle')}
@@ -238,28 +270,37 @@ const WalletScreen: FunctionComponent = observer(() => {
         ListFooterComponent={
           credentials && credentials.length > 0 ? (
             <View
-              style={[styles.footer, { backgroundColor: colorScheme.white }]}
+              style={[
+                styles.footer,
+                { backgroundColor: colorScheme__OLD.white },
+              ]}
             >
-              {hasNextPage ? (
+              {hasNextPage && (
                 <LoadingIndicator
-                  color={colorScheme.accent}
+                  color={colorScheme__OLD.accent}
                   style={styles.pageLoadingIndicator}
                 />
-              ) : undefined}
+              )}
             </View>
           ) : undefined
         }
         ListHeaderComponent={
           <Header
-            actionButtons={[
-              {
-                accessibilityLabel: translate('wallet.settings'),
-                content: SettingsIcon,
-                key: 'settings',
-                onPress: handleWalletSettingsClick,
-              },
-            ]}
+            onSearchPhraseChange={setSearchPhrase}
+            rightButton={
+              <TouchableOpacity
+                accessibilityLabel={translate('wallet.settings')}
+                onPress={handleWalletSettingsClick}
+                style={styles.settingsButton}
+              >
+                <OptionsIcon color={colorScheme.text} />
+              </TouchableOpacity>
+            }
+            searchPhrase={searchPhrase}
             testID={'WalletScreen.header'}
+            text={{
+              searchPlaceholder: translate('wallet.search'),
+            }}
             title={translate('wallet.title')}
           />
         }
@@ -284,6 +325,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           { backgroundColor: colorScheme.background },
         ]}
       />
+      <ScanButton onPress={handleScanPress} />
     </View>
   );
 });
@@ -327,6 +369,10 @@ const styles = StyleSheet.create({
   pageLoadingIndicator: {
     marginBottom: 20,
     marginTop: 12,
+  },
+  settingsButton: {
+    height: 24,
+    width: 24,
   },
   title: {
     borderRadius: 20,
