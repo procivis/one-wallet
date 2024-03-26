@@ -3,9 +3,9 @@ import { PresentationDefinitionRequestedCredential } from '@procivis/react-nativ
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useCoreConfig } from '../../hooks/core-config';
+import { useCoreConfig } from '../../hooks/core/core-config';
+import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useCredentialDetail } from '../../hooks/credentials';
 import { selectCredentialCardFromCredential } from '../../utils/credential-sharing';
 
 export const Credential: FC<{

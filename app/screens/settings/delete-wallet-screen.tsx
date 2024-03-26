@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from 'react-query';
 
 import { removePin } from '../../components/pin-code/pin-code';
-import { useONECore } from '../../hooks/core-context';
+import { useONECore } from '../../hooks/core/core-context';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

@@ -10,7 +10,7 @@ import { StyleSheet } from 'react-native';
 import { BackupScreen } from '../../components/backup/backup-screen';
 import { Section } from '../../components/common/section';
 import { NextIcon } from '../../components/icon/common-icon';
-import { useHistory } from '../../hooks/history';
+import { useHistory } from '../../hooks/core/history';
 import { translate } from '../../i18n';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
