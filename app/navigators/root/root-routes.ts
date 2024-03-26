@@ -1,5 +1,6 @@
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ImageSourcePropType } from 'react-native';
 
 import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
 import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
@@ -13,7 +14,7 @@ export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;
   ImagePreview: {
-    image: string;
+    image: string | ImageSourcePropType;
     title: string;
   };
   Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
