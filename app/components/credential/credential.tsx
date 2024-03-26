@@ -6,7 +6,7 @@ import { ImageSourcePropType, StyleSheet } from 'react-native';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { detailsCardFromCredential } from './parsers';
+import { detailsCardFromCredential } from '../../utils/credential';
 
 interface CredentialProps {
   credentialId: string;
