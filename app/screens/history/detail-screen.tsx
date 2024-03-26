@@ -7,13 +7,14 @@ import {
   HistoryEntityTypeEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
 import { Credential } from '../../components/credential/credential';
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { useProofDetail } from '../../hooks/proofs';
 import { translate, TxKeyPath } from '../../i18n';
@@ -44,19 +45,7 @@ const DetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
-  const [expandedCredential, setExpandedCredential] = useState<string>();
-
-  const onCredentialHeaderPress = useCallback((credentialId?: string) => {
-    if (!credentialId) {
-      return;
-    }
-    setExpandedCredential((oldValue) => {
-      if (credentialId === oldValue) {
-        return undefined;
-      }
-      return credentialId;
-    });
-  }, []);
+  const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   const from = credential?.issuerDid ?? proof?.verifierDid;
   const destructiveActions = [
@@ -125,7 +114,7 @@ const DetailScreen: FC = () => {
             credentialId={credential.id}
             expanded={expandedCredential === credential.id}
             lastItem
-            onHeaderPress={onCredentialHeaderPress}
+            onHeaderPress={onHeaderPress}
           />
         </Section>
       )}
@@ -144,7 +133,7 @@ const DetailScreen: FC = () => {
                 credentialId={proofCredential.id}
                 expanded={expandedCredential === proofCredential.id}
                 lastItem={index === length - 1}
-                onHeaderPress={onCredentialHeaderPress}
+                onHeaderPress={onHeaderPress}
               />
             </View>
           ))}
