@@ -1,18 +1,11 @@
+import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
 import {
-  Accordion,
   Button,
   concatTestID,
-  formatDateTime,
-  Selector,
-  SelectorStatus,
-  TextAvatar,
-  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
 import {
-  Claim as CredentialClaim,
-  CredentialDetail,
   CredentialListItem,
   CredentialStateEnum,
   PresentationDefinitionField,
@@ -22,74 +15,18 @@ import React, { FunctionComponent, useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import {
-  getValidityState,
-  supportsSelectiveDisclosure,
-  ValidityState,
-} from '../../utils/credential';
-import { Claim } from '../credential/claim';
-import { MissingCredentialIcon } from '../icon/credential-icon';
-import { SelectiveDislosureNotice } from './selective-disclosure-notice';
-
-interface DisplayedAttribute {
-  claim?: CredentialClaim;
-  field?: PresentationDefinitionField;
-  id: string;
-  selected?: boolean;
-  status: SelectorStatus;
-}
-
-const getDisplayedAttributes = (
-  request: PresentationDefinitionRequestedCredential,
-  validityState: ValidityState,
-  credential?: CredentialDetail,
-  selectiveDisclosureSupported?: boolean,
-  selectedFields?: string[],
-): DisplayedAttribute[] => {
-  if (credential && selectiveDisclosureSupported === false) {
-    return credential.claims.map((claim) => ({
-      claim,
-      id: claim.id,
-      status: SelectorStatus.LockedSelected,
-    }));
-  }
-
-  return request.fields.map((field) => {
-    const selected = selectedFields?.includes(field.id);
-    const status = getAttributeSelectorStatus(
-      field,
-      validityState,
-      credential,
-      selected,
-    );
-    const claim = credential?.claims.find(
-      ({ key }) => key === field.keyMap[credential.id],
-    );
-    return { claim, field, id: field.id, selected, status };
-  });
-};
-
-const getAttributeSelectorStatus = (
-  field: PresentationDefinitionField,
-  validityState: ValidityState,
-  credential?: CredentialDetail,
-  selected?: boolean,
-): SelectorStatus => {
-  if (!credential || validityState !== ValidityState.Valid) {
-    return field.required
-      ? SelectorStatus.LockedInvalid
-      : SelectorStatus.Invalid;
-  }
-  if (field.required) {
-    return SelectorStatus.LockedSelected;
-  }
-  return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
-};
+import { getValidityState, ValidityState } from '../../utils/credential';
+import { shareCredentialCardFromCredential } from '../../utils/credential-sharing';
 
 export const CredentialSelect: FunctionComponent<{
   allCredentials: CredentialListItem[];
+  credentialId: string;
+  expanded?: boolean;
+  lastItem?: boolean;
+  onHeaderPress?: (credentialId?: string) => void;
   onSelectCredential?: () => void;
   onSelectField: (
     id: PresentationDefinitionField['id'],
@@ -109,20 +46,25 @@ export const CredentialSelect: FunctionComponent<{
   onSelectCredential,
   selectedFields,
   onSelectField,
+  credentialId,
+  expanded,
+  lastItem,
+  onHeaderPress,
 }) => {
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } =
     useCredentialDetail(selectedCredentialId);
   const { data: config } = useCoreConfig();
 
-  const name = request.name ?? credential?.schema.name ?? request.id;
+  const onImagePreview = useCredentialImagePreview();
 
   const selectionOptions = useMemo(
     () =>
-      request.applicableCredentials.filter((credentialId) =>
+      request.applicableCredentials.filter((applicableCredentialId) =>
         allCredentials.some(
           ({ id, state }) =>
-            id === credentialId && state === CredentialStateEnum.ACCEPTED,
+            id === applicableCredentialId &&
+            state === CredentialStateEnum.ACCEPTED,
         ),
       ),
     [allCredentials, request],
@@ -140,119 +82,22 @@ export const CredentialSelect: FunctionComponent<{
     );
   }, [credential, request]);
 
-  const subtitle = useMemo(() => {
-    if (validityState === ValidityState.Revoked) {
-      return translate('proofRequest.revokedCredential.title');
-    }
-    if (validityState === ValidityState.Suspended) {
-      return translate('proofRequest.suspendedCredential.title');
-    }
-    if (invalid) {
-      return translate('proofRequest.invalidCredential.title');
-    }
-    return credential?.issuanceDate
-      ? formatDateTime(new Date(credential.issuanceDate))
-      : translate('proofRequest.missingCredential.title');
-  }, [credential, invalid, validityState]);
-
-  const subtitleStyle = useMemo(() => {
-    if (!credential) {
-      return {
-        color: colorScheme.alertText,
-        testID: concatTestID(testID, 'subtitle', 'missing'),
-      };
-    }
-    if (validityState !== ValidityState.Valid) {
-      return {
-        color: colorScheme.alertText,
-        testID: concatTestID(testID, 'subtitle', validityState),
-      };
-    }
-    if (invalid) {
-      return {
-        color: colorScheme.noticeText,
-        testID: concatTestID(testID, 'subtitle', 'invalid'),
-      };
-    }
-  }, [
-    colorScheme.alertText,
-    colorScheme.noticeText,
-    credential,
-    invalid,
-    validityState,
-    testID,
-  ]);
-
   if (isLoading || !config) {
     return null;
   }
 
-  const selectiveDisclosureSupported = supportsSelectiveDisclosure(
+  const { card, attributes } = shareCredentialCardFromCredential(
     credential,
+    invalid,
+    request,
+    selectedFields,
+    onSelectField,
     config,
+    testID,
   );
 
-  return (
-    <View style={style}>
-      <Accordion
-        headerNotice={
-          selectiveDisclosureSupported === false && (
-            <SelectiveDislosureNotice
-              style={styles.headerNotice}
-              testID={concatTestID(testID, 'notice.selectiveDisclosure')}
-            />
-          )
-        }
-        icon={{
-          component: credential ? (
-            <TextAvatar
-              innerSize={48}
-              produceInitials={true}
-              shape="rect"
-              text={name}
-            />
-          ) : (
-            <MissingCredentialIcon style={styles.icon} />
-          ),
-        }}
-        subtitle={subtitle}
-        subtitleStyle={subtitleStyle}
-        testID={testID}
-        title={name}
-        titleStyle={{ testID: concatTestID(testID, 'title', credential?.id) }}
-      >
-        {getDisplayedAttributes(
-          request,
-          validityState,
-          credential,
-          selectiveDisclosureSupported,
-          selectedFields,
-        ).map(({ claim, field, id, selected, status }, index, { length }) => {
-          const selector = <Selector status={status} />;
-          return (
-            <Claim
-              claim={claim}
-              key={id}
-              last={length === index + 1}
-              rightAccessory={
-                credential && field && !field.required ? (
-                  <TouchableOpacity
-                    accessibilityRole="button"
-                    onPress={() => onSelectField(id, !selected)}
-                  >
-                    {selector}
-                  </TouchableOpacity>
-                ) : (
-                  selector
-                )
-              }
-              style={[styles.claim, index === 0 && styles.firstClaim]}
-              testID={concatTestID(testID, 'claim', `${index}`)}
-              title={field?.name ?? claim?.key ?? id}
-            />
-          );
-        })}
-      </Accordion>
+  const footer = (
+    <>
       {!credential && (
         <View
           style={{ backgroundColor: colorScheme.alert }}
@@ -311,7 +156,7 @@ export const CredentialSelect: FunctionComponent<{
       )}
       {selectionOptions.length > 1 && (
         <View
-          style={{ backgroundColor: colorScheme.notice }}
+          style={{ backgroundColor: colorScheme.background }}
           testID={concatTestID(testID, 'notice.multiple')}
         >
           <Typography
@@ -331,23 +176,35 @@ export const CredentialSelect: FunctionComponent<{
           </Button>
         </View>
       )}
-    </View>
+    </>
+  );
+
+  return (
+    <CredentialDetailsCardListItem
+      attributes={attributes}
+      card={{
+        ...card,
+        credentialId,
+        onHeaderPress,
+      }}
+      expanded={expanded}
+      footer={footer}
+      lastItem={lastItem}
+      onImagePreview={onImagePreview}
+      style={[
+        styles.credential,
+        { borderColor: colorScheme.lighterGrey },
+        style,
+      ]}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  claim: {
-    paddingBottom: 14,
-  },
-  firstClaim: {
-    marginTop: 24,
-  },
-  headerNotice: {
-    marginTop: 8,
-  },
-  icon: {
-    borderRadius: 3,
-    overflow: 'hidden',
+  credential: {
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 8,
   },
   notice: {
     marginHorizontal: 12,
