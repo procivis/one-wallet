@@ -22,4 +22,8 @@ export default abstract class WalletScreen {
   static credential(credentialId: string) {
     return this.credentialEntry(credentialId);
   }
+
+  static credentialName(credentialName: string) {
+    return element(by.text(credentialName));
+  }
 }

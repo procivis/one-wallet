@@ -50,3 +50,18 @@ export declare enum HistoryEntityTypeEnum {
   PROOF = 'PROOF',
   PROOF_SCHEMA = 'PROOF_SCHEMA',
 }
+
+export enum WalletKeyStorageType {
+  HARDWARE = 'HARDWARE',
+  SOFTWARE = 'SOFTWARE',
+}
+
+export enum DataType {
+  BIRTH_DATE = 'BIRTH_DATE',
+  COUNT = 'COUNT',
+  DATE = 'DATE',
+  EMAIL = 'EMAIL',
+  NUMBER = 'NUMBER',
+  PICTURE = 'PICTURE',
+  STRING = 'STRING',
+}

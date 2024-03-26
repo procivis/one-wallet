@@ -1,5 +1,6 @@
 import { expect } from 'detox';
 
+import { credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
@@ -7,6 +8,7 @@ import ProofRequestAcceptProcessScreen from '../page-objects/ProofRequestAcceptP
 import ProofRequestSharingScreen from '../page-objects/ProofRequestScreen';
 import ProofRequestSelectCredentialScreen from '../page-objects/ProofRequestSelectCredentialScreen';
 import WalletScreen from '../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../types/proof';
 import {
   bffLogin,
   createCredential,
@@ -25,28 +27,24 @@ import { scanURL } from '../utils/scan';
 
 describe('ONE-614: Proof request', () => {
   let authToken: string;
-  let credentialSchema: Record<string, any>;
+  let credentialSchema: CredentialSchemaResponseDTO;
   let proofSchema: Record<string, any>;
 
   beforeAll(async () => {
+    await device.launchApp({ permissions: { camera: 'YES' } });
+    await pinSetup();
     authToken = await bffLogin();
     credentialSchema = await createCredentialSchema(authToken);
-    proofSchema = await createProofSchema(authToken, credentialSchema);
+    proofSchema = await createProofSchema(authToken, [credentialSchema]);
   });
 
   describe('Proof request with valid credential', () => {
     beforeAll(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
-      const credentialId = await createCredential(authToken, credentialSchema);
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchema,
+        transport: Transport.OPENID4VC,
+      });
     });
 
     const proofRequestSharingTestCase = async (redirectUri?: string) => {
@@ -90,8 +88,8 @@ describe('ONE-614: Proof request', () => {
   });
 
   describe('ONE-1182: Selective disclosure', () => {
-    let jwtCredentialSchema: Record<string, any>;
-    let sdjwtCredentialSchema: Record<string, any>;
+    let jwtCredentialSchema: CredentialSchemaResponseDTO;
+    let sdjwtCredentialSchema: CredentialSchemaResponseDTO;
     let jwtProofSchema: Record<string, any>;
     let jwtCredentialId: string;
 
@@ -112,25 +110,18 @@ describe('ONE-614: Proof request', () => {
         format: CredentialFormat.SDJWT,
       });
 
-      jwtProofSchema = await createProofSchema(authToken, jwtCredentialSchema, {
-        claimSchemas: [
-          {
-            id: jwtCredentialSchema.claims[0].id,
-            required: true,
-          },
-        ],
-      });
-
-      jwtCredentialId = await createCredential(authToken, jwtCredentialSchema, {
+      jwtProofSchema = await createProofSchema(authToken, [
+        jwtCredentialSchema,
+      ]);
+      jwtCredentialId = await credentialIssuance({
+        authToken: authToken,
         claimValues: [
           { claimId: jwtCredentialSchema.claims[0].id, value: 'value1' },
           { claimId: jwtCredentialSchema.claims[1].id, value: 'value2' },
         ],
+        credentialSchema: jwtCredentialSchema,
+        transport: Transport.PROCIVIS,
       });
-      const invitationUrl = await offerCredential(jwtCredentialId, authToken);
-      await scanURL(invitationUrl);
-      await CredentialOfferScreen.acceptButton.tap();
-      await CredentialAcceptProcessScreen.closeButton.tap();
     });
 
     it('displays selective disclosure notice and all claims', async () => {
@@ -225,19 +216,11 @@ describe('ONE-614: Proof request', () => {
       await pinSetup();
 
       for (let i = 0; i < 3; i++) {
-        const credentialId = await createCredential(
-          authToken,
-          credentialSchema,
-        );
-        const invitationUrl = await offerCredential(credentialId, authToken);
-        await scanURL(invitationUrl);
-        await expect(CredentialOfferScreen.screen).toBeVisible();
-        await CredentialOfferScreen.acceptButton.tap();
-        await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-        await expect(
-          CredentialAcceptProcessScreen.status.success,
-        ).toBeVisible();
-        await CredentialAcceptProcessScreen.closeButton.tap();
+        const credentialId = await credentialIssuance({
+          authToken: authToken,
+          credentialSchema: credentialSchema,
+          transport: Transport.OPENID4VC,
+        });
         credentialIds.push(credentialId);
       }
     });
@@ -339,6 +322,7 @@ describe('ONE-614: Proof request', () => {
     const pictureKey = 'picture';
     let credentialId: string;
     let pictureProofSchema: Record<string, any>;
+
     beforeAll(async () => {
       await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
       await pinSetup();
@@ -346,10 +330,9 @@ describe('ONE-614: Proof request', () => {
       const pictureCredentialSchema = await createCredentialSchema(authToken, {
         claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
       });
-      pictureProofSchema = await createProofSchema(
-        authToken,
+      pictureProofSchema = await createProofSchema(authToken, [
         pictureCredentialSchema,
-      );
+      ]);
 
       credentialId = await createCredential(authToken, pictureCredentialSchema);
       const invitationUrl = await offerCredential(credentialId, authToken);
@@ -419,30 +402,16 @@ describe('ONE-614: Proof request', () => {
           authToken,
           { format: credentialFormat },
         );
-        const credentialId = await createCredential(
-          authToken,
-          specificCredentialSchema,
-          { transport: issuanceTransport },
-        );
-        const credentialInvitationUrl = await offerCredential(
-          credentialId,
-          authToken,
-        );
 
-        await scanURL(credentialInvitationUrl);
-        await expect(CredentialOfferScreen.screen).toBeVisible();
-        await CredentialOfferScreen.acceptButton.tap();
-        await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-        await expect(
-          CredentialAcceptProcessScreen.status.success,
-        ).toBeVisible();
-        await CredentialAcceptProcessScreen.closeButton.tap();
-        await expect(WalletScreen.screen).toBeVisible();
+        await credentialIssuance({
+          authToken: authToken,
+          credentialSchema: specificCredentialSchema,
+          transport: issuanceTransport,
+        });
 
-        const specificProofSchema = await createProofSchema(
-          authToken,
+        const specificProofSchema = await createProofSchema(authToken, [
           specificCredentialSchema,
-        );
+        ]);
         const proofRequestId = await createProofRequest(
           authToken,
           specificProofSchema,
