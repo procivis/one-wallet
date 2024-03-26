@@ -28,23 +28,21 @@ export const useCredentials = (queryParams?: Partial<CredentialListQuery>) => {
 
   return useQuery(
     [CREDENTIAL_LIST_QUERY_KEY, ...getQueryKeyFromListQueryParams(queryParams)],
-    () =>
-      core
-        .getCredentials({
-          organisationId: ONE_CORE_ORGANISATION_ID,
-          page: 0,
-          // TODO: workaround pagination for now, until it's supported by UI
-          pageSize: 10000,
-          ...queryParams,
-        })
-        .then(({ values }) =>
-          values.filter(
-            ({ state }) =>
-              state === CredentialStateEnum.ACCEPTED ||
-              state === CredentialStateEnum.SUSPENDED ||
-              state === CredentialStateEnum.REVOKED,
-          ),
-        ),
+    async () => {
+      const { values } = await core.getCredentials({
+        organisationId: ONE_CORE_ORGANISATION_ID,
+        page: 0,
+        // TODO: workaround pagination for now, until it's supported by UI
+        pageSize: 10000,
+        status: [
+          CredentialStateEnum.ACCEPTED,
+          CredentialStateEnum.SUSPENDED,
+          CredentialStateEnum.REVOKED,
+        ],
+        ...queryParams,
+      });
+      return values;
+    },
     {
       keepPreviousData: true,
     },
@@ -67,6 +65,11 @@ export const usePagedCredentials = (
         organisationId: ONE_CORE_ORGANISATION_ID,
         page: pageParam,
         pageSize: PAGE_SIZE,
+        status: [
+          CredentialStateEnum.ACCEPTED,
+          CredentialStateEnum.SUSPENDED,
+          CredentialStateEnum.REVOKED,
+        ],
         ...queryParams,
       }),
     {
