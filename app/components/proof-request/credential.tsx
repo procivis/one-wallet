@@ -1,12 +1,11 @@
 import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
 import { PresentationDefinitionRequestedCredential } from '@procivis/react-native-one-core';
-import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback } from 'react';
-import { ImageSourcePropType, StyleSheet } from 'react-native';
+import React, { FC } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialDetail } from '../../hooks/credentials';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { selectCredentialCardFromCredential } from '../../utils/credential-sharing';
 
 export const Credential: FC<{
@@ -17,19 +16,10 @@ export const Credential: FC<{
   selected: boolean;
   testID?: string;
 }> = ({ testID, credentialId, selected, lastItem, request, onPress }) => {
-  const rootNavigation = useNavigation<RootNavigationProp<any>>();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
 
-  const onImagePreview = useCallback(
-    (title: string, image: ImageSourcePropType) => {
-      rootNavigation.navigate('ImagePreview', {
-        image,
-        title,
-      });
-    },
-    [rootNavigation],
-  );
+  const onImagePreview = useCredentialImagePreview();
 
   if (!credential || !config) {
     return null;

@@ -1,7 +1,8 @@
 import { CredentialListItem } from '@procivis/react-native-one-core';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { Section } from '../common/section';
 import { Credential } from '../credential/credential';
 
@@ -16,19 +17,7 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
   fullWidth = false,
   title,
 }) => {
-  const [expandedCredential, setExpandedCredential] = useState<string>();
-
-  const onHeaderPress = useCallback((credentialId?: string) => {
-    if (!credentialId) {
-      return;
-    }
-    setExpandedCredential((oldValue) => {
-      if (credentialId === oldValue) {
-        return undefined;
-      }
-      return credentialId;
-    });
-  }, []);
+  const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   if (!credentials || credentials.length === 0) {
     return null;
