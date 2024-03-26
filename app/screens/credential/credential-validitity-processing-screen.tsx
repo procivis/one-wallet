@@ -60,8 +60,11 @@ const CredentialValidityProcessingScreen: FC = () => {
   }, []);
 
   const onClose = useCallback(() => {
-    navigation.popToTop();
-  }, [navigation]);
+    navigation.navigate('CredentialDetail', {
+      params: { credentialId },
+      screen: 'Detail',
+    });
+  }, [navigation, credentialId]);
 
   const getTranslation = useCallback(
     (key: string): string => {
