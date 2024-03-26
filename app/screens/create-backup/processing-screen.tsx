@@ -9,7 +9,7 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { DocumentDirectoryPath, unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
-import { useCreateBackup } from '../../hooks/backup';
+import { useCreateBackup } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
 import {
   CreateBackupNavigationProp,

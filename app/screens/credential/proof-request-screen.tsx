@@ -27,13 +27,13 @@ import { StyleSheet, View } from 'react-native';
 
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
-import { useONECore } from '../../hooks/core-context';
-import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
+import { useONECore } from '../../hooks/core/core-context';
 import {
   useCredentialRevocationCheck,
   useCredentials,
-} from '../../hooks/credentials';
-import { useProofDetail, useProofReject } from '../../hooks/proofs';
+} from '../../hooks/core/credentials';
+import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
