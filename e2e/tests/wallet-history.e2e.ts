@@ -1,5 +1,6 @@
 import { expect } from 'detox';
 
+import { credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import HistoryDetailScreen from '../page-objects/HistoryDetailScreen';
@@ -28,7 +29,6 @@ describe('ONE-224: Wallet history', () => {
     credentialSchemaJWT = await createCredentialSchema(authToken, {
       format: CredentialFormat.JWT,
     });
-    credentialId = await createCredential(authToken, credentialSchemaJWT);
   });
 
   it('Empty history list', async () => {
@@ -37,25 +37,19 @@ describe('ONE-224: Wallet history', () => {
     await expect(SettingsScreen.screen).toBeVisible();
     await SettingsScreen.historyButton.tap();
     await expect(HistoryScreen.screen).toBeVisible();
-    // await WalletHistoryScreen.containText('No entries');
-    // await WalletHistoryScreen.containText(
-    //   'You have not interacted with your wallet yet.',
-    // );
+    await HistoryScreen.verifyContainsText('No entries');
+    await HistoryScreen.verifyContainsText(
+      'You have not interacted with your wallet yet.',
+    );
     await HistoryScreen.back.tap();
   });
 
   describe('Non empty list', () => {
     beforeAll(async () => {
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
+      });
     });
 
     it('Contain records. Open detail screen', async () => {
