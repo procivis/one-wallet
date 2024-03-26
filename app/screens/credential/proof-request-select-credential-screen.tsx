@@ -15,7 +15,7 @@ import React, {
 import { StyleSheet, View } from 'react-native';
 
 import { Credential } from '../../components/proof-request/credential';
-import { useCredentials } from '../../hooks/credentials';
+import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
