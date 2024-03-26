@@ -28,6 +28,7 @@ import { StyleSheet, View } from 'react-native';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
 import { useONECore } from '../../hooks/core-context';
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import {
   useCredentialRevocationCheck,
   useCredentials,
@@ -62,19 +63,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { mutateAsync: rejectProof } = useProofReject();
   const { data: proof } = useProofDetail(proofId);
 
-  const [expandedCredential, setExpandedCredential] = useState<string>();
-
-  const onCredentialHeaderPress = useCallback((credentialId?: string) => {
-    if (!credentialId) {
-      return;
-    }
-    setExpandedCredential((oldValue) => {
-      if (credentialId === oldValue) {
-        return undefined;
-      }
-      return credentialId;
-    });
-  }, []);
+  const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   const presentationDefinition = useMemoAsync(async () => {
     const definition = await core.getPresentationDefinition(proofId);
@@ -276,7 +265,7 @@ const ProofRequestScreen: FunctionComponent = () => {
                   expanded={expandedCredential === credential.id}
                   key={credential.id}
                   lastItem={credentialIndex === credentialsLength - 1}
-                  onHeaderPress={onCredentialHeaderPress}
+                  onHeaderPress={onHeaderPress}
                   onSelectCredential={onSelectCredential(credential.id)}
                   onSelectField={onSelectField(credential.id)}
                   request={credential}
