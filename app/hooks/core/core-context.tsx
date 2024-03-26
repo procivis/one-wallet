@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 
-import { reportException } from '../utils/reporting';
+import { reportException } from '../../utils/reporting';
 
 interface ContextValue {
   core: ONECore;

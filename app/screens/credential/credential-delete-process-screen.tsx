@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 
-import { useCredentialDelete } from '../../hooks/credentials';
+import { useCredentialDelete } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

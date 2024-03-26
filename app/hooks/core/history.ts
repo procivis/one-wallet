@@ -5,8 +5,8 @@ import {
 } from '@procivis/react-native-one-core';
 import { useInfiniteQuery } from 'react-query';
 
-import { HistoryListItemWithDid } from '../models/core/history';
-import { getQueryKeyFromListQueryParams } from '../utils/history';
+import { HistoryListItemWithDid } from '../../models/core/history';
+import { getQueryKeyFromListQueryParams } from '../../utils/history';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 

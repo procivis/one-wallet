@@ -14,9 +14,9 @@ import { PreviewCredentials } from '../../components/backup/preview-credentials'
 import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
 import { Credential } from '../../components/credential/credential';
+import { useCredentialDetail } from '../../hooks/core/credentials';
+import { useProofDetail } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
-import { useCredentialDetail } from '../../hooks/credentials';
-import { useProofDetail } from '../../hooks/proofs';
 import { translate, TxKeyPath } from '../../i18n';
 import {
   HistoryNavigationProp,

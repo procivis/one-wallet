@@ -14,8 +14,11 @@ import React, {
   useState,
 } from 'react';
 
+import {
+  PIN_CODE_LENGTH,
+  usePinCodeEntry,
+} from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
-import { PIN_CODE_LENGTH, usePinCodeEntry } from './pin-code';
 
 export interface PinCodeScreenContentProps {
   biometry?: PinCodeScreenProps['biometry'];

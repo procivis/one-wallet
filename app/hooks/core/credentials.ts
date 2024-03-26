@@ -12,7 +12,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { getQueryKeyFromListQueryParams } from '../utils/credential';
+import { getQueryKeyFromListQueryParams } from '../../utils/credential';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 import { CREDENTIAL_SCHEMA_LIST_QUERY_KEY } from './credential-schemas';
