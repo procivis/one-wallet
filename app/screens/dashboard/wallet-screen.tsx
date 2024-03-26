@@ -39,7 +39,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { cardFromCredentialListItem } from '../../components/credential/parsers';
 import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
@@ -48,6 +47,7 @@ import {
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { cardFromCredentialListItem } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const WalletScreen: FunctionComponent = observer(() => {
