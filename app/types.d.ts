@@ -1,5 +1,5 @@
+declare module '@carimus/metro-symlinked-deps';
 declare module '@react-native/normalize-color';
-declare module 'react-native-blur-overlay';
 
 declare module '*.svg' {
   import React from 'react';

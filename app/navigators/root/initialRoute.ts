@@ -26,7 +26,7 @@ export const useInitialRoute = () => {
       case false:
         return 'Onboarding';
       case true:
-        return 'Tabs';
+        return 'Dashboard';
     }
   }, [pinInitialized]);
 
