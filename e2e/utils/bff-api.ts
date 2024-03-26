@@ -1,7 +1,13 @@
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CredentialFormat, RevocationMethod, Transport } from './enums';
+import { CredentialSchemaResponseDTO } from '../types/proof';
+import {
+  CredentialFormat,
+  DataType,
+  RevocationMethod,
+  Transport,
+} from './enums';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
@@ -58,7 +64,7 @@ async function apiRequest(
 
 async function getCredentialSchema(
   authToken: string,
-): Promise<Record<string, any>> {
+): Promise<CredentialSchemaResponseDTO> {
   const schemaId = await apiRequest(
     '/api/credential-schema/v1?page=0&pageSize=1',
     authToken,
@@ -76,7 +82,7 @@ export interface CredentialSchemaData {
 export async function createCredentialSchema(
   authToken: string,
   data?: Partial<CredentialSchemaData>,
-): Promise<Record<string, any>> {
+): Promise<CredentialSchemaResponseDTO> {
   const schemaData = {
     claims: [{ datatype: 'STRING', key: 'field', required: true }],
     format: CredentialFormat.SDJWT,
@@ -109,7 +115,7 @@ async function getLocalDid(authToken: string, algorithm: string = 'EDDSA') {
 export interface CredentialData {
   claimValues: Array<{ claimId: string; value: string }>;
   redirectUri: string;
-  transport: Transport;
+  transport?: Transport;
 }
 
 /**
@@ -129,16 +135,16 @@ export async function createCredential(
     ({ id, datatype }: { datatype: string; id: string }) => {
       let value: string = '';
       switch (datatype) {
-        case 'STRING':
+        case DataType.STRING:
           value = 'string';
           break;
-        case 'NUMBER':
+        case DataType.NUMBER:
           value = '42';
           break;
-        case 'DATE':
+        case DataType.DATE:
           value = '2023-08-21T07:29:27.850Z';
           break;
-        case 'PICTURE':
+        case DataType.PICTURE:
           value =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
           break;
@@ -150,12 +156,12 @@ export async function createCredential(
     },
   );
   const data = {
-    claimValues,
+    claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: credentialSchema.id,
     issuerDid: did.id,
-    transport: Transport.PROCIVIS,
-    ...credentialData,
+    transport: credentialData?.transport ?? Transport.PROCIVIS,
   };
+
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );
@@ -169,19 +175,22 @@ export interface ProofSchemaData {
 
 export async function createProofSchema(
   authToken: string,
-  credentialSchema: Record<string, any>,
-  data?: Partial<ProofSchemaData>,
-): Promise<Record<string, any>> {
+  credentialSchemas: CredentialSchemaResponseDTO[],
+  expireDuration?: number,
+) {
+  const proofInputSchemas = credentialSchemas.map((credSchema) => ({
+    claimSchemas: credSchema.claims.map((claim) => ({
+      id: claim.id,
+      required: claim.required,
+    })),
+    credentialSchemaId: credSchema.id,
+    validityConstraint:
+      credSchema.revocationMethod === RevocationMethod.LVVC ? 1000 : undefined,
+  }));
   const proofSchemaData = {
-    claimSchemas: [
-      {
-        id: credentialSchema.claims[0].id,
-        required: true,
-      },
-    ],
-    expireDuration: 0,
-    name: `detox-e2e-test-${uuidv4()}`,
-    ...data,
+    expireDuration: expireDuration || 0,
+    name: `proof-schema-${uuidv4()}`,
+    proofInputSchemas: proofInputSchemas,
   };
   return await apiRequest(
     '/api/proof-schema/v1',
@@ -200,11 +209,12 @@ export async function createProofRequest(
   authToken: string,
   proofSchema?: Record<string, any>,
   proofRequestData?: Partial<ProofRequestData>,
+  credentialSchema?: CredentialSchemaResponseDTO,
 ): Promise<string> {
   const did: Record<string, any> = await getLocalDid(authToken);
-  const credentialSchema = await getCredentialSchema(authToken);
+  const credSchema = credentialSchema ?? (await getCredentialSchema(authToken));
   const schema: Record<string, any> =
-    proofSchema ?? (await createProofSchema(authToken, credentialSchema));
+    proofSchema ?? (await createProofSchema(authToken, [credSchema]));
   const data = {
     proofSchemaId: schema.id,
     transport: Transport.PROCIVIS,
