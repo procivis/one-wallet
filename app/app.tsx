@@ -30,7 +30,7 @@ import {
 import Config from 'react-native-ultimate-config';
 import { QueryClientProvider } from 'react-query';
 
-import { queryClient } from './hooks/query';
+import { queryClient } from './hooks/core/query';
 import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';

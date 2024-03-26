@@ -13,13 +13,13 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { Insets, StyleSheet, View } from 'react-native';
 
 import { HelpIcon } from '../../components/icon/navigation-icon';
-import { useCoreConfig } from '../../hooks/core-config';
-import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
-import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
   useCredentialReject,
-} from '../../hooks/credentials';
+} from '../../hooks/core/credentials';
+import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,

@@ -7,7 +7,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { useInitializeONECoreIdentifiers } from '../../hooks/core-init';
+import { useInitializeONECoreIdentifiers } from '../../hooks/core/core-init';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
