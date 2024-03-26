@@ -40,6 +40,9 @@ export const useProofAccept = () => {
       keyId?: string;
     }) => core.holderSubmitProof(interactionId, credentials, didId, keyId),
     {
+      onError: () => {
+        queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
+      },
       onSuccess: () => {
         queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
         queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
