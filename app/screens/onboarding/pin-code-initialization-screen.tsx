@@ -2,10 +2,10 @@ import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 
-import { storePin } from '../../components/pin-code/pin-code';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
+import { storePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 

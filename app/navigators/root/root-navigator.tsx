@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
 import { StatusBar } from 'react-native';
 
-import { useAutomaticPinCodeCoverLogic } from '../../components/pin-code/pin-code-check';
+import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import { AppColorScheme } from '../../theme';

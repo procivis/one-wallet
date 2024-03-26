@@ -7,13 +7,10 @@ import React, {
   useState,
 } from 'react';
 
-import {
-  storePin,
-  usePinCodeValidation,
-} from '../../components/pin-code/pin-code';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
+import { storePin, usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
