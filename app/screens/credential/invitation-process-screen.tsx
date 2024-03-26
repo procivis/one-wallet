@@ -14,12 +14,16 @@ import React, {
 
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
+import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
-  const rootNavigation = useNavigation<RootNavigationProp<'Invitation'>>();
+  const navigation =
+    useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const { invitationUrl } = route.params;
   useBlockOSBackNavigation();
@@ -33,7 +37,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
-          rootNavigation.navigate('IssueCredential', {
+          navigation.navigate('IssueCredential', {
             params: {
               credentialId: result.credentialIds[0],
               interactionId: result.interactionId,
@@ -41,7 +45,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
             screen: 'CredentialOffer',
           });
         } else {
-          rootNavigation.navigate('ShareCredential', {
+          navigation.navigate('ShareCredential', {
             params: { request: result },
             screen: 'ProofRequest',
           });
@@ -51,7 +55,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         reportException(err, 'Invitation failure');
         setState(LoadingResultState.Failure);
       });
-  }, [handleInvitation, invitationUrl, rootNavigation]);
+  }, [handleInvitation, invitationUrl, navigation]);
 
   const onConfirm = useCallback(() => {
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
