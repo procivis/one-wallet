@@ -1,6 +1,7 @@
 import {
   Config,
   CredentialListItem,
+  CredentialListQuery,
   CredentialStateEnum,
   FormatFeatureEnum,
 } from '@procivis/react-native-one-core';
@@ -10,6 +11,16 @@ export enum ValidityState {
   Suspended = 'suspended',
   Valid = 'valid',
 }
+
+export const getQueryKeyFromListQueryParams = (
+  queryParams?: Partial<CredentialListQuery>,
+) => {
+  if (!queryParams) {
+    return [];
+  }
+  const { name } = queryParams;
+  return [name];
+};
 
 export const getValidityState = (
   credential: CredentialListItem | undefined,

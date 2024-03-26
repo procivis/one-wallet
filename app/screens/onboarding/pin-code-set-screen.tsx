@@ -20,7 +20,7 @@ const PinCodeSetScreen: FC = () => {
     if (rootNavigation.canGoBack()) {
       rootNavigation.popToTop();
     }
-    rootNavigation.replace('Tabs', { screen: 'Wallet' });
+    rootNavigation.replace('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
   useEffect(() => {
