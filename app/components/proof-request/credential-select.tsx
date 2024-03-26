@@ -11,20 +11,13 @@ import {
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
 } from '@procivis/react-native-one-core';
-import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
-import {
-  ImageSourcePropType,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, { FunctionComponent, useMemo } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getValidityState, ValidityState } from '../../utils/credential';
 import { shareCredentialCardFromCredential } from '../../utils/credential-sharing';
 
@@ -58,21 +51,12 @@ export const CredentialSelect: FunctionComponent<{
   lastItem,
   onHeaderPress,
 }) => {
-  const rootNavigation = useNavigation<RootNavigationProp<any>>();
   const colorScheme = useAppColorScheme();
   const { data: credential, isLoading } =
     useCredentialDetail(selectedCredentialId);
   const { data: config } = useCoreConfig();
 
-  const onImagePreview = useCallback(
-    (title: string, image: ImageSourcePropType) => {
-      rootNavigation.navigate('ImagePreview', {
-        image,
-        title,
-      });
-    },
-    [rootNavigation],
-  );
+  const onImagePreview = useCredentialImagePreview();
 
   const selectionOptions = useMemo(
     () =>

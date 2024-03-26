@@ -9,11 +9,13 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useState } from 'react';
-import { ImageSourcePropType, Insets, StyleSheet, View } from 'react-native';
+import React, { FunctionComponent, useCallback } from 'react';
+import { Insets, StyleSheet, View } from 'react-native';
 
 import { HelpIcon } from '../../components/icon/navigation-icon';
 import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import {
   useCredentialDetail,
   useCredentialReject,
@@ -44,13 +46,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
-  const [expanded, setExpanded] = useState(true);
+  const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
   useBlockOSBackNavigation();
-
-  const onHeaderPress = useCallback(() => {
-    setExpanded((oldValue) => !oldValue);
-  }, []);
 
   const onIssuerDetail = useCallback(() => {
     issuanceNavigation.navigate('CredentialOfferDetail', { credentialId });
@@ -67,15 +65,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     issuanceNavigation.navigate('Processing', { credentialId, interactionId });
   }, [credentialId, interactionId, issuanceNavigation]);
 
-  const onImagePreview = useCallback(
-    (title: string, image: ImageSourcePropType) => {
-      rootNavigation.navigate('ImagePreview', {
-        image,
-        title,
-      });
-    },
-    [rootNavigation],
-  );
+  const onImagePreview = useCredentialImagePreview();
 
   if (!credential) {
     return <ActivityIndicator />;
