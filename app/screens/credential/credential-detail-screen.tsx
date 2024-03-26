@@ -14,10 +14,10 @@ import { Alert, StyleSheet, View } from 'react-native';
 
 import { Section } from '../../components/common/section';
 import { MoreIcon } from '../../components/icon/navigation-icon';
-import { useCoreConfig } from '../../hooks/core-config';
+import { useCoreConfig } from '../../hooks/core/core-config';
+import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
   CredentialDetailNavigationProp,
