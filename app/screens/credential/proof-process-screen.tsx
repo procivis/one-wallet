@@ -59,7 +59,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   }, [proof]);
 
   const onClose = useCallback(() => {
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
   return (

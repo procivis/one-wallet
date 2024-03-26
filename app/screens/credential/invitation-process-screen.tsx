@@ -54,7 +54,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [handleInvitation, invitationUrl, rootNavigation]);
 
   const onConfirm = useCallback(() => {
-    rootNavigation.navigate('Tabs', { screen: 'Wallet' });
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
   return (

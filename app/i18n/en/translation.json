@@ -259,6 +259,7 @@
   "wallet.credentialsList.title.empty": "All credentials",
   "wallet.qrCodeScannerScreen.description": "Position the QR code within the window to validate or send evidence to third parties.",
   "wallet.qrCodeScannerScreen.title": "Scan QR code",
+  "wallet.search": "Search",
   "wallet.settings": "Settings",
   "wallet.tabBar.qrCodeScanner": "Scan QR-Code",
   "wallet.tabBar.wallet": "Wallet",
