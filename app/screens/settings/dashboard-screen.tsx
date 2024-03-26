@@ -22,11 +22,8 @@ import {
   PINIcon,
   TouchIDIcon,
 } from '../../components/icon/settings-icon';
-import {
-  Biometry,
-  useBiometricType,
-} from '../../components/pin-code/biometric';
-import { useExplicitPinCodeCheck } from '../../components/pin-code/pin-code-check';
+import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
+import { useExplicitPinCodeCheck } from '../../hooks/pin-code/pin-code-check';
 import { Locale, Locales, useUpdatedTranslate } from '../../i18n';
 import { useStores } from '../../models';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';

@@ -13,7 +13,7 @@ import {
   useCredentialDetail,
   useCredentialRevocationCheck,
   useInvalidateCredentialDetails,
-} from '../../hooks/credentials';
+} from '../../hooks/core/credentials';
 import { translate, TxKeyPath } from '../../i18n';
 import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

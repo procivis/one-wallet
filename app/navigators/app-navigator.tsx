@@ -15,7 +15,7 @@ import {
 import i18n from 'i18n-js';
 import React from 'react';
 
-import { ONECoreContextProvider } from '../hooks/core-context';
+import { ONECoreContextProvider } from '../hooks/core/core-context';
 import { useStores } from '../models';
 import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';
