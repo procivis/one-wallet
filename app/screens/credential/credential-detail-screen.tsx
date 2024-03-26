@@ -159,7 +159,7 @@ const CredentialDetailScreen: FC = () => {
 
   return (
     <DetailScreen
-      onBack={() => rootNavigation.navigate('Tabs', { screen: 'Wallet' })}
+      onBack={() => rootNavigation.navigate('Dashboard', { screen: 'Wallet' })}
       rightButton={
         <RoundButton
           accessibilityLabel={translate('credentialDetail.actions')}
