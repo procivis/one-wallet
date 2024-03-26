@@ -26,7 +26,8 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialAcceptProcessScreen: FunctionComponent = () => {
-  const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const [state, setState] = useState<
     | LoadingResultState.InProgress
