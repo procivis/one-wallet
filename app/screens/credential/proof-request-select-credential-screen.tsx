@@ -2,6 +2,7 @@ import {
   Button,
   concatTestID,
   DetailScreen,
+  useAppColorScheme,
 } from '@procivis/react-native-components';
 import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -26,6 +27,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
+  const colorScheme = useAppColorScheme();
   const { data: allCredentials } = useCredentials();
 
   const { preselectedCredentialId, request } = route.params;
@@ -56,16 +58,21 @@ const SelectCredentialScreen: FunctionComponent = () => {
 
   return (
     <DetailScreen
+      contentStyle={[
+        styles.container,
+        { backgroundColor: colorScheme.background },
+      ]}
       onBack={navigation.goBack}
       testID="ProofRequestSelectCredentialScreen"
       title={translate('proofRequest.selectCredential.title')}
     >
-      {selectionOptions.map((credentialId) => {
+      {selectionOptions.map((credentialId, index, { length }) => {
         const selected = selectedCredentialId === credentialId;
         return (
           <View key={credentialId} style={styles.item}>
             <Credential
               credentialId={credentialId}
+              lastItem={index === length - 1}
               onPress={
                 selected
                   ? undefined
@@ -98,6 +105,10 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  container: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   item: {
     marginBottom: 12,

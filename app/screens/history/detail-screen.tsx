@@ -14,6 +14,7 @@ import { PreviewCredentials } from '../../components/backup/preview-credentials'
 import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
 import { Credential } from '../../components/credential/credential';
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { useProofDetail } from '../../hooks/proofs';
 import { translate, TxKeyPath } from '../../i18n';
@@ -44,6 +45,7 @@ const DetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
+  const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   const from = credential?.issuerDid ?? proof?.verifierDid;
   const destructiveActions = [
@@ -104,19 +106,35 @@ const DetailScreen: FC = () => {
       )}
 
       {credential && (
-        <Section title={translate('historyDetail.credential')}>
-          <Credential credentialId={credential.id} expanded />
+        <Section
+          style={styles.credentialSection}
+          title={translate('historyDetail.credential')}
+        >
+          <Credential
+            credentialId={credential.id}
+            expanded={expandedCredential === credential.id}
+            lastItem
+            onHeaderPress={onHeaderPress}
+          />
         </Section>
       )}
 
       {proof && (
-        <Section title={translate('historyDetail.credential')}>
-          {proof.credentials.map((proofCredential, index) => (
+        <Section
+          style={styles.credentialSection}
+          title={translate('historyDetail.credential')}
+        >
+          {proof.credentials.map((proofCredential, index, { length }) => (
             <View
               key={proofCredential.id}
               style={[styles.credential, index === 0 && styles.credentialFirst]}
             >
-              <Credential credentialId={proofCredential.id} expanded />
+              <Credential
+                credentialId={proofCredential.id}
+                expanded={expandedCredential === proofCredential.id}
+                lastItem={index === length - 1}
+                onHeaderPress={onHeaderPress}
+              />
             </View>
           ))}
         </Section>
@@ -131,6 +149,11 @@ const styles = StyleSheet.create({
   },
   credentialFirst: {
     marginTop: 0,
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  credentialSection: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
   },
   entityTitle: {
     marginBottom: 0,
