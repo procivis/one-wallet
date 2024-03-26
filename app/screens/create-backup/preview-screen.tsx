@@ -3,8 +3,8 @@ import React, { FC } from 'react';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
-import { useBackupInfo } from '../../hooks/backup';
-import { useCredentials } from '../../hooks/credentials';
+import { useBackupInfo } from '../../hooks/core/backup';
+import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
   CreateBackupNavigationProp,

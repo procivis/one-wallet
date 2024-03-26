@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 
-import { useInvitationHandler } from '../../hooks/credentials';
+import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

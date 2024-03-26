@@ -14,9 +14,9 @@ import {
 import React, { FunctionComponent, useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { useCoreConfig } from '../../hooks/core-config';
+import { useCoreConfig } from '../../hooks/core/core-config';
+import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { getValidityState, ValidityState } from '../../utils/credential';
 import { shareCredentialCardFromCredential } from '../../utils/credential-sharing';

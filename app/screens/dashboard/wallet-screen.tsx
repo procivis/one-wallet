@@ -43,7 +43,7 @@ import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialRevocationCheck,
   usePagedCredentials,
-} from '../../hooks/credentials';
+} from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

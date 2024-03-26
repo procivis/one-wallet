@@ -7,7 +7,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { useFinalizeImport } from '../../hooks/backup';
+import { useFinalizeImport } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

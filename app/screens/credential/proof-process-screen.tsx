@@ -15,8 +15,8 @@ import React, {
 } from 'react';
 import { Linking } from 'react-native';
 
-import { useCredentialDetail } from '../../hooks/credentials';
-import { useProofAccept, useProofDetail } from '../../hooks/proofs';
+import { useCredentialDetail } from '../../hooks/core/credentials';
+import { useProofAccept, useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

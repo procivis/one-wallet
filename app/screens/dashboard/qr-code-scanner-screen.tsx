@@ -9,7 +9,7 @@ import React, {
 import { StyleSheet, View } from 'react-native';
 import { BarCodeReadEvent } from 'react-native-camera';
 
-import { useInvitationHandling } from '../../hooks/deep-link';
+import { useInvitationHandling } from '../../hooks/core/deep-link';
 import { translate } from '../../i18n';
 
 const QRCodeScannerScreen: FunctionComponent = () => {

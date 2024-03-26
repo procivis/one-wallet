@@ -11,7 +11,7 @@ import { StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
-import { useONECore } from '../../hooks/core-context';
+import { useONECore } from '../../hooks/core/core-context';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 

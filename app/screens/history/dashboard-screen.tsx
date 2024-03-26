@@ -22,8 +22,8 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
-import { useCredentialSchemas } from '../../hooks/credential-schemas';
-import { useHistory } from '../../hooks/history';
+import { useCredentialSchemas } from '../../hooks/core/credential-schemas';
+import { useHistory } from '../../hooks/core/history';
 import { translate } from '../../i18n';
 import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 import { formatMonth, formatTimestamp } from '../../utils/date';
