@@ -4,15 +4,18 @@ import {
   LoadingResultVariation,
   useBlockOSBackNavigation,
 } from '@procivis/react-native-components';
+import { WalletStorageType } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Linking } from 'react-native';
 
+import { useCredentialDetail } from '../../hooks/credentials';
 import { useProofAccept, useProofDetail } from '../../hooks/proofs';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -26,37 +29,57 @@ const ProofProcessScreen: FunctionComponent = () => {
   const { credentials, interactionId, proofId } = route.params;
   const [state, setState] = useState(LoadingResultState.InProgress);
   const { mutateAsync: acceptProof } = useProofAccept();
-  const { data: proof, refetch: refetchProof } = useProofDetail(proofId);
+  const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
 
   useBlockOSBackNavigation();
+
+  // ONE-2078: workaround for selecting matching did
+  const { data: credentialDetail } = useCredentialDetail(
+    Object.values(credentials)[0]?.credentialId,
+  );
+  const didId = useMemo(() => {
+    if (!credentialDetail) {
+      return undefined;
+    }
+    switch (credentialDetail.schema.walletStorageType) {
+      case WalletStorageType.SOFTWARE:
+        return walletStore.holderDidSwId;
+      case WalletStorageType.HARDWARE:
+        return walletStore.holderDidHwId;
+      default:
+        return walletStore.holderDidId;
+    }
+  }, [walletStore, credentialDetail]);
 
   const handleProofSubmit = useCallback(async () => {
     try {
       await acceptProof({
         credentials,
-        didId: walletStore.holderDidId,
+        didId: didId!,
         interactionId,
       });
-      await refetchProof();
       setState(LoadingResultState.Success);
     } catch (e) {
       reportException(e, 'Submit Proof failure');
       setState(LoadingResultState.Failure);
     }
-  }, [acceptProof, credentials, interactionId, refetchProof, walletStore]);
+  }, [acceptProof, didId, credentials, interactionId]);
 
   useEffect(() => {
-    handleProofSubmit();
+    if (didId) {
+      handleProofSubmit();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [!didId]);
 
+  const redirectUri = proof?.redirectUri;
   const onCTA = useCallback(() => {
-    proof?.redirectUri &&
-      Linking.openURL(proof.redirectUri).catch((e) => {
+    redirectUri &&
+      Linking.openURL(redirectUri).catch((e) => {
         reportException(e, "Couldn't open redirect URI");
       });
-  }, [proof]);
+  }, [redirectUri]);
 
   const onClose = useCallback(() => {
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
@@ -67,7 +90,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       ctaButtonLabel={translate('proofRequest.process.success.cta')}
       failureCloseButtonLabel={translate('common.close')}
       inProgressCloseButtonLabel={translate('common.cancel')}
-      onCTA={proof?.redirectUri ? onCTA : undefined}
+      onCTA={redirectUri ? onCTA : undefined}
       onClose={onClose}
       state={state}
       subtitle={translate(`proofRequest.process.${state}.subtitle`)}
