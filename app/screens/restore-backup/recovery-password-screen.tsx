@@ -1,6 +1,6 @@
 import { ActivityIndicator, Input } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { unlink } from 'react-native-fs';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
@@ -17,8 +17,21 @@ const RecoveryPasswordScreen: FC = () => {
     useNavigation<RestoreBackupNavigationProp<'RecoveryPassword'>>();
   const route = useRoute<RestoreBackupRouteProp<'RecoveryPassword'>>();
   const { inputPath } = route.params;
-  const { mutateAsync: unpackBackup, isLoading, isError } = useUnpackBackup();
+  const {
+    mutateAsync: unpackBackup,
+    isLoading,
+    isError,
+    reset,
+  } = useUnpackBackup();
   const [password, setPassword] = useState('');
+
+  const handlePasswordTextChange = useCallback(
+    (text: string) => {
+      setPassword(text);
+      reset();
+    },
+    [reset],
+  );
 
   const handleCta = async () => {
     try {
@@ -55,7 +68,7 @@ const RecoveryPasswordScreen: FC = () => {
         }
         label={translate('restoreBackup.recoveryPassword.password')}
         onAccessoryPress={() => setPassword('')}
-        onChangeText={setPassword}
+        onChangeText={handlePasswordTextChange}
         secureTextEntry
         value={password}
       />
