@@ -13,15 +13,15 @@ import React, {
 } from 'react';
 import { AppState, Platform } from 'react-native';
 
-import {
-  biometricAuthenticate,
-  useBiometricType,
-} from '../../components/pin-code/biometric';
-import { usePinCodeValidation } from '../../components/pin-code/pin-code';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
 import { useInitialDeepLinkHandling } from '../../hooks/core/deep-link';
+import {
+  biometricAuthenticate,
+  useBiometricType,
+} from '../../hooks/pin-code/biometric';
+import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
