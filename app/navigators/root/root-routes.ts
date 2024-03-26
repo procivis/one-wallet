@@ -3,28 +3,24 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ImageSourcePropType } from 'react-native';
 
 import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
+import { CredentialManagementNavigatorParamList } from '../credential-management/credential-management-routes';
 import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
-import { InvitationNavigatorParamList } from '../invitation/invitation-routes';
-import { IssueCredentialNavigatorParamList } from '../issue-credential/issue-credential-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
-import { ShareCredentialNavigatorParamList } from '../share-credential/share-credential-routes';
 
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
+  CredentialManagement: NavigatorScreenParams<CredentialManagementNavigatorParamList>;
   Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;
   ImagePreview: {
     image: string | ImageSourcePropType;
     title: string;
   };
-  Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
-  IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
   Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
   PinCodeCheck?: {
     disableBiometry: boolean;
   };
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
-  ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =
