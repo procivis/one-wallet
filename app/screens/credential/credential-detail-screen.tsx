@@ -13,7 +13,6 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Alert, ImageSourcePropType, StyleSheet, View } from 'react-native';
 
 import { Section } from '../../components/common/section';
-import { detailsCardFromCredential } from '../../components/credential/parsers';
 import { MoreIcon } from '../../components/icon/navigation-icon';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
@@ -23,7 +22,11 @@ import {
   CredentialDetailRouteProp,
 } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { getValidityState, ValidityState } from '../../utils/credential';
+import {
+  detailsCardFromCredential,
+  getValidityState,
+  ValidityState,
+} from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();

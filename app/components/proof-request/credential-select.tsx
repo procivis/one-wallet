@@ -26,7 +26,7 @@ import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getValidityState, ValidityState } from '../../utils/credential';
-import { shareCredentialCardFromCredential } from '../credential/parsers';
+import { shareCredentialCardFromCredential } from '../../utils/credential-sharing';
 
 export const CredentialSelect: FunctionComponent<{
   allCredentials: CredentialListItem[];

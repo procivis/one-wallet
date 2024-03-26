@@ -12,7 +12,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ImageSourcePropType, Insets, StyleSheet, View } from 'react-native';
 
-import { detailsCardFromCredential } from '../../components/credential/parsers';
 import { HelpIcon } from '../../components/icon/navigation-icon';
 import { useCoreConfig } from '../../hooks/core-config';
 import {
@@ -25,6 +24,7 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { detailsCardFromCredential } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const detailButtonHitslop: Insets = {
