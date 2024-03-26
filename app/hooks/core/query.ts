@@ -1,6 +1,6 @@
 import { QueryClient } from 'react-query';
 
-import { reportException } from '../utils/reporting';
+import { reportException } from '../../utils/reporting';
 
 export const queryClient = new QueryClient({
   defaultOptions: {

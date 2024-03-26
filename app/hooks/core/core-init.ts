@@ -1,8 +1,8 @@
 import { OneError, OneErrorCode } from '@procivis/react-native-one-core';
 import { useCallback } from 'react';
 
-import { useStores } from '../models';
-import { reportException } from '../utils/reporting';
+import { useStores } from '../../models';
+import { reportException } from '../../utils/reporting';
 import { useONECore } from './core-context';
 
 // using single static organisation within the wallet for all entries

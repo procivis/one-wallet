@@ -5,8 +5,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
-import { useRollbackImport } from '../../hooks/backup';
-import { useCredentials } from '../../hooks/credentials';
+import { useRollbackImport } from '../../hooks/core/backup';
+import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';

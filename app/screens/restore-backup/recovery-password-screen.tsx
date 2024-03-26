@@ -4,7 +4,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { unlink } from 'react-native-fs';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
-import { useUnpackBackup } from '../../hooks/backup';
+import { useUnpackBackup } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
 import {
   RestoreBackupNavigationProp,

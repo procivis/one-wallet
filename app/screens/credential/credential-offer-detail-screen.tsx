@@ -8,7 +8,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useCredentialDetail } from '../../hooks/credentials';
+import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
