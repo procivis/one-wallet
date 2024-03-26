@@ -1,4 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { CredentialDetailsCard } from '@procivis/one-react-native-components';
 import {
   ActivityIndicator,
   DetailScreen,
@@ -11,10 +12,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
-import { DataItem } from '../../components/common/data-item';
 import { Section } from '../../components/common/section';
-import { Claim } from '../../components/credential/claim';
 import { MoreIcon } from '../../components/icon/navigation-icon';
+import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { translate } from '../../i18n';
 import {
@@ -22,7 +24,11 @@ import {
   CredentialDetailRouteProp,
 } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { getValidityState, ValidityState } from '../../utils/credential';
+import {
+  detailsCardFromCredential,
+  getValidityState,
+  ValidityState,
+} from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
@@ -33,29 +39,10 @@ const CredentialDetailScreen: FC = () => {
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
+  const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
   const validityState = getValidityState(credential);
-
-  const validityStateValue = useMemo(() => {
-    if (
-      validityState === ValidityState.Suspended &&
-      credential?.suspendEndDate
-    ) {
-      return translate(`credentialDetail.validity.suspendedUntil`, {
-        date: formatDateTime(new Date(credential.suspendEndDate)),
-      });
-    }
-
-    return translate(`credentialDetail.validity.${validityState}`);
-  }, [credential?.suspendEndDate, validityState]);
-
-  const validityStateValueColor = useMemo(
-    () =>
-      [ValidityState.Revoked, ValidityState.Suspended].includes(validityState)
-        ? colorScheme.alertText
-        : colorScheme.text,
-    [colorScheme.alertText, colorScheme.text, validityState],
-  );
 
   const isRevokable = useMemo(
     () =>
@@ -153,9 +140,13 @@ const CredentialDetailScreen: FC = () => {
     ],
   );
 
+  const onImagePreview = useCredentialImagePreview();
+
   if (!credential) {
     return <ActivityIndicator />;
   }
+
+  const { card, attributes } = detailsCardFromCredential(credential, config);
 
   return (
     <DetailScreen
@@ -172,41 +163,16 @@ const CredentialDetailScreen: FC = () => {
       testID="CredentialDetailScreen"
       title={credential.schema.name}
     >
-      <Section title={translate('credentialDetail.credential.title')}>
-        <DataItem
-          attribute={translate('credentialDetail.credential.schema')}
-          value={credential.schema.name}
-        />
-        <DataItem
-          attribute={translate('credentialDetail.credential.issuer')}
-          value={credential.issuerDid ?? ''}
-        />
-        <DataItem
-          attribute={translate('credentialDetail.credential.format')}
-          value={credential.schema.format}
-        />
-        <DataItem
-          attribute={translate('credentialDetail.credential.revocationMethod')}
-          value={credential.schema.revocationMethod}
-        />
-        <DataItem
-          attribute={translate('credentialDetail.credential.status')}
-          testID="CredentialDetailScreen.status"
-          value={validityStateValue}
-          valueColor={validityStateValueColor}
-        />
-      </Section>
-      <Section title={translate('credentialDetail.attributes.title')}>
-        {credential.claims.map((claim, index, { length }) => (
-          <Claim
-            claim={claim}
-            key={claim.key}
-            last={length === index + 1}
-            style={{ borderColor: colorScheme.background }}
-            testID={`CredentialDetailScreen.claim.${claim.key}`}
-          />
-        ))}
-      </Section>
+      <CredentialDetailsCard
+        attributes={attributes}
+        card={{
+          ...card,
+          onHeaderPress,
+        }}
+        expanded={expanded}
+        onImagePreview={onImagePreview}
+        style={styles.credential}
+      />
       <Section title={translate('credentialDetail.log.title')}>
         <View style={styles.logTitlePadding} />
         {credential.lvvcIssuanceDate && (
@@ -249,6 +215,9 @@ const CredentialDetailScreen: FC = () => {
 };
 
 const styles = StyleSheet.create({
+  credential: {
+    marginBottom: 12,
+  },
   logItem: {
     paddingHorizontal: 0,
   },

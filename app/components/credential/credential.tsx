@@ -1,51 +1,54 @@
-import { Accordion, TextAvatar } from '@procivis/react-native-components';
+import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { useCoreConfig } from '../../hooks/core-config';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialDetail } from '../../hooks/credentials';
-import { Claim } from './claim';
+import { detailsCardFromCredential } from '../../utils/credential';
 
 interface CredentialProps {
   credentialId: string;
   expanded?: boolean;
+  lastItem?: boolean;
+  onHeaderPress?: (credentialId?: string) => void;
 }
 
 export const Credential: FC<CredentialProps> = ({
   credentialId,
   expanded = false,
+  lastItem,
+  onHeaderPress,
 }) => {
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: config } = useCoreConfig();
 
-  if (!credential) {
+  const onImagePreview = useCredentialImagePreview();
+
+  if (!credential || !config) {
     return null;
   }
 
+  const { card, attributes } = detailsCardFromCredential(credential, config);
+
   return (
-    <Accordion
-      icon={{
-        component: (
-          <TextAvatar
-            innerSize={48}
-            produceInitials={true}
-            shape="rect"
-            text={credential.schema.name}
-          />
-        ),
+    <CredentialDetailsCardListItem
+      attributes={attributes}
+      card={{
+        ...card,
+        credentialId,
+        onHeaderPress,
       }}
-      initiallyExpanded={expanded}
-      title={credential.schema.name}
-    >
-      <View style={styles.claims}>
-        {credential.claims.map((claim, index, { length }) => (
-          <Claim claim={claim} key={claim.id} last={length === index + 1} />
-        ))}
-      </View>
-    </Accordion>
+      expanded={expanded}
+      lastItem={lastItem}
+      onImagePreview={onImagePreview}
+      style={styles.credential}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  claims: {
-    paddingBottom: 12,
+  credential: {
+    marginBottom: 8,
   },
 });
