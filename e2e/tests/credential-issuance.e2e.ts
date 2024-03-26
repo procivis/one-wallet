@@ -1,5 +1,6 @@
 import { expect } from 'detox';
 
+import { CredentialAction, credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
@@ -44,42 +45,32 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   describe('Credential offer', () => {
-    let credentialId: string;
-
-    const issueCredentialTestCase = async (redirectUri?: string) => {
-      credentialId = await createCredential(authToken, credentialSchemaJWT, {
-        redirectUri,
-      });
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-    };
-
     it('Accept credential issuance', async () => {
-      await issueCredentialTestCase();
-      await CredentialOfferScreen.acceptButton.tap();
-
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
+        transport: Transport.OPENID4VC,
+      });
     });
 
     it('Accept credential issuance with redirect URI', async () => {
-      await issueCredentialTestCase('https://example.com');
-      await CredentialOfferScreen.acceptButton.tap();
-
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
+        redirectUri: 'https://www.procivis.ch',
+        transport: Transport.OPENID4VC,
+      });
     });
 
     it('Reject credential issuance', async () => {
-      await issueCredentialTestCase();
-      await CredentialOfferScreen.rejectButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      await credentialIssuance(
+        {
+          authToken: authToken,
+          credentialSchema: credentialSchemaJWT,
+          transport: Transport.OPENID4VC,
+        },
+        CredentialAction.REJECT,
+      );
     });
   });
 
@@ -87,16 +78,11 @@ describe('ONE-601: Credential issuance', () => {
     let credentialId: string;
 
     beforeAll(async () => {
-      credentialId = await createCredential(authToken, credentialSchemaJWT);
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
+        transport: Transport.PROCIVIS,
+      });
     });
 
     it('Credential not revoked initially', async () => {
@@ -131,20 +117,12 @@ describe('ONE-601: Credential issuance', () => {
   describe('ONE-1313: Credential revocation LVVC', () => {
     let credentialId: string;
 
-    it('Issue credential with LVVC revocation method', async () => {
-      credentialId = await createCredential(
-        authToken,
-        credentialSchemaJWT_with_LVVC,
-      );
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+    beforeAll(async () => {
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT_with_LVVC,
+        transport: Transport.PROCIVIS,
+      });
     });
 
     it('Check valid on the detail page', async () => {
@@ -154,6 +132,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Check validity remote', async () => {
+      await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action('Check validity').tap();
       await expect(CredentialValidityProcessScreen.screen).toBeVisible();
@@ -189,16 +168,11 @@ describe('ONE-601: Credential issuance', () => {
     let credentialId: string;
 
     beforeAll(async () => {
-      credentialId = await createCredential(authToken, credentialSchemaJWT);
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT_with_LVVC,
+        transport: Transport.PROCIVIS,
+      });
     });
 
     beforeEach(async () => {
@@ -248,8 +222,9 @@ describe('ONE-601: Credential issuance', () => {
       await CredentialAcceptProcessScreen.closeButton.tap();
 
       await expect(WalletScreen.screen).toBeVisible();
-      // TODO: Find a way how to determine OpenID4VC credential in list.
-      // await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await expect(
+        WalletScreen.credentialName(credentialSchema.name).atIndex(0),
+      ).toBeVisible();
     };
 
     it('Issue credential: JWT schema', async () => {
