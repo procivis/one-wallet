@@ -7,7 +7,7 @@ import { ImageSourcePropType, StyleSheet } from 'react-native';
 import { useCoreConfig } from '../../hooks/core-config';
 import { useCredentialDetail } from '../../hooks/credentials';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { selectCredentialCardFromCredential } from '../credential/parsers';
+import { selectCredentialCardFromCredential } from '../../utils/credential-sharing';
 
 export const Credential: FC<{
   credentialId: string;
