@@ -150,6 +150,8 @@ build:
           - iOS_TEST
           - Android_DEMO
           - iOS_DEMO
+          - Android_TRIAL
+          - iOS_TRIAL
   rules:
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
