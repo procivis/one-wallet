@@ -20,6 +20,7 @@ import {
 } from '../../hooks/core/credentials';
 import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useBeforeRemove } from '../../hooks/navigation/beforeRemove';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
@@ -38,7 +39,8 @@ const detailButtonHitslop: Insets = {
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
-  const rootNavigation = useNavigation<RootNavigationProp<'IssueCredential'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const issuanceNavigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
@@ -54,12 +56,18 @@ const CredentialOfferScreen: FunctionComponent = () => {
     issuanceNavigation.navigate('CredentialOfferDetail', { credentialId });
   }, [credentialId, issuanceNavigation]);
 
-  const onReject = useCallback(() => {
+  const reject = useCallback(() => {
     rejectCredential(interactionId).catch((e) =>
       reportException(e, 'Reject credential offer failed'),
     );
+  }, [interactionId, rejectCredential]);
+
+  const onReject = useCallback(() => {
+    reject();
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [interactionId, rejectCredential, rootNavigation]);
+  }, [reject, rootNavigation]);
+
+  useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
     issuanceNavigation.navigate('Processing', { credentialId, interactionId });

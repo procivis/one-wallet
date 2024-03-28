@@ -24,7 +24,8 @@ import { ShareCredentialRouteProp } from '../../navigators/share-credential/shar
 import { reportException } from '../../utils/reporting';
 
 const ProofProcessScreen: FunctionComponent = () => {
-  const rootNavigation = useNavigation<RootNavigationProp<'ShareCredential'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
   const { credentials, interactionId, proofId } = route.params;
   const [state, setState] = useState(LoadingResultState.InProgress);
