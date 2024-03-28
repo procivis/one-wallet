@@ -1,16 +1,14 @@
 import {
-  CredentialAttributeItemProps,
+  concatTestID,
+  CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
   CredentialErrorIcon,
   CredentialHeaderProps,
   CredentialWarningIcon,
-} from '@procivis/one-react-native-components';
-import {
-  concatTestID,
   formatDate,
   formatDateTime,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import {
   Claim,
   Config,
@@ -65,11 +63,6 @@ export const supportsSelectiveDisclosure = (
       )
     : undefined;
 };
-
-export type CredentialAttribute = Omit<
-  CredentialAttributeItemProps,
-  'style' | 'onImagePreview' | 'last'
->;
 
 export const cardHeaderFromCredentialListItem = (
   credential: CredentialListItem,
@@ -129,32 +122,38 @@ export const detailsCardAttributeFromClaim = (
   claim: Claim,
   config?: Config,
 ): CredentialAttribute => {
-  let value;
-  let image;
   const typeConfig = config?.datatype[claim.dataType];
+
+  const attribute: Partial<CredentialAttribute> = {
+    id: claim.id,
+    name: claim.key,
+  };
+
   switch (typeConfig?.type) {
+    case DataTypeEnum.Object: {
+      attribute.attributes = (claim.value as Claim[]).map((nestedClaim) =>
+        detailsCardAttributeFromClaim(nestedClaim, config),
+      );
+      break;
+    }
     case DataTypeEnum.Date: {
-      value = formatDate(new Date(claim.value)) ?? claim.value;
+      attribute.value =
+        formatDate(new Date(claim.value as string)) ?? (claim.value as string);
       break;
     }
     case DataTypeEnum.File: {
       if (typeConfig.params?.showAs === 'IMAGE') {
-        image = { uri: claim.value };
+        attribute.image = { uri: claim.value as string };
       } else {
-        value = claim.value;
+        attribute.value = claim.value as string;
       }
       break;
     }
     default:
-      value = claim.value;
+      attribute.value = claim.value as string;
       break;
   }
-  return {
-    id: claim.id,
-    image,
-    name: claim.key,
-    value,
-  };
+  return attribute as CredentialAttribute;
 };
 
 export const detailsCardFromCredential = (
