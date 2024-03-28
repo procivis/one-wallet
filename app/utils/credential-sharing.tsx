@@ -1,5 +1,6 @@
 import {
   AlertOutlineIcon,
+  CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
   RequiredAttributeIcon,
@@ -24,7 +25,6 @@ import { translate } from '../i18n';
 import {
   cardFromCredentialListItem,
   cardHeaderFromCredentialListItem,
-  CredentialAttribute,
   detailsCardAttributeFromClaim,
   getValidityState,
   supportsSelectiveDisclosure,
