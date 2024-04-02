@@ -7,17 +7,15 @@ import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import CredentialValidityProcessScreen from '../page-objects/CredentialValidityProcessScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
-import PinCodeScreen from '../page-objects/PinCodeScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import {
   bffLogin,
   createCredential,
   createCredentialSchema,
   offerCredential,
-  revokeCredential,
 } from '../utils/bff-api';
 import { CredentialFormat, RevocationMethod, Transport } from '../utils/enums';
-import { pinSetup } from '../utils/init';
+import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
@@ -27,8 +25,8 @@ describe('ONE-601: Credential issuance', () => {
   let credentialSchemaJWT_with_LVVC: Record<string, any>;
 
   beforeAll(async () => {
-    await device.launchApp({ permissions: { camera: 'YES' } });
-    await pinSetup();
+    await launchApp();
+
     authToken = await bffLogin();
     credentialSchemaJWT = await createCredentialSchema(authToken, {
       format: CredentialFormat.JWT,
@@ -93,11 +91,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Credential revoked remotely', async () => {
-      await revokeCredential(credentialId, authToken);
-      await device.launchApp({ newInstance: true });
-      await expect(PinCodeScreen.Check.screen).toBeVisible();
-      await PinCodeScreen.Check.digit(1).multiTap(6);
-      await expect(WalletScreen.screen).toBeVisible();
+      await reloadApp();
 
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
       await expect(
@@ -143,11 +137,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Revoke credential', async () => {
-      await revokeCredential(credentialId, authToken);
-      await device.launchApp({ newInstance: true });
-      await expect(PinCodeScreen.Check.screen).toBeVisible();
-      await PinCodeScreen.Check.digit(1).multiTap(6);
-      await expect(WalletScreen.screen).toBeVisible();
+      await reloadApp();
 
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
       await expect(
@@ -241,8 +231,7 @@ describe('ONE-601: Credential issuance', () => {
     const pictureKey = 'picture';
 
     beforeAll(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
       const credentialSchema = await createCredentialSchema(authToken, {
         claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
       });
