@@ -26,6 +26,14 @@ export default abstract class CredentialDetailScreen {
     return this.dataItem('CredentialDetailScreen.status');
   }
 
+  static get revocationMethod() {
+    return this.dataItem('CredentialDetailScreen.revocationMethod');
+  }
+
+  static get credentialFormat() {
+    return this.dataItem('CredentialDetailScreen.format');
+  }
+
   static log(itemId: string) {
     return element(by.id(`CredentialDetailScreen.log.${itemId}`));
   }
