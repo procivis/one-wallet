@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CredentialSchemaResponseDTO } from '../types/proof';
+import { CredentialSchemaResponseDTO } from '../types/credential';
+import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   CredentialFormat,
   DataType,
@@ -99,7 +100,10 @@ export async function createCredentialSchema(
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
-async function getProofSchemaDetail(proofSchemaId: string, authToken: string) {
+async function getProofSchemaDetail(
+  proofSchemaId: string,
+  authToken: string,
+): Promise<ProofSchemaResponseDTO> {
   return apiRequest(`/api/proof-schema/v1/${proofSchemaId}`, authToken);
 }
 
@@ -177,7 +181,7 @@ export async function createProofSchema(
   authToken: string,
   credentialSchemas: CredentialSchemaResponseDTO[],
   expireDuration?: number,
-) {
+): Promise<ProofSchemaResponseDTO> {
   const proofInputSchemas = credentialSchemas.map((credSchema) => ({
     claimSchemas: credSchema.claims.map((claim) => ({
       id: claim.id,
@@ -185,7 +189,7 @@ export async function createProofSchema(
     })),
     credentialSchemaId: credSchema.id,
     validityConstraint:
-      credSchema.revocationMethod === RevocationMethod.LVVC ? 1000 : undefined,
+      credSchema.revocationMethod === RevocationMethod.LVVC ? 10 : undefined,
   }));
   const proofSchemaData = {
     expireDuration: expireDuration || 0,
