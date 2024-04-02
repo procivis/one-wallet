@@ -28,8 +28,6 @@ export interface AppColorScheme__OLD extends ColorScheme__OLD {
 }
 
 export interface AppColorScheme extends ColorScheme {
-  /** is a dark mode scheme */
-  darkMode: boolean;
   /** used for native OS picker component */
   nativePickerText: string;
 }
@@ -50,6 +48,6 @@ export function useFlavorColorScheme(): AppColorScheme {
     const darkMode = Boolean(osDarkMode && darkModeColorScheme);
     const nativePickerText = osDarkMode ? '#ffffff' : '#000000';
     const scheme = darkMode ? darkModeColorScheme! : colorScheme;
-    return { darkMode, nativePickerText, ...scheme };
+    return { nativePickerText, ...scheme };
   }, [osDarkMode]);
 }
