@@ -2,13 +2,15 @@ import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
+import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/ProofRequestAcceptProcessScreen';
 import ProofRequestSharingScreen from '../page-objects/ProofRequestScreen';
 import ProofRequestSelectCredentialScreen from '../page-objects/ProofRequestSelectCredentialScreen';
 import WalletScreen from '../page-objects/WalletScreen';
-import { CredentialSchemaResponseDTO } from '../types/proof';
+import { CredentialSchemaResponseDTO } from '../types/credential';
+import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   bffLogin,
   createCredential,
@@ -21,8 +23,8 @@ import {
   revokeCredential,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { CredentialFormat, Transport } from '../utils/enums';
-import { pinSetup } from '../utils/init';
+import { CredentialFormat, RevocationMethod, Transport } from '../utils/enums';
+import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 describe('ONE-614: Proof request', () => {
@@ -31,8 +33,7 @@ describe('ONE-614: Proof request', () => {
   let proofSchema: Record<string, any>;
 
   beforeAll(async () => {
-    await device.launchApp({ permissions: { camera: 'YES' } });
-    await pinSetup();
+    await launchApp();
     authToken = await bffLogin();
     credentialSchema = await createCredentialSchema(authToken);
     proofSchema = await createProofSchema(authToken, [credentialSchema]);
@@ -94,8 +95,7 @@ describe('ONE-614: Proof request', () => {
     let jwtCredentialId: string;
 
     beforeAll(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
 
       const claims: CredentialSchemaData['claims'] = [
         { datatype: 'STRING', key: 'field1', required: true },
@@ -196,8 +196,7 @@ describe('ONE-614: Proof request', () => {
 
   describe('Proof request without credentials', () => {
     beforeEach(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
     });
 
     it('Without credentials', async () => {
@@ -212,8 +211,7 @@ describe('ONE-614: Proof request', () => {
   describe('ONE-620: Revoked credentials', () => {
     const credentialIds: string[] = [];
     beforeAll(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
 
       for (let i = 0; i < 3; i++) {
         const credentialId = await credentialIssuance({
@@ -324,8 +322,7 @@ describe('ONE-614: Proof request', () => {
     let pictureProofSchema: Record<string, any>;
 
     beforeAll(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
 
       const pictureCredentialSchema = await createCredentialSchema(authToken, {
         claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
@@ -366,8 +363,7 @@ describe('ONE-614: Proof request', () => {
 
   describe('Proof request Transport Protocol TestCase', () => {
     beforeEach(async () => {
-      await device.launchApp({ delete: true, permissions: { camera: 'YES' } });
-      await pinSetup();
+      await launchApp({ delete: true });
     });
 
     interface TestCombination {
@@ -433,5 +429,77 @@ describe('ONE-614: Proof request', () => {
         await expect(WalletScreen.screen).toBeVisible();
       },
     );
+  });
+
+  describe('ONE-1316: Check validity of credential in proof request', () => {
+    let proofSchemaLVVC: ProofSchemaResponseDTO;
+    let credentialId: string;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+
+      credentialSchema = await createCredentialSchema(authToken, {
+        revocationMethod: RevocationMethod.LVVC,
+      });
+      proofSchemaLVVC = await createProofSchema(authToken, [credentialSchema]);
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchema,
+        transport: Transport.PROCIVIS,
+      });
+    });
+
+    it('Proof request checks LVVC', async () => {
+      const proofRequestId = await createProofRequest(
+        authToken,
+        proofSchemaLVVC,
+        {
+          transport: Transport.PROCIVIS,
+        },
+      );
+      await requestProof(proofRequestId, authToken);
+
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
+      await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
+        'LVVC',
+      );
+    });
+
+    it('Wallet proposes a validation update if necessary', async () => {
+      await reloadApp();
+    });
+
+    it('Holder receives new validation', async () => {
+      const proofRequestId = await createProofRequest(
+        authToken,
+        proofSchemaLVVC,
+        {
+          transport: Transport.PROCIVIS,
+        },
+      );
+      await requestProof(proofRequestId, authToken);
+      await expect(WalletScreen.screen).toBeVisible();
+
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
+      await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
+        'LVVC',
+      );
+    });
+
+    it('Holder receives revocation', async () => {
+      await revokeCredential(credentialId, authToken);
+      // await reloadApp();
+      const proofRequestId = await createProofRequest(
+        authToken,
+        proofSchemaLVVC,
+        { transport: Transport.OPENID4VC },
+      );
+      const proofInvitationUrl = await requestProof(proofRequestId, authToken);
+
+      await scanURL(proofInvitationUrl);
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+    });
   });
 });

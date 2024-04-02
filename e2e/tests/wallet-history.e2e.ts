@@ -14,7 +14,7 @@ import {
   offerCredential,
 } from '../utils/bff-api';
 import { CredentialFormat } from '../utils/enums';
-import { pinSetup } from '../utils/init';
+import { launchApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 describe('ONE-224: Wallet history', () => {
@@ -23,8 +23,8 @@ describe('ONE-224: Wallet history', () => {
   let credentialId: string;
 
   beforeAll(async () => {
-    await device.launchApp({ permissions: { camera: 'YES' } });
-    await pinSetup();
+    await launchApp();
+
     authToken = await bffLogin();
     credentialSchemaJWT = await createCredentialSchema(authToken, {
       format: CredentialFormat.JWT,
