@@ -3,14 +3,19 @@ import { expect } from 'detox';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
 import { Transport } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface credentialIssuanceProps {
   authToken?: string;
-  claimValues?: Array<{ claimId: string; value: string }>;
-  credentialSchema: Record<string, any>;
+  claimValues?: Array<{
+    claimId: string;
+    claims?: credentialIssuanceProps['claimValues'][];
+    value: string;
+  }>;
+  credentialSchema: CredentialSchemaResponseDTO;
   redirectUri?: string;
   transport?: Transport;
 }
@@ -66,8 +71,8 @@ export const credentialIssuance = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
-  await expect(CredentialOfferScreen.screen).toBeVisible();
 
+  await expect(CredentialOfferScreen.screen).toBeVisible();
   if (action === CredentialAction.ACCEPT) {
     await acceptCredentialTestCase(credentialId, data);
   } else {
