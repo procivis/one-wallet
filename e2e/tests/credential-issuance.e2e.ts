@@ -8,21 +8,27 @@ import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import CredentialValidityProcessScreen from '../page-objects/CredentialValidityProcessScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import WalletScreen from '../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
   createCredential,
   createCredentialSchema,
   offerCredential,
 } from '../utils/bff-api';
-import { CredentialFormat, RevocationMethod, Transport } from '../utils/enums';
+import {
+  CredentialFormat,
+  DataType,
+  RevocationMethod,
+  Transport,
+} from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
-  let credentialSchemaJWT: Record<string, any>;
-  let credentialSchemaSD_JWT: Record<string, any>;
-  let credentialSchemaJWT_with_LVVC: Record<string, any>;
+  let credentialSchemaJWT: CredentialSchemaResponseDTO;
+  let credentialSchemaSD_JWT: CredentialSchemaResponseDTO;
+  let credentialSchemaJWT_with_LVVC: CredentialSchemaResponseDTO;
 
   beforeAll(async () => {
     await launchApp();
@@ -195,7 +201,7 @@ describe('ONE-601: Credential issuance', () => {
 
   describe('ONE-796: OpenID4VC Credential transport', () => {
     const issueCredentialTestCase = async (
-      credentialSchema: Record<string, any>,
+      credentialSchema: CredentialSchemaResponseDTO,
     ) => {
       const credentialId = await createCredential(authToken, credentialSchema, {
         transport: Transport.OPENID4VC,
@@ -233,7 +239,9 @@ describe('ONE-601: Credential issuance', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
       const credentialSchema = await createCredentialSchema(authToken, {
-        claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
+        claims: [
+          { datatype: DataType.PICTURE, key: pictureKey, required: true },
+        ],
       });
 
       credentialId = await createCredential(authToken, credentialSchema);
