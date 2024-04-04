@@ -134,6 +134,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         }}
         expanded={expanded}
         onImagePreview={onImagePreview}
+        testID="CredentialOfferScreen.detail"
       />
     </SharingScreen>
   );
