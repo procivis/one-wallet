@@ -1,9 +1,9 @@
 import {
   Button,
   concatTestID,
-  DetailScreen,
+  NavigationHeader,
   useAppColorScheme,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -12,8 +12,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { Credential } from '../../components/proof-request/credential';
 import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
@@ -57,47 +59,52 @@ const SelectCredentialScreen: FunctionComponent = () => {
   );
 
   return (
-    <DetailScreen
-      contentStyle={[
-        styles.container,
-        { backgroundColor: colorScheme.background },
-      ]}
-      onBack={navigation.goBack}
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={[styles.scrollView, { backgroundColor: colorScheme.background }]}
       testID="ProofRequestSelectCredentialScreen"
-      title={translate('proofRequest.selectCredential.title')}
     >
-      {selectionOptions.map((credentialId, index, { length }) => {
-        const selected = selectedCredentialId === credentialId;
-        return (
-          <View key={credentialId} style={styles.item}>
-            <Credential
-              credentialId={credentialId}
-              lastItem={index === length - 1}
-              onPress={
-                selected
-                  ? undefined
-                  : () => setSelectedCredentialId(credentialId)
-              }
-              request={request}
-              selected={selected}
-              testID={concatTestID(
-                'ProofRequestSelectCredentialScreen.credential',
-                credentialId,
-              )}
-            />
-          </View>
-        );
-      })}
+      <View
+        style={styles.content}
+        testID="ProofRequestSelectCredentialScreen.content"
+      >
+        <NavigationHeader
+          leftItem={HeaderBackButton}
+          modalHandleVisible
+          title={translate('proofRequest.selectCredential.title')}
+        />
+        {selectionOptions.map((credentialId, index, { length }) => {
+          const selected = selectedCredentialId === credentialId;
+          return (
+            <View key={credentialId} style={styles.item}>
+              <Credential
+                credentialId={credentialId}
+                lastItem={index === length - 1}
+                onPress={
+                  selected
+                    ? undefined
+                    : () => setSelectedCredentialId(credentialId)
+                }
+                request={request}
+                selected={selected}
+                testID={concatTestID(
+                  'ProofRequestSelectCredentialScreen.credential',
+                  credentialId,
+                )}
+              />
+            </View>
+          );
+        })}
 
-      <View style={styles.bottom}>
-        <Button
-          onPress={onConfirm}
-          testID="ProofRequestSelectCredentialScreen.confirm"
-        >
-          {translate('proofRequest.selectCredential.select')}
-        </Button>
+        <SafeAreaView edges={['bottom']} style={styles.bottom}>
+          <Button
+            onPress={onConfirm}
+            testID="ProofRequestSelectCredentialScreen.confirm"
+            title={translate('proofRequest.selectCredential.select')}
+          />
+        </SafeAreaView>
       </View>
-    </DetailScreen>
+    </ScrollView>
   );
 };
 
@@ -106,12 +113,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  container: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   item: {
     marginBottom: 12,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
 });
 

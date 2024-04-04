@@ -1,10 +1,11 @@
-import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
 import {
   Button,
+  ButtonType,
   concatTestID,
+  CredentialDetailsCardListItem,
   Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import {
   CredentialListItem,
   CredentialStateEnum,
@@ -100,12 +101,13 @@ export const CredentialSelect: FunctionComponent<{
     <>
       {!credential && (
         <View
-          style={{ backgroundColor: colorScheme.alert }}
+          style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.missing')}
         >
           <Typography
             align="center"
-            color={colorScheme.alertText}
+            color={colorScheme.text}
+            preset="s/line-height-capped"
             style={styles.notice}
           >
             {translate('proofRequest.missingCredential.notice')}
@@ -114,12 +116,13 @@ export const CredentialSelect: FunctionComponent<{
       )}
       {validityState === ValidityState.Revoked && (
         <View
-          style={{ backgroundColor: colorScheme.alert }}
+          style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.revoked')}
         >
           <Typography
             align="center"
-            color={colorScheme.alertText}
+            color={colorScheme.text}
+            preset="s/line-height-capped"
             style={styles.notice}
           >
             {translate('proofRequest.revokedCredential.notice')}
@@ -128,12 +131,13 @@ export const CredentialSelect: FunctionComponent<{
       )}
       {validityState === ValidityState.Suspended && (
         <View
-          style={{ backgroundColor: colorScheme.alert }}
+          style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.suspended')}
         >
           <Typography
             align="center"
-            color={colorScheme.alertText}
+            color={colorScheme.text}
+            preset="s/line-height-capped"
             style={styles.notice}
           >
             {translate('proofRequest.suspendedCredential.notice')}
@@ -142,12 +146,13 @@ export const CredentialSelect: FunctionComponent<{
       )}
       {invalid && (
         <View
-          style={{ backgroundColor: colorScheme.notice }}
+          style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.invalid')}
         >
           <Typography
             align="center"
-            color={colorScheme.noticeText}
+            color={colorScheme.text}
+            preset="s/line-height-capped"
             style={styles.notice}
           >
             {translate('proofRequest.invalidCredential.notice')}
@@ -156,13 +161,13 @@ export const CredentialSelect: FunctionComponent<{
       )}
       {selectionOptions.length > 1 && (
         <View
-          style={{ backgroundColor: colorScheme.background }}
+          style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.multiple')}
         >
           <Typography
             align="center"
-            color={colorScheme.noticeText}
-            style={styles.notice}
+            color={colorScheme.text}
+            preset="s/line-height-capped"
           >
             {translate('proofRequest.multipleCredentials.notice')}
           </Typography>
@@ -170,10 +175,9 @@ export const CredentialSelect: FunctionComponent<{
             onPress={onSelectCredential}
             style={styles.noticeButton}
             testID={concatTestID(testID, 'notice.multiple.button')}
-            type="light"
-          >
-            {translate('proofRequest.multipleCredentials.select')}
-          </Button>
+            title={translate('proofRequest.multipleCredentials.select')}
+            type={ButtonType.Secondary}
+          />
         </View>
       )}
     </>
@@ -193,7 +197,7 @@ export const CredentialSelect: FunctionComponent<{
       onImagePreview={onImagePreview}
       style={[
         styles.credential,
-        { borderColor: colorScheme.lighterGrey },
+        { borderColor: colorScheme.background },
         style,
       ]}
     />
@@ -207,10 +211,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   notice: {
-    marginHorizontal: 12,
-    marginVertical: 8,
+    padding: 12,
   },
   noticeButton: {
-    margin: 8,
+    marginTop: 12,
+    paddingVertical: 11,
   },
 });
