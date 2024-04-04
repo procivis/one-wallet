@@ -53,6 +53,7 @@ const ImportScreen: FC = () => {
         label={translate('restoreBackup.import.importBackup')}
         onAddPress={handleAddPress}
         onDeletePress={handleDeletePress}
+        testID="RestoreBackupImportScreen.file"
       />
     </BackupScreen>
   );
