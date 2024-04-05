@@ -1,43 +1,142 @@
-import { ConsentScreen } from '@procivis/react-native-components';
+import {
+  Button,
+  ButtonType,
+  ContrastingStatusBar,
+  CredentialDetailsCard,
+  Typography,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
-const SetupScreen: FC = () => {
+const DummyCredential: FC<{
+  detail: string;
+  name: string;
+  style?: StyleProp<ViewStyle>;
+}> = ({ name, detail, style }) => (
+  <CredentialDetailsCard
+    attributes={[]}
+    card={{
+      header: {
+        accessory: <View />,
+        credentialDetail: detail,
+        credentialName: name,
+      },
+    }}
+    style={style}
+  />
+);
+
+export const SetupScreen: FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'Setup'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const colorScheme = useAppColorScheme();
+  const insets = useSafeAreaInsets();
+
+  const onSetup = useCallback(
+    () => navigation.navigate('PinCodeInitialization'),
+    [navigation],
+  );
+  const onRestore = useCallback(
+    () =>
+      rootNavigation.navigate('Settings', {
+        params: {
+          screen: 'Dashboard',
+        },
+        screen: 'RestoreBackup',
+      }),
+    [rootNavigation],
+  );
 
   return (
-    <ConsentScreen
-      buttons={[
-        {
-          onPress: () => navigation.navigate('PinCodeInitialization'),
-          testID: 'OnboardingSetupScreen.setup',
-          title: translate('onboarding.setup.getStarted'),
-        },
-        {
-          onPress: () =>
-            rootNavigation.navigate('Settings', {
-              params: {
-                screen: 'Dashboard',
-              },
-              screen: 'RestoreBackup',
-            }),
-          testID: 'OnboardingSetupScreen.restore',
-          title: translate('onboarding.setup.restoreFromBackup'),
-        },
+    <View
+      style={[
+        styles.screen,
+        { backgroundColor: colorScheme.background, paddingTop: insets.top },
       ]}
-      description={translate('onboarding.setup.description')}
-      illustration={{
-        imageSource: require('./assets/setup-illustration.png'),
-      }}
       testID="OnboardingSetupScreen"
-      title={translate('onboarding.setup.title')}
-    />
+    >
+      <ContrastingStatusBar backgroundColor={colorScheme.background} />
+      <View accessibilityElementsHidden={true} style={styles.top}>
+        <DummyCredential
+          detail={'... 0987  ·  DEBIT'}
+          name={'Bank ID'}
+          style={styles.credential1}
+        />
+        <DummyCredential
+          detail={'30.06.1990  ·  CHE'}
+          name={'National Identity'}
+          style={styles.credential2}
+        />
+      </View>
+      <View
+        style={{
+          backgroundColor: colorScheme.white,
+          paddingBottom: insets.bottom,
+        }}
+      >
+        <View style={styles.text}>
+          <Typography color={colorScheme.black} preset="l/line-height-large">
+            {translate('onboarding.setup.title')}
+          </Typography>
+          <Typography color={colorScheme.text} style={styles.description}>
+            {translate('onboarding.setup.description')}
+          </Typography>
+        </View>
+        <View style={styles.buttons}>
+          <Button
+            onPress={onSetup}
+            testID="OnboardingSetupScreen.setup"
+            title={translate('onboarding.setup.title')}
+          />
+          <Button
+            onPress={onRestore}
+            style={styles.secondaryButton}
+            testID="OnboardingSetupScreen.restore"
+            title={translate('onboarding.setup.restoreFromBackup')}
+            type={ButtonType.Secondary}
+          />
+        </View>
+      </View>
+    </View>
   );
 };
 
-export default SetupScreen;
+const styles = StyleSheet.create({
+  buttons: {
+    padding: 12,
+    paddingBottom: 24,
+  },
+  credential1: {
+    position: 'absolute',
+    transform: [{ scale: 0.75 }, { rotate: '20deg' }],
+  },
+  credential2: {
+    bottom: 20,
+    position: 'absolute',
+    transform: [{ scale: 0.75 }, { rotate: '-17deg' }],
+  },
+  description: {
+    marginBottom: 24,
+    marginTop: 8,
+  },
+  screen: {
+    flex: 1,
+  },
+  secondaryButton: {
+    marginTop: 4,
+  },
+  text: {
+    padding: 20,
+    paddingBottom: 24,
+  },
+  top: {
+    flex: 1,
+  },
+});
