@@ -230,6 +230,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                 accessibilityLabel={translate('wallet.settings')}
                 onPress={handleWalletSettingsClick}
                 style={styles.settingsButton}
+                testID="WalletScreen.header.action-settings"
               >
                 <OptionsIcon color={colorScheme.text} />
               </TouchableOpacity>

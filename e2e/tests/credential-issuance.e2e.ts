@@ -18,8 +18,10 @@ import {
 import {
   CredentialFormat,
   DataType,
+  LoadingResultState,
   RevocationMethod,
   Transport,
+  WalletKeyStorageType,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
@@ -232,6 +234,49 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
+  describe('ONE-1697: Wallet key storage location', () => {
+    let credentialSchemaSoftware: CredentialSchemaResponseDTO;
+    let credentialSchemaHardware: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+
+      credentialSchemaSoftware = await createCredentialSchema(authToken, {
+        format: CredentialFormat.JWT,
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+        walletStorageType: WalletKeyStorageType.SOFTWARE,
+      });
+      credentialSchemaHardware = await createCredentialSchema(authToken, {
+        format: CredentialFormat.JWT,
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+        walletStorageType: WalletKeyStorageType.HARDWARE,
+      });
+    });
+
+    it('Issue Software schema', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaSoftware,
+        transport: Transport.OPENID4VC,
+      });
+      await WalletScreen.credentialName(credentialSchemaSoftware.name).tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+    });
+
+    // Issuance fail because emulator does not have hardware key
+    it('Issue Hardware schema', async () => {
+      await credentialIssuance(
+        {
+          authToken: authToken,
+          credentialSchema: credentialSchemaHardware,
+          transport: Transport.OPENID4VC,
+        },
+        CredentialAction.ACCEPT,
+        LoadingResultState.Failure,
+      );
+    });
+  });
+
   describe('ONE-1233: Picture claim', () => {
     let credentialId: string;
     const pictureKey = 'picture';
@@ -244,16 +289,10 @@ describe('ONE-601: Credential issuance', () => {
         ],
       });
 
-      credentialId = await createCredential(authToken, credentialSchema);
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
+      credentialId = await credentialIssuance({
+        authToken,
+        credentialSchema,
+      });
     });
 
     it('display picture link in credential detail', async () => {
