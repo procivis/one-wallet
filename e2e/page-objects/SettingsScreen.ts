@@ -10,4 +10,16 @@ export default abstract class SettingsScreen {
   static get back() {
     return element(by.id('SettingsScreen.header.back'));
   }
+
+  static get createBackupButton() {
+    return element(by.id('SettingsScreen.createBackup'));
+  }
+
+  static get restoreBackupButton() {
+    return element(by.id('SettingsScreen.restoreBackup'));
+  }
+
+  static get languageChangepButton() {
+    return element(by.id('SettingsScreen.languageChange'));
+  }
 }
