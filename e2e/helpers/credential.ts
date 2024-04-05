@@ -5,7 +5,7 @@ import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
-import { Transport } from '../utils/enums';
+import { LoadingResultState, Transport } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface credentialIssuanceProps {
@@ -28,9 +28,16 @@ export enum CredentialAction {
 const acceptCredentialTestCase = async (
   credentialId: string,
   data: credentialIssuanceProps,
+  expectedResult: LoadingResultState,
 ) => {
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+
+  if (expectedResult === LoadingResultState.Failure) {
+    await expect(CredentialAcceptProcessScreen.status.failure).toBeVisible();
+    await CredentialAcceptProcessScreen.closeButton.tap();
+    return;
+  }
   await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
 
   if (data.redirectUri) {
@@ -56,6 +63,7 @@ const rejectCredentialTestCase = async () => {
 export const credentialIssuance = async (
   data: credentialIssuanceProps,
   action: CredentialAction = CredentialAction.ACCEPT,
+  expectedResult: LoadingResultState = LoadingResultState.Success,
 ) => {
   if (!data.authToken) {
     data.authToken = await bffLogin();
@@ -74,7 +82,7 @@ export const credentialIssuance = async (
 
   await expect(CredentialOfferScreen.screen).toBeVisible();
   if (action === CredentialAction.ACCEPT) {
-    await acceptCredentialTestCase(credentialId, data);
+    await acceptCredentialTestCase(credentialId, data, expectedResult);
   } else {
     await rejectCredentialTestCase();
   }
