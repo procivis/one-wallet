@@ -1,18 +1,18 @@
-import { CredentialDetailsCard } from '@procivis/one-react-native-components';
 import {
-  ActivityIndicator,
-  SharingScreen,
-  SharingScreenVariation,
-  TouchableOpacity,
-  Typography,
+  Button,
+  CredentialDetailsCard,
+  EntityCluster,
+  NavigationHeader,
   useAppColorScheme,
   useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
+import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
-import { Insets, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { HelpIcon } from '../../components/icon/navigation-icon';
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
@@ -26,22 +26,12 @@ import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { detailsCardFromCredential } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
-const detailButtonHitslop: Insets = {
-  bottom: 10,
-  left: 10,
-  right: 10,
-  top: 10,
-};
-
 const CredentialOfferScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
-  const issuanceNavigation =
+  const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
@@ -52,111 +42,94 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   useBlockOSBackNavigation();
 
-  const onIssuerDetail = useCallback(() => {
-    issuanceNavigation.navigate('CredentialOfferDetail', { credentialId });
-  }, [credentialId, issuanceNavigation]);
-
   const reject = useCallback(() => {
     rejectCredential(interactionId).catch((e) =>
       reportException(e, 'Reject credential offer failed'),
     );
   }, [interactionId, rejectCredential]);
 
-  const onReject = useCallback(() => {
-    reject();
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [reject, rootNavigation]);
-
   useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
-    issuanceNavigation.navigate('Processing', { credentialId, interactionId });
-  }, [credentialId, interactionId, issuanceNavigation]);
+    navigation.navigate('Processing', {
+      credentialId,
+      interactionId,
+    });
+  }, [credentialId, interactionId, navigation]);
 
   const onImagePreview = useCredentialImagePreview();
 
-  if (!credential) {
-    return <ActivityIndicator />;
-  }
-
-  const { card, attributes } = detailsCardFromCredential(credential, config);
+  const { card, attributes } = credential
+    ? detailsCardFromCredential(credential, config)
+    : { attributes: [], card: undefined };
 
   return (
-    <SharingScreen
-      cancelLabel={translate('credentialOffer.reject')}
-      contentTitle={translate('credentialOffer.credential')}
-      header={
-        <View style={styles.header}>
-          <View style={styles.headerTopRow}>
-            <Typography
-              accessibilityRole="header"
-              bold={true}
-              caps={true}
-              size="sml"
-              style={styles.headerLabel}
-            >
-              {translate('credentialDetail.credential.issuer')}
-            </Typography>
-            <TouchableOpacity
-              accessibilityLabel={translate('common.info')}
-              accessibilityRole="button"
-              hitSlop={detailButtonHitslop}
-              onPress={onIssuerDetail}
-              style={[
-                styles.detailButton,
-                { backgroundColor: colorScheme.background },
-              ]}
-            >
-              <HelpIcon />
-            </TouchableOpacity>
-          </View>
-          <Typography
-            color={colorScheme.text}
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            {credential.issuerDid}
-          </Typography>
-        </View>
-      }
-      onCancel={onReject}
-      onSubmit={onAccept}
-      submitLabel={translate('credentialOffer.accept')}
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={styles.scrollView}
       testID="CredentialOfferScreen"
-      title={translate('credentialOffer.title')}
-      variation={SharingScreenVariation.Neutral}
     >
-      <CredentialDetailsCard
-        attributes={attributes}
-        card={{
-          ...card,
-          onHeaderPress,
-        }}
-        expanded={expanded}
-        onImagePreview={onImagePreview}
-        testID="CredentialOfferScreen.detail"
+      <NavigationHeader
+        leftItem={HeaderCloseModalButton}
+        modalHandleVisible
+        title={translate('credentialOffer.title')}
       />
-    </SharingScreen>
+
+      <View style={styles.content} testID="CredentialOfferScreen.content">
+        <EntityCluster
+          entityName={
+            credential?.issuerDid ?? translate('credentialOffer.unknownIssuer')
+          }
+          style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
+        />
+        {!credential || !card ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            <CredentialDetailsCard
+              attributes={attributes}
+              card={{
+                ...card,
+                onHeaderPress,
+              }}
+              expanded={expanded}
+              onImagePreview={onImagePreview}
+              testID="CredentialOfferScreen.detail"
+            />
+            <SafeAreaView edges={['bottom']} style={styles.bottom}>
+              <Button
+                onPress={onAccept}
+                title={translate('credentialOffer.accept')}
+              />
+            </SafeAreaView>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  detailButton: {
-    borderRadius: 12,
-    height: 24,
-    width: 24,
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingTop: 16,
   },
-  header: {
-    padding: 12,
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
-  headerLabel: {
-    marginBottom: 4,
+  contentContainer: {
+    flexGrow: 1,
   },
-  headerTopRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
+  issuer: {
+    borderBottomWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 0,
+    paddingVertical: 16,
+  },
+  scrollView: {
+    flex: 1,
   },
 });
 
