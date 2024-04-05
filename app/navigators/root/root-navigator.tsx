@@ -56,7 +56,7 @@ const RootNavigator: FunctionComponent = () => {
             animation:
               Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
             headerShown: false,
-            presentation: 'modal',
+            presentation: 'formSheet',
           }}
         />
         <RootStack.Screen component={SettingsNavigator} name="Settings" />
