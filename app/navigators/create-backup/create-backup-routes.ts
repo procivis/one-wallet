@@ -2,7 +2,12 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type CreateBackupNavigatorParamList = {
-  Dashboard: undefined;
+  Dashboard:
+    | {
+        backupFileName: string;
+        backupFilePath: string;
+      }
+    | undefined;
   Preview: {
     recoveryPassword: string;
   };
