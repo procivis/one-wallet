@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import CredentialAcceptProcessScreen from '../../screens/credential/credential-accept-process-screen';
-import CredentialOfferDetailScreen from '../../screens/credential/credential-offer-detail-screen';
 import CredentialOfferScreen from '../../screens/credential/credential-offer-screen';
 import { IssueCredentialNavigatorParamList } from './issue-credential-routes';
 
@@ -12,10 +11,6 @@ const IssueCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen component={CredentialOfferScreen} name="CredentialOffer" />
-      <Stack.Screen
-        component={CredentialOfferDetailScreen}
-        name="CredentialOfferDetail"
-      />
       <Stack.Screen
         component={CredentialAcceptProcessScreen}
         name="Processing"
