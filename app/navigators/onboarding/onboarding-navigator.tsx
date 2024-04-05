@@ -3,7 +3,7 @@ import React from 'react';
 
 import PinCodeInitializationScreen from '../../screens/onboarding/pin-code-initialization-screen';
 import PinCodeSetScreen from '../../screens/onboarding/pin-code-set-screen';
-import SetupScreen from '../../screens/onboarding/setup-screen';
+import { SetupScreen } from '../../screens/onboarding/setup-screen';
 import { OnboardingNavigatorParamList } from './onboarding-routes';
 
 const OnboardingStack =
