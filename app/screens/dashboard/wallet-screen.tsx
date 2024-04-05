@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   header: {
-    marginHorizontal: -24,
+    marginHorizontal: -16,
   },
   itemIcon: {
     borderRadius: 0,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    marginHorizontal: 24,
+    marginHorizontal: 16,
     overflow: 'visible',
     paddingHorizontal: 0,
   },
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 0,
     paddingBottom: 4,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingTop: 12,
   },
   titleWrapper: {
