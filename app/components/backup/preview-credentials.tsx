@@ -26,7 +26,7 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
   return (
     <Section
       style={[styles.credentials, fullWidth && styles.credentialsFullWidth]}
-      title={title}
+      title={`${title} (${credentials.length})`}
     >
       {credentials.map((credential, index, { length }) => (
         <View key={credential.id}>
