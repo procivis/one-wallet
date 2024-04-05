@@ -35,6 +35,7 @@ const RecoveryPasswordScreen: FC = () => {
         onAccessoryPress={() => setValues({ ...values, password: '' })}
         onChangeText={(password) => setValues({ ...values, password })}
         secureTextEntry
+        testID="CreateBackupRecoveryPasswordScreen.input.password"
         value={values.password}
       />
 
@@ -47,6 +48,7 @@ const RecoveryPasswordScreen: FC = () => {
           setValues({ ...values, passwordConfirmation })
         }
         secureTextEntry
+        testID="CreateBackupRecoveryPasswordScreen.input.reenterPassword"
         value={values.passwordConfirmation}
       />
     </BackupScreen>

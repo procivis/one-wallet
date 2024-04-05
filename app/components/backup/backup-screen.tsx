@@ -1,3 +1,4 @@
+import { concatTestID } from '@procivis/one-react-native-components';
 import {
   Button,
   DetailScreen,
@@ -70,7 +71,11 @@ export const BackupScreen: FC<BackupScreenProps> = ({
         {children}
       </View>
 
-      <Button disabled={isCtaDisabled} onPress={onCta}>
+      <Button
+        disabled={isCtaDisabled}
+        onPress={onCta}
+        testID={concatTestID(testID, 'mainButton')}
+      >
         {cta}
       </Button>
     </DetailScreen>
