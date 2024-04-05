@@ -3,12 +3,10 @@ import {
   concatTestID,
   EntityCluster,
   NavigationHeader,
+  useBlockOSBackNavigation,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
-import {
-  ActivityIndicator,
-  useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
+import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialStateEnum,
   OneError,
@@ -238,12 +236,12 @@ const ProofRequestScreen: FunctionComponent = () => {
       style={styles.scrollView}
       testID="ProofRequestSharingScreen"
     >
+      <NavigationHeader
+        leftItem={HeaderCloseModalButton}
+        modalHandleVisible
+        title={translate('proofRequest.title')}
+      />
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        <NavigationHeader
-          leftItem={HeaderCloseModalButton}
-          modalHandleVisible
-          title={translate('proofRequest.title')}
-        />
         <EntityCluster
           entityName={
             proof?.verifierDid ?? translate('proofRequest.unknownVerifier')
@@ -336,7 +334,7 @@ const styles = StyleSheet.create({
   },
   verifier: {
     paddingHorizontal: 0,
-    paddingVertical: 0,
+    paddingTop: 16,
   },
 });
 
