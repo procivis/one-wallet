@@ -55,7 +55,7 @@ const ProofProcessScreen: FunctionComponent = () => {
     }
   }, [walletStore, credentialDetail]);
 
-  const handleProofSubmit = useCallback(async () => {
+  const handleProofSubmit = useCallback(() => {
     setTimeout(async () => {
       try {
         await acceptProof({
