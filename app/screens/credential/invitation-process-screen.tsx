@@ -3,7 +3,11 @@ import {
   LoadingResultScreen,
 } from '@procivis/one-react-native-components';
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
@@ -17,6 +21,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
+  const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
 
   useBlockOSBackNavigation();
@@ -30,7 +35,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
-          navigation.navigate('IssueCredential', {
+          navigation.replace('IssueCredential', {
             params: {
               credentialId: result.credentialIds[0],
               interactionId: result.interactionId,
@@ -38,7 +43,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
             screen: 'CredentialOffer',
           });
         } else {
-          navigation.navigate('ShareCredential', {
+          navigation.replace('ShareCredential', {
             params: { request: result },
             screen: 'ProofRequest',
           });
@@ -57,6 +62,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         modalHandleVisible: true,
       }}
       loader={{
+        animate: isFocused,
         label: translate(`invitation.process.${state}.title`),
         state,
       }}
