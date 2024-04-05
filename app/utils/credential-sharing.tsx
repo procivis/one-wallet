@@ -1,16 +1,14 @@
 import {
   AlertOutlineIcon,
+  concatTestID,
   CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
   RequiredAttributeIcon,
-} from '@procivis/one-react-native-components';
-import {
-  concatTestID,
   Selector,
   SelectorStatus,
   TouchableOpacity,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import {
   Claim,
   Config,
@@ -101,14 +99,12 @@ const getAttributeSelectorStatus = (
   selected?: boolean,
 ): SelectorStatus => {
   if (!credential || validityState !== ValidityState.Valid) {
-    return field.required
-      ? SelectorStatus.LockedInvalid
-      : SelectorStatus.Invalid;
+    return SelectorStatus.Rejected;
   }
   if (field.required) {
-    return SelectorStatus.LockedSelected;
+    return SelectorStatus.Required;
   }
-  return selected ? SelectorStatus.SelectedCheck : SelectorStatus.Unselected;
+  return selected ? SelectorStatus.SelectedCheckmark : SelectorStatus.Empty;
 };
 
 const getDisplayedAttributes = (
@@ -122,7 +118,7 @@ const getDisplayedAttributes = (
     return credential.claims.map((claim) => ({
       claim,
       id: claim.id,
-      status: SelectorStatus.LockedSelected,
+      status: SelectorStatus.Required,
     }));
   }
 
@@ -256,9 +252,7 @@ export const selectCredentialCardFromCredential = (
   );
   const rightAccessory = (
     <Selector
-      status={
-        selected ? SelectorStatus.SelectedRadio : SelectorStatus.Unselected
-      }
+      status={selected ? SelectorStatus.SelectedRadio : SelectorStatus.Empty}
     />
   );
   const notice =
