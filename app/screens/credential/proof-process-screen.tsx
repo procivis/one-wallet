@@ -5,7 +5,11 @@ import {
 } from '@procivis/one-react-native-components';
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { WalletStorageType } from '@procivis/react-native-one-core';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
@@ -28,6 +32,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
+  const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
   const [closeTimeout, setCloseTimeout] = useState(5);
   const [state, setState] = useState(LoaderViewState.InProgress);
@@ -125,6 +130,7 @@ const ProofProcessScreen: FunctionComponent = () => {
         title: translate('proofRequest.title'),
       }}
       loader={{
+        animate: isFocused,
         label: translate(`proofRequest.process.${state}.title`),
         state,
       }}
