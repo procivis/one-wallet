@@ -41,14 +41,24 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
+  useCredentialDetail,
   useCredentialRevocationCheck,
   usePagedCredentials,
 } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { cardFromCredentialListItem } from '../../utils/credential';
+import { getCredentialCardPropsFromCredential } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
+
+const Credential: FunctionComponent<{
+  credentialId: string;
+}> = ({ credentialId }) => {
+  const { data: credential } = useCredentialDetail(credentialId);
+  return credential ? (
+    <CredentialCard {...getCredentialCardPropsFromCredential(credential)} />
+  ) : null;
+};
 
 const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme__OLD = useAppColorScheme__OLD();
@@ -59,9 +69,13 @@ const WalletScreen: FunctionComponent = observer(() => {
     locale: { locale },
   } = useStores();
   const [searchPhrase, setSearchPhrase] = useState<string>('');
-  const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>(
-    {},
-  );
+  const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
+    status: [
+      CredentialStateEnum.ACCEPTED,
+      CredentialStateEnum.SUSPENDED,
+      CredentialStateEnum.REVOKED,
+    ],
+  });
   const {
     data: credentialsData,
     fetchNextPage,
@@ -70,16 +84,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
 
   const credentials = useMemo(
-    () =>
-      credentialsData?.pages
-        .map((page) => page.values)
-        .flat()
-        .filter(
-          ({ state }) =>
-            state === CredentialStateEnum.ACCEPTED ||
-            state === CredentialStateEnum.SUSPENDED ||
-            state === CredentialStateEnum.REVOKED,
-        ),
+    () => credentialsData?.pages.map((page) => page.values).flat(),
     [credentialsData?.pages],
   );
 
@@ -162,11 +167,9 @@ const WalletScreen: FunctionComponent = observer(() => {
             styles.listItem,
             index === section.data.length - 1 ? styles.listItemLast : undefined,
           ]}
+          testID={testID}
         >
-          <CredentialCard
-            {...cardFromCredentialListItem(credential)}
-            testID={testID}
-          />
+          <Credential credentialId={credential.id} />
         </TouchableOpacity>
       );
     },
