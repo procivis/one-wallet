@@ -12859,6 +12859,7 @@ __metadata:
     react-native-keep-awake: "npm:^4.0.0"
     react-native-keychain: "npm:^8.0.0"
     react-native-localize: "npm:^3.0.0"
+    react-native-permissions: "npm:^4.1.5"
     react-native-reanimated: "npm:^2.17.0"
     react-native-safe-area-context: "npm:4.5.2"
     react-native-screens: "npm:^3.20.0"
@@ -14161,6 +14162,20 @@ __metadata:
     react-native-macos:
       optional: true
   checksum: 263a387ec3af21d2aae48272da32a59585c1b28ea0af5f05d3e07cbccdbe14fbfdd8e61dffc22f40317022b68ccd732f4dace67d7f16b867b59b198599698442
+  languageName: node
+  linkType: hard
+
+"react-native-permissions@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "react-native-permissions@npm:4.1.5"
+  peerDependencies:
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-windows: ">=0.70.0"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 93dd8ec9c4f5259b959fe0ec560c95c10518e893358b53acf9a380dca7d58e541274bf25cfe83e09c769b260fbce1361fa4497488b6bbcad499d8fb2cdefb5c0
   languageName: node
   linkType: hard
 
