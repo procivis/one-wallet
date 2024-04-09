@@ -5,7 +5,7 @@ import {
   TouchableOpacityRef,
   useAccessibilityAnnouncement,
   useAccessibilityFocus,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import React, {
   forwardRef,
   useCallback,
