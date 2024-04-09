@@ -3,8 +3,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type OnboardingNavigatorParamList = {
   PinCodeInitialization: undefined;
-  PinCodeSet: undefined;
+  Security: undefined;
   Setup: undefined;
+  UserAgreement: undefined;
 };
 
 export type OnboardingRouteProp<

@@ -1,4 +1,12 @@
 import { useMemoAsync } from '@procivis/react-native-components';
+import { useCallback, useMemo } from 'react';
+import { Platform } from 'react-native';
+import {
+  check as checkPermission,
+  PERMISSIONS,
+  request as requestPermission,
+  RESULTS,
+} from 'react-native-permissions';
 import TouchID from 'react-native-touch-id';
 
 import { reportException } from '../../utils/reporting';
@@ -36,4 +44,26 @@ export async function biometricAuthenticate(
 
 export const useBiometricType = (): Biometry | null => {
   return useMemoAsync(getBiometricType, [], null);
+};
+
+export const useFaceIDPermission = () => {
+  const status = useMemoAsync(
+    () =>
+      Platform.OS === 'ios'
+        ? checkPermission(PERMISSIONS.IOS.FACE_ID)
+        : RESULTS.UNAVAILABLE,
+    [],
+  );
+
+  const request = useCallback(
+    async () =>
+      status === RESULTS.DENIED
+        ? requestPermission(PERMISSIONS.IOS.FACE_ID).then(
+            (result) => result === RESULTS.GRANTED,
+          )
+        : status === RESULTS.GRANTED,
+    [status],
+  );
+
+  return useMemo(() => ({ request, status }), [status, request]);
 };
