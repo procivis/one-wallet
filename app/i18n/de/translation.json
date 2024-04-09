@@ -79,8 +79,6 @@
   "onboarding.pinCodeScreen.key.delete": "löschen",
   "onboarding.pinCodeScreen.key.faceID": "Face ID",
   "onboarding.pinCodeScreen.key.fingerprint": "Fingerabdruck",
-  "onboarding.pinCodeSet.description": "Ihr Wallet ist nun bereit, mit Ihren verifizierten Nachweisen gefüllt zu werden.",
-  "onboarding.pinCodeSet.title": "PIN-Code eingestellt",
   "proofRequest.attributes": "Angeforderte Attribute",
   "proofRequest.confirm": "Teilen",
   "proofRequest.missingAttribute": "Attribut fehlend",
