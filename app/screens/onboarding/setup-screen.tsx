@@ -40,7 +40,7 @@ export const SetupScreen: FC = () => {
   const insets = useSafeAreaInsets();
 
   const onSetup = useCallback(
-    () => navigation.navigate('PinCodeInitialization'),
+    () => navigation.navigate('UserAgreement'),
     [navigation],
   );
   const onRestore = useCallback(
@@ -93,7 +93,7 @@ export const SetupScreen: FC = () => {
           <Button
             onPress={onSetup}
             testID="OnboardingSetupScreen.setup"
-            title={translate('onboarding.setup.title')}
+            title={translate('onboarding.setup.getStarted')}
           />
           <Button
             onPress={onRestore}
