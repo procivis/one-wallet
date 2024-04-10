@@ -26,6 +26,10 @@ export const HeaderCloseModalButton = () => {
     });
   }, [navigation]);
   return (
-    <BackButton icon={BackButtonIcon.Close} onPress={handleCloseButtonPress} />
+    <BackButton
+      icon={BackButtonIcon.Close}
+      onPress={handleCloseButtonPress}
+      testID="Screen.closeButton"
+    />
   );
 };
