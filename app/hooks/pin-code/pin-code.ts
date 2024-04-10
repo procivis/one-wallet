@@ -26,15 +26,23 @@ export function usePinCodeInitialized(): boolean | undefined {
         globalPinInitialized = Boolean(loaded);
       });
     }
-
-    const subscription = DeviceEventEmitter.addListener(
-      PIN_CODE_INITIALIZATION_EVENT,
-      () => setInitialized(globalPinInitialized),
-    );
-    return () => subscription.remove();
   }, []);
 
+  useOnPinCodeInitialized(setInitialized);
+
   return initialized;
+}
+
+export function useOnPinCodeInitialized(
+  callback: (initialized: boolean) => void,
+) {
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      PIN_CODE_INITIALIZATION_EVENT,
+      () => callback(globalPinInitialized!),
+    );
+    return () => subscription.remove();
+  }, [callback]);
 }
 
 export function storePin(userEntry: string): void {
