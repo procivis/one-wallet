@@ -1,6 +1,6 @@
 import { device, expect } from 'detox';
 
-import PinCodeScreen from '../page-objects/PinCodeScreen';
+import PinCodeScreen from '../page-objects/onboarding/PinCodeScreen';
 import { CORRECT_PIN_DIGIT } from './init';
 
 /**
