@@ -99,6 +99,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
             <SafeAreaView edges={['bottom']} style={styles.bottom}>
               <Button
                 onPress={onAccept}
+                testID="CredentialOfferScreen.accept"
                 title={translate('credentialOffer.accept')}
               />
             </SafeAreaView>
