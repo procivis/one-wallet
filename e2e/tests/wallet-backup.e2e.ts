@@ -5,7 +5,7 @@ import BackupPreviewScreen from '../page-objects/backup/BackupPreviewScreen';
 import CreateBackupProcessingScreen from '../page-objects/backup/BackupProcessingScreen';
 import BackupRecoveryPasswordScreen from '../page-objects/backup/BackupRecoveryPasswordScreen';
 import CreateBackupDashboardScreen from '../page-objects/CreateBackupDashboardScreen';
-import OnboardingSetupScreen from '../page-objects/OnboardingSetupScreen';
+import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScreen';
 import RestoreBackupDashboardScreen from '../page-objects/restore/RestoreBackupDashboardScreen';
 import RestoreBackupImportScreen from '../page-objects/restore/RestoreBackupImportScreen';
 import SettingsScreen from '../page-objects/SettingsScreen';
