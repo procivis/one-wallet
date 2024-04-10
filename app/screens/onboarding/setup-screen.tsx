@@ -15,18 +15,35 @@ import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
+const BG_IMAGES = [
+  {
+    color: '#C2CDF1',
+    imageSource: require('../../../assets/credential-background/01.png'),
+  },
+  {
+    color: '#E5C7A6',
+    imageSource: require('../../../assets/credential-background/05.png'),
+  },
+];
+
 const DummyCredential: FC<{
+  bgImageIndex: number;
   detail: string;
   name: string;
   style?: StyleProp<ViewStyle>;
-}> = ({ name, detail, style }) => (
+}> = ({ name, detail, style, bgImageIndex }) => (
   <CredentialDetailsCard
     attributes={[]}
     card={{
+      cardImage: {
+        imageSource: BG_IMAGES[bgImageIndex].imageSource,
+      },
+      color: BG_IMAGES[bgImageIndex].color,
       header: {
         accessory: <View />,
         credentialDetail: detail,
         credentialName: name,
+        iconLabelColor: '#000',
       },
     }}
     style={style}
@@ -65,11 +82,13 @@ export const SetupScreen: FC = () => {
       <ContrastingStatusBar backgroundColor={colorScheme.background} />
       <View accessibilityElementsHidden={true} style={styles.top}>
         <DummyCredential
+          bgImageIndex={0}
           detail={'... 0987  ·  DEBIT'}
           name={'Bank ID'}
           style={styles.credential1}
         />
         <DummyCredential
+          bgImageIndex={1}
           detail={'30.06.1990  ·  CHE'}
           name={'National Identity'}
           style={styles.credential2}

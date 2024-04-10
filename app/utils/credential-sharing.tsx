@@ -13,7 +13,6 @@ import {
   Claim,
   Config,
   CredentialDetail,
-  CredentialListItem,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
 } from '@procivis/react-native-one-core';
@@ -21,16 +20,15 @@ import React from 'react';
 
 import { translate } from '../i18n';
 import {
-  cardFromCredentialListItem,
-  cardHeaderFromCredentialListItem,
   detailsCardAttributeFromClaim,
+  getCredentialCardPropsFromCredential,
   getValidityState,
   supportsSelectiveDisclosure,
   ValidityState,
 } from './credential';
 
-export const validityCheckedCardFromCredentialListItem = (
-  credential: CredentialListItem,
+export const validityCheckedCardFromCredential = (
+  credential: CredentialDetail,
   invalid: boolean,
   notice:
     | {
@@ -48,14 +46,14 @@ export const validityCheckedCardFromCredentialListItem = (
       credentialDetailTestID: concatTestID(testID, 'invalid'),
     };
   }
+
+  const card = getCredentialCardPropsFromCredential(credential, notice);
   return {
-    cardImage: undefined,
-    color: undefined,
+    ...card,
     header: {
-      ...cardHeaderFromCredentialListItem(credential),
+      ...card.header,
       ...invalidCredentialHeaderDetail,
     },
-    ...notice,
   };
 };
 
@@ -178,12 +176,7 @@ export const shareCredentialCardFromCredential = (
         }
       : undefined;
   const card = credential
-    ? validityCheckedCardFromCredentialListItem(
-        credential,
-        invalid,
-        notice,
-        testID,
-      )
+    ? validityCheckedCardFromCredential(credential, invalid, notice, testID)
     : missingCredentialCardFromRequest(request, notice, testID);
   const validityState = getValidityState(credential);
   const attributes: CredentialAttribute[] = getDisplayedAttributes(
@@ -262,7 +255,7 @@ export const selectCredentialCardFromCredential = (
           noticeIcon: AlertOutlineIcon,
         }
       : undefined;
-  const { header, ...cardProps } = cardFromCredentialListItem(
+  const { header, ...cardProps } = getCredentialCardPropsFromCredential(
     credential,
     notice,
     testID,
