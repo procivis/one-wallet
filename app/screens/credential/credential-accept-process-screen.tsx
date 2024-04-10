@@ -138,6 +138,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
         animate: isFocused,
         label: loaderLabel,
         state,
+        testID: 'CredentialAcceptProcessScreen.animation',
       }}
       testID="CredentialAcceptProcessScreen"
     />
