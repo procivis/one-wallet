@@ -14,6 +14,7 @@ import {
   createCredential,
   createCredentialSchema,
   offerCredential,
+  revokeCredential,
 } from '../utils/bff-api';
 import {
   CredentialFormat,
@@ -84,6 +85,7 @@ describe('ONE-601: Credential issuance', () => {
     let credentialId: string;
 
     beforeAll(async () => {
+      await launchApp({ delete: true });
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
@@ -99,6 +101,8 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Credential revoked remotely', async () => {
+      await revokeCredential(credentialId, authToken);
+
       await reloadApp();
 
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
@@ -304,6 +308,40 @@ describe('ONE-601: Credential issuance', () => {
       await CredentialDetailScreen.claim(pictureKey).value.tap();
       await expect(ImagePreviewScreen.screen).toBeVisible();
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
+    });
+  });
+
+  describe('ONE-1861: Nested claim', () => {
+    let credentialId: string;
+
+    const claims = [
+      { datatype: DataType.EMAIL, key: 'email', required: true },
+      {
+        claims: [
+          { datatype: DataType.STRING, key: 'country', required: true },
+          { datatype: DataType.STRING, key: 'region', required: true },
+          { datatype: DataType.STRING, key: 'city', required: true },
+          { datatype: DataType.STRING, key: 'street', required: true },
+        ],
+        datatype: DataType.OBJECT,
+        key: 'address',
+        required: true,
+      },
+    ];
+    beforeAll(async () => {
+      const credentialSchema = await createCredentialSchema(authToken, {
+        claims: claims,
+      });
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchema,
+        transport: Transport.OPENID4VC,
+      });
+    });
+
+    it('Object claim', async () => {
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
     });
   });
 });
