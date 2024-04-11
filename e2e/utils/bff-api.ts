@@ -1,13 +1,17 @@
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CredentialSchemaResponseDTO } from '../types/credential';
+import {
+  CredentialClaimSchemaResponseDTO,
+  CredentialSchemaResponseDTO,
+} from '../types/credential';
 import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   CredentialFormat,
   DataType,
   RevocationMethod,
   Transport,
+  WalletKeyStorageType,
 } from './enums';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
@@ -78,6 +82,7 @@ export interface CredentialSchemaData {
   format: CredentialFormat;
   name: string;
   revocationMethod: RevocationMethod;
+  walletStorageType?: WalletKeyStorageType;
 }
 
 export async function createCredentialSchema(
@@ -85,7 +90,7 @@ export async function createCredentialSchema(
   data?: Partial<CredentialSchemaData>,
 ): Promise<CredentialSchemaResponseDTO> {
   const schemaData = {
-    claims: [{ datatype: 'STRING', key: 'field', required: true }],
+    claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
     format: CredentialFormat.SDJWT,
     name: `detox-e2e-revocable-${uuidv4()}`,
     revocationMethod: RevocationMethod.STATUSLIST2021,
@@ -122,6 +127,46 @@ export interface CredentialData {
   transport?: Transport;
 }
 
+const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
+  let value: string = '';
+  switch (claim.datatype) {
+    case DataType.STRING:
+      value = 'string';
+      break;
+    case DataType.NUMBER:
+      value = '42';
+      break;
+    case DataType.DATE:
+      value = '2023-08-21T07:29:27.850Z';
+      break;
+    case DataType.PICTURE:
+      value =
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+      break;
+    case DataType.EMAIL:
+      value = 'test.support@procivis.ch';
+      break;
+  }
+  return value;
+};
+
+const claimsFilling = (claims: CredentialClaimSchemaResponseDTO[]) => {
+  const claimValues: CredentialData['claimValues'] = [];
+  claims.forEach((claim) => {
+    if (claim.datatype === DataType.OBJECT) {
+      const nestedValues = claimsFilling(claim.claims!);
+      claimValues.push(...nestedValues);
+      return;
+    }
+    const value: string = claimValue(claim);
+    claimValues.push({
+      claimId: claim.id,
+      value,
+    });
+  });
+  return claimValues;
+};
+
 /**
  * Create a new credential to be issued
  * @param authToken
@@ -129,43 +174,19 @@ export interface CredentialData {
  */
 export async function createCredential(
   authToken: string,
-  schema?: Record<string, any>,
+  schema: CredentialSchemaResponseDTO,
   credentialData?: Partial<CredentialData>,
 ): Promise<string> {
   const credentialSchema: Record<string, any> =
     schema ?? (await getCredentialSchema(authToken));
   const did: Record<string, any> = await getLocalDid(authToken);
-  const claimValues = credentialSchema.claims.map(
-    ({ id, datatype }: { datatype: string; id: string }) => {
-      let value: string = '';
-      switch (datatype) {
-        case DataType.STRING:
-          value = 'string';
-          break;
-        case DataType.NUMBER:
-          value = '42';
-          break;
-        case DataType.DATE:
-          value = '2023-08-21T07:29:27.850Z';
-          break;
-        case DataType.PICTURE:
-          value =
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
-          break;
-      }
-      return {
-        claimId: id,
-        value,
-      };
-    },
-  );
+  const claimValues = claimsFilling(schema.claims);
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: credentialSchema.id,
     issuerDid: did.id,
     transport: credentialData?.transport ?? Transport.PROCIVIS,
   };
-
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );

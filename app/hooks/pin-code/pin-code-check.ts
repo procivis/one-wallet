@@ -8,6 +8,7 @@ import {
 } from '../../navigators/root/root-routes';
 import { useIsAppActive } from '../../utils/appState';
 import { reportError } from '../../utils/reporting';
+import { useOnPinCodeInitialized } from './pin-code';
 
 const PIN_CODE_INACTIVE_TIMEOUT = 60000;
 
@@ -65,6 +66,16 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
   }, [appActive, enabled, showPinCodeCheck]);
 
   const lastActiveTimestamp = useRef<number>(0);
+
+  // update last active timestamp when pin set-up during onboarding
+  // this prevents to trigger pin check when navigating to wallet dashboard from onboarding
+  const onPinCodeInitialized = useCallback((initialized: boolean) => {
+    if (initialized) {
+      lastActiveTimestamp.current = Date.now();
+    }
+  }, []);
+  useOnPinCodeInitialized(onPinCodeInitialized);
+
   useEffect(() => {
     if (!enabled) {
       return;

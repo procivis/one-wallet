@@ -1,43 +1,41 @@
 import {
-  LoadingResult,
-  LoadingResultState,
-  LoadingResultVariation,
-  useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+  LoaderViewState,
+  LoadingResultScreen,
+} from '@procivis/one-react-native-components';
+import { useBlockOSBackNavigation } from '@procivis/react-native-components';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
+  const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
+
   useBlockOSBackNavigation();
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
 
   const [state, setState] = useState<
-    LoadingResultState.InProgress | LoadingResultState.Failure
-  >(LoadingResultState.InProgress);
+    LoaderViewState.InProgress | LoaderViewState.Warning
+  >(LoaderViewState.InProgress);
   useEffect(() => {
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
-          navigation.navigate('IssueCredential', {
+          navigation.replace('IssueCredential', {
             params: {
               credentialId: result.credentialIds[0],
               interactionId: result.interactionId,
@@ -45,7 +43,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
             screen: 'CredentialOffer',
           });
         } else {
-          navigation.navigate('ShareCredential', {
+          navigation.replace('ShareCredential', {
             params: { request: result },
             screen: 'ProofRequest',
           });
@@ -53,25 +51,22 @@ const InvitationProcessScreen: FunctionComponent = () => {
       })
       .catch((err) => {
         reportException(err, 'Invitation failure');
-        setState(LoadingResultState.Failure);
+        setState(LoaderViewState.Warning);
       });
   }, [handleInvitation, invitationUrl, navigation]);
 
-  const onConfirm = useCallback(() => {
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [rootNavigation]);
-
   return (
-    <LoadingResult
-      failureCloseButtonLabel={translate('invitation.process.close')}
-      inProgressCloseButtonLabel={translate('common.cancel')}
-      onClose={onConfirm}
-      state={state}
-      subtitle={translate(`invitation.process.${state}.subtitle`)}
-      successCloseButtonLabel={translate('invitation.process.close')}
+    <LoadingResultScreen
+      header={{
+        leftItem: HeaderCloseModalButton,
+        modalHandleVisible: true,
+      }}
+      loader={{
+        animate: isFocused,
+        label: translate(`invitation.process.${state}.title`),
+        state,
+      }}
       testID="InvitationProcessScreen"
-      title={translate(`invitation.process.${state}.title`)}
-      variation={LoadingResultVariation.Neutral}
     />
   );
 };

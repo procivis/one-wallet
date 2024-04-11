@@ -6,8 +6,7 @@ import {
 } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { DocumentDirectoryPath, unlink } from 'react-native-fs';
-import Share from 'react-native-share';
+import { DocumentDirectoryPath } from 'react-native-fs';
 
 import { useCreateBackup } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
@@ -64,20 +63,7 @@ const ProcessingScreen: FC = () => {
   }, [navigation, state]);
 
   const handleCta = useCallback(async () => {
-    try {
-      const shareResponse = await Share.open({
-        failOnCancel: false,
-        filename: backupFileName,
-        url: `file://${backupFilePath}`,
-      });
-      if (shareResponse.success) {
-        await unlink(backupFilePath);
-        navigation.navigate('Dashboard');
-      }
-    } catch (e) {
-      reportException(e, 'Backup move failure');
-      setState(LoadingResultState.Failure);
-    }
+    navigation.navigate('Dashboard', { backupFileName, backupFilePath });
   }, [backupFileName, backupFilePath, navigation]);
 
   return (

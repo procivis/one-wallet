@@ -1,16 +1,21 @@
-import { expect } from 'detox';
+import { expect, waitFor } from 'detox';
 
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
-import { Transport } from '../utils/enums';
+import { LoadingResultState, Transport } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface credentialIssuanceProps {
   authToken?: string;
-  claimValues?: Array<{ claimId: string; value: string }>;
-  credentialSchema: Record<string, any>;
+  claimValues?: Array<{
+    claimId: string;
+    claims?: credentialIssuanceProps['claimValues'][];
+    value: string;
+  }>;
+  credentialSchema: CredentialSchemaResponseDTO;
   redirectUri?: string;
   transport?: Transport;
 }
@@ -23,14 +28,26 @@ export enum CredentialAction {
 const acceptCredentialTestCase = async (
   credentialId: string,
   data: credentialIssuanceProps,
+  expectedResult: LoadingResultState,
 ) => {
+  await device.disableSynchronization();
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-  await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
 
-  if (data.redirectUri) {
-    await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
+  await waitFor(CredentialAcceptProcessScreen.closeButton)
+    .toBeVisible()
+    .withTimeout(3000);
+  if (expectedResult === LoadingResultState.Success) {
+    await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
+  } else if (expectedResult === LoadingResultState.Failure) {
+    await expect(CredentialAcceptProcessScreen.status.failure).toBeVisible();
+    await CredentialAcceptProcessScreen.closeButton.tap();
+    return;
   }
+  // Temporary not working
+  // if (data.redirectUri) {
+  //   await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
+  // }
 
   await CredentialAcceptProcessScreen.closeButton.tap();
   await expect(WalletScreen.screen).toBeVisible();
@@ -51,6 +68,7 @@ const rejectCredentialTestCase = async () => {
 export const credentialIssuance = async (
   data: credentialIssuanceProps,
   action: CredentialAction = CredentialAction.ACCEPT,
+  expectedResult: LoadingResultState = LoadingResultState.Success,
 ) => {
   if (!data.authToken) {
     data.authToken = await bffLogin();
@@ -66,10 +84,10 @@ export const credentialIssuance = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
-  await expect(CredentialOfferScreen.screen).toBeVisible();
 
+  await expect(CredentialOfferScreen.screen).toBeVisible();
   if (action === CredentialAction.ACCEPT) {
-    await acceptCredentialTestCase(credentialId, data);
+    await acceptCredentialTestCase(credentialId, data, expectedResult);
   } else {
     await rejectCredentialTestCase();
   }

@@ -1,13 +1,12 @@
 import {
-  ActivityIndicator,
+  Button,
   concatTestID,
-  SharingScreen,
-  SharingScreenVariation,
-  Typography,
-  useAppColorScheme,
+  EntityCluster,
+  NavigationHeader,
   useBlockOSBackNavigation,
   useMemoAsync,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
+import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialStateEnum,
   OneError,
@@ -16,15 +15,21 @@ import {
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
 } from '@procivis/react-native-one-core';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
 import { useONECore } from '../../hooks/core/core-context';
@@ -36,7 +41,6 @@ import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { useBeforeRemove } from '../../hooks/navigation/beforeRemove';
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,
@@ -44,12 +48,10 @@ import {
 import { reportException } from '../../utils/reporting';
 
 const ProofRequestScreen: FunctionComponent = () => {
-  const colorScheme = useAppColorScheme();
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const isFocused = useIsFocused();
   const { core } = useONECore();
 
   useBlockOSBackNavigation();
@@ -190,6 +192,9 @@ const ProofRequestScreen: FunctionComponent = () => {
   );
 
   const reject = useCallback(() => {
+    if (!isFocused) {
+      return;
+    }
     rejectProof(interactionId).catch((err) => {
       if (
         !(err instanceof OneError) ||
@@ -198,12 +203,7 @@ const ProofRequestScreen: FunctionComponent = () => {
         reportException(err, 'Reject Proof failure');
       }
     });
-  }, [interactionId, rejectProof]);
-
-  const onReject = useCallback(() => {
-    reject();
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [reject, rootNavigation]);
+  }, [interactionId, isFocused, rejectProof]);
 
   const onSubmit = useCallback(() => {
     sharingNavigation.navigate('Processing', {
@@ -231,89 +231,110 @@ const ProofRequestScreen: FunctionComponent = () => {
     );
 
   return (
-    <SharingScreen
-      cancelLabel={translate('common.cancel')}
-      header={
-        <View style={styles.header}>
-          <Typography
-            accessibilityRole="header"
-            bold={true}
-            caps={true}
-            size="sml"
-            style={styles.headerLabel}
-          >
-            {translate('proofRequest.verifier')}
-          </Typography>
-          <Typography
-            color={colorScheme.text}
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            {proof?.verifierDid}
-          </Typography>
-        </View>
-      }
-      onCancel={onReject}
-      onSubmit={allSelectionsValid ? onSubmit : undefined}
-      submitLabel={translate('proofRequest.confirm')}
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={styles.scrollView}
       testID="ProofRequestSharingScreen"
-      title={translate('proofRequest.title')}
-      variation={SharingScreenVariation.Neutral}
     >
-      {!presentationDefinition || !allCredentials ? (
-        <ActivityIndicator />
-      ) : (
-        presentationDefinition.requestGroups.map((group, index, { length }) => (
-          <Group key={group.id} last={length === index + 1} request={group}>
-            {group.requestedCredentials.map(
-              (credential, credentialIndex, { length: credentialsLength }) => (
-                <CredentialSelect
-                  allCredentials={allCredentials}
-                  credentialId={credential.id}
-                  expanded={expandedCredential === credential.id}
-                  key={credential.id}
-                  lastItem={credentialIndex === credentialsLength - 1}
-                  onHeaderPress={onHeaderPress}
-                  onSelectCredential={onSelectCredential(credential.id)}
-                  onSelectField={onSelectField(credential.id)}
-                  request={credential}
-                  selectedCredentialId={
-                    selectedCredentials[credential.id]?.credentialId
-                  }
-                  selectedFields={
-                    selectedCredentials[credential.id]?.submitClaims
-                  }
-                  style={[
-                    styles.requestedCredential,
-                    credentialsLength === credentialIndex + 1 &&
-                      styles.requestedCredentialLast,
-                  ]}
-                  testID={concatTestID(
-                    'ProofRequestSharingScreen.credential',
-                    credential.id,
+      <NavigationHeader
+        leftItem={HeaderCloseModalButton}
+        modalHandleVisible
+        title={translate('proofRequest.title')}
+      />
+      <View style={styles.content} testID="ProofRequestSharingScreen.content">
+        <EntityCluster
+          entityName={
+            proof?.verifierDid ?? translate('proofRequest.unknownVerifier')
+          }
+          style={styles.verifier}
+        />
+        {!presentationDefinition || !allCredentials ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            {presentationDefinition.requestGroups.map(
+              (group, index, { length }) => (
+                <Group
+                  key={group.id}
+                  last={length === index + 1}
+                  request={group}
+                >
+                  {group.requestedCredentials.map(
+                    (
+                      credential,
+                      credentialIndex,
+                      { length: credentialsLength },
+                    ) => (
+                      <CredentialSelect
+                        allCredentials={allCredentials}
+                        credentialId={credential.id}
+                        expanded={expandedCredential === credential.id}
+                        key={credential.id}
+                        lastItem={credentialIndex === credentialsLength - 1}
+                        onHeaderPress={onHeaderPress}
+                        onSelectCredential={onSelectCredential(credential.id)}
+                        onSelectField={onSelectField(credential.id)}
+                        request={credential}
+                        selectedCredentialId={
+                          selectedCredentials[credential.id]?.credentialId
+                        }
+                        selectedFields={
+                          selectedCredentials[credential.id]?.submitClaims
+                        }
+                        style={[
+                          styles.requestedCredential,
+                          credentialsLength === credentialIndex + 1 &&
+                            styles.requestedCredentialLast,
+                        ]}
+                        testID={concatTestID(
+                          'ProofRequestSharingScreen.credential',
+                          credential.id,
+                        )}
+                      />
+                    ),
                   )}
-                />
+                </Group>
               ),
             )}
-          </Group>
-        ))
-      )}
-    </SharingScreen>
+            <SafeAreaView edges={['bottom']} style={styles.bottom}>
+              <Button
+                disabled={!allSelectionsValid}
+                onPress={onSubmit}
+                title={translate('proofRequest.confirm')}
+              />
+            </SafeAreaView>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 12,
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingTop: 16,
   },
-  headerLabel: {
-    marginBottom: 4,
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   requestedCredential: {
     marginBottom: 24,
   },
   requestedCredentialLast: {
     marginBottom: 0,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  verifier: {
+    paddingHorizontal: 0,
+    paddingTop: 16,
   },
 });
 

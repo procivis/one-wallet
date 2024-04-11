@@ -7,6 +7,7 @@ import HistoryDetailScreen from '../page-objects/HistoryDetailScreen';
 import HistoryScreen from '../page-objects/HistoryScreen';
 import SettingsScreen from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
   createCredential,
@@ -19,7 +20,7 @@ import { scanURL } from '../utils/scan';
 
 describe('ONE-224: Wallet history', () => {
   let authToken: string;
-  let credentialSchemaJWT: Record<string, any>;
+  let credentialSchemaJWT: CredentialSchemaResponseDTO;
   let credentialId: string;
 
   beforeAll(async () => {

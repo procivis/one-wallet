@@ -1,11 +1,15 @@
 import {
-  LoadingResult,
-  LoadingResultState,
-  LoadingResultVariation,
-  useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
+  ButtonType,
+  LoaderViewState,
+  LoadingResultScreen,
+} from '@procivis/one-react-native-components';
+import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { WalletStorageType } from '@procivis/react-native-one-core';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,6 +19,7 @@ import React, {
 } from 'react';
 import { Linking } from 'react-native';
 
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useProofAccept, useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
@@ -27,8 +32,10 @@ const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
+  const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
-  const [state, setState] = useState(LoadingResultState.InProgress);
+  const [closeTimeout, setCloseTimeout] = useState(5);
+  const [state, setState] = useState(LoaderViewState.InProgress);
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
@@ -53,18 +60,20 @@ const ProofProcessScreen: FunctionComponent = () => {
     }
   }, [walletStore, credentialDetail]);
 
-  const handleProofSubmit = useCallback(async () => {
-    try {
-      await acceptProof({
-        credentials,
-        didId: didId!,
-        interactionId,
-      });
-      setState(LoadingResultState.Success);
-    } catch (e) {
-      reportException(e, 'Submit Proof failure');
-      setState(LoadingResultState.Failure);
-    }
+  const handleProofSubmit = useCallback(() => {
+    setTimeout(async () => {
+      try {
+        await acceptProof({
+          credentials,
+          didId: didId!,
+          interactionId,
+        });
+        setState(LoaderViewState.Success);
+      } catch (e) {
+        reportException(e, 'Submit Proof failure');
+        setState(LoaderViewState.Warning);
+      }
+    }, 1000);
   }, [acceptProof, didId, credentials, interactionId]);
 
   useEffect(() => {
@@ -75,30 +84,57 @@ const ProofProcessScreen: FunctionComponent = () => {
   }, [!didId]);
 
   const redirectUri = proof?.redirectUri;
-  const onCTA = useCallback(() => {
-    redirectUri &&
+  const closeButtonHandler = useCallback(() => {
+    if (redirectUri) {
       Linking.openURL(redirectUri).catch((e) => {
         reportException(e, "Couldn't open redirect URI");
       });
-  }, [redirectUri]);
-
-  const onClose = useCallback(() => {
+      return;
+    }
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [rootNavigation]);
+  }, [redirectUri, rootNavigation]);
+
+  useEffect(() => {
+    if (state !== LoaderViewState.Success) {
+      return;
+    }
+    if (closeTimeout === 0) {
+      closeButtonHandler();
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setCloseTimeout(closeTimeout - 1);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [closeButtonHandler, closeTimeout, state]);
 
   return (
-    <LoadingResult
-      ctaButtonLabel={translate('proofRequest.process.success.cta')}
-      failureCloseButtonLabel={translate('common.close')}
-      inProgressCloseButtonLabel={translate('common.cancel')}
-      onCTA={redirectUri ? onCTA : undefined}
-      onClose={onClose}
-      state={state}
-      subtitle={translate(`proofRequest.process.${state}.subtitle`)}
-      successCloseButtonLabel={translate('common.close')}
+    <LoadingResultScreen
+      button={
+        state === LoaderViewState.Success
+          ? {
+              onPress: closeButtonHandler,
+              testID: 'ProofRequestAcceptProcessScreen.close',
+              title: translate('proofRequest.process.success.cta', {
+                timeout: closeTimeout,
+              }),
+              type: ButtonType.Secondary,
+            }
+          : undefined
+      }
+      header={{
+        leftItem: HeaderCloseModalButton,
+        modalHandleVisible: true,
+        title: translate('proofRequest.title'),
+      }}
+      loader={{
+        animate: isFocused,
+        label: translate(`proofRequest.process.${state}.title`),
+        state,
+      }}
       testID="ProofRequestAcceptProcessScreen"
-      title={translate(`proofRequest.process.${state}.title`)}
-      variation={LoadingResultVariation.Neutral}
     />
   );
 };
