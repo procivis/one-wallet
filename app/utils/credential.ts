@@ -8,6 +8,7 @@ import {
   CredentialWarningIcon,
   formatDate,
   formatDateTime,
+  ImageOrComponentSource,
 } from '@procivis/one-react-native-components';
 import {
   Claim,
@@ -15,10 +16,12 @@ import {
   CredentialDetail,
   CredentialListItem,
   CredentialListQuery,
+  CredentialSchemaType,
   CredentialStateEnum,
   DataTypeEnum,
   FormatFeatureEnum,
 } from '@procivis/react-native-one-core';
+import { ColorValue } from 'react-native';
 
 import { translate } from '../i18n';
 
@@ -102,20 +105,38 @@ export const cardHeaderFromCredentialListItem = (
   };
 };
 
-export const cardFromCredentialListItem = (
-  credential: CredentialListItem,
+export const getCredentialCardPropsFromCredential = (
+  credential: CredentialDetail,
   notice?: {
     notice: string;
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
   },
   testID?: string,
 ): Omit<CredentialCardProps, 'onHeaderPress' | 'style' | 'testID'> => {
-  return {
+  const result: Omit<
+    CredentialCardProps,
+    'onHeaderPress' | 'style' | 'testID'
+  > = {
     cardImage: undefined,
     color: undefined,
     header: cardHeaderFromCredentialListItem(credential, testID),
     ...notice,
   };
+
+  const layoutProperties = credential.schema.layoutProperties;
+  const procivisBackground =
+    credential.schema.schemaType ===
+      CredentialSchemaType.PROCIVIS_ONE_SCHEMA2024 &&
+    !layoutProperties?.background;
+
+  if (procivisBackground) {
+    const definition = getProcivisBackground(credential.schema.name);
+    result.cardImage = definition.image;
+    result.color = definition.color;
+    result.header.iconLabelColor = '#000';
+  }
+
+  return result;
 };
 
 export const detailsCardAttributeFromClaim = (
@@ -161,11 +182,48 @@ export const detailsCardFromCredential = (
   config?: Config,
   testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
-  const attributes: CredentialAttribute[] = credential.claims.map((claim) => {
-    return detailsCardAttributeFromClaim(claim, config);
-  });
+  const attributes: CredentialAttribute[] = credential.claims.map((claim) =>
+    detailsCardAttributeFromClaim(claim, config),
+  );
   return {
     attributes,
-    card: cardFromCredentialListItem(credential, undefined, testID),
+    card: getCredentialCardPropsFromCredential(credential, undefined, testID),
+  };
+};
+
+const PROCIVIS_BACKGROUNDS = [
+  [require('../../assets/credential-background/01.png'), '#C2CDF1'],
+  [require('../../assets/credential-background/02.png'), '#DACDB5'],
+  [require('../../assets/credential-background/03.png'), '#FDAFA0'],
+  [require('../../assets/credential-background/04.png'), '#C2CDF1'],
+  [require('../../assets/credential-background/05.png'), '#E5C7A6'],
+  [require('../../assets/credential-background/06.png'), '#7CCCC5'],
+  [require('../../assets/credential-background/07.png'), '#F9A968'],
+  [require('../../assets/credential-background/08.png'), '#E5AEF6'],
+  [require('../../assets/credential-background/09.png'), '#C3CEE7'],
+  [require('../../assets/credential-background/10.png'), '#ECBAE6'],
+];
+
+interface ProcivisBackground {
+  color: ColorValue;
+  image: ImageOrComponentSource;
+}
+
+const getProcivisBackground = (identifier: string): ProcivisBackground => {
+  // simplified digest
+  let hash = 0;
+  for (let i = 0; i < identifier.length; i++) {
+    // eslint-disable-next-line no-bitwise
+    hash = (hash << 5) - hash + identifier.charCodeAt(i);
+    // eslint-disable-next-line no-bitwise
+    hash = hash & hash;
+  }
+  hash = hash < 0 ? -hash : hash;
+  const definition = PROCIVIS_BACKGROUNDS[hash % PROCIVIS_BACKGROUNDS.length];
+  return {
+    color: definition[1],
+    image: {
+      imageSource: definition[0],
+    },
   };
 };
