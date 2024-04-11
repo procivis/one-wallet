@@ -16,11 +16,13 @@ import {
  * Runs revocation check on background for all potential updates
  *
  * Navigates to the result page if some credential states were updated
+ * @param {string[]} credentialIds if specified only those credentials get checked, otherwise all potentially eligible credentials
  */
-export const useCredentialStatusCheck = () => {
+export const useCredentialStatusCheck = (credentialIds?: string[]) => {
   const navigation = useNavigation<RootNavigationProp>();
   const { mutateAsync: check } = useCredentialRevocationCheck();
   const { data: credentials } = useCredentials({
+    ids: credentialIds,
     status: [CredentialStateEnum.ACCEPTED, CredentialStateEnum.SUSPENDED],
   });
 
