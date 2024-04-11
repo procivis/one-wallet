@@ -62,6 +62,20 @@ export enum DataType {
   DATE = 'DATE',
   EMAIL = 'EMAIL',
   NUMBER = 'NUMBER',
+  OBJECT = 'OBJECT',
   PICTURE = 'PICTURE',
   STRING = 'STRING',
+}
+
+export enum LayoutType {
+  CARD = 'CARD',
+  DOCUMENT = 'DOCUMENT',
+  SINGLE_ATTRIBUTE = 'SINGLE_ATTRIBUTE',
+}
+
+export enum LoadingResultState {
+  Error = 'error',
+  Failure = 'failure',
+  InProgress = 'inProgress',
+  Success = 'success',
 }

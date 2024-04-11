@@ -350,7 +350,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-one-core (1.16321.0):
+  - react-native-one-core (1.16681.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -459,6 +459,8 @@ PODS:
   - RNKeychain (8.1.1):
     - React-Core
   - RNLocalize (3.0.0):
+    - React-Core
+  - RNPermissions (4.1.5):
     - React-Core
   - RNReanimated (2.17.0):
     - DoubleConversion
@@ -583,6 +585,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
@@ -713,6 +716,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -769,7 +774,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 3599b238843369026201d2ef466df53f77ae0452
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-one-core: cbb85df77fff7b7b4f48e9ced6516d6c2675ddae
+  react-native-one-core: 6e24b08111c54b9fbb1b2378de08f0cb75529baa
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-ultimate-config: 26275a1a4f2e7af5914942ebebbd8df52b5a375e
@@ -793,6 +798,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNLocalize: 5944c97d2fe8150913a51ddd5eab4e23a82bd80d
+  RNPermissions: 44d8f2d97073f25bc6a0e184ab47bf6ee5549152
   RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSentry: 22ec5cbcdfffeea7fae88695467a3af5f8d94790
@@ -805,6 +811,6 @@ SPEC CHECKSUMS:
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 0780d857e0cd2aa2bc26313fa4a74720b0b4cd9d
+PODFILE CHECKSUM: 23c94945095f3eee87d5edb92b4ce72e25859df6
 
 COCOAPODS: 1.15.2

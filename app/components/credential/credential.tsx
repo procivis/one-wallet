@@ -1,4 +1,7 @@
-import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
+import {
+  concatTestID,
+  CredentialDetailsCardListItem,
+} from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -43,6 +46,7 @@ export const Credential: FC<CredentialProps> = ({
       lastItem={lastItem}
       onImagePreview={onImagePreview}
       style={styles.credential}
+      testID={concatTestID('Credential.credential', credential.id)}
     />
   );
 };
