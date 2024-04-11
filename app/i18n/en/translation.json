@@ -93,6 +93,8 @@
   "credentialOffer.process.warning.title": "Issuance failed",
   "credentialOffer.title": "Issuing request",
   "credentialOffer.unknownIssuer": "Unknown Issuer",
+  "credentialUpdate.subtitle": "The following credential(s) have been updated:",
+  "credentialUpdate.title": "Credential update",
   "credentialValidity.error.revoked.subtitle": "Your credential has been revoked and is not valid anymore.",
   "credentialValidity.error.revoked.title": "Credential is revoked",
   "credentialValidity.error.suspended.subtitle": "Your credential has been suspended and is not valid anymore.",
