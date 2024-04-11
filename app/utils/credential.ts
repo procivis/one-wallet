@@ -127,8 +127,7 @@ export const getCredentialCardPropsFromCredential = (
   const procivisBackground =
     credential.schema.schemaType ===
       CredentialSchemaType.PROCIVIS_ONE_SCHEMA2024 &&
-    !layoutProperties?.backgroundImage &&
-    !layoutProperties?.backgroundColor;
+    !layoutProperties?.background;
 
   if (procivisBackground) {
     const definition = getProcivisBackground(credential.schema.name);
