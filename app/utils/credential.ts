@@ -37,8 +37,8 @@ export const getQueryKeyFromListQueryParams = (
   if (!queryParams) {
     return [];
   }
-  const { name } = queryParams;
-  return [name];
+  const { name, sort, sortDirection, exact, role, ids, status } = queryParams;
+  return [name, sort, sortDirection, exact, role, ids, status];
 };
 
 export const getValidityState = (
