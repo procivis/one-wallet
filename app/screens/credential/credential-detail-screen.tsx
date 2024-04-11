@@ -18,6 +18,7 @@ import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import {
   CredentialDetailNavigationProp,
@@ -42,47 +43,21 @@ const CredentialDetailScreen: FC = () => {
   const { data: config } = useCoreConfig();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
+  useCredentialStatusCheck([credentialId]);
   const validityState = getValidityState(credential);
 
-  const isRevokable = useMemo(
-    () =>
-      credential?.schema.revocationMethod !== 'NONE' &&
-      (validityState === ValidityState.Valid ||
-        validityState === ValidityState.Suspended),
-    [credential?.schema.revocationMethod, validityState],
-  );
-
   const { showActionSheetWithOptions } = useActionSheet();
-
-  const options = useMemo(() => {
-    const commonOptions = [
-      translate('credentialDetail.action.delete'),
-      translate('common.close'),
-    ];
-
-    if (isRevokable) {
-      return {
-        cancelButtonIndex: 2,
-        destructiveButtonIndex: 1,
-        options: [
-          translate('credentialDetail.action.checkValidity'),
-          ...commonOptions,
-        ],
-      };
-    }
-
-    return {
+  const options = useMemo(
+    () => ({
       cancelButtonIndex: 1,
       destructiveButtonIndex: 0,
-      options: commonOptions,
-    };
-  }, [isRevokable]);
-
-  const handleCheckValidity = useCallback(() => {
-    navigation.replace('ValidityProcessing', {
-      credentialId,
-    });
-  }, [credentialId, navigation]);
+      options: [
+        translate('credentialDetail.action.delete'),
+        translate('common.close'),
+      ],
+    }),
+    [],
+  );
 
   const handleDelete = useCallback(() => {
     Alert.alert(
@@ -111,18 +86,6 @@ const CredentialDetailScreen: FC = () => {
   const onActions = useCallback(
     () =>
       showActionSheetWithOptions(options, (selectedIndex) => {
-        if (isRevokable) {
-          switch (selectedIndex) {
-            case 0:
-              handleCheckValidity();
-              return;
-            case 1:
-              handleDelete();
-              return;
-            default:
-              return;
-          }
-        }
         switch (selectedIndex) {
           case 0:
             handleDelete();
@@ -131,13 +94,7 @@ const CredentialDetailScreen: FC = () => {
             return;
         }
       }),
-    [
-      handleCheckValidity,
-      handleDelete,
-      isRevokable,
-      options,
-      showActionSheetWithOptions,
-    ],
+    [handleDelete, options, showActionSheetWithOptions],
   );
 
   const onImagePreview = useCredentialImagePreview();
