@@ -8,9 +8,6 @@ export type CredentialDetailNavigatorParamList = {
   Detail: {
     credentialId: string;
   };
-  ValidityProcessing: {
-    credentialId: string;
-  };
 };
 
 export type CredentialDetailRouteProp<
