@@ -37,8 +37,8 @@ export const getQueryKeyFromListQueryParams = (
   if (!queryParams) {
     return [];
   }
-  const { name } = queryParams;
-  return [name];
+  const { name, sort, sortDirection, exact, role, ids, status } = queryParams;
+  return [name, sort, sortDirection, exact, role, ids, status];
 };
 
 export const getValidityState = (
@@ -77,12 +77,16 @@ export const cardHeaderFromCredentialListItem = (
   let statusIcon;
   switch (credential.state) {
     case CredentialStateEnum.SUSPENDED:
-      credentialDetail = translate('credentialDetail.log.suspended');
+      credentialDetail = credential.suspendEndDate
+        ? translate('credentialDetail.validity.suspendedUntil', {
+            date: formatDateTime(new Date(credential.suspendEndDate)),
+          })
+        : translate('credentialDetail.validity.suspended');
       credentialDetailTestID = concatTestID(testID, 'suspended');
       statusIcon = CredentialWarningIcon;
       break;
     case CredentialStateEnum.REVOKED:
-      credentialDetail = translate('credentialDetail.log.revoked');
+      credentialDetail = translate('credentialDetail.validity.revoked');
       credentialDetailErrorColor = true;
       credentialDetailTestID = concatTestID(testID, 'revoked');
       statusIcon = CredentialErrorIcon;
