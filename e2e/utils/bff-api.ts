@@ -56,8 +56,9 @@ async function apiRequest(
     body: body ? JSON.stringify(body) : undefined,
     headers,
     method,
-  }).then((res) => {
+  }).then(async (res) => {
     if (!res.ok) {
+      console.error(`HTTP Error. Status: ${res.status}`, await res.json());
       throw Error('HTTP error: ' + res.status);
     }
     if (res.status === 204) {
@@ -291,4 +292,16 @@ export async function requestProof(
     authToken,
     'POST',
   ).then((res) => res.url);
+}
+
+export async function suspendCredential(
+  credentialId: string,
+  authToken: string,
+): Promise<undefined> {
+  return apiRequest(
+    `/api/credential/v1/${credentialId}/suspend`,
+    authToken,
+    'POST',
+    {},
+  );
 }
