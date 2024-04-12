@@ -4,6 +4,7 @@ import {
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
@@ -63,8 +64,12 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
 
   useEffect(() => {
     if (!checkDone.current && credentials && isFocused) {
-      checkDone.current = true;
-      runCheck(credentials);
+      RNBootSplash.getVisibilityStatus().then((status) => {
+        if (status === 'hidden') {
+          checkDone.current = true;
+          runCheck(credentials);
+        }
+      });
     }
   }, [credentials, isFocused, runCheck]);
 };
