@@ -4,6 +4,7 @@ import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScr
 import PinCodeScreen from '../page-objects/onboarding/PinCodeScreen';
 import SecurityScreen from '../page-objects/onboarding/SecurityScreen';
 import UserAgreementScreen from '../page-objects/onboarding/UserAgreementScreen';
+import StatusCheckResultScreen from '../page-objects/StatusCheckResultScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { verifyButtonEnabled } from './button';
 
@@ -19,11 +20,21 @@ export async function pinSetup() {
   await expect(WalletScreen.screen).toBeVisible();
 }
 
-export async function reloadApp() {
+type ReloadAllType = {
+  suspendedScreen?: boolean;
+};
+
+export async function reloadApp(values?: ReloadAllType) {
   await device.launchApp({ newInstance: true });
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
-  await expect(WalletScreen.screen).toBeVisible();
+  if (values?.suspendedScreen) {
+    await expect(StatusCheckResultScreen.screen).toBeVisible();
+    await StatusCheckResultScreen.closeButton.tap();
+    await expect(WalletScreen.screen).toBeVisible();
+  } else {
+    await expect(WalletScreen.screen).toBeVisible();
+  }
 }
 
 export async function userAgreement() {

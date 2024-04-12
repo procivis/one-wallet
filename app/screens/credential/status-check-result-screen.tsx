@@ -70,6 +70,7 @@ const StatusCheckResultScreen: FunctionComponent = () => {
         <View style={[styles.bottom, { marginBottom: insets.bottom }]}>
           <Button
             onPress={navigation.goBack}
+            testID="StatusCheckResultScreen.close"
             title={translate('common.close')}
             type={ButtonType.Secondary}
           />
