@@ -26,4 +26,22 @@ export default abstract class WalletScreen {
   static credentialName(credentialName: string) {
     return element(by.text(credentialName));
   }
+  static get credentialList() {
+    return element(by.id('WalletScreen.credentialList'));
+  }
+
+  static get search() {
+    const field = element(by.id('WalletScreen.header.search'));
+    return {
+      clearText() {
+        return element(by.id('WalletScreen.header.search.clear')).tap();
+      },
+      get element() {
+        return field;
+      },
+      typeText(text: string) {
+        return field.typeText(text);
+      },
+    };
+  }
 }
