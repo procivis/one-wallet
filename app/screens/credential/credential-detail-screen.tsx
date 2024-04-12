@@ -43,10 +43,10 @@ const CredentialDetailScreen: FC = () => {
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+
   const { data: historyPages } = useHistory({
-    credentialId,
-    page: 1,
-    pageSize: 3,
+    action: HistoryActionEnum.ACCEPTED,
+    credentialId: credentialId,
   });
 
   const credentialHistory = historyPages?.pages.flatMap((page) => page.values);
