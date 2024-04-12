@@ -1,8 +1,8 @@
 import { observe } from 'mobx';
 import { useCallback, useEffect, useState } from 'react';
 
+import { translate } from '../i18n/translate';
 import { useStores } from '../models';
-import { translate } from './translate';
 
 /**
  * Provides {@link translate} functionality which will update when the app language changes

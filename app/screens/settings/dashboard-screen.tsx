@@ -24,7 +24,8 @@ import {
 } from '../../components/icon/settings-icon';
 import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
 import { useExplicitPinCodeCheck } from '../../hooks/pin-code/pin-code-check';
-import { Locale, Locales, useUpdatedTranslate } from '../../i18n';
+import { useUpdatedTranslate } from '../../hooks/updated-translate';
+import { Locale, Locales } from '../../i18n';
 import { useStores } from '../../models';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
