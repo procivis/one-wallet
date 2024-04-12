@@ -111,8 +111,6 @@
   "wallet.credentialsList.empty.title": "Noch keine Nachweise vorhanden.",
   "wallet.credentialsList.title": "Alle Nachweise (%{credentialsCount})",
   "wallet.credentialsList.title.empty": "Alle Nachweise",
-  "wallet.qrCodeScannerScreen.description": "Halten Sie den QR-Code in das Quadrat, um Daten zu validieren oder zu teilen.",
-  "wallet.qrCodeScannerScreen.title": "QR-Code Leser",
   "wallet.tabBar.qrCodeScanner": "QR-Code Leser",
   "wallet.tabBar.wallet": "Wallet",
   "wallet.title": "Wallet"

@@ -1,4 +1,4 @@
-import { QRCodeScanner } from '@procivis/react-native-components';
+import { QRCodeScanner } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BarCodeReadEvent } from 'react-native-camera';
+import { Code } from 'react-native-vision-camera';
 
 import { useInvitationHandling } from '../../hooks/core/deep-link';
 import { translate } from '../../i18n';
@@ -19,9 +19,9 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   const [code, setCode] = useState<string>();
 
   const handleCodeScan = useCallback(
-    (event: BarCodeReadEvent) => {
+    (scannedCode: Code[]) => {
       if (!code) {
-        setCode(event.data);
+        setCode(scannedCode[0].value);
       }
     },
     [code, setCode],
@@ -39,8 +39,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     <View style={styles.screen}>
       {isFocused && (
         <QRCodeScanner
-          description={translate('wallet.qrCodeScannerScreen.description')}
-          onBarCodeRead={handleCodeScan}
+          onClose={navigation.goBack}
+          onQRCodeRead={handleCodeScan}
           title={translate('wallet.qrCodeScannerScreen.title')}
         />
       )}
