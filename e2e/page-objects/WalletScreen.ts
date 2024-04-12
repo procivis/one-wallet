@@ -16,6 +16,9 @@ export default abstract class WalletScreen {
       get revokedLabel() {
         return element(by.id(`${id}.revoked`));
       },
+      get suspendedLabel() {
+        return element(by.id(`${id}.suspended`));
+      },
     };
   }
 

@@ -132,10 +132,13 @@ const WalletScreen: FunctionComponent = observer(() => {
             styles.listItem,
             index === section.data.length - 1 ? styles.listItemLast : undefined,
           ]}
-          testID={testID}
         >
           <CredentialCard
-            {...getCredentialCardPropsFromCredential(credential)}
+            {...getCredentialCardPropsFromCredential(
+              credential,
+              undefined,
+              testID,
+            )}
           />
         </TouchableOpacity>
       );
