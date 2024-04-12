@@ -1,4 +1,5 @@
 import { expect } from 'detox';
+import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
@@ -342,6 +343,70 @@ describe('ONE-601: Credential issuance', () => {
     it('Object claim', async () => {
       await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
+    });
+  });
+
+  describe('ONE-1799: Searching Credential', () => {
+    let schema1: CredentialSchemaResponseDTO;
+    let schema2: CredentialSchemaResponseDTO;
+    let credentialId_1: string;
+    let credentialId_2: string;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      schema1 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'last name', required: true },
+          { datatype: DataType.EMAIL, key: 'email', required: true },
+        ],
+        name: `Schema-1-${uuidv4()}`,
+      });
+
+      schema2 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'last name', required: true },
+          { datatype: DataType.EMAIL, key: 'email', required: true },
+        ],
+        name: `Schema-2-${uuidv4()}`,
+      });
+      credentialId_1 = await credentialIssuance({
+        authToken,
+        credentialSchema: schema1,
+      });
+      credentialId_2 = await credentialIssuance({
+        authToken,
+        credentialSchema: schema2,
+      });
+    });
+
+    afterEach(async () => {
+      await WalletScreen.search.clearText();
+    });
+
+    it('Searching credential', async () => {
+      await expect(WalletScreen.screen).toBeVisible();
+      await WalletScreen.search.element.tap();
+      await WalletScreen.search.typeText('Schema\n');
+      await waitFor(WalletScreen.credential(credentialId_1).element)
+        .toBeVisible()
+        .withTimeout(2000);
+      await expect(
+        WalletScreen.credential(credentialId_2).element,
+      ).toBeVisible();
+    });
+
+    it('Check credential search find only 1 matches', async () => {
+      await WalletScreen.search.element.tap();
+      await WalletScreen.search.typeText('Schema-2\n');
+
+      await expect(
+        WalletScreen.credential(credentialId_2).element,
+      ).toBeVisible();
+      await waitFor(WalletScreen.credential(credentialId_1).element)
+        .not.toBeVisible()
+        .withTimeout(3000);
     });
   });
 });
