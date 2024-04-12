@@ -14,6 +14,7 @@ import {
   useAppColorScheme as useAppColorScheme__OLD,
 } from '@procivis/react-native-components';
 import {
+  CredentialListIncludeEntityType,
   CredentialListItem,
   CredentialListQuery,
   CredentialStateEnum,
@@ -39,24 +40,12 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyIcon } from '../../components/icon/wallet-icon';
-import {
-  useCredentialDetail,
-  usePagedCredentials,
-} from '../../hooks/core/credentials';
+import { usePagedCredentials } from '../../hooks/core/credentials';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getCredentialCardPropsFromCredential } from '../../utils/credential';
-
-const Credential: FunctionComponent<{
-  credentialId: string;
-}> = ({ credentialId }) => {
-  const { data: credential } = useCredentialDetail(credentialId);
-  return credential ? (
-    <CredentialCard {...getCredentialCardPropsFromCredential(credential)} />
-  ) : null;
-};
 
 const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme__OLD = useAppColorScheme__OLD();
@@ -68,6 +57,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   } = useStores();
   const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
+    include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
     status: [
       CredentialStateEnum.ACCEPTED,
       CredentialStateEnum.SUSPENDED,
@@ -99,18 +89,16 @@ const WalletScreen: FunctionComponent = observer(() => {
     navigation.navigate('Settings');
   }, [navigation]);
 
-  const handleSearchPhraseChange = debounce(setQueryParams, 500);
-
-  useEffect(
-    () => {
-      handleSearchPhraseChange({
-        ...queryParams,
-        name: searchPhrase || undefined,
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchPhrase],
+  const handleSearchPhraseChange = useMemo(
+    () => debounce(setQueryParams, 500),
+    [],
   );
+  useEffect(() => {
+    handleSearchPhraseChange((prev) => ({
+      ...prev,
+      name: searchPhrase || undefined,
+    }));
+  }, [handleSearchPhraseChange, searchPhrase]);
 
   const handleCredentialPress = useCallback(
     (credentialId: string) => {
@@ -146,7 +134,9 @@ const WalletScreen: FunctionComponent = observer(() => {
           ]}
           testID={testID}
         >
-          <Credential credentialId={credential.id} />
+          <CredentialCard
+            {...getCredentialCardPropsFromCredential(credential)}
+          />
         </TouchableOpacity>
       );
     },
