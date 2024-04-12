@@ -33,10 +33,12 @@ const acceptCredentialTestCase = async (
   await device.disableSynchronization();
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-
+  await waitFor(CredentialAcceptProcessScreen.screen)
+    .toBeVisible()
+    .withTimeout(1000);
   await waitFor(CredentialAcceptProcessScreen.closeButton)
     .toBeVisible()
-    .withTimeout(3000);
+    .withTimeout(2000);
   if (expectedResult === LoadingResultState.Success) {
     await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
   } else if (expectedResult === LoadingResultState.Failure) {
@@ -51,6 +53,7 @@ const acceptCredentialTestCase = async (
 
   await CredentialAcceptProcessScreen.closeButton.tap();
   await expect(WalletScreen.screen).toBeVisible();
+  await device.enableSynchronization();
   if (data.transport === Transport.PROCIVIS) {
     await expect(WalletScreen.credential(credentialId).element).toBeVisible();
   } else if (data.transport === Transport.OPENID4VC) {
