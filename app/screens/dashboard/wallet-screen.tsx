@@ -170,6 +170,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                 styles.empty,
                 { backgroundColor: colorScheme__OLD.white },
               ]}
+              testID="WalletScreen.credentialList"
             >
               <ListSectionHeader
                 title={translate('wallet.credentialsList.title.empty')}
