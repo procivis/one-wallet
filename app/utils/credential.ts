@@ -37,8 +37,9 @@ export const getQueryKeyFromListQueryParams = (
   if (!queryParams) {
     return [];
   }
-  const { name, sort, sortDirection, exact, role, ids, status } = queryParams;
-  return [name, sort, sortDirection, exact, role, ids, status];
+  const { name, sort, sortDirection, exact, role, ids, status, include } =
+    queryParams;
+  return [name, sort, sortDirection, exact, role, ids, status, include];
 };
 
 export const getValidityState = (
@@ -110,7 +111,7 @@ export const cardHeaderFromCredentialListItem = (
 };
 
 export const getCredentialCardPropsFromCredential = (
-  credential: CredentialDetail,
+  credential: CredentialListItem,
   notice?: {
     notice: string;
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
