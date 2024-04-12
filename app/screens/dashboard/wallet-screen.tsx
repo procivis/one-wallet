@@ -26,7 +26,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -42,14 +41,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EmptyIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialDetail,
-  useCredentialRevocationCheck,
   usePagedCredentials,
 } from '../../hooks/core/credentials';
+import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getCredentialCardPropsFromCredential } from '../../utils/credential';
-import { reportException } from '../../utils/reporting';
 
 const Credential: FunctionComponent<{
   credentialId: string;
@@ -81,7 +79,8 @@ const WalletScreen: FunctionComponent = observer(() => {
     fetchNextPage,
     hasNextPage,
   } = usePagedCredentials(queryParams);
-  const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
+
+  useCredentialStatusCheck();
 
   const credentials = useMemo(
     () => credentialsData?.pages.map((page) => page.values).flat(),
@@ -95,28 +94,6 @@ const WalletScreen: FunctionComponent = observer(() => {
     }
     fetchNextPage({ pageParam });
   }, [fetchNextPage, credentialsData?.pages.length]);
-
-  const revocationCheckPerformedForPage = useRef<number>();
-
-  useEffect(() => {
-    if (!credentialsData) {
-      return;
-    }
-    const page = credentialsData.pages.length - 1;
-    if (revocationCheckPerformedForPage.current !== page) {
-      revocationCheckPerformedForPage.current = page;
-      checkRevocation(
-        credentialsData.pages[page].values
-          .filter(({ state }) =>
-            [
-              CredentialStateEnum.ACCEPTED,
-              CredentialStateEnum.SUSPENDED,
-            ].includes(state),
-          )
-          .map(({ id }) => id),
-      ).catch((e) => reportException(e, 'Revocation check failed'));
-    }
-  }, [checkRevocation, credentialsData]);
 
   const handleWalletSettingsClick = useCallback(() => {
     navigation.navigate('Settings');
