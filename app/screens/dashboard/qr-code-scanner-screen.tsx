@@ -39,9 +39,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     <View style={styles.screen}>
       {isFocused && (
         <QRCodeScanner
-          description={translate('wallet.qrCodeScannerScreen.description')}
-          onBarCodeRead={handleCodeScan}
-          onClose={() => navigation.goBack()}
+          onClose={navigation.goBack}
+          onQRCodeRead={handleCodeScan}
           title={translate('wallet.qrCodeScannerScreen.title')}
         />
       )}
