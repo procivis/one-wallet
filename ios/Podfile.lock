@@ -350,7 +350,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-one-core (1.16746.0):
+  - react-native-one-core (1.16762.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -781,7 +781,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 3599b238843369026201d2ef466df53f77ae0452
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-one-core: ac6b2190f8d081cb32f342a73fdc8a005e7c5a93
+  react-native-one-core: d86990791f745c1f9c4baf7dd78c43981833233f
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-ultimate-config: 26275a1a4f2e7af5914942ebebbd8df52b5a375e
