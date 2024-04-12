@@ -9,11 +9,7 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
-import {
-  CredentialDetail,
-  HistoryActionEnum,
-  HistoryEntityTypeEnum,
-} from '@procivis/react-native-one-core';
+import { HistoryActionEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -153,39 +149,17 @@ const CredentialDetailScreen: FC = () => {
         showAllButtonLabel={translate('common.seeAll')}
         style={styles.credential}
       />
-      <HistorySection
-        credential={credential}
-        historyEntries={credentialHistory}
-      />
+      <HistorySection historyEntries={credentialHistory} />
     </DetailScreen>
   );
 };
 
-// TODO This function should be removed once ONE-2096 is fixed and we get actual history items
-const historyItemFromCredenetial = (
-  credential: CredentialDetail,
-): HistoryListItemWithDid => {
-  return {
-    action: HistoryActionEnum.ACCEPTED,
-    createdDate: credential.createdDate,
-    did: credential.issuerDid!,
-    entityId: credential.id,
-    entityType: HistoryEntityTypeEnum.CREDENTIAL,
-    id: credential.id,
-    organisationId: '',
-  };
-};
-
 const HistorySection: FC<{
-  credential: CredentialDetail;
   historyEntries?: HistoryListItemWithDid[];
-}> = ({ historyEntries, credential }) => {
+}> = ({ historyEntries }) => {
   const colorScheme = useAppColorScheme();
 
-  const historyItems = historyEntries?.length
-    ? historyEntries
-    : [historyItemFromCredenetial(credential)];
-  const previewHistoryItems = historyItems.slice(0, 3);
+  const previewHistoryItems = (historyEntries ?? []).slice(0, 3);
 
   return (
     <React.Fragment>
