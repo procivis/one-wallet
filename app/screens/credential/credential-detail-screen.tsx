@@ -1,35 +1,38 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { CredentialDetailsCard } from '@procivis/one-react-native-components';
+import {
+  CredentialDetailsCard,
+  DetailScreen,
+  OptionsIcon,
+} from '@procivis/one-react-native-components';
 import {
   ActivityIndicator,
-  DetailScreen,
-  formatDateTime,
-  ListItem,
-  RoundButton,
+  Typography,
   useAppColorScheme,
 } from '@procivis/react-native-components';
+import {
+  CredentialDetail,
+  HistoryActionEnum,
+  HistoryEntityTypeEnum,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { Section } from '../../components/common/section';
-import { MoreIcon } from '../../components/icon/navigation-icon';
+import HistoryItem from '../../components/history/history-item';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
+import { useHistory } from '../../hooks/core/history';
 import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
+import { HistoryListItemWithDid } from '../../models/core/history';
 import {
   CredentialDetailNavigationProp,
   CredentialDetailRouteProp,
 } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import {
-  detailsCardFromCredential,
-  getValidityState,
-  ValidityState,
-} from '../../utils/credential';
+import { detailsCardFromCredential } from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
@@ -40,11 +43,18 @@ const CredentialDetailScreen: FC = () => {
 
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: historyPages } = useHistory({
+    credentialId,
+    page: 1,
+    pageSize: 3,
+  });
+
+  const credentialHistory = historyPages?.pages.flatMap((page) => page.values);
+
   const { data: config } = useCoreConfig();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
   useCredentialStatusCheck([credentialId]);
-  const validityState = getValidityState(credential);
 
   const { showActionSheetWithOptions } = useActionSheet();
   const options = useMemo(
@@ -107,18 +117,29 @@ const CredentialDetailScreen: FC = () => {
 
   return (
     <DetailScreen
-      onBack={() => rootNavigation.navigate('Dashboard', { screen: 'Wallet' })}
-      rightButton={
-        <RoundButton
-          accessibilityLabel={translate('credentialDetail.actions')}
-          icon={MoreIcon}
-          onPress={onActions}
-          testID="CredentialDetailScreen.header.action"
-        />
-      }
-      style={{ backgroundColor: colorScheme.background }}
+      contentStyle={[
+        {
+          backgroundColor: colorScheme.background,
+        },
+        styles.credentialContainer,
+      ]}
+      headerProps={{
+        onBack: () =>
+          rootNavigation.navigate('Dashboard', { screen: 'Wallet' }),
+        rightButton: (
+          <TouchableOpacity
+            accessibilityLabel={translate('wallet.settings')}
+            onPress={onActions}
+            style={styles.settingsButton}
+            testID="WalletScreen.header.action-settings"
+          >
+            <OptionsIcon color={colorScheme.text} />
+          </TouchableOpacity>
+        ),
+        text: {},
+        title: credential.schema.name,
+      }}
       testID="CredentialDetailScreen"
-      title={credential.schema.name}
     >
       <CredentialDetailsCard
         attributes={attributes}
@@ -126,48 +147,61 @@ const CredentialDetailScreen: FC = () => {
           ...card,
           onHeaderPress,
         }}
+        cardCarouselImages={[]}
         expanded={expanded}
         onImagePreview={onImagePreview}
+        showAllButtonLabel={translate('common.seeAll')}
         style={styles.credential}
       />
-      <Section title={translate('credentialDetail.log.title')}>
-        <View style={styles.logTitlePadding} />
-        {credential.lvvcIssuanceDate && (
-          <ListItem
-            rightAccessory={null}
-            style={styles.logItem}
-            subtitle={formatDateTime(new Date(credential.lvvcIssuanceDate))}
-            testID="CredentialDetailScreen.log.validityUpdated"
-            title={translate('credentialDetail.log.validityUpdated')}
-          />
-        )}
-        {validityState === ValidityState.Suspended && (
-          <ListItem
-            rightAccessory={null}
-            style={styles.logItem}
-            subtitle={formatDateTime(new Date(credential.lastModified))}
-            testID="CredentialDetailScreen.log.suspended"
-            title={translate('credentialDetail.log.suspended')}
-          />
-        )}
-        {credential.revocationDate && (
-          <ListItem
-            rightAccessory={null}
-            style={styles.logItem}
-            subtitle={formatDateTime(new Date(credential.revocationDate))}
-            testID="CredentialDetailScreen.log.revoked"
-            title={translate('credentialDetail.log.revoked')}
-          />
-        )}
-        <ListItem
-          rightAccessory={null}
-          style={styles.logItem}
-          subtitle={formatDateTime(new Date(credential.issuanceDate))}
-          testID="CredentialDetailScreen.log.issued"
-          title={translate('credentialDetail.log.issued')}
-        />
-      </Section>
+      <HistorySection
+        credential={credential}
+        historyEntries={credentialHistory}
+      />
     </DetailScreen>
+  );
+};
+
+// TODO This function should be removed once ONE-2096 is fixed and we get actual history items
+const historyItemFromCredenetial = (
+  credential: CredentialDetail,
+): HistoryListItemWithDid => {
+  return {
+    action: HistoryActionEnum.ACCEPTED,
+    createdDate: credential.createdDate,
+    did: credential.issuerDid!,
+    entityId: credential.id,
+    entityType: HistoryEntityTypeEnum.CREDENTIAL,
+    id: credential.id,
+    organisationId: '',
+  };
+};
+
+const HistorySection: FC<{
+  credential: CredentialDetail;
+  historyEntries?: HistoryListItemWithDid[];
+}> = ({ historyEntries, credential }) => {
+  const colorScheme = useAppColorScheme();
+
+  const historyItems = historyEntries?.length
+    ? historyEntries
+    : [historyItemFromCredenetial(credential)];
+  const previewHistoryItems = historyItems.slice(0, 3);
+
+  return (
+    <React.Fragment>
+      <Typography size="h2" style={styles.historySectionTitle}>
+        {translate('history.title')}
+      </Typography>
+      <View style={[styles.historyLog, { backgroundColor: colorScheme.white }]}>
+        {previewHistoryItems.map((historyItem, idx) => (
+          <HistoryItem
+            historyItem={historyItem}
+            key={historyItem.id}
+            last={idx === previewHistoryItems.length - 1}
+          />
+        ))}
+      </View>
+    </React.Fragment>
   );
 };
 
@@ -175,11 +209,21 @@ const styles = StyleSheet.create({
   credential: {
     marginBottom: 12,
   },
-  logItem: {
-    paddingHorizontal: 0,
+  credentialContainer: {
+    paddingHorizontal: 16,
   },
-  logTitlePadding: {
+  historyLog: {
+    borderRadius: 20,
     marginBottom: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  historySectionTitle: {
+    marginVertical: 12,
+  },
+  settingsButton: {
+    height: 24,
+    width: 24,
   },
 });
 
