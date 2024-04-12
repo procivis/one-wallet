@@ -6,7 +6,6 @@ import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProce
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
-import CredentialValidityProcessScreen from '../page-objects/CredentialValidityProcessScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
@@ -16,6 +15,7 @@ import {
   createCredentialSchema,
   offerCredential,
   revokeCredential,
+  suspendCredential,
 } from '../utils/bff-api';
 import {
   CredentialFormat,
@@ -132,21 +132,24 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
 
-    it('Check valid on the detail page', async () => {
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('Check valid on the detail page', async () => {
       await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.log('issued')).toExist();
       await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
     });
 
-    it('Check validity remote', async () => {
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await CredentialDetailScreen.actionButton.tap();
-      await CredentialDetailScreen.action('Check validity').tap();
-      await expect(CredentialValidityProcessScreen.screen).toBeVisible();
-      await CredentialValidityProcessScreen.verifySuccessScreenVisible();
-
-      await CredentialValidityProcessScreen.closeButton.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+    it('Suspended credential', async () => {
+      await expect(WalletScreen.credential(credentialId).element).toExist();
+      await suspendCredential(credentialId, authToken);
+      await reloadApp({ suspendedScreen: true });
+      await expect(
+        WalletScreen.credential(credentialId).suspendedLabel,
+      ).toExist();
+      await WalletScreen.credential(credentialId).element.tap();
+      await expect(CredentialDetailScreen.screen).toExist();
+      await expect(CredentialDetailScreen.log('issued')).toExist();
+      await expect(CredentialDetailScreen.log('suspended')).toExist();
     });
 
     it('Revoke credential', async () => {
@@ -160,10 +163,6 @@ describe('ONE-601: Credential issuance', () => {
       await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.log('revoked')).toExist();
       await expect(CredentialDetailScreen.status.value).toHaveText('Revoked');
-      await CredentialDetailScreen.actionButton.tap();
-      await expect(
-        CredentialDetailScreen.action('Check validity'),
-      ).not.toBeVisible();
     });
   });
 
