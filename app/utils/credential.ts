@@ -24,6 +24,7 @@ import {
 import { ColorValue } from 'react-native';
 
 import { translate } from '../i18n';
+import { getCarouselImagesFromClaims } from './credential-images';
 
 export enum ValidityState {
   Revoked = 'revoked',
@@ -70,12 +71,16 @@ export const supportsSelectiveDisclosure = (
 
 export const cardHeaderFromCredentialListItem = (
   credential: CredentialListItem,
+  claims: Claim[] = [],
   testID?: string,
 ): Omit<CredentialHeaderProps, 'style'> => {
   let credentialDetail;
   let credentialDetailErrorColor;
   let credentialDetailTestID;
   let statusIcon;
+
+  const { layoutProperties } = credential.schema;
+
   switch (credential.state) {
     case CredentialStateEnum.SUSPENDED:
       credentialDetail = credential.suspendEndDate
@@ -93,18 +98,45 @@ export const cardHeaderFromCredentialListItem = (
       statusIcon = CredentialErrorIcon;
       break;
     default:
-      credentialDetail =
-        formatDateTime(new Date(credential.issuanceDate)) ?? '';
+      {
+        let contentDetail = '';
+        const primary = claims?.find(
+          ({ key }) => key === layoutProperties?.primaryAttribute,
+        )?.value;
+
+        if (primary) {
+          contentDetail += primary;
+        } else {
+          contentDetail += formatDateTime(new Date(credential.issuanceDate));
+        }
+
+        const secondary = claims?.find(
+          ({ key }) => key === layoutProperties?.secondaryAttribute,
+        )?.value;
+
+        if (secondary) {
+          const interpunct = ' · ';
+          contentDetail += `${interpunct}${secondary}`;
+        }
+
+        credentialDetail = contentDetail;
+      }
       break;
   }
   return {
-    color: undefined,
+    color: layoutProperties?.logo?.backgroundColor,
     credentialDetail,
     credentialDetailErrorColor,
     credentialDetailTestID,
     credentialName: credential.schema.name,
-    icon: undefined,
-    iconLabelColor: undefined,
+    icon: layoutProperties?.logo?.image
+      ? {
+          imageSource: {
+            uri: layoutProperties.logo.image,
+          },
+        }
+      : undefined,
+    iconLabelColor: layoutProperties?.logo?.fontColor,
     statusIcon,
     testID,
   };
@@ -112,23 +144,28 @@ export const cardHeaderFromCredentialListItem = (
 
 export const getCredentialCardPropsFromCredential = (
   credential: CredentialListItem,
+  claims: Claim[] = [],
   notice?: {
     notice: string;
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
   },
   testID?: string,
 ): Omit<CredentialCardProps, 'onHeaderPress' | 'style' | 'testID'> => {
+  const { layoutProperties } = credential.schema;
+
   const result: Omit<
     CredentialCardProps,
     'onHeaderPress' | 'style' | 'testID'
   > = {
-    cardImage: undefined,
-    color: undefined,
-    header: cardHeaderFromCredentialListItem(credential, testID),
+    cardCarouselImages: getCarouselImagesFromClaims(claims, layoutProperties),
+    cardImage: layoutProperties?.background?.image
+      ? { imageSource: { uri: layoutProperties.background.image } }
+      : undefined,
+    color: layoutProperties?.background?.color,
+    header: cardHeaderFromCredentialListItem(credential, claims, testID),
     ...notice,
   };
 
-  const layoutProperties = credential.schema.layoutProperties;
   const procivisBackground =
     credential.schema.schemaType ===
       CredentialSchemaType.PROCIVIS_ONE_SCHEMA2024 &&
@@ -190,9 +227,17 @@ export const detailsCardFromCredential = (
   const attributes: CredentialAttribute[] = credential.claims.map((claim) =>
     detailsCardAttributeFromClaim(claim, config),
   );
+
+  const card = getCredentialCardPropsFromCredential(
+    credential,
+    credential.claims,
+    undefined,
+    testID,
+  );
+
   return {
     attributes,
-    card: getCredentialCardPropsFromCredential(credential, undefined, testID),
+    card,
   };
 };
 
