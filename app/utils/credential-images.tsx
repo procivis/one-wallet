@@ -5,6 +5,7 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   Claim,
+  CredentialSchemaCodeType,
   CredentialSchemaLayoutProperties,
 } from '@procivis/react-native-one-core';
 import React from 'react';
@@ -58,17 +59,17 @@ export const getCarouselImagesFromClaims = (
       return result;
     }
 
-    if (code.type === 'QR_CODE') {
+    if (code.type === CredentialSchemaCodeType.QR_CODE) {
       result.push({
         element: <QrCode content={claim} />,
         type: CarouselImageType.QrCode,
       });
-    } else if (code.type === 'BARCODE') {
+    } else if (code.type === CredentialSchemaCodeType.BARCODE) {
       result.push({
         element: <Barcode content={claim} />,
         type: CarouselImageType.Barcode,
       });
-    } else if (code.type === 'MRZ') {
+    } else if (code.type === CredentialSchemaCodeType.MRZ) {
       result.push({
         element: <Mrz content={claim} />,
         type: CarouselImageType.MRZ,
