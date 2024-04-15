@@ -26,7 +26,7 @@ export const IssuedSuccessIcon: FC<SvgProps> = () => (
   </Svg>
 );
 
-// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?type=design&node-id=1143-41498&mode=design&t=mnpIjCXoZSU3mT8I-4
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?type=design&node-id=454-99608&mode=design&t=0ymwpvYR90sLnHeR-0
 export const ProofRejectedIcon: FC<SvgProps> = () => (
   <Svg fill="none" height="48" viewBox="0 0 48 48" width="48">
     <Rect fill="#F1F3F5" height="48" rx="24" width="48" />
@@ -51,7 +51,7 @@ export const ProofRejectedIcon: FC<SvgProps> = () => (
   </Svg>
 );
 
-// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?type=design&node-id=454-100366&mode=design&t=mnpIjCXoZSU3mT8I-4
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?type=design&node-id=454-99608&mode=design&t=0ymwpvYR90sLnHeR-0
 export const ProofSuccessIcon: FC<SvgProps> = () => (
   <Svg fill="none" height="48" viewBox="0 0 48 48" width="48">
     <Rect fill="#F1F3F5" height="48" rx="24" width="48" />
