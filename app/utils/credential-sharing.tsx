@@ -47,7 +47,11 @@ export const validityCheckedCardFromCredential = (
     };
   }
 
-  const card = getCredentialCardPropsFromCredential(credential, notice);
+  const card = getCredentialCardPropsFromCredential(
+    credential,
+    credential.claims,
+    notice,
+  );
   return {
     ...card,
     header: {
@@ -257,6 +261,7 @@ export const selectCredentialCardFromCredential = (
       : undefined;
   const { header, ...cardProps } = getCredentialCardPropsFromCredential(
     credential,
+    credential.claims,
     notice,
     testID,
   );
