@@ -111,6 +111,7 @@ const CredentialDetailScreen: FC = () => {
   }
 
   const { card, attributes } = detailsCardFromCredential(credential, config);
+
   return (
     <DetailScreen
       contentStyle={[
