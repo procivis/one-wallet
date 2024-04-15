@@ -24,6 +24,7 @@
   "common.rollcall": "%{current} of %{total}",
   "common.save": "Save",
   "common.search": "Search",
+  "common.seeAll": "See all",
   "common.skip": "Skip",
   "common.time.now": "now",
   "common.yes": "Yes",
