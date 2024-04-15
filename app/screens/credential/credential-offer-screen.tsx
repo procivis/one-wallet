@@ -94,6 +94,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
               }}
               expanded={expanded}
               onImagePreview={onImagePreview}
+              showAllButtonLabel={translate('common.seeAll')}
               testID="CredentialOfferScreen.detail"
             />
             <SafeAreaView edges={['bottom']} style={styles.bottom}>
