@@ -11,6 +11,7 @@ import { translate } from '../../i18n';
 import { HistoryListItemWithDid } from '../../models/core/history';
 import { IssuedSuccessIcon } from '../icon/history-icon';
 
+// TODO Expand this function to support "Presentation" success / failure events once ONE-2096 is resolved.
 const getLabelAndIconForAction = (action: HistoryActionEnum) => {
   switch (action) {
     case HistoryActionEnum.ACCEPTED:
