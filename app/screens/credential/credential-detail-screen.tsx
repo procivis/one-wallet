@@ -40,6 +40,7 @@ const CredentialDetailScreen: FC = () => {
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
 
+  // TODO Remove filtering by action type once ONE-2096 is resolved
   const { data: historyPages } = useHistory({
     action: HistoryActionEnum.ACCEPTED,
     credentialId: credentialId,
