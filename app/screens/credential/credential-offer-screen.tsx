@@ -82,7 +82,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
           }
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
         />
-        {!credential || !card ? (
+        {!credential || !config || !card ? (
           <ActivityIndicator />
         ) : (
           <>
