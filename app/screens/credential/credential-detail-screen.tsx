@@ -3,11 +3,11 @@ import {
   CredentialDetailsCard,
   DetailScreen,
   OptionsIcon,
+  useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
   ActivityIndicator,
   Typography,
-  useAppColorScheme,
 } from '@procivis/react-native-components';
 import { HistoryActionEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -144,7 +144,6 @@ const CredentialDetailScreen: FC = () => {
           ...card,
           onHeaderPress,
         }}
-        cardCarouselImages={[]}
         expanded={expanded}
         onImagePreview={onImagePreview}
         showAllButtonLabel={translate('common.seeAll')}
