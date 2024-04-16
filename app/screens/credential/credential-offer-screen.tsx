@@ -20,7 +20,7 @@ import {
 } from '../../hooks/core/credentials';
 import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useBeforeRemove } from '../../hooks/navigation/beforeRemove';
+import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,

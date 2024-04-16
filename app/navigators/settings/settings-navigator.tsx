@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
@@ -28,7 +29,16 @@ const SettingsNavigator = () => {
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
       <Stack.Screen component={HistoryNavigator} name="History" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
-      <Stack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
+      <Stack.Screen
+        component={PinCodeSetScreen}
+        name="PinCodeSet"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'formSheet',
+        }}
+      />
     </Stack.Navigator>
   );
 };
