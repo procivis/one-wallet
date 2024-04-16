@@ -35,7 +35,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<string>${APP_IOS_EXPORT_NON_EXEMPT}</string>
+	<key>ITSEncryptionExportComplianceCode</key>
+	<string>${APP_IOS_EXPORT_KEY}</string>
 	<key>LSApplicationCategoryType</key>
 	<string/>
 	<key>LSRequiresIPhoneOS</key>
