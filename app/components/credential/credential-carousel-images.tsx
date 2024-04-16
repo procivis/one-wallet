@@ -72,6 +72,7 @@ type QrCodeProps = {
 export const QrCode: FC<QrCodeProps> = ({ content }) => {
   const qrCodeXml = useMemo(() => {
     return new QRCode({
+      container: 'svg-viewbox',
       content,
       join: true,
       padding: 1,
