@@ -40,7 +40,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyIcon } from '../../components/icon/wallet-icon';
-import { usePagedCredentials } from '../../hooks/core/credentials';
+import {
+  useCredentialDetail,
+  usePagedCredentials,
+} from '../../hooks/core/credentials';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -122,7 +125,15 @@ const WalletScreen: FunctionComponent = observer(() => {
       index,
       section,
     }: SectionListRenderItemInfo<CredentialListItem>) => {
-      const credential = item;
+      // TODO Fix / discuss. This is ineficient.
+      // The list item contains no claims. Without claims we can not render
+      // all preview fields (primaryAttribute, photoAttribute, MRZ, etc.)
+      const { data: credential } = useCredentialDetail(item.id);
+
+      if (!credential) {
+        return null;
+      }
+
       const testID = concatTestID('WalletScreen.credential', credential.id);
       return (
         <TouchableOpacity
@@ -136,6 +147,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           <CredentialCard
             {...getCredentialCardPropsFromCredential(
               credential,
+              credential.claims,
               undefined,
               testID,
             )}
