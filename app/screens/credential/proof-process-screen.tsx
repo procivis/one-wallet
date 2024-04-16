@@ -22,6 +22,7 @@ import { Linking } from 'react-native';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useProofAccept, useProofDetail } from '../../hooks/core/proofs';
+import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -34,7 +35,6 @@ const ProofProcessScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
-  const [closeTimeout, setCloseTimeout] = useState(5);
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
@@ -93,22 +93,10 @@ const ProofProcessScreen: FunctionComponent = () => {
     }
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [redirectUri, rootNavigation]);
-
-  useEffect(() => {
-    if (state !== LoaderViewState.Success) {
-      return;
-    }
-    if (closeTimeout === 0) {
-      closeButtonHandler();
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setCloseTimeout(closeTimeout - 1);
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [closeButtonHandler, closeTimeout, state]);
+  const { closeTimeout } = useCloseButtonTimeout(
+    state === LoaderViewState.Success,
+    closeButtonHandler,
+  );
 
   return (
     <LoadingResultScreen
@@ -117,7 +105,7 @@ const ProofProcessScreen: FunctionComponent = () => {
           ? {
               onPress: closeButtonHandler,
               testID: 'ProofRequestAcceptProcessScreen.close',
-              title: translate('proofRequest.process.success.cta', {
+              title: translate('common.closeWithTimeout', {
                 timeout: closeTimeout,
               }),
               type: ButtonType.Secondary,
