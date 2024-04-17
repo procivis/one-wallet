@@ -29,7 +29,7 @@ npmScopes:
 
 Each flavor has a separate configuration script defined in `package.json` file, named `rnuc:{flavor}`.
 
-To build the app using one of flavors, configuration script needs to be called before strting bundler and compiling the app. For example, to build Dev Wallet flavor for iOS, run:
+To build the app using one of flavors, configuration script needs to be called before starting the bundler and compiling the app. For example, to build Dev Wallet flavor for iOS, run:
 
 ```shell
 yarn rnuc:dev
