@@ -130,6 +130,16 @@ const ProofRequestScreen: FunctionComponent = () => {
     setSelectedCredentials(preselected);
   }, [presentationDefinition, allCredentials]);
 
+  // by default the first credential is expanded
+  useEffect(() => {
+    if (!expandedCredential) {
+      const [credentialId] =
+        Object.entries(selectedCredentials).find(([_, v]) => v !== undefined) ??
+        [];
+      onHeaderPress(credentialId);
+    }
+  }, [expandedCredential, selectedCredentials, onHeaderPress]);
+
   const [activeSelection, setActiveSelection] =
     useState<PresentationDefinitionRequestedCredential['id']>();
   const onSelectCredential = useCallback(
