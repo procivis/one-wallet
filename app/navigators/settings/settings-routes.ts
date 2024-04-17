@@ -1,6 +1,7 @@
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { ExternalLibrary, Licence } from '../../models/licences/licences';
 import { CreateBackupNavigatorParamList } from '../create-backup/create-backup-routes';
 import { HistoryNavigatorParamList } from '../history/history-routes';
 import { RestoreBackupNavigatorParamList } from '../restore-backup/restore-backup-routes';
@@ -14,6 +15,11 @@ export type SettingsNavigatorParamList = {
   Dashboard: undefined;
   DeleteWallet: undefined;
   History: NavigatorScreenParams<HistoryNavigatorParamList>;
+  LicenceDetails: {
+    library: ExternalLibrary;
+    licences: Licence[];
+  };
+  Licences: undefined;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
