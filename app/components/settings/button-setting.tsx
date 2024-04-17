@@ -2,13 +2,19 @@ import {
   TouchableOpacity,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import React, { ComponentType, FunctionComponent, ReactElement } from 'react';
+import React, {
+  ComponentType,
+  FunctionComponent,
+  ReactElement,
+  useMemo,
+} from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { NextIcon } from '../icon/wallet-icon';
 import SettingItem from './setting-item';
 
 export type ButtonSettingProps = {
+  accessory?: ComponentType<any> | ReactElement;
   icon?: ComponentType<any> | ReactElement;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
@@ -17,6 +23,7 @@ export type ButtonSettingProps = {
 };
 
 const ButtonSetting: FunctionComponent<ButtonSettingProps> = ({
+  accessory,
   title,
   onPress,
   icon,
@@ -24,6 +31,23 @@ const ButtonSetting: FunctionComponent<ButtonSettingProps> = ({
   testID,
 }) => {
   const colorScheme = useAppColorScheme();
+
+  const accessoryView: React.ReactElement | undefined = useMemo(() => {
+    if (!accessory) {
+      return (
+        <View style={styles.arrow}>
+          <NextIcon color={colorScheme.text} />
+        </View>
+      );
+    }
+    if (React.isValidElement(accessory)) {
+      return accessory;
+    } else {
+      const AccessoryComponent = accessory as React.ComponentType<any>;
+      return <AccessoryComponent />;
+    }
+  }, [accessory, colorScheme.text]);
+
   return (
     <TouchableOpacity
       accessibilityRole="button"
@@ -32,9 +56,7 @@ const ButtonSetting: FunctionComponent<ButtonSettingProps> = ({
       testID={testID}
     >
       <SettingItem icon={icon} style={style} title={title}>
-        <View style={styles.arrow}>
-          <NextIcon color={colorScheme.text} />
-        </View>
+        {accessoryView}
       </SettingItem>
     </TouchableOpacity>
   );
