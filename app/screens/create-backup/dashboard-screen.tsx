@@ -88,7 +88,6 @@ const DashboardScreen: FC = () => {
       cta={translate('createBackup.dashboard.cta')}
       description={translate('createBackup.dashboard.description')}
       onCta={() => navigation.navigate('RecoveryPassword')}
-      screenTitle={translate('createBackup.title')}
       testID="CreateBackupDashboardScreen"
       title={translate('createBackup.dashboard.title')}
     >

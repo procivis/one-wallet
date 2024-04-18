@@ -31,7 +31,6 @@ const PreviewScreen: FC = () => {
       cta={translate('createBackup.preview.cta')}
       description={translate('createBackup.preview.description')}
       onCta={() => navigation.navigate('Processing', params)}
-      screenTitle={translate('createBackup.title')}
       testID="CreateBackupPreviewScreen"
       title={translate('createBackup.preview.title')}
     >
