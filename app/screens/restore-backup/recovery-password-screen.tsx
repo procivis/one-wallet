@@ -1,68 +1,48 @@
-import { ActivityIndicator, Input } from '@procivis/react-native-components';
+import { Input } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
-import { unlink } from 'react-native-fs';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
-import { useUnpackBackup } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
 import {
   RestoreBackupNavigationProp,
   RestoreBackupRouteProp,
 } from '../../navigators/restore-backup/restore-backup-routes';
-import { reportException } from '../../utils/reporting';
 
 const RecoveryPasswordScreen: FC = () => {
   const navigation =
     useNavigation<RestoreBackupNavigationProp<'RecoveryPassword'>>();
   const route = useRoute<RestoreBackupRouteProp<'RecoveryPassword'>>();
   const { inputPath } = route.params;
-  const {
-    mutateAsync: unpackBackup,
-    isLoading,
-    isError,
-    reset,
-  } = useUnpackBackup();
   const [password, setPassword] = useState('');
 
   const handlePasswordTextChange = useCallback(
     (text: string) => {
       setPassword(text);
-      reset();
+      navigation.setParams({ error: false });
     },
-    [reset],
+    [navigation],
   );
 
-  const handleCta = async () => {
-    try {
-      await unpackBackup({
-        inputPath,
-        password,
-      });
-      await unlink(inputPath);
-      navigation.navigate('Preview');
-    } catch (e) {
-      reportException(e, 'Backup unpacking failure');
-    }
-  };
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
+  const handleCta = useCallback(() => {
+    navigation.navigate('Processing', {
+      params: { inputPath, password },
+      screen: 'Unlock',
+    });
+  }, [inputPath, navigation, password]);
 
   return (
     <BackupScreen
       cta={translate('restoreBackup.recoveryPassword.cta')}
       description={translate('restoreBackup.recoveryPassword.description')}
-      isCtaDisabled={!password || isError}
+      isCtaDisabled={!password || route.params.error}
       onCta={handleCta}
-      screenTitle={translate('restoreBackup.recoveryPassword.title')}
       testID="RestoreBackupRecoveryPasswordScreen"
       title={translate('restoreBackup.recoveryPassword.title')}
     >
       <Input
         error={
-          isError
+          route.params.error
             ? translate('restoreBackup.recoveryPassword.wrongPassword')
             : ''
         }
