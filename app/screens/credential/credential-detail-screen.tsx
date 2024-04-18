@@ -1,15 +1,15 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
+  Button,
+  ButtonType,
   CredentialDetailsCard,
   DetailScreen,
   OptionsIcon,
+  Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import {
-  ActivityIndicator,
-  Typography,
-} from '@procivis/react-native-components';
-import { HistoryActionEnum } from '@procivis/react-native-one-core';
+import { ActivityIndicator } from '@procivis/react-native-components';
+import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -40,12 +40,13 @@ const CredentialDetailScreen: FC = () => {
   const { credentialId } = route.params;
   const { data: credential } = useCredentialDetail(credentialId);
 
-  // TODO Remove filtering by action type once ONE-2096 is resolved
   const { data: historyPages } = useHistory({
-    action: HistoryActionEnum.ACCEPTED,
-    credentialId: credentialId,
+    credentialId,
+    entityTypes: [
+      HistoryEntityTypeEnum.CREDENTIAL,
+      HistoryEntityTypeEnum.PROOF,
+    ],
   });
-
   const credentialHistory = historyPages?.pages.flatMap((page) => page.values);
 
   const { data: config } = useCoreConfig();
@@ -106,6 +107,10 @@ const CredentialDetailScreen: FC = () => {
 
   const onImagePreview = useCredentialImagePreview();
 
+  const onSeeAllHistory = useCallback(() => {
+    navigation.navigate('History', { credentialId });
+  }, [credentialId, navigation]);
+
   if (!credential) {
     return <ActivityIndicator />;
   }
@@ -149,33 +154,51 @@ const CredentialDetailScreen: FC = () => {
         showAllButtonLabel={translate('common.seeAll')}
         style={styles.credential}
       />
-      <HistorySection historyEntries={credentialHistory} />
+      <HistorySection
+        historyEntries={credentialHistory}
+        onSeeAllHistory={onSeeAllHistory}
+      />
     </DetailScreen>
   );
 };
 
+const DISPLAYED_HISTORY_ITEMS = 3;
 const HistorySection: FC<{
   historyEntries?: HistoryListItemWithDid[];
-}> = ({ historyEntries }) => {
+  onSeeAllHistory?: () => void;
+}> = ({ historyEntries = [], onSeeAllHistory }) => {
   const colorScheme = useAppColorScheme();
-
-  const previewHistoryItems = (historyEntries ?? []).slice(0, 3);
+  const previewHistoryItems = historyEntries.slice(0, DISPLAYED_HISTORY_ITEMS);
+  const expandable = historyEntries.length > DISPLAYED_HISTORY_ITEMS;
 
   return (
-    <React.Fragment>
-      <Typography size="h2" style={styles.historySectionTitle}>
+    <>
+      <Typography
+        accessibilityRole="header"
+        color={colorScheme.text}
+        preset="m"
+        style={styles.historySectionTitle}
+      >
         {translate('history.title')}
       </Typography>
       <View style={[styles.historyLog, { backgroundColor: colorScheme.white }]}>
-        {previewHistoryItems.map((historyItem, idx) => (
+        {previewHistoryItems.map((historyItem, idx, { length }) => (
           <HistoryItem
             historyItem={historyItem}
             key={historyItem.id}
-            last={idx === previewHistoryItems.length - 1}
+            last={!expandable && idx === length - 1}
           />
         ))}
+        {expandable && (
+          <Button
+            onPress={onSeeAllHistory}
+            testID="CredentialDetailScreen.history.seeAll"
+            title={translate('common.seeAll')}
+            type={ButtonType.Secondary}
+          />
+        )}
       </View>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -193,7 +216,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   historySectionTitle: {
-    marginVertical: 12,
+    marginHorizontal: 4,
+    marginVertical: 16,
   },
   settingsButton: {
     height: 24,
