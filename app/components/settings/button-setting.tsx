@@ -1,5 +1,5 @@
 import {
-  TouchableHighlight,
+  TouchableOpacity,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import React, { ComponentType, FunctionComponent, ReactElement } from 'react';
@@ -25,19 +25,18 @@ const ButtonSetting: FunctionComponent<ButtonSettingProps> = ({
 }) => {
   const colorScheme = useAppColorScheme();
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       accessibilityRole="button"
       onPress={onPress}
       style={styles.container}
       testID={testID}
-      underlayColor={colorScheme.background}
     >
       <SettingItem icon={icon} style={style} title={title}>
         <View style={styles.arrow}>
           <NextIcon color={colorScheme.text} />
         </View>
       </SettingItem>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
