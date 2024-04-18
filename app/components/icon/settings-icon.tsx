@@ -1,6 +1,6 @@
 import { useAppColorScheme } from '@procivis/react-native-components';
 import React, { FC } from 'react';
-import Svg, { Circle, Path, Rect, SvgProps } from 'react-native-svg';
+import Svg, { Circle, G, Path, SvgProps } from 'react-native-svg';
 
 // Icons used on the settings screen: https://www.figma.com/file/Mj9Nm9CUtauth6jt49UL7t/OTS-Developments-2023?type=design&node-id=13-15689&t=GXsNdBzYheEWxZvG-4
 
@@ -41,82 +41,29 @@ export const HistoryIcon: FC<SvgProps> = (props) => {
   );
 };
 
-// https://www.figma.com/file/RVk1ou3IWFWuRHZQgC0f7e/Procivis-One-Developments-2024?type=design&node-id=4190-90061&mode=design&t=7buPeKqMIZaW6MbG-4
-export const BackupIcon: FC<SvgProps> = (props) => {
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=1143%3A39704&mode=dev
+export const CreateBackupIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
 
   return (
-    <Svg fill="none" height="18" viewBox="0 0 20 20" width="18" {...props}>
-      <Rect
-        height="16"
-        rx="1"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-        width="16"
-        x="2.33337"
-        y="1"
-      />
-      <Path
-        d="M1 5.66667H6.33333"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-      />
-      <Path
-        d="M1 12.3333H6.33333"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-      />
-      <Rect
-        height="10"
-        rx="1"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-        width="10"
-        x="5.33337"
-        y="4"
-      />
-      <Path
-        d="M8.09416 11.4058C7.8989 11.2106 7.8989 10.894 8.09416 10.6987L9.10549 9.68741C9.24037 10.0051 9.49494 10.2596 9.81259 10.3945L8.80127 11.4058C8.606 11.6011 8.28942 11.6011 8.09416 11.4058Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M9.83333 10.4031V11.8333C9.83333 12.1095 10.0572 12.3333 10.3333 12.3333C10.6095 12.3333 10.8333 12.1095 10.8333 11.8333L10.8333 10.4031C10.6789 10.4656 10.5101 10.5 10.3333 10.5C10.1565 10.5 9.98773 10.4656 9.83333 10.4031Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M10.8541 10.3945L11.8654 11.4058C12.0607 11.6011 12.3773 11.6011 12.5726 11.4058C12.7678 11.2106 12.7678 10.894 12.5726 10.6987L11.5612 9.68733C11.4263 10.005 11.1717 10.2596 10.8541 10.3945Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M11.5697 9.66666H13C13.2761 9.66666 13.5 9.4428 13.5 9.16666C13.5 8.89051 13.2761 8.66666 13 8.66666H11.5697C11.6322 8.82107 11.6666 8.98986 11.6666 9.16669C11.6666 9.3435 11.6322 9.51226 11.5697 9.66666Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M11.5611 8.64598L12.5725 7.63461C12.7678 7.43935 12.7678 7.12277 12.5725 6.9275C12.3772 6.73224 12.0607 6.73224 11.8654 6.9275L10.854 7.93887C11.1717 8.07376 11.4262 8.32832 11.5611 8.64598Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M10.8333 7.93029V6.5C10.8333 6.22386 10.6095 6 10.3333 6C10.0572 6 9.83333 6.22386 9.83333 6.5V7.93027C9.98773 7.86777 10.1565 7.83336 10.3333 7.83336C10.5101 7.83336 10.6789 7.86778 10.8333 7.93029Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M9.81267 7.93884L8.80132 6.92749C8.60605 6.73223 8.28947 6.73223 8.09421 6.92749C7.89895 7.12275 7.89895 7.43933 8.09421 7.63459L9.10552 8.6459C9.24042 8.32825 9.495 8.07371 9.81267 7.93884Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M9.09691 8.66666H7.66663C7.39048 8.66666 7.16663 8.89051 7.16663 9.16666C7.16663 9.4428 7.39048 9.66666 7.66663 9.66666L9.09688 9.66666C9.03439 9.51226 8.99997 9.3435 8.99997 9.16669C8.99997 8.98986 9.0344 8.82107 9.09691 8.66666Z"
-        fill={colorScheme.text}
-      />
-      <Path
-        d="M5.33337 17V19"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-      />
-      <Path
-        d="M15.3334 17V19"
-        stroke={colorScheme.text}
-        strokeLinecap="round"
-      />
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <G stroke={colorScheme.text} strokeLinecap="round">
+        <Path d="M12 19a7 7 0 10-4.2-1.4M8 15v3H5M12 9v6M15 12H9" />
+      </G>
+    </Svg>
+  );
+};
+
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=1143%3A39704&mode=dev
+export const RestoreBackupIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <G stroke={colorScheme.text} strokeLinecap="round">
+        <Path d="M12 5a7 7 0 104.2 1.4M16 9V6h3" />
+        <Path d="M12 8v4l3 2" />
+      </G>
     </Svg>
   );
 };
@@ -217,6 +164,21 @@ export const InformationIcon: FC<SvgProps> = (props) => {
         fill={colorScheme.text}
         fillRule="evenodd"
       />
+    </Svg>
+  );
+};
+
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=1143%3A39704&mode=dev
+export const LicencesIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <G stroke={colorScheme.text} strokeLinecap="round">
+        <Path d="M17 15.454v.956c0 .55 0 .826-.105 1.037a.999.999 0 01-.448.448c-.211.105-.486.105-1.037.105H8.59c-.55 0-.826 0-1.037-.105a1 1 0 01-.448-.448C7 17.236 7 16.961 7 16.41V5.59c0-.55 0-.826.105-1.037a1 1 0 01.448-.448C7.764 4 8.039 4 8.59 4h6.82c.55 0 .826 0 1.037.105a1 1 0 01.448.448C17 4.764 17 5.039 17 5.59v3.5" />
+        <Path d="M7 6h-.41c-.55 0-.826 0-1.037.105a1 1 0 00-.448.448C5 6.764 5 7.039 5 7.59v10.82c0 .55 0 .826.105 1.037a1 1 0 00.448.448C5.764 20 6.039 20 6.59 20h7.32c.55 0 .826 0 1.037-.105a.999.999 0 00.448-.448c.105-.211.105-.486.105-1.037V18" />
+        <Path d="M12 12l2.215 3L20 8M9 7h6M9 9h4" strokeLinejoin="round" />
+      </G>
     </Svg>
   );
 };

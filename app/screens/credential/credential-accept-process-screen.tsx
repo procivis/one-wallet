@@ -24,6 +24,7 @@ import {
   useCredentialAccept,
   useCredentialDetail,
 } from '../../hooks/core/credentials';
+import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
 import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';
@@ -35,7 +36,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
-  const [closeTimeout, setCloseTimeout] = useState(5);
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { credentialId, interactionId } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
@@ -98,22 +98,10 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     }
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [redirectUri, rootNavigation]);
-
-  useEffect(() => {
-    if (state !== LoaderViewState.Success) {
-      return;
-    }
-    if (closeTimeout === 0) {
-      closeButtonHandler();
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setCloseTimeout(closeTimeout - 1);
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [closeButtonHandler, closeTimeout, state]);
+  const { closeTimeout } = useCloseButtonTimeout(
+    state === LoaderViewState.Success,
+    closeButtonHandler,
+  );
 
   return (
     <LoadingResultScreen
@@ -122,7 +110,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
           ? {
               onPress: closeButtonHandler,
               testID: 'CredentialAcceptProcessScreen.close',
-              title: translate('credentialOffer.process.success.cta', {
+              title: translate('common.closeWithTimeout', {
                 timeout: closeTimeout,
               }),
               type: ButtonType.Secondary,

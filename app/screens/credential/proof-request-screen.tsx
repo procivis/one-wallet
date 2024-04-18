@@ -39,7 +39,7 @@ import {
 } from '../../hooks/core/credentials';
 import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
-import { useBeforeRemove } from '../../hooks/navigation/beforeRemove';
+import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
