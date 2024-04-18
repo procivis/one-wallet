@@ -1,18 +1,24 @@
-import { FileInput } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
-import { DocumentDirectoryPath, moveFile } from 'react-native-fs';
+import {
+  DocumentDirectoryPath,
+  exists,
+  moveFile,
+  unlink,
+} from 'react-native-fs';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
+import { DownloadIcon } from '../../components/icon/common-icon';
+import SettingsButton from '../../components/settings/settings-button';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';
 
 const ImportScreen: FC = () => {
-  const navigation = useNavigation<RestoreBackupNavigationProp<'Preview'>>();
+  const navigation = useNavigation<RestoreBackupNavigationProp<'Import'>>();
   const [selectedFile, setSelectedFile] = useState<DocumentPickerResponse>();
   const [selectedFilePath, setSelectedFilePath] = useState<string>();
 
@@ -21,8 +27,12 @@ const ImportScreen: FC = () => {
       const file = await DocumentPicker.pickSingle({
         type: DocumentPicker.types.zip,
       });
-      const filePath = `${DocumentDirectoryPath}/${file.name}`;
-      await moveFile(file.uri, filePath);
+      const fileName = file.name?.replace(/\s/g, '_');
+      const filePath = `${DocumentDirectoryPath}/${fileName}`;
+      if (await exists(filePath)) {
+        await unlink(filePath);
+      }
+      await moveFile(decodeURI(file.uri), filePath);
       setSelectedFile(file);
       setSelectedFilePath(filePath);
     } catch (e) {
@@ -31,8 +41,6 @@ const ImportScreen: FC = () => {
       }
     }
   };
-
-  const handleDeletePress = () => setSelectedFile(undefined);
 
   return (
     <BackupScreen
@@ -44,16 +52,17 @@ const ImportScreen: FC = () => {
           inputPath: selectedFilePath!,
         })
       }
-      screenTitle={translate('restoreBackup.title')}
       testID="RestoreBackupImportScreen"
       title={translate('restoreBackup.import.title')}
     >
-      <FileInput
-        files={selectedFile ? [selectedFile] : []}
-        label={translate('restoreBackup.import.importBackup')}
-        onAddPress={handleAddPress}
-        onDeletePress={handleDeletePress}
+      <SettingsButton
+        accessory={DownloadIcon}
+        onPress={handleAddPress}
         testID="RestoreBackupImportScreen.file"
+        title={
+          selectedFile?.name ??
+          translate('restoreBackup.import.selectBackupFile')
+        }
       />
     </BackupScreen>
   );
