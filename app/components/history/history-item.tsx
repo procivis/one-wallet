@@ -1,43 +1,78 @@
 import {
   Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
-import { HistoryActionEnum } from '@procivis/react-native-one-core';
+} from '@procivis/one-react-native-components';
+import {
+  HistoryActionEnum,
+  HistoryEntityTypeEnum,
+  HistoryListItem,
+} from '@procivis/react-native-one-core';
 import moment from 'moment';
 import React, { FC } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
 import { HistoryListItemWithDid } from '../../models/core/history';
-import { IssuedSuccessIcon } from '../icon/history-icon';
+import { HistoryActionIcon, HistoryActionIconType } from '../icon/history-icon';
 
-// TODO Expand this function to support "Presentation" success / failure events once ONE-2096 is resolved.
-const getLabelAndIconForAction = (action: HistoryActionEnum) => {
-  switch (action) {
+const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
+  if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
+    return {
+      icon: <HistoryActionIcon type={HistoryActionIconType.Share} />,
+      label: translate('credentialHistory.shared'),
+    };
+  }
+
+  switch (historyItem.action) {
+    case HistoryActionEnum.PENDING:
+      return {
+        icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
+        label: translate('credentialHistory.pending'),
+      };
+    case HistoryActionEnum.OFFERED:
+      return {
+        icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
+        label: translate('credentialHistory.offered'),
+      };
     case HistoryActionEnum.ACCEPTED:
       return {
-        icon: <IssuedSuccessIcon />,
-        label: `${translate('history.entityType.CREDENTIAL')} ${translate(
-          'history.action.ISSUED',
-        )}`,
+        icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
+        label: translate('credentialHistory.accepted'),
       };
-    default:
+    case HistoryActionEnum.REVOKED:
       return {
-        icon: null,
-        label: action,
+        icon: <HistoryActionIcon type={HistoryActionIconType.Revoke} />,
+        label: translate('credentialHistory.revoked'),
+      };
+    case HistoryActionEnum.SUSPENDED:
+      return {
+        icon: <HistoryActionIcon type={HistoryActionIconType.Suspend} />,
+        label: translate('credentialHistory.suspended'),
+      };
+    case HistoryActionEnum.REACTIVATED:
+      return {
+        icon: <HistoryActionIcon type={HistoryActionIconType.Revalidate} />,
+        label: translate('credentialHistory.revalidated'),
       };
   }
 };
 
 const HistoryItem: FC<{
+  absoluteTime?: boolean;
   historyItem: HistoryListItemWithDid;
   last?: boolean;
   style?: StyleProp<ViewStyle>;
-}> = ({ historyItem, last, style }) => {
+}> = ({ historyItem, last, style, absoluteTime }) => {
   const colorScheme = useAppColorScheme();
 
-  const momentDate = moment(historyItem.createdDate).fromNow();
-  const { label, icon } = getLabelAndIconForAction(historyItem.action);
+  const display = getLabelAndIconForAction(historyItem);
+  if (!display) {
+    return null;
+  }
+
+  const { label, icon } = display;
+  const time = moment(historyItem.createdDate);
+  const timeLabel = absoluteTime ? time.format('H:mm') : time.fromNow();
 
   return (
     <View
@@ -47,40 +82,52 @@ const HistoryItem: FC<{
           backgroundColor: colorScheme.white,
           borderColor: colorScheme.background,
         },
-        !last && styles.bottomBorder,
+        last && styles.last,
         style,
       ]}
     >
-      <View style={styles.iconAndLabelWithDid}>
-        {icon}
-        <View style={styles.labelAndDid}>
-          <Typography>{label}</Typography>
-          <Typography size="sml">
-            {historyItem.did?.slice(0, 20) + '...'}
-          </Typography>
-        </View>
+      {icon}
+      <View style={styles.labelAndDid}>
+        <Typography color={colorScheme.text} preset="s">
+          {label}
+        </Typography>
+        <Typography
+          color={colorScheme.text}
+          numberOfLines={1}
+          preset="s/line-height-small"
+          style={styles.shaded}
+        >
+          {historyItem.did}
+        </Typography>
       </View>
-      <Typography size="sml">{momentDate}</Typography>
+      <Typography
+        color={colorScheme.text}
+        preset="xs/line-height-small"
+        style={styles.shaded}
+      >
+        {timeLabel}
+      </Typography>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bottomBorder: {
-    borderBottomWidth: 1,
-  },
   historyItemContainer: {
     alignItems: 'center',
+    borderBottomWidth: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingRight: 8,
     paddingVertical: 12,
   },
-  iconAndLabelWithDid: {
-    flexDirection: 'row',
-  },
   labelAndDid: {
-    justifyContent: 'space-around',
-    marginLeft: 12,
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  last: {
+    borderBottomWidth: 0,
+  },
+  shaded: {
+    opacity: 0.7,
   },
 });
 
