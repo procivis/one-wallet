@@ -8,6 +8,9 @@ export type CredentialDetailNavigatorParamList = {
   Detail: {
     credentialId: string;
   };
+  History: {
+    credentialId: string;
+  };
 };
 
 export type CredentialDetailRouteProp<
