@@ -2,6 +2,7 @@ import {
   HistoryListItem,
   HistoryListQuery,
 } from '@procivis/react-native-one-core';
+import moment, { Moment } from 'moment';
 
 import { translate } from '../i18n';
 import { HistoryListItemWithDid } from '../models/core/history';
@@ -17,8 +18,65 @@ export const getQueryKeyFromListQueryParams = (
   if (!queryParams) {
     return [];
   }
-  const { credentialSchemaId, searchText, entityTypes } = queryParams;
-  return [credentialSchemaId, searchText, entityTypes];
+
+  const {
+    entityId,
+    action,
+    entityTypes,
+    createdDateFrom,
+    createdDateTo,
+    didId,
+    credentialId,
+    credentialSchemaId,
+    searchText,
+    searchType,
+  } = queryParams;
+  return [
+    entityId,
+    action,
+    entityTypes,
+    createdDateFrom,
+    createdDateTo,
+    didId,
+    credentialId,
+    credentialSchemaId,
+    searchText,
+    searchType,
+  ];
+};
+
+export interface HistoryGroupByDaySection {
+  data: HistoryListItemWithDid[];
+  date: Moment;
+  firstYearEntry: boolean;
+}
+
+export const groupEntriesByDay = (entries: HistoryListItemWithDid[]) => {
+  const groupedEntries = entries.reduce(
+    (result: HistoryGroupByDaySection[], entry: HistoryListItemWithDid) => {
+      const entryDate = moment(entry.createdDate);
+
+      const matchingEntry = result.find(({ date }) =>
+        date.isSame(entryDate, 'day'),
+      );
+      if (matchingEntry) {
+        matchingEntry.data.push(entry);
+      } else {
+        result.push({ data: [entry], date: entryDate, firstYearEntry: false });
+      }
+
+      return result;
+    },
+    [],
+  );
+
+  return groupedEntries
+    .sort(({ date: a }, { date: b }) => b.valueOf() - a.valueOf())
+    .map((item, index, list) => {
+      item.firstYearEntry =
+        !index || !list[index - 1].date.isSame(item.date, 'year');
+      return item;
+    });
 };
 
 export const groupEntriesByMonth = (

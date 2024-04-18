@@ -3,6 +3,7 @@ import React from 'react';
 
 import CredentialDeleteProcessScreen from '../../screens/credential/credential-delete-process-screen';
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
+import { CredentialHistoryScreen } from '../../screens/credential/credential-history-screen';
 import { CredentialDetailNavigatorParamList } from './credential-detail-routes';
 
 const Stack = createNativeStackNavigator<CredentialDetailNavigatorParamList>();
@@ -15,6 +16,7 @@ const CredentialDetailNavigator = () => {
         component={CredentialDeleteProcessScreen}
         name="DeleteProcessing"
       />
+      <Stack.Screen component={CredentialHistoryScreen} name="History" />
     </Stack.Navigator>
   );
 };
