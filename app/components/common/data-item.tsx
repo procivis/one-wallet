@@ -2,47 +2,64 @@ import {
   concatTestID,
   Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
-import { FC } from 'react';
-import React, {
-  ColorValue,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+} from '@procivis/one-react-native-components';
+import { FC, ReactNode } from 'react';
+import React, { ColorValue, StyleSheet, View, ViewProps } from 'react-native';
 
-export const DataItem: FC<{
+export interface DataItemProps extends ViewProps {
   attribute: string;
+  last?: boolean;
   multiline?: boolean;
-  style?: StyleProp<ViewStyle>;
-  testID?: string;
   value: string;
   valueColor?: ColorValue;
-}> = ({ attribute, multiline, style, value, valueColor, testID }) => {
+  valueIcon?: ReactNode;
+}
+
+export const DataItem: FC<DataItemProps> = ({
+  attribute,
+  value,
+  valueColor,
+  valueIcon,
+  multiline,
+  last,
+  testID,
+  style,
+  ...props
+}) => {
   const colorScheme = useAppColorScheme();
 
   return (
     <View
-      style={[styles.dataItem, { borderColor: colorScheme.background }, style]}
+      style={[
+        styles.dataItem,
+        { borderColor: colorScheme.background },
+        last && styles.last,
+        style,
+      ]}
       testID={testID}
+      {...props}
     >
       <Typography
-        color={colorScheme.textSecondary}
-        size="sml"
+        color={colorScheme.text}
+        preset="xs/line-height-small"
         style={styles.dataItemLabel}
+        testID={concatTestID(testID, 'title')}
       >
         {attribute}
       </Typography>
 
-      <Typography
-        color={valueColor ?? colorScheme.text}
-        ellipsizeMode="tail"
-        numberOfLines={multiline ? 0 : 1}
-        testID={concatTestID(testID, 'value')}
-      >
-        {value}
-      </Typography>
+      <View style={styles.value}>
+        {valueIcon}
+        <Typography
+          color={valueColor ?? colorScheme.text}
+          numberOfLines={multiline ? undefined : 1}
+          preset="s"
+          style={valueIcon ? styles.valueLabel : undefined}
+          testID={concatTestID(testID, 'value')}
+        >
+          {value}
+        </Typography>
+      </View>
     </View>
   );
 };
@@ -50,10 +67,20 @@ export const DataItem: FC<{
 const styles = StyleSheet.create({
   dataItem: {
     borderBottomWidth: 1,
-    marginTop: 12,
-    paddingBottom: 6,
+    paddingVertical: 10,
   },
   dataItemLabel: {
-    marginBottom: 2,
+    marginBottom: 4,
+    opacity: 0.7,
+  },
+  last: {
+    borderBottomWidth: 0,
+  },
+  value: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  valueLabel: {
+    marginLeft: 4,
   },
 });
