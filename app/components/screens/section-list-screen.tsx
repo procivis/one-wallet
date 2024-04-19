@@ -4,29 +4,38 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import React from 'react';
-import { SectionList, SectionListProps, StyleSheet, View } from 'react-native';
+import {
+  SectionList,
+  SectionListProps,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { useOnScrollHeaderState } from '../../hooks/navigation/on-scroll-header-state';
 import ListTitleHeader from '../list/list-title-header';
 
-type SectionListScreenProps<ItemT, SectionT> = {
+type SectionListScreenProps<ItemT, SectionT> = ViewProps & {
   header: Omit<
     NavigationHeaderProps,
     'animate' | 'blurred' | 'style' | 'title' | 'titleVisible'
   > & {
+    static?: boolean;
     title: string;
   };
   list: Omit<
     SectionListProps<ItemT, SectionT>,
-    'ListHeaderComponent' | 'contentContainerStyle' | 'onScroll'
+    'ListHeaderComponent' | 'onScroll'
   >;
 };
 
 const SectionListScreen = <ItemT, SectionT>({
   header,
-  list: { stickySectionHeadersEnabled, ...listProps },
+  list: { contentContainerStyle, stickySectionHeadersEnabled, ...listProps },
+  style,
+  ...viewProps
 }: SectionListScreenProps<ItemT, SectionT>) => {
   const colorScheme = useAppColorScheme();
   const safeAreaInsets = useSafeAreaInsets();
@@ -35,11 +44,18 @@ const SectionListScreen = <ItemT, SectionT>({
 
   return (
     <View
-      style={[styles.container, { backgroundColor: colorScheme.background }]}
+      style={[
+        styles.container,
+        { backgroundColor: colorScheme.background },
+        style,
+      ]}
+      {...viewProps}
     >
       <SectionList<ItemT, SectionT>
-        ListHeaderComponent={<ListTitleHeader title={header.title} />}
-        contentContainerStyle={contentInsetsStyle}
+        ListHeaderComponent={
+          !header.static ? <ListTitleHeader title={header.title} /> : undefined
+        }
+        contentContainerStyle={[contentInsetsStyle, contentContainerStyle]}
         onScroll={onScroll}
         stickySectionHeadersEnabled={stickySectionHeadersEnabled ?? false}
         {...listProps}
@@ -48,7 +64,7 @@ const SectionListScreen = <ItemT, SectionT>({
         animate
         blurred
         style={[styles.header, { paddingTop: safeAreaInsets.top }]}
-        titleVisible={titleVisible}
+        titleVisible={header.static || titleVisible}
         {...header}
       />
     </View>
