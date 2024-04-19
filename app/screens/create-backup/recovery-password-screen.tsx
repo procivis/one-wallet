@@ -26,7 +26,6 @@ const RecoveryPasswordScreen: FC = () => {
           recoveryPassword: values.password,
         })
       }
-      screenTitle={translate('createBackup.title')}
       testID="CreateBackupRecoveryPasswordScreen"
       title={translate('createBackup.recoveryPassword.title')}
     >

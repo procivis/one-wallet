@@ -1,9 +1,8 @@
 import { CredentialListItem } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
-import { Section } from '../common/section';
 import { Credential } from '../credential/credential';
 
 interface PreviewCredentialsProps {
@@ -14,8 +13,6 @@ interface PreviewCredentialsProps {
 
 export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
   credentials,
-  fullWidth = false,
-  title,
 }) => {
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
@@ -24,10 +21,7 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
   }
 
   return (
-    <Section
-      style={[styles.credentials, fullWidth && styles.credentialsFullWidth]}
-      title={`${title} (${credentials.length})`}
-    >
+    <View>
       {credentials.map((credential, index, { length }) => (
         <View key={credential.id}>
           <Credential
@@ -38,15 +32,6 @@ export const PreviewCredentials: FC<PreviewCredentialsProps> = ({
           />
         </View>
       ))}
-    </Section>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  credentials: {
-    marginBottom: 0,
-  },
-  credentialsFullWidth: {
-    paddingHorizontal: 0,
-  },
-});

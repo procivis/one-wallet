@@ -13,7 +13,6 @@ const DashboardScreen: FC = () => {
       cta={translate('restoreBackup.dashboard.cta')}
       description={translate('restoreBackup.dashboard.description')}
       onCta={() => navigation.navigate('Import')}
-      screenTitle={translate('restoreBackup.title')}
       testID="RestoreBackupDashboardScreen"
       title={translate('restoreBackup.dashboard.title')}
     />
