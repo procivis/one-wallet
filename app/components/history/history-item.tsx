@@ -14,16 +14,10 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
 import { HistoryListItemWithDid } from '../../models/core/history';
+import { getEntryTitle } from '../../utils/history';
 import { HistoryActionIcon, HistoryActionIconType } from '../icon/history-icon';
 
 const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
-  if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
-    return {
-      icon: <HistoryActionIcon type={HistoryActionIconType.Share} />,
-      label: translate('credentialHistory.shared'),
-    };
-  }
-
   switch (historyItem.action) {
     case HistoryActionEnum.PENDING:
       return {
@@ -36,6 +30,12 @@ const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
         label: translate('credentialHistory.offered'),
       };
     case HistoryActionEnum.ACCEPTED:
+      if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
+        return {
+          icon: <HistoryActionIcon type={HistoryActionIconType.Share} />,
+          label: translate('credentialHistory.shared'),
+        };
+      }
       return {
         icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
         label: translate('credentialHistory.accepted'),
@@ -56,6 +56,11 @@ const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
         label: translate('credentialHistory.revalidated'),
       };
   }
+
+  return {
+    icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
+    label: getEntryTitle(historyItem),
+  };
 };
 
 export interface HistoryItemProps {
@@ -74,13 +79,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
   onPress,
 }) => {
   const colorScheme = useAppColorScheme();
-
-  const display = getLabelAndIconForAction(item);
-  if (!display) {
-    return null;
-  }
-
-  const { label, icon } = display;
+  const { label, icon } = getLabelAndIconForAction(item);
   const time = moment(item.createdDate);
   const timeLabel = absoluteTime ? time.format('H:mm') : time.fromNow();
 
