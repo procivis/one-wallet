@@ -5,7 +5,7 @@ import {
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { NativeModules, Platform, StyleSheet } from 'react-native';
 import { unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
@@ -65,12 +65,28 @@ const DashboardScreen: FC = () => {
     const { backupFileName, backupFilePath } = params;
 
     try {
-      const shareResponse = await Share.open({
-        failOnCancel: false,
-        filename: backupFileName,
-        url: `file://${backupFilePath}`,
-      });
-      if (shareResponse.success) {
+      const url = `file://${backupFilePath}`;
+      const filename = backupFileName;
+      const mimeType = 'application/zip';
+      let success;
+      if (Platform.OS === 'ios') {
+        const shareResponse = await Share.open({
+          failOnCancel: false,
+          filename,
+          saveToFiles: true,
+          type: mimeType,
+          url,
+        });
+        success = shareResponse.success;
+      } else {
+        await NativeModules.FileExporter.export({
+          filename,
+          mimeType,
+          url,
+        });
+        success = true;
+      }
+      if (success) {
         await unlink(backupFilePath);
         navigation.replace('Dashboard');
       }
