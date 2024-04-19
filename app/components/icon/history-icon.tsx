@@ -1,7 +1,7 @@
 import { useAppColorScheme } from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
-import Svg, { Path, Rect, SvgProps } from 'react-native-svg';
+import Svg, { G, Path, Rect, SvgProps } from 'react-native-svg';
 
 // https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=454-99608
 const HistoryShareIcon: FC<SvgProps> = (props) => {
@@ -159,6 +159,87 @@ const HistoryStatusSuspendTemporaryIcon: FC<SvgProps> = (props) => {
   );
 };
 
+// https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=493-79830
+const HistoryStatusIndicatorIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+  return (
+    <Svg fill="none" height="16" viewBox="0 0 16 16" width="16" {...props}>
+      <G opacity="0.1">
+        <Path
+          d="M7.9971 14C7.17658 14 6.40445 13.8432 5.6807 13.5295C4.95694 13.2197 4.31834 12.788 3.76488 12.2343C3.21529 11.6805 2.78374 11.0416 2.47025 10.3175C2.15675 9.59342 2 8.82091 2 8C2 7.17909 2.15675 6.40658 2.47025 5.68248C2.78374 4.95837 3.21529 4.32139 3.76488 3.77154C4.31834 3.21781 4.95501 2.78412 5.67489 2.47047C6.39865 2.15682 7.17078 2 7.99129 2C8.81567 2 9.58974 2.15682 10.3135 2.47047C11.0373 2.78412 11.6759 3.21781 12.2293 3.77154C12.7828 4.32139 13.2163 4.95837 13.5298 5.68248C13.8433 6.40658 14 7.17909 14 8C14 8.82091 13.8433 9.59342 13.5298 10.3175C13.2163 11.0416 12.7828 11.6805 12.2293 12.2343C11.6759 12.788 11.0373 13.2197 10.3135 13.5295C9.58974 13.8432 8.81761 14 7.9971 14Z"
+          fill={colorScheme.success}
+        />
+        <Path
+          d="M3.05512 12.9387L3.0576 12.9412C3.70117 13.5851 4.44577 14.0884 5.28521 14.448C6.13891 14.8176 7.04621 15 7.9971 15C8.94801 15 9.85534 14.8176 10.7091 14.448C11.5485 14.0884 12.293 13.5851 12.9366 12.9412C13.5798 12.2977 14.0843 11.5535 14.4474 10.7148C14.8174 9.86023 15 8.95194 15 8C15 7.04806 14.8174 6.13977 14.4474 5.28517C14.0843 4.44638 13.5794 3.70359 12.9354 3.06342C12.2925 2.4205 11.549 1.91605 10.7111 1.55293C9.85621 1.18244 8.94617 1 7.99129 1C7.03961 1 6.13158 1.1827 5.27726 1.55293L5.27726 1.55293L5.27546 1.55371C4.44108 1.91725 3.6999 2.422 3.0576 3.0646C2.41766 3.70486 1.91531 4.4473 1.55256 5.28517L2.47025 5.68248L1.55256 5.28517C1.18257 6.13977 1 7.04806 1 8C1 8.95194 1.18257 9.86023 1.55256 10.7148L2.47025 10.3175L1.55256 10.7148C1.91503 11.5521 2.41666 12.2954 3.05512 12.9387Z"
+          stroke="white"
+          strokeOpacity="0.2"
+          strokeWidth="2"
+        />
+      </G>
+      <G opacity="0.2">
+        <Path
+          d="M7.99806 12C7.45106 12 6.9363 11.8955 6.4538 11.6864C5.97129 11.4798 5.54556 11.192 5.17658 10.8228C4.81019 10.4537 4.5225 10.0278 4.3135 9.54501C4.1045 9.06228 4 8.54727 4 8C4 7.45273 4.1045 6.93772 4.3135 6.45499C4.5225 5.97225 4.81019 5.5476 5.17658 5.18103C5.54556 4.81187 5.97 4.52275 6.44993 4.31365C6.93243 4.10455 7.44719 4 7.99419 4C8.54378 4 9.05983 4.10455 9.54233 4.31365C10.0248 4.52275 10.4506 4.81187 10.8195 5.18103C11.1885 5.5476 11.4775 5.97225 11.6865 6.45499C11.8955 6.93772 12 7.45273 12 8C12 8.54727 11.8955 9.06228 11.6865 9.54501C11.4775 10.0278 11.1885 10.4537 10.8195 10.8228C10.4506 11.192 10.0248 11.4798 9.54233 11.6864C9.05983 11.8955 8.54507 12 7.99806 12Z"
+          fill={colorScheme.success}
+        />
+        <Path
+          d="M4.46683 11.5273L4.46683 11.5273L4.46931 11.5298C4.92837 11.9891 5.46007 12.3485 6.05824 12.6048C6.6707 12.8699 7.32065 13 7.99806 13C8.67547 13 9.32542 12.8699 9.93788 12.6048C10.536 12.3485 11.0678 11.9891 11.5268 11.5298C11.9855 11.0709 12.3456 10.5397 12.6042 9.94232C12.8697 9.32909 13 8.67831 13 8C13 7.32169 12.8697 6.6709 12.6042 6.05768C12.3455 5.46023 11.9852 4.92975 11.5256 4.47286C11.0672 4.01453 10.5366 3.65466 9.93996 3.3961C9.3263 3.13016 8.67427 3 7.99419 3C7.31602 3 6.66536 3.13042 6.0523 3.3961L6.05229 3.3961L6.0505 3.39689C5.45607 3.65587 4.92712 4.01606 4.46931 4.47409L5.17658 5.18103L4.46931 4.47409C4.01256 4.93106 3.65407 5.46118 3.39581 6.05768C3.13032 6.67091 3 7.32169 3 8C3 8.67831 3.13032 9.32909 3.39581 9.94232C3.65378 10.5382 4.01156 11.0686 4.46683 11.5273Z"
+          stroke="white"
+          strokeOpacity="0.2"
+          strokeWidth="2"
+        />
+      </G>
+      <Path
+        d="M7.99903 10C7.72553 10 7.46815 9.94773 7.2269 9.84318C6.98565 9.73992 6.77278 9.596 6.58829 9.41142C6.4051 9.22685 6.26125 9.01388 6.15675 8.77251C6.05225 8.53114 6 8.27364 6 8C6 7.72636 6.05225 7.46886 6.15675 7.22749C6.26125 6.98612 6.4051 6.7738 6.58829 6.59051C6.77278 6.40594 6.985 6.26137 7.22496 6.15682C7.46622 6.05227 7.72359 6 7.9971 6C8.27189 6 8.52991 6.05227 8.77117 6.15682C9.01242 6.26137 9.22529 6.40594 9.40977 6.59051C9.59426 6.7738 9.73875 6.98612 9.84325 7.22749C9.94775 7.46886 10 7.72636 10 8C10 8.27364 9.94775 8.53114 9.84325 8.77251C9.73875 9.01388 9.59426 9.22685 9.40977 9.41142C9.22529 9.596 9.01242 9.73992 8.77117 9.84318C8.52991 9.94773 8.27254 10 7.99903 10Z"
+        fill={colorScheme.success}
+      />
+      <Path
+        d="M5.87854 10.1159L5.87853 10.1159L5.88101 10.1184C6.15559 10.3931 6.47442 10.6085 6.83134 10.7616C7.20255 10.9221 7.59511 11 7.99903 11C8.40295 11 8.79552 10.9221 9.16673 10.7616C9.52365 10.6085 9.84248 10.3931 10.1171 10.1184C10.3913 9.84402 10.6068 9.52579 10.7609 9.16982C10.9219 8.79796 11 8.40467 11 8C11 7.59533 10.9219 7.20204 10.7609 6.83018C10.6068 6.4741 10.3909 6.15596 10.1158 5.88235C9.8419 5.6086 9.52418 5.39329 9.1688 5.23928C8.79638 5.07789 8.40238 5 7.9971 5C7.59242 5 7.19915 5.07815 6.82733 5.23928L6.82733 5.23928L6.82553 5.24006C6.47107 5.3945 6.15434 5.61012 5.88101 5.88358L6.58829 6.59051L5.88101 5.88358C5.60746 6.15726 5.39282 6.47505 5.23906 6.83018C5.07807 7.20204 5 7.59533 5 8C5 8.40467 5.07807 8.79796 5.23906 9.16981C5.39254 9.5243 5.60647 9.84175 5.87854 10.1159Z"
+        stroke="white"
+        strokeOpacity="0.2"
+        strokeWidth="2"
+      />
+    </Svg>
+  );
+};
+
+export enum HistoryStatusIconType {
+  Success,
+  Error,
+  Suspend,
+  SuspendTemporary,
+  Indicator,
+}
+
+export interface HistoryStatusIconProps extends SvgProps {
+  type: HistoryStatusIconType;
+}
+
+export const HistoryStatusIcon: FC<HistoryStatusIconProps> = ({
+  type,
+  ...props
+}) => {
+  let StatusIcon = HistoryStatusAcceptedIcon;
+  switch (type) {
+    case HistoryStatusIconType.Success:
+      StatusIcon = HistoryStatusAcceptedIcon;
+      break;
+    case HistoryStatusIconType.Error:
+      StatusIcon = HistoryStatusErrorIcon;
+      break;
+    case HistoryStatusIconType.Suspend:
+      StatusIcon = HistoryStatusSuspendIcon;
+      break;
+    case HistoryStatusIconType.SuspendTemporary:
+      StatusIcon = HistoryStatusSuspendTemporaryIcon;
+      break;
+    case HistoryStatusIconType.Indicator:
+      StatusIcon = HistoryStatusIndicatorIcon;
+      break;
+  }
+
+  return <StatusIcon {...props} />;
+};
+
 export enum HistoryActionIconType {
   Issue,
   Revalidate,
@@ -192,23 +273,23 @@ export const HistoryActionIcon: FC<HistoryActionIconProps> = ({
       break;
   }
 
-  let StatusIcon = HistoryStatusAcceptedIcon;
+  let statusIcon = HistoryStatusIconType.Success;
   switch (type) {
     case HistoryActionIconType.Revoke:
-      StatusIcon = HistoryStatusErrorIcon;
+      statusIcon = HistoryStatusIconType.Error;
       break;
     case HistoryActionIconType.Suspend:
-      StatusIcon = HistoryStatusSuspendIcon;
+      statusIcon = HistoryStatusIconType.Suspend;
       break;
     case HistoryActionIconType.SuspendTemporary:
-      StatusIcon = HistoryStatusSuspendTemporaryIcon;
+      statusIcon = HistoryStatusIconType.SuspendTemporary;
       break;
   }
 
   return (
     <View style={[styles.wrapper, style]} {...props}>
       <TypeIcon style={styles.round} />
-      <StatusIcon style={styles.status} />
+      <HistoryStatusIcon style={styles.status} type={statusIcon} />
     </View>
   );
 };
