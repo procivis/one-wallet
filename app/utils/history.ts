@@ -79,35 +79,6 @@ export const groupEntriesByDay = (entries: HistoryListItemWithDid[]) => {
     });
 };
 
-export const groupEntriesByMonth = (
-  entries: HistoryListItemWithDid[],
-): HistoryListItemGroup[] => {
-  const groupedEntries = entries.reduce(
-    (
-      result: Record<string, HistoryListItemWithDid[]>,
-      entry: HistoryListItemWithDid,
-    ) => {
-      const [year, month] = entry.createdDate.split('-');
-      const date = `${year}-${month}`;
-
-      if (!result[date]) {
-        result[date] = [];
-      }
-
-      result[date].push(entry);
-      return result;
-    },
-    {},
-  );
-
-  return Object.keys(groupedEntries).map((date) => {
-    return {
-      date,
-      entries: groupedEntries[date],
-    };
-  });
-};
-
 export const getEntryTitle = (entry: HistoryListItem) => {
   return `${translate(`history.entityType.${entry.entityType}`)} ${translate(
     `history.action.${entry.action}`,
