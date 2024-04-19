@@ -1,15 +1,16 @@
-import { concatTestID } from '@procivis/one-react-native-components';
 import {
+  BackButton,
   Button,
-  DetailScreen,
+  ButtonType,
+  concatTestID,
   Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
-import { useNavigation } from '@react-navigation/native';
-import React, { FC, PropsWithChildren } from 'react';
+} from '@procivis/one-react-native-components';
+import React, { FC, PropsWithChildren, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { HeaderBackButton } from '../navigation/header-buttons';
+import ScrollViewScreen from '../screens/scroll-view-screen';
 
 export enum BackupScreenMode {
   Create = 'create',
@@ -22,7 +23,6 @@ type BackupScreenProps = PropsWithChildren<{
   isCtaDisabled?: boolean;
   onBack?: () => void;
   onCta: () => void;
-  screenTitle: string;
   testID: string;
   title: string;
 }>;
@@ -34,65 +34,64 @@ export const BackupScreen: FC<BackupScreenProps> = ({
   isCtaDisabled,
   onBack,
   onCta,
-  screenTitle,
   testID,
   title,
 }) => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<RootNavigationProp<'Settings'>>();
 
-  const handleBack = () => {
-    onBack?.();
-    navigation.goBack();
-  };
+  const backButton = useMemo(() => {
+    if (!onBack) {
+      return HeaderBackButton;
+    }
+    return <BackButton onPress={onBack} />;
+  }, [onBack]);
 
   return (
-    <DetailScreen
-      onBack={handleBack}
-      style={styles.container}
+    <ScrollViewScreen
+      header={{
+        leftItem: backButton,
+        title,
+      }}
+      style={{ backgroundColor: colorScheme.white }}
       testID={testID}
-      title={screenTitle}
     >
-      <View style={styles.content}>
-        <Typography
-          accessibilityRole="header"
-          bold={true}
-          color={colorScheme.text}
-          size="h1"
-          style={styles.title}
-        >
-          {title}
-        </Typography>
+      <View style={styles.contentWrapper}>
+        <View style={styles.content}>
+          <Typography color={colorScheme.text} style={styles.description}>
+            {description}
+          </Typography>
 
-        <Typography color={colorScheme.text} style={styles.description}>
-          {description}
-        </Typography>
+          {children}
+        </View>
 
-        {children}
+        <View style={styles.bottom}>
+          <Button
+            disabled={isCtaDisabled}
+            onPress={onCta}
+            testID={concatTestID(testID, 'mainButton')}
+            title={cta}
+            type={isCtaDisabled ? ButtonType.Border : ButtonType.Primary}
+          />
+        </View>
       </View>
-
-      <Button
-        disabled={isCtaDisabled}
-        onPress={onCta}
-        testID={concatTestID(testID, 'mainButton')}
-      >
-        {cta}
-      </Button>
-    </DetailScreen>
+    </ScrollViewScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    minHeight: 84,
   },
   content: {
+    marginHorizontal: 8,
+  },
+  contentWrapper: {
     flex: 1,
+    marginHorizontal: 12,
   },
   description: {
     marginBottom: 24,
-  },
-  title: {
-    marginBottom: 12,
   },
 });
