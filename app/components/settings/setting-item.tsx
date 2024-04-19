@@ -14,7 +14,6 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderBottomWidth: 1,
     flexDirection: 'row',
     height: 60,
     justifyContent: 'center',
@@ -22,11 +21,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignItems: 'center',
-    borderRadius: 24,
-    height: 32,
+    borderRadius: 18,
+    height: 36,
     justifyContent: 'center',
     marginRight: 12,
-    width: 32,
+    width: 36,
   },
   label: {
     flex: 1,
@@ -34,7 +33,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   wrapper: {
-    paddingHorizontal: 24,
+    justifyContent: 'center',
+    marginHorizontal: 16,
+    paddingHorizontal: 12,
   },
 });
 
@@ -64,13 +65,10 @@ const SettingItem: FunctionComponent<PropsWithChildren<SettingItemProps>> = ({
   }, [icon]);
 
   return (
-    <View style={[styles.wrapper, style]}>
-      <View
-        style={[
-          styles.container,
-          { borderBottomColor: colorScheme.background },
-        ]}
-      >
+    <View
+      style={[styles.wrapper, { backgroundColor: colorScheme.white }, style]}
+    >
+      <View style={styles.container}>
         {iconView && (
           <View
             style={[styles.icon, { backgroundColor: colorScheme.background }]}
