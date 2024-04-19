@@ -1,4 +1,5 @@
 import {
+  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -57,25 +58,36 @@ const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
   }
 };
 
-const HistoryItem: FC<{
+export interface HistoryItemProps {
   absoluteTime?: boolean;
-  historyItem: HistoryListItemWithDid;
+  item: HistoryListItemWithDid;
   last?: boolean;
+  onPress?: (item: HistoryListItemWithDid) => void;
   style?: StyleProp<ViewStyle>;
-}> = ({ historyItem, last, style, absoluteTime }) => {
+}
+
+export const HistoryItem: FC<HistoryItemProps> = ({
+  item,
+  last,
+  style,
+  absoluteTime,
+  onPress,
+}) => {
   const colorScheme = useAppColorScheme();
 
-  const display = getLabelAndIconForAction(historyItem);
+  const display = getLabelAndIconForAction(item);
   if (!display) {
     return null;
   }
 
   const { label, icon } = display;
-  const time = moment(historyItem.createdDate);
+  const time = moment(item.createdDate);
   const timeLabel = absoluteTime ? time.format('H:mm') : time.fromNow();
 
   return (
-    <View
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={() => onPress?.(item)}
       style={[
         styles.historyItemContainer,
         {
@@ -88,7 +100,7 @@ const HistoryItem: FC<{
     >
       {icon}
       <View style={styles.labelAndDid}>
-        <Typography color={colorScheme.text} preset="s">
+        <Typography color={colorScheme.text} preset="s" style={styles.label}>
           {label}
         </Typography>
         <Typography
@@ -97,7 +109,7 @@ const HistoryItem: FC<{
           preset="s/line-height-small"
           style={styles.shaded}
         >
-          {historyItem.did}
+          {item.did}
         </Typography>
       </View>
       <Typography
@@ -107,7 +119,7 @@ const HistoryItem: FC<{
       >
         {timeLabel}
       </Typography>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -118,6 +130,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingRight: 8,
     paddingVertical: 12,
+  },
+  label: {
+    marginBottom: 2,
   },
   labelAndDid: {
     flex: 1,
@@ -130,5 +145,3 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-
-export default HistoryItem;

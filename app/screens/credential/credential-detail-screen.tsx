@@ -14,7 +14,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import HistoryItem from '../../components/history/history-item';
+import { HistoryItem } from '../../components/history/history-item';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useHistory } from '../../hooks/core/history';
@@ -182,10 +182,10 @@ const HistorySection: FC<{
         {translate('history.title')}
       </Typography>
       <View style={[styles.historyLog, { backgroundColor: colorScheme.white }]}>
-        {previewHistoryItems.map((historyItem, idx, { length }) => (
+        {previewHistoryItems.map((item, idx, { length }) => (
           <HistoryItem
-            historyItem={historyItem}
-            key={historyItem.id}
+            item={item}
+            key={item.id}
             last={!expandable && idx === length - 1}
           />
         ))}
