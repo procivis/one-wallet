@@ -28,6 +28,7 @@ import ListSectionHeader, {
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import SectionListScreen from '../../components/screens/section-list-screen';
 import ButtonSetting from '../../components/settings/button-setting';
+import SettingItemSeparator from '../../components/settings/setting-item-separator';
 import SwitchSetting from '../../components/settings/switch-setting';
 import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
 import { useExplicitPinCodeCheck } from '../../hooks/pin-code/pin-code-check';
@@ -111,8 +112,9 @@ const DashboardScreen: FunctionComponent = observer(() => {
     navigation.navigate('AppInformation');
   }, [navigation]);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const handleLicences = useCallback(() => {}, []);
+  const handleLicences = useCallback(() => {
+    navigation.navigate('Licences');
+  }, [navigation]);
 
   const handleDeleteWallet = useCallback(() => {
     navigation.navigate('DeleteWallet');
@@ -266,6 +268,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
         title: translate('settings.title'),
       }}
       list={{
+        ItemSeparatorComponent: SettingItemSeparator,
         renderItem: renderSettingsItem,
         renderSectionHeader: renderSettingsSectionHeder,
         sections: sections,
