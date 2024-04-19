@@ -38,7 +38,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
 import { useONECore } from '../../hooks/core/core-context';
@@ -103,6 +106,9 @@ const ProofRequestScreen: FunctionComponent = () => {
       PresentationSubmitCredentialRequest | undefined
     >
   >({});
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const infoPressHandler = useCallback(() => {}, []);
 
   // initial selection of credentials/claims
   useEffect(() => {
@@ -266,6 +272,7 @@ const ProofRequestScreen: FunctionComponent = () => {
       <NavigationHeader
         leftItem={HeaderCloseModalButton}
         modalHandleVisible={Platform.OS === 'ios'}
+        rightItem={<HeaderInfoButton onPress={infoPressHandler} />}
         title={translate('proofRequest.title')}
       />
       <View style={styles.content} testID="ProofRequestSharingScreen.content">

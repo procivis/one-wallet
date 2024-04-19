@@ -3,26 +3,40 @@ import {
   LoadingResultScreen,
 } from '@procivis/one-react-native-components';
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
+import { OneError } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
-import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
+import {
+  InvitationNavigationProp,
+  InvitationRouteProp,
+} from '../../navigators/invitation/invitation-routes';
 import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
-  const navigation =
+  const navigation = useNavigation<InvitationNavigationProp<'Processing'>>();
+  const managementNavigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
+  const [error, setError] = useState<OneError>();
 
   useBlockOSBackNavigation();
 
@@ -35,7 +49,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
-          navigation.replace('IssueCredential', {
+          managementNavigation.replace('IssueCredential', {
             params: {
               credentialId: result.credentialIds[0],
               interactionId: result.interactionId,
@@ -43,23 +57,35 @@ const InvitationProcessScreen: FunctionComponent = () => {
             screen: 'CredentialOffer',
           });
         } else {
-          navigation.replace('ShareCredential', {
+          managementNavigation.replace('ShareCredential', {
             params: { request: result },
             screen: 'ProofRequest',
           });
         }
       })
-      .catch((err) => {
+      .catch((err: OneError) => {
         reportException(err, 'Invitation failure');
         setState(LoaderViewState.Warning);
+        setError(err);
       });
-  }, [handleInvitation, invitationUrl, navigation]);
+  }, [handleInvitation, invitationUrl, managementNavigation]);
+
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    navigation.navigate('Error', { error });
+  }, [error, navigation]);
 
   return (
     <LoadingResultScreen
       header={{
         leftItem: HeaderCloseModalButton,
         modalHandleVisible: true,
+        rightItem:
+          state === LoaderViewState.Warning ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
       }}
       loader={{
         animate: isFocused,
