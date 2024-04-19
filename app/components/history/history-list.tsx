@@ -25,10 +25,15 @@ export interface HistorySectionListProps
     SectionListProps<HistoryListItemWithDid, HistoryGroupByDaySection>,
     'sections'
   > {
+  // optional customization of item props
   getItemProps?: (
     item: HistoryListItemWithDid,
   ) => Partial<HistorySectionItemProps> | undefined;
   itemProps?: Partial<HistorySectionItemProps>;
+
+  // callback when empty list displayed
+  onEmpty?: (empty: boolean) => void;
+
   query: Partial<HistoryListQuery>;
 }
 
@@ -37,6 +42,7 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
   contentContainerStyle,
   getItemProps,
   itemProps,
+  onEmpty,
   ...props
 }) => {
   const colorScheme = useAppColorScheme();
@@ -55,8 +61,11 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
     if (!items) {
       return undefined;
     }
+    if (historyData) {
+      setImmediate(() => onEmpty?.(!items.length));
+    }
     return groupEntriesByDay(items);
-  }, [historyData?.pages]);
+  }, [historyData, onEmpty]);
 
   const onEndReached = useCallback(() => {
     if (hasNextHistoryPage) {

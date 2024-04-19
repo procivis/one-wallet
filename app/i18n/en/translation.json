@@ -140,6 +140,7 @@
   "historyDetail.date": "Date",
   "historyDetail.entity": "Entity",
   "historyDetail.from": "From",
+  "historyDetail.response": "Response",
   "historyDetail.type": "Type",
   "invitation.process.inProgress.title": "Connecting...",
   "invitation.process.warning.title": "Connection failed",
