@@ -2,6 +2,7 @@ import {
   BackButton,
   NavigationHeader,
   SearchBar,
+  Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
@@ -25,6 +26,7 @@ const HistoryDashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<HistoryNavigationProp<'Dashboard'>>();
+  const [empty, setEmpty] = useState<boolean>();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
   const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
@@ -78,23 +80,42 @@ const HistoryDashboardScreen: FC = () => {
         leftItem={<BackButton onPress={navigation.goBack} />}
         title={translate('history.title')}
       />
-      <View style={styles.searchLine}>
-        <SearchBar
-          onSearchPhraseChange={setSearchPhrase}
-          placeholder={translate('common.search')}
-          searchPhrase={searchPhrase}
-          style={styles.searchBar}
-          testID="HistoryScreen.search"
-        />
-        <FilterButton
-          active={Boolean(queryParams.credentialSchemaId)}
-          onPress={() => setIsFilterModalOpened(true)}
-          testID="HistoryScreen.filter"
-        />
-      </View>
+      {empty ? (
+        <View
+          style={[styles.emptyNotice, { backgroundColor: colorScheme.white }]}
+        >
+          <Typography align="center" color={colorScheme.text} preset="s">
+            {translate('history.empty.title')}
+          </Typography>
+          <Typography
+            align="center"
+            color={colorScheme.text}
+            preset="s/line-height-small"
+            style={styles.shaded}
+          >
+            {translate('history.empty.subtitle')}
+          </Typography>
+        </View>
+      ) : (
+        <View style={styles.searchLine}>
+          <SearchBar
+            onSearchPhraseChange={setSearchPhrase}
+            placeholder={translate('common.search')}
+            searchPhrase={searchPhrase}
+            style={styles.searchBar}
+            testID="HistoryScreen.search"
+          />
+          <FilterButton
+            active={Boolean(queryParams.credentialSchemaId)}
+            onPress={() => setIsFilterModalOpened(true)}
+            testID="HistoryScreen.filter"
+          />
+        </View>
+      )}
       <HistorySectionList
         contentContainerStyle={{ paddingBottom: 24 + insets.bottom }}
         itemProps={{ onPress: handleItemPress }}
+        onEmpty={setEmpty}
         query={queryParams}
       />
       <CredentialSchemaPicker
@@ -111,6 +132,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  emptyNotice: {
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginVertical: 24,
+    paddingBottom: 20,
+    paddingHorizontal: 12,
+    paddingTop: 16,
+  },
   searchBar: {
     flex: 1,
     marginRight: 4,
@@ -120,6 +149,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 12,
     paddingHorizontal: 16,
+  },
+  shaded: {
+    opacity: 0.7,
   },
 });
 
