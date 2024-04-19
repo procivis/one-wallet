@@ -1,37 +1,35 @@
 import {
-  LoadingResult,
-  LoadingResultState,
-  LoadingResultVariation,
+  ButtonType,
+  LoaderViewState,
+  LoadingResultScreen,
   useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
-import { useNavigation } from '@react-navigation/native';
+} from '@procivis/one-react-native-components';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useFinalizeImport } from '../../hooks/core/backup';
+import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
-import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const ProcessingScreen: FC = () => {
+  const isFocused = useIsFocused();
   const rootNavigation = useNavigation<RootNavigationProp>();
-  const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const { mutateAsync: finalizeImport } = useFinalizeImport();
-  const [state, setState] = useState<
-    | LoadingResultState.InProgress
-    | LoadingResultState.Success
-    | LoadingResultState.Failure
-  >(LoadingResultState.InProgress);
+  const [state, setState] = useState(LoaderViewState.InProgress);
 
   useBlockOSBackNavigation();
 
   const handleBackupRestore = useCallback(async () => {
     try {
       await finalizeImport();
-      setState(LoadingResultState.Success);
+      setState(LoaderViewState.Success);
     } catch (e) {
       reportException(e, 'Backup restoring failure');
-      setState(LoadingResultState.Failure);
+      setState(LoaderViewState.Warning);
     }
   }, [finalizeImport]);
 
@@ -40,28 +38,41 @@ const ProcessingScreen: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleClose = useCallback(() => {
+  const closeButtonHandler = useCallback(() => {
     // TODO: implement possible restoring termination
-    navigation.goBack();
-  }, [navigation]);
-
-  const handleCta = useCallback(() => {
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
+  const { closeTimeout } = useCloseButtonTimeout(
+    state === LoaderViewState.Success,
+    closeButtonHandler,
+  );
+
   return (
-    <LoadingResult
-      ctaButtonLabel={translate('restoreBackup.processing.success.cta')}
-      failureCloseButtonLabel={translate('common.close')}
-      inProgressCloseButtonLabel={translate('common.cancel')}
-      onCTA={handleCta}
-      onClose={state !== LoadingResultState.Success ? handleClose : undefined}
-      state={state}
-      subtitle={translate(`restoreBackup.processing.${state}.subtitle`)}
-      successCloseButtonLabel={translate('common.close')}
+    <LoadingResultScreen
+      button={
+        state === LoaderViewState.Success
+          ? {
+              onPress: closeButtonHandler,
+              testID: 'CredentialAcceptProcessScreen.close',
+              title: translate('common.closeWithTimeout', {
+                timeout: closeTimeout,
+              }),
+              type: ButtonType.Secondary,
+            }
+          : undefined
+      }
+      header={{
+        leftItem: HeaderCloseModalButton,
+        modalHandleVisible: Platform.OS === 'ios',
+        title: translate('restoreBackup.processing.title'),
+      }}
+      loader={{
+        animate: isFocused,
+        label: translate(`restoreBackup.processing.${state}`),
+        state,
+      }}
       testID="RestoreBackupProcessingScreen"
-      title={translate(`restoreBackup.processing.${state}.title`)}
-      variation={LoadingResultVariation.Neutral}
     />
   );
 };
