@@ -61,7 +61,7 @@
   "errorScreen.friendlySubtitle": "Es ist ein unerwarteter Fehler aufgetreten. Bitte starten Sie die App erneut.",
   "errorScreen.title": "Es ist ein Fehler aufgetreten!",
   "invitation.process.inProgress.title": "Verbinden...",
-  "invitation.process.warning.title": "Verbindung fehlgeschlagen",
+  "invitation.process.warning.title": "Etwas ist schief gelaufen.",
   "onboarding.pinCodeScreen.biometric.cancel": "PIN-Code verwenden",
   "onboarding.pinCodeScreen.biometric.prompt": "Bestätigen Sie Ihre Identität",
   "onboarding.pinCodeScreen.change.check.title": "Aktuellen PIN-Code eingeben",
