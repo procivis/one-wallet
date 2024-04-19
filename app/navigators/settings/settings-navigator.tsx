@@ -6,6 +6,8 @@ import AppInformationScreen from '../../screens/settings/app-information-screen'
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
 import DashboardScreen from '../../screens/settings/dashboard-screen';
 import DeleteWalletScreen from '../../screens/settings/delete-wallet-screen';
+import LicenceDetailsScreen from '../../screens/settings/licence-details-screen';
+import LicencesScreen from '../../screens/settings/licences-screen';
 import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
 import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
 import CreateBackupNavigator from '../create-backup/create-backup-navigator';
@@ -39,6 +41,8 @@ const SettingsNavigator = () => {
           presentation: 'formSheet',
         }}
       />
+      <Stack.Screen component={LicencesScreen} name="Licences" />
+      <Stack.Screen component={LicenceDetailsScreen} name="LicenceDetails" />
     </Stack.Navigator>
   );
 };
