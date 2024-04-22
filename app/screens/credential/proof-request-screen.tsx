@@ -26,8 +26,17 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
@@ -51,6 +60,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const { top } = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const { core } = useONECore();
 
@@ -240,15 +250,22 @@ const ProofRequestScreen: FunctionComponent = () => {
         ),
     );
 
+  const safeAreaPaddingStyle: ViewStyle | undefined =
+    Platform.OS === 'android'
+      ? {
+          paddingTop: top,
+        }
+      : undefined;
+
   return (
     <ScrollView
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[styles.contentContainer, safeAreaPaddingStyle]}
       style={styles.scrollView}
       testID="ProofRequestSharingScreen"
     >
       <NavigationHeader
         leftItem={HeaderCloseModalButton}
-        modalHandleVisible
+        modalHandleVisible={Platform.OS === 'ios'}
         title={translate('proofRequest.title')}
       />
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
@@ -324,6 +341,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingBottom: Platform.OS === 'android' ? 16 : 0,
     paddingTop: 16,
   },
   content: {
