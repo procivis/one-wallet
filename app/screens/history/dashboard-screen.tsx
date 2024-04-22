@@ -25,7 +25,7 @@ import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 const HistoryDashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<HistoryNavigationProp<'Dashboard'>>();
+  const navigation = useNavigation<HistoryNavigationProp<'HistoryDashboard'>>();
   const [empty, setEmpty] = useState<boolean>();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
