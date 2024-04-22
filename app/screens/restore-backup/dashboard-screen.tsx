@@ -6,7 +6,8 @@ import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 
 const DashboardScreen: FC = () => {
-  const navigation = useNavigation<RestoreBackupNavigationProp<'Dashboard'>>();
+  const navigation =
+    useNavigation<RestoreBackupNavigationProp<'RestoreBackupDashboard'>>();
 
   return (
     <BackupScreen

@@ -4,13 +4,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RestoreBackupProcessingNavigatorParamList } from './restore-backup-processing-routes';
 
 export type RestoreBackupNavigatorParamList = {
-  Dashboard: undefined;
   Import: undefined;
   Processing: NavigatorScreenParams<RestoreBackupProcessingNavigatorParamList>;
   RecoveryPassword: {
     error?: boolean;
     inputPath: string;
   };
+  RestoreBackupDashboard: undefined;
 };
 
 export type RestoreBackupRouteProp<

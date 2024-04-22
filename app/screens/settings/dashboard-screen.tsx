@@ -45,7 +45,8 @@ const LocaleNames: Record<Locale, string> = {
 
 const DashboardScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'Dashboard'>>();
+  const navigation =
+    useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
   const { userSettings, locale } = useStores();
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
@@ -79,15 +80,15 @@ const DashboardScreen: FunctionComponent = observer(() => {
   }, [locale, showActionSheetWithOptions, translate]);
 
   const handleHistory = useCallback(() => {
-    navigation.navigate('History', { screen: 'Dashboard' });
+    navigation.navigate('History', { screen: 'HistoryDashboard' });
   }, [navigation]);
 
   const handleCreateBackup = useCallback(() => {
-    navigation.navigate('CreateBackup', { screen: 'Dashboard' });
+    navigation.navigate('CreateBackup', { screen: 'CreateBackupDashboard' });
   }, [navigation]);
 
   const handleRestoreBackup = useCallback(() => {
-    navigation.navigate('RestoreBackup', { screen: 'Dashboard' });
+    navigation.navigate('RestoreBackup', { screen: 'RestoreBackupDashboard' });
   }, [navigation]);
 
   const handleChangePinCode = useCallback(() => {
