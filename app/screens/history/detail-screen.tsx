@@ -135,12 +135,18 @@ export const HistoryDetailScreen: FC = () => {
           />
         </View>
 
-        {backupInfo && (
-          <PreviewCredentials
-            credentials={backupInfo.credentials}
-            title={translate('historyDetail.backedUp')}
-          />
-        )}
+        {backupInfo?.credentials.length ? (
+          <>
+            <Typography
+              color={colorScheme.text}
+              preset="m"
+              style={styles.sectionHeader}
+            >
+              {translate('createBackup.preview.notBackedUp')}
+            </Typography>
+            <PreviewCredentials credentials={backupInfo.credentials} />
+          </>
+        ) : null}
 
         {credential && (
           <>
