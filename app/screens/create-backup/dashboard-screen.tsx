@@ -73,7 +73,6 @@ const DashboardScreen: FC = () => {
         const shareResponse = await Share.open({
           failOnCancel: false,
           filename,
-          saveToFiles: true,
           type: mimeType,
           url,
         });
