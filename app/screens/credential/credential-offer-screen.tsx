@@ -8,7 +8,7 @@ import {
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -42,15 +42,18 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   useBlockOSBackNavigation();
 
+  const skipRejection = useRef(false);
   const reject = useCallback(() => {
-    rejectCredential(interactionId).catch((e) =>
-      reportException(e, 'Reject credential offer failed'),
-    );
+    if (!skipRejection.current) {
+      rejectCredential(interactionId).catch((e) =>
+        reportException(e, 'Reject credential offer failed'),
+      );
+    }
   }, [interactionId, rejectCredential]);
-
   useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
+    skipRejection.current = true;
     navigation.navigate('Processing', {
       credentialId,
       interactionId,
