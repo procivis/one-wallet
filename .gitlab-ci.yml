@@ -7,6 +7,7 @@ stages:
   - scan_validation
   - build
   - e2e_tests
+  - license
 
 variables:
   # ONE-wallet project on Bitrise
@@ -329,3 +330,41 @@ dependency_track:react-native:policy_violations:
   needs: [dependency_track:react-native:upload-bom]
   extends:
     - .dTrack_policy_validation
+
+
+license_generate:
+  image:
+    name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.1.1
+    entrypoint: [""]
+  variables:
+    BASE_URL: ${DEPENDENCY_TRACK_BASE_URL}
+    API_KEY: ${DEPENDENCY_TRACK_API_KEY}
+    OUTPUT_DIR: "assets/licences"
+    MR_ENDPOINT: ${CI_SERVER_URL}/api/v4/projects/${CI_PROJECT_ID}/merge_requests
+    BRANCH_NAME: "update_licenses-${CI_PIPELINE_ID}"
+  script:
+    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_PRIVATE_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+    - python /app/main.py
+    - git add .
+    - git -c user.email="${GITLAB_USER_EMAIL}" -c user.name="${GITLAB_USER_NAME}" commit -m "Update Open Source licenses"
+    - git push origin HEAD:refs/heads/${BRANCH_NAME}
+    - |-
+      PAYLOAD=$(cat << JSON
+      {
+        "source_branch": "$BRANCH_NAME",
+        "target_branch": "$CI_DEFAULT_BRANCH",
+        "title": "Update Licences: Automated MR from $CI_COMMIT_REF_NAME",
+        "remove_source_branch": "true",
+        "assignee_id": "$GITLAB_USER_ID"
+      }
+      JSON
+      )
+    - echo "$PAYLOAD"
+    - >
+      curl --fail -X POST ${MR_ENDPOINT} \
+        -H "Content-Type: application/json" \
+        -H "PRIVATE-TOKEN: ${GITLAB_PRIVATE_TOKEN}" \
+        --data-binary "${PAYLOAD}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
