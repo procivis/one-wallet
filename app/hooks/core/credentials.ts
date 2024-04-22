@@ -80,14 +80,17 @@ export const usePagedCredentials = (
   );
 };
 
-export const useCredentialDetail = (credentialId: string | undefined) => {
+export const useCredentialDetail = (
+  credentialId: string | undefined,
+  active = true,
+) => {
   const { core } = useONECore();
 
   return useQuery(
     [CREDENTIAL_DETAIL_QUERY_KEY, credentialId],
     () => (credentialId ? core.getCredential(credentialId) : undefined),
     {
-      enabled: Boolean(credentialId),
+      enabled: active && Boolean(credentialId),
       keepPreviousData: true,
     },
   );
