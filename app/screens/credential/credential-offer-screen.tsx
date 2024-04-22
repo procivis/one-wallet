@@ -9,8 +9,17 @@ import {
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useRef } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
@@ -35,6 +44,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
+  const { top } = useSafeAreaInsets();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -66,15 +76,22 @@ const CredentialOfferScreen: FunctionComponent = () => {
     ? detailsCardFromCredential(credential, config)
     : { attributes: [], card: undefined };
 
+  const safeAreaPaddingStyle: ViewStyle | undefined =
+    Platform.OS === 'android'
+      ? {
+          paddingTop: top,
+        }
+      : undefined;
+
   return (
     <ScrollView
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[styles.contentContainer, safeAreaPaddingStyle]}
       style={styles.scrollView}
       testID="CredentialOfferScreen"
     >
       <NavigationHeader
         leftItem={HeaderCloseModalButton}
-        modalHandleVisible
+        modalHandleVisible={Platform.OS === 'ios'}
         title={translate('credentialOffer.title')}
       />
 
@@ -118,6 +135,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingBottom: Platform.OS === 'android' ? 16 : 0,
     paddingTop: 16,
   },
   content: {
