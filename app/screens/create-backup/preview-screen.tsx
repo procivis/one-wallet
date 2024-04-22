@@ -1,5 +1,10 @@
+import {
+  Typography,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
@@ -12,6 +17,7 @@ import {
 } from '../../navigators/create-backup/create-backup-routes';
 
 const PreviewScreen: FC = () => {
+  const colorScheme = useAppColorScheme();
   const navigation = useNavigation<CreateBackupNavigationProp<'Preview'>>();
   const { params } = useRoute<CreateBackupRouteProp<'Preview'>>();
   const { data: credentials } = useCredentials();
@@ -34,19 +40,32 @@ const PreviewScreen: FC = () => {
       testID="CreateBackupPreviewScreen"
       title={translate('createBackup.preview.title')}
     >
-      <PreviewCredentials
-        credentials={exportableCredentials}
-        fullWidth
-        title={translate('createBackup.preview.backedUp')}
-      />
+      <Typography
+        color={colorScheme.text}
+        preset="m"
+        style={styles.sectionHeader}
+      >
+        {translate('createBackup.preview.backedUp')}
+      </Typography>
+      <PreviewCredentials credentials={exportableCredentials} fullWidth />
 
-      <PreviewCredentials
-        credentials={nonExportableCredentials}
-        fullWidth
-        title={translate('createBackup.preview.notBackedUp')}
-      />
+      <Typography
+        color={colorScheme.text}
+        preset="m"
+        style={styles.sectionHeader}
+      >
+        {translate('createBackup.preview.notBackedUp')}
+      </Typography>
+      <PreviewCredentials credentials={nonExportableCredentials} fullWidth />
     </BackupScreen>
   );
 };
+
+const styles = StyleSheet.create({
+  sectionHeader: {
+    marginHorizontal: 4,
+    marginVertical: 16,
+  },
+});
 
 export default PreviewScreen;
