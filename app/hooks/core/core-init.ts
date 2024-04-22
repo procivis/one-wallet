@@ -7,6 +7,8 @@ import { useONECore } from './core-context';
 
 // using single static organisation within the wallet for all entries
 export const ONE_CORE_ORGANISATION_ID = '11111111-2222-3333-a444-ffffffffffff';
+export const SW_DID_NAME_PREFIX = 'holder-did-sw-key';
+export const HW_DID_NAME_PREFIX = 'holder-did-hw-key';
 
 // create base local identifiers in the wallet
 export const useInitializeONECoreIdentifiers = () => {
@@ -60,7 +62,7 @@ export const useInitializeONECoreIdentifiers = () => {
               capabilityInvocation: [hwKeyId],
               keyAgreement: [hwKeyId],
             },
-            name: 'holder-did-hw-key',
+            name: HW_DID_NAME_PREFIX,
             organisationId: ONE_CORE_ORGANISATION_ID,
             params: {},
           });
@@ -75,7 +77,7 @@ export const useInitializeONECoreIdentifiers = () => {
             capabilityInvocation: [swKeyId],
             keyAgreement: [swKeyId],
           },
-          name: 'holder-did-sw-key',
+          name: SW_DID_NAME_PREFIX,
           organisationId: ONE_CORE_ORGANISATION_ID,
           params: {},
         });
