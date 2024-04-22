@@ -12,7 +12,6 @@ export type SettingsNavigatorParamList = {
     enabled: boolean;
   };
   CreateBackup: NavigatorScreenParams<CreateBackupNavigatorParamList>;
-  Dashboard: undefined;
   DeleteWallet: undefined;
   History: NavigatorScreenParams<HistoryNavigatorParamList>;
   LicenceDetails: {
@@ -23,11 +22,12 @@ export type SettingsNavigatorParamList = {
   PinCodeChange: undefined;
   PinCodeSet: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
+  SettingsDashboard: undefined;
 };
 
 export type SettingsRouteProp<
   RouteName extends keyof SettingsNavigatorParamList,
 > = RouteProp<SettingsNavigatorParamList, RouteName>;
 export type SettingsNavigationProp<
-  RouteName extends keyof SettingsNavigatorParamList = 'Dashboard',
+  RouteName extends keyof SettingsNavigatorParamList = 'SettingsDashboard',
 > = NativeStackNavigationProp<SettingsNavigatorParamList, RouteName>;

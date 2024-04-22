@@ -18,6 +18,7 @@ import {
   CreateBackupNavigationProp,
   CreateBackupRouteProp,
 } from '../../navigators/create-backup/create-backup-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
@@ -25,9 +26,11 @@ import { reportException } from '../../utils/reporting';
 
 const DashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<CreateBackupNavigationProp<'Dashboard'>>();
+  const navigation =
+    useNavigation<CreateBackupNavigationProp<'CreateBackupDashboard'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
   const settingsNavigation = useNavigation<SettingsNavigationProp>();
-  const { params } = useRoute<CreateBackupRouteProp<'Dashboard'>>();
+  const { params } = useRoute<CreateBackupRouteProp<'CreateBackupDashboard'>>();
   const { data: historyData } = useHistory({
     entityTypes: [HistoryEntityTypeEnum.BACKUP],
     pageSize: 1,
@@ -87,12 +90,12 @@ const DashboardScreen: FC = () => {
       }
       if (success) {
         await unlink(backupFilePath);
-        navigation.replace('Dashboard');
+        rootNavigation.replace('Dashboard', { screen: 'Wallet' });
       }
     } catch (e) {
       reportException(e, 'Backup move failure');
     }
-  }, [navigation, params]);
+  }, [rootNavigation, params]);
 
   useEffect(() => {
     handleSaveFile();
