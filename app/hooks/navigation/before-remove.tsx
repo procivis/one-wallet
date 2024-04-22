@@ -11,7 +11,7 @@ export const useBeforeRemove = (callback: () => void) => {
     if (removed.current) {
       return;
     }
-    rootNavigation.addListener('beforeRemove', (e) => {
+    return rootNavigation.addListener('beforeRemove', (e) => {
       if (removed.current) {
         return;
       }

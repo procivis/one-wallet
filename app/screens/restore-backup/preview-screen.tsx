@@ -5,7 +5,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useRef } from 'react';
 import {
   Platform,
   ScrollView,
@@ -37,7 +37,11 @@ const PreviewScreen: FC = () => {
   const { data: credentials } = useCredentials();
   const { mutateAsync: rollbackImport } = useRollbackImport();
 
+  const skipRollback = useRef(false);
   const rollback = async () => {
+    if (skipRollback.current) {
+      return;
+    }
     try {
       await rollbackImport();
     } catch (e) {
@@ -45,6 +49,11 @@ const PreviewScreen: FC = () => {
     }
   };
   useBeforeRemove(rollback);
+
+  const onConfirm = useCallback(() => {
+    skipRollback.current = true;
+    navigation.replace('Restore');
+  }, [navigation]);
 
   const safeAreaPaddingStyle: ViewStyle | undefined =
     Platform.OS === 'android'
@@ -77,7 +86,7 @@ const PreviewScreen: FC = () => {
         <SafeAreaView edges={['bottom']} style={styles.bottom}>
           <Button
             delayLongPress={longPressTimeSeconds * 1000}
-            onLongPress={() => navigation.replace('Restore')}
+            onLongPress={onConfirm}
             subtitle={translate('restoreBackup.preview.cta.subtitle', {
               seconds: longPressTimeSeconds,
             })}

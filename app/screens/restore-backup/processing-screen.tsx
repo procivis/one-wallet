@@ -9,7 +9,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import { useFinalizeImport } from '../../hooks/core/backup';
+import { useBackupFinalizeImportProcedure } from '../../hooks/core/backup';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -18,7 +18,7 @@ import { reportException } from '../../utils/reporting';
 const ProcessingScreen: FC = () => {
   const isFocused = useIsFocused();
   const rootNavigation = useNavigation<RootNavigationProp>();
-  const { mutateAsync: finalizeImport } = useFinalizeImport();
+  const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState(LoaderViewState.InProgress);
 
   useBlockOSBackNavigation();

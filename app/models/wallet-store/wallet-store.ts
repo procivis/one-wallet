@@ -20,9 +20,7 @@ export const WalletStoreModel = types
       self.holderDidSwId = '';
     },
     walletSetup: (holderDidHwId: string | null, holderDidSwId: string) => {
-      if (holderDidHwId) {
-        self.holderDidHwId = holderDidHwId;
-      }
+      self.holderDidHwId = holderDidHwId ?? '';
       self.holderDidSwId = holderDidSwId;
     },
   }));
