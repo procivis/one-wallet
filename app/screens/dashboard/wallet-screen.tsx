@@ -19,7 +19,7 @@ import {
   CredentialListQuery,
   CredentialStateEnum,
 } from '@procivis/react-native-one-core';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React, {
@@ -128,7 +128,8 @@ const WalletScreen: FunctionComponent = observer(() => {
       // TODO Fix / discuss. This is ineficient.
       // The list item contains no claims. Without claims we can not render
       // all preview fields (primaryAttribute, photoAttribute, MRZ, etc.)
-      const { data: credential } = useCredentialDetail(item.id);
+      const isFocused = useIsFocused();
+      const { data: credential } = useCredentialDetail(item.id, isFocused);
 
       if (!credential) {
         return null;
