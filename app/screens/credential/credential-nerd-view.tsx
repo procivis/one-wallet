@@ -91,25 +91,25 @@ const CredentialNerdView: FunctionComponent = () => {
 
   const nerdModeFields: Array<NerdModeItemProps> = [
     {
-      attributeKey: 'Credential schema',
+      attributeKey: translate('credentialDetail.credential.schema'),
       highlightedText: credentialDetail.schema.name,
     },
     {
-      attributeKey: 'Credential format',
+      attributeKey: translate('credentialDetail.credential.format'),
       attributeText: credentialDetail.schema.format,
     },
     {
-      attributeKey: 'Issuer DID',
+      attributeKey: translate('credentialDetail.credential.issuerDid'),
       attributeText: did,
       canBeCopied: true,
       highlightedText: didMethodId.reverse().join(':') + ':',
     },
     {
-      attributeKey: 'Revocation method',
+      attributeKey: translate('credentialDetail.credential.revocationMethod'),
       attributeText: credentialDetail.schema.revocationMethod,
     },
     {
-      attributeKey: 'Validity',
+      attributeKey: translate('credentialDetail.credential.validity'),
       element: (
         <View style={styles.validityEntryContainer}>
           {icon}
