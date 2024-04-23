@@ -15,12 +15,13 @@ import { CopyContentIcon, OpenLinkIcon } from '../icon/nerd-view-icon';
 const VALUE_PREVIEW_LENGTH = 80;
 
 export type NerdModeItemProps = {
-  copy?: boolean;
-  fieldKey: string;
+  attributeKey: string;
+  attributeText?: string;
+  canBeCopied?: boolean;
+  element?: React.ReactElement;
   highlightedText?: string;
   last?: boolean;
   link?: string;
-  text: string;
 };
 
 const styles = StyleSheet.create({
@@ -81,22 +82,45 @@ const ActionIcon: FunctionComponent<{
   }
 };
 
+const TextWithHighlight: FunctionComponent<{
+  highlightedText: string;
+  text: string;
+}> = ({ highlightedText, text }) => {
+  const colorScheme = useAppColorScheme();
+  return (
+    <Typography
+      color={colorScheme.white}
+      preset="s/code"
+      style={styles.attributeValue}
+    >
+      <Typography
+        color={colorScheme.nerdView.codeHighlightText}
+        preset="s/code"
+      >
+        {highlightedText}
+      </Typography>
+      {text}
+    </Typography>
+  );
+};
+
 const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
   highlightedText = '',
-  text,
-  fieldKey,
+  attributeText = '',
+  attributeKey,
   link,
-  copy,
+  canBeCopied,
   last = false,
+  element,
 }) => {
   const colorScheme = useAppColorScheme();
-  const expandable = text.length > VALUE_PREVIEW_LENGTH;
+  const expandable = attributeText.length > VALUE_PREVIEW_LENGTH;
 
   const [expanded, setExpanded] = React.useState(!expandable);
 
   const previewText = expanded
-    ? text
-    : text.slice(0, VALUE_PREVIEW_LENGTH) + '...';
+    ? attributeText
+    : attributeText.slice(0, VALUE_PREVIEW_LENGTH) + '...';
 
   return (
     <View
@@ -111,7 +135,7 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
         preset="s/code"
         style={styles.attributeLabel}
       >
-        {fieldKey}
+        {attributeKey}
       </Typography>
       <View
         style={[
@@ -122,25 +146,20 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
           },
         ]}
       >
-        <Typography
-          color={colorScheme.white}
-          preset="s/code"
-          style={styles.attributeValue}
-        >
-          <Typography
-            color={colorScheme.nerdView.codeHighlightText}
-            preset="s/code"
-          >
-            {highlightedText}
-          </Typography>
-          {previewText}
-        </Typography>
-        {copy || link ? (
+        {element ? (
+          element
+        ) : (
+          <TextWithHighlight
+            highlightedText={highlightedText}
+            text={previewText}
+          />
+        )}
+        {canBeCopied || link ? (
           <View style={styles.actionIcon}>
             <ActionIcon
-              copy={copy}
+              copy={canBeCopied}
               link={link}
-              value={`${highlightedText}${text}`}
+              value={`${highlightedText}${attributeText}`}
             />
           </View>
         ) : null}
