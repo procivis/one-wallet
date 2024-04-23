@@ -36,6 +36,7 @@
     "@procivis/react-native-one-core": "1.17067.1",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
+    "@react-native-clipboard/clipboard": "1.14.0",
     "@react-native-community/blur": "^4.4.0",
     "@react-native/normalize-color": "^2.0.0",
     "@react-navigation/native": "~6.1.6",
