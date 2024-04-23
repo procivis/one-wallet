@@ -12802,6 +12802,7 @@ __metadata:
     "@procivis/react-native-one-core": "npm:1.17067.1"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
+    "@react-native-clipboard/clipboard": "npm:^1.14.0"
     "@react-native-community/blur": "npm:^4.4.0"
     "@react-native-community/eslint-config": "npm:^3.2.0"
     "@react-native/normalize-color": "npm:^2.0.0"
