@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderWidth: 0.2,
     flexDirection: 'row',
-    overflow: 'hidden',
     padding: 8,
   },
   container: {
