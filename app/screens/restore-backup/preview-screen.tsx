@@ -25,12 +25,14 @@ import { useCredentials } from '../../hooks/core/credentials';
 import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
 import { RestoreBackupProcessingNavigationProp } from '../../navigators/restore-backup/restore-backup-processing-routes';
+import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';
 
 const longPressTimeSeconds = 3;
 
 const PreviewScreen: FC = () => {
-  const navigation =
+  const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
+  const processingNavigation =
     useNavigation<RestoreBackupProcessingNavigationProp<'Preview'>>();
   const colorScheme = useAppColorScheme();
   const { top } = useSafeAreaInsets();
@@ -52,7 +54,12 @@ const PreviewScreen: FC = () => {
 
   const onConfirm = useCallback(() => {
     skipRollback.current = true;
-    navigation.replace('Restore');
+    processingNavigation.replace('Restore');
+  }, [processingNavigation]);
+
+  const onClose = useCallback(() => {
+    skipRollback.current = true;
+    navigation.navigate('RestoreBackupDashboard');
   }, [navigation]);
 
   const safeAreaPaddingStyle: ViewStyle | undefined =
@@ -69,7 +76,7 @@ const PreviewScreen: FC = () => {
       testID="RestoreBackupPreviewScreen"
     >
       <NavigationHeader
-        leftItem={HeaderCloseModalButton}
+        leftItem={<HeaderCloseModalButton onPress={onClose} />}
         modalHandleVisible={Platform.OS === 'ios'}
         title={translate('restoreBackup.preview.title')}
       />
