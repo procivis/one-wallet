@@ -7,6 +7,7 @@ import {
 } from '@procivis/one-react-native-components';
 import React, { FunctionComponent } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import NerdModeItem, { NerdModeItemProps } from './nerd-mode-item';
@@ -56,7 +57,11 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
   return (
     <>
       <NavigationHeader
-        leftItem={<CloseIcon color={colorScheme.white} onPress={onClose} />}
+        leftItem={
+          <TouchableOpacity onPress={onClose}>
+            <CloseIcon color={colorScheme.white} />
+          </TouchableOpacity>
+        }
         style={{
           backgroundColor: colorScheme.nerdView.background,
           paddingTop: insets.top,
