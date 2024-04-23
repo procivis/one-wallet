@@ -50,7 +50,7 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
 
   const lastElements = sections.reduce((acc, { title: sectionTitle, data }) => {
     const lastElement = data[data.length - 1];
-    return { ...acc, [sectionTitle]: lastElement.fieldKey };
+    return { ...acc, [sectionTitle]: lastElement.attributeKey };
   }, {} as Record<string, string>);
 
   return (
@@ -82,7 +82,7 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
         renderItem={({ item, section }) => (
           <NerdModeItem
             {...item}
-            last={lastElements[section.title] === item.fieldKey}
+            last={lastElements[section.title] === item.attributeKey}
           />
         )}
         renderSectionHeader={({ section }) => {
