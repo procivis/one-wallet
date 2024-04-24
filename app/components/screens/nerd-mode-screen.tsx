@@ -11,7 +11,9 @@ import { SectionList, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import NerdModeItem, { NerdModeItemProps } from './nerd-mode-item';
+import NerdModeItem, {
+  NerdModeItemProps,
+} from '../../components/nerd-view/nerd-mode-item';
 
 const styles = StyleSheet.create({
   entityCluster: {
@@ -42,7 +44,7 @@ type NerdModeProps = {
   title: string;
 };
 
-const NerdMode: FunctionComponent<NerdModeProps> = ({
+const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
   sections,
   onClose,
   entityCluster,
@@ -124,4 +126,4 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
   );
 };
 
-export const NerdModeView = NerdMode;
+export default NerdModeScreen;

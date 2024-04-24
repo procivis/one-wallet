@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator<RestoreBackupNavigatorParamList>();
 const RestoreBackupNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen component={DashboardScreen} name="Dashboard" />
+      <Stack.Screen component={DashboardScreen} name="RestoreBackupDashboard" />
       <Stack.Screen component={ImportScreen} name="Import" />
       <Stack.Screen
         component={RecoveryPasswordScreen}
