@@ -1,6 +1,7 @@
 import {
   concatTestID,
   CredentialDetailsCardListItem,
+  CredentialHeaderProps,
 } from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
@@ -10,9 +11,10 @@ import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { detailsCardFromCredential } from '../../utils/credential';
 
-interface CredentialProps {
+export interface CredentialProps {
   credentialId: string;
   expanded?: boolean;
+  headerAccessory?: CredentialHeaderProps['accessory'];
   lastItem?: boolean;
   onHeaderPress?: (credentialId?: string) => void;
 }
@@ -22,6 +24,7 @@ export const Credential: FC<CredentialProps> = ({
   expanded = false,
   lastItem,
   onHeaderPress,
+  headerAccessory,
 }) => {
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
@@ -33,6 +36,9 @@ export const Credential: FC<CredentialProps> = ({
   }
 
   const { card, attributes } = detailsCardFromCredential(credential, config);
+  if (headerAccessory) {
+    card.header.accessory = headerAccessory;
+  }
 
   return (
     <CredentialDetailsCardListItem
