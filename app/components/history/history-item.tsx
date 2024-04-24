@@ -69,6 +69,7 @@ export interface HistoryItemProps {
   last?: boolean;
   onPress?: (item: HistoryListItemWithDid) => void;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 export const HistoryItem: FC<HistoryItemProps> = ({
@@ -77,6 +78,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
   style,
   absoluteTime,
   onPress,
+  testID,
 }) => {
   const colorScheme = useAppColorScheme();
   const { label, icon } = getLabelAndIconForAction(item);
@@ -96,6 +98,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
         last && styles.last,
         style,
       ]}
+      testID={testID}
     >
       {icon}
       <View style={styles.labelAndDid}>
