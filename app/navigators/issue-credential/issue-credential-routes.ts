@@ -6,6 +6,9 @@ export type IssueCredentialNavigatorParamList = {
     credentialId: string;
     interactionId: string;
   };
+  CredentialOfferNerdScreen: {
+    credentialId: string;
+  };
   Processing: {
     credentialId: string;
     interactionId: string;

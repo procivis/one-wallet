@@ -53,8 +53,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const infoPressHandler = useCallback(() => {}, []);
+  const infoPressHandler = useCallback(() => {
+    navigation.navigate('CredentialOfferNerdScreen', {
+      credentialId,
+    });
+  }, [credentialId, navigation]);
 
   useBlockOSBackNavigation();
 
