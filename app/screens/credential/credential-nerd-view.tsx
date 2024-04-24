@@ -18,7 +18,7 @@ import {
   CredentialValidIcon,
 } from '../../components/icon/nerd-view-icon';
 import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
-import { NerdModeView } from '../../components/nerd-view/nerd-mode-view';
+import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
@@ -127,7 +127,7 @@ const CredentialNerdView: FunctionComponent = () => {
   ];
 
   return (
-    <NerdModeView
+    <NerdModeScreen
       entityCluster={{
         entityName:
           credentialDetail?.issuerDid ??
