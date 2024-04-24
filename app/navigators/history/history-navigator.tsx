@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator<HistoryNavigatorParamList>();
 const HistoryNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen component={DashboardScreen} name="Dashboard" />
+      <Stack.Screen component={DashboardScreen} name="HistoryDashboard" />
       <Stack.Screen component={HistoryDetailScreen} name="Detail" />
     </Stack.Navigator>
   );
