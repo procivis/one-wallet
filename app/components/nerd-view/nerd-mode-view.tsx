@@ -49,10 +49,13 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
   const insets = useSafeAreaInsets();
   const colorScheme = useAppColorScheme();
 
-  const lastElementsForSection = sections.reduce((acc, { title: sectionTitle, data }) => {
-    const lastElement = data[data.length - 1];
-    return { ...acc, [sectionTitle]: lastElement.attributeKey };
-  }, {} as Record<string, string>);
+  const lastElementsForSection = sections.reduce(
+    (acc, { title: sectionTitle, data }) => {
+      const lastElement = data[data.length - 1];
+      return { ...acc, [sectionTitle]: lastElement.attributeKey };
+    },
+    {} as Record<string, string>,
+  );
 
   return (
     <>
