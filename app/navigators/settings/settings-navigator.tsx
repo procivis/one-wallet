@@ -20,14 +20,14 @@ const Stack = createNativeStackNavigator<SettingsNavigatorParamList>();
 const SettingsNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="SettingsDashboard"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen component={AppInformationScreen} name="AppInformation" />
       <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
       <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
-      <Stack.Screen component={DashboardScreen} name="Dashboard" />
+      <Stack.Screen component={DashboardScreen} name="SettingsDashboard" />
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
       <Stack.Screen component={HistoryNavigator} name="History" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
