@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonType,
+  concatTestID,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -22,6 +23,7 @@ export type NerdModeItemProps = {
   highlightedText?: string;
   last?: boolean;
   link?: string;
+  testID?: string;
 };
 
 const styles = StyleSheet.create({
@@ -61,19 +63,20 @@ const styles = StyleSheet.create({
 const ActionIcon: FunctionComponent<{
   copy?: boolean;
   link?: string;
+  testID?: string;
   value: string;
-}> = ({ value, link, copy }) => {
+}> = ({ value, link, testID, copy }) => {
   const [, setString] = useClipboard();
 
   if (copy) {
     return (
-      <TouchableOpacity onPress={() => setString(value)}>
+      <TouchableOpacity onPress={() => setString(value)} testID={testID}>
         <CopyContentIcon />
       </TouchableOpacity>
     );
   } else if (link) {
     return (
-      <TouchableOpacity onPress={() => Linking.openURL(link)}>
+      <TouchableOpacity onPress={() => Linking.openURL(link)} testID={testID}>
         <OpenLinkIcon />
       </TouchableOpacity>
     );
@@ -84,14 +87,16 @@ const ActionIcon: FunctionComponent<{
 
 const TextWithHighlight: FunctionComponent<{
   highlightedText: string;
+  testID: string;
   text: string;
-}> = ({ highlightedText, text }) => {
+}> = ({ highlightedText, testID, text }) => {
   const colorScheme = useAppColorScheme();
   return (
     <Typography
       color={colorScheme.white}
       preset="s/code"
       style={styles.attributeValue}
+      testID={testID}
     >
       <Typography
         color={colorScheme.nerdView.codeHighlightText}
@@ -112,6 +117,7 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
   canBeCopied,
   last = false,
   element,
+  testID,
 }) => {
   const colorScheme = useAppColorScheme();
   const expandable = attributeText.length > VALUE_PREVIEW_LENGTH;
@@ -129,11 +135,13 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
         { backgroundColor: colorScheme.nerdView.attributeSectionBackground },
         last ? styles.lastAttribute : {},
       ]}
+      testID={testID}
     >
       <Typography
         color={colorScheme.nerdView.attributeLabel}
         preset="s/code"
         style={styles.attributeLabel}
+        testID={concatTestID(testID, 'attributeLabel')}
       >
         {attributeKey}
       </Typography>
@@ -151,6 +159,7 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
         ) : (
           <TextWithHighlight
             highlightedText={highlightedText}
+            testID={concatTestID(testID, 'attributeValue')!}
             text={previewText}
           />
         )}
@@ -159,6 +168,7 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
             <ActionIcon
               copy={canBeCopied}
               link={link}
+              testID={concatTestID(testID, 'actionIcon')}
               value={`${highlightedText}${attributeText}`}
             />
           </View>
@@ -168,6 +178,7 @@ const NerdModeItem: FunctionComponent<NerdModeItemProps> = ({
         <Button
           onPress={() => setExpanded(!expanded)}
           style={styles.expandValueButton}
+          testID={concatTestID(testID, 'expandValueButton')}
           title={
             expanded
               ? translate('nerdView.action.collapseAttribute')
