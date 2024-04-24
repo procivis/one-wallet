@@ -21,7 +21,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
@@ -49,6 +52,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const infoPressHandler = useCallback(() => {}, []);
 
   useBlockOSBackNavigation();
 
@@ -92,6 +98,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
       <NavigationHeader
         leftItem={HeaderCloseModalButton}
         modalHandleVisible={Platform.OS === 'ios'}
+        rightItem={<HeaderInfoButton onPress={infoPressHandler} />}
         title={translate('credentialOffer.title')}
       />
 
