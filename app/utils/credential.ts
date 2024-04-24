@@ -69,14 +69,35 @@ export const supportsSelectiveDisclosure = (
     : undefined;
 };
 
+const findClaimByPathParts = (
+  path: string[],
+  claims?: Claim[],
+): Claim | undefined => {
+  if (!claims?.length) {
+    return undefined;
+  }
+  const [first, ...rest] = path;
+  const claim = claims.find((c) => c.key === first);
+  if (!claim || !rest.length || claim.dataType !== DataTypeEnum.Object) {
+    return claim;
+  }
+
+  return findClaimByPathParts(rest, claim.value as Claim[]);
+};
+
+const findClaimByPath = (
+  path: string | undefined,
+  claims: Claim[] | undefined,
+) => (path ? findClaimByPathParts(path.split('/'), claims) : undefined);
+
 export const cardHeaderFromCredentialListItem = (
   credential: CredentialListItem,
   claims: Claim[] = [],
   testID?: string,
 ): Omit<CredentialHeaderProps, 'style'> => {
-  let credentialDetail;
-  let credentialDetailErrorColor;
-  let credentialDetailTestID;
+  let credentialDetail: string;
+  let credentialDetailErrorColor: boolean | undefined;
+  let credentialDetailTestID: string | undefined;
   let statusIcon;
 
   const { layoutProperties } = credential.schema;
@@ -100,8 +121,9 @@ export const cardHeaderFromCredentialListItem = (
     default:
       {
         let contentDetail = '';
-        const primary = claims?.find(
-          ({ key }) => key === layoutProperties?.primaryAttribute,
+        const primary = findClaimByPath(
+          layoutProperties?.primaryAttribute,
+          claims,
         )?.value;
 
         if (primary) {
@@ -110,8 +132,9 @@ export const cardHeaderFromCredentialListItem = (
           contentDetail += formatDateTime(new Date(credential.issuanceDate));
         }
 
-        const secondary = claims?.find(
-          ({ key }) => key === layoutProperties?.secondaryAttribute,
+        const secondary = findClaimByPath(
+          layoutProperties?.secondaryAttribute,
+          claims,
         )?.value;
 
         if (secondary) {
