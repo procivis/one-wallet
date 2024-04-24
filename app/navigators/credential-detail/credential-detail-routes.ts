@@ -1,13 +1,13 @@
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { DeleteCredentialNavigatorParamList } from '../delete-credential/delete-credential-routes';
 
 export type CredentialDetailNavigatorParamList = {
   CredentialNerdScreen: {
     credentialId: string;
   };
-  DeleteProcessing: {
-    credentialId: string;
-  };
+  Delete: NavigatorScreenParams<DeleteCredentialNavigatorParamList>;
   Detail: {
     credentialId: string;
   };
