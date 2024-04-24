@@ -1,10 +1,13 @@
 import {
   BackButton,
   BackButtonIcon,
+  GhostButton,
+  InfoIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 
+import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 export const HeaderBackButton: FC = () => {
@@ -39,6 +42,36 @@ export const HeaderCloseModalButton: FC<HeaderCloseModalButtonProps> = ({
       icon={BackButtonIcon.Close}
       onPress={handleCloseButtonPress}
       testID="Screen.closeButton"
+    />
+  );
+};
+
+export const HeaderModalBackButton: FC = () => {
+  const navigation = useNavigation<RootNavigationProp>();
+  const handleCloseButtonPress = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+  return (
+    <BackButton
+      icon={BackButtonIcon.Close}
+      onPress={handleCloseButtonPress}
+      testID="Screen.closeButton"
+    />
+  );
+};
+
+export type HeaderInfoButtonProps = {
+  onPress: () => void;
+};
+
+export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({ onPress }) => {
+  return (
+    <GhostButton
+      accessibilityLabel={translate('accessibility.nav.info')}
+      icon={InfoIcon}
+      onPress={onPress}
+      // style={style}
+      testID="Screen.infoButton"
     />
   );
 };
