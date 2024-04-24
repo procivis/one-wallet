@@ -70,7 +70,9 @@ const PinCodeChangeScreen: FunctionComponent = () => {
   return (
     <PinCodeScreenContent
       error={error}
-      instruction={translate(`onboarding.pinCodeScreen.${stage}.subtitle`)}
+      instruction={translate(
+        `onboarding.pinCodeScreen.change.${stage}.subtitle`,
+      )}
       onBack={navigation.goBack}
       onPinEntered={onPinEntered}
       ref={screen}
