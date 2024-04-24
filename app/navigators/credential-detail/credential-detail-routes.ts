@@ -2,6 +2,9 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type CredentialDetailNavigatorParamList = {
+  CredentialNerdScreen: {
+    credentialId: string;
+  };
   DeleteProcessing: {
     credentialId: string;
   };
