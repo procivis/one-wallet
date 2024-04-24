@@ -13,7 +13,7 @@ const translations = {
   en: Object.assign(en, localeOverride?.en),
 };
 
-i18n.defaultSeparator = '_';
+i18n.defaultSeparator = '/';
 i18n.translations = translations;
 i18n.defaultLocale = 'en';
 i18n.fallbacks = true;
