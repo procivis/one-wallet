@@ -2,6 +2,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
   Button,
   ButtonType,
+  concatTestID,
   CredentialDetailsCard,
   DetailScreen,
   OptionsIcon,
@@ -143,11 +144,12 @@ const CredentialDetailScreen: FC = () => {
             accessibilityLabel={translate('wallet.settings')}
             onPress={onActions}
             style={styles.settingsButton}
-            testID="WalletScreen.header.action-settings"
+            testID="CredentialDetailScreen.header.action"
           >
             <OptionsIcon color={colorScheme.text} />
           </TouchableOpacity>
         ),
+        testID: 'CredentialDetailScreen.header',
         text: {},
         title: credential.schema.name,
       }}
@@ -163,6 +165,7 @@ const CredentialDetailScreen: FC = () => {
         onImagePreview={onImagePreview}
         showAllButtonLabel={translate('common.seeAll')}
         style={styles.credential}
+        testID="CredentialDetailScreen.detail"
       />
       <HistorySection
         historyEntries={credentialHistory}
@@ -191,12 +194,19 @@ const HistorySection: FC<{
       >
         {translate('history.title')}
       </Typography>
-      <View style={[styles.historyLog, { backgroundColor: colorScheme.white }]}>
+      <View
+        style={[styles.historyLog, { backgroundColor: colorScheme.white }]}
+        testID="CredentialDetailScreen.history"
+      >
         {previewHistoryItems.map((item, idx, { length }) => (
           <HistoryItem
             item={item}
             key={item.id}
             last={!expandable && idx === length - 1}
+            testID={concatTestID(
+              'CredentialDetailScreen.history',
+              idx.toString(),
+            )}
           />
         ))}
         {expandable && (
