@@ -297,11 +297,13 @@ export async function requestProof(
 export async function suspendCredential(
   credentialId: string,
   authToken: string,
+  suspendEndDate?: string,
 ): Promise<undefined> {
+  const payload = suspendEndDate ? { suspendEndDate } : {};
   return apiRequest(
     `/api/credential/v1/${credentialId}/suspend`,
     authToken,
     'POST',
-    {},
+    payload,
   );
 }
