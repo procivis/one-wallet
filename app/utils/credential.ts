@@ -85,7 +85,7 @@ const findClaimByPathParts = (
   return findClaimByPathParts(rest, claim.value as Claim[]);
 };
 
-const findClaimByPath = (
+export const findClaimByPath = (
   path: string | undefined,
   claims: Claim[] | undefined,
 ) => (path ? findClaimByPathParts(path.split('/'), claims) : undefined);
