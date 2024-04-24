@@ -81,8 +81,9 @@ const CredentialNerdView: FunctionComponent = () => {
     return <ActivityIndicator />;
   }
 
-  const [did, ...didMethodId] =
-    credentialDetail.issuerDid?.split(':').reverse() ?? [];
+  const didSections = credentialDetail.issuerDid?.split(':') ?? [];
+  const identifier = didSections.pop();
+  const didMethod = didSections.join(':') + ':';
 
   const { text, textColor, icon } = getCredentialValidityValue(
     credentialDetail,
@@ -100,9 +101,9 @@ const CredentialNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.issuerDid'),
-      attributeText: did,
+      attributeText: identifier,
       canBeCopied: true,
-      highlightedText: didMethodId.reverse().join(':') + ':',
+      highlightedText: didMethod,
     },
     {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
