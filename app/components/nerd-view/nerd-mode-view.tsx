@@ -1,5 +1,6 @@
 import {
   CloseIcon,
+  concatTestID,
   EntityCluster,
   NavigationHeader,
   Typography,
@@ -37,6 +38,7 @@ type NerdModeProps = {
     data: Array<NerdModeItemProps>;
     title: string;
   }[];
+  testID: string;
   title: string;
 };
 
@@ -44,21 +46,28 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
   sections,
   onClose,
   entityCluster,
+  testID,
   title,
 }) => {
   const insets = useSafeAreaInsets();
   const colorScheme = useAppColorScheme();
 
-  const lastElements = sections.reduce((acc, { title: sectionTitle, data }) => {
-    const lastElement = data[data.length - 1];
-    return { ...acc, [sectionTitle]: lastElement.attributeKey };
-  }, {} as Record<string, string>);
+  const lastElementsForSection = sections.reduce(
+    (acc, { title: sectionTitle, data }) => {
+      const lastElement = data[data.length - 1];
+      return { ...acc, [sectionTitle]: lastElement.attributeKey };
+    },
+    {} as Record<string, string>,
+  );
 
   return (
     <>
       <NavigationHeader
         leftItem={
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            testID={concatTestID(testID, 'closeIcon')}
+          >
             <CloseIcon color={colorScheme.white} />
           </TouchableOpacity>
         }
@@ -80,6 +89,7 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
                   backgroundColor: colorScheme.nerdView.background,
                 },
               ]}
+              testID={concatTestID(testID, 'entityCluster')}
               textColor={colorScheme.white}
             />
           ) : null
@@ -87,12 +97,16 @@ const NerdMode: FunctionComponent<NerdModeProps> = ({
         renderItem={({ item, section }) => (
           <NerdModeItem
             {...item}
-            last={lastElements[section.title] === item.attributeKey}
+            last={lastElementsForSection[section.title] === item.attributeKey}
+            testID={concatTestID(testID, item.attributeKey)}
           />
         )}
         renderSectionHeader={({ section }) => {
           return (
-            <View style={styles.sectionHeaderContainer}>
+            <View
+              style={styles.sectionHeaderContainer}
+              testID={concatTestID(testID, section.title)}
+            >
               <Typography
                 color={colorScheme.white}
                 style={styles.sectionHeaderText}

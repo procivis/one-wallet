@@ -140,6 +140,7 @@ const CredentialNerdView: FunctionComponent = () => {
           title: translate('credentialDetail.nerdView.attributes.title'),
         },
       ]}
+      testID="credentialNerdView"
       title={translate('credentialDetail.action.moreInfo')}
     />
   );
