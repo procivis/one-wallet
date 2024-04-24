@@ -69,10 +69,10 @@ const getCredentialValidityValue = (
   };
 };
 
-const CredentialNerdView: FunctionComponent = () => {
+const CredentialDetailNerdScreen: FunctionComponent = () => {
   const nav = useNavigation();
   const colorScheme = useAppColorScheme();
-  const route = useRoute<CredentialDetailRouteProp<'CredentialNerdView'>>();
+  const route = useRoute<CredentialDetailRouteProp<'CredentialNerdScreen'>>();
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CredentialDetailNerdView = CredentialNerdView;
+export default CredentialDetailNerdScreen;
