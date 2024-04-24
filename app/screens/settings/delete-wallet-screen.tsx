@@ -1,151 +1,86 @@
 import {
-  ActivityIndicator,
   Button,
+  ButtonType,
   Checkbox,
-  CheckboxAlignment,
-  GradientBackground,
-  theme,
   Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useQueryClient } from 'react-query';
+import { Platform, StyleSheet, View } from 'react-native';
 
-import { useONECore } from '../../hooks/core/core-context';
-import { removePin } from '../../hooks/pin-code/pin-code';
+import { HeaderBackButton } from '../../components/navigation/header-buttons';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException, reportTraceInfo } from '../../utils/reporting';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
-const DeletionConfirmScreen: FunctionComponent = () => {
+const longPressTimeSeconds = 3;
+
+const DeleteWalletScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<RootNavigationProp>();
-  const { top, bottom } = useSafeAreaInsets();
-  const { core, initialize } = useONECore();
-  const queryClient = useQueryClient();
+  const navigation = useNavigation<SettingsNavigationProp<'DeleteWallet'>>();
 
   const [confirmation, setConfirmation] = useState(false);
-  const [deletingWallet, setDeletingWallet] = useState(false);
 
-  const { walletStore } = useStores();
-
-  const deleteAction = useCallback(async () => {
-    reportTraceInfo('Wallet', 'Deleting wallet');
-    setDeletingWallet(true);
-
-    try {
-      await core.uninitialize(true);
-    } catch (e) {
-      reportException(e, 'Failed to uninitialize core');
-    }
-
-    await initialize(true);
-
-    try {
-      await removePin();
-    } catch (e) {
-      reportException(e, 'Failed to remove PIN');
-    }
-
-    await queryClient.resetQueries();
-    walletStore.walletDeleted();
-
-    navigation.popToTop();
-    navigation.replace('Onboarding');
-  }, [core, initialize, navigation, queryClient, walletStore]);
+  const deleteAction = useCallback(() => {
+    navigation.navigate('DeleteWalletProcess');
+  }, [navigation]);
 
   return (
-    <>
-      <GradientBackground style={{ backgroundColor: colorScheme.background }} />
+    <ScrollViewScreen
+      header={{
+        leftItem: HeaderBackButton,
+        title: translate('deleteWalletScreen.title'),
+      }}
+      testID="DeleteWalletScreen"
+    >
+      <View style={styles.contentWrapper}>
+        <Typography color={colorScheme.text} style={styles.description}>
+          {translate('deleteWalletScreen.explainer')}
+        </Typography>
 
-      {deletingWallet ? (
-        <ActivityIndicator />
-      ) : (
-        <View style={{ paddingTop: top }}>
-          <ScrollView
-            alwaysBounceVertical={false}
-            contentContainerStyle={styles.scrollContent}
-          >
-            <Typography
-              accessibilityRole="header"
-              align="center"
-              bold={true}
-              color={colorScheme.text}
-              size="h1"
-              style={styles.contentTitle}
-            >
-              {translate('deleteWalletScreen.title')}
-            </Typography>
-            <Typography
-              align="center"
-              color={colorScheme.text}
-              style={styles.contentDescription}
-            >
-              {translate('deleteWalletScreen.explainer')}
-            </Typography>
-
-            <Checkbox
-              alignment={CheckboxAlignment.centered}
-              onValueChanged={setConfirmation}
-              style={styles.checkbox}
-              text={translate('deleteWalletScreen.confirm')}
-              value={confirmation}
-            />
-            <View style={[styles.buttonContainer, { paddingBottom: bottom }]}>
-              <Button
-                onPress={navigation.goBack}
-                style={styles.button}
-                type="light"
-              >
-                {translate('common.cancel')}
-              </Button>
-              <View style={styles.buttonsSpacing} />
-              <Button
-                disabled={!confirmation}
-                onPress={deleteAction}
-                style={styles.button}
-              >
-                {translate('common.delete')}
-              </Button>
-            </View>
-          </ScrollView>
+        <View style={styles.bottom}>
+          <Checkbox
+            onValueChanged={setConfirmation}
+            style={[styles.checkbox, { backgroundColor: colorScheme.grayDark }]}
+            testID="DeleteWalletScreen.checkbox"
+            text={translate('deleteWalletScreen.confirm')}
+            value={confirmation}
+          />
+          <Button
+            delayLongPress={longPressTimeSeconds * 1000}
+            disabled={!confirmation}
+            onLongPress={deleteAction}
+            subtitle={translate('common.holdButton', {
+              seconds: longPressTimeSeconds,
+            })}
+            testID="DeleteWalletScreen.mainButton"
+            title={translate('common.delete')}
+            type={confirmation ? ButtonType.Primary : ButtonType.Border}
+          />
         </View>
-      )}
-    </>
+      </View>
+    </ScrollViewScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
+  bottom: {
     flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonsSpacing: {
-    width: theme.padding,
+    justifyContent: 'flex-end',
+    paddingBottom: Platform.OS === 'android' ? 16 : 0,
+    paddingTop: 16,
   },
   checkbox: {
     marginBottom: 12,
   },
-  contentDescription: {
+  contentWrapper: {
     flex: 1,
-    marginTop: theme.grid,
+    marginHorizontal: 12,
   },
-  contentTitle: {
-    marginTop: theme.paddingM,
-  },
-  scrollContent: {
-    minHeight: '100%',
-    paddingBottom: theme.paddingM,
-    paddingHorizontal: theme.padding,
-    paddingTop: theme.paddingM,
+  description: {
+    marginHorizontal: 8,
   },
 });
 
-export default DeletionConfirmScreen;
+export default DeleteWalletScreen;
