@@ -218,7 +218,6 @@ e2e:
 .upload_bom:
   stage: scan
   needs: [build_deps]
-  when: manual
   variables:
     SBOM_FILE_PATH: "bom.json"
     FETCH_LICENSE: "true"
@@ -243,7 +242,7 @@ e2e:
 
 
 dependency_track:android:upload-bom:
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.74.0
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.76.0-0.1
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
     SBOM_FILE_PATH: "android-bom.json"
