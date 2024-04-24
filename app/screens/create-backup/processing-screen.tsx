@@ -59,11 +59,14 @@ const ProcessingScreen: FC = () => {
       navigation.goBack();
       return;
     }
-    navigation.navigate('Dashboard');
+    navigation.navigate('CreateBackupDashboard');
   }, [navigation, state]);
 
   const handleCta = useCallback(async () => {
-    navigation.navigate('Dashboard', { backupFileName, backupFilePath });
+    navigation.navigate('CreateBackupDashboard', {
+      backupFileName,
+      backupFilePath,
+    });
   }, [backupFileName, backupFilePath, navigation]);
 
   return (

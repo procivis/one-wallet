@@ -62,10 +62,14 @@ const UnlockScreen: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onClose = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   return (
     <LoadingResultScreen
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: <HeaderCloseModalButton onPress={onClose} />,
         modalHandleVisible: Platform.OS === 'ios',
         title: translate('restoreBackup.unlock.title'),
       }}

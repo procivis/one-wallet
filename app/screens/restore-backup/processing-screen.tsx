@@ -11,13 +11,17 @@ import { Platform } from 'react-native';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useBackupFinalizeImportProcedure } from '../../hooks/core/backup';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
+import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
+import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const ProcessingScreen: FC = () => {
   const isFocused = useIsFocused();
+  const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
+  const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState(LoaderViewState.InProgress);
 
@@ -40,8 +44,14 @@ const ProcessingScreen: FC = () => {
 
   const closeButtonHandler = useCallback(() => {
     // TODO: implement possible restoring termination
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-  }, [rootNavigation]);
+    if (pinInitialized) {
+      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+    } else if (state === LoaderViewState.Success) {
+      rootNavigation.replace('Onboarding', { screen: 'UserAgreement' });
+    } else {
+      navigation.navigate('RestoreBackupDashboard');
+    }
+  }, [pinInitialized, navigation, rootNavigation, state]);
 
   const { closeTimeout } = useCloseButtonTimeout(
     state === LoaderViewState.Success,
@@ -63,7 +73,7 @@ const ProcessingScreen: FC = () => {
           : undefined
       }
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
         modalHandleVisible: Platform.OS === 'ios',
         title: translate('restoreBackup.processing.title'),
       }}

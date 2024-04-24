@@ -52,7 +52,7 @@ const DummyCredential: FC<{
 
 export const SetupScreen: FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'Setup'>>();
-  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
   const colorScheme = useAppColorScheme();
   const insets = useSafeAreaInsets();
 
@@ -64,7 +64,7 @@ export const SetupScreen: FC = () => {
     () =>
       rootNavigation.navigate('Settings', {
         params: {
-          screen: 'Dashboard',
+          screen: 'RestoreBackupDashboard',
         },
         screen: 'RestoreBackup',
       }),
