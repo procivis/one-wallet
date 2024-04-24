@@ -12,6 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { RevocationMethod } from '../../../e2e/utils/enums';
 import {
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
@@ -96,18 +97,22 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       highlightedText: credentialDetail.schema.name,
     },
     {
-      attributeKey: translate('credentialDetail.credential.format'),
-      attributeText: credentialDetail.schema.format,
-    },
-    {
       attributeKey: translate('credentialDetail.credential.issuerDid'),
       attributeText: identifier,
       canBeCopied: true,
       highlightedText: didMethod,
     },
     {
+      attributeKey: translate('credentialDetail.credential.format'),
+      attributeText: credentialDetail.schema.format,
+    },
+    {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
-      attributeText: credentialDetail.schema.revocationMethod,
+      attributeText: translate(
+        `credentialDetail.credential.revocation.${
+          credentialDetail.schema.revocationMethod as RevocationMethod
+        }`,
+      ),
     },
     {
       attributeKey: translate('credentialDetail.credential.validity'),
