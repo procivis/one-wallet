@@ -12,7 +12,7 @@ import { ActivityIndicator } from '@procivis/react-native-components';
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { HistoryItem } from '../../components/history/history-item';
 import { useCoreConfig } from '../../hooks/core/core-config';
@@ -69,27 +69,10 @@ const CredentialDetailScreen: FC = () => {
   );
 
   const handleDelete = useCallback(() => {
-    Alert.alert(
-      translate('credentialDetail.action.delete.confirmation.title'),
-      translate('credentialDetail.action.delete.confirmation.message'),
-      [
-        {
-          isPreferred: true,
-          style: 'cancel',
-          text: translate('common.cancel'),
-        },
-        {
-          onPress: () => {
-            navigation.replace('DeleteProcessing', {
-              credentialId,
-            });
-          },
-          style: 'destructive',
-          text: translate('common.delete'),
-        },
-      ],
-      { cancelable: true },
-    );
+    navigation.navigate('Delete', {
+      params: { credentialId },
+      screen: 'Prompt',
+    });
   }, [credentialId, navigation]);
 
   const onActions = useCallback(
