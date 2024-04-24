@@ -1,9 +1,9 @@
 import {
-  LoadingResult,
-  LoadingResultState,
-  LoadingResultVariation,
+  ButtonType,
+  LoaderViewState,
+  LoadingResultScreen,
   useBlockOSBackNavigation,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -11,35 +11,35 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Platform } from 'react-native';
 
+import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCredentialDelete } from '../../hooks/core/credentials';
+import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
-import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
+import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
-  const route = useRoute<CredentialDetailRouteProp<'DeleteProcessing'>>();
-  const [state, setState] = useState<
-    | LoadingResultState.InProgress
-    | LoadingResultState.Success
-    | LoadingResultState.Failure
-  >(LoadingResultState.InProgress);
+  const route = useRoute<DeleteCredentialRouteProp<'Processing'>>();
+
+  const [state, setState] = useState(LoaderViewState.InProgress);
   const { credentialId } = route.params;
   const { mutateAsync: deleteCredential } = useCredentialDelete();
 
-  useBlockOSBackNavigation();
+  useBlockOSBackNavigation(state === LoaderViewState.InProgress);
 
   const handleCredentialDelete = useCallback(async () => {
-    setState(LoadingResultState.InProgress);
+    setState(LoaderViewState.InProgress);
     try {
       await deleteCredential(credentialId);
-      setState(LoadingResultState.Success);
+      setState(LoaderViewState.Success);
     } catch (e) {
       reportException(e, 'Delete credential failure');
-      setState(LoadingResultState.Failure);
+      setState(LoaderViewState.Warning);
     }
   }, [credentialId, deleteCredential]);
 
@@ -51,20 +51,36 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const onClose = useCallback(() => {
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
+  const { closeTimeout } = useCloseButtonTimeout(
+    state === LoaderViewState.Success,
+    onClose,
+  );
 
   return (
-    <LoadingResult
-      failureCloseButtonLabel={translate('common.cancel')}
-      inProgressCloseButtonLabel={translate('common.cancel')}
-      onClose={onClose}
-      onRetry={handleCredentialDelete}
-      retryButtonLabel={translate('common.retry')}
-      state={state}
-      subtitle={translate(`credentialDelete.${state}.subtitle`)}
-      successCloseButtonLabel={translate('common.close')}
+    <LoadingResultScreen
+      button={
+        state === LoaderViewState.Success
+          ? {
+              onPress: onClose,
+              testID: 'CredentialDeleteProcessScreen.close',
+              title: translate('common.closeWithTimeout', {
+                timeout: closeTimeout,
+              }),
+              type: ButtonType.Secondary,
+            }
+          : undefined
+      }
+      header={{
+        leftItem: <HeaderCloseModalButton onPress={onClose} />,
+        modalHandleVisible: Platform.OS === 'ios',
+        title: translate('credentialDelete.title'),
+      }}
+      loader={{
+        animate: true,
+        label: translate(`credentialDelete.${state}.title`),
+        state,
+      }}
       testID="CredentialDeleteProcessScreen"
-      title={translate(`credentialDelete.${state}.title`)}
-      variation={LoadingResultVariation.Neutral}
     />
   );
 };
