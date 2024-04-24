@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import CredentialDeleteProcessScreen from '../../screens/credential/credential-delete-process-screen';
 import CredentialDetailScreen from '../../screens/credential/credential-detail-screen';
@@ -21,6 +22,12 @@ const CredentialDetailNavigator = () => {
       <Stack.Screen
         component={CredentialDetailNerdScreen}
         name="CredentialNerdScreen"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'fullScreenModal',
+        }}
       />
     </Stack.Navigator>
   );
