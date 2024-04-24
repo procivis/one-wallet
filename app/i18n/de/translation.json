@@ -28,8 +28,6 @@
   "credentialAccept.success.subtitle": "Ihr Nachweis wurde erfolgreich ausgestellt.",
   "credentialAccept.success.title": "Nachweis ausgestellt",
   "credentialDetail.action.delete": "Nachweis löschen",
-  "credentialDetail.action.delete.confirmation.message": "Dieser Auftrag kann nicht rückgängig gemacht werden.",
-  "credentialDetail.action.delete.confirmation.title": "Möchten Sie diesen Nachweis löschen?",
   "credentialDetail.actions": "Aktionen",
   "credentialDetail.attributes.title": "Attribute",
   "credentialDetail.credential.format": "Nachweis-Format",
