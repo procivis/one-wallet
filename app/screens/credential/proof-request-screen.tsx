@@ -107,8 +107,11 @@ const ProofRequestScreen: FunctionComponent = () => {
     >
   >({});
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const infoPressHandler = useCallback(() => {}, []);
+  const infoPressHandler = useCallback(() => {
+    sharingNavigation.navigate('ProofRequestNerdScreen', {
+      proofId,
+    });
+  }, [proofId, sharingNavigation]);
 
   // initial selection of credentials/claims
   useEffect(() => {
