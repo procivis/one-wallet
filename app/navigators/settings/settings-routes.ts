@@ -13,6 +13,7 @@ export type SettingsNavigatorParamList = {
   };
   CreateBackup: NavigatorScreenParams<CreateBackupNavigatorParamList>;
   DeleteWallet: undefined;
+  DeleteWalletProcess: undefined;
   History: NavigatorScreenParams<HistoryNavigatorParamList>;
   LicenceDetails: {
     library: ExternalLibrary;

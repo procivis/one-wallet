@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
 import DashboardScreen from '../../screens/settings/dashboard-screen';
+import DeleteWalletProcessScreen from '../../screens/settings/delete-wallet-process-screen';
 import DeleteWalletScreen from '../../screens/settings/delete-wallet-screen';
 import LicenceDetailsScreen from '../../screens/settings/licence-details-screen';
 import LicencesScreen from '../../screens/settings/licences-screen';
@@ -29,6 +30,16 @@ const SettingsNavigator = () => {
       <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
       <Stack.Screen component={DashboardScreen} name="SettingsDashboard" />
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
+      <Stack.Screen
+        component={DeleteWalletProcessScreen}
+        name="DeleteWalletProcess"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'formSheet',
+        }}
+      />
       <Stack.Screen component={HistoryNavigator} name="History" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
       <Stack.Screen

@@ -94,7 +94,7 @@ const PreviewScreen: FC = () => {
           <Button
             delayLongPress={longPressTimeSeconds * 1000}
             onLongPress={onConfirm}
-            subtitle={translate('restoreBackup.preview.cta.subtitle', {
+            subtitle={translate('common.holdButton', {
               seconds: longPressTimeSeconds,
             })}
             testID="RestoreBackupPreviewScreen.mainButton"
