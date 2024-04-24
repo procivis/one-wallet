@@ -57,9 +57,10 @@ const CredentialDetailScreen: FC = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const options = useMemo(
     () => ({
-      cancelButtonIndex: 1,
-      destructiveButtonIndex: 0,
+      cancelButtonIndex: 2,
+      destructiveButtonIndex: 1,
       options: [
+        translate('credentialDetail.action.moreInfo'),
         translate('credentialDetail.action.delete'),
         translate('common.close'),
       ],
@@ -96,13 +97,22 @@ const CredentialDetailScreen: FC = () => {
       showActionSheetWithOptions(options, (selectedIndex) => {
         switch (selectedIndex) {
           case 0:
+            navigation.navigate('CredentialNerdScreen', { credentialId });
+            return;
+          case 1:
             handleDelete();
             return;
           default:
             return;
         }
       }),
-    [handleDelete, options, showActionSheetWithOptions],
+    [
+      credentialId,
+      handleDelete,
+      options,
+      showActionSheetWithOptions,
+      navigation,
+    ],
   );
 
   const onImagePreview = useCredentialImagePreview();
