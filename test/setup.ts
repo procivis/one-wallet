@@ -9,7 +9,7 @@ import './mock-rnfs';
 import './mock-sentry';
 import './mock-localize';
 
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests();
+require('react-native-reanimated').setUpTests();
 
 jest.useFakeTimers();
 declare global {
