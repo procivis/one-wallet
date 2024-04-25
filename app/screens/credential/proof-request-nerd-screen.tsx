@@ -27,6 +27,21 @@ const ProofRequestNerdView: FunctionComponent = () => {
     return <ActivityIndicator />;
   }
 
+  const didSections = proofDetail.verifierDid?.split(':') ?? [];
+  const identifier = didSections.pop();
+  const didMethod = didSections.join(':') + ':';
+
+  const didField = identifier
+    ? [
+        {
+          attributeKey: translate('proofRequest.verifierDid'),
+          attributeText: identifier,
+          canBeCopied: true,
+          highlightedText: didMethod,
+        },
+      ]
+    : [];
+
   const nerdModeFields: Array<NerdModeItemProps> = [
     {
       attributeKey: translate('credentialDetail.credential.transport'),
@@ -55,7 +70,7 @@ const ProofRequestNerdView: FunctionComponent = () => {
       onClose={nav.goBack}
       sections={[
         {
-          data: nerdModeFields,
+          data: [...didField, ...nerdModeFields],
           title: translate('proofRequest.nerdView.section.title'),
         },
       ]}
