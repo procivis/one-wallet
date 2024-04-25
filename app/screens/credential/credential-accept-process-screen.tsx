@@ -39,7 +39,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { credentialId, interactionId } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
-  const { data: credential } = useCredentialDetail(credentialId);
+  const { data: credential, isLoading } = useCredentialDetail(credentialId);
   const { walletStore } = useStores();
 
   useBlockOSBackNavigation();
@@ -90,29 +90,37 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
 
   const redirectUri = credential?.redirectUri;
   const closeButtonHandler = useCallback(() => {
+    const close = () =>
+      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
     if (redirectUri) {
-      Linking.openURL(redirectUri).catch((e) => {
-        reportException(e, "Couldn't open redirect URI");
-      });
-      return;
+      Linking.openURL(redirectUri)
+        .then(close)
+        .catch((e) => {
+          reportException(e, "Couldn't open redirect URI");
+        });
+    } else {
+      close();
     }
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [redirectUri, rootNavigation]);
   const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
+    state === LoaderViewState.Success && !redirectUri,
     closeButtonHandler,
   );
 
   return (
     <LoadingResultScreen
       button={
-        state === LoaderViewState.Success
+        state === LoaderViewState.Success && !isLoading
           ? {
               onPress: closeButtonHandler,
-              testID: 'CredentialAcceptProcessScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
+              testID: `CredentialAcceptProcessScreen.${
+                redirectUri ? 'redirect' : 'close'
+              }`,
+              title: redirectUri
+                ? translate('credentialOffer.redirect')
+                : translate('common.closeWithTimeout', {
+                    timeout: closeTimeout,
+                  }),
               type: ButtonType.Secondary,
             }
           : undefined
