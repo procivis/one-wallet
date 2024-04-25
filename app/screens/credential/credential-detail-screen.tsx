@@ -109,7 +109,11 @@ const CredentialDetailScreen: FC = () => {
     return <ActivityIndicator />;
   }
 
-  const { card, attributes } = detailsCardFromCredential(credential, config);
+  const { card, attributes } = detailsCardFromCredential(
+    credential,
+    config,
+    'CredentialDetailScreen.card.label',
+  );
 
   return (
     <DetailScreen
