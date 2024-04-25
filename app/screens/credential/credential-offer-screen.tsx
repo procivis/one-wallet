@@ -2,29 +2,19 @@ import {
   Button,
   CredentialDetailsCard,
   EntityCluster,
-  NavigationHeader,
   useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useRef } from 'react';
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
@@ -47,7 +37,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId } = route.params;
-  const { top } = useSafeAreaInsets();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -85,26 +74,18 @@ const CredentialOfferScreen: FunctionComponent = () => {
     ? detailsCardFromCredential(credential, config)
     : { attributes: [], card: undefined };
 
-  const safeAreaPaddingStyle: ViewStyle | undefined =
-    Platform.OS === 'android'
-      ? {
-          paddingTop: top,
-        }
-      : undefined;
-
   return (
-    <ScrollView
-      contentContainerStyle={[styles.contentContainer, safeAreaPaddingStyle]}
-      style={styles.scrollView}
+    <ScrollViewScreen
+      header={{
+        leftItem: HeaderCloseModalButton,
+        modalHandleVisible: Platform.OS === 'ios',
+        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        static: true,
+        title: translate('credentialOffer.title'),
+      }}
+      modalPresentation
       testID="CredentialOfferScreen"
     >
-      <NavigationHeader
-        leftItem={HeaderCloseModalButton}
-        modalHandleVisible={Platform.OS === 'ios'}
-        rightItem={<HeaderInfoButton onPress={infoPressHandler} />}
-        title={translate('credentialOffer.title')}
-      />
-
       <View style={styles.content} testID="CredentialOfferScreen.content">
         <EntityCluster
           entityName={
@@ -127,17 +108,17 @@ const CredentialOfferScreen: FunctionComponent = () => {
               showAllButtonLabel={translate('common.seeAll')}
               testID="CredentialOfferScreen.detail"
             />
-            <SafeAreaView edges={['bottom']} style={styles.bottom}>
+            <View style={styles.bottom}>
               <Button
                 onPress={onAccept}
                 testID="CredentialOfferScreen.accept"
                 title={translate('credentialOffer.accept')}
               />
-            </SafeAreaView>
+            </View>
           </>
         )}
       </View>
-    </ScrollView>
+    </ScrollViewScreen>
   );
 };
 
@@ -152,17 +133,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  contentContainer: {
-    flexGrow: 1,
-  },
   issuer: {
     borderBottomWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 0,
     paddingVertical: 16,
-  },
-  scrollView: {
-    flex: 1,
   },
 });
 
