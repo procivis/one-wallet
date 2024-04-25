@@ -85,16 +85,20 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   const redirectUri = proof?.redirectUri;
   const closeButtonHandler = useCallback(() => {
+    const close = () =>
+      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
     if (redirectUri) {
-      Linking.openURL(redirectUri).catch((e) => {
-        reportException(e, "Couldn't open redirect URI");
-      });
-      return;
+      Linking.openURL(redirectUri)
+        .then(close)
+        .catch((e) => {
+          reportException(e, "Couldn't open redirect URI");
+        });
+    } else {
+      close();
     }
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [redirectUri, rootNavigation]);
   const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
+    state === LoaderViewState.Success && !redirectUri,
     closeButtonHandler,
   );
 
@@ -104,10 +108,14 @@ const ProofProcessScreen: FunctionComponent = () => {
         state === LoaderViewState.Success
           ? {
               onPress: closeButtonHandler,
-              testID: 'ProofRequestAcceptProcessScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
+              testID: `ProofRequestAcceptProcessScreen.${
+                redirectUri ? 'redirect' : 'close'
+              }`,
+              title: redirectUri
+                ? translate('proofRequest.redirect')
+                : translate('common.closeWithTimeout', {
+                    timeout: closeTimeout,
+                  }),
               type: ButtonType.Secondary,
             }
           : undefined
