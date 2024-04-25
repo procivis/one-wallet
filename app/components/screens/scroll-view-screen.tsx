@@ -6,11 +6,13 @@ import {
 } from '@procivis/one-react-native-components';
 import React, { FC, PropsWithChildren } from 'react';
 import {
+  Platform,
   ScrollView,
   ScrollViewProps,
   StyleSheet,
   View,
   ViewProps,
+  ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,26 +25,38 @@ type ScrollViewScreenProps = ViewProps & {
     NavigationHeaderProps,
     'animate' | 'blurred' | 'style' | 'title' | 'titleVisible'
   > & {
+    static?: boolean;
     title: string;
   };
+  modalPresentation?: boolean;
   scrollView?: Omit<ScrollViewProps, 'onScroll'>;
 };
 
 const ScrollViewScreen: FC<PropsWithChildren<ScrollViewScreenProps>> = ({
   children,
   header,
+  modalPresentation,
   scrollView,
   style,
   testID,
   ...viewProps
 }) => {
   const colorScheme = useAppColorScheme();
-  const safeAreaInsets = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const contentInsetsStyle = useListContentInset({
     additionalBottomPadding: 24,
+    headerHeight: modalPresentation && Platform.OS === 'ios' ? 63 : 48,
+    modalPresentation,
   });
   const { titleVisible, onScroll } = useOnScrollHeaderState();
   const { contentContainerStyle, ...scrollViewProps } = scrollView ?? {};
+
+  const safeAreaPaddingStyle: ViewStyle | undefined =
+    !modalPresentation || Platform.OS === 'android'
+      ? {
+          paddingTop: top,
+        }
+      : undefined;
 
   return (
     <View
@@ -64,15 +78,15 @@ const ScrollViewScreen: FC<PropsWithChildren<ScrollViewScreenProps>> = ({
         {...scrollViewProps}
       >
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
-          <ListTitleHeader title={header.title} />
+          {!header.static && <ListTitleHeader title={header.title} />}
           {children}
         </View>
       </ScrollView>
       <NavigationHeader
         animate
         blurred
-        style={[styles.header, { paddingTop: safeAreaInsets.top }]}
-        titleVisible={titleVisible}
+        style={[styles.header, safeAreaPaddingStyle]}
+        titleVisible={header.static || titleVisible}
         {...header}
       />
     </View>
