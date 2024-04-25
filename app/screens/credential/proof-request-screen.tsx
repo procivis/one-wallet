@@ -2,7 +2,6 @@ import {
   Button,
   concatTestID,
   EntityCluster,
-  NavigationHeader,
   useBlockOSBackNavigation,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
@@ -26,17 +25,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -44,6 +33,7 @@ import {
 } from '../../components/navigation/header-buttons';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useONECore } from '../../hooks/core/core-context';
 import {
   useCredentialRevocationCheck,
@@ -63,7 +53,6 @@ const ProofRequestScreen: FunctionComponent = () => {
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
-  const { top } = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const { core } = useONECore();
 
@@ -259,25 +248,18 @@ const ProofRequestScreen: FunctionComponent = () => {
         ),
     );
 
-  const safeAreaPaddingStyle: ViewStyle | undefined =
-    Platform.OS === 'android'
-      ? {
-          paddingTop: top,
-        }
-      : undefined;
-
   return (
-    <ScrollView
-      contentContainerStyle={[styles.contentContainer, safeAreaPaddingStyle]}
-      style={styles.scrollView}
+    <ScrollViewScreen
+      header={{
+        leftItem: HeaderCloseModalButton,
+        modalHandleVisible: Platform.OS === 'ios',
+        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        static: true,
+        title: translate('proofRequest.title'),
+      }}
+      modalPresentation
       testID="ProofRequestSharingScreen"
     >
-      <NavigationHeader
-        leftItem={HeaderCloseModalButton}
-        modalHandleVisible={Platform.OS === 'ios'}
-        rightItem={<HeaderInfoButton onPress={infoPressHandler} />}
-        title={translate('proofRequest.title')}
-      />
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
         <EntityCluster
           entityName={
@@ -333,17 +315,17 @@ const ProofRequestScreen: FunctionComponent = () => {
                 </Group>
               ),
             )}
-            <SafeAreaView edges={['bottom']} style={styles.bottom}>
+            <View style={styles.bottom}>
               <Button
                 disabled={!allSelectionsValid}
                 onPress={onSubmit}
                 title={translate('proofRequest.confirm')}
               />
-            </SafeAreaView>
+            </View>
           </>
         )}
       </View>
-    </ScrollView>
+    </ScrollViewScreen>
   );
 };
 
@@ -358,17 +340,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  contentContainer: {
-    flexGrow: 1,
-  },
   requestedCredential: {
     marginBottom: 24,
   },
   requestedCredentialLast: {
     marginBottom: 0,
-  },
-  scrollView: {
-    flex: 1,
   },
   verifier: {
     paddingHorizontal: 0,
