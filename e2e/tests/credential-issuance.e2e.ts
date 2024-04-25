@@ -17,6 +17,7 @@ import {
   revokeCredential,
   suspendCredential,
 } from '../utils/bff-api';
+import { formatDate } from '../utils/date';
 import {
   CredentialFormat,
   DataType,
@@ -117,39 +118,87 @@ describe('ONE-601: Credential issuance', () => {
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(CredentialDetailScreen.status.element).toBeVisible();
       await expect(CredentialDetailScreen.status.value).toHaveText('Revoked');
-      await expect(CredentialDetailScreen.log('revoked')).toExist();
+      await expect(CredentialDetailScreen.history(0).element).toExist();
     });
   });
 
   describe('ONE-1313: Credential revocation LVVC', () => {
     let credentialId: string;
 
-    beforeAll(async () => {
-      credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: credentialSchemaJWT_with_LVVC,
-        transport: Transport.PROCIVIS,
+    describe('Suspend credential', () => {
+      beforeAll(async () => {
+        await launchApp({ delete: true });
       });
-    });
 
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('Check valid on the detail page', async () => {
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.log('issued')).toExist();
-      await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
-    });
+      beforeEach(async () => {
+        credentialId = await credentialIssuance({
+          authToken: authToken,
+          credentialSchema: credentialSchemaJWT_with_LVVC,
+          transport: Transport.PROCIVIS,
+        });
+      });
 
-    it('Suspended credential', async () => {
-      await expect(WalletScreen.credential(credentialId).element).toExist();
-      await suspendCredential(credentialId, authToken);
-      await reloadApp({ suspendedScreen: true });
-      await expect(
-        WalletScreen.credential(credentialId).suspendedLabel,
-      ).toExist();
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.screen).toExist();
-      await expect(CredentialDetailScreen.log('issued')).toExist();
-      await expect(CredentialDetailScreen.log('suspended')).toExist();
+      it('Suspended credential with specified date', async () => {
+        await expect(
+          WalletScreen.credentialName(
+            credentialSchemaJWT_with_LVVC.name,
+          ).atIndex(0),
+        ).toBeVisible();
+        const suspendedDate = new Date();
+        suspendedDate.setHours(0, 0, 0, 0);
+        suspendedDate.setDate(suspendedDate.getDate() + 1);
+        const formattedDate = formatDate(suspendedDate);
+
+        await suspendCredential(
+          credentialId,
+          authToken,
+          suspendedDate.toISOString(),
+        );
+
+        await reloadApp({ suspendedScreen: true });
+
+        await expect(
+          WalletScreen.credential(credentialId).suspendedLabel,
+        ).toExist();
+        await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
+          .atIndex(0)
+          .tap();
+        await expect(CredentialDetailScreen.screen).toExist();
+        await expect(CredentialDetailScreen.history(0).element).toExist();
+        await expect(CredentialDetailScreen.history(0).label).toHaveText(
+          'Credential suspended',
+        );
+        await expect(
+          CredentialDetailScreen.credential.suspendedLabel,
+        ).toHaveText(`Suspended until ${formattedDate}`);
+      });
+
+      it('Suspended credential without date limits', async () => {
+        await expect(
+          WalletScreen.credentialName(
+            credentialSchemaJWT_with_LVVC.name,
+          ).atIndex(0),
+        ).toBeVisible();
+
+        await suspendCredential(credentialId, authToken);
+
+        await reloadApp({ suspendedScreen: true });
+
+        await expect(
+          WalletScreen.credential(credentialId).suspendedLabel,
+        ).toExist();
+        await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
+          .atIndex(0)
+          .tap();
+        await expect(CredentialDetailScreen.screen).toExist();
+        await expect(CredentialDetailScreen.history(0).element).toExist();
+        await expect(CredentialDetailScreen.history(0).label).toHaveText(
+          'Credential suspended',
+        );
+        await expect(
+          CredentialDetailScreen.credential.suspendedLabel,
+        ).toHaveText('Suspended');
+      });
     });
 
     it('Revoke credential', async () => {
@@ -161,7 +210,7 @@ describe('ONE-601: Credential issuance', () => {
       ).toExist();
 
       await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.log('revoked')).toExist();
+      await expect(CredentialDetailScreen.history(0).element).toExist();
       await expect(CredentialDetailScreen.status.value).toHaveText('Revoked');
     });
   });
@@ -312,8 +361,7 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   describe('ONE-1861: Nested claim', () => {
-    let credentialId: string;
-
+    let credentialSchemaName: string;
     const claims = [
       { datatype: DataType.EMAIL, key: 'email', required: true },
       {
@@ -332,15 +380,16 @@ describe('ONE-601: Credential issuance', () => {
       const credentialSchema = await createCredentialSchema(authToken, {
         claims: claims,
       });
-      credentialId = await credentialIssuance({
+      credentialSchemaName = credentialSchema.name;
+      await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
         transport: Transport.OPENID4VC,
       });
     });
 
-    it('Object claim', async () => {
-      await WalletScreen.credential(credentialId).element.tap();
+    it('Issue credential with object claims', async () => {
+      await WalletScreen.credentialName(credentialSchemaName).atIndex(0).tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
     });
   });
