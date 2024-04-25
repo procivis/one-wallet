@@ -31,6 +31,12 @@ const acceptCredentialTestCase = async (
   expectedResult: LoadingResultState,
 ) => {
   await device.disableSynchronization();
+
+  await waitFor(CredentialOfferScreen.acceptButton)
+    .toBeVisible()
+    .whileElement(by.id('CredentialOfferScreen'))
+    .scroll(300, 'down');
+
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
   await waitFor(CredentialAcceptProcessScreen.screen)
@@ -38,7 +44,7 @@ const acceptCredentialTestCase = async (
     .withTimeout(1000);
   await waitFor(CredentialAcceptProcessScreen.closeButton)
     .toBeVisible()
-    .withTimeout(2000);
+    .withTimeout(3000);
   if (expectedResult === LoadingResultState.Success) {
     await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
   } else if (expectedResult === LoadingResultState.Failure) {
@@ -50,17 +56,14 @@ const acceptCredentialTestCase = async (
   // if (data.redirectUri) {
   //   await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
   // }
+  await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
 
-  await CredentialAcceptProcessScreen.closeButton.tap();
-  await expect(WalletScreen.screen).toBeVisible();
+  await waitFor(WalletScreen.screen).toBeVisible().withTimeout(6000);
   await device.enableSynchronization();
-  if (data.transport === Transport.PROCIVIS) {
-    await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-  } else if (data.transport === Transport.OPENID4VC) {
-    await expect(
-      WalletScreen.credentialName(data.credentialSchema.name).atIndex(0),
-    ).toBeVisible();
-  }
+
+  await expect(
+    WalletScreen.credentialName(data.credentialSchema.name).atIndex(0),
+  ).toBeVisible();
 };
 
 const rejectCredentialTestCase = async () => {

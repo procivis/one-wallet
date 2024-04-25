@@ -73,6 +73,12 @@ export enum LayoutType {
   SINGLE_ATTRIBUTE = 'SINGLE_ATTRIBUTE',
 }
 
+export enum CodeType {
+  BarCode = 'BARCODE',
+  Mrz = 'MRZ',
+  QrCode = 'QR_CODE',
+}
+
 export enum LoadingResultState {
   Error = 'error',
   Failure = 'failure',

@@ -1,4 +1,5 @@
 import {
+  concatTestID,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -102,7 +103,12 @@ export const HistoryItem: FC<HistoryItemProps> = ({
     >
       {icon}
       <View style={styles.labelAndDid}>
-        <Typography color={colorScheme.text} preset="s" style={styles.label}>
+        <Typography
+          color={colorScheme.text}
+          preset="s"
+          style={styles.label}
+          testID={concatTestID(testID, 'label')}
+        >
           {label}
         </Typography>
         <Typography
@@ -110,6 +116,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
           numberOfLines={1}
           preset="s/line-height-small"
           style={styles.shaded}
+          testID={concatTestID(testID, 'did')}
         >
           {item.did}
         </Typography>
@@ -118,6 +125,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
         color={colorScheme.text}
         preset="xs/line-height-small"
         style={styles.shaded}
+        testID={concatTestID(testID, 'timeLabel')}
       >
         {timeLabel}
       </Typography>
