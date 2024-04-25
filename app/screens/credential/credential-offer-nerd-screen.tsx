@@ -27,7 +27,22 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     return <ActivityIndicator />;
   }
 
-  const nerdModeFields: Array<NerdModeItemProps> = [
+  const didSections = credentialDetail.issuerDid?.split(':') ?? [];
+  const identifier = didSections.pop();
+  const didMethod = didSections.join(':') + ':';
+
+  const didField = identifier
+    ? [
+        {
+          attributeKey: translate('credentialDetail.credential.issuerDid'),
+          attributeText: identifier,
+          canBeCopied: true,
+          highlightedText: didMethod,
+        },
+      ]
+    : [];
+
+  const [schemaField, ...nerdModeFields]: Array<NerdModeItemProps> = [
     {
       attributeKey: translate('credentialDetail.credential.schema'),
       highlightedText: credentialDetail.schema.name,
@@ -56,7 +71,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
       onClose={nav.goBack}
       sections={[
         {
-          data: nerdModeFields,
+          data: [schemaField, ...didField, ...nerdModeFields],
           title: translate('credentialOffer.nerdView.section.title'),
         },
       ]}
