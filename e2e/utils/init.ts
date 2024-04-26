@@ -21,6 +21,7 @@ export async function pinSetup() {
 }
 
 type ReloadAllType = {
+  revokedScreen?: boolean;
   suspendedScreen?: boolean;
 };
 
@@ -29,6 +30,10 @@ export async function reloadApp(values?: ReloadAllType) {
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
   if (values?.suspendedScreen) {
+    await expect(StatusCheckResultScreen.screen).toBeVisible();
+    await StatusCheckResultScreen.closeButton.tap();
+    await expect(WalletScreen.screen).toBeVisible();
+  } else if (values?.revokedScreen) {
     await expect(StatusCheckResultScreen.screen).toBeVisible();
     await StatusCheckResultScreen.closeButton.tap();
     await expect(WalletScreen.screen).toBeVisible();

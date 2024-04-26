@@ -31,11 +31,12 @@ const acceptCredentialTestCase = async (
   expectedResult: LoadingResultState,
 ) => {
   await device.disableSynchronization();
+  await expect(CredentialOfferScreen.card).toBeVisible();
 
   await waitFor(CredentialOfferScreen.acceptButton)
     .toBeVisible()
     .whileElement(by.id('CredentialOfferScreen'))
-    .scroll(300, 'down');
+    .scroll(400, 'down');
 
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
@@ -50,10 +51,6 @@ const acceptCredentialTestCase = async (
     await CredentialAcceptProcessScreen.closeButton.tap();
     return;
   }
-  // Temporary not working
-  // if (data.redirectUri) {
-  //   await expect(CredentialAcceptProcessScreen.ctaButton).toBeVisible();
-  // }
   await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
 
   await waitFor(WalletScreen.screen).toBeVisible().withTimeout(6000);
