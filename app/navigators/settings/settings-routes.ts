@@ -8,6 +8,7 @@ import { RestoreBackupNavigatorParamList } from '../restore-backup/restore-backu
 
 export type SettingsNavigatorParamList = {
   AppInformation: undefined;
+  AppInformationNerd: undefined;
   BiometricsSet: {
     enabled: boolean;
   };
