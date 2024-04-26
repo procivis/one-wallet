@@ -84,7 +84,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
         title: translate('credentialOffer.title'),
       }}
       modalPresentation
-      testID="CredentialOfferScreen"
+      scrollView={{
+        testID: 'CredentialOfferScreen',
+      }}
     >
       <View style={styles.content} testID="CredentialOfferScreen.content">
         <EntityCluster
