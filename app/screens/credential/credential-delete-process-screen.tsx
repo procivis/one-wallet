@@ -9,12 +9,14 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { Platform } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCredentialDelete } from '../../hooks/core/credentials';
+import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
@@ -48,9 +50,16 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const closing = useRef(false);
   const onClose = useCallback(() => {
+    closing.current = true;
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
+  useBeforeRemove(() => {
+    if (!closing.current) {
+      onClose();
+    }
+  });
   const { closeTimeout } = useCloseButtonTimeout(
     state === LoaderViewState.Success,
     onClose,
