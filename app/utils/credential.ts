@@ -214,7 +214,7 @@ export const detailsCardAttributeFromClaim = (
   const attribute: Partial<CredentialAttribute> = {
     id: claim.id,
     name: claim.key,
-    testID: concatTestID(testID, 'attribute'),
+    testID: concatTestID(testID, 'attribute', claim.key),
   };
 
   switch (typeConfig?.type) {
