@@ -112,7 +112,7 @@ const CredentialDetailScreen: FC = () => {
   const { card, attributes } = detailsCardFromCredential(
     credential,
     config,
-    'CredentialDetailScreen.card.label',
+    'CredentialDetailScreen.card',
   );
 
   return (

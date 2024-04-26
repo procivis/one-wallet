@@ -207,18 +207,20 @@ export const getCredentialCardPropsFromCredential = (
 export const detailsCardAttributeFromClaim = (
   claim: Claim,
   config?: Config,
+  testID?: string,
 ): CredentialAttribute => {
   const typeConfig = config?.datatype[claim.dataType];
 
   const attribute: Partial<CredentialAttribute> = {
     id: claim.id,
     name: claim.key,
+    testID: concatTestID(testID, 'attribute'),
   };
 
   switch (typeConfig?.type) {
     case DataTypeEnum.Object: {
       attribute.attributes = (claim.value as Claim[]).map((nestedClaim) =>
-        detailsCardAttributeFromClaim(nestedClaim, config),
+        detailsCardAttributeFromClaim(nestedClaim, config, testID),
       );
       break;
     }
@@ -248,7 +250,7 @@ export const detailsCardFromCredential = (
   testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
   const attributes: CredentialAttribute[] = credential.claims.map((claim) =>
-    detailsCardAttributeFromClaim(claim, config),
+    detailsCardAttributeFromClaim(claim, config, testID),
   );
 
   const card = getCredentialCardPropsFromCredential(
