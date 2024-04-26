@@ -2,18 +2,14 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
-import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
-import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
-  createCredential,
   createCredentialSchema,
-  offerCredential,
   revokeCredential,
   suspendCredential,
 } from '../utils/bff-api';
@@ -27,7 +23,6 @@ import {
   WalletKeyStorageType,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
-import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
@@ -255,35 +250,20 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   describe('ONE-796: OpenID4VC Credential transport', () => {
-    const issueCredentialTestCase = async (
-      credentialSchema: CredentialSchemaResponseDTO,
-    ) => {
-      const credentialId = await createCredential(authToken, credentialSchema, {
+    it('Issue credential: JWT schema', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
         transport: Transport.OPENID4VC,
       });
-
-      const invitationUrl = await offerCredential(credentialId, authToken);
-      await scanURL(invitationUrl);
-
-      await expect(CredentialOfferScreen.screen).toBeVisible();
-      await CredentialOfferScreen.acceptButton.tap();
-
-      await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-      await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-      await CredentialAcceptProcessScreen.closeButton.tap();
-
-      await expect(WalletScreen.screen).toBeVisible();
-      await expect(
-        WalletScreen.credentialName(credentialSchema.name).atIndex(0),
-      ).toBeVisible();
-    };
-
-    it('Issue credential: JWT schema', async () => {
-      await issueCredentialTestCase(credentialSchemaJWT);
     });
 
     it('Issue credential: SD_JWT schema', async () => {
-      await issueCredentialTestCase(credentialSchemaSD_JWT);
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaSD_JWT,
+        transport: Transport.OPENID4VC,
+      });
     });
   });
 
@@ -317,7 +297,8 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     // Issuance fail because emulator does not have hardware key
-    it('Issue Hardware schema', async () => {
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('Issue Hardware schema', async () => {
       await credentialIssuance(
         {
           authToken: authToken,
@@ -331,25 +312,25 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   describe('ONE-1233: Picture claim', () => {
-    let credentialId: string;
+    let credentialSchema: CredentialSchemaResponseDTO;
     const pictureKey = 'picture';
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      const credentialSchema = await createCredentialSchema(authToken, {
+      credentialSchema = await createCredentialSchema(authToken, {
         claims: [
           { datatype: DataType.PICTURE, key: pictureKey, required: true },
         ],
       });
 
-      credentialId = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema,
       });
     });
 
     it('display picture link in credential detail', async () => {
-      await WalletScreen.credential(credentialId).element.tap();
+      await WalletScreen.credentialName(credentialSchema.name).tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(
         CredentialDetailScreen.claim(pictureKey).element,
@@ -397,8 +378,6 @@ describe('ONE-601: Credential issuance', () => {
   describe('ONE-1799: Searching Credential', () => {
     let schema1: CredentialSchemaResponseDTO;
     let schema2: CredentialSchemaResponseDTO;
-    let credentialId_1: string;
-    let credentialId_2: string;
 
     beforeAll(async () => {
       await launchApp({ delete: true });
@@ -419,11 +398,11 @@ describe('ONE-601: Credential issuance', () => {
         ],
         name: `Schema-2-${uuidv4()}`,
       });
-      credentialId_1 = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema: schema1,
       });
-      credentialId_2 = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema: schema2,
       });
@@ -437,11 +416,12 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.search.element.tap();
       await WalletScreen.search.typeText('Schema\n');
-      await waitFor(WalletScreen.credential(credentialId_1).element)
+
+      await waitFor(WalletScreen.credentialName(schema1.name).atIndex(1))
         .toBeVisible()
         .withTimeout(2000);
       await expect(
-        WalletScreen.credential(credentialId_2).element,
+        WalletScreen.credentialName(schema2.name).atIndex(0),
       ).toBeVisible();
     });
 
@@ -449,12 +429,35 @@ describe('ONE-601: Credential issuance', () => {
       await WalletScreen.search.element.tap();
       await WalletScreen.search.typeText('Schema-2\n');
 
-      await expect(
-        WalletScreen.credential(credentialId_2).element,
-      ).toBeVisible();
-      await waitFor(WalletScreen.credential(credentialId_1).element)
-        .not.toBeVisible()
-        .withTimeout(3000);
+      await waitFor(WalletScreen.credentialName(schema2.name).atIndex(0))
+        .toBeVisible()
+        .withTimeout(2000);
+      await expect(WalletScreen.credentialName(schema1.name)).not.toBeVisible();
+    });
+  });
+
+  describe('ONE-1880: Scrolling Through Credentials in Wallet Dashboard', () => {
+    let credentialName: string;
+
+    beforeAll(async () => {
+      const schema = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'last name', required: true },
+        ],
+        name: `Scrolling test ${uuidv4()}`,
+      });
+      credentialName = schema.name;
+      for (let i = 0; i <= 7; i++) {
+        await credentialIssuance({
+          authToken,
+          credentialSchema: schema,
+        });
+      }
+    }, 220000);
+
+    it('Test scrolling credential list', async () => {
+      await WalletScreen.scrollTo(credentialName, 7);
     });
   });
 });

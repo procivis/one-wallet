@@ -5,14 +5,13 @@ import {
   CredentialClaimSchemaResponseDTO,
   CredentialSchemaResponseDTO,
 } from '../types/credential';
+import { CredentialSchemaData } from '../types/credentialSchema';
 import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   CredentialFormat,
   DataType,
-  LayoutType,
   RevocationMethod,
   Transport,
-  WalletKeyStorageType,
 } from './enums';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
@@ -77,40 +76,6 @@ async function getCredentialSchema(
     authToken,
   ).then((res) => res?.values?.[0]?.id);
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
-}
-
-interface BackgroundLayoutProperties {
-  image: string;
-}
-interface CodeLayoutProperties {
-  attribute: string;
-  type: string;
-}
-
-// image or (backgroundColor and fontColor)
-interface LogoLayoutProperties {
-  backgroundColor?: string;
-  fontColor?: string;
-  image?: string;
-}
-
-export interface LayoutProperties {
-  background?: BackgroundLayoutProperties;
-  code?: CodeLayoutProperties;
-  logo?: LogoLayoutProperties;
-  pictureAttribute?: string;
-  primaryAttribute?: string;
-  secondaryAttribute?: string;
-}
-
-export interface CredentialSchemaData {
-  claims: Array<{ datatype: string; key: string; required: boolean }>;
-  format: CredentialFormat;
-  layoutProperties?: LayoutProperties;
-  layoutType: LayoutType;
-  name: string;
-  revocationMethod: RevocationMethod;
-  walletStorageType?: WalletKeyStorageType;
 }
 
 export async function createCredentialSchema(
