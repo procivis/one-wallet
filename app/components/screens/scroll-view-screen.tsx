@@ -75,6 +75,7 @@ const ScrollViewScreen: FC<PropsWithChildren<ScrollViewScreenProps>> = ({
           contentContainerStyle,
         ]}
         onScroll={onScroll}
+        scrollEventThrottle={100}
         {...scrollViewProps}
       >
         <View style={styles.content} testID={concatTestID(testID, 'content')}>

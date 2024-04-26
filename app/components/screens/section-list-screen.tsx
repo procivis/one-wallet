@@ -57,6 +57,7 @@ const SectionListScreen = <ItemT, SectionT>({
         }
         contentContainerStyle={[contentInsetsStyle, contentContainerStyle]}
         onScroll={onScroll}
+        scrollEventThrottle={100}
         stickySectionHeadersEnabled={stickySectionHeadersEnabled ?? false}
         {...listProps}
       />
