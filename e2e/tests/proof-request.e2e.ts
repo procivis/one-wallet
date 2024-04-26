@@ -10,6 +10,7 @@ import ProofRequestSharingScreen from '../page-objects/ProofRequestScreen';
 import ProofRequestSelectCredentialScreen from '../page-objects/ProofRequestSelectCredentialScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
+import { CredentialSchemaData } from '../types/credentialSchema';
 import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   bffLogin,
@@ -17,7 +18,6 @@ import {
   createCredentialSchema,
   createProofRequest,
   createProofSchema,
-  CredentialSchemaData,
   offerCredential,
   requestProof,
   revokeCredential,
