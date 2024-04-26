@@ -1,4 +1,7 @@
-import { useAppColorScheme } from '@procivis/one-react-native-components';
+import {
+  LinkIcon,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import {
@@ -10,7 +13,6 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { ShareIcon } from '../../components/icon/common-icon';
 import ListSectionHeader, {
   ListSectionHeaderProps,
 } from '../../components/list/list-section-header';
@@ -85,7 +87,7 @@ const LicencesScreen: FC = () => {
     if ('link' in item) {
       return (
         <ButtonSetting
-          accessory={ShareIcon}
+          accessory={<LinkIcon color={colorScheme.text} />}
           onPress={() => openURL(item.link.url)}
           style={style}
           title={item.link.title}
