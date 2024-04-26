@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform } from 'react-native';
 
+import AppInformationNerdScreen from '../../screens/settings/app-information-nerd-screen';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
 import DashboardScreen from '../../screens/settings/dashboard-screen';
@@ -25,6 +26,16 @@ const SettingsNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen component={AppInformationScreen} name="AppInformation" />
+      <Stack.Screen
+        component={AppInformationNerdScreen}
+        name="AppInformationNerd"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'fullScreenModal',
+        }}
+      />
       <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
       <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
