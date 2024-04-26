@@ -1,17 +1,16 @@
 import {
+  Button,
   CredentialCard,
   Header,
   OptionsIcon,
   ScanButton,
+  Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
   ActivityIndicator,
   concatTestID,
-  EmptyListView,
-  ListSectionHeader,
   TouchableOpacity,
-  useAppColorScheme as useAppColorScheme__OLD,
 } from '@procivis/react-native-components';
 import {
   CredentialListIncludeEntityType,
@@ -35,11 +34,10 @@ import {
   SectionListRenderItemInfo,
   StyleSheet,
   View,
-  ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { EmptyIcon } from '../../components/icon/wallet-icon';
+import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialDetail,
   usePagedCredentials,
@@ -51,7 +49,6 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getCredentialCardPropsFromCredential } from '../../utils/credential';
 
 const WalletScreen: FunctionComponent = observer(() => {
-  const colorScheme__OLD = useAppColorScheme__OLD();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const safeAreaInsets = useSafeAreaInsets();
@@ -72,6 +69,7 @@ const WalletScreen: FunctionComponent = observer(() => {
     fetchNextPage,
     hasNextPage,
   } = usePagedCredentials(queryParams);
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
 
   useCredentialStatusCheck();
 
@@ -159,9 +157,10 @@ const WalletScreen: FunctionComponent = observer(() => {
     [handleCredentialPress],
   );
 
-  const containerStyle: ViewStyle = {
-    flex: !credentials ? 1 : undefined,
-  };
+  useEffect(() => {
+    setIsEmpty((!credentials || credentials.length === 0) && !searchPhrase);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [credentials]);
 
   return (
     <View
@@ -171,25 +170,46 @@ const WalletScreen: FunctionComponent = observer(() => {
       <SectionList
         ListEmptyComponent={
           credentials ? (
-            <View
-              style={[
-                styles.empty,
-                { backgroundColor: colorScheme__OLD.white },
-              ]}
-              testID="WalletScreen.credentialList"
-            >
-              <ListSectionHeader
-                title={translate('wallet.credentialsList.title.empty')}
-                titleStyle={styles.title}
-              />
-              <EmptyListView
-                icon={{
-                  component: <EmptyIcon color={colorScheme__OLD.lightGrey} />,
-                }}
-                iconStyle={styles.emptyIcon}
-                subtitle={translate('wallet.credentialsList.empty.subtitle')}
-                title={translate('wallet.credentialsList.empty.title')}
-              />
+            <View style={styles.empty} testID="WalletScreen.credentialList">
+              {isEmpty ? (
+                <>
+                  <Typography
+                    align="center"
+                    color={colorScheme.text}
+                    preset="l/line-height-large"
+                    style={styles.emptyTitle}
+                  >
+                    {translate('wallet.credentialsList.empty.title')}
+                  </Typography>
+                  <Typography align="center" color={colorScheme.text}>
+                    {translate('wallet.credentialsList.empty.subtitle')}
+                  </Typography>
+                  <NoCredentialsIcon style={styles.emptyIcon} />
+                  <Button
+                    onPress={handleScanPress}
+                    style={[
+                      styles.emptyButton,
+                      { bottom: Math.max(24, safeAreaInsets.bottom) },
+                    ]}
+                    testID="OnboardingSetupScreen.setup"
+                    title={translate('wallet.credentialsList.empty.scanQrCode')}
+                  />
+                </>
+              ) : (
+                <>
+                  <Typography
+                    align="center"
+                    color={colorScheme.text}
+                    preset="l/line-height-large"
+                    style={styles.emptyTitle}
+                  >
+                    {translate('wallet.credentialsList.empty.search.title')}
+                  </Typography>
+                  <Typography align="center" color={colorScheme.text}>
+                    {translate('wallet.credentialsList.empty.search.subtitle')}
+                  </Typography>
+                </>
+              )}
             </View>
           ) : (
             <View style={styles.loadingIndicator}>
@@ -202,7 +222,7 @@ const WalletScreen: FunctionComponent = observer(() => {
             <View style={styles.footer}>
               {hasNextPage && (
                 <LoadingIndicator
-                  color={colorScheme__OLD.accent}
+                  color={colorScheme.accent}
                   style={styles.pageLoadingIndicator}
                 />
               )}
@@ -211,7 +231,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         }
         ListHeaderComponent={
           <Header
-            onSearchPhraseChange={setSearchPhrase}
+            onSearchPhraseChange={!isEmpty ? setSearchPhrase : undefined}
             rightButton={
               <TouchableOpacity
                 accessibilityLabel={translate('wallet.settings')}
@@ -234,7 +254,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           styles.header,
           { paddingTop: safeAreaInsets.top },
         ]}
-        contentContainerStyle={containerStyle}
+        contentContainerStyle={styles.contentContainer}
         key={locale}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.1}
@@ -244,13 +264,9 @@ const WalletScreen: FunctionComponent = observer(() => {
         }
         showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={false}
-        style={[
-          styles.list,
-          containerStyle,
-          { backgroundColor: colorScheme.background },
-        ]}
+        style={[styles.list, { backgroundColor: colorScheme.background }]}
       />
-      <ScanButton onPress={handleScanPress} />
+      {!isEmpty && <ScanButton onPress={handleScanPress} />}
     </View>
   );
 });
@@ -259,11 +275,24 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
+  contentContainer: {
+    flex: 1,
+  },
   empty: {
-    borderRadius: 20,
+    alignItems: 'center',
+    flex: 1,
+    marginTop: 84,
+  },
+  emptyButton: {
+    marginBottom: 16,
+    position: 'absolute',
+    width: '100%',
   },
   emptyIcon: {
-    marginBottom: 2,
+    marginTop: -24,
+  },
+  emptyTitle: {
+    marginBottom: 8,
   },
   footer: {
     minHeight: 20,
