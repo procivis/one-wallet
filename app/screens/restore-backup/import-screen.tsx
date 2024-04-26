@@ -1,3 +1,7 @@
+import {
+  ImportIcon,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import DocumentPicker, {
@@ -11,13 +15,13 @@ import {
 } from 'react-native-fs';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
-import { DownloadIcon } from '../../components/icon/common-icon';
 import SettingsButton from '../../components/settings/settings-button';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';
 
 const ImportScreen: FC = () => {
+  const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RestoreBackupNavigationProp<'Import'>>();
   const [selectedFile, setSelectedFile] = useState<DocumentPickerResponse>();
   const [selectedFilePath, setSelectedFilePath] = useState<string>();
@@ -56,7 +60,7 @@ const ImportScreen: FC = () => {
       title={translate('restoreBackup.import.title')}
     >
       <SettingsButton
-        accessory={DownloadIcon}
+        accessory={<ImportIcon color={colorScheme.text} />}
         onPress={handleAddPress}
         testID="RestoreBackupImportScreen.file"
         title={
