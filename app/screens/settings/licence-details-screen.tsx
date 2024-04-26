@@ -1,4 +1,5 @@
 import {
+  LinkIcon,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -12,7 +13,6 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { ShareIcon } from '../../components/icon/common-icon';
 import ListSectionHeader, {
   ListSectionHeaderProps,
 } from '../../components/list/list-section-header';
@@ -87,7 +87,7 @@ const LicenceDetailsScreen: FC = () => {
     } else if ('link' in item) {
       return (
         <ButtonSetting
-          accessory={ShareIcon}
+          accessory={<LinkIcon color={colorScheme.text} />}
           onPress={() => openURL(item.link.url)}
           style={style}
           title={item.link.title}
