@@ -33,6 +33,14 @@ export default abstract class WalletScreen {
     return element(by.id('WalletScreen.credentialList'));
   }
 
+  static scrollTo(credentialSchemaName: string, index: number = 0) {
+    const element = this.credentialName(credentialSchemaName).atIndex(index);
+    return waitFor(element)
+      .toBeVisible()
+      .whileElement(by.id('WalletScreen.credentialList'))
+      .scroll(600, 'down');
+  }
+
   static get search() {
     const field = element(by.id('WalletScreen.header.search'));
     return {
