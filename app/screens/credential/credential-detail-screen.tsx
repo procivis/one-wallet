@@ -11,7 +11,11 @@ import {
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -39,7 +43,8 @@ const CredentialDetailScreen: FC = () => {
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
 
   const { credentialId } = route.params;
-  const { data: credential } = useCredentialDetail(credentialId);
+  const isFocused = useIsFocused();
+  const { data: credential } = useCredentialDetail(credentialId, isFocused);
 
   const { data: historyPages } = useHistory({
     credentialId,
