@@ -1,3 +1,5 @@
+import CredentialCard from './components/CredentialCard';
+
 export default abstract class CredentialDetailScreen {
   static get screen() {
     return element(by.id('CredentialDetailScreen'));
@@ -5,6 +7,10 @@ export default abstract class CredentialDetailScreen {
 
   static get backButton() {
     return element(by.id('CredentialDetailScreen.header.back'));
+  }
+
+  static action(actionText: string) {
+    return element(by.text(actionText));
   }
 
   static get actionButton() {
@@ -37,56 +43,7 @@ export default abstract class CredentialDetailScreen {
     return element(by.id('CredentialDetailScreen.history.seeAll'));
   }
 
-  private static credentialLabel() {
-    const id = 'CredentialDetailScreen.card';
-    return {
-      get element() {
-        return element(by.id(id));
-      },
-      get revokedLabel() {
-        return element(by.id(`${id}.revoked`));
-      },
-      get suspendedLabel() {
-        return element(by.id(`${id}.suspended`));
-      },
-    };
-  }
-
-  static get credential() {
-    return this.credentialLabel();
-  }
-
-  private static dataItem(id: string) {
-    return {
-      get element() {
-        return element(by.id(id));
-      },
-      get title() {
-        return element(by.id(`${id}.title`));
-      },
-      get value() {
-        return element(by.id(`${id}.value`));
-      },
-    };
-  }
-
-  static get status() {
-    return this.dataItem('CredentialDetailScreen.status');
-  }
-
-  static get revocationMethod() {
-    return this.dataItem('CredentialDetailScreen.revocationMethod');
-  }
-
-  static get credentialFormat() {
-    return this.dataItem('CredentialDetailScreen.format');
-  }
-
-  static action(actionText: string) {
-    return element(by.text(actionText));
-  }
-
-  static claim(key: string) {
-    return this.dataItem(`CredentialDetailScreen.card.attribute.${key}`);
+  static get credentialCard() {
+    return CredentialCard('CredentialDetailScreen.card');
   }
 }

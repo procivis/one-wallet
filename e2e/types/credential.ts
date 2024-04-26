@@ -30,5 +30,6 @@ export interface CredentialSchemaResponseDTO
   extends CredentialSchemaListResponseDTO {
   claims: CredentialClaimSchemaResponseDTO[];
   organisationId: string;
+  schemaId: string;
   walletStorageType?: WalletKeyStorageType;
 }

@@ -10,6 +10,7 @@ import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   CredentialFormat,
   DataType,
+  LayoutType,
   RevocationMethod,
   Transport,
 } from './enums';
@@ -85,6 +86,7 @@ export async function createCredentialSchema(
   const schemaData = {
     claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
     format: CredentialFormat.SDJWT,
+    layoutType: LayoutType.CARD,
     name: `detox-e2e-revocable-${uuidv4()}`,
     revocationMethod: RevocationMethod.STATUSLIST2021,
     ...data,

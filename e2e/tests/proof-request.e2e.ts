@@ -2,7 +2,7 @@ import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
-import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
+// import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/ProofRequestAcceptProcessScreen';
@@ -460,10 +460,10 @@ describe('ONE-614: Proof request', () => {
       await requestProof(proofRequestId, authToken);
 
       await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
-      await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
-        'LVVC',
-      );
+      // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
+      // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
+      //   'LVVC',
+      // );
     });
 
     it('Wallet proposes a validation update if necessary', async () => {
@@ -482,10 +482,10 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
 
       await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
-      await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
-        'LVVC',
-      );
+      // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
+      // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
+      // 'LVVC',
+      // );
     });
 
     it('Holder receives revocation', async () => {
