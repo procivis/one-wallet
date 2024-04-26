@@ -171,7 +171,9 @@ e2e:
           - E2E_Android
   extends:
     - .bitrise_e2e
-    - .only_main_or_manual
+  rules:
+  # Temporary while not fixed
+    - when: manual
 
 
 .dTrack_metrics: &dTrack_metrics
@@ -335,6 +337,7 @@ license_generate:
   image:
     name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.1.1
     entrypoint: [""]
+  stage: license
   variables:
     BASE_URL: ${DEPENDENCY_TRACK_BASE_URL}
     API_KEY: ${DEPENDENCY_TRACK_API_KEY}
