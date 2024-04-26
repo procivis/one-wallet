@@ -38,7 +38,7 @@ export default abstract class CredentialDetailScreen {
   }
 
   private static credentialLabel() {
-    const id = 'CredentialDetailScreen.card.label';
+    const id = 'CredentialDetailScreen.card';
     return {
       get element() {
         return element(by.id(id));
@@ -60,6 +60,9 @@ export default abstract class CredentialDetailScreen {
     return {
       get element() {
         return element(by.id(id));
+      },
+      get title() {
+        return element(by.id(`${id}.title`));
       },
       get value() {
         return element(by.id(`${id}.value`));
@@ -84,6 +87,6 @@ export default abstract class CredentialDetailScreen {
   }
 
   static claim(key: string) {
-    return this.dataItem(`CredentialDetailScreen.claim.${key}`);
+    return this.dataItem(`CredentialDetailScreen.card.attribute.${key}`);
   }
 }

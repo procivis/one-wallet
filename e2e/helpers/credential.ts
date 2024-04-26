@@ -39,13 +39,11 @@ const acceptCredentialTestCase = async (
 
   await CredentialOfferScreen.acceptButton.tap();
   await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-  await waitFor(CredentialAcceptProcessScreen.screen)
-    .toBeVisible()
-    .withTimeout(1000);
-  await waitFor(CredentialAcceptProcessScreen.closeButton)
-    .toBeVisible()
-    .withTimeout(3000);
+
   if (expectedResult === LoadingResultState.Success) {
+    await waitFor(CredentialAcceptProcessScreen.closeButton)
+      .toBeVisible()
+      .withTimeout(3000);
     await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
   } else if (expectedResult === LoadingResultState.Failure) {
     await expect(CredentialAcceptProcessScreen.status.failure).toBeVisible();
