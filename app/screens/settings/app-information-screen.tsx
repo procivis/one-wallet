@@ -1,66 +1,103 @@
 import {
-  DetailScreen,
-  formatDateTime,
+  BackButton,
+  LinkIcon,
   Typography,
   useAppColorScheme,
-  useMemoAsync,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent } from 'react';
-import { StyleSheet } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Config from 'react-native-ultimate-config';
+import React, { FC, useCallback } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
 
-import { useONECore } from '../../hooks/core/core-context';
+import { HeaderInfoButton } from '../../components/navigation/header-buttons';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
+import ButtonSetting from '../../components/settings/button-setting';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
-const AppInformationScreen: FunctionComponent = () => {
+const Link: FC<{ label: string; url: string }> = ({ label, url }) => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
-  const { core } = useONECore();
-
-  const appVersion = `v${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()} (${
-    Config.CONFIG_NAME
-  }, ${Config.ENVIRONMENT})`;
-
-  const coreVersion = useMemoAsync(async () => {
-    const version = await core.getVersion();
-    return `ONE-core: v${version.pipelineId} (${formatDateTime(
-      new Date(version.buildTime),
-    )}, ${version.branch}, ${version.commit})`;
-  }, [core]);
+  const openURL = useCallback(() => {
+    Linking.openURL(url);
+  }, [url]);
 
   return (
-    <DetailScreen
-      onBack={navigation.goBack}
+    <ButtonSetting
+      accessory={<LinkIcon color={colorScheme.text} />}
+      onPress={openURL}
+      style={[styles.link, { backgroundColor: colorScheme.background }]}
+      title={label}
+    />
+  );
+};
+
+const AppInformationScreen: FC = () => {
+  const colorScheme = useAppColorScheme();
+  const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
+
+  const infoPressHandler = useCallback(() => {
+    navigation.navigate('AppInformationNerd');
+  }, [navigation]);
+
+  return (
+    <ScrollViewScreen
+      header={{
+        leftItem: <BackButton onPress={navigation.goBack} />,
+        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        title: translate('appInformation.app.title'),
+      }}
       style={{ backgroundColor: colorScheme.white }}
-      title={translate('appInformation.title')}
+      testID="AppInformationScreen"
     >
-      <Typography accessibilityRole="header" color={colorScheme.text} size="h1">
-        {translate('appInformation.app.title')}
-      </Typography>
-      <Typography color={colorScheme.text} size="h2">
-        {appVersion}
-      </Typography>
-      <Typography color={colorScheme.text}>{coreVersion}</Typography>
-      <Typography color={colorScheme.text} style={styles.contentDescription}>
-        {translate('appInformation.app.description')}
-      </Typography>
-      <Typography accessibilityRole="header" color={colorScheme.text} size="h1">
-        {translate('appInformation.company.title')}
-      </Typography>
-      <Typography color={colorScheme.text} style={styles.contentDescription}>
-        {translate('appInformation.company.description')}
-      </Typography>
-    </DetailScreen>
+      <View style={styles.contentContainer}>
+        <Typography color={colorScheme.text} style={styles.contentDescription}>
+          {translate('appInformation.app.description')}
+        </Typography>
+        <Link
+          label={translate('appInformation.oneProject.label')}
+          url={translate('appInformation.oneProject.link')}
+        />
+        <Link
+          label={translate('appInformation.oneDocumentation.label')}
+          url={translate('appInformation.oneDocumentation.link')}
+        />
+
+        <Typography
+          accessibilityRole="header"
+          color={colorScheme.text}
+          preset="l"
+          style={styles.header}
+        >
+          {translate('appInformation.company.title')}
+        </Typography>
+        <Typography color={colorScheme.text} style={styles.contentDescription}>
+          {translate('appInformation.company.description')}
+        </Typography>
+        <Link
+          label={translate('appInformation.company.label')}
+          url={translate('appInformation.company.link')}
+        />
+      </View>
+    </ScrollViewScreen>
   );
 };
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    paddingHorizontal: 20,
+  },
   contentDescription: {
     marginBottom: 24,
-    marginTop: 8,
+  },
+  header: {
+    marginBottom: 24,
+    marginTop: 40,
+  },
+  link: {
+    borderRadius: 12,
+    height: 68,
+    marginBottom: 8,
+    marginHorizontal: 0,
+    paddingHorizontal: 12,
   },
 });
 
