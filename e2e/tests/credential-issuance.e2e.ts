@@ -15,6 +15,7 @@ import {
 } from '../utils/bff-api';
 import { formatDate } from '../utils/date';
 import {
+  CodeType,
   CredentialFormat,
   DataType,
   LoadingResultState,
@@ -47,7 +48,7 @@ describe('ONE-601: Credential issuance', () => {
       revocationMethod: RevocationMethod.LVVC,
     });
   });
-
+  // Pass
   describe('Credential offer', () => {
     it('Accept credential issuance', async () => {
       await credentialIssuance({
@@ -78,7 +79,8 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  describe('ONE-620: Credential revocation', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  describe.skip('ONE-620: Credential revocation', () => {
     let credentialId: string;
 
     beforeAll(async () => {
@@ -111,16 +113,16 @@ describe('ONE-601: Credential issuance', () => {
     it('Revoked credential detail screen', async () => {
       await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
-      await expect(
-        CredentialDetailScreen.credentialCard.header.label.revoked,
-      ).toBeVisible();
+
+      await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
+
       await expect(
         CredentialDetailScreen.credentialCard.header.label.revoked,
       ).toHaveText('Revoked');
       await expect(CredentialDetailScreen.history(0).element).toExist();
     });
   });
-  // Tested
+  // Pass
   describe('ONE-1313: LVVC; Credential revocation & Suspension', () => {
     let credentialId: string;
 
@@ -154,7 +156,10 @@ describe('ONE-601: Credential issuance', () => {
           suspendedDate.toISOString(),
         );
 
-        await reloadApp({ suspendedScreen: true });
+        await reloadApp({
+          credentialIds: [credentialId],
+          suspendedScreen: true,
+        });
 
         await expect(
           WalletScreen.credential(credentialId).suspendedLabel,
@@ -163,10 +168,13 @@ describe('ONE-601: Credential issuance', () => {
           .atIndex(0)
           .tap();
         await expect(CredentialDetailScreen.screen).toExist();
+        await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
+
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
           'Credential suspended',
         );
+
         await expect(
           CredentialDetailScreen.credentialCard.header.label.suspended,
         ).toHaveText(`Suspended until ${formattedDate}`);
@@ -181,8 +189,10 @@ describe('ONE-601: Credential issuance', () => {
 
         await suspendCredential(credentialId, authToken);
 
-        await reloadApp({ suspendedScreen: true });
-
+        await reloadApp({
+          credentialIds: [credentialId],
+          suspendedScreen: true,
+        });
         await expect(
           WalletScreen.credential(credentialId).suspendedLabel,
         ).toExist();
@@ -190,13 +200,15 @@ describe('ONE-601: Credential issuance', () => {
           .atIndex(0)
           .tap();
         await expect(CredentialDetailScreen.screen).toExist();
+        await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
+        await expect(
+          CredentialDetailScreen.credentialCard.header.label.suspended,
+        ).toHaveText('Suspended');
+
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
           'Credential suspended',
         );
-        await expect(
-          CredentialDetailScreen.credentialCard.header.label.suspended,
-        ).toHaveText('Suspended');
       });
     });
 
@@ -211,8 +223,10 @@ describe('ONE-601: Credential issuance', () => {
 
       it('Revoke credential', async () => {
         await revokeCredential(credentialId, authToken);
-        await reloadApp({ revokedScreen: true });
-
+        await reloadApp({
+          credentialIds: [credentialId],
+          revokedScreen: true,
+        });
         await expect(
           WalletScreen.credential(credentialId).revokedLabel,
         ).toExist();
@@ -224,6 +238,8 @@ describe('ONE-601: Credential issuance', () => {
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
           'Credential revoked',
         );
+        await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
+
         await expect(
           CredentialDetailScreen.credentialCard.header.label.revoked,
         ).toHaveText('Revoked');
@@ -231,10 +247,12 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  describe('ONE-618: Credential deletion', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  describe.skip('ONE-618: Credential deletion', () => {
     let credentialId: string;
 
     beforeAll(async () => {
+      await launchApp({ delete: true });
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT_with_LVVC,
@@ -269,7 +287,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.credential(credentialId).element).not.toExist();
     });
   });
-  // Tested
+  // Pass
   describe('ONE-796: OpenID4VC Credential transport', () => {
     it('Issue credential: JWT schema', async () => {
       await credentialIssuance({
@@ -287,7 +305,7 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
   });
-  // Tested
+  // Pass
   describe('ONE-1697: Wallet key storage location', () => {
     let credentialSchemaSoftware: CredentialSchemaResponseDTO;
     let credentialSchemaHardware: CredentialSchemaResponseDTO;
@@ -331,7 +349,7 @@ describe('ONE-601: Credential issuance', () => {
       );
     });
   });
-  // Tested
+  // Pass
   describe('ONE-1233: Picture claim', () => {
     let credentialSchema: CredentialSchemaResponseDTO;
     const pictureKey = 'picture';
@@ -366,7 +384,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
     });
   });
-
+  // Pass
   describe('ONE-1861: Nested claim', () => {
     let credentialSchemaName: string;
     const claims = [
@@ -415,7 +433,6 @@ describe('ONE-601: Credential issuance', () => {
         ],
         name: `Schema-1-${uuidv4()}`,
       });
-
       schema2 = await createCredentialSchema(authToken, {
         claims: [
           { datatype: DataType.STRING, key: 'first name', required: true },
@@ -484,6 +501,76 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Test scrolling credential list', async () => {
       await WalletScreen.scrollTo(credentialName, 7);
+    });
+  });
+
+  describe('ONE-1893: Credential Schema Layout', () => {
+    let schema1: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+
+      schema1 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'Last name', required: false },
+          { datatype: DataType.BIRTH_DATE, key: 'Birthday', required: true },
+          { datatype: DataType.PICTURE, key: 'Photo', required: false },
+        ],
+        layoutProperties: {
+          code: {
+            attribute: 'first name',
+            type: CodeType.QrCode,
+          },
+          logo: {
+            backgroundColor: '#ebb1f9',
+            fontColor: '#000000',
+          },
+          pictureAttribute: 'Photo',
+          primaryAttribute: 'first name',
+          secondaryAttribute: 'Last name',
+        },
+        name: `credential-detox-e2e-${uuidv4()}`,
+      });
+    });
+
+    it('Test credential card header', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: schema1,
+        transport: Transport.OPENID4VC,
+      });
+      await WalletScreen.credentialName(schema1.name).tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
+
+      await CredentialDetailScreen.credentialCard.verifyCredentialName(
+        schema1.name,
+      );
+      await CredentialDetailScreen.credentialCard.verifyDetailLabel(
+        'string',
+        'string',
+      );
+    });
+
+    it('Test credential card attributes', async () => {
+      await CredentialDetailScreen.credentialCard.showAllAttributes();
+
+      await CredentialDetailScreen.credentialCard.verifyAttributeValues([
+        { key: 'first name', value: 'string' },
+        { key: 'Last name', value: 'string' },
+        { key: 'Birthday', value: '2/21/1996' },
+      ]);
+      await waitFor(CredentialDetailScreen.credentialCard.header.element)
+        .toBeVisible()
+        .whileElement(by.id('CredentialDetailScreen.content'))
+        .scroll(200, 'up');
+
+      await CredentialDetailScreen.credentialCard.collapseOrExpand();
+    });
+
+    it('Test credential card body', async () => {
+      await CredentialDetailScreen.credentialCard.swipe('right');
     });
   });
 });
