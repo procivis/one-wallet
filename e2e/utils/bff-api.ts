@@ -83,14 +83,25 @@ export async function createCredentialSchema(
   authToken: string,
   data?: Partial<CredentialSchemaData>,
 ): Promise<CredentialSchemaResponseDTO> {
-  const schemaData = {
-    claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
-    format: CredentialFormat.SDJWT,
-    layoutType: LayoutType.CARD,
-    name: `detox-e2e-revocable-${uuidv4()}`,
-    revocationMethod: RevocationMethod.STATUSLIST2021,
-    ...data,
-  };
+  const schemaData: CredentialSchemaData = Object.assign(
+    {
+      claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
+      format: CredentialFormat.SDJWT,
+      layoutProperties: {
+        background: {
+          color: '#1677ff',
+        },
+        logo: {
+          backgroundColor: '#ebb1f9',
+          fontColor: '#000000',
+        },
+      },
+      layoutType: LayoutType.CARD,
+      name: `detox-e2e-${uuidv4()}`,
+      revocationMethod: RevocationMethod.NONE,
+    },
+    data,
+  );
   const schemaId = await apiRequest(
     '/api/credential-schema/v1',
     authToken,
@@ -133,6 +144,9 @@ const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
       break;
     case DataType.DATE:
       value = '2023-08-21T07:29:27.850Z';
+      break;
+    case DataType.BIRTH_DATE:
+      value = '1996-02-21T21:00:00.000Z';
       break;
     case DataType.PICTURE:
       value =

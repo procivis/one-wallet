@@ -21,6 +21,7 @@ export async function pinSetup() {
 }
 
 type ReloadAllType = {
+  credentialIds?: string[];
   revokedScreen?: boolean;
   suspendedScreen?: boolean;
 };
@@ -29,17 +30,24 @@ export async function reloadApp(values?: ReloadAllType) {
   await device.launchApp({ newInstance: true });
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
-  if (values?.suspendedScreen) {
+
+  if (values?.suspendedScreen || values?.revokedScreen) {
     await expect(StatusCheckResultScreen.screen).toBeVisible();
+    if (values.credentialIds) {
+      const status = values.revokedScreen ? 'revoked' : 'suspended';
+      for (const credentialId of values.credentialIds) {
+        await expect(
+          StatusCheckResultScreen.credentialCard(credentialId).element,
+        ).toBeVisible();
+        await StatusCheckResultScreen.credentialCard(credentialId).verifyStatus(
+          status,
+        );
+      }
+    }
+
     await StatusCheckResultScreen.closeButton.tap();
-    await expect(WalletScreen.screen).toBeVisible();
-  } else if (values?.revokedScreen) {
-    await expect(StatusCheckResultScreen.screen).toBeVisible();
-    await StatusCheckResultScreen.closeButton.tap();
-    await expect(WalletScreen.screen).toBeVisible();
-  } else {
-    await expect(WalletScreen.screen).toBeVisible();
   }
+  await expect(WalletScreen.screen).toBeVisible();
 }
 
 export async function userAgreement() {

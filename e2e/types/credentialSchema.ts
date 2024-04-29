@@ -6,7 +6,8 @@ import {
 } from '../utils/enums';
 
 interface BackgroundLayoutProperties {
-  image: string;
+  color?: string;
+  image?: string;
 }
 interface CodeLayoutProperties {
   attribute: string;
