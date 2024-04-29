@@ -5,6 +5,7 @@ import {
   RevocationMethod,
   WalletKeyStorageType,
 } from '../utils/enums';
+import { LayoutProperties } from './credentialSchema';
 
 export interface CredentialSchemaListResponseDTO {
   createdDate: string;
@@ -14,6 +15,7 @@ export interface CredentialSchemaListResponseDTO {
   layoutType: LayoutType;
   name: string;
   revocationMethod: RevocationMethod;
+  schemaId: string;
   schemaType: string;
 }
 export interface CredentialClaimSchemaResponseDTO {
@@ -29,6 +31,7 @@ export interface CredentialClaimSchemaResponseDTO {
 export interface CredentialSchemaResponseDTO
   extends CredentialSchemaListResponseDTO {
   claims: CredentialClaimSchemaResponseDTO[];
+  layoutProperties: LayoutProperties;
   organisationId: string;
   schemaId: string;
   walletStorageType?: WalletKeyStorageType;

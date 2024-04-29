@@ -34,8 +34,13 @@ export const Credential: FC<CredentialProps> = ({
   if (!credential || !config) {
     return null;
   }
+  const testID = concatTestID('Credential.credential', credential.id);
 
-  const { card, attributes } = detailsCardFromCredential(credential, config);
+  const { card, attributes } = detailsCardFromCredential(
+    credential,
+    config,
+    testID,
+  );
   if (headerAccessory) {
     card.header.accessory = headerAccessory;
   }
@@ -52,7 +57,7 @@ export const Credential: FC<CredentialProps> = ({
       lastItem={lastItem}
       onImagePreview={onImagePreview}
       style={styles.credential}
-      testID={concatTestID('Credential.credential', credential.id)}
+      testID={testID}
     />
   );
 };

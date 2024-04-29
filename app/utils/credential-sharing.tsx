@@ -166,7 +166,7 @@ export const shareCredentialCardFromCredential = (
     selected: boolean,
   ) => void,
   config: Config,
-  testID: string | undefined,
+  testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
   const selectiveDisclosureSupported = supportsSelectiveDisclosure(
     credential,
