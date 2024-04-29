@@ -109,6 +109,19 @@ const getAttributeSelectorStatus = (
   return selected ? SelectorStatus.SelectedCheckmark : SelectorStatus.Empty;
 };
 
+// Returns a flat list of claims with their full JSON path as key
+const flattenClaims = (claims: Claim[], parentClaimPath = ''): Claim[] => {
+  return claims.reduce((acc, claim) => {
+    const claimPath = parentClaimPath
+      ? `${parentClaimPath}/${claim.key}`
+      : claim.key;
+    if (Array.isArray(claim.value)) {
+      return [...acc, ...flattenClaims(claim.value, claimPath)];
+    }
+    return [...acc, { ...claim, key: claimPath }];
+  }, [] as Claim[]);
+};
+
 const getDisplayedAttributes = (
   request: PresentationDefinitionRequestedCredential,
   validityState: ValidityState,
@@ -132,9 +145,12 @@ const getDisplayedAttributes = (
       credential,
       selected,
     );
-    const claim = credential?.claims.find(
-      ({ key }) => key === field.keyMap[credential.id],
-    );
+
+    const claim =
+      credential &&
+      flattenClaims(credential.claims).find(({ key }) => {
+        return key === field.keyMap[credential.id];
+      });
     return { claim, field, id: field.id, selected, status };
   });
 };
