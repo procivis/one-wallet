@@ -8,11 +8,11 @@ import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
 import { LoadingResultState, Transport } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
-interface credentialIssuanceProps {
+interface CredentialIssuanceProps {
   authToken?: string;
   claimValues?: Array<{
     claimId: string;
-    claims?: credentialIssuanceProps['claimValues'][];
+    claims?: CredentialIssuanceProps['claimValues'][];
     value: string;
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
@@ -27,7 +27,7 @@ export enum CredentialAction {
 
 const acceptCredentialTestCase = async (
   credentialId: string,
-  data: credentialIssuanceProps,
+  data: CredentialIssuanceProps,
   expectedResult: LoadingResultState,
 ) => {
   await device.disableSynchronization();
@@ -39,7 +39,7 @@ const acceptCredentialTestCase = async (
     .scroll(400, 'down');
 
   await CredentialOfferScreen.acceptButton.tap();
-  await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+  await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
 
   if (expectedResult === LoadingResultState.Success) {
     await waitFor(CredentialAcceptProcessScreen.closeButton)
@@ -52,9 +52,10 @@ const acceptCredentialTestCase = async (
     return;
   }
   await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
+  await CredentialAcceptProcessScreen.closeButton.tap();
 
-  await waitFor(WalletScreen.screen).toBeVisible().withTimeout(6000);
   await device.enableSynchronization();
+  await expect(WalletScreen.screen).toBeVisible();
 
   await expect(
     WalletScreen.credentialName(data.credentialSchema.name).atIndex(0),
@@ -67,7 +68,7 @@ const rejectCredentialTestCase = async () => {
 };
 
 export const credentialIssuance = async (
-  data: credentialIssuanceProps,
+  data: CredentialIssuanceProps,
   action: CredentialAction = CredentialAction.ACCEPT,
   expectedResult: LoadingResultState = LoadingResultState.Success,
 ) => {
