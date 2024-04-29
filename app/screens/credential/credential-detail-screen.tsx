@@ -113,11 +113,11 @@ const CredentialDetailScreen: FC = () => {
   if (!credential) {
     return <ActivityIndicator />;
   }
-
+  const testID = 'CredentialDetailScreen.card';
   const { card, attributes } = detailsCardFromCredential(
     credential,
     config,
-    'CredentialDetailScreen.card',
+    testID,
   );
 
   return (
@@ -157,7 +157,7 @@ const CredentialDetailScreen: FC = () => {
         onImagePreview={onImagePreview}
         showAllButtonLabel={translate('common.seeAll')}
         style={styles.credential}
-        testID="CredentialDetailScreen.detail"
+        testID={testID}
       />
       <HistorySection
         historyEntries={credentialHistory}
