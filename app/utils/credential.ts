@@ -124,10 +124,14 @@ export const cardHeaderFromCredentialListItem = (
         const primary = findClaimByPath(
           layoutProperties?.primaryAttribute,
           claims,
-        )?.value;
+        );
 
         if (primary) {
-          contentDetail += primary;
+          if (primary.dataType === DataTypeEnum.Date) {
+            contentDetail += formatDate(new Date(primary.value));
+          } else {
+            contentDetail += primary.value;
+          }
         } else {
           contentDetail += formatDateTime(new Date(credential.issuanceDate));
         }
@@ -135,11 +139,17 @@ export const cardHeaderFromCredentialListItem = (
         const secondary = findClaimByPath(
           layoutProperties?.secondaryAttribute,
           claims,
-        )?.value;
+        );
 
         if (secondary) {
           const interpunct = ' · ';
-          contentDetail += `${interpunct}${secondary}`;
+          if (secondary.dataType === DataTypeEnum.Date) {
+            contentDetail += `${interpunct}${formatDate(
+              new Date(secondary.value),
+            )}`;
+          } else {
+            contentDetail += `${interpunct}${secondary.value}`;
+          }
         }
 
         credentialDetail = contentDetail;
