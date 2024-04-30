@@ -45,8 +45,16 @@ export default abstract class CredentialDetailScreen {
     return this.historyEntry(itemId);
   }
 
-  static historySeeAllButton() {
+  static get historySeeAllButton() {
     return element(by.id('CredentialDetailScreen.history.seeAll'));
+  }
+
+  static async openCredentialHistoryScreen() {
+    await waitFor(this.historySeeAllButton)
+      .toBeVisible()
+      .whileElement(by.id('CredentialDetailScreen.content'))
+      .scroll(100, 'down');
+    await this.historySeeAllButton.tap();
   }
 
   static get credentialCard() {

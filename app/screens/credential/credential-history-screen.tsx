@@ -89,6 +89,7 @@ export const CredentialHistoryScreen: FC = () => {
             : undefined
         }
         query={query}
+        testID="CredentialHistoryScreen.list"
       />
     </View>
   );
