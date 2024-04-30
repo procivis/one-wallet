@@ -2,7 +2,6 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
-  useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
@@ -20,8 +19,6 @@ const PinCodeSetScreen: FC = () => {
     navigation.goBack();
   }, [navigation]);
   const { closeTimeout } = useCloseButtonTimeout(true, closeButtonHandler);
-
-  useBlockOSBackNavigation();
 
   return (
     <LoadingResultScreen
