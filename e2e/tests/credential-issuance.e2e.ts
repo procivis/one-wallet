@@ -2,14 +2,21 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
+import CredentialNerdScreen, {
+  Attributes,
+  AttributeTestID,
+} from '../page-objects/credential/CredentialNerdScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
-import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
+import CredentialDetailScreen, {
+  Action,
+} from '../page-objects/CredentialDetailScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
   createCredentialSchema,
+  getCredentialDetail,
   revokeCredential,
   suspendCredential,
 } from '../utils/bff-api';
@@ -264,11 +271,11 @@ describe('ONE-601: Credential issuance', () => {
       await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
-      await CredentialDetailScreen.action('Delete credential').tap();
+      await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
     });
 
     it('Cancel confirmation', async () => {
-      await CredentialDetailScreen.action('Cancel').tap();
+      await CredentialDetailScreen.action(Action.CLOSE).tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       // await expect(CredentialDetailScreen.status.element).toExist();
       // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
@@ -279,7 +286,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Accept confirmation', async () => {
-      await CredentialDetailScreen.action('Delete').tap();
+      await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
       await expect(CredentialDeleteProcessScreen.screen).toBeVisible();
       await expect(CredentialDeleteProcessScreen.status.success).toBeVisible();
       await CredentialDeleteProcessScreen.closeButton.tap();
@@ -571,6 +578,81 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Test credential card body', async () => {
       await CredentialDetailScreen.credentialCard.swipe('right');
+    });
+  });
+
+  describe('ONE-1879: Credential Schema Layout', () => {
+    let schema1: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      schema1 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
+          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+        ],
+        format: CredentialFormat.SDJWT,
+        layoutProperties: {
+          code: {
+            attribute: 'Attribute 1',
+            type: CodeType.QrCode,
+          },
+          logo: {
+            backgroundColor: '#ebb1f9',
+            fontColor: '#000000',
+          },
+          primaryAttribute: 'Attribute 1',
+          secondaryAttribute: 'Attribute 2',
+        },
+        name: `credential-detox-e2e-${uuidv4()}`,
+        revocationMethod: RevocationMethod.LVVC,
+      });
+    });
+
+    it('Detailed credential information', async () => {
+      const credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: schema1,
+        transport: Transport.OPENID4VC,
+      });
+      await WalletScreen.credentialName(schema1.name).tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await CredentialDetailScreen.actionButton.tap();
+      const credentialDetail = await getCredentialDetail(
+        credentialId,
+        authToken,
+      );
+      await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
+      await expect(CredentialNerdScreen.screen).toBeVisible();
+      await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
+        credentialDetail.issuerDid.did,
+      );
+
+      const attributes: Attributes = {
+        [AttributeTestID.schemaName]: {
+          label: 'Credential schema',
+          value: credentialDetail.schema.name,
+        },
+        [AttributeTestID.issuerDID]: {
+          label: 'Issuer DID',
+          showMoreButton: true,
+          value: credentialDetail.issuerDid.did,
+        },
+        [AttributeTestID.credentialFormat]: {
+          label: 'Credential format',
+          value: credentialDetail.schema.format,
+        },
+        [AttributeTestID.revocationMethod]: {
+          label: 'Revocation method',
+          value: 'LVVC (Linked Validity Verifiable Credential)',
+        },
+        [AttributeTestID.validity]: {
+          label: 'Validity',
+          value: 'Valid',
+        },
+      };
+      await CredentialNerdScreen.verifyAttributes(attributes);
+      await CredentialNerdScreen.close();
     });
   });
 });

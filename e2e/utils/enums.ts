@@ -85,3 +85,20 @@ export enum LoadingResultState {
   InProgress = 'inProgress',
   Success = 'success',
 }
+
+export enum CredentialRole {
+  HOLDER = 'HOLDER',
+  ISSUER = 'ISSUER',
+  VERIFIER = 'VERIFIER',
+}
+
+export enum CredentialState {
+  ACCEPTED = 'ACCEPTED',
+  CREATED = 'CREATED',
+  ERROR = 'ERROR',
+  OFFERED = 'OFFERED',
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED',
+  REVOKED = 'REVOKED',
+  SUSPENDED = 'SUSPENDED',
+}

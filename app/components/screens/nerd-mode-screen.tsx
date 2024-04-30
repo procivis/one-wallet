@@ -100,7 +100,7 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
           <NerdModeItem
             {...item}
             last={lastElementsForSection[section.title] === item.attributeKey}
-            testID={concatTestID(testID, item.attributeKey)}
+            testID={concatTestID(testID, item.testID)}
           />
         )}
         renderSectionHeader={({ section }) => {
@@ -121,6 +121,7 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
         sections={sections}
         stickySectionHeadersEnabled={false}
         style={{ backgroundColor: colorScheme.nerdView.background }}
+        testID={testID}
       />
     </>
   );
