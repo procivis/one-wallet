@@ -91,6 +91,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         animate: isFocused,
         label: translate(`invitation.process.${state}.title`),
         state,
+        testID: 'InvitationProcessScreen.animation',
       }}
       testID="InvitationProcessScreen"
     />

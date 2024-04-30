@@ -27,7 +27,13 @@ type ReloadAllType = {
 };
 
 export async function reloadApp(values?: ReloadAllType) {
-  await device.launchApp({ newInstance: true });
+  await device.launchApp({
+    languageAndLocale: {
+      language: 'en-US',
+      locale: 'en-US',
+    },
+    newInstance: true,
+  });
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
 
@@ -65,6 +71,10 @@ type LaunchAppConfig = {
 export async function launchApp(config?: LaunchAppConfig) {
   await device.launchApp({
     delete: config?.delete,
+    languageAndLocale: {
+      language: 'en-US',
+      locale: 'en-US',
+    },
     permissions: { camera: 'YES' },
   });
   await expect(OnboardingSetupScreen.screen).toBeVisible();

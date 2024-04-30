@@ -81,6 +81,7 @@ const ProcessingScreen: FC = () => {
         animate: isFocused,
         label: translate(`restoreBackup.processing.${state}`),
         state,
+        testID: 'RestoreBackupProcessingScreen.animation',
       }}
       testID="RestoreBackupProcessingScreen"
     />

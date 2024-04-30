@@ -48,20 +48,20 @@ export default function CredentialCard(testID: string) {
         get label() {
           return {
             get revoked() {
-              return element(by.id(`${testID}.revoked`));
+              return element(by.id(`${id}.revoked`));
             },
             get suspended() {
-              return element(by.id(`${testID}.suspended`));
+              return element(by.id(`${id}.suspended`));
             },
           };
         },
         get logo() {
           return {
             get icon() {
-              return element(by.id(`${testID}.logoIcon`));
+              return element(by.id(`${id}.logoIcon`));
             },
             get name() {
-              return element(by.id(`${testID}.logoName`));
+              return element(by.id(`${id}.logoName`));
             },
           };
         },

@@ -77,6 +77,7 @@ const UnlockScreen: FC = () => {
         animate: isFocused,
         label: translate(`restoreBackup.unlock.unlocking`),
         state: LoaderViewState.InProgress,
+        testID: 'RestoreBackupUnlockScreen.animation',
       }}
       testID="RestoreBackupUnlockScreen"
     />

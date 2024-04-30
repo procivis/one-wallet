@@ -88,6 +88,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
         animate: true,
         label: translate(`credentialDelete.${state}.title`),
         state,
+        testID: 'CredentialDeleteProcessScreen.animation',
       }}
       testID="CredentialDeleteProcessScreen"
     />
