@@ -39,3 +39,13 @@ export interface CredentialSchemaData {
   revocationMethod: RevocationMethod;
   walletStorageType?: WalletKeyStorageType;
 }
+
+export interface CredentialDetailCredSchemaDTO {
+  createdDate: string;
+  format: CredentialFormat;
+  id: string;
+  lastModified: string;
+  name: string;
+  organisationId: string;
+  revocationMethod: RevocationMethod;
+}

@@ -1,15 +1,6 @@
-import { CredentialFormat, DataType, RevocationMethod } from '../utils/enums';
+import { DataType } from '../utils/enums';
 import { CredentialClaimSchemaResponseDTO } from './credential';
-
-export interface CredentialDetailCredSchemaDTO {
-  createdDate: string;
-  format: CredentialFormat;
-  id: string;
-  lastModified: string;
-  name: string;
-  organisationId: string;
-  revocationMethod: RevocationMethod;
-}
+import { CredentialDetailCredSchemaDTO } from './credentialSchema';
 
 export interface ProofSchemaResponseClaimDTO {
   createdDate: string;
