@@ -1,20 +1,20 @@
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { CreateBackupProcessingNavigatorParamList } from './create-backup-processing-routes';
+
 export type CreateBackupNavigatorParamList = {
+  CheckPassword: {
+    password: string;
+  };
   CreateBackupDashboard:
     | {
         backupFileName: string;
         backupFilePath: string;
       }
     | undefined;
-  Preview: {
-    recoveryPassword: string;
-  };
-  Processing: {
-    recoveryPassword: string;
-  };
-  RecoveryPassword: undefined;
+  Processing: NavigatorScreenParams<CreateBackupProcessingNavigatorParamList>;
+  SetPassword: undefined;
 };
 
 export type CreateBackupRouteProp<

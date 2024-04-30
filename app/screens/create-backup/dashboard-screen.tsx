@@ -1,17 +1,17 @@
 import {
-  FlatListView,
+  formatDateTime,
+  TouchableOpacity,
+  Typography,
   useAppColorScheme,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import { NativeModules, Platform, StyleSheet } from 'react-native';
+import React, { FC, useCallback, useEffect } from 'react';
+import { NativeModules, Platform, StyleSheet, View } from 'react-native';
 import { unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
 import { BackupScreen } from '../../components/backup/backup-screen';
-import { Section } from '../../components/common/section';
-import { NextIcon } from '../../components/icon/common-icon';
 import { useHistory } from '../../hooks/core/history';
 import { translate } from '../../i18n';
 import {
@@ -36,20 +36,6 @@ const DashboardScreen: FC = () => {
     pageSize: 1,
   });
   const lastBackupEntry = historyData?.pages?.[0]?.values?.[0];
-
-  const items = useMemo(() => {
-    if (!lastBackupEntry) {
-      return [];
-    }
-    return [
-      {
-        rightAccessory: <NextIcon color={colorScheme.text} />,
-        subtitle: formatTimestamp(new Date(lastBackupEntry.createdDate)),
-        testID: 'CreateBackupDashboardScreen.history',
-        title: getEntryTitle(lastBackupEntry),
-      },
-    ];
-  }, [colorScheme.text, lastBackupEntry]);
 
   const handleItemPress = useCallback(() => {
     settingsNavigation.navigate('History', {
@@ -105,29 +91,93 @@ const DashboardScreen: FC = () => {
     <BackupScreen
       cta={translate('createBackup.dashboard.cta')}
       description={translate('createBackup.dashboard.description')}
-      onCta={() => navigation.navigate('RecoveryPassword')}
+      onCta={() => navigation.navigate('SetPassword')}
       testID="CreateBackupDashboardScreen"
       title={translate('createBackup.dashboard.title')}
     >
-      <Section
-        style={styles.noHorizontalPadding}
-        title={translate('createBackup.dashboard.lastBackup')}
+      <Typography
+        accessibilityRole="header"
+        color={colorScheme.text}
+        preset="m"
+        style={styles.sectionHeader}
       >
-        <FlatListView
-          emptyListSubtitle={translate('createBackup.dashboard.empty.subtitle')}
-          emptyListTitle={translate('createBackup.dashboard.empty.title')}
-          items={items}
-          onItemSelected={handleItemPress}
-          style={styles.noHorizontalPadding}
-        />
-      </Section>
+        {translate('createBackup.dashboard.lastBackup')}
+      </Typography>
+      <View style={[styles.item, { backgroundColor: colorScheme.background }]}>
+        {lastBackupEntry ? (
+          <TouchableOpacity
+            onPress={handleItemPress}
+            style={styles.historyItem}
+          >
+            <View style={styles.left}>
+              <Typography color={colorScheme.text} preset="s">
+                {getEntryTitle(lastBackupEntry)}
+              </Typography>
+              <Typography
+                color={colorScheme.text}
+                preset="s/line-height-small"
+                style={styles.shaded}
+              >
+                {formatDateTime(new Date(lastBackupEntry.createdDate))}
+              </Typography>
+            </View>
+            <Typography
+              color={colorScheme.text}
+              preset="s/line-height-small"
+              style={[styles.shaded, styles.time]}
+            >
+              {formatTimestamp(new Date(lastBackupEntry.createdDate))}
+            </Typography>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.emtpy}>
+            <Typography align="center" color={colorScheme.text} preset="s">
+              {translate('createBackup.dashboard.empty.title')}
+            </Typography>
+            <Typography
+              align="center"
+              color={colorScheme.text}
+              preset="s/line-height-small"
+              style={styles.shaded}
+            >
+              {translate('createBackup.dashboard.empty.subtitle')}
+            </Typography>
+          </View>
+        )}
+      </View>
     </BackupScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  noHorizontalPadding: {
-    paddingHorizontal: 0,
+  emtpy: {
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  historyItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 12,
+  },
+  item: {
+    borderRadius: 12,
+    paddingBottom: 12,
+    paddingTop: 8,
+  },
+  left: {
+    flex: 1,
+  },
+  sectionHeader: {
+    marginHorizontal: 4,
+    marginVertical: 16,
+  },
+  shaded: {
+    opacity: 0.7,
+  },
+  time: {
+    marginLeft: 12,
+    marginRight: 8,
   },
 });
 

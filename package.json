@@ -44,6 +44,7 @@
     "@sentry/react-native": "^5.19.3",
     "apisauce": "2.0.0",
     "buffer": "^6.0.3",
+    "check-password-strength": "^2.0.10",
     "i18n-js": "3.8.0",
     "lodash": "^4.17.21",
     "lottie-react-native": "^5.1.5",
