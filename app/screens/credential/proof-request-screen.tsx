@@ -2,7 +2,6 @@ import {
   Button,
   concatTestID,
   EntityCluster,
-  useBlockOSBackNavigation,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
@@ -55,8 +54,6 @@ const ProofRequestScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
   const isFocused = useIsFocused();
   const { core } = useONECore();
-
-  useBlockOSBackNavigation();
 
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
   const { data: allCredentials } = useCredentials();
