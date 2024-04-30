@@ -60,7 +60,7 @@ const HistorySuspendIcon: FC<SvgProps> = (props) => {
 };
 
 // https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?node-id=454-100241
-const HistoryStatusAcceptedIcon: FC<SvgProps> = (props) => {
+export const HistoryStatusAcceptedIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();
   return (
     <Svg fill="none" height="22" viewBox="0 0 22 22" width="22" {...props}>
