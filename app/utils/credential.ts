@@ -16,10 +16,10 @@ import {
   CredentialDetail,
   CredentialListItem,
   CredentialListQuery,
-  CredentialSchemaType,
   CredentialStateEnum,
   DataTypeEnum,
   FormatFeatureEnum,
+  KnownCredentialSchemaType,
 } from '@procivis/react-native-one-core';
 import { ColorValue } from 'react-native';
 
@@ -204,7 +204,7 @@ export const getCredentialCardPropsFromCredential = (
 
   const procivisBackground =
     credential.schema.schemaType ===
-      CredentialSchemaType.PROCIVIS_ONE_SCHEMA2024 &&
+      KnownCredentialSchemaType.PROCIVIS_ONE_SCHEMA2024 &&
     !layoutProperties?.background;
 
   if (procivisBackground) {

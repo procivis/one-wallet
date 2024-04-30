@@ -7,8 +7,6 @@ import {
 import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialStateEnum,
-  OneError,
-  OneErrorCode,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
@@ -211,12 +209,7 @@ const ProofRequestScreen: FunctionComponent = () => {
       return;
     }
     rejectProof(interactionId).catch((err) => {
-      if (
-        !(err instanceof OneError) ||
-        err.code !== OneErrorCode.NotSupported
-      ) {
-        reportException(err, 'Reject Proof failure');
-      }
+      reportException(err, 'Reject Proof failure');
     });
   }, [interactionId, isFocused, rejectProof]);
 
