@@ -10,7 +10,10 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
-import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
+import {
+  HistoryEntityTypeEnum,
+  HistoryListItem,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -175,7 +178,21 @@ const HistorySection: FC<{
   const colorScheme = useAppColorScheme();
   const previewHistoryItems = historyEntries.slice(0, DISPLAYED_HISTORY_ITEMS);
   const expandable = historyEntries.length > DISPLAYED_HISTORY_ITEMS;
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
 
+  const handleProofPress = useCallback(
+    (entry: HistoryListItem) => {
+      rootNavigation.navigate('Settings', {
+        params: {
+          params: { entry },
+          screen: 'Detail',
+        },
+        screen: 'History',
+      });
+    },
+    [rootNavigation],
+  );
   return (
     <>
       <Typography
@@ -195,6 +212,7 @@ const HistorySection: FC<{
             item={item}
             key={item.id}
             last={!expandable && idx === length - 1}
+            onPress={handleProofPress}
             testID={concatTestID(
               'CredentialDetailScreen.history',
               idx.toString(),
