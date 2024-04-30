@@ -22,6 +22,10 @@ describe('ONE-1530: Backup & Restore', () => {
   describe('Onboarding', () => {
     beforeAll(async () => {
       await device.launchApp({
+        languageAndLocale: {
+          language: 'en-US',
+          locale: 'en-US',
+        },
         permissions: { camera: 'YES' },
       });
     });
@@ -46,6 +50,10 @@ describe('ONE-1530: Backup & Restore', () => {
         format: CredentialFormat.JWT,
       });
       await device.launchApp({
+        languageAndLocale: {
+          language: 'en-US',
+          locale: 'en-US',
+        },
         permissions: { camera: 'YES' },
       });
     });

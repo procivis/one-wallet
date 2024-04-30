@@ -51,6 +51,7 @@ export const validityCheckedCardFromCredential = (
     credential,
     credential.claims,
     notice,
+    testID,
   );
   return {
     ...card,

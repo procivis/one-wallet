@@ -41,6 +41,7 @@ const PinCodeSetScreen: FC = () => {
         animate: false,
         label: translate(`settings.security.pinCodeSet.title`),
         state: LoaderViewState.Success,
+        testID: 'PinCodeSetScreen.animation',
       }}
       testID="PinCodeSetScreen"
     />

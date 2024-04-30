@@ -50,6 +50,6 @@ export default abstract class CredentialDetailScreen {
   }
 
   static get credentialCard() {
-    return CredentialCard('CredentialDetailScreen.card');
+    return CredentialCard('CredentialDetailScreen.detailsCard');
   }
 }

@@ -1,4 +1,4 @@
-import { expect } from 'detox';
+import { device, expect } from 'detox';
 
 export default abstract class UserAgreementScreen {
   static get screen() {
@@ -19,7 +19,13 @@ export default abstract class UserAgreementScreen {
         return field;
       },
       verifyChecked(checked: boolean = true) {
-        return expect(field).toHaveLabel(checked ? 'checked' : 'not checked');
+        if (device.getPlatform() === 'ios') {
+          return expect(field).toHaveValue(
+            checked ? 'checkbox, checked' : 'checkbox, not checked',
+          );
+        } else {
+          return expect(field).toHaveLabel(checked ? 'checked' : 'not checked');
+        }
       },
     };
   }

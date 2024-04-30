@@ -13,11 +13,14 @@ export default abstract class WalletScreen {
       get element() {
         return element(by.id(id));
       },
+      get header() {
+        return element(by.id(`${id}.header`));
+      },
       get revokedLabel() {
-        return element(by.id(`${id}.revoked`));
+        return element(by.id(`${id}.header.revoked`));
       },
       get suspendedLabel() {
-        return element(by.id(`${id}.suspended`));
+        return element(by.id(`${id}.header.suspended`));
       },
     };
   }

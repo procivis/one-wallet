@@ -116,7 +116,7 @@ const CredentialDetailScreen: FC = () => {
   if (!credential) {
     return <ActivityIndicator />;
   }
-  const testID = 'CredentialDetailScreen.card';
+  const testID = 'CredentialDetailScreen.detailsCard';
   const { card, attributes } = detailsCardFromCredential(
     credential,
     config,
