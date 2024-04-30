@@ -129,6 +129,7 @@ const ProofProcessScreen: FunctionComponent = () => {
         animate: isFocused,
         label: translate(`proofRequest.process.${state}.title`),
         state,
+        testID: 'ProofRequestAcceptProcessScreen.animation',
       }}
       testID="ProofRequestAcceptProcessScreen"
     />
