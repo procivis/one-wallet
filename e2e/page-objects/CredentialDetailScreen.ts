@@ -1,5 +1,11 @@
 import CredentialCard from './components/CredentialCard';
 
+export enum Action {
+  CLOSE = 'Close',
+  DELETE_CREDENTIAL = 'Delete credential',
+  MORE_INFORMATION = 'More information',
+}
+
 export default abstract class CredentialDetailScreen {
   static get screen() {
     return element(by.id('CredentialDetailScreen'));
@@ -9,7 +15,7 @@ export default abstract class CredentialDetailScreen {
     return element(by.id('CredentialDetailScreen.header.back'));
   }
 
-  static action(actionText: string) {
+  static action(actionText: Action) {
     return element(by.text(actionText));
   }
 

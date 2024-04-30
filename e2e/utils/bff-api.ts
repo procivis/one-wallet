@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   CredentialClaimSchemaResponseDTO,
+  CredentialDetailResponseDTO,
   CredentialSchemaResponseDTO,
 } from '../types/credential';
 import { CredentialSchemaData } from '../types/credentialSchema';
@@ -314,4 +315,11 @@ export async function suspendCredential(
     'POST',
     payload,
   );
+}
+
+export async function getCredentialDetail(
+  credentialId: string,
+  authToken: string,
+): Promise<CredentialDetailResponseDTO> {
+  return apiRequest(`/api/credential/v1/${credentialId}`, authToken);
 }
