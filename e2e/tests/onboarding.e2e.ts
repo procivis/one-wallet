@@ -8,7 +8,12 @@ import { reloadApp, userAgreement } from '../utils/init';
 
 describe('Onboarding', () => {
   beforeAll(async () => {
-    await device.launchApp({});
+    await device.launchApp({
+      languageAndLocale: {
+        language: 'en-US',
+        locale: 'en-US',
+      },
+    });
   });
 
   it('shows PIN init screen', async () => {
@@ -31,7 +36,13 @@ describe('Onboarding', () => {
   });
 
   it('wrong PIN entry keeps the Lock screen open', async () => {
-    await device.launchApp({ newInstance: true });
+    await device.launchApp({
+      languageAndLocale: {
+        language: 'en-US',
+        locale: 'en-US',
+      },
+      newInstance: true,
+    });
     await expect(PinCodeScreen.Check.screen).toBeVisible();
     await expect(PinCodeScreen.Check.error).toHaveText('');
     await PinCodeScreen.Check.digit(2).multiTap(6);

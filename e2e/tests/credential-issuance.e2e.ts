@@ -7,6 +7,7 @@ import CredentialNerdScreen, {
   AttributeTestID,
 } from '../page-objects/credential/CredentialNerdScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
+import CredentialDeletePromptScreen from '../page-objects/CredentialDeletePromptScreen';
 import CredentialDetailScreen, {
   Action,
 } from '../page-objects/CredentialDetailScreen';
@@ -20,7 +21,7 @@ import {
   revokeCredential,
   suspendCredential,
 } from '../utils/bff-api';
-import { formatDate } from '../utils/date';
+import { formatDateTime } from '../utils/date';
 import {
   CodeType,
   CredentialFormat,
@@ -118,7 +119,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Revoked credential detail screen', async () => {
-      await WalletScreen.credential(credentialId).element.tap();
+      await WalletScreen.credential(credentialId).header.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
@@ -155,7 +156,7 @@ describe('ONE-601: Credential issuance', () => {
         const suspendedDate = new Date();
         suspendedDate.setHours(0, 0, 0, 0);
         suspendedDate.setDate(suspendedDate.getDate() + 1);
-        const formattedDate = formatDate(suspendedDate);
+        const formattedDate = formatDateTime(suspendedDate);
 
         await suspendCredential(
           credentialId,
@@ -254,8 +255,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip('ONE-618: Credential deletion', () => {
+  describe('ONE-618: Credential deletion', () => {
     let credentialId: string;
 
     beforeAll(async () => {
@@ -268,17 +268,22 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     beforeEach(async () => {
-      await WalletScreen.credential(credentialId).element.tap();
+      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await WalletScreen.credential(credentialId).header.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
     });
 
     it('Cancel confirmation', async () => {
-      await CredentialDetailScreen.action(Action.CLOSE).tap();
+      await CredentialDeletePromptScreen.cancelButton.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
-      // await expect(CredentialDetailScreen.status.element).toExist();
-      // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
+      await expect(
+        CredentialDetailScreen.credentialCard.header.label.revoked,
+      ).not.toExist();
+      await expect(
+        CredentialDetailScreen.credentialCard.header.label.suspended,
+      ).not.toExist();
 
       await CredentialDetailScreen.backButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
@@ -286,10 +291,17 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Accept confirmation', async () => {
-      await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
+      await device.disableSynchronization();
+      await CredentialDeletePromptScreen.deleteButton.longPress(3001);
+      await waitFor(CredentialDeleteProcessScreen.screen)
+        .toBeVisible()
+        .withTimeout(5000);
       await expect(CredentialDeleteProcessScreen.screen).toBeVisible();
-      await expect(CredentialDeleteProcessScreen.status.success).toBeVisible();
+      await waitFor(CredentialDeleteProcessScreen.status.success)
+        .toBeVisible()
+        .withTimeout(3000);
       await CredentialDeleteProcessScreen.closeButton.tap();
+      await device.enableSynchronization();
       await expect(WalletScreen.screen).toBeVisible();
       await expect(WalletScreen.credential(credentialId).element).not.toExist();
     });
