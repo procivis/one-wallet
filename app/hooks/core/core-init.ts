@@ -24,8 +24,13 @@ const generateHwDid = async (core: ONECore) => {
       storageParams: {},
       storageType: 'SECURE_ELEMENT',
     })
-    // ignore if HW key cannot be created
-    .catch(() => null);
+    .catch((e) => {
+      // ignore if HW keys not supported by device
+      if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+        return null;
+      }
+      throw e;
+    });
 
   if (hwKeyId) {
     return core.createDid({
