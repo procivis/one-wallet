@@ -3,7 +3,6 @@ import {
   CredentialDetailsCard,
   EntityCluster,
   useAppColorScheme,
-  useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -47,8 +46,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
       credentialId,
     });
   }, [credentialId, navigation]);
-
-  useBlockOSBackNavigation();
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
