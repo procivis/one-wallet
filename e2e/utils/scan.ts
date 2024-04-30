@@ -13,6 +13,10 @@ import { CORRECT_PIN_DIGIT } from './init';
 export async function scanURL(url: string) {
   // openUrl only works on iOS, on android the app must be restarted
   await device.launchApp({
+    languageAndLocale: {
+      language: 'en-US',
+      locale: 'en-US',
+    },
     newInstance: true,
     // workaround detox bug: https://github.com/wix/Detox/issues/2549
     url: device.getPlatform() === 'android' ? url.replace(/&/g, '\\&') : url,
