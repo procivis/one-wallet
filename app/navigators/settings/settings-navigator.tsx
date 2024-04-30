@@ -36,7 +36,16 @@ const SettingsNavigator = () => {
           presentation: 'fullScreenModal',
         }}
       />
-      <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
+      <Stack.Screen
+        component={BiometricsSetScreen}
+        name="BiometricsSet"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'formSheet',
+        }}
+      />
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
       <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
       <Stack.Screen component={DashboardScreen} name="SettingsDashboard" />
