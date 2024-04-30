@@ -167,6 +167,32 @@ const WalletScreen: FunctionComponent = observer(() => {
       style={[styles.background, { backgroundColor: colorScheme.background }]}
       testID="WalletScreen"
     >
+      <Header
+        onSearchPhraseChange={!isEmpty ? setSearchPhrase : undefined}
+        rightButton={
+          <TouchableOpacity
+            accessibilityLabel={translate('wallet.settings')}
+            onPress={handleWalletSettingsClick}
+            style={styles.settingsButton}
+            testID="WalletScreen.header.action-settings"
+          >
+            <OptionsIcon color={colorScheme.text} />
+          </TouchableOpacity>
+        }
+        searchPhrase={searchPhrase}
+        style={[
+          styles.header,
+          {
+            backgroundColor: colorScheme.background,
+            paddingTop: safeAreaInsets.top,
+          },
+        ]}
+        testID={'WalletScreen.header'}
+        text={{
+          searchPlaceholder: translate('wallet.search'),
+        }}
+        title={translate('wallet.title')}
+      />
       <SectionList
         ListEmptyComponent={
           credentials ? (
@@ -229,32 +255,7 @@ const WalletScreen: FunctionComponent = observer(() => {
             </View>
           ) : undefined
         }
-        ListHeaderComponent={
-          <Header
-            onSearchPhraseChange={!isEmpty ? setSearchPhrase : undefined}
-            rightButton={
-              <TouchableOpacity
-                accessibilityLabel={translate('wallet.settings')}
-                onPress={handleWalletSettingsClick}
-                style={styles.settingsButton}
-                testID="WalletScreen.header.action-settings"
-              >
-                <OptionsIcon color={colorScheme.text} />
-              </TouchableOpacity>
-            }
-            searchPhrase={searchPhrase}
-            testID={'WalletScreen.header'}
-            text={{
-              searchPlaceholder: translate('wallet.search'),
-            }}
-            title={translate('wallet.title')}
-          />
-        }
-        ListHeaderComponentStyle={[
-          styles.header,
-          { paddingTop: safeAreaInsets.top },
-        ]}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={isEmpty && styles.contentContainer}
         key={locale}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.1}
@@ -298,7 +299,8 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   header: {
-    marginHorizontal: -16,
+    alignSelf: 'center',
+    marginHorizontal: 16,
   },
   itemIcon: {
     borderRadius: 0,
@@ -307,7 +309,6 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginHorizontal: 16,
-    overflow: 'visible',
     paddingHorizontal: 0,
   },
   listItem: {
@@ -327,17 +328,6 @@ const styles = StyleSheet.create({
   settingsButton: {
     height: 24,
     width: 24,
-  },
-  title: {
-    borderRadius: 20,
-    marginBottom: 0,
-    paddingBottom: 4,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-  },
-  titleWrapper: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
   },
 });
 
