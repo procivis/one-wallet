@@ -37,13 +37,7 @@ export const useCreateBackup = () => {
     }: {
       outputPath: string;
       password: string;
-    }) =>
-      core.createBackup(password, outputPath).catch((e) => {
-        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
-          return;
-        }
-        throw e;
-      }),
+    }) => core.createBackup(password, outputPath),
     {
       onSuccess: () => queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY),
     },
@@ -56,12 +50,7 @@ export const useUnpackBackup = () => {
 
   return useMutation(
     async ({ password, inputPath }: { inputPath: string; password: string }) =>
-      core.unpackBackup(password, inputPath).catch((e) => {
-        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
-          return;
-        }
-        throw e;
-      }),
+      core.unpackBackup(password, inputPath),
     {
       onSuccess: () => queryClient.resetQueries(),
     },
@@ -72,36 +61,18 @@ export const useFinalizeImport = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(
-    async () =>
-      core.finalizeImport().catch((e) => {
-        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
-          return;
-        }
-        throw e;
-      }),
-    {
-      onSuccess: () => queryClient.resetQueries(),
-    },
-  );
+  return useMutation(async () => core.finalizeImport(), {
+    onSuccess: () => queryClient.resetQueries(),
+  });
 };
 
 export const useRollbackImport = () => {
   const queryClient = useQueryClient();
   const { core } = useONECore();
 
-  return useMutation(
-    async () =>
-      core.rollbackImport().catch((e) => {
-        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
-          return;
-        }
-        throw e;
-      }),
-    {
-      onSuccess: () => queryClient.resetQueries(),
-    },
-  );
+  return useMutation(async () => core.rollbackImport(), {
+    onSuccess: () => queryClient.resetQueries(),
+  });
 };
 
 export const useBackupFinalizeImportProcedure = () => {
@@ -158,8 +129,13 @@ export const useBackupFinalizeImportProcedure = () => {
         storageParams: {},
         storageType: 'SECURE_ELEMENT',
       })
-      // ignore if HW key cannot be created
-      .catch(() => null);
+      .catch((e) => {
+        // ignore if HW keys not supported by device
+        if (e instanceof OneError && e.code === OneErrorCode.NotSupported) {
+          return null;
+        }
+        throw e;
+      });
     if (hwKeyId) {
       hwDidId = await core.createDid({
         didMethod: 'KEY',
