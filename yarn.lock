@@ -5554,6 +5554,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"check-password-strength@npm:^2.0.10":
+  version: 2.0.10
+  resolution: "check-password-strength@npm:2.0.10"
+  checksum: f0e1296316b72650b013e4b367c6939da672efdbf7e0c7c3bfd4a54ef0da62558b6fae1e9c7c6f994cca043c8b248d97f429f8d28e79c2b8730c8f72a135cdb7
+  languageName: node
+  linkType: hard
+
 "child-process-promise@npm:^2.2.0":
   version: 2.2.1
   resolution: "child-process-promise@npm:2.2.1"
@@ -13094,6 +13101,7 @@ __metadata:
     babel-jest: "npm:^29.2.1"
     babel-loader: "npm:8.2.2"
     buffer: "npm:^6.0.3"
+    check-password-strength: "npm:^2.0.10"
     deprecated-react-native-prop-types: "npm:^4.1.0"
     detox: "npm:^20.12.1"
     eslint: "npm:^8.53.0"
