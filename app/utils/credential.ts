@@ -143,6 +143,7 @@ export const cardHeaderFromCredentialListItem = (
         }
 
         credentialDetail = contentDetail;
+        credentialDetailTestID = concatTestID(testID, 'detail');
       }
       break;
   }
@@ -173,19 +174,21 @@ export const getCredentialCardPropsFromCredential = (
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
   },
   testID?: string,
-): Omit<CredentialCardProps, 'onHeaderPress' | 'style' | 'testID'> => {
+): Omit<CredentialCardProps, 'onHeaderPress' | 'style'> => {
   const { layoutProperties } = credential.schema;
 
-  const result: Omit<
-    CredentialCardProps,
-    'onHeaderPress' | 'style' | 'testID'
-  > = {
+  const result: Omit<CredentialCardProps, 'onHeaderPress' | 'style'> = {
     cardCarouselImages: getCarouselImagesFromClaims(claims, layoutProperties),
     cardImage: layoutProperties?.background?.image
       ? { imageSource: { uri: layoutProperties.background.image } }
       : undefined,
     color: layoutProperties?.background?.color,
-    header: cardHeaderFromCredentialListItem(credential, claims, testID),
+    header: cardHeaderFromCredentialListItem(
+      credential,
+      claims,
+      concatTestID(testID, 'header'),
+    ),
+    testID,
     ...notice,
   };
 
@@ -257,7 +260,7 @@ export const detailsCardFromCredential = (
     credential,
     credential.claims,
     undefined,
-    testID,
+    concatTestID(testID, 'card'),
   );
 
   return {
