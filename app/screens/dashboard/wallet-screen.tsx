@@ -1,6 +1,6 @@
 import {
   Button,
-  CredentialCard,
+  CredentialDetailsCardListItem,
   Header,
   OptionsIcon,
   ScanButton,
@@ -30,18 +30,21 @@ import React, {
 } from 'react';
 import {
   ActivityIndicator as LoadingIndicator,
-  SectionList,
+  Animated,
   SectionListRenderItemInfo,
   StyleSheet,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { NextIcon } from '../../components/icon/common-icon';
 import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
 import {
   useCredentialDetail,
   usePagedCredentials,
 } from '../../hooks/core/credentials';
+import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
+import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -52,6 +55,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const safeAreaInsets = useSafeAreaInsets();
+  const contentInsetsStyle = useListContentInset({ headerHeight: 0 });
   const {
     locale: { locale },
   } = useStores();
@@ -70,6 +74,8 @@ const WalletScreen: FunctionComponent = observer(() => {
     hasNextPage,
   } = usePagedCredentials(queryParams);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
+  const { expandedCredential, onHeaderPress, foldCards } =
+    useCredentialListExpandedCard();
 
   useCredentialStatusCheck();
 
@@ -134,27 +140,50 @@ const WalletScreen: FunctionComponent = observer(() => {
       }
 
       const testID = concatTestID('WalletScreen.credential', credential.id);
-      return (
+      const { header, ...cardProps } = getCredentialCardPropsFromCredential(
+        credential,
+        credential.claims,
+        undefined,
+        testID,
+      );
+      const headerAccessory = (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleCredentialPress(credential.id)}
-          style={[
-            styles.listItem,
-            index === section.data.length - 1 ? styles.listItemLast : undefined,
-          ]}
+          style={styles.headerAccessory}
         >
-          <CredentialCard
-            {...getCredentialCardPropsFromCredential(
-              credential,
-              credential.claims,
-              undefined,
-              testID,
-            )}
-          />
+          <NextIcon color={colorScheme.text} />
         </TouchableOpacity>
       );
+      const lastItem = index === section.data.length - 1;
+      const expanded = lastItem || expandedCredential === credential.id;
+      return (
+        <CredentialDetailsCardListItem
+          attributes={[]}
+          card={{
+            ...cardProps,
+            credentialId: credential.id,
+            header: {
+              ...header,
+              accessory: headerAccessory,
+            },
+            onCardPress: expanded ? foldCards : undefined,
+            onHeaderPress: lastItem ? foldCards : onHeaderPress,
+          }}
+          detailsCardStyle={styles.listItemExpanded}
+          expanded={expanded}
+          lastItem={lastItem}
+          style={styles.listItem}
+        />
+      );
     },
-    [handleCredentialPress],
+    [
+      colorScheme.text,
+      expandedCredential,
+      foldCards,
+      handleCredentialPress,
+      onHeaderPress,
+    ],
   );
 
   useEffect(() => {
@@ -193,7 +222,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         }}
         title={translate('wallet.title')}
       />
-      <SectionList
+      <Animated.SectionList
         ListEmptyComponent={
           credentials ? (
             <View style={styles.empty} testID="WalletScreen.credentialList">
@@ -255,10 +284,14 @@ const WalletScreen: FunctionComponent = observer(() => {
             </View>
           ) : undefined
         }
-        contentContainerStyle={isEmpty && styles.contentContainer}
+        contentContainerStyle={
+          isEmpty ? styles.emptyContainer : contentInsetsStyle
+        }
         key={locale}
+        keyExtractor={(item) => item.id}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.1}
+        onScrollBeginDrag={foldCards}
         renderItem={renderItem}
         sections={
           credentials && credentials.length > 0 ? [{ data: credentials }] : []
@@ -276,9 +309,6 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  contentContainer: {
-    flex: 1,
-  },
   empty: {
     alignItems: 'center',
     flex: 1,
@@ -288,6 +318,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     position: 'absolute',
     width: '100%',
+  },
+  emptyContainer: {
+    flex: 1,
   },
   emptyIcon: {
     marginTop: -24,
@@ -302,6 +335,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginHorizontal: 16,
   },
+  headerAccessory: {
+    alignItems: 'center',
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
   itemIcon: {
     borderRadius: 0,
     borderWidth: 0,
@@ -312,11 +351,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   listItem: {
-    height: 60,
     marginBottom: 8,
   },
-  listItemLast: {
-    height: 'auto',
+  listItemExpanded: {
+    marginBottom: 32,
   },
   loadingIndicator: {
     height: '100%',
