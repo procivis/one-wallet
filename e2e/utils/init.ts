@@ -33,16 +33,14 @@ export async function reloadApp(values?: ReloadAllType) {
 
   if (values?.suspendedScreen || values?.revokedScreen) {
     await expect(StatusCheckResultScreen.screen).toBeVisible();
-    if (values.credentialIds) {
-      const status = values.revokedScreen ? 'revoked' : 'suspended';
-      for (const credentialId of values.credentialIds) {
-        await expect(
-          StatusCheckResultScreen.credentialCard(credentialId).element,
-        ).toBeVisible();
-        await StatusCheckResultScreen.credentialCard(credentialId).verifyStatus(
-          status,
-        );
-      }
+    const status = values.revokedScreen ? 'revoked' : 'suspended';
+    for (const credentialId of values.credentialIds || []) {
+      await expect(
+        StatusCheckResultScreen.credentialCard(credentialId).element,
+      ).toBeVisible();
+      await StatusCheckResultScreen.credentialCard(credentialId).verifyStatus(
+        status,
+      );
     }
 
     await StatusCheckResultScreen.closeButton.tap();

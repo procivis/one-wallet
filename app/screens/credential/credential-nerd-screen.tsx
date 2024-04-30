@@ -95,16 +95,19 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     {
       attributeKey: translate('credentialDetail.credential.schema'),
       highlightedText: credentialDetail.schema.name,
+      testID: 'schemaName',
     },
     {
       attributeKey: translate('credentialDetail.credential.issuerDid'),
       attributeText: identifier,
       canBeCopied: true,
       highlightedText: didMethod,
+      testID: 'issuerDID',
     },
     {
       attributeKey: translate('credentialDetail.credential.format'),
       attributeText: credentialDetail.schema.format,
+      testID: 'credentialFormat',
     },
     {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
@@ -113,6 +116,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
           credentialDetail.schema.revocationMethod as RevocationMethod
         }`,
       ),
+      testID: 'revocationMethod',
     },
     {
       attributeKey: translate('credentialDetail.credential.validity'),
@@ -123,11 +127,13 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
             color={textColor}
             preset="s/code"
             style={styles.validityEntryText}
+            testID="CredentialNerdView.validity.attributeValue"
           >
             {text}
           </Typography>
         </View>
       ),
+      testID: 'validity',
     },
   ];
 
@@ -145,7 +151,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
           title: translate('credentialDetail.nerdView.attributes.title'),
         },
       ]}
-      testID="credentialNerdView"
+      testID="CredentialNerdView"
       title={translate('credentialDetail.action.moreInfo')}
     />
   );
