@@ -93,5 +93,6 @@ const styles = StyleSheet.create({
   },
   description: {
     marginBottom: 24,
+    opacity: 0.7,
   },
 });
