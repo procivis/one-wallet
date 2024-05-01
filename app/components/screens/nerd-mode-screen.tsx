@@ -1,6 +1,7 @@
 import {
   CloseIcon,
   concatTestID,
+  ContrastingStatusBar,
   EntityCluster,
   NavigationHeader,
   Typography,
@@ -64,6 +65,7 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
 
   return (
     <>
+      <ContrastingStatusBar backgroundColor={colorScheme.nerdView.background} />
       <NavigationHeader
         leftItem={
           <TouchableOpacity
