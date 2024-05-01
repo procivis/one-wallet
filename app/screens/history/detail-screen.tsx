@@ -10,7 +10,7 @@ import {
   HistoryEntityTypeEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,6 +21,7 @@ import {
   HistoryStatusIcon,
   HistoryStatusIconType,
 } from '../../components/icon/history-icon';
+import { HeaderInfoButton } from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
@@ -29,6 +30,7 @@ import {
   HistoryNavigationProp,
   HistoryRouteProp,
 } from '../../navigators/history/history-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getEntryTitle } from '../../utils/history';
 import {
   capitalizeFirstLetter,
@@ -68,6 +70,8 @@ export const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
+  const rootNavigation = useNavigation<RootNavigationProp>();
+
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
   const { metadata: backupInfo } = entry;
@@ -87,6 +91,47 @@ export const HistoryDetailScreen: FC = () => {
   const actionStatus = getActionStatus(entry.action);
   const actionValueColor = getStatusTextColor(actionStatus);
 
+  const moreInfoIcon = useMemo(() => {
+    if (entry.entityType === HistoryEntityTypeEnum.BACKUP) {
+      return undefined;
+    }
+
+    const infoPressHandler = () => {
+      if (entry.entityType === HistoryEntityTypeEnum.PROOF) {
+        rootNavigation.navigate('NerdMode', {
+          params: {
+            proofId: entry.entityId!,
+          },
+          screen: 'ProofNerdMode',
+        });
+      } else if (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL) {
+        const credentialActions = [
+          HistoryActionEnum.REACTIVATED,
+          HistoryActionEnum.SUSPENDED,
+          HistoryActionEnum.REVOKED,
+          HistoryActionEnum.DEACTIVATED,
+        ];
+        if (credentialActions.includes(entry.action)) {
+          rootNavigation.navigate('NerdMode', {
+            params: {
+              credentialId: entry.entityId!,
+            },
+            screen: 'CredentialNerdMode',
+          });
+        } else {
+          rootNavigation.navigate('NerdMode', {
+            params: {
+              credentialId: entry.entityId!,
+            },
+            screen: 'OfferNerdMode',
+          });
+        }
+      }
+    };
+
+    return <HeaderInfoButton onPress={infoPressHandler} />;
+  }, [entry, rootNavigation]);
+
   return (
     <View
       style={[
@@ -100,6 +145,7 @@ export const HistoryDetailScreen: FC = () => {
     >
       <NavigationHeader
         leftItem={<BackButton onPress={navigation.goBack} />}
+        rightItem={moreInfoIcon}
         title={getEntryTitle(entry)}
       />
       <ScrollView
