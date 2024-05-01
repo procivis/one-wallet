@@ -22,12 +22,12 @@ import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
-import { CredentialDetailRouteProp } from '../../navigators/credential-detail/credential-detail-routes';
+import { NerdModeNavigatorProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
   colorScheme: ColorScheme,
-): { icon: ReactElement; text: string; textColor: string } => {
+): { icon: ReactElement; text: string; textColor: string } | undefined => {
   if (credential.state === CredentialStateEnum.SUSPENDED) {
     if (credential.suspendEndDate) {
       return {
@@ -61,19 +61,12 @@ const getCredentialValidityValue = (
       textColor: colorScheme.success,
     };
   }
-
-  // Should never occur
-  return {
-    icon: <></>,
-    text: 'UNKNOWN',
-    textColor: colorScheme.white,
-  };
 };
 
 const CredentialDetailNerdScreen: FunctionComponent = () => {
   const nav = useNavigation();
   const colorScheme = useAppColorScheme();
-  const route = useRoute<CredentialDetailRouteProp<'CredentialNerdScreen'>>();
+  const route = useRoute<NerdModeNavigatorProp<'CredentialNerdMode'>>();
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
@@ -85,11 +78,6 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   const didSections = credentialDetail.issuerDid?.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
-
-  const { text, textColor, icon } = getCredentialValidityValue(
-    credentialDetail,
-    colorScheme,
-  );
 
   const nerdModeFields: Array<NerdModeItemProps> = [
     {
@@ -118,7 +106,17 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       ),
       testID: 'revocationMethod',
     },
-    {
+  ];
+
+  const validityData = getCredentialValidityValue(
+    credentialDetail,
+    colorScheme,
+  );
+
+  if (validityData) {
+    const { icon, text, textColor } = validityData;
+
+    nerdModeFields.push({
       attributeKey: translate('credentialDetail.credential.validity'),
       element: (
         <View style={styles.validityEntryContainer}>
@@ -134,8 +132,8 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
         </View>
       ),
       testID: 'validity',
-    },
-  ];
+    });
+  }
 
   return (
     <NerdModeScreen

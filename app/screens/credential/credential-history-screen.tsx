@@ -84,7 +84,8 @@ export const CredentialHistoryScreen: FC = () => {
       <HistorySectionList
         contentContainerStyle={{ paddingBottom: 24 + insets.bottom }}
         getItemProps={(item) =>
-          item.entityType === HistoryEntityTypeEnum.PROOF
+          item.entityType === HistoryEntityTypeEnum.PROOF ||
+          item.entityType === HistoryEntityTypeEnum.CREDENTIAL
             ? { onPress: handleProofPress }
             : undefined
         }
