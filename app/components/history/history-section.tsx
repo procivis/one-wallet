@@ -1,4 +1,5 @@
 import {
+  concatTestID,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -15,7 +16,8 @@ import { HistoryItem, HistoryItemProps } from './history-item';
 
 export const HistorySectionHeader: FC<{
   section: HistoryGroupByDaySection;
-}> = ({ section }) => {
+  testID?: string;
+}> = ({ section, testID }) => {
   const colorScheme = useAppColorScheme();
 
   const day = useMemo(() => {
@@ -36,6 +38,7 @@ export const HistorySectionHeader: FC<{
         accessibilityRole="header"
         color={colorScheme.text}
         preset="m"
+        testID={concatTestID(testID, 'title')}
       >
         {day}
       </Typography>

@@ -1,4 +1,7 @@
-import { useAppColorScheme } from '@procivis/one-react-native-components';
+import {
+  concatTestID,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { HistoryListQuery } from '@procivis/react-native-one-core';
 import React, { FC, useCallback, useMemo } from 'react';
 import {
@@ -92,12 +95,16 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
           first={!index}
           item={item}
           last={index === section.data.length - 1}
+          testID={concatTestID(props.testID, 'item', index.toString())}
           {...itemProps}
           {...getItemProps?.(item)}
         />
       )}
       renderSectionHeader={({ section }) => (
-        <HistorySectionHeader section={section} />
+        <HistorySectionHeader
+          section={section}
+          testID={concatTestID(props.testID, 'section')}
+        />
       )}
       sections={history}
       stickySectionHeadersEnabled={false}

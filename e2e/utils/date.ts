@@ -1,9 +1,7 @@
 // Date & Time formatted as specified in SW-610
 
-import { device } from 'detox';
-
 // Default tests locale
-const defaultLocale = device.getPlatform() === 'ios' ? 'en-US' : undefined;
+const defaultLocale = 'en-US';
 
 /**
  * Date only format
