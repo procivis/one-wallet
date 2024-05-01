@@ -2,6 +2,7 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
+import CredentialHistoryScreen from '../page-objects/credential/CredentialHistoryScreen';
 import CredentialNerdScreen, {
   Attributes,
   AttributeTestID,
@@ -130,6 +131,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(CredentialDetailScreen.history(0).element).toExist();
     });
   });
+
   // Pass
   describe('ONE-1313: LVVC; Credential revocation & Suspension', () => {
     let credentialId: string;
@@ -665,6 +667,60 @@ describe('ONE-601: Credential issuance', () => {
       };
       await CredentialNerdScreen.verifyAttributes(attributes);
       await CredentialNerdScreen.close();
+    });
+  });
+
+  describe('ONE-1876: Credential full history screen', () => {
+    let schema1: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      schema1 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
+          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+        ],
+        layoutProperties: {
+          primaryAttribute: 'Attribute 1',
+        },
+        name: `credential-${uuidv4()}`,
+        revocationMethod: RevocationMethod.LVVC,
+      });
+    });
+
+    it('Test credential history list', async () => {
+      const credentialId = await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: schema1,
+        transport: Transport.OPENID4VC,
+      });
+
+      await suspendCredential(credentialId, authToken);
+
+      await reloadApp({
+        suspendedScreen: true,
+      });
+      await WalletScreen.credentialName(schema1.name).tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await CredentialDetailScreen.openCredentialHistoryScreen();
+      await expect(CredentialHistoryScreen.screen).toBeVisible();
+
+      await expect(CredentialHistoryScreen.history(0).element).toBeVisible();
+      const labels = [
+        'Credential suspended',
+        'Credential issued',
+        'Credential pending offer',
+        'Credential offered',
+      ];
+      await CredentialHistoryScreen.verifyHistoryLabels(labels);
+    });
+
+    it('Search test', async () => {
+      await CredentialHistoryScreen.search.typeText('Hello');
+      await expect(
+        CredentialHistoryScreen.history(0).element,
+      ).not.toBeVisible();
+      await CredentialHistoryScreen.search.clearText();
     });
   });
 });
