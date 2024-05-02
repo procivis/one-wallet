@@ -9,6 +9,7 @@ export type SwitchSettingProps = {
   icon?: ComponentType<any> | ReactElement;
   onChange: (newValue: boolean) => void;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
   title: string;
   value: boolean;
 };
@@ -20,6 +21,7 @@ const SwitchSetting: FunctionComponent<SwitchSettingProps> = ({
   icon,
   style,
   disabled = false,
+  testID,
 }) => {
   return (
     <SettingItem icon={icon} style={style} title={title}>
@@ -27,6 +29,7 @@ const SwitchSetting: FunctionComponent<SwitchSettingProps> = ({
         accessibilityLabel={title}
         disabled={disabled}
         onChange={onChange}
+        testID={testID}
         value={value}
       />
     </SettingItem>

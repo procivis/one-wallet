@@ -31,7 +31,7 @@ import ButtonSetting from '../../components/settings/button-setting';
 import SettingItemSeparator from '../../components/settings/setting-item-separator';
 import SwitchSetting from '../../components/settings/switch-setting';
 import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
-import { useExplicitPinCodeCheck } from '../../hooks/pin-code/pin-code-check';
+import { useBiometricSetting } from '../../hooks/settings/biometric';
 import { useUpdatedTranslate } from '../../hooks/updated-translate';
 import { Locale, Locales } from '../../i18n';
 import { useStores } from '../../models';
@@ -95,19 +95,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
     navigation.navigate('PinCodeChange');
   }, [navigation]);
 
-  const runAfterPinCheck = useExplicitPinCodeCheck();
-  const handleBiometrics = useCallback(
-    (enabled: boolean) => {
-      runAfterPinCheck(
-        () => {
-          userSettings.switchBiometrics(enabled);
-          navigation.navigate('BiometricsSet', { enabled });
-        },
-        { disableBiometry: true },
-      );
-    },
-    [navigation, runAfterPinCheck, userSettings],
-  );
+  const biometricSetting = useBiometricSetting();
 
   const handleAppInformation = useCallback(() => {
     navigation.navigate('AppInformation');
@@ -214,14 +202,24 @@ const DashboardScreen: FunctionComponent = observer(() => {
           },
         },
         biometry
-          ? {
-              switchSetting: {
-                icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
-                onChange: handleBiometrics,
-                title: translate('settings.security.biometrics'),
-                value: userSettings.biometrics,
-              },
-            }
+          ? biometricSetting.toggleUnavailable
+            ? {
+                buttonSetting: {
+                  icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
+                  onPress: biometricSetting.onPress,
+                  testID: 'SettingsScreen.biometry',
+                  title: translate('settings.security.biometrics'),
+                },
+              }
+            : {
+                switchSetting: {
+                  icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
+                  onChange: biometricSetting.onPress,
+                  testID: 'SettingsScreen.biometry',
+                  title: translate('settings.security.biometrics'),
+                  value: userSettings.biometrics,
+                },
+              }
           : null,
       ].filter(nonEmptyFilter),
       title: translate('settings.security.title'),
@@ -272,7 +270,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
         ItemSeparatorComponent: SettingItemSeparator,
         renderItem: renderSettingsItem,
         renderSectionHeader: renderSettingsSectionHeder,
-        sections: sections,
+        sections,
       }}
     />
   );
