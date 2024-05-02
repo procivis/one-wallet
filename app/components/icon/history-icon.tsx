@@ -242,9 +242,11 @@ export const HistoryStatusIcon: FC<HistoryStatusIconProps> = ({
 
 export enum HistoryActionIconType {
   Issue,
+  IssueReject,
   Revalidate,
   Revoke,
   Share,
+  ShareReject,
   Suspend,
   SuspendTemporary,
 }
@@ -263,6 +265,9 @@ export const HistoryActionIcon: FC<HistoryActionIconProps> = ({
     case HistoryActionIconType.Issue:
       TypeIcon = HistoryIssueIcon;
       break;
+    case HistoryActionIconType.IssueReject:
+      TypeIcon = HistoryIssueIcon;
+      break;
     case HistoryActionIconType.Revoke:
       TypeIcon = HistoryRevokeIcon;
       break;
@@ -275,6 +280,12 @@ export const HistoryActionIcon: FC<HistoryActionIconProps> = ({
 
   let statusIcon = HistoryStatusIconType.Success;
   switch (type) {
+    case HistoryActionIconType.IssueReject:
+      statusIcon = HistoryStatusIconType.Error;
+      break;
+    case HistoryActionIconType.ShareReject:
+      statusIcon = HistoryStatusIconType.Error;
+      break;
     case HistoryActionIconType.Revoke:
       statusIcon = HistoryStatusIconType.Error;
       break;
