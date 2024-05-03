@@ -12,6 +12,7 @@ import React, {
   useState,
 } from 'react';
 import { AppState, Platform } from 'react-native';
+import { RESULTS } from 'react-native-permissions';
 
 import PinCodeScreenContent, {
   PinCodeActions,
@@ -20,6 +21,7 @@ import { useInitialDeepLinkHandling } from '../../hooks/core/deep-link';
 import {
   biometricAuthenticate,
   useBiometricType,
+  useFaceIDPermission,
 } from '../../hooks/pin-code/biometric';
 import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
@@ -70,8 +72,13 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     [onCheckPassed, validatePin],
   );
 
+  const faceIdPermissions = useFaceIDPermission();
   const biometricCheckEnabled = Boolean(
-    biometry && userSettings.biometrics && !route.params?.disableBiometry,
+    biometry &&
+      faceIdPermissions.status &&
+      faceIdPermissions.status !== RESULTS.BLOCKED &&
+      userSettings.biometrics &&
+      !route.params?.disableBiometry,
   );
 
   const runBiometricCheck = useCallback(() => {
