@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
+import { DeviceEventEmitter } from 'react-native';
 
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
 import {
@@ -23,6 +24,11 @@ export const preventBackgroundLockScreen = () => {
     backgroundPinLockEnabled = true;
   };
 };
+
+/**
+ * Event signaling after app comes from background and pin check screen stays active (not hidden)
+ */
+export const PIN_CODE_CHECK_ACTIVE_EVENT = 'pin-code-check-active';
 
 /**
  * Checks for AppState changes and shows PIN code check screen if inactive for long time
@@ -88,6 +94,8 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
         lastActiveTimestamp.current = now;
         if (showPinCodeCheck()) {
           return;
+        } else {
+          DeviceEventEmitter.emit(PIN_CODE_CHECK_ACTIVE_EVENT);
         }
       } else if (lockedWhenGoingToBackground.current) {
         // hide lockscreen when reopening after short time
