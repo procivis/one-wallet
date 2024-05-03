@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { AppState, Platform } from 'react-native';
+import { AppState, DeviceEventEmitter, Platform } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
 
 import PinCodeScreenContent, {
@@ -24,6 +24,7 @@ import {
   useFaceIDPermission,
 } from '../../hooks/pin-code/biometric';
 import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
+import { PIN_CODE_CHECK_ACTIVE_EVENT } from '../../hooks/pin-code/pin-code-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
@@ -94,11 +95,24 @@ const PinCodeCheckScreen: FunctionComponent = () => {
 
   useEffect(() => {
     if (biometricCheckEnabled) {
-      return navigation.addListener('transitionEnd', () => {
-        if (AppState.currentState === 'active') {
-          runBiometricCheck();
-        }
-      });
+      const transitionUnsubscribe = navigation.addListener(
+        'transitionEnd',
+        () => {
+          if (AppState.currentState === 'active') {
+            runBiometricCheck();
+          }
+        },
+      );
+
+      const checkActiveSubscription = DeviceEventEmitter.addListener(
+        PIN_CODE_CHECK_ACTIVE_EVENT,
+        runBiometricCheck,
+      );
+
+      return () => {
+        transitionUnsubscribe();
+        checkActiveSubscription.remove();
+      };
     }
     return undefined;
   }, [biometricCheckEnabled, navigation, runBiometricCheck]);
