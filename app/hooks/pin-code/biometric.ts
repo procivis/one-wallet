@@ -1,9 +1,10 @@
 import { useMemoAsync } from '@procivis/react-native-components';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import {
   check as checkPermission,
   PERMISSIONS,
+  PermissionStatus,
   request as requestPermission,
   RESULTS,
 } from 'react-native-permissions';
@@ -47,7 +48,7 @@ export const useBiometricType = (): Biometry | null => {
 };
 
 export const useFaceIDPermission = () => {
-  const status = useMemoAsync(
+  const initialStatus = useMemoAsync(
     () =>
       Platform.OS === 'ios'
         ? checkPermission(PERMISSIONS.IOS.FACE_ID)
@@ -55,12 +56,19 @@ export const useFaceIDPermission = () => {
     [],
   );
 
+  // status updates after interactive requests
+  const [interactiveStatus, setInteractiveStatus] =
+    useState<PermissionStatus>();
+
+  const status = interactiveStatus ?? initialStatus;
+
   const request = useCallback(
     async () =>
       status === RESULTS.DENIED
-        ? requestPermission(PERMISSIONS.IOS.FACE_ID).then(
-            (result) => result === RESULTS.GRANTED,
-          )
+        ? requestPermission(PERMISSIONS.IOS.FACE_ID).then((result) => {
+            setInteractiveStatus(result);
+            return result === RESULTS.GRANTED;
+          })
         : status === RESULTS.GRANTED,
     [status],
   );
