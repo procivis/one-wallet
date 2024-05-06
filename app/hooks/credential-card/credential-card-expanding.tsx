@@ -25,5 +25,9 @@ export const useCredentialListExpandedCard = () => {
     });
   }, []);
 
-  return { expandedCredential, onHeaderPress };
+  const foldCards = useCallback(() => {
+    setExpandedCredential(undefined);
+  }, []);
+
+  return { expandedCredential, foldCards, onHeaderPress };
 };
