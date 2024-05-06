@@ -124,7 +124,10 @@ export const cardHeaderFromCredentialListItem = (
         );
 
         if (primary) {
-          if (primary.dataType === DataTypeEnum.Date) {
+          if (
+            primary.dataType === DataTypeEnum.Date ||
+            primary.dataType === 'BIRTH_DATE'
+          ) {
             contentDetail += formatDate(new Date(primary.value));
           } else {
             contentDetail += primary.value;
@@ -140,7 +143,10 @@ export const cardHeaderFromCredentialListItem = (
 
         if (secondary) {
           const interpunct = ' · ';
-          if (secondary.dataType === DataTypeEnum.Date) {
+          if (
+            secondary.dataType === DataTypeEnum.Date ||
+            secondary.dataType === 'BIRTH_DATE'
+          ) {
             contentDetail += `${interpunct}${formatDate(
               new Date(secondary.value),
             )}`;
