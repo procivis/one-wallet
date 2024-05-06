@@ -39,6 +39,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
 import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
+import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
   usePagedCredentials,
@@ -54,6 +55,8 @@ import { getCredentialCardPropsFromCredential } from '../../utils/credential';
 const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
+  const { data: config } = useCoreConfig();
+
   const safeAreaInsets = useSafeAreaInsets();
   const contentInsetsStyle = useListContentInset({ headerHeight: 0 });
   const {
@@ -143,6 +146,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       const { header, ...cardProps } = getCredentialCardPropsFromCredential(
         credential,
         credential.claims,
+        config,
         undefined,
         testID,
       );
