@@ -76,11 +76,9 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
               />
             ) : undefined
           }
-          onDeselected={handleCredentialSchemaChange}
           onEndReached={handleSchemasEndReached}
           onSelected={handleCredentialSchemaChange}
-          selectedItems={selected ? [selected] : ['']}
-          staticContent={false}
+          selectedItem={selected ?? ''}
           style={styles.filterGroup}
         />
       ) : (
