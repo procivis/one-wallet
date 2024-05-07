@@ -3,6 +3,10 @@ export default abstract class CreateBackupDashboardScreen {
     return element(by.id('CreateBackupDashboardScreen'));
   }
 
+  static get back() {
+    return element(by.id('Screen.back'));
+  }
+
   static get history() {
     return element(by.id('CreateBackupDashboardScreen.history'));
   }
