@@ -18,7 +18,7 @@ export const HeaderBackButton: FC = () => {
   if (!navigation.canGoBack) {
     return null;
   }
-  return <BackButton onPress={handleBackButtonPress} />;
+  return <BackButton onPress={handleBackButtonPress} testID="Screen.back" />;
 };
 
 export type HeaderCloseModalButtonProps = {

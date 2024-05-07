@@ -43,8 +43,10 @@ export const BackupScreen: FC<BackupScreenProps> = ({
     if (!onBack) {
       return HeaderBackButton;
     }
-    return <BackButton onPress={onBack} />;
-  }, [onBack]);
+    return (
+      <BackButton onPress={onBack} testID={concatTestID(testID, 'back')} />
+    );
+  }, [onBack, testID]);
 
   return (
     <ScrollViewScreen
