@@ -17,10 +17,7 @@ import {
 
 import { translate } from '../../i18n';
 
-type RadioGroupFlatListProps = FlatListProps<RadioGroupItem>;
-
 export type RadioGroupItem = {
-  disabled?: boolean;
   key: React.Key;
   label: string;
   style?: StyleProp<ViewStyle>;
@@ -29,35 +26,23 @@ export type RadioGroupItem = {
 export interface RadioGroupProps {
   containerStyle?: StyleProp<ViewStyle>;
   items: RadioGroupItem[];
-  listFooter?: RadioGroupFlatListProps['ListFooterComponent'];
-  listFooterStyle?: RadioGroupFlatListProps['ListFooterComponentStyle'];
-  multiselect?: boolean;
-  onDeselected?: (item: RadioGroupItem, index: number) => void;
-  onEndReached?: RadioGroupFlatListProps['onEndReached'];
-  onEndReachedThreshold?: RadioGroupFlatListProps['onEndReachedThreshold'];
+  listFooter?: FlatListProps<RadioGroupItem>['ListFooterComponent'];
+  listFooterStyle?: FlatListProps<RadioGroupItem>['ListFooterComponentStyle'];
+  onEndReached?: FlatListProps<RadioGroupItem>['onEndReached'];
   onSelected: (item: RadioGroupItem, index: number) => void;
-  selectedItems: React.Key[];
-  showsVerticalScrollIndicator?: RadioGroupFlatListProps['showsVerticalScrollIndicator'];
-  staticContent?: boolean;
+  selectedItem?: React.Key;
   style?: StyleProp<ViewStyle>;
-  title?: string;
 }
 
 const RadioGroup: FunctionComponent<RadioGroupProps> = ({
   containerStyle,
-  title,
   items,
-  multiselect,
-  selectedItems,
+  selectedItem,
   onSelected,
-  onDeselected,
   style,
   listFooter,
   listFooterStyle,
-  staticContent = true,
-  onEndReachedThreshold,
   onEndReached,
-  showsVerticalScrollIndicator = false,
 }) => {
   const colorScheme = useAppColorScheme();
 
@@ -65,31 +50,17 @@ const RadioGroup: FunctionComponent<RadioGroupProps> = ({
     <FlatList<RadioGroupItem>
       ListFooterComponent={listFooter}
       ListFooterComponentStyle={listFooterStyle}
-      ListHeaderComponent={
-        title ? (
-          <Typography
-            accessibilityRole="header"
-            align="left"
-            caps={true}
-            color={colorScheme.text}
-            style={styles.title}
-          >
-            {title}
-          </Typography>
-        ) : null
-      }
       contentContainerStyle={containerStyle}
       data={items}
       onEndReached={onEndReached}
-      onEndReachedThreshold={onEndReachedThreshold}
       renderItem={({ item, index }) => {
-        const selected = selectedItems.includes(item.key);
+        const selected = selectedItem === item.key;
         return (
           <React.Fragment key={item.key}>
             <TouchableOpacity
               accessibilityLabel={item.label}
               accessibilityRole="button"
-              accessibilityState={{ disabled: item.disabled, selected }}
+              accessibilityState={{ selected }}
               accessibilityValue={
                 items.length > 1
                   ? {
@@ -100,27 +71,16 @@ const RadioGroup: FunctionComponent<RadioGroupProps> = ({
                     }
                   : undefined
               }
-              activeOpacity={selected && !multiselect ? 1 : undefined}
-              disabled={item.disabled}
+              activeOpacity={selected ? 1 : undefined}
               onPress={() => {
-                selected
-                  ? multiselect
-                    ? onDeselected?.(item, index)
-                    : undefined
-                  : onSelected(item, index);
+                onSelected(item, index);
               }}
               style={[styles.item, item.style]}
             >
               <Typography color={colorScheme.text}>{item.label}</Typography>
               <Selector
                 status={
-                  selected
-                    ? multiselect
-                      ? SelectorStatus.SelectedCheckmark
-                      : SelectorStatus.SelectedRadio
-                    : item.disabled
-                    ? SelectorStatus.Disabled
-                    : SelectorStatus.Empty
+                  selected ? SelectorStatus.SelectedRadio : SelectorStatus.Empty
                 }
                 style={styles.selector}
               />
@@ -134,8 +94,7 @@ const RadioGroup: FunctionComponent<RadioGroupProps> = ({
           </React.Fragment>
         );
       }}
-      scrollEnabled={!staticContent}
-      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      showsVerticalScrollIndicator={false}
       style={style}
     />
   );
@@ -156,10 +115,6 @@ const styles = StyleSheet.create({
   selector: {
     marginLeft: 4,
     paddingTop: 0,
-  },
-  title: {
-    marginBottom: 24,
-    marginTop: 12,
   },
 });
 
