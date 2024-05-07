@@ -41,7 +41,7 @@ const InvitationErrorDetailsScreen: FC = () => {
     <NerdModeScreen
       onClose={navigation.goBack}
       sections={sections}
-      testID={'InvitationErrorDetailsScreen'}
+      testID="InvitationErrorDetailsScreen"
       title={translate('invitationError.title')}
     />
   );
