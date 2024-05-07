@@ -6,7 +6,7 @@ export default abstract class HistoryScreen {
   }
 
   static get back() {
-    return element(by.id('HistoryScreen.header.back'));
+    return element(by.id('HistoryScreen.back'));
   }
 
   private static historyEntry(index: number) {
