@@ -2647,9 +2647,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/one-react-native-components@npm:0.0.38":
-  version: 0.0.38
-  resolution: "@procivis/one-react-native-components@npm:0.0.38::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.0.38.tgz"
+"@procivis/one-react-native-components@npm:0.0.41":
+  version: 0.0.41
+  resolution: "@procivis/one-react-native-components@npm:0.0.41::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.0.41.tgz"
   peerDependencies:
     "@react-native-community/blur": "*"
     "@react-native/normalize-color": "*"
@@ -2660,7 +2660,7 @@ __metadata:
     react-native-safe-area-context: "*"
     react-native-svg: "*"
     react-native-vision-camera: "*"
-  checksum: b1596894c2383fcae431631601a53c0a23a241b1c14756fb2880a8f8f90744cb9645a66336f5fee740fd58b21f51943d0482cebbf6f743b47217517ba3f19dae
+  checksum: 9b56c42e96ce435ea717593d12b73e7c34da2242da411ed15fe0e2259ac0f8408e89d1cda6e9246f451bf5c99d4fc47daa522205f89c1f03cb1272c00107737f
   languageName: node
   linkType: hard
 
@@ -13071,7 +13071,7 @@ __metadata:
     "@babel/runtime": "npm:^7.21.0"
     "@carimus/metro-symlinked-deps": "npm:^1.1.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/one-react-native-components": "npm:0.0.38"
+    "@procivis/one-react-native-components": "npm:0.0.41"
     "@procivis/react-native-components": "npm:0.1.19"
     "@procivis/react-native-one-core": "npm:1.17661.0"
     "@procivis/react-native-picker": "npm:5.0.3"
