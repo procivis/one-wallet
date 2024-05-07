@@ -1,3 +1,5 @@
+import { expect } from 'detox';
+
 export default abstract class WalletScreen {
   static get screen() {
     return element(by.id('WalletScreen'));
@@ -57,5 +59,13 @@ export default abstract class WalletScreen {
         return field.typeText(text);
       },
     };
+  }
+
+  static async verifyEmptyCredentialList() {
+    const el = element(by.id('WalletScreen.credentialList'));
+    await expect(el).toBeVisible();
+    await expect(el).toHaveLabel(
+      'No credentials yet Connect to an issuer to add your first credential. Scan QR Code',
+    );
   }
 }
