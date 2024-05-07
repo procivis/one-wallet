@@ -30,6 +30,7 @@ import {
 export const validityCheckedCardFromCredential = (
   credential: CredentialDetail,
   invalid: boolean,
+  config: Config | undefined,
   notice:
     | {
         notice: string;
@@ -50,6 +51,7 @@ export const validityCheckedCardFromCredential = (
   const card = getCredentialCardPropsFromCredential(
     credential,
     credential.claims,
+    config,
     notice,
     testID,
   );
@@ -197,7 +199,13 @@ export const shareCredentialCardFromCredential = (
         }
       : undefined;
   const card = credential
-    ? validityCheckedCardFromCredential(credential, invalid, notice, testID)
+    ? validityCheckedCardFromCredential(
+        credential,
+        invalid,
+        config,
+        notice,
+        testID,
+      )
     : missingCredentialCardFromRequest(request, notice, testID);
   const validityState = getValidityState(credential);
   const attributes: CredentialAttribute[] = getDisplayedAttributes(
@@ -279,6 +287,7 @@ export const selectCredentialCardFromCredential = (
   const { header, ...cardProps } = getCredentialCardPropsFromCredential(
     credential,
     credential.claims,
+    config,
     notice,
     testID,
   );
