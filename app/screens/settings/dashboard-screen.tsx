@@ -117,7 +117,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
         switchSetting: ComponentProps<typeof SwitchSetting>;
       };
 
-  const renderSettingsSectionHeder: SectionListProps<
+  const renderSettingsSectionHeader: SectionListProps<
     SettingsListItem,
     ListSectionHeaderProps
   >['renderSectionHeader'] = ({ section }) => {
@@ -269,9 +269,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
       list={{
         ItemSeparatorComponent: SettingItemSeparator,
         renderItem: renderSettingsItem,
-        renderSectionHeader: renderSettingsSectionHeder,
+        renderSectionHeader: renderSettingsSectionHeader,
         sections,
+        testID: 'SettingsScreen.content',
       }}
+      testID="SettingsScreen"
     />
   );
 });

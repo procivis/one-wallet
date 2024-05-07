@@ -4,11 +4,11 @@ import { credentialIssuance } from '../helpers/credential';
 import BackupPreviewScreen from '../page-objects/backup/BackupPreviewScreen';
 import CreateBackupProcessingScreen from '../page-objects/backup/BackupProcessingScreen';
 import BackupRecoveryPasswordScreen from '../page-objects/backup/BackupRecoveryPasswordScreen';
-import CreateBackupDashboardScreen from '../page-objects/CreateBackupDashboardScreen';
+import CreateBackupDashboardScreen from '../page-objects/backup/CreateBackupDashboardScreen';
 import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScreen';
 import RestoreBackupDashboardScreen from '../page-objects/restore/RestoreBackupDashboardScreen';
 import RestoreBackupImportScreen from '../page-objects/restore/RestoreBackupImportScreen';
-import SettingsScreen from '../page-objects/SettingsScreen';
+import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredentialSchema } from '../utils/bff-api';
@@ -75,7 +75,7 @@ describe('ONE-1530: Backup & Restore', () => {
       await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
-      await SettingsScreen.createBackupButton.tap();
+      await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
       await expect(CreateBackupDashboardScreen.screen).toBeVisible();
       await CreateBackupDashboardScreen.newBackupButton.tap();
       await expect(BackupRecoveryPasswordScreen.screen).toBeVisible();
@@ -102,7 +102,7 @@ describe('ONE-1530: Backup & Restore', () => {
     it('User can restore backup from settings', async () => {
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
-      await SettingsScreen.restoreBackupButton.tap();
+      await SettingsScreen.button(SettingsButton.RESTORE_BACKUP).tap();
       await expect(RestoreBackupDashboardScreen.screen).toBeVisible();
       await RestoreBackupDashboardScreen.restoreButton.tap();
       await expect(RestoreBackupImportScreen.screen).toBeVisible();

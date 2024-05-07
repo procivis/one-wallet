@@ -76,6 +76,7 @@ const PinCodeChangeScreen: FunctionComponent = () => {
       onBack={navigation.goBack}
       onPinEntered={onPinEntered}
       ref={screen}
+      testID="PinCodeChangeScreen"
       title={translate(`onboarding.pinCodeScreen.change.${stage}.title`)}
     />
   );

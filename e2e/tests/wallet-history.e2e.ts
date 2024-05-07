@@ -5,7 +5,7 @@ import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProce
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import HistoryDetailScreen from '../page-objects/HistoryDetailScreen';
 import HistoryScreen from '../page-objects/HistoryScreen';
-import SettingsScreen from '../page-objects/SettingsScreen';
+import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
@@ -36,7 +36,7 @@ describe('ONE-224: Wallet history', () => {
     await expect(WalletScreen.screen).toBeVisible();
     await WalletScreen.settingsButton.tap();
     await expect(SettingsScreen.screen).toBeVisible();
-    await SettingsScreen.historyButton.tap();
+    await SettingsScreen.button(SettingsButton.HISTORY).tap();
     await expect(HistoryScreen.screen).toBeVisible();
     await HistoryScreen.verifyContainsText('No entries');
     await HistoryScreen.verifyContainsText(
@@ -57,7 +57,7 @@ describe('ONE-224: Wallet history', () => {
       await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
-      await SettingsScreen.historyButton.tap();
+      await SettingsScreen.button(SettingsButton.HISTORY).tap();
       await expect(HistoryScreen.screen).toBeVisible();
       await expect(HistoryScreen.history(1).element).toBeVisible();
       await HistoryScreen.history(1).element.tap();
@@ -126,7 +126,7 @@ describe('ONE-224: Wallet history', () => {
       await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
-      await SettingsScreen.historyButton.tap();
+      await SettingsScreen.button(SettingsButton.HISTORY).tap();
       await expect(HistoryScreen.screen).toBeVisible();
 
       await expect(HistoryScreen.history(4).element).toBeVisible();
