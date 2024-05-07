@@ -90,6 +90,7 @@ export const findClaimByPath = (
 export const cardHeaderFromCredentialListItem = (
   credential: CredentialListItem,
   claims: Claim[] = [],
+  config?: Config,
   testID?: string,
 ): Omit<CredentialHeaderProps, 'style'> => {
   let credentialDetail: string;
@@ -124,8 +125,9 @@ export const cardHeaderFromCredentialListItem = (
         );
 
         if (primary) {
-          if (primary.dataType === DataTypeEnum.Date) {
-            contentDetail += formatDate(new Date(primary.value));
+          const primaryType = config?.datatype[primary.dataType];
+          if (primaryType && primaryType.type === DataTypeEnum.Date) {
+            contentDetail += formatDate(new Date(primary.value as string));
           } else {
             contentDetail += primary.value;
           }
@@ -139,10 +141,11 @@ export const cardHeaderFromCredentialListItem = (
         );
 
         if (secondary) {
+          const secondaryType = config?.datatype[secondary.dataType];
           const interpunct = ' · ';
-          if (secondary.dataType === DataTypeEnum.Date) {
+          if (secondaryType && secondaryType.type === DataTypeEnum.Date) {
             contentDetail += `${interpunct}${formatDate(
-              new Date(secondary.value),
+              new Date(secondary.value as string),
             )}`;
           } else {
             contentDetail += `${interpunct}${secondary.value}`;
@@ -176,6 +179,7 @@ export const cardHeaderFromCredentialListItem = (
 export const getCredentialCardPropsFromCredential = (
   credential: CredentialListItem,
   claims: Claim[] = [],
+  config?: Config,
   notice?: {
     notice: string;
     noticeIcon?: React.ComponentType<any> | React.ReactElement;
@@ -193,6 +197,7 @@ export const getCredentialCardPropsFromCredential = (
     header: cardHeaderFromCredentialListItem(
       credential,
       claims,
+      config,
       concatTestID(testID, 'header'),
     ),
     testID,
@@ -254,6 +259,7 @@ export const detailsCardFromCredential = (
   const card = getCredentialCardPropsFromCredential(
     credential,
     credential.claims,
+    config,
     undefined,
     concatTestID(testID, 'card'),
   );
