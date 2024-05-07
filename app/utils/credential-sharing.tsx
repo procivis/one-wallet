@@ -7,7 +7,6 @@ import {
   RequiredAttributeIcon,
   Selector,
   SelectorStatus,
-  TouchableOpacity,
 } from '@procivis/one-react-native-components';
 import {
   Claim,
@@ -141,7 +140,7 @@ const getDisplayedAttributes = (
   }
 
   return request.fields.map((field) => {
-    const selected = selectedFields?.includes(field.id);
+    const selected = !field.required && selectedFields?.includes(field.id);
     const status = getAttributeSelectorStatus(
       field,
       validityState,
@@ -180,10 +179,6 @@ export const shareCredentialCardFromCredential = (
   invalid: boolean,
   request: PresentationDefinitionRequestedCredential,
   selectedFields: string[] | undefined,
-  onSelectField: (
-    id: PresentationDefinitionField['id'],
-    selected: boolean,
-  ) => void,
   config: Config,
   testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
@@ -215,21 +210,13 @@ export const shareCredentialCardFromCredential = (
     selectiveDisclosureSupported,
     selectedFields,
   ).map(({ claim, field, id, selected, status }, index) => {
-    const selector = <Selector status={status} />;
-    const rightAccessory =
-      credential && field && !field.required ? (
-        <TouchableOpacity
-          accessibilityRole="button"
-          onPress={() => onSelectField(id, !selected)}
-        >
-          {selector}
-        </TouchableOpacity>
-      ) : (
-        selector
-      );
+    const disabled = !credential || !field || field.required;
+    const rightAccessory = <Selector status={status} />;
     const attribute: CredentialAttribute = {
       ...shareCredentialCardAttributeFromClaim(id, claim, field, config),
+      disabled,
       rightAccessory,
+      selected,
       testID: concatTestID(testID, 'claim', `${index}`),
     };
     return attribute;
