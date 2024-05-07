@@ -4,6 +4,10 @@ export default abstract class InvitationProcessScreen {
   }
 
   static get closeButton() {
-    return element(by.id('InvitationProcessScreen.close'));
+    return element(by.id('Screen.closeButton'));
+  }
+
+  static get infoButton() {
+    return element(by.id('Screen.infoButton'));
   }
 }
