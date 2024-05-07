@@ -182,6 +182,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       );
     },
     [
+      config,
       colorScheme.text,
       expandedCredential,
       foldCards,
