@@ -92,7 +92,6 @@ export const CredentialSelect: FunctionComponent<{
     invalid,
     request,
     selectedFields,
-    onSelectField,
     config,
     testID,
   );
@@ -194,6 +193,7 @@ export const CredentialSelect: FunctionComponent<{
       expanded={expanded}
       footer={footer}
       lastItem={lastItem}
+      onAttributeSelected={onSelectField}
       onImagePreview={onImagePreview}
       style={[
         styles.credential,
