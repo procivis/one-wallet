@@ -145,8 +145,10 @@ const LicencesScreen: FC = () => {
         renderItem: renderSettingsItem,
         renderSectionHeader: renderSettingsSectionHeder,
         sections: sections,
+        testID: 'LicencesScreen.content',
       }}
       style={{ backgroundColor: colorScheme.white }}
+      testID="LicencesScreen"
     />
   );
 };

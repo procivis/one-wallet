@@ -5,6 +5,10 @@ export default abstract class BackupPreviewScreen {
     return element(by.id('CreateBackupPreviewScreen'));
   }
 
+  static get back() {
+    return element(by.id('CreateBackupPreviewScreen.back'));
+  }
+
   static get continueButton() {
     return element(by.id('CreateBackupPreviewScreen.mainButton'));
   }

@@ -41,7 +41,12 @@ const AppInformationScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <BackButton onPress={navigation.goBack} />,
+        leftItem: (
+          <BackButton
+            onPress={navigation.goBack}
+            testID="AppInformationScreen.back"
+          />
+        ),
         rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
         title: translate('appInformation.app.title'),
       }}
@@ -66,6 +71,7 @@ const AppInformationScreen: FC = () => {
           color={colorScheme.text}
           preset="l"
           style={styles.header}
+          testID="AppInformationScreen.title"
         >
           {translate('appInformation.company.title')}
         </Typography>

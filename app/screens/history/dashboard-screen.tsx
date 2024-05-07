@@ -77,7 +77,9 @@ const HistoryDashboardScreen: FC = () => {
       testID="HistoryScreen"
     >
       <NavigationHeader
-        leftItem={<BackButton onPress={navigation.goBack} />}
+        leftItem={
+          <BackButton onPress={navigation.goBack} testID="HistoryScreen.back" />
+        }
         title={translate('history.title')}
       />
       {empty ? (
