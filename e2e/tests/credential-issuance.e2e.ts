@@ -13,6 +13,8 @@ import CredentialDetailScreen, {
   Action,
 } from '../page-objects/CredentialDetailScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
+import InvitationErrorDetailsScreen from '../page-objects/invitation/InvitationErrorDetailsScreen';
+import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
@@ -33,6 +35,7 @@ import {
   WalletKeyStorageType,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
+import { scanURL } from '../utils/scan';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
@@ -721,6 +724,23 @@ describe('ONE-601: Credential issuance', () => {
         CredentialHistoryScreen.history(0).element,
       ).not.toBeVisible();
       await CredentialHistoryScreen.search.clearText();
+    });
+  });
+
+  describe('ONE-1870: Handling Errors in Credential Offering Process', () => {
+    it('Wrong share URI', async () => {
+      const invitationUrl =
+        'https://core.dev.procivis-one.com/ssi/temporary-issuer/v1/connect?protocol=PROCIVIS_TEMPORARY&credential=8a611gad-30b5-4a35-9fa5-b2f86d7279a3';
+      await scanURL(invitationUrl);
+
+      await expect(InvitationProcessScreen.screen).toBeVisible();
+      await expect(element(by.text('Something went wrong.'))).toBeVisible();
+      await InvitationProcessScreen.infoButton.tap();
+      await expect(InvitationErrorDetailsScreen.screen).toBeVisible();
+      await InvitationErrorDetailsScreen.close.tap();
+      await expect(InvitationProcessScreen.screen).toBeVisible();
+      await InvitationProcessScreen.closeButton.tap();
+      await expect(WalletScreen.screen).toBeVisible();
     });
   });
 });
