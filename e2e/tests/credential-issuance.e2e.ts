@@ -60,6 +60,12 @@ describe('ONE-601: Credential issuance', () => {
       revocationMethod: RevocationMethod.LVVC,
     });
   });
+
+  it('ONE-1800: Empty Credential dashboard', async () => {
+    await expect(WalletScreen.screen).toBeVisible();
+    await WalletScreen.verifyEmptyCredentialList();
+  });
+
   // Pass
   describe('Credential offer', () => {
     it('Accept credential issuance', async () => {
@@ -135,7 +141,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  // Pass
+  // Fail
   describe('ONE-1313: LVVC; Credential revocation & Suspension', () => {
     let credentialId: string;
 
@@ -260,6 +266,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
+  // Fail
   describe('ONE-618: Credential deletion', () => {
     let credentialId: string;
 
