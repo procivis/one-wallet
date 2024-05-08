@@ -10,6 +10,7 @@ import { AppColorScheme } from '../../theme';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
 import CredentialManagementNavigator from '../credential-management/credential-management-navigator';
 import DashboardNavigator from '../dashboard/dashboard-navigator';
+import NerdModeNavigator from '../nerd-mode/nerd-mode-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
@@ -49,6 +50,16 @@ const RootNavigator: FunctionComponent = () => {
           <RootStack.Screen component={OnboardingNavigator} name="Onboarding" />
           <RootStack.Screen component={DashboardNavigator} name="Dashboard" />
         </RootStack.Group>
+        <RootStack.Screen
+          component={NerdModeNavigator}
+          name="NerdMode"
+          options={{
+            animation:
+              Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+            headerShown: false,
+            presentation: 'fullScreenModal',
+          }}
+        />
         <RootStack.Screen
           component={CredentialManagementNavigator}
           name="CredentialManagement"
