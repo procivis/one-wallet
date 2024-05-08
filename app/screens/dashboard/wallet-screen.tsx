@@ -155,8 +155,16 @@ const WalletScreen: FunctionComponent = observer(() => {
           activeOpacity={1}
           onPress={() => handleCredentialPress(credential.id)}
           style={styles.headerAccessory}
+          testID={testID}
         >
-          <NextIcon color={colorScheme.text} />
+          <NextIcon
+            color={colorScheme.text}
+            // Schema name required for OpenID4VC in detox tests
+            testID={concatTestID(
+              'WalletScreen.credential',
+              credential.schema.name,
+            )}
+          />
         </TouchableOpacity>
       );
       const lastItem = index === section.data.length - 1;
