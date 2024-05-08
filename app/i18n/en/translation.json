@@ -1,4 +1,5 @@
 {
+  "accessibility.control.order": "{current} of {length}",
   "accessibility.nav.info": "info",
   "appInformation.app.description": "The %{appName} permits secure issuance, validation and management of verifiable credentials with digital services. Placing privacy at the forefront, users are empowered with complete control over their data.",
   "appInformation.app.title": "About %{appName}",
