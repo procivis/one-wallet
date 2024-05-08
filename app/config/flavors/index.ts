@@ -15,7 +15,7 @@ const configs: {
       case 'test':
         return require('./procivis/test');
       case 'demo':
-        return require('./procivis');
+        return require('./procivis/demo');
       case 'trial':
         return require('./procivis/trial');
     }
