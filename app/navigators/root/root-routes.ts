@@ -5,6 +5,7 @@ import { ImageSourcePropType } from 'react-native';
 import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
 import { CredentialManagementNavigatorParamList } from '../credential-management/credential-management-routes';
 import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
+import { NerdModeNavigatorParamList } from '../nerd-mode/nerd-mode-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
 
@@ -16,6 +17,7 @@ export type RootNavigatorParamList = {
     image: string | ImageSourcePropType;
     title: string;
   };
+  NerdMode: NavigatorScreenParams<NerdModeNavigatorParamList>;
   Onboarding?: NavigatorScreenParams<OnboardingNavigatorParamList>;
   PinCodeCheck?: {
     disableBiometry: boolean;

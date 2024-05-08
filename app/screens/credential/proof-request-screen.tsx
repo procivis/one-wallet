@@ -40,6 +40,7 @@ import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,
@@ -47,6 +48,7 @@ import {
 import { reportException } from '../../utils/reporting';
 
 const ProofRequestScreen: FunctionComponent = () => {
+  const rootNavigation = useNavigation<RootNavigationProp>();
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
@@ -92,10 +94,13 @@ const ProofRequestScreen: FunctionComponent = () => {
   >({});
 
   const infoPressHandler = useCallback(() => {
-    sharingNavigation.navigate('ProofRequestNerdScreen', {
-      proofId,
+    rootNavigation.navigate('NerdMode', {
+      params: {
+        proofId,
+      },
+      screen: 'ProofNerdMode',
     });
-  }, [proofId, sharingNavigation]);
+  }, [proofId, rootNavigation]);
 
   // initial selection of credentials/claims
   useEffect(() => {
