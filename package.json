@@ -25,7 +25,7 @@
     "rnuc:dev": "yarn rnuc ./app/config/flavors/procivis/dev/.env",
     "rnuc:test": "yarn rnuc ./app/config/flavors/procivis/test/.env",
     "rnuc:trial": "yarn rnuc ./app/config/flavors/procivis/trial/.env",
-    "rnuc:demo": "yarn rnuc ./app/config/flavors/procivis/.env",
+    "rnuc:demo": "yarn rnuc ./app/config/flavors/procivis/demo/.env",
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
     "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv"
   },
