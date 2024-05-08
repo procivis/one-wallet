@@ -32,7 +32,7 @@ export default abstract class WalletScreen {
   }
 
   static credentialName(credentialName: string) {
-    return element(by.text(credentialName));
+    return element(by.id(`WalletScreen.credential.${credentialName}`));
   }
   static get credentialList() {
     return element(by.id('WalletScreen.credentialList'));

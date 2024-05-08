@@ -22,6 +22,11 @@ export default function CredentialCard(testID: string) {
     get body() {
       const id = `${cardId}.carousel`;
       return {
+        backgroundColor: function (cardBackgroundColor: string) {
+          return element(
+            by.id(`${cardId}.cardBackgroundColor.${cardBackgroundColor}`),
+          );
+        },
         get carousel() {
           return element(by.id(id));
         },
@@ -57,11 +62,19 @@ export default function CredentialCard(testID: string) {
         },
         get logo() {
           return {
+            backgroundColor: (logoBackgroundColor: string) => {
+              return element(
+                by.id(`${id}.logoBackgroundColor.${logoBackgroundColor}`),
+              );
+            },
             get icon() {
               return element(by.id(`${id}.logoIcon`));
             },
             get name() {
               return element(by.id(`${id}.logoName`));
+            },
+            textColor: (logoTextColor: string) => {
+              return element(by.id(`${id}.logoTextColor.${logoTextColor}`));
             },
           };
         },
@@ -94,6 +107,9 @@ export default function CredentialCard(testID: string) {
         await this.verifyAttributeValue(attribute.key, attribute.value);
       }
     },
+    verifyCardBackgroundColor: async function (backgroundColor: string) {
+      await expect(this.body.backgroundColor(backgroundColor)).toBeVisible();
+    },
     verifyCredentialName: async function (credentialName: string) {
       await expect(this.header.name).toHaveText(credentialName);
     },
@@ -114,6 +130,15 @@ export default function CredentialCard(testID: string) {
       }
       await expect(this.header.detail).toBeVisible();
       await expect(this.header.detail).toHaveText(contentDetail);
+    },
+    verifyLogoColor: async function (
+      backgroundColor: string,
+      textColor: string,
+    ) {
+      await expect(
+        this.header.logo.backgroundColor(backgroundColor),
+      ).toBeVisible();
+      await expect(this.header.logo.textColor(textColor)).toBeVisible();
     },
     verifyStatus: async function (status: 'revoked' | 'suspended') {
       await expect(this.header.label[status]).toBeVisible();
