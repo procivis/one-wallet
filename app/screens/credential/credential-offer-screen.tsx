@@ -27,11 +27,13 @@ import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { detailsCardFromCredential } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
+  const rootNavigation = useNavigation<RootNavigationProp>();
   const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
@@ -42,10 +44,13 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
   const infoPressHandler = useCallback(() => {
-    navigation.navigate('CredentialOfferNerdScreen', {
-      credentialId,
+    rootNavigation.navigate('NerdMode', {
+      params: {
+        credentialId,
+      },
+      screen: 'OfferNerdMode',
     });
-  }, [credentialId, navigation]);
+  }, [credentialId, rootNavigation]);
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {

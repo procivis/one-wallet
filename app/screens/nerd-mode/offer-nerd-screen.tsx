@@ -7,17 +7,12 @@ import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
-import {
-  IssueCredentialNavigationProp,
-  IssueCredentialRouteProp,
-} from '../../navigators/issue-credential/issue-credential-routes';
+import { NerdModeNavigatorProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
-  const nav =
-    useNavigation<IssueCredentialNavigationProp<'CredentialOfferNerdScreen'>>();
+  const nav = useNavigation();
 
-  const route =
-    useRoute<IssueCredentialRouteProp<'CredentialOfferNerdScreen'>>();
+  const route = useRoute<NerdModeNavigatorProp<'OfferNerdMode'>>();
 
   const { credentialId } = route.params;
 
