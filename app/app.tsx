@@ -15,6 +15,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import {
   AccessibilityFocusHistoryProvider,
   ColorSchemeProvider,
+  useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
   AccessibilityFocusHistoryProvider as AccessibilityFocusHistoryProvider___OLD,
@@ -22,6 +23,7 @@ import {
 } from '@procivis/react-native-components';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
+import { Platform, StatusBar } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import {
   initialWindowMetrics,
@@ -65,10 +67,20 @@ if (!__DEV__) {
  */
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined);
+  const { darkMode } = useAppColorScheme<AppColorScheme>();
 
   useEffect(() => {
     registerTimeAgoLocales();
   }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      return;
+    }
+    StatusBar.setBarStyle(darkMode ? 'light-content' : 'dark-content', true);
+    StatusBar.setBackgroundColor('transparent', true);
+    StatusBar.setTranslucent(true);
+  }, [darkMode]);
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
