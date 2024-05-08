@@ -6,18 +6,18 @@
     </style>
 
     <style name="AppTheme.procivis" parent="BaseTheme">
-        <item name="colorPrimary">#F62323</item>
-        <item name="colorPrimaryDark">#F62323</item>
-        <item name="colorAccent">#F62323</item>
+        <item name="colorPrimary">#0F151A</item>
+        <item name="colorPrimaryDark">#0F151A</item>
+        <item name="colorAccent">#0F151A</item>
         <item name="android:statusBarColor">#FFFFFF</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="BootTheme.procivis" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FCFDFE</item>
+        <item name="windowSplashScreenBackground">#000000</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
         <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>
