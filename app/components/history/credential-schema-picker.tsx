@@ -3,11 +3,7 @@ import {
   ButtonType,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import {
-  ActionModal,
-  RadioGroup,
-  RadioGroupItem,
-} from '@procivis/react-native-components';
+import { ActionModal } from '@procivis/react-native-components';
 import { CredentialSchema } from '@procivis/react-native-one-core';
 import React, { FC, useCallback } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
@@ -15,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useCredentialSchemas } from '../../hooks/core/credential-schemas';
 import { translate } from '../../i18n';
+import RadioGroup, { RadioGroupItem } from '../common/radio-group';
 
 export interface CredentialSchemaPickerProps {
   onClose: () => void;
@@ -60,16 +57,15 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
     >
       {credentialSchemas ? (
         <RadioGroup
+          containerStyle={styles.containerStyle}
           items={[
             {
               key: '',
               label: translate('common.all'),
-              style: styles.filterGroupItem,
             },
             ...credentialSchemas.pages.flat().map((credentialSchema) => ({
               key: credentialSchema.id,
               label: credentialSchema.name,
-              style: styles.filterGroupItem,
             })),
           ]}
           listFooter={
@@ -80,11 +76,9 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
               />
             ) : undefined
           }
-          onDeselected={handleCredentialSchemaChange}
           onEndReached={handleSchemasEndReached}
           onSelected={handleCredentialSchemaChange}
-          selectedItems={selected ? [selected] : ['']}
-          staticContent={false}
+          selectedItem={selected ?? ''}
           style={styles.filterGroup}
         />
       ) : (
@@ -92,6 +86,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
       )}
       <Button
         onPress={onClose}
+        style={[styles.closeButton, { borderColor: colorScheme.background }]}
         testID="CredentialSchemaPicker.close"
         title={translate('common.close')}
         type={ButtonType.Secondary}
@@ -101,17 +96,19 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    borderWidth: 1,
+  },
+  containerStyle: {
+    paddingTop: 12,
+  },
   filterGroup: {
     marginBottom: 12,
-  },
-  filterGroupItem: {
-    marginVertical: 0,
-    paddingTop: 8,
   },
   filterModalContent: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
-    maxHeight: '85%',
+    maxHeight: '45%',
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
