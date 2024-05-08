@@ -605,6 +605,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
+  // Pass
   describe('ONE-1879: Credential Schema Layout', () => {
     let schema1: CredentialSchemaResponseDTO;
 
@@ -633,13 +634,13 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
 
-    it('Detailed credential information', async () => {
+    it('ONE-1873: Accessing Advanced Credential Details ("Nerd Mode")', async () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
+        transport: Transport.PROCIVIS,
       });
-      await WalletScreen.credentialName(schema1.name).tap();
+      await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
       const credentialDetail = await getCredentialDetail(
@@ -680,6 +681,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
+  // Pass
   describe('ONE-1876: Credential full history screen', () => {
     let schema1: CredentialSchemaResponseDTO;
 
@@ -702,15 +704,13 @@ describe('ONE-601: Credential issuance', () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
+        transport: Transport.PROCIVIS,
       });
 
       await suspendCredential(credentialId, authToken);
 
-      await reloadApp({
-        suspendedScreen: true,
-      });
-      await WalletScreen.credentialName(schema1.name).tap();
+      await reloadApp({ suspendedScreen: true });
+      await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.openCredentialHistoryScreen();
       await expect(CredentialHistoryScreen.screen).toBeVisible();
@@ -734,7 +734,12 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
+  // Pass
   describe('ONE-1870: Handling Errors in Credential Offering Process', () => {
+    beforeAll(async () => {
+      await reloadApp();
+    });
+
     it('Wrong share URI', async () => {
       const invitationUrl =
         'https://core.dev.procivis-one.com/ssi/temporary-issuer/v1/connect?protocol=PROCIVIS_TEMPORARY&credential=8a611gad-30b5-4a35-9fa5-b2f86d7279a3';
