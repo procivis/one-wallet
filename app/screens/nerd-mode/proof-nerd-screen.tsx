@@ -8,16 +8,12 @@ import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
-import {
-  ShareCredentialNavigationProp,
-  ShareCredentialRouteProp,
-} from '../../navigators/share-credential/share-credential-routes';
+import { NerdModeNavigatorProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 
-const ProofRequestNerdView: FunctionComponent = () => {
-  const nav =
-    useNavigation<ShareCredentialNavigationProp<'ProofRequestNerdScreen'>>();
-
-  const route = useRoute<ShareCredentialRouteProp<'ProofRequestNerdScreen'>>();
+const ProofDetailNerdView: FunctionComponent = () => {
+  const nav = useNavigation<RootNavigationProp>();
+  const route = useRoute<NerdModeNavigatorProp<'ProofNerdMode'>>();
 
   const { proofId } = route.params;
 
@@ -80,4 +76,4 @@ const ProofRequestNerdView: FunctionComponent = () => {
   );
 };
 
-export default ProofRequestNerdView;
+export default ProofDetailNerdView;

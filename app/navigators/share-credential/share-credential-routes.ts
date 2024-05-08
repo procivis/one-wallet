@@ -19,9 +19,6 @@ export type ShareCredentialNavigatorParamList = {
     request: InvitationResultProofRequest;
     selectedCredentialId?: string;
   };
-  ProofRequestNerdScreen: {
-    proofId: string;
-  };
   SelectCredential: {
     preselectedCredentialId: string;
     request: PresentationDefinitionRequestedCredential;

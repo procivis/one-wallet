@@ -89,7 +89,10 @@ const CredentialDetailScreen: FC = () => {
       showActionSheetWithOptions(options, (selectedIndex) => {
         switch (selectedIndex) {
           case 0:
-            navigation.navigate('CredentialNerdScreen', { credentialId });
+            rootNavigation.navigate('NerdMode', {
+              params: { credentialId },
+              screen: 'CredentialNerdMode',
+            });
             return;
           case 1:
             handleDelete();
@@ -103,7 +106,7 @@ const CredentialDetailScreen: FC = () => {
       handleDelete,
       options,
       showActionSheetWithOptions,
-      navigation,
+      rootNavigation,
     ],
   );
 
