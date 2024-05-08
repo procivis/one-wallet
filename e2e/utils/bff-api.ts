@@ -83,25 +83,27 @@ async function getCredentialSchema(
 export async function createCredentialSchema(
   authToken: string,
   data?: Partial<CredentialSchemaData>,
+  layoutProperties: boolean = false,
 ): Promise<CredentialSchemaResponseDTO> {
+  const layout = {
+    background: {
+      color: '#1677ff',
+    },
+    logo: {
+      backgroundColor: '#ebb1f9',
+      fontColor: '#000000',
+    },
+  };
   const schemaData: CredentialSchemaData = Object.assign(
     {
       claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
       format: CredentialFormat.SDJWT,
-      layoutProperties: {
-        background: {
-          color: '#1677ff',
-        },
-        logo: {
-          backgroundColor: '#ebb1f9',
-          fontColor: '#000000',
-        },
-      },
       layoutType: LayoutType.CARD,
       name: `detox-e2e-${uuidv4()}`,
       revocationMethod: RevocationMethod.NONE,
     },
     data,
+    layoutProperties ? { layoutProperties: layout } : {},
   );
   const schemaId = await apiRequest(
     '/api/credential-schema/v1',
