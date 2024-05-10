@@ -35,7 +35,10 @@ const SetPasswordScreen: FC = () => {
         testID="CreateBackupSetPasswordScreen.input.password"
         value={password}
       />
-      <PasswordStrength password={password} />
+      <PasswordStrength
+        password={password}
+        testID="CreateBackupSetPasswordScreen.strength"
+      />
     </BackupScreen>
   );
 };

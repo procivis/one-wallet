@@ -1,10 +1,13 @@
 import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
-import BackupPreviewScreen from '../page-objects/backup/BackupPreviewScreen';
 import CreateBackupProcessingScreen from '../page-objects/backup/BackupProcessingScreen';
-import BackupRecoveryPasswordScreen from '../page-objects/backup/BackupRecoveryPasswordScreen';
+import CreateBackupCheckPasswordScreen from '../page-objects/backup/CreateBackupCheckPasswordScreen';
 import CreateBackupDashboardScreen from '../page-objects/backup/CreateBackupDashboardScreen';
+import CreateBackupPreviewScreen from '../page-objects/backup/CreateBackupPreviewScreen';
+import CreateBackupSetPasswordScreen, {
+  Tip,
+} from '../page-objects/backup/CreateBackupSetPasswordScreen';
 import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScreen';
 import RestoreBackupDashboardScreen from '../page-objects/restore/RestoreBackupDashboardScreen';
 import RestoreBackupImportScreen from '../page-objects/restore/RestoreBackupImportScreen';
@@ -18,6 +21,10 @@ import { launchApp, reloadApp } from '../utils/init';
 
 describe('ONE-1530: Backup & Restore', () => {
   let authToken: string;
+
+  beforeAll(async () => {
+    authToken = await bffLogin();
+  });
 
   describe('Onboarding', () => {
     beforeAll(async () => {
@@ -45,21 +52,10 @@ describe('ONE-1530: Backup & Restore', () => {
     let credentialSchemaJWT: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      authToken = await bffLogin();
+      await launchApp({ delete: true });
       credentialSchemaJWT = await createCredentialSchema(authToken, {
         format: CredentialFormat.JWT,
       });
-      await device.launchApp({
-        languageAndLocale: {
-          language: 'en-US',
-          locale: 'en-US',
-        },
-        permissions: { camera: 'YES' },
-      });
-    });
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
@@ -78,25 +74,39 @@ describe('ONE-1530: Backup & Restore', () => {
       await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
       await expect(CreateBackupDashboardScreen.screen).toBeVisible();
       await CreateBackupDashboardScreen.newBackupButton.tap();
-      await expect(BackupRecoveryPasswordScreen.screen).toBeVisible();
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
       await verifyButtonEnabled(
-        BackupRecoveryPasswordScreen.setPasswordButton,
+        CreateBackupSetPasswordScreen.setPasswordButton,
         false,
       );
       const password = 'tester';
-      await BackupRecoveryPasswordScreen.password(password);
-      // hide a keyboard
-      await device.pressBack();
-      await BackupRecoveryPasswordScreen.reEnterPassword(password);
-      // hide a keyboard
-      await device.pressBack();
-      await BackupRecoveryPasswordScreen.setPasswordButton.tap();
-      await expect(BackupPreviewScreen.screen).toBeVisible();
-      await BackupPreviewScreen.verifyCredentialVisible(credentialId);
-      await BackupPreviewScreen.continueButton.tap();
-      await expect(CreateBackupProcessingScreen.screen).toBeVisible();
-      await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
-      await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
+      await CreateBackupSetPasswordScreen.fillPassword(`${password}\n`); // \n provide clicking "setPasswordButton"
+
+      await expect(CreateBackupCheckPasswordScreen.screen).toBeVisible();
+
+      await verifyButtonEnabled(
+        CreateBackupCheckPasswordScreen.submitButton,
+        false,
+      );
+      await CreateBackupCheckPasswordScreen.password(password);
+      await device.pressBack(); // hide a keyboard
+      await verifyButtonEnabled(
+        CreateBackupCheckPasswordScreen.submitButton,
+        true,
+      );
+      await CreateBackupCheckPasswordScreen.submitButton.tap();
+
+      await expect(CreateBackupPreviewScreen.screen).toBeVisible();
+      await CreateBackupPreviewScreen.credentialCard(
+        credentialId,
+      ).verifyIsVisible();
+      if (device.getPlatform() === 'ios') {
+        // long press does not work in android
+        await CreateBackupPreviewScreen.createBackupButton.longPress(3001);
+        await expect(CreateBackupProcessingScreen.screen).toBeVisible();
+        await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
+        await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
+      }
     });
 
     it('User can restore backup from settings', async () => {
@@ -108,6 +118,102 @@ describe('ONE-1530: Backup & Restore', () => {
       await expect(RestoreBackupImportScreen.screen).toBeVisible();
       await expect(RestoreBackupImportScreen.importButton).toBeVisible();
       await verifyButtonEnabled(RestoreBackupImportScreen.importButton, false);
+    });
+  });
+
+  describe('ONE-1796: Password strength', () => {
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      await WalletScreen.settingsButton.tap();
+      await expect(SettingsScreen.screen).toBeVisible();
+      await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
+      await expect(CreateBackupDashboardScreen.screen).toBeVisible();
+      await CreateBackupDashboardScreen.newBackupButton.tap();
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
+      await verifyButtonEnabled(
+        CreateBackupSetPasswordScreen.setPasswordButton,
+        false,
+      );
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
+    });
+
+    it('Password: no chars', async () => {
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'unsatisfied',
+        [0, 1, 2, 3],
+      );
+    });
+
+    it('Password: only number', async () => {
+      await CreateBackupSetPasswordScreen.fillPassword('1', {
+        pressBack: true,
+      });
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [0],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyTipsAreVisible(
+        [Tip.Number],
+      );
+    });
+
+    it('Password: only numbers with length > 8', async () => {
+      await CreateBackupSetPasswordScreen.fillPassword('1234512345', {
+        pressBack: true,
+      });
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [0],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyTipsAreVisible(
+        [Tip.Number, Tip.Length],
+      );
+    });
+
+    it('Password: only numbers', async () => {
+      await CreateBackupSetPasswordScreen.fillPassword('1234512345', {
+        pressBack: true,
+      });
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [0],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyTipsAreVisible(
+        [Tip.Number, Tip.Length],
+      );
+    });
+    it('Contain uppercase letter', async () => {
+      await CreateBackupSetPasswordScreen.fillPassword('Freedom22', {
+        pressBack: true,
+      });
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [0, 1],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'unsatisfied',
+        [2, 3],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyTipsAreVisible(
+        [Tip.Number, Tip.Length, Tip.Upper],
+      );
+    });
+
+    it('Contain symbol', async () => {
+      await CreateBackupSetPasswordScreen.fillPassword('Str@ngPass123', {
+        pressBack: true,
+      });
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyIndicatorLevel(
+        'satisfied',
+        [0, 1, 2, 3],
+      );
+      await CreateBackupSetPasswordScreen.passwordStrength.verifyTipsAreVisible(
+        [Tip.Number, Tip.Length, Tip.Upper, Tip.Symbol],
+      );
     });
   });
 });
