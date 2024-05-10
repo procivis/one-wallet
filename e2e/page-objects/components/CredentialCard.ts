@@ -131,6 +131,9 @@ export default function CredentialCard(testID: string) {
       await expect(this.header.detail).toBeVisible();
       await expect(this.header.detail).toHaveText(contentDetail);
     },
+    verifyIsVisible: async function () {
+      await expect(this.element).toBeVisible();
+    },
     verifyLogoColor: async function (
       backgroundColor: string,
       textColor: string,
