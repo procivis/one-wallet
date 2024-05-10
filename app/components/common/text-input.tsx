@@ -1,4 +1,5 @@
 import {
+  concatTestID,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -128,6 +129,7 @@ const Input = forwardRef<TextInput, InputProps>(
         disabled={disabled}
         hitSlop={hitSlop}
         onPress={onAccessoryPress}
+        testID={concatTestID(props.testID, 'accessoryButton')}
       >
         {accessoryIcon}
       </TouchableOpacity>
