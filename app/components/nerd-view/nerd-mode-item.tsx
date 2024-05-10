@@ -5,11 +5,11 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { useClipboard } from '@react-native-clipboard/clipboard';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { CopyContentIcon, OpenLinkIcon } from '../icon/nerd-view-icon';
 
@@ -66,23 +66,34 @@ const ActionIcon: FunctionComponent<{
   testID?: string;
   value: string;
 }> = ({ value, link, testID, copy }) => {
-  const [, setString] = useClipboard();
+  const copyToClipboard = useCopyToClipboard();
+  const handleCopy = useCallback(() => {
+    copyToClipboard(value);
+  }, [copyToClipboard, value]);
+
+  const openLink = useCallback(() => {
+    if (link) {
+      Linking.openURL(link);
+    }
+  }, [link]);
 
   if (copy) {
     return (
-      <TouchableOpacity onPress={() => setString(value)} testID={testID}>
+      <TouchableOpacity onPress={handleCopy} testID={testID}>
         <CopyContentIcon />
       </TouchableOpacity>
     );
-  } else if (link) {
+  }
+
+  if (link) {
     return (
-      <TouchableOpacity onPress={() => Linking.openURL(link)} testID={testID}>
+      <TouchableOpacity onPress={openLink} testID={testID}>
         <OpenLinkIcon />
       </TouchableOpacity>
     );
-  } else {
-    return null;
   }
+
+  return null;
 };
 
 const TextWithHighlight: FunctionComponent<{

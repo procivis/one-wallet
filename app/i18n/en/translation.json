@@ -28,6 +28,7 @@
   "common.closeWithTimeout": "Close (%{timeout}s)",
   "common.confirm": "Confirm",
   "common.continue": "Continue",
+  "common.copiedToClipboard": "Copied to clipboard",
   "common.delete": "Delete",
   "common.holdButton": "Hold for %{seconds} seconds",
   "common.info": "Info",
