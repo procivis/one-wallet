@@ -1,4 +1,5 @@
 import {
+  concatTestID,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -12,6 +13,7 @@ import { PurposeInfoIcon } from '../icon/purpose-icon';
 
 export interface PasswordStrengthProps {
   password: string;
+  testID?: string;
 }
 
 enum Tip {
@@ -57,7 +59,10 @@ const EMPTY_PASSWORD: Result<Levels> = {
   value: '0',
 };
 
-export const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
+export const PasswordStrength: FC<PasswordStrengthProps> = ({
+  password,
+  testID,
+}) => {
   const colorScheme = useAppColorScheme();
   const strength = useMemo(
     () => (password ? passwordStrength(password, OPTIONS) : EMPTY_PASSWORD),
@@ -71,7 +76,6 @@ export const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
       [Tip.Upper]: strength.contains.includes('uppercase'),
     };
   }, [strength]);
-
   return (
     <>
       <View style={styles.strengthIndicators}>
@@ -88,6 +92,12 @@ export const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
                     : colorScheme.grayDark,
               },
             ]}
+            testID={concatTestID(
+              testID,
+              'indicator',
+              index.toString(),
+              strength.id > index ? 'satisfied' : 'unsatisfied',
+            )}
           />
         ))}
       </View>
@@ -113,12 +123,16 @@ export const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
             <View key={tip} style={styles.tipItem}>
               <View style={styles.tipIcon}>
                 {fullfilled && (
-                  <HistoryStatusAcceptedIcon style={styles.successIcon} />
+                  <HistoryStatusAcceptedIcon
+                    style={styles.successIcon}
+                    testID={concatTestID(testID, tip, 'successIcon')}
+                  />
                 )}
               </View>
               <Typography
                 color={fullfilled ? 'rgba(0, 0, 0, 0.5)' : colorScheme.text}
                 preset="xs"
+                testID={concatTestID(testID, tip, 'tip')}
               >
                 {translate(`passwordStrength.tip.${tip}`)}
               </Typography>
