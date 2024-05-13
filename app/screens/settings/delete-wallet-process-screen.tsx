@@ -4,6 +4,7 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
+import { OneError } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -13,7 +14,10 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useONECore } from '../../hooks/core/core-context';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { removePin } from '../../hooks/pin-code/pin-code';
@@ -28,6 +32,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { core, initialize } = useONECore();
   const queryClient = useQueryClient();
+  const [error, setError] = useState<OneError>();
 
   const { walletStore } = useStores();
 
@@ -39,6 +44,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     } catch (e) {
       reportException(e, 'Failed to uninitialize core');
       setState(LoaderViewState.Warning);
+      setError(e as unknown as OneError);
     }
 
     await initialize(true);
@@ -71,6 +77,16 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     closeButtonHandler,
   );
 
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
+
   return (
     <LoadingResultScreen
       button={
@@ -88,6 +104,10 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
       header={{
         leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
         modalHandleVisible: true,
+        rightItem:
+          state === LoaderViewState.Warning && error ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
         title: translate('deleteWalletProcess.title'),
       }}
       loader={{
