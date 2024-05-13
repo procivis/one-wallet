@@ -45,6 +45,8 @@ const getActionStatus = (action: HistoryActionEnum) => {
     case HistoryActionEnum.REJECTED:
     case HistoryActionEnum.REVOKED:
       return HistoryStatusIconType.Error;
+    case HistoryActionEnum.ERRORED:
+      return HistoryStatusIconType.Error;
     case HistoryActionEnum.SUSPENDED:
       return HistoryStatusIconType.Suspend;
     case HistoryActionEnum.OFFERED:

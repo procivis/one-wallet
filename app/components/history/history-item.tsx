@@ -41,6 +41,17 @@ const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
         icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
         label: translate('credentialHistory.accepted'),
       };
+    case HistoryActionEnum.ERRORED:
+      if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
+        return {
+          icon: <HistoryActionIcon type={HistoryActionIconType.Error} />,
+          label: translate('credentialHistory.shareError'),
+        };
+      }
+      return {
+        icon: <HistoryActionIcon type={HistoryActionIconType.Error} />,
+        label: translate('credentialHistory.offerError'),
+      };
     case HistoryActionEnum.REJECTED:
       if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
         return {

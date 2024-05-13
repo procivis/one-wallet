@@ -249,6 +249,7 @@ export enum HistoryActionIconType {
   ShareReject,
   Suspend,
   SuspendTemporary,
+  Error,
 }
 
 export interface HistoryActionIconProps extends ViewProps {
@@ -284,6 +285,9 @@ export const HistoryActionIcon: FC<HistoryActionIconProps> = ({
       statusIcon = HistoryStatusIconType.Error;
       break;
     case HistoryActionIconType.ShareReject:
+      statusIcon = HistoryStatusIconType.Error;
+      break;
+    case HistoryActionIconType.Error:
       statusIcon = HistoryStatusIconType.Error;
       break;
     case HistoryActionIconType.Revoke:
