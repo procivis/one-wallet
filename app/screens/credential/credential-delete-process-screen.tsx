@@ -4,6 +4,7 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
+import { OneError } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -14,7 +15,10 @@ import React, {
 } from 'react';
 import { Platform } from 'react-native';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useCredentialDelete } from '../../hooks/core/credentials';
 import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
@@ -27,6 +31,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const route = useRoute<DeleteCredentialRouteProp<'Processing'>>();
+  const [error, setError] = useState<OneError>();
 
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { credentialId } = route.params;
@@ -42,6 +47,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
     } catch (e) {
       reportException(e, 'Delete credential failure');
       setState(LoaderViewState.Warning);
+      setError(e as unknown as OneError);
     }
   }, [credentialId, deleteCredential]);
 
@@ -65,6 +71,16 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
     onClose,
   );
 
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
+
   return (
     <LoadingResultScreen
       button={
@@ -82,6 +98,10 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
       header={{
         leftItem: <HeaderCloseModalButton onPress={onClose} />,
         modalHandleVisible: Platform.OS === 'ios',
+        rightItem:
+          state === LoaderViewState.Warning ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
         title: translate('credentialDelete.title'),
       }}
       loader={{

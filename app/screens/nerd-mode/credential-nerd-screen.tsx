@@ -22,7 +22,7 @@ import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
-import { NerdModeNavigatorProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
@@ -66,7 +66,7 @@ const getCredentialValidityValue = (
 const CredentialDetailNerdScreen: FunctionComponent = () => {
   const nav = useNavigation();
   const colorScheme = useAppColorScheme();
-  const route = useRoute<NerdModeNavigatorProp<'CredentialNerdMode'>>();
+  const route = useRoute<NerdModeRouteProp<'CredentialNerdMode'>>();
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
