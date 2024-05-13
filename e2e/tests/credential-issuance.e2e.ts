@@ -113,7 +113,7 @@ describe('ONE-601: Credential issuance', () => {
     it('Credential not revoked initially', async () => {
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
       await expect(
-        WalletScreen.credential(credentialId).revokedLabel,
+        WalletScreen.credential(credentialId).header.label.revoked,
       ).not.toExist();
     });
 
@@ -124,12 +124,12 @@ describe('ONE-601: Credential issuance', () => {
 
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
       await expect(
-        WalletScreen.credential(credentialId).revokedLabel,
+        WalletScreen.credential(credentialId).header.label.revoked,
       ).toExist();
     });
 
     it('Revoked credential detail screen', async () => {
-      await WalletScreen.credential(credentialId).header.tap();
+      await WalletScreen.credential(credentialId).header.element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
@@ -181,8 +181,9 @@ describe('ONE-601: Credential issuance', () => {
         });
 
         await expect(
-          WalletScreen.credential(credentialId).suspendedLabel,
+          WalletScreen.credential(credentialId).header.label.suspended,
         ).toExist();
+        await WalletScreen.credential(credentialId).verifyStatus('suspended');
         await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
           .atIndex(0)
           .tap();
@@ -213,7 +214,7 @@ describe('ONE-601: Credential issuance', () => {
           suspendedScreen: true,
         });
         await expect(
-          WalletScreen.credential(credentialId).suspendedLabel,
+          WalletScreen.credential(credentialId).header.label.suspended,
         ).toExist();
         await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
           .atIndex(0)
@@ -247,7 +248,7 @@ describe('ONE-601: Credential issuance', () => {
           revokedScreen: true,
         });
         await expect(
-          WalletScreen.credential(credentialId).revokedLabel,
+          WalletScreen.credential(credentialId).header.label.revoked,
         ).toExist();
         await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
           .atIndex(0)
@@ -282,7 +283,7 @@ describe('ONE-601: Credential issuance', () => {
 
     beforeEach(async () => {
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await WalletScreen.credential(credentialId).header.tap();
+      await WalletScreen.credential(credentialId).element.tap();
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
@@ -831,6 +832,115 @@ describe('ONE-601: Credential issuance', () => {
       );
       await CredentialDetailScreen.credentialCard.verifyCardBackgroundColor(
         '#cc66ff',
+      );
+    });
+  });
+
+  // Pass
+  describe('ONE-2300: Card Stack View: highlight individual Credential', () => {
+    let credentialId_1: string;
+    let credentialId_2: string;
+    let credentialId_3: string;
+
+    beforeAll(async () => {
+      const schema_1 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'Main region', required: true },
+          { datatype: DataType.STRING, key: 'Support region', required: true },
+          { datatype: DataType.PICTURE, key: 'Location photo', required: true },
+        ],
+        layoutProperties: {
+          background: {
+            color: '#7C3D2F',
+          },
+          code: {
+            attribute: 'Main region',
+            type: CodeType.QrCode,
+          },
+          logo: {
+            backgroundColor: '#1A7437',
+            fontColor: '#2E1A74',
+          },
+          pictureAttribute: 'Location photo',
+          primaryAttribute: 'Main region',
+          secondaryAttribute: 'Support region',
+        },
+        name: `Scrolling 1 ${uuidv4()}`,
+      });
+
+      const schema_2 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'last name', required: true },
+          { datatype: DataType.PICTURE, key: 'Photo', required: true },
+        ],
+        layoutProperties: {
+          background: {
+            color: '#cc66ff',
+          },
+          code: {
+            attribute: 'first name',
+            type: CodeType.QrCode,
+          },
+          logo: {
+            backgroundColor: '#ebb1f9',
+            fontColor: '#000000',
+          },
+          pictureAttribute: 'Photo',
+          primaryAttribute: 'first name',
+          secondaryAttribute: 'last name',
+        },
+        name: `Scrolling 2 ${uuidv4()}`,
+      });
+
+      const schema_3 = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first name', required: true },
+          { datatype: DataType.STRING, key: 'last name', required: true },
+        ],
+        name: `Scrolling 3 ${uuidv4()}`,
+      });
+
+      credentialId_1 = await credentialIssuance({
+        authToken,
+        credentialSchema: schema_1,
+      });
+      credentialId_2 = await credentialIssuance({
+        authToken,
+        credentialSchema: schema_2,
+      });
+      credentialId_3 = await credentialIssuance({
+        authToken,
+        credentialSchema: schema_3,
+      });
+    });
+
+    beforeEach(async () => {
+      await expect(WalletScreen.screen).toBeVisible();
+    });
+
+    it('Verify last card opened', async () => {
+      await WalletScreen.credential(credentialId_1).verifyIsVisible();
+      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
+        false,
+      );
+
+      await WalletScreen.credential(credentialId_2).verifyIsVisible();
+      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
+
+      await WalletScreen.credential(credentialId_3).verifyIsVisible();
+      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed();
+    });
+
+    it('Expand card, all cards collapse (Except last one)', async () => {
+      await WalletScreen.credential(credentialId_3).collapseOrExpand();
+      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed(
+        false,
+      );
+
+      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
+      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
+        false,
       );
     });
   });

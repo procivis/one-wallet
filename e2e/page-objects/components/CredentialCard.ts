@@ -35,11 +35,24 @@ export default function CredentialCard(testID: string) {
         },
       };
     },
+    get card() {
+      return {
+        get body() {
+          return element(by.id(cardId));
+        },
+        get collapsed() {
+          return element(by.id(`${testID}.collapsed`));
+        },
+        get expanded() {
+          return element(by.id(`${testID}.expanded`));
+        },
+      };
+    },
     collapseOrExpand: async function () {
       await this.header.element.tap();
     },
     get element() {
-      return element(by.id(cardId));
+      return element(by.id(testID));
     },
     get header() {
       const id = `${cardId}.header`;
@@ -94,7 +107,7 @@ export default function CredentialCard(testID: string) {
       return element(by.id(`${testID}.showAllAttributesButton`));
     },
     swipe: async function (direction: 'left' | 'right') {
-      await expect(this.body.carousel).toBeVisible();
+      await this.verifyCarouselIsVisible();
       await this.body.carousel.swipe(direction);
     },
     verifyAttributeValue: async function (key: string, value: string) {
@@ -109,6 +122,13 @@ export default function CredentialCard(testID: string) {
     },
     verifyCardBackgroundColor: async function (backgroundColor: string) {
       await expect(this.body.backgroundColor(backgroundColor)).toBeVisible();
+    },
+    verifyCarouselIsVisible: async function (visible: boolean = true) {
+      if (visible) {
+        await expect(this.body.carousel).toBeVisible();
+      } else {
+        await expect(this.body.carousel).not.toBeVisible();
+      }
     },
     verifyCredentialName: async function (credentialName: string) {
       await expect(this.header.name).toHaveText(credentialName);
@@ -130,6 +150,13 @@ export default function CredentialCard(testID: string) {
       }
       await expect(this.header.detail).toBeVisible();
       await expect(this.header.detail).toHaveText(contentDetail);
+    },
+    verifyIsCardCollapsed: async function (collapsed: boolean = true) {
+      if (collapsed) {
+        await expect(this.card.collapsed).toBeVisible();
+      } else {
+        await expect(this.card.expanded).toBeVisible();
+      }
     },
     verifyIsVisible: async function () {
       await expect(this.element).toBeVisible();
