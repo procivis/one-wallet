@@ -148,7 +148,6 @@ const CredentialDetailScreen: FC = () => {
           </TouchableOpacity>
         ),
         testID: 'CredentialDetailScreen.header',
-        text: {},
         title: credential.schema.name,
       }}
       testID="CredentialDetailScreen"

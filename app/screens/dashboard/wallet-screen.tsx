@@ -1,17 +1,16 @@
 import {
   Button,
+  concatTestID,
   CredentialDetailsCardListItem,
   Header,
   OptionsIcon,
   ScanButton,
+  SearchBar,
+  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import {
-  ActivityIndicator,
-  concatTestID,
-  TouchableOpacity,
-} from '@procivis/react-native-components';
+import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialListIncludeEntityType,
   CredentialListItem,
@@ -58,7 +57,10 @@ const WalletScreen: FunctionComponent = observer(() => {
   const { data: config } = useCoreConfig();
 
   const safeAreaInsets = useSafeAreaInsets();
-  const contentInsetsStyle = useListContentInset({ headerHeight: 0 });
+  const contentInsetsStyle = useListContentInset({
+    headerHeight: 24,
+    modalPresentation: true,
+  });
   const {
     locale: { locale },
   } = useStores();
@@ -211,10 +213,11 @@ const WalletScreen: FunctionComponent = observer(() => {
       testID="WalletScreen"
     >
       <Header
-        onSearchPhraseChange={!isEmpty ? setSearchPhrase : undefined}
         rightButton={
           <TouchableOpacity
             accessibilityLabel={translate('wallet.settings')}
+            accessibilityRole="button"
+            hitSlop={12}
             onPress={handleWalletSettingsClick}
             style={styles.settingsButton}
             testID="WalletScreen.header.action-settings"
@@ -222,7 +225,6 @@ const WalletScreen: FunctionComponent = observer(() => {
             <OptionsIcon color={colorScheme.text} />
           </TouchableOpacity>
         }
-        searchPhrase={searchPhrase}
         style={[
           styles.header,
           {
@@ -231,11 +233,17 @@ const WalletScreen: FunctionComponent = observer(() => {
           },
         ]}
         testID={'WalletScreen.header'}
-        text={{
-          searchPlaceholder: translate('wallet.search'),
-        }}
         title={translate('wallet.title')}
       />
+      {!isEmpty && (
+        <SearchBar
+          onSearchPhraseChange={setSearchPhrase}
+          placeholder={translate('wallet.search')}
+          searchPhrase={searchPhrase}
+          style={styles.searchBar}
+          testID={'WalletScreen.header.search'}
+        />
+      )}
       <Animated.SectionList
         ListEmptyComponent={
           credentials ? (
@@ -376,6 +384,10 @@ const styles = StyleSheet.create({
   pageLoadingIndicator: {
     marginBottom: 20,
     marginTop: 12,
+  },
+  searchBar: {
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   settingsButton: {
     height: 24,
