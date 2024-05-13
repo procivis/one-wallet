@@ -459,7 +459,7 @@ describe('ONE-614: Proof request', () => {
       );
       await requestProof(proofRequestId, authToken);
 
-      await WalletScreen.credential(credentialId).header.tap();
+      await WalletScreen.credential(credentialId).header.element.tap();
       // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
       // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
       //   'LVVC',
@@ -481,7 +481,7 @@ describe('ONE-614: Proof request', () => {
       await requestProof(proofRequestId, authToken);
       await expect(WalletScreen.screen).toBeVisible();
 
-      await WalletScreen.credential(credentialId).header.tap();
+      await WalletScreen.credential(credentialId).header.element.tap();
       // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
       // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
       // 'LVVC',

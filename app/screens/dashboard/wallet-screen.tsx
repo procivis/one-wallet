@@ -186,6 +186,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           expanded={expanded}
           lastItem={lastItem}
           style={styles.listItem}
+          testID={testID}
         />
       );
     },
