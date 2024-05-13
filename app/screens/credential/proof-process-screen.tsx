@@ -4,7 +4,7 @@ import {
   LoadingResultScreen,
 } from '@procivis/one-react-native-components';
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
-import { WalletStorageType } from '@procivis/react-native-one-core';
+import { OneError, WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -19,7 +19,10 @@ import React, {
 } from 'react';
 import { Linking } from 'react-native';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useProofAccept, useProofDetail } from '../../hooks/core/proofs';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
@@ -39,6 +42,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
+  const [error, setError] = useState<OneError>();
 
   useBlockOSBackNavigation();
 
@@ -72,6 +76,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       } catch (e) {
         reportException(e, 'Submit Proof failure');
         setState(LoaderViewState.Warning);
+        setError(e as unknown as OneError);
       }
     }, 1000);
   }, [acceptProof, didId, credentials, interactionId]);
@@ -102,6 +107,16 @@ const ProofProcessScreen: FunctionComponent = () => {
     closeButtonHandler,
   );
 
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
+
   return (
     <LoadingResultScreen
       button={
@@ -123,6 +138,10 @@ const ProofProcessScreen: FunctionComponent = () => {
       header={{
         leftItem: HeaderCloseModalButton,
         modalHandleVisible: true,
+        rightItem:
+          state === LoaderViewState.Warning ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
         title: translate('proofRequest.title'),
       }}
       loader={{
