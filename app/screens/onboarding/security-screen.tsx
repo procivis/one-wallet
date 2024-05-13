@@ -63,11 +63,10 @@ export const SecurityScreen: FC = () => {
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <Header
         onBack={navigation.goBack}
-        text={{}}
         title={translate('onboarding.security.title')}
       />
       <View style={styles.top}>
-        <Typography color={colorScheme.text}>
+        <Typography color={colorScheme.text} style={styles.shaded}>
           {translate('onboarding.security.subtitle')}
         </Typography>
       </View>
@@ -113,6 +112,9 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
+  },
+  shaded: {
+    opacity: 0.7,
   },
   switch: {
     marginLeft: 12,
