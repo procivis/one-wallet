@@ -164,10 +164,10 @@ export const shareCredentialCardAttributeFromClaim = (
   config?: Config,
 ): CredentialAttribute => {
   if (claim) {
-    return detailsCardAttributeFromClaim(claim, config);
+    return { ...detailsCardAttributeFromClaim(claim, config), id };
   }
   return {
-    id: id,
+    id,
     name: field?.name ?? id,
     value: translate('proofRequest.missingAttribute'),
     valueErrorColor: true,
