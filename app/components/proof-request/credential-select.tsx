@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   notice: {
+    margin: 12,
     padding: 12,
   },
   noticeButton: {
