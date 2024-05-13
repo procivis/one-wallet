@@ -3,14 +3,11 @@ import React, { FC } from 'react';
 
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { translate } from '../../i18n';
-import {
-  InvitationNavigationProp,
-  InvitationRouteProp,
-} from '../../navigators/invitation/invitation-routes';
+import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
-const InvitationErrorDetailsScreen: FC = () => {
-  const navigation = useNavigation<InvitationNavigationProp<'Error'>>();
-  const route = useRoute<InvitationRouteProp<'Error'>>();
+const ErrorNerdScreen: FC = () => {
+  const navigation = useNavigation();
+  const route = useRoute<NerdModeRouteProp<'ErrorNerdMode'>>();
 
   const { error } = route.params;
 
@@ -47,4 +44,4 @@ const InvitationErrorDetailsScreen: FC = () => {
   );
 };
 
-export default InvitationErrorDetailsScreen;
+export default ErrorNerdScreen;
