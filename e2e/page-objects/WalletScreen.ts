@@ -1,5 +1,7 @@
 import { expect } from 'detox';
 
+import CredentialCard from './components/CredentialCard';
+
 export default abstract class WalletScreen {
   static get screen() {
     return element(by.id('WalletScreen'));
@@ -9,26 +11,8 @@ export default abstract class WalletScreen {
     return element(by.id('WalletScreen.header.action-settings'));
   }
 
-  private static credentialEntry(credentialId: string) {
-    const id = `WalletScreen.credential.${credentialId}`;
-    return {
-      get element() {
-        return element(by.id(id));
-      },
-      get header() {
-        return element(by.id(`${id}.header`));
-      },
-      get revokedLabel() {
-        return element(by.id(`${id}.header.revoked`));
-      },
-      get suspendedLabel() {
-        return element(by.id(`${id}.header.suspended`));
-      },
-    };
-  }
-
   static credential(credentialId: string) {
-    return this.credentialEntry(credentialId);
+    return CredentialCard(`WalletScreen.credential.${credentialId}`);
   }
 
   static credentialName(credentialName: string) {
