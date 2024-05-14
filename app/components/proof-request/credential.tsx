@@ -1,7 +1,6 @@
 import { CredentialDetailsCardListItem } from '@procivis/one-react-native-components';
 import { PresentationDefinitionRequestedCredential } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
-import { StyleSheet } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
@@ -43,13 +42,6 @@ export const Credential: FC<{
       expanded={selected}
       lastItem={lastItem}
       onImagePreview={onImagePreview}
-      style={styles.credential}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  credential: {
-    marginBottom: 8,
-  },
-});
