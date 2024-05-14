@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+    marginTop: 64,
   },
   content: {
     flex: 1,
