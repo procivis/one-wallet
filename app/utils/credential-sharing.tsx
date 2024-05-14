@@ -1,9 +1,9 @@
 import {
-  AlertOutlineIcon,
   concatTestID,
   CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
+  CredentialNoticeWarningIcon,
   CredentialWarningIcon,
   RequiredAttributeIcon,
   Selector,
@@ -190,7 +190,7 @@ export const shareCredentialCardFromCredential = (
     selectiveDisclosureSupported === false
       ? {
           notice: translate('proofRequest.selectiveDisclosure.notice'),
-          noticeIcon: AlertOutlineIcon,
+          noticeIcon: CredentialNoticeWarningIcon,
         }
       : undefined;
   const card = credential
@@ -268,7 +268,7 @@ export const selectCredentialCardFromCredential = (
     selectiveDisclosureSupported === false
       ? {
           notice: translate('proofRequest.selectiveDisclosure.notice'),
-          noticeIcon: AlertOutlineIcon,
+          noticeIcon: CredentialNoticeWarningIcon,
         }
       : undefined;
   const { header, ...cardProps } = getCredentialCardPropsFromCredential(
