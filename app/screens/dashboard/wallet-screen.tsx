@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   searchBar: {
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 20,
   },
   settingsButton: {
