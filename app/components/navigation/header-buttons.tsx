@@ -10,24 +10,25 @@ import React, { FC, useCallback } from 'react';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
-export const HeaderBackButton: FC = () => {
+export type HeaderButtonProps = {
+  onPress?: () => void;
+};
+
+export const HeaderBackButton: FC<HeaderButtonProps> = ({ onPress }) => {
   const navigation = useNavigation();
   const handleBackButtonPress = useCallback(() => {
+    if (onPress) {
+      return onPress();
+    }
     navigation.goBack();
-  }, [navigation]);
+  }, [onPress, navigation]);
   if (!navigation.canGoBack) {
     return null;
   }
   return <BackButton onPress={handleBackButtonPress} testID="Screen.back" />;
 };
 
-export type HeaderCloseModalButtonProps = {
-  onPress?: () => void;
-};
-
-export const HeaderCloseModalButton: FC<HeaderCloseModalButtonProps> = ({
-  onPress,
-}) => {
+export const HeaderCloseModalButton: FC<HeaderButtonProps> = ({ onPress }) => {
   const navigation = useNavigation<RootNavigationProp>();
   const handleCloseButtonPress = useCallback(() => {
     if (onPress) {
@@ -46,11 +47,14 @@ export const HeaderCloseModalButton: FC<HeaderCloseModalButtonProps> = ({
   );
 };
 
-export const HeaderModalBackButton: FC = () => {
+export const HeaderModalBackButton: FC<HeaderButtonProps> = ({ onPress }) => {
   const navigation = useNavigation<RootNavigationProp>();
   const handleCloseButtonPress = useCallback(() => {
+    if (onPress) {
+      return onPress();
+    }
     navigation.goBack();
-  }, [navigation]);
+  }, [onPress, navigation]);
   return (
     <BackButton
       icon={BackButtonIcon.Close}
@@ -70,7 +74,6 @@ export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({ onPress }) => {
       accessibilityLabel={translate('accessibility.nav.info')}
       icon={InfoIcon}
       onPress={onPress}
-      // style={style}
       testID="Screen.infoButton"
     />
   );
