@@ -26,8 +26,9 @@ const ListTitleHeader: FC<ListTitleHeaderProps> = ({ title }) => {
 
 const styles = StyleSheet.create({
   listTitle: {
+    marginBottom: 20,
     marginHorizontal: 20,
-    marginVertical: 24,
+    marginTop: 9,
   },
 });
 

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-export const useOnScrollHeaderState = (offset = 50) => {
+export const useOnScrollHeaderState = (offset = 30) => {
   const [titleVisible, setTitleVisible] = useState(false);
 
   const onScroll = useCallback(
