@@ -4,7 +4,7 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { OneError, WalletStorageType } from '@procivis/react-native-one-core';
+import { WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -44,7 +44,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const { mutateAsync: acceptCredential } = useCredentialAccept();
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
   const { walletStore } = useStores();
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -81,7 +81,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       } catch (e) {
         reportException(e, 'Accept credential failure');
         setState(LoaderViewState.Warning);
-        setError(e as unknown as OneError);
+        setError(e);
       }
     }, 1000);
   }, [acceptCredential, interactionId, didId]);
