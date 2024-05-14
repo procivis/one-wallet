@@ -4,6 +4,7 @@ import {
   CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
+  CredentialWarningIcon,
   RequiredAttributeIcon,
   Selector,
   SelectorStatus,
@@ -81,8 +82,7 @@ export const missingCredentialCardFromRequest = (
       credentialDetailErrorColor: true,
       credentialDetailTestID: concatTestID(testID, 'subtitle', 'missing'),
       credentialName: request.name ?? request.id,
-      icon: undefined,
-      iconLabelColor: undefined,
+      statusIcon: CredentialWarningIcon,
     },
     ...notice,
   };
