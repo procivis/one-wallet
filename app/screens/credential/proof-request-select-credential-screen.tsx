@@ -1,9 +1,4 @@
-import {
-  Button,
-  concatTestID,
-  NavigationHeader,
-  useAppColorScheme,
-} from '@procivis/one-react-native-components';
+import { Button, concatTestID } from '@procivis/one-react-native-components';
 import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -12,11 +7,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { Credential } from '../../components/proof-request/credential';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
@@ -29,7 +24,6 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
-  const colorScheme = useAppColorScheme();
   const { data: allCredentials } = useCredentials();
 
   const { preselectedCredentialId, request } = route.params;
@@ -59,20 +53,20 @@ const SelectCredentialScreen: FunctionComponent = () => {
   );
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.contentContainer}
-      style={[styles.scrollView, { backgroundColor: colorScheme.background }]}
+    <ScrollViewScreen
+      header={{
+        leftItem: HeaderBackButton,
+        modalHandleVisible: Platform.OS === 'ios',
+        static: true,
+        title: translate('proofRequest.selectCredential.title'),
+      }}
+      modalPresentation
       testID="ProofRequestSelectCredentialScreen"
     >
       <View
         style={styles.content}
         testID="ProofRequestSelectCredentialScreen.content"
       >
-        <NavigationHeader
-          leftItem={HeaderBackButton}
-          modalHandleVisible
-          title={translate('proofRequest.selectCredential.title')}
-        />
         {selectionOptions.map((credentialId, index, { length }) => {
           const selected = selectedCredentialId === credentialId;
           return (
@@ -95,16 +89,15 @@ const SelectCredentialScreen: FunctionComponent = () => {
             </View>
           );
         })}
-
-        <SafeAreaView edges={['bottom']} style={styles.bottom}>
-          <Button
-            onPress={onConfirm}
-            testID="ProofRequestSelectCredentialScreen.confirm"
-            title={translate('proofRequest.selectCredential.select')}
-          />
-        </SafeAreaView>
       </View>
-    </ScrollView>
+      <View style={styles.bottom}>
+        <Button
+          onPress={onConfirm}
+          testID="ProofRequestSelectCredentialScreen.confirm"
+          title={translate('proofRequest.selectCredential.select')}
+        />
+      </View>
+    </ScrollViewScreen>
   );
 };
 
@@ -112,19 +105,15 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+    marginTop: 64,
+    paddingHorizontal: 12,
   },
   content: {
     flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
+    paddingHorizontal: 16,
   },
   item: {
     marginBottom: 12,
-  },
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
   },
 });
 
