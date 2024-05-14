@@ -222,13 +222,7 @@ export const HistoryDetailScreen: FC = () => {
               {translate('historyDetail.response')}
             </Typography>
             {proof.credentials.map((proofCredential, index, { length }) => (
-              <View
-                key={proofCredential.id}
-                style={[
-                  styles.credential,
-                  index === 0 && styles.credentialFirst,
-                ]}
-              >
+              <View key={proofCredential.id} style={styles.credential}>
                 <Credential
                   credentialId={proofCredential.id}
                   expanded={expandedCredential === proofCredential.id}
@@ -253,10 +247,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   credential: {
-    marginTop: 12,
-  },
-  credentialFirst: {
-    marginTop: 0,
+    marginBottom: 4,
   },
   section: {
     borderRadius: 8,
