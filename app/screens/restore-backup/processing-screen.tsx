@@ -8,7 +8,10 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useBackupFinalizeImportProcedure } from '../../hooks/core/backup';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
@@ -24,6 +27,7 @@ const ProcessingScreen: FC = () => {
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState(LoaderViewState.InProgress);
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -34,6 +38,7 @@ const ProcessingScreen: FC = () => {
     } catch (e) {
       reportException(e, 'Backup restoring failure');
       setState(LoaderViewState.Warning);
+      setError(e);
     }
   }, [finalizeImport]);
 
@@ -58,6 +63,16 @@ const ProcessingScreen: FC = () => {
     closeButtonHandler,
   );
 
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
+
   return (
     <LoadingResultScreen
       button={
@@ -75,6 +90,10 @@ const ProcessingScreen: FC = () => {
       header={{
         leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
         modalHandleVisible: Platform.OS === 'ios',
+        rightItem:
+          state === LoaderViewState.Warning ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
         title: translate('restoreBackup.processing.title'),
       }}
       loader={{
