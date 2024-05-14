@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   requestedCredential: {
-    marginBottom: 24,
+    marginBottom: 12,
   },
   requestedCredentialLast: {
     marginBottom: 0,
