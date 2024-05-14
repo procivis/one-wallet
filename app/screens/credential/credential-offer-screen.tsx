@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'flex-end',
+    marginTop: 64,
     paddingBottom: Platform.OS === 'android' ? 16 : 0,
     paddingTop: 16,
   },
