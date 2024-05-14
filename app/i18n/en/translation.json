@@ -244,7 +244,6 @@
   "proofRequest.invalidCredential.notice": "This credential validity could not be confirmed. Please try again in few minutes.",
   "proofRequest.invalidCredential.title": "Validation error",
   "proofRequest.missingAttribute": "Attribute Missing",
-  "proofRequest.missingCredential.notice": "You are missing this credential. Please ask the service provider how you can obtain this credential.",
   "proofRequest.missingCredential.title": "Credential Missing",
   "proofRequest.multipleCredentials.notice": "There is more than one version of this credential available.",
   "proofRequest.multipleCredentials.select": "Select version",
