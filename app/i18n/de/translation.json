@@ -80,7 +80,6 @@
   "proofRequest.attributes": "Angeforderte Attribute",
   "proofRequest.confirm": "Teilen",
   "proofRequest.missingAttribute": "Attribut fehlend",
-  "proofRequest.missingCredential.notice": "Die benötigten Nachweise fehlen. Bitte wenden Sie sich an den Aussteller, um diese anzufordern.",
   "proofRequest.missingCredential.title": "Nachweis fehlt",
   "proofRequest.multipleCredentials.notice": "Es ist mehr als eine Version dieses Nachweises verfügbar.",
   "proofRequest.multipleCredentials.select": "Version auswählen",
