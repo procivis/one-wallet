@@ -7,7 +7,9 @@ export interface BackendConfiguration {
   host: string;
 }
 
-export interface FeatureFlags {}
+export interface FeatureFlags {
+  localization: boolean;
+}
 
 export interface Configuration {
   appName: string;
