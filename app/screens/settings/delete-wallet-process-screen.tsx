@@ -4,7 +4,6 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -32,7 +31,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { core, initialize } = useONECore();
   const queryClient = useQueryClient();
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   const { walletStore } = useStores();
 
@@ -44,7 +43,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     } catch (e) {
       reportException(e, 'Failed to uninitialize core');
       setState(LoaderViewState.Warning);
-      setError(e as unknown as OneError);
+      setError(e);
     }
 
     await initialize(true);
@@ -54,6 +53,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     } catch (e) {
       reportException(e, 'Failed to remove PIN');
       setState(LoaderViewState.Warning);
+      setError(e);
     }
 
     await queryClient.resetQueries();

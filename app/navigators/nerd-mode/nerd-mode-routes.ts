@@ -1,4 +1,3 @@
-import { OneError } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -7,7 +6,7 @@ export type NerdModeNavigatorParamList = {
     credentialId: string;
   };
   ErrorNerdMode: {
-    error: OneError;
+    error: Error | unknown;
   };
   OfferNerdMode: {
     credentialId: string;

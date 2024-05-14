@@ -35,7 +35,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 

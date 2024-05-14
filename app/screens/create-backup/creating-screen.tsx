@@ -4,7 +4,6 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FC,
@@ -39,7 +38,7 @@ const CreatingScreen: FC = () => {
   } = useRoute<CreateBackupProcessingRouteProp<'Creating'>>();
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { mutateAsync: createBackup } = useCreateBackup();
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -59,7 +58,7 @@ const CreatingScreen: FC = () => {
     } catch (e) {
       reportException(e, 'Backup creation failure');
       setState(LoaderViewState.Warning);
-      setError(e as unknown as OneError);
+      setError(e);
     }
   }, [createBackup, password, backupFilePath]);
 
