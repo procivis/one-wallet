@@ -204,11 +204,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   notice: {
-    margin: 12,
+    marginBottom: 22,
+    marginHorizontal: 12,
     padding: 12,
   },
   noticeButton: {
-    marginTop: 12,
+    marginTop: 24,
     paddingVertical: 11,
   },
 });
