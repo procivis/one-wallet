@@ -16,23 +16,29 @@ import React, {
 import { Platform } from 'react-native';
 import { DocumentDirectoryPath } from 'react-native-fs';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useCreateBackup } from '../../hooks/core/backup';
 import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { CreateBackupProcessingRouteProp } from '../../navigators/create-backup/create-backup-processing-routes';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getBackupFileName } from '../../utils/backup';
 import { reportException } from '../../utils/reporting';
 
 const CreatingScreen: FC = () => {
   const navigation = useNavigation<CreateBackupNavigationProp<'Processing'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
   const {
     params: { password },
   } = useRoute<CreateBackupProcessingRouteProp<'Creating'>>();
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { mutateAsync: createBackup } = useCreateBackup();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -52,6 +58,7 @@ const CreatingScreen: FC = () => {
     } catch (e) {
       reportException(e, 'Backup creation failure');
       setState(LoaderViewState.Warning);
+      setError(e);
     }
   }, [createBackup, password, backupFilePath]);
 
@@ -89,6 +96,16 @@ const CreatingScreen: FC = () => {
     handleClose,
   );
 
+  const infoPressHandler = useCallback(() => {
+    if (!error) {
+      return;
+    }
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
+
   return (
     <LoadingResultScreen
       button={
@@ -106,6 +123,10 @@ const CreatingScreen: FC = () => {
       header={{
         leftItem: <HeaderCloseModalButton onPress={handleClose} />,
         modalHandleVisible: Platform.OS === 'ios',
+        rightItem:
+          state === LoaderViewState.Warning ? (
+            <HeaderInfoButton onPress={infoPressHandler} />
+          ) : undefined,
         title: translate('createBackup.processing.title'),
       }}
       loader={{
