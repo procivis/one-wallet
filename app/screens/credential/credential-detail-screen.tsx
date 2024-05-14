@@ -4,8 +4,8 @@ import {
   ButtonType,
   concatTestID,
   CredentialDetailsCard,
-  DetailScreen,
   OptionsIcon,
+  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -20,9 +20,11 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { HistoryItem } from '../../components/history/history-item';
+import { HeaderBackButton } from '../../components/navigation/header-buttons';
+import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useHistory } from '../../hooks/core/history';
@@ -116,6 +118,10 @@ const CredentialDetailScreen: FC = () => {
     navigation.navigate('History', { credentialId });
   }, [credentialId, navigation]);
 
+  const backButtonHandler = useCallback(() => {
+    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+  }, [rootNavigation]);
+
   if (!credential) {
     return <ActivityIndicator />;
   }
@@ -127,17 +133,10 @@ const CredentialDetailScreen: FC = () => {
   );
 
   return (
-    <DetailScreen
-      contentStyle={[
-        {
-          backgroundColor: colorScheme.background,
-        },
-        styles.credentialContainer,
-      ]}
-      headerProps={{
-        onBack: () =>
-          rootNavigation.navigate('Dashboard', { screen: 'Wallet' }),
-        rightButton: (
+    <ScrollViewScreen
+      header={{
+        leftItem: <HeaderBackButton onPress={backButtonHandler} />,
+        rightItem: (
           <TouchableOpacity
             accessibilityLabel={translate('wallet.settings')}
             onPress={onActions}
@@ -168,7 +167,7 @@ const CredentialDetailScreen: FC = () => {
         historyEntries={credentialHistory}
         onSeeAllHistory={onSeeAllHistory}
       />
-    </DetailScreen>
+    </ScrollViewScreen>
   );
 };
 
@@ -196,7 +195,7 @@ const HistorySection: FC<{
     [rootNavigation],
   );
   return (
-    <>
+    <View style={styles.history}>
       <Typography
         accessibilityRole="header"
         color={colorScheme.text}
@@ -230,16 +229,17 @@ const HistorySection: FC<{
           />
         )}
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   credential: {
     marginBottom: 12,
+    marginHorizontal: 16,
   },
-  credentialContainer: {
-    paddingHorizontal: 16,
+  history: {
+    marginHorizontal: 16,
   },
   historyLog: {
     borderRadius: 20,
