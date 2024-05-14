@@ -32,15 +32,17 @@ const styles = StyleSheet.create({
   },
 });
 
+export type NerdModeSection = {
+  data: Array<NerdModeItemProps>;
+  title: string;
+};
+
 type NerdModeProps = {
   entityCluster?: {
     entityName: string;
   };
   onClose: () => void;
-  sections: {
-    data: Array<NerdModeItemProps>;
-    title: string;
-  }[];
+  sections: NerdModeSection[];
   testID: string;
   title: string;
 };
