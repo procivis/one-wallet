@@ -4,7 +4,7 @@ import {
   LoadingResultScreen,
 } from '@procivis/one-react-native-components';
 import { useBlockOSBackNavigation } from '@procivis/react-native-components';
-import { OneError, WalletStorageType } from '@procivis/react-native-one-core';
+import { WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -42,7 +42,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -76,7 +76,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       } catch (e) {
         reportException(e, 'Submit Proof failure');
         setState(LoaderViewState.Warning);
-        setError(e as unknown as OneError);
+        setError(e);
       }
     }, 1000);
   }, [acceptProof, didId, credentials, interactionId]);

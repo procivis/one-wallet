@@ -4,7 +4,6 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -31,7 +30,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const route = useRoute<DeleteCredentialRouteProp<'Processing'>>();
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   const [state, setState] = useState(LoaderViewState.InProgress);
   const { credentialId } = route.params;
@@ -47,7 +46,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
     } catch (e) {
       reportException(e, 'Delete credential failure');
       setState(LoaderViewState.Warning);
-      setError(e as unknown as OneError);
+      setError(e);
     }
   }, [credentialId, deleteCredential]);
 

@@ -4,7 +4,6 @@ import {
   LoadingResultScreen,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
@@ -28,7 +27,7 @@ const ProcessingScreen: FC = () => {
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState(LoaderViewState.InProgress);
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -39,7 +38,7 @@ const ProcessingScreen: FC = () => {
     } catch (e) {
       reportException(e, 'Backup restoring failure');
       setState(LoaderViewState.Warning);
-      setError(e as unknown as OneError);
+      setError(e);
     }
   }, [finalizeImport]);
 
