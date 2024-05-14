@@ -23,20 +23,19 @@ import {
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
-import {
-  InvitationNavigationProp,
-  InvitationRouteProp,
-} from '../../navigators/invitation/invitation-routes';
+import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
-  const navigation = useNavigation<InvitationNavigationProp<'Processing'>>();
+  const rootNavigation =
+    useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const managementNavigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
-  const [error, setError] = useState<OneError>();
+  const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
 
@@ -74,8 +73,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
     if (!error) {
       return;
     }
-    navigation.navigate('Error', { error });
-  }, [error, navigation]);
+    rootNavigation.navigate('NerdMode', {
+      params: { error },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, rootNavigation]);
 
   return (
     <LoadingResultScreen

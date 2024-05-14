@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import CredentialDetailNerdScreen from '../../screens/nerd-mode/credential-nerd-screen';
+import ErrorNerdScreen from '../../screens/nerd-mode/error-nerd-screen';
 import CredentialOfferNerdView from '../../screens/nerd-mode/offer-nerd-screen';
 import ProofDetailNerdView from '../../screens/nerd-mode/proof-nerd-screen';
 import { NerdModeNavigatorParamList } from './nerd-mode-routes';
@@ -17,6 +18,7 @@ const NerdModeNavigator = () => {
         name="CredentialNerdMode"
       />
       <Stack.Screen component={CredentialOfferNerdView} name="OfferNerdMode" />
+      <Stack.Screen component={ErrorNerdScreen} name="ErrorNerdMode" />
     </Stack.Navigator>
   );
 };

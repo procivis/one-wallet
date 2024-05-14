@@ -8,12 +8,12 @@ import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
 import NerdModeScreen from '../../components/screens/nerd-mode-screen';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
-import { NerdModeNavigatorProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const ProofDetailNerdView: FunctionComponent = () => {
   const nav = useNavigation<RootNavigationProp>();
-  const route = useRoute<NerdModeNavigatorProp<'ProofNerdMode'>>();
+  const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
 
   const { proofId } = route.params;
 
