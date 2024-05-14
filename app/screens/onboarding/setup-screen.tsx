@@ -81,18 +81,20 @@ export const SetupScreen: FC = () => {
     >
       <ContrastingStatusBar backgroundColor={colorScheme.background} />
       <View accessibilityElementsHidden={true} style={styles.top}>
-        <DummyCredential
-          bgImageIndex={0}
-          detail={'... 0987  ·  DEBIT'}
-          name={'Bank ID'}
-          style={styles.credential1}
-        />
-        <DummyCredential
-          bgImageIndex={1}
-          detail={'30.06.1990  ·  CHE'}
-          name={'National Identity'}
-          style={styles.credential2}
-        />
+        <View style={[styles.topCredential, styles.credential]}>
+          <DummyCredential
+            bgImageIndex={0}
+            detail={'... 0987  ·  DEBIT'}
+            name={'Bank ID'}
+          />
+        </View>
+        <View style={[styles.bottomCredential, styles.credential]}>
+          <DummyCredential
+            bgImageIndex={1}
+            detail={'30.06.1990  ·  CHE'}
+            name={'National Identity'}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -128,22 +130,30 @@ export const SetupScreen: FC = () => {
 };
 
 const styles = StyleSheet.create({
+  bottomCredential: {
+    bottom: 30,
+    left: 5,
+    transform: [{ scale: 0.8 }, { rotate: '-17deg' }],
+  },
   buttons: {
     padding: 12,
-    paddingBottom: 24,
+    paddingBottom: 11,
   },
-  credential1: {
+  // eslint-disable-next-line react-native/no-color-literals
+  credential: {
+    alignSelf: 'center',
     position: 'absolute',
-    transform: [{ scale: 0.75 }, { rotate: '20deg' }],
-  },
-  credential2: {
-    bottom: 20,
-    position: 'absolute',
-    transform: [{ scale: 0.75 }, { rotate: '-17deg' }],
+    shadowColor: '#102742',
+    shadowOffset: {
+      height: 0,
+      width: 5,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 14,
   },
   description: {
-    marginBottom: 24,
     marginTop: 8,
+    opacity: 0.7,
   },
   screen: {
     flex: 1,
@@ -152,10 +162,17 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   text: {
+    marginBottom: 24,
     padding: 20,
     paddingBottom: 24,
   },
   top: {
     flex: 1,
+    paddingTop: 100,
+  },
+  topCredential: {
+    right: 5,
+    top: 15,
+    transform: [{ scale: 0.8 }, { rotate: '20deg' }],
   },
 });
