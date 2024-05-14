@@ -96,24 +96,9 @@ export const CredentialSelect: FunctionComponent<{
     testID,
   );
 
-  const footer = (
-    <>
-      {!credential && (
-        <View
-          style={[styles.notice, { backgroundColor: colorScheme.background }]}
-          testID={concatTestID(testID, 'notice.missing')}
-        >
-          <Typography
-            align="center"
-            color={colorScheme.text}
-            preset="s/line-height-capped"
-            style={styles.notice}
-          >
-            {translate('proofRequest.missingCredential.notice')}
-          </Typography>
-        </View>
-      )}
-      {validityState === ValidityState.Revoked && (
+  const footer = (() => {
+    if (validityState === ValidityState.Revoked) {
+      return (
         <View
           style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.revoked')}
@@ -127,8 +112,10 @@ export const CredentialSelect: FunctionComponent<{
             {translate('proofRequest.revokedCredential.notice')}
           </Typography>
         </View>
-      )}
-      {validityState === ValidityState.Suspended && (
+      );
+    }
+    if (validityState === ValidityState.Suspended) {
+      return (
         <View
           style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.suspended')}
@@ -142,8 +129,11 @@ export const CredentialSelect: FunctionComponent<{
             {translate('proofRequest.suspendedCredential.notice')}
           </Typography>
         </View>
-      )}
-      {invalid && (
+      );
+    }
+
+    if (invalid) {
+      return (
         <View
           style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.invalid')}
@@ -157,8 +147,11 @@ export const CredentialSelect: FunctionComponent<{
             {translate('proofRequest.invalidCredential.notice')}
           </Typography>
         </View>
-      )}
-      {selectionOptions.length > 1 && (
+      );
+    }
+
+    if (selectionOptions.length > 1) {
+      return (
         <View
           style={[styles.notice, { backgroundColor: colorScheme.background }]}
           testID={concatTestID(testID, 'notice.multiple')}
@@ -178,9 +171,9 @@ export const CredentialSelect: FunctionComponent<{
             type={ButtonType.Secondary}
           />
         </View>
-      )}
-    </>
-  );
+      );
+    }
+  })();
 
   return (
     <CredentialDetailsCardListItem
