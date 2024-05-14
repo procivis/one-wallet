@@ -62,7 +62,6 @@ export const UserAgreementScreen: FC = () => {
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <Header
         onBack={navigation.goBack}
-        text={{}}
         title={translate('onboarding.userAgreement.title')}
       />
       <View style={styles.top}>
@@ -126,6 +125,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginBottom: 16,
+    opacity: 0.7,
   },
   top: {
     flex: 1,
