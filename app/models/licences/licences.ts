@@ -1,28 +1,24 @@
 type ExternalLibraryExternalReference = {
   comment: string | null;
-  type: 'documentation' | 'website' | 'vcs';
+  type: 'documentation' | 'website' | 'vcs' | 'other';
   url: string;
 };
 
 export type ExternalLibrary = {
-  description: string;
-  externalReferences: ExternalLibraryExternalReference[];
+  description: string | null;
+  externalReferences: ExternalLibraryExternalReference[] | null;
   licenses: string[];
   name: string;
   purl: string;
-  type: string;
+  type: 'library' | 'framework';
   version: string;
 };
 
 export type Licence = {
-  id: string;
-  isFsfLibre: boolean;
-  isOsiApproved: boolean;
-  licenseComments: string | null;
+  licenseId: string;
   licenseText: string;
   name: string;
   seeAlso: string[];
-  uuid: string;
 };
 
 export type LibrariesLicences = {
