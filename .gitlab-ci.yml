@@ -42,7 +42,7 @@ workflow:
       --access-token $BITRISE_API_ACCESS_TOKEN
       --slug $BITRISE_PROJECT_SLUG
       --workflow $BITRISE_WORKFLOW
-      --branch "$CI_COMMIT_REF_NAME"
+      --commit "$CI_COMMIT_SHA"
       --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
       --output "artifacts"
   artifacts:
@@ -60,7 +60,7 @@ workflow:
       --access-token $BITRISE_API_ACCESS_TOKEN
       --slug $BITRISE_PROJECT_SLUG
       --workflow $BITRISE_WORKFLOW
-      --branch "$CI_COMMIT_REF_NAME"
+      --commit "$CI_COMMIT_SHA"
       --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
 
 .install-node-modules: &install-node-modules
@@ -267,7 +267,7 @@ dependency_track:ios:upload-bom:
       --access-token $BITRISE_API_ACCESS_TOKEN
       --slug $BITRISE_PROJECT_SLUG
       --workflow iOS_SBOM
-      --branch "$CI_COMMIT_REF_NAME"
+      --commit "$CI_COMMIT_SHA"
       --output "artifacts"
     # remove authors from OpenSSL entry, because it breaks parsing when uploaded
     - grep -v 'mark\@openssl\.org' ${SBOM_FILE_PATH} >temp.xml
