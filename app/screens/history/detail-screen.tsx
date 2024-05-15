@@ -31,6 +31,7 @@ import {
   HistoryRouteProp,
 } from '../../navigators/history/history-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { nonEmptyFilter } from '../../utils/filtering';
 import { getEntryTitle } from '../../utils/history';
 import {
   capitalizeFirstLetter,
@@ -75,7 +76,7 @@ export const HistoryDetailScreen: FC = () => {
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
   const { metadata: backupInfo } = entry;
-  const { data: credential } = useCredentialDetail(
+  const { data: issuedCredential } = useCredentialDetail(
     entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
       ? entry.entityId
       : undefined,
@@ -85,9 +86,13 @@ export const HistoryDetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
+  const proofCredentials = (proof?.proofInputs ?? [])
+    .map(({ credential }) => credential)
+    .filter(nonEmptyFilter);
+
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
-  const from = credential?.issuerDid ?? proof?.verifierDid;
+  const from = issuedCredential?.issuerDid ?? proof?.verifierDid;
   const actionStatus = getActionStatus(entry.action);
   const actionValueColor = getStatusTextColor(actionStatus);
 
@@ -194,7 +199,7 @@ export const HistoryDetailScreen: FC = () => {
           </>
         ) : null}
 
-        {credential && (
+        {issuedCredential && (
           <>
             <Typography
               color={colorScheme.text}
@@ -204,8 +209,8 @@ export const HistoryDetailScreen: FC = () => {
               {translate('historyDetail.credential')}
             </Typography>
             <Credential
-              credentialId={credential.id}
-              expanded={expandedCredential === credential.id}
+              credentialId={issuedCredential.id}
+              expanded={expandedCredential === issuedCredential.id}
               lastItem
               onHeaderPress={onHeaderPress}
             />
@@ -221,7 +226,7 @@ export const HistoryDetailScreen: FC = () => {
             >
               {translate('historyDetail.response')}
             </Typography>
-            {proof.credentials.map((proofCredential, index, { length }) => (
+            {proofCredentials.map((proofCredential, index, { length }) => (
               <View key={proofCredential.id} style={styles.credential}>
                 <Credential
                   credentialId={proofCredential.id}
