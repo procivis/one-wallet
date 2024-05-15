@@ -10,6 +10,7 @@
 		0ED34EA2EBAB4DD8BE467220 /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 258702B773E64857AB05C15E /* OpenSans-Medium.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		155C79672BF4AF0B00ACA35E /* Procivis-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */; };
 		158D69EA2785F1AA00D5359B /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
 		1598E2272717219400E4B02E /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1598E2262717219400E4B02E /* Void.swift */; };
 		15A4F1C42718D04900E1384E /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15A4F1BE2718D04800E1384E /* OpenSans-Bold.ttf */; };
@@ -31,6 +32,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Wallet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Wallet/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Wallet/main.m; sourceTree = "<group>"; };
+		155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Procivis-Book.ttf"; path = "../assets/fonts/Procivis-Book.ttf"; sourceTree = "<group>"; };
 		158D69E92785F1AA00D5359B /* rnuc.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = rnuc.xcconfig; sourceTree = "<group>"; };
 		1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Wallet-Bridging-Header.h"; sourceTree = "<group>"; };
 		1598E2262717219400E4B02E /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				4C726A7939A743A686EE049A /* IBMPlexMono-Regular.ttf */,
+				155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */,
 				56F7E5873D6E4D43AC5F0BF2 /* OpenSans-Bold.ttf */,
 				258702B773E64857AB05C15E /* OpenSans-Medium.ttf */,
 				0D423538F2044E07A3A42829 /* OpenSans-Regular.ttf */,
@@ -214,6 +217,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				155C79672BF4AF0B00ACA35E /* Procivis-Book.ttf in Resources */,
 				33A63B8727BC0A6000AC5C33 /* LaunchScreen.storyboard in Resources */,
 				15F550092BDA828300064BED /* PrivacyInfo.xcprivacy in Resources */,
 				15A4F1C42718D04900E1384E /* OpenSans-Bold.ttf in Resources */,
