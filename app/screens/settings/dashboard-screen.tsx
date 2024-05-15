@@ -30,6 +30,7 @@ import SectionListScreen from '../../components/screens/section-list-screen';
 import ButtonSetting from '../../components/settings/button-setting';
 import SettingItemSeparator from '../../components/settings/setting-item-separator';
 import SwitchSetting from '../../components/settings/switch-setting';
+import { config } from '../../config';
 import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
 import { useBiometricSetting } from '../../hooks/settings/biometric';
 import { useUpdatedTranslate } from '../../hooks/updated-translate';
@@ -151,14 +152,16 @@ const DashboardScreen: FunctionComponent = observer(() => {
   >['sections'] = [
     {
       data: [
-        {
-          buttonSetting: {
-            icon: LanguageIcon,
-            onPress: handleChangeLanguage,
-            testID: 'SettingsScreen.languageChange',
-            title: translate('settings.general.language'),
-          },
-        },
+        config.featureFlags.localization
+          ? {
+              buttonSetting: {
+                icon: LanguageIcon,
+                onPress: handleChangeLanguage,
+                testID: 'SettingsScreen.languageChange',
+                title: translate('settings.general.language'),
+              },
+            }
+          : undefined,
         {
           buttonSetting: {
             icon: HistoryIcon,
@@ -167,7 +170,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             title: translate('settings.general.history'),
           },
         },
-      ],
+      ].filter(nonEmptyFilter),
       title: translate('settings.general.title'),
     },
     {
