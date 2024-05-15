@@ -87,13 +87,26 @@ export const findClaimByPath = (
   claims: Claim[] | undefined,
 ) => (path ? findClaimByPathParts(path.split('/'), claims) : undefined);
 
+const formatCredentialDetail = (claim: Claim, config?: Config) => {
+  const typeConfig = config?.datatype[claim.dataType];
+
+  if (typeConfig?.type === DataTypeEnum.Date) {
+    return formatDate(new Date(claim.value as string)) as string;
+  }
+
+  return claim.value as string;
+};
+
 export const cardHeaderFromCredentialListItem = (
   credential: CredentialListItem,
   claims: Claim[] = [],
   config?: Config,
   testID?: string,
 ): Omit<CredentialHeaderProps, 'style'> => {
-  let credentialDetail: string;
+  let credentialDetailPrimary =
+    formatDateTime(new Date(credential.issuanceDate)) ?? '';
+
+  let credentialDetailSecondary: string | undefined;
   let credentialDetailErrorColor: boolean | undefined;
   let credentialDetailTestID: string | undefined;
   let statusIcon;
@@ -102,7 +115,7 @@ export const cardHeaderFromCredentialListItem = (
 
   switch (credential.state) {
     case CredentialStateEnum.SUSPENDED:
-      credentialDetail = credential.suspendEndDate
+      credentialDetailPrimary = credential.suspendEndDate
         ? translate('credentialDetail.validity.suspendedUntil', {
             date: formatDateTime(new Date(credential.suspendEndDate)),
           })
@@ -111,56 +124,39 @@ export const cardHeaderFromCredentialListItem = (
       statusIcon = CredentialWarningIcon;
       break;
     case CredentialStateEnum.REVOKED:
-      credentialDetail = translate('credentialDetail.validity.revoked');
+      credentialDetailPrimary = translate('credentialDetail.validity.revoked');
       credentialDetailErrorColor = true;
       credentialDetailTestID = concatTestID(testID, 'revoked');
       statusIcon = CredentialErrorIcon;
       break;
-    default:
-      {
-        let contentDetail = '';
-        const primary = findClaimByPath(
-          layoutProperties?.primaryAttribute,
-          claims,
-        );
+    default: {
+      const primary = findClaimByPath(
+        layoutProperties?.primaryAttribute,
+        claims,
+      );
 
-        if (primary) {
-          const primaryType = config?.datatype[primary.dataType];
-          if (primaryType && primaryType.type === DataTypeEnum.Date) {
-            contentDetail += formatDate(new Date(primary.value as string));
-          } else {
-            contentDetail += primary.value;
-          }
-        } else {
-          contentDetail += formatDateTime(new Date(credential.issuanceDate));
-        }
-
-        const secondary = findClaimByPath(
-          layoutProperties?.secondaryAttribute,
-          claims,
-        );
-
-        if (secondary) {
-          const secondaryType = config?.datatype[secondary.dataType];
-          const interpunct = ' · ';
-          if (secondaryType && secondaryType.type === DataTypeEnum.Date) {
-            contentDetail += `${interpunct}${formatDate(
-              new Date(secondary.value as string),
-            )}`;
-          } else {
-            contentDetail += `${interpunct}${secondary.value}`;
-          }
-        }
-
-        credentialDetail = contentDetail;
-        credentialDetailTestID = concatTestID(testID, 'detail');
+      if (primary) {
+        credentialDetailPrimary = formatCredentialDetail(primary, config);
       }
+
+      const secondary = findClaimByPath(
+        layoutProperties?.secondaryAttribute,
+        claims,
+      );
+
+      if (secondary) {
+        credentialDetailSecondary = formatCredentialDetail(secondary, config);
+      }
+
+      credentialDetailTestID = concatTestID(testID, 'detail');
       break;
+    }
   }
   return {
     color: layoutProperties?.logo?.backgroundColor,
-    credentialDetail,
     credentialDetailErrorColor,
+    credentialDetailPrimary,
+    credentialDetailSecondary,
     credentialDetailTestID,
     credentialName: credential.schema.name,
     icon: layoutProperties?.logo?.image
