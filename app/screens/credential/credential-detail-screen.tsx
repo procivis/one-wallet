@@ -4,8 +4,6 @@ import {
   ButtonType,
   concatTestID,
   CredentialDetailsCard,
-  OptionsIcon,
-  TouchableOpacity,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -23,7 +21,10 @@ import React, { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { HistoryItem } from '../../components/history/history-item';
-import { HeaderBackButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderBackButton,
+  HeaderOptionsButton,
+} from '../../components/navigation/header-buttons';
 import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
@@ -41,7 +42,6 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { detailsCardFromCredential } from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
-  const colorScheme = useAppColorScheme();
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
@@ -137,14 +137,11 @@ const CredentialDetailScreen: FC = () => {
       header={{
         leftItem: <HeaderBackButton onPress={backButtonHandler} />,
         rightItem: (
-          <TouchableOpacity
-            accessibilityLabel={translate('wallet.settings')}
+          <HeaderOptionsButton
+            accessibilityLabel={'wallet.settings'}
             onPress={onActions}
-            style={styles.settingsButton}
-            testID="CredentialDetailScreen.header.action"
-          >
-            <OptionsIcon color={colorScheme.text} />
-          </TouchableOpacity>
+            testID={'CredentialDetailScreen.header.action'}
+          />
         ),
         testID: 'CredentialDetailScreen.header',
         title: credential.schema.name,
@@ -250,10 +247,6 @@ const styles = StyleSheet.create({
   historySectionTitle: {
     marginHorizontal: 4,
     marginVertical: 16,
-  },
-  settingsButton: {
-    height: 24,
-    width: 24,
   },
 });
 
