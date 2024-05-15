@@ -242,7 +242,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       <Animated.SectionList
         ListEmptyComponent={
           credentials ? (
-            <View style={styles.empty} testID="WalletScreen.credentialList">
+            <View style={styles.empty}>
               {isEmpty ? (
                 <>
                   <Typography
@@ -316,6 +316,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={false}
         style={[styles.list, { backgroundColor: colorScheme.background }]}
+        testID="WalletScreen.credentialList"
       />
       {!isEmpty && <ScanButton onPress={handleScanPress} />}
     </View>
