@@ -59,7 +59,7 @@ const LicencesScreen: FC = () => {
         return;
       }
       const licences = libraries.licences.filter((l) =>
-        library.licenses.includes(l.id),
+        library.licenses.includes(l.licenseId),
       );
       navigation.navigate('LicenceDetails', { library, licences });
     },
