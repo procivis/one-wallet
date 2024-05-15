@@ -28,10 +28,17 @@ const BG_IMAGES = [
 
 const DummyCredential: FC<{
   bgImageIndex: number;
-  detail: string;
+  credentialDetailPrimary: string;
+  credentialDetailSecondary: string;
   name: string;
   style?: StyleProp<ViewStyle>;
-}> = ({ name, detail, style, bgImageIndex }) => (
+}> = ({
+  name,
+  credentialDetailPrimary,
+  credentialDetailSecondary,
+  style,
+  bgImageIndex,
+}) => (
   <CredentialDetailsCard
     attributes={[]}
     card={{
@@ -41,7 +48,8 @@ const DummyCredential: FC<{
       color: BG_IMAGES[bgImageIndex].color,
       header: {
         accessory: <View />,
-        credentialDetail: detail,
+        credentialDetailPrimary,
+        credentialDetailSecondary,
         credentialName: name,
         iconLabelColor: '#000',
       },
@@ -84,14 +92,16 @@ export const SetupScreen: FC = () => {
         <View style={[styles.topCredential, styles.credential]}>
           <DummyCredential
             bgImageIndex={0}
-            detail={'... 0987  ·  DEBIT'}
+            credentialDetailPrimary="... 0987"
+            credentialDetailSecondary="DEBIT"
             name={'Bank ID'}
           />
         </View>
         <View style={[styles.bottomCredential, styles.credential]}>
           <DummyCredential
             bgImageIndex={1}
-            detail={'30.06.1990  ·  CHE'}
+            credentialDetailPrimary="30.06.1990"
+            credentialDetailSecondary="CHE"
             name={'National Identity'}
           />
         </View>
