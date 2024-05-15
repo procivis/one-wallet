@@ -3,11 +3,12 @@ import {
   BackButtonIcon,
   GhostButton,
   InfoIcon,
+  OptionsIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 
-import { translate } from '../../i18n';
+import { translate, TxKeyPath } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 export type HeaderButtonProps = {
@@ -75,6 +76,27 @@ export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({ onPress }) => {
       icon={InfoIcon}
       onPress={onPress}
       testID="Screen.infoButton"
+    />
+  );
+};
+
+type HeaderOptionsButtonProps = {
+  accessibilityLabel: TxKeyPath;
+  onPress: () => void;
+  testID: string;
+};
+
+export const HeaderOptionsButton: FC<HeaderOptionsButtonProps> = ({
+  onPress,
+  testID,
+  accessibilityLabel,
+}) => {
+  return (
+    <GhostButton
+      accessibilityLabel={translate(accessibilityLabel)}
+      icon={OptionsIcon}
+      onPress={onPress}
+      testID={testID}
     />
   );
 };

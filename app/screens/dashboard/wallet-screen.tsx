@@ -3,7 +3,6 @@ import {
   concatTestID,
   CredentialDetailsCardListItem,
   Header,
-  OptionsIcon,
   ScanButton,
   SearchBar,
   TouchableOpacity,
@@ -38,6 +37,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NextIcon } from '../../components/icon/common-icon';
 import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
+import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
@@ -214,16 +214,11 @@ const WalletScreen: FunctionComponent = observer(() => {
     >
       <Header
         rightButton={
-          <TouchableOpacity
-            accessibilityLabel={translate('wallet.settings')}
-            accessibilityRole="button"
-            hitSlop={12}
+          <HeaderOptionsButton
+            accessibilityLabel="wallet.settings"
             onPress={handleWalletSettingsClick}
-            style={styles.settingsButton}
             testID="WalletScreen.header.action-settings"
-          >
-            <OptionsIcon color={colorScheme.text} />
-          </TouchableOpacity>
+          />
         }
         style={[
           styles.header,
@@ -388,10 +383,6 @@ const styles = StyleSheet.create({
   searchBar: {
     marginHorizontal: 16,
     marginTop: 20,
-  },
-  settingsButton: {
-    height: 24,
-    width: 24,
   },
 });
 
