@@ -67,6 +67,7 @@
 		<string>OpenSans-Bold.ttf</string>
 		<string>OpenSans-Medium.ttf</string>
 		<string>OpenSans-Regular.ttf</string>
+		<string>Procivis-Book.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

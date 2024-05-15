@@ -16,6 +16,10 @@
     {
       "path": "assets/fonts/OpenSans-Regular.ttf",
       "sha1": "3564ed0b5363df5cf277c16e0c6bedc5a682217f"
+    },
+    {
+      "path": "assets/fonts/Procivis-Book.ttf",
+      "sha1": "27de971aae1fa03abbc978456fd7a95afbc5dfd5"
     }
   ]
 }
