@@ -78,8 +78,10 @@ export const missingCredentialCardFromRequest = (
     cardImage: undefined,
     color: undefined,
     header: {
-      credentialDetail: translate('proofRequest.missingCredential.title'),
       credentialDetailErrorColor: true,
+      credentialDetailPrimary: translate(
+        'proofRequest.missingCredential.title',
+      ),
       credentialDetailTestID: concatTestID(testID, 'subtitle', 'missing'),
       credentialName: request.name ?? request.id,
       statusIcon: CredentialWarningIcon,
