@@ -22,6 +22,7 @@ import ButtonSetting from '../../components/settings/button-setting';
 import SettingItemSeparator from '../../components/settings/setting-item-separator';
 import { useUpdatedTranslate } from '../../hooks/updated-translate';
 import { SettingsRouteProp } from '../../navigators/settings/settings-routes';
+import { nonEmptyFilter } from '../../utils/filtering';
 
 type LicenceDetailsListItem =
   | {
@@ -103,12 +104,19 @@ const LicenceDetailsScreen: FC = () => {
     return null;
   };
 
-  const links = library.externalReferences.map(({ type, url }) => ({
-    link: {
-      title: translate(`licenceDetailsScreen.library.link.${type}`),
-      url,
-    },
-  }));
+  const links =
+    library.externalReferences
+      ?.filter(({ type }) => type !== 'other')
+      .map(({ type, url }) => ({
+        link: {
+          title: translate(
+            `licenceDetailsScreen.library.link.${
+              type as 'documentation' | 'website' | 'vcs'
+            }`,
+          ),
+          url,
+        },
+      })) ?? [];
 
   links.push(
     ...licences.flatMap((l) =>
@@ -127,11 +135,13 @@ const LicenceDetailsScreen: FC = () => {
   >['sections'] = [
     {
       data: [
-        {
-          description: library.description,
-        },
+        library.description
+          ? {
+              description: library.description,
+            }
+          : undefined,
         ...links,
-      ],
+      ].filter(nonEmptyFilter),
     },
     {
       ItemSeparatorComponent,
