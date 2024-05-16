@@ -34,6 +34,16 @@
                 <data android:scheme="openid-credential-offer" />
                 <data android:scheme="openid4vp" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="@string/ASSOCIATED_INVITATION_DOMAIN" />
+                <data android:path="/ssi/temporary-issuer/v1/connect" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>

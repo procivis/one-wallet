@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">${APP_NAME}</string>
+    <string name="associated_invitation_domain">${ASSOCIATED_INVITATION_DOMAIN}</string>
 </resources>
