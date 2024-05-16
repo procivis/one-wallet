@@ -113,16 +113,17 @@ const getAttributeSelectorStatus = (
   return selected ? SelectorStatus.SelectedCheckmark : SelectorStatus.Empty;
 };
 
-// Returns a flat list of claims with their full JSON path as key
-const flattenClaims = (claims: Claim[], parentClaimPath = ''): Claim[] => {
+// Returns a spread list of all claims with their full JSON path as key, including all intermediate objects
+const spreadClaims = (claims: Claim[], parentClaimPath = ''): Claim[] => {
   return claims.reduce((acc, claim) => {
     const claimPath = parentClaimPath
       ? `${parentClaimPath}/${claim.key}`
       : claim.key;
+    const result = [{ ...claim, key: claimPath }];
     if (Array.isArray(claim.value)) {
-      return [...acc, ...flattenClaims(claim.value, claimPath)];
+      result.push(...spreadClaims(claim.value, claimPath));
     }
-    return [...acc, { ...claim, key: claimPath }];
+    return [...acc, ...result];
   }, [] as Claim[]);
 };
 
@@ -152,7 +153,7 @@ const getDisplayedAttributes = (
 
     const claim =
       credential &&
-      flattenClaims(credential.claims).find(({ key }) => {
+      spreadClaims(credential.claims).find(({ key }) => {
         return key === field.keyMap[credential.id];
       });
     return { claim, field, id: field.id, selected, status };
