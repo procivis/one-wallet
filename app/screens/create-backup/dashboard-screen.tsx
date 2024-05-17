@@ -76,7 +76,7 @@ const DashboardScreen: FC = () => {
       }
       if (success) {
         await unlink(backupFilePath);
-        rootNavigation.replace('Dashboard', { screen: 'Wallet' });
+        rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
       }
     } catch (e) {
       reportException(e, 'Backup move failure');
