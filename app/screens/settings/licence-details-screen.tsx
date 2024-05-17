@@ -157,6 +157,7 @@ const LicenceDetailsScreen: FC = () => {
   return (
     <SectionListScreen<LicenceDetailsListItem, Partial<ListSectionHeaderProps>>
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: HeaderBackButton,
         static: true,
         title: library.name,

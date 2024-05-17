@@ -137,6 +137,7 @@ const LicencesScreen: FC = () => {
   return (
     <SectionListScreen<LicencesListItem, ListSectionHeaderProps>
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: HeaderBackButton,
         title: translate('licencesScreen.title'),
       }}
