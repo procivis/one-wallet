@@ -51,6 +51,7 @@ export const BackupScreen: FC<BackupScreenProps> = ({
   return (
     <ScrollViewScreen
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: backButton,
         title,
       }}
