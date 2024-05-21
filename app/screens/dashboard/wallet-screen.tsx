@@ -4,7 +4,6 @@ import {
   CredentialDetailsCardListItem,
   Header,
   ScanButton,
-  SearchBar,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -35,6 +34,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { FoldableSearchHeader } from '../../components/header/foldable-header';
 import { NextIcon } from '../../components/icon/common-icon';
 import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
@@ -55,12 +55,13 @@ const WalletScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const { data: config } = useCoreConfig();
-
   const safeAreaInsets = useSafeAreaInsets();
   const contentInsetsStyle = useListContentInset({
-    headerHeight: 24,
-    modalPresentation: true,
+    headerHeight: 120 + 8,
   });
+
+  const [scrollOffset] = useState(() => new Animated.Value(0));
+
   const {
     locale: { locale },
   } = useStores();
@@ -207,38 +208,22 @@ const WalletScreen: FunctionComponent = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
+  const optionsButton = useMemo(
+    () => (
+      <HeaderOptionsButton
+        accessibilityLabel="wallet.settings"
+        onPress={handleWalletSettingsClick}
+        testID="WalletScreen.header.action-settings"
+      />
+    ),
+    [handleWalletSettingsClick],
+  );
+
   return (
     <View
       style={[styles.background, { backgroundColor: colorScheme.background }]}
       testID="WalletScreen"
     >
-      <Header
-        rightButton={
-          <HeaderOptionsButton
-            accessibilityLabel="wallet.settings"
-            onPress={handleWalletSettingsClick}
-            testID="WalletScreen.header.action-settings"
-          />
-        }
-        style={[
-          styles.header,
-          {
-            backgroundColor: colorScheme.background,
-            paddingTop: safeAreaInsets.top,
-          },
-        ]}
-        testID={'WalletScreen.header'}
-        title={translate('wallet.title')}
-      />
-      {!isEmpty && (
-        <SearchBar
-          onSearchPhraseChange={setSearchPhrase}
-          placeholder={translate('wallet.search')}
-          searchPhrase={searchPhrase}
-          style={styles.searchBar}
-          testID={'WalletScreen.header.search'}
-        />
-      )}
       <Animated.SectionList
         ListEmptyComponent={
           credentials ? (
@@ -253,7 +238,11 @@ const WalletScreen: FunctionComponent = observer(() => {
                   >
                     {translate('wallet.credentialsList.empty.title')}
                   </Typography>
-                  <Typography align="center" color={colorScheme.text}>
+                  <Typography
+                    align="center"
+                    color={colorScheme.text}
+                    style={styles.emptySubtitle}
+                  >
                     {translate('wallet.credentialsList.empty.subtitle')}
                   </Typography>
                   <NoCredentialsIcon style={styles.emptyIcon} />
@@ -308,8 +297,15 @@ const WalletScreen: FunctionComponent = observer(() => {
         keyExtractor={(item) => item.id}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.1}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
+          {
+            useNativeDriver: true,
+          },
+        )}
         onScrollBeginDrag={foldCards}
         renderItem={renderItem}
+        scrollEnabled={credentials && credentials.length > 0}
         sections={
           credentials && credentials.length > 0 ? [{ data: credentials }] : []
         }
@@ -319,6 +315,30 @@ const WalletScreen: FunctionComponent = observer(() => {
         testID="WalletScreen.credentialList"
       />
       {!isEmpty && <ScanButton onPress={handleScanPress} />}
+      <FoldableSearchHeader
+        header={
+          <Header
+            rightButton={optionsButton}
+            testID={'WalletScreen.header'}
+            title={translate('wallet.title')}
+            titleRowStyle={!isEmpty && styles.headerWithSearchBar}
+          />
+        }
+        scrollOffset={scrollOffset}
+        searchBar={
+          isEmpty
+            ? undefined
+            : {
+                rightButton: optionsButton,
+                searchBarProps: {
+                  onSearchPhraseChange: setSearchPhrase,
+                  placeholder: translate('wallet.search'),
+                  searchPhrase,
+                  testID: 'WalletScreen.header.search',
+                },
+              }
+        }
+      />
     </View>
   );
 });
@@ -330,7 +350,7 @@ const styles = StyleSheet.create({
   empty: {
     alignItems: 'center',
     flex: 1,
-    marginTop: 84,
+    marginTop: 224,
   },
   emptyButton: {
     marginBottom: 16,
@@ -341,17 +361,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   emptyIcon: {
-    marginTop: -24,
+    marginTop: -30,
+  },
+  emptySubtitle: {
+    opacity: 0.7,
   },
   emptyTitle: {
     marginBottom: 8,
+    opacity: 0.7,
   },
   footer: {
     minHeight: 20,
-  },
-  header: {
-    alignSelf: 'center',
-    marginHorizontal: 16,
   },
   headerAccessory: {
     alignItems: 'center',
@@ -359,9 +379,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 44,
   },
-  itemIcon: {
-    borderRadius: 0,
-    borderWidth: 0,
+  headerWithSearchBar: {
+    marginTop: 0,
+    paddingBottom: 18,
   },
   list: {
     flex: 1,
@@ -380,10 +400,6 @@ const styles = StyleSheet.create({
   pageLoadingIndicator: {
     marginBottom: 20,
     marginTop: 12,
-  },
-  searchBar: {
-    marginHorizontal: 16,
-    marginTop: 20,
   },
 });
 
