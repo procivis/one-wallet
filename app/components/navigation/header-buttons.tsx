@@ -7,6 +7,7 @@ import {
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import { translate, TxKeyPath } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -80,15 +81,17 @@ export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({ onPress }) => {
   );
 };
 
-type HeaderOptionsButtonProps = {
+export type HeaderOptionsButtonProps = {
   accessibilityLabel: TxKeyPath;
   onPress: () => void;
+  style?: StyleProp<ViewStyle>;
   testID: string;
 };
 
 export const HeaderOptionsButton: FC<HeaderOptionsButtonProps> = ({
   onPress,
   testID,
+  style,
   accessibilityLabel,
 }) => {
   return (
@@ -96,6 +99,7 @@ export const HeaderOptionsButton: FC<HeaderOptionsButtonProps> = ({
       accessibilityLabel={translate(accessibilityLabel)}
       icon={OptionsIcon}
       onPress={onPress}
+      style={style}
       testID={testID}
     />
   );

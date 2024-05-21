@@ -11,7 +11,7 @@ export interface FilterButtonProps extends TouchableOpacityProps {
   active: boolean;
 }
 
-const hitslop: Insets = { bottom: 4, left: 4, right: 4, top: 4 };
+const hitslop: Insets = { bottom: 10, left: 10, right: 10, top: 10 };
 
 export const FilterButton: FC<FilterButtonProps> = ({
   active,

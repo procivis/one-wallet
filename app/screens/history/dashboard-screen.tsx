@@ -1,7 +1,6 @@
 import {
   BackButton,
   NavigationHeader,
-  SearchBar,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -13,20 +12,27 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Animated, StyleSheet, View } from 'react-native';
 
+import { FoldableSearchHeader } from '../../components/header/foldable-header';
 import { CredentialSchemaPicker } from '../../components/history/credential-schema-picker';
 import { FilterButton } from '../../components/history/filter-button';
 import { HistorySectionList } from '../../components/history/history-list';
+import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { translate } from '../../i18n';
 import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 
 const HistoryDashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const insets = useSafeAreaInsets();
+
+  const insets = useListContentInset({
+    additionalBottomPadding: 24,
+    headerHeight: 100,
+  });
+
   const navigation = useNavigation<HistoryNavigationProp<'HistoryDashboard'>>();
   const [empty, setEmpty] = useState<boolean>();
+  const [scrollOffset] = useState(() => new Animated.Value(0));
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
   const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
@@ -71,18 +77,11 @@ const HistoryDashboardScreen: FC = () => {
         styles.container,
         {
           backgroundColor: colorScheme.background,
-          paddingTop: insets.top,
         },
       ]}
       testID="HistoryScreen"
     >
-      <NavigationHeader
-        leftItem={
-          <BackButton onPress={navigation.goBack} testID="HistoryScreen.back" />
-        }
-        title={translate('history.title')}
-      />
-      {empty ? (
+      {empty && (
         <View
           style={[styles.emptyNotice, { backgroundColor: colorScheme.white }]}
         >
@@ -98,26 +97,17 @@ const HistoryDashboardScreen: FC = () => {
             {translate('history.empty.subtitle')}
           </Typography>
         </View>
-      ) : (
-        <View style={styles.searchLine}>
-          <SearchBar
-            onSearchPhraseChange={setSearchPhrase}
-            placeholder={translate('common.search')}
-            searchPhrase={searchPhrase}
-            style={styles.searchBar}
-            testID="HistoryScreen.search"
-          />
-          <FilterButton
-            active={Boolean(queryParams.credentialSchemaId)}
-            onPress={() => setIsFilterModalOpened(true)}
-            testID="HistoryScreen.filter"
-          />
-        </View>
       )}
       <HistorySectionList
-        contentContainerStyle={{ paddingBottom: 24 + insets.bottom }}
+        contentContainerStyle={insets}
         itemProps={{ onPress: handleItemPress }}
         onEmpty={setEmpty}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
+          {
+            useNativeDriver: true,
+          },
+        )}
         query={queryParams}
       />
       <CredentialSchemaPicker
@@ -125,6 +115,41 @@ const HistoryDashboardScreen: FC = () => {
         onSelection={handleCredentialSchemaChange}
         selected={queryParams.credentialSchemaId}
         visible={isFilterModalOpened}
+      />
+      <FoldableSearchHeader
+        header={
+          <NavigationHeader
+            backgroundColor={'transparent'}
+            leftItem={
+              <BackButton
+                onPress={navigation.goBack}
+                testID="HistoryScreen.back"
+              />
+            }
+            title={translate('history.title')}
+          />
+        }
+        scrollOffset={scrollOffset}
+        searchBar={
+          empty
+            ? undefined
+            : {
+                rightButton: (
+                  <FilterButton
+                    active={Boolean(queryParams.credentialSchemaId)}
+                    onPress={() => setIsFilterModalOpened(true)}
+                    testID="HistoryScreen.filter"
+                  />
+                ),
+                rightButtonAlwaysVisible: true,
+                searchBarProps: {
+                  onSearchPhraseChange: setSearchPhrase,
+                  placeholder: translate('common.search'),
+                  searchPhrase,
+                  testID: 'HistoryScreen.search',
+                },
+              }
+        }
       />
     </View>
   );
@@ -141,16 +166,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal: 12,
     paddingTop: 16,
-  },
-  searchBar: {
-    flex: 1,
-    marginRight: 4,
-  },
-  searchLine: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingBottom: 12,
-    paddingHorizontal: 16,
   },
   shaded: {
     opacity: 0.7,
