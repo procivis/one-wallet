@@ -6,7 +6,7 @@ import { HistoryListQuery } from '@procivis/react-native-one-core';
 import React, { FC, useCallback, useMemo } from 'react';
 import {
   ActivityIndicator,
-  SectionList,
+  Animated,
   SectionListProps,
   StyleSheet,
 } from 'react-native';
@@ -36,7 +36,6 @@ export interface HistorySectionListProps
 
   // callback when empty list displayed
   onEmpty?: (empty: boolean) => void;
-
   query: Partial<HistoryListQuery>;
 }
 
@@ -46,6 +45,7 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
   getItemProps,
   itemProps,
   onEmpty,
+  onScroll,
   ...props
 }) => {
   const colorScheme = useAppColorScheme();
@@ -81,7 +81,7 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
   }
 
   return (
-    <SectionList<HistoryListItemWithDid, HistoryGroupByDaySection>
+    <Animated.SectionList<HistoryListItemWithDid, HistoryGroupByDaySection>
       ListFooterComponent={
         isLoading ? (
           <ActivityIndicator color={colorScheme.accent} style={styles.footer} />
@@ -90,6 +90,7 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
       contentContainerStyle={[styles.listContent, contentContainerStyle]}
       keyExtractor={(item) => item.id}
       onEndReached={onEndReached}
+      onScroll={onScroll}
       renderItem={({ item, index, section }) => (
         <HistorySectionItem
           first={!index}
