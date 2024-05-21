@@ -7,9 +7,13 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import NerdModeItem, {
@@ -47,6 +51,9 @@ type NerdModeProps = {
   title: string;
 };
 
+const AnimatedSectionList = Animated.createAnimatedComponent(
+  SectionList<NerdModeItemProps>,
+);
 const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
   sections,
   onClose,
@@ -56,6 +63,20 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const colorScheme = useAppColorScheme();
+  const scrollOffset = useSharedValue(0);
+  const [expandedAttributes, setExpandedAttributes] = useState(0);
+
+  // This is a bit of a hack. It's used to notify attributes that another attribute has been expanded
+  // which will allow them to update their scroll offset accordingly.
+  const onExpand = (expanded: boolean) => {
+    setExpandedAttributes((prev) => (expanded ? prev + 1 : prev - 1));
+  };
+
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: ({ contentOffset }) => {
+      scrollOffset.value = contentOffset.y;
+    },
+  });
 
   const lastElementsForSection = sections.reduce(
     (acc, { title: sectionTitle, data }) => {
@@ -84,7 +105,7 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
         title={title}
         titleColor={colorScheme.white}
       />
-      <SectionList
+      <AnimatedSectionList
         ListHeaderComponent={
           entityCluster ? (
             <EntityCluster
@@ -100,10 +121,14 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
             />
           ) : null
         }
+        onScroll={onScroll}
         renderItem={({ item, section }) => (
           <NerdModeItem
             {...item}
+            expandedAttributes={expandedAttributes}
             last={lastElementsForSection[section.title] === item.attributeKey}
+            onExpand={onExpand}
+            scrollOffset={scrollOffset}
             testID={concatTestID(testID, item.testID)}
           />
         )}
@@ -122,6 +147,7 @@ const NerdModeScreen: FunctionComponent<NerdModeProps> = ({
             </View>
           );
         }}
+        scrollEventThrottle={16}
         sections={sections}
         stickySectionHeadersEnabled={false}
         style={{ backgroundColor: colorScheme.nerdView.background }}
