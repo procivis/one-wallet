@@ -245,6 +245,7 @@
   "proofRequest.invalidCredential.title": "Validation error",
   "proofRequest.missingAttribute": "Attribute Missing",
   "proofRequest.missingCredential.title": "Credential Missing",
+  "proofRequest.multipleCredentials.detail": "Multiple credentials available",
   "proofRequest.multipleCredentials.notice": "There is more than one version of this credential available.",
   "proofRequest.multipleCredentials.select": "Select version",
   "proofRequest.nerdView.section.title": "Proof request data",

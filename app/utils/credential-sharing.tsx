@@ -3,6 +3,7 @@ import {
   CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
+  CredentialHeaderProps,
   CredentialNoticeWarningIcon,
   CredentialWarningIcon,
   RequiredAttributeIcon,
@@ -29,7 +30,9 @@ import {
 
 export const validityCheckedCardFromCredential = (
   credential: CredentialDetail,
-  invalid: boolean,
+  invalidLVVC: boolean,
+  expanded: boolean,
+  multipleCredentialsAvailable: boolean,
   config: Config | undefined,
   notice:
     | {
@@ -39,12 +42,29 @@ export const validityCheckedCardFromCredential = (
     | undefined,
   testID?: string,
 ): Omit<CredentialCardProps, 'onHeaderPress' | 'style' | 'testID'> => {
-  let invalidCredentialHeaderDetail;
-  if (invalid) {
-    invalidCredentialHeaderDetail = {
-      credentialDetail: translate('credentialDetail.log.revoked'),
+  let credentialHeaderDetail:
+    | Pick<
+        CredentialHeaderProps,
+        | 'credentialDetailPrimary'
+        | 'credentialDetailSecondary'
+        | 'credentialDetailErrorColor'
+        | 'credentialDetailTestID'
+        | 'statusIcon'
+      >
+    | undefined;
+  if (invalidLVVC) {
+    credentialHeaderDetail = {
       credentialDetailErrorColor: true,
+      credentialDetailPrimary: translate('credentialDetail.log.revoked'),
       credentialDetailTestID: concatTestID(testID, 'invalid'),
+    };
+  } else if (!expanded && multipleCredentialsAvailable) {
+    credentialHeaderDetail = {
+      credentialDetailPrimary: translate(
+        'proofRequest.multipleCredentials.detail',
+      ),
+      credentialDetailTestID: concatTestID(testID, 'multiple'),
+      statusIcon: CredentialWarningIcon,
     };
   }
 
@@ -59,7 +79,7 @@ export const validityCheckedCardFromCredential = (
     ...card,
     header: {
       ...card.header,
-      ...invalidCredentialHeaderDetail,
+      ...credentialHeaderDetail,
     },
   };
 };
@@ -179,7 +199,9 @@ export const shareCredentialCardAttributeFromClaim = (
 
 export const shareCredentialCardFromCredential = (
   credential: CredentialDetail | undefined,
-  invalid: boolean,
+  invalidLVVC: boolean,
+  expanded: boolean,
+  multipleCredentialsAvailable: boolean,
   request: PresentationDefinitionRequestedCredential,
   selectedFields: string[] | undefined,
   config: Config,
@@ -199,7 +221,9 @@ export const shareCredentialCardFromCredential = (
   const card = credential
     ? validityCheckedCardFromCredential(
         credential,
-        invalid,
+        invalidLVVC,
+        expanded,
+        multipleCredentialsAvailable,
         config,
         notice,
         testID,
