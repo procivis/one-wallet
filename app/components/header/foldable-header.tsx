@@ -21,8 +21,11 @@ export type FoldableHeaderProps = {
   header: ReactElement;
   scrollOffset: Animated.Value;
   searchBar?: Omit<AnimatedSearchBarProps, 'collapsed'>;
+  // if true, the header won't fold / fade out on scroll
+  staticHeader?: boolean;
 };
 export const FoldableSearchHeader: FunctionComponent<FoldableHeaderProps> = ({
+  staticHeader = false,
   scrollOffset,
   searchBar,
   header,
@@ -49,7 +52,9 @@ export const FoldableSearchHeader: FunctionComponent<FoldableHeaderProps> = ({
     };
   }, [scrollOffset, searchBar, headerHeight]);
 
-  const scrollHeaderAnimatedStyle = headerHeight && {
+  const playHeaderFoldAnimation = !staticHeader && headerHeight;
+
+  const scrollHeaderAnimatedStyle = playHeaderFoldAnimation && {
     transform: [
       {
         translateY: scrollOffset.interpolate({
@@ -61,7 +66,7 @@ export const FoldableSearchHeader: FunctionComponent<FoldableHeaderProps> = ({
     ],
   };
 
-  const fadeHeaderOutAnimatedStyle = headerHeight && {
+  const fadeHeaderOutAnimatedStyle = playHeaderFoldAnimation && {
     opacity: scrollOffset.interpolate({
       extrapolate: 'clamp',
       inputRange: [0, headerHeight / 2],
