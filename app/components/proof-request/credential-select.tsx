@@ -70,6 +70,7 @@ export const CredentialSelect: FunctionComponent<{
       ),
     [allCredentials, request],
   );
+  const multipleCredentialsAvailable = selectionOptions.length > 1;
 
   const validityState = getValidityState(credential);
 
@@ -90,6 +91,8 @@ export const CredentialSelect: FunctionComponent<{
   const { card, attributes } = shareCredentialCardFromCredential(
     credential,
     invalid,
+    Boolean(expanded),
+    multipleCredentialsAvailable,
     request,
     selectedFields,
     config,
@@ -150,7 +153,7 @@ export const CredentialSelect: FunctionComponent<{
       );
     }
 
-    if (selectionOptions.length > 1) {
+    if (multipleCredentialsAvailable) {
       return (
         <View
           style={[styles.notice, { backgroundColor: colorScheme.background }]}
