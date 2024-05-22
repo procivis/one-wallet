@@ -24,14 +24,8 @@ import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 
 const HistoryDashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-
-  const insets = useListContentInset({
-    additionalBottomPadding: 24,
-    headerHeight: 100,
-  });
-
   const navigation = useNavigation<HistoryNavigationProp<'HistoryDashboard'>>();
-  const [empty, setEmpty] = useState<boolean>();
+  const [empty, setEmpty] = useState<boolean>(false);
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
@@ -58,6 +52,8 @@ const HistoryDashboardScreen: FC = () => {
   );
 
   const [searchPhrase, setSearchPhrase] = useState<string>('');
+  const searchBarVisible = !empty || Boolean(queryParams.searchText);
+
   const handleSearchPhraseChange = useMemo(
     () =>
       debounce(
@@ -71,6 +67,13 @@ const HistoryDashboardScreen: FC = () => {
     handleSearchPhraseChange(searchPhrase || undefined);
   }, [searchPhrase, handleSearchPhraseChange]);
 
+  const headerHeight = searchBarVisible ? 112 : 70;
+
+  const insets = useListContentInset({
+    additionalBottomPadding: 24,
+    headerHeight,
+  });
+
   return (
     <View
       style={[
@@ -83,7 +86,13 @@ const HistoryDashboardScreen: FC = () => {
     >
       {empty && (
         <View
-          style={[styles.emptyNotice, { backgroundColor: colorScheme.white }]}
+          style={[
+            styles.emptyNotice,
+            {
+              backgroundColor: colorScheme.white,
+              marginTop: insets.paddingTop,
+            },
+          ]}
         >
           <Typography align="center" color={colorScheme.text} preset="s">
             {translate('history.empty.title')}
@@ -131,7 +140,7 @@ const HistoryDashboardScreen: FC = () => {
         }
         scrollOffset={scrollOffset}
         searchBar={
-          empty
+          !searchBarVisible
             ? undefined
             : {
                 rightButton: (
@@ -150,6 +159,7 @@ const HistoryDashboardScreen: FC = () => {
                 },
               }
         }
+        staticHeader={!searchBarVisible}
       />
     </View>
   );
@@ -162,7 +172,6 @@ const styles = StyleSheet.create({
   emptyNotice: {
     borderRadius: 12,
     marginHorizontal: 16,
-    marginVertical: 24,
     paddingBottom: 20,
     paddingHorizontal: 12,
     paddingTop: 16,
