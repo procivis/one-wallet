@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 type BarcodeProps = {
   content: string;
   height?: number;
+  testID?: string;
   width?: number;
 };
 
@@ -39,6 +40,7 @@ export const Barcode: FC<BarcodeProps> = ({
   content,
   width = 220,
   height = 80,
+  testID,
 }) => {
   const colorScheme = useAppColorScheme();
   const barcodeXml = useMemo(
@@ -57,6 +59,7 @@ export const Barcode: FC<BarcodeProps> = ({
         <SvgXml
           height={height}
           style={[styles.barcodeBackground, styles.barcodeContent]}
+          testID={testID}
           width={width}
           xml={barcodeXml}
         />
@@ -67,9 +70,10 @@ export const Barcode: FC<BarcodeProps> = ({
 
 type QrCodeProps = {
   content: string;
+  testID?: string;
 };
 
-export const QrCode: FC<QrCodeProps> = ({ content }) => {
+export const QrCode: FC<QrCodeProps> = ({ content, testID }) => {
   const qrCodeXml = useMemo(() => {
     return new QRCode({
       container: 'svg-viewbox',
@@ -78,15 +82,19 @@ export const QrCode: FC<QrCodeProps> = ({ content }) => {
       padding: 1,
     }).svg();
   }, [content]);
-
-  return <SvgXml height={'100%'} width={'100%'} xml={qrCodeXml} />;
+  return (
+    <SvgXml height={'100%'} testID={testID} width={'100%'} xml={qrCodeXml} />
+  );
 };
 
-export const Mrz: FC<{ content: string }> = ({ content }) => {
+export const Mrz: FC<{ content: string; testID?: string }> = ({
+  content,
+  testID,
+}) => {
   const colorScheme = useAppColorScheme();
   return (
     <View style={[styles.container, styles.mrzBackground]}>
-      <Typography color={colorScheme.text} preset={'s/code'}>
+      <Typography color={colorScheme.text} preset={'s/code'} testID={testID}>
         {content}
       </Typography>
     </View>

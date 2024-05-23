@@ -12,7 +12,7 @@ export default abstract class CredentialDetailScreen {
   }
 
   static get backButton() {
-    return element(by.id('CredentialDetailScreen.header.back'));
+    return element(by.id('Screen.back'));
   }
 
   static action(actionText: Action) {
@@ -50,11 +50,18 @@ export default abstract class CredentialDetailScreen {
   }
 
   static async openCredentialHistoryScreen() {
-    await waitFor(this.historySeeAllButton)
-      .toBeVisible()
-      .whileElement(by.id('CredentialDetailScreen.content'))
-      .scroll(100, 'down');
+    await this.scrollTo(this.historySeeAllButton, 'down');
     await this.historySeeAllButton.tap();
+  }
+
+  static scrollTo(
+    element: Detox.IndexableNativeElement,
+    direction: 'up' | 'down',
+  ) {
+    return waitFor(element)
+      .toBeVisible()
+      .whileElement(by.id('CredentialDetailScreen.scroll'))
+      .scroll(100, direction);
   }
 
   static get credentialCard() {
