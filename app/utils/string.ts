@@ -11,3 +11,8 @@ export const capitalize = (str: string): string =>
 
 export const replaceBreakingHyphens = (str: string): string =>
   str.replace(/-/g, '\u2011');
+
+export const isASCII = (str: string) => {
+  // eslint-disable-next-line no-control-regex
+  return /^[\x00-\xFF]*$/.test(str);
+};
