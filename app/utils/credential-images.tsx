@@ -1,6 +1,7 @@
 import {
   CarouselImage,
   CarouselImageType,
+  concatTestID,
   ImageOrComponent,
 } from '@procivis/one-react-native-components';
 import {
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
 export const getCarouselImagesFromClaims = (
   claims: Claim[],
   layoutProperties?: CredentialSchemaLayoutProperties,
+  testID?: string,
 ): CarouselImage[] => {
   const result: CarouselImage[] = [];
 
@@ -46,6 +48,7 @@ export const getCarouselImagesFromClaims = (
           <ImageOrComponent
             source={{ imageSource: { uri: pictureClaim.value as string } }}
             style={styles.container}
+            testID={concatTestID(testID, CarouselImageType.Photo)}
           />
         ),
         type: CarouselImageType.Photo,
@@ -62,17 +65,32 @@ export const getCarouselImagesFromClaims = (
 
     if (code.type === CredentialSchemaCodeType.QR_CODE) {
       result.push({
-        element: <QrCode content={claim.value} />,
+        element: (
+          <QrCode
+            content={claim.value}
+            testID={concatTestID(testID, CarouselImageType.QrCode)}
+          />
+        ),
         type: CarouselImageType.QrCode,
       });
     } else if (code.type === CredentialSchemaCodeType.BARCODE) {
       result.push({
-        element: <Barcode content={claim.value} />,
+        element: (
+          <Barcode
+            content={claim.value}
+            testID={concatTestID(testID, CarouselImageType.Barcode)}
+          />
+        ),
         type: CarouselImageType.Barcode,
       });
     } else if (code.type === CredentialSchemaCodeType.MRZ) {
       result.push({
-        element: <Mrz content={claim.value} />,
+        element: (
+          <Mrz
+            content={claim.value}
+            testID={concatTestID(testID, CarouselImageType.MRZ)}
+          />
+        ),
         type: CarouselImageType.MRZ,
       });
     }
