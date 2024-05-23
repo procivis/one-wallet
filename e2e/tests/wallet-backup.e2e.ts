@@ -100,13 +100,11 @@ describe('ONE-1530: Backup & Restore', () => {
       await CreateBackupPreviewScreen.credentialCard(
         credentialId,
       ).verifyIsVisible();
-      if (device.getPlatform() === 'ios') {
-        // long press does not work in android
-        await CreateBackupPreviewScreen.createBackupButton.longPress(3001);
-        await expect(CreateBackupProcessingScreen.screen).toBeVisible();
-        await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
-        await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
-      }
+
+      await CreateBackupPreviewScreen.createBackupButton.longPress(3001);
+      await expect(CreateBackupProcessingScreen.screen).toBeVisible();
+      await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
+      await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
     });
 
     it('User can restore backup from settings', async () => {
