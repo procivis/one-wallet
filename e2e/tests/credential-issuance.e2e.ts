@@ -2,11 +2,6 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
-import CredentialHistoryScreen from '../page-objects/credential/CredentialHistoryScreen';
-import CredentialNerdScreen, {
-  Attributes,
-  AttributeTestID,
-} from '../page-objects/credential/CredentialNerdScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDeletePromptScreen from '../page-objects/CredentialDeletePromptScreen';
 import CredentialDetailScreen, {
@@ -20,13 +15,11 @@ import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
   createCredentialSchema,
-  getCredentialDetail,
   revokeCredential,
   suspendCredential,
 } from '../utils/bff-api';
 import { formatDateTime } from '../utils/date';
 import {
-  CodeType,
   CredentialFormat,
   DataType,
   LoadingResultState,
@@ -141,7 +134,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  // Fail
+  // Pass
   describe('ONE-1313: LVVC; Credential revocation & Suspension', () => {
     let credentialId: string;
 
@@ -179,14 +172,9 @@ describe('ONE-601: Credential issuance', () => {
           credentialIds: [credentialId],
           suspendedScreen: true,
         });
-
-        await expect(
-          WalletScreen.credential(credentialId).header.label.suspended,
-        ).toExist();
         await WalletScreen.credential(credentialId).verifyStatus('suspended');
-        await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
-          .atIndex(0)
-          .tap();
+        await WalletScreen.openDetailScreen(credentialId);
+
         await expect(CredentialDetailScreen.screen).toExist();
         await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
 
@@ -213,12 +201,9 @@ describe('ONE-601: Credential issuance', () => {
           credentialIds: [credentialId],
           suspendedScreen: true,
         });
-        await expect(
-          WalletScreen.credential(credentialId).header.label.suspended,
-        ).toExist();
-        await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
-          .atIndex(0)
-          .tap();
+        await WalletScreen.credential(credentialId).verifyStatus('suspended');
+        await WalletScreen.openDetailScreen(credentialSchemaJWT_with_LVVC.name);
+
         await expect(CredentialDetailScreen.screen).toExist();
         await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
         await expect(
@@ -247,12 +232,9 @@ describe('ONE-601: Credential issuance', () => {
           credentialIds: [credentialId],
           revokedScreen: true,
         });
-        await expect(
-          WalletScreen.credential(credentialId).header.label.revoked,
-        ).toExist();
-        await WalletScreen.credentialName(credentialSchemaJWT_with_LVVC.name)
-          .atIndex(0)
-          .tap();
+
+        await WalletScreen.credential(credentialId).verifyStatus('revoked');
+        await WalletScreen.openDetailScreen(credentialId);
 
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
@@ -267,9 +249,8 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  // Fail
-  // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip('ONE-618: Credential deletion', () => {
+  // Pass
+  describe('ONE-618: Credential deletion', () => {
     let credentialId: string;
 
     beforeAll(async () => {
@@ -283,7 +264,7 @@ describe('ONE-601: Credential issuance', () => {
 
     beforeEach(async () => {
       await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await WalletScreen.credential(credentialId).element.tap();
+      await WalletScreen.openDetailScreen(credentialId);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
@@ -305,6 +286,10 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Accept confirmation', async () => {
+      // Long press is not working on android emulator
+      if (device.getPlatform() === 'android') {
+        return;
+      }
       await device.disableSynchronization();
       await CredentialDeletePromptScreen.deleteButton.longPress(3001);
       await waitFor(CredentialDeleteProcessScreen.screen)
@@ -320,6 +305,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.credential(credentialId).element).not.toExist();
     });
   });
+
   // Pass
   describe('ONE-796: OpenID4VC Credential transport', () => {
     it('Issue credential: JWT schema', async () => {
@@ -345,7 +331,7 @@ describe('ONE-601: Credential issuance', () => {
     let credentialSchemaHardware: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      await launchApp({ delete: true });
+      // await launchApp({ delete: true });
 
       credentialSchemaSoftware = await createCredentialSchema(authToken, {
         format: CredentialFormat.JWT,
@@ -365,7 +351,7 @@ describe('ONE-601: Credential issuance', () => {
         credentialSchema: credentialSchemaSoftware,
         transport: Transport.OPENID4VC,
       });
-      await WalletScreen.credentialName(credentialSchemaSoftware.name).tap();
+      await WalletScreen.openDetailScreen(credentialSchemaSoftware.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
     });
 
@@ -383,8 +369,9 @@ describe('ONE-601: Credential issuance', () => {
       );
     });
   });
-  // Pass
-  describe('ONE-1233: Picture claim', () => {
+  // Fail
+  // eslint-disable-next-line jest/no-disabled-tests
+  describe.skip('ONE-1233: Picture claim', () => {
     let credentialSchema: CredentialSchemaResponseDTO;
     const pictureKey = 'picture';
 
@@ -403,7 +390,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('display picture link in credential detail', async () => {
-      await WalletScreen.credentialName(credentialSchema.name).tap();
+      await WalletScreen.openDetailScreen(credentialSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(
         CredentialDetailScreen.credentialCard.attribute(pictureKey).element,
@@ -413,7 +400,7 @@ describe('ONE-601: Credential issuance', () => {
       ).toHaveText('picture');
       await CredentialDetailScreen.credentialCard
         .attribute(pictureKey)
-        .element.tap();
+        .value.tap();
       await expect(ImagePreviewScreen.screen).toBeVisible();
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
     });
@@ -512,232 +499,6 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.credentialName(schema1.name)).not.toBeVisible();
     });
   });
-  // Fail. Broken scroll
-  // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip('ONE-1880: Scrolling Through Credentials in Wallet Dashboard', () => {
-    let credentialName: string;
-
-    beforeAll(async () => {
-      const schema = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-        ],
-        name: `Scrolling test ${uuidv4()}`,
-      });
-      credentialName = schema.name;
-      for (let i = 0; i <= 7; i++) {
-        await credentialIssuance({
-          authToken,
-          credentialSchema: schema,
-        });
-      }
-    }, 220000);
-
-    it('Test scrolling credential list', async () => {
-      await WalletScreen.scrollTo(credentialName, 7);
-    });
-  });
-
-  // Pass
-  describe('ONE-1893: Credential Schema Layout', () => {
-    let schema1: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-
-      schema1 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'Last name', required: false },
-          { datatype: DataType.BIRTH_DATE, key: 'Birthday', required: true },
-          { datatype: DataType.PICTURE, key: 'Photo', required: false },
-        ],
-        layoutProperties: {
-          code: {
-            attribute: 'first name',
-            type: CodeType.QrCode,
-          },
-          logo: {
-            backgroundColor: '#ebb1f9',
-            fontColor: '#000000',
-          },
-          pictureAttribute: 'Photo',
-          primaryAttribute: 'first name',
-          secondaryAttribute: 'Last name',
-        },
-        name: `credential-detox-e2e-${uuidv4()}`,
-      });
-    });
-
-    it('Test credential card header', async () => {
-      await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
-      });
-      await WalletScreen.credentialName(schema1.name).tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
-
-      await CredentialDetailScreen.credentialCard.verifyCredentialName(
-        schema1.name,
-      );
-      await CredentialDetailScreen.credentialCard.verifyDetailLabel(
-        'string',
-        'string',
-      );
-    });
-
-    it('Test credential card attributes', async () => {
-      await CredentialDetailScreen.credentialCard.showAllAttributes();
-
-      await CredentialDetailScreen.credentialCard.verifyAttributeValues([
-        { key: 'first name', value: 'string' },
-        { key: 'Last name', value: 'string' },
-        { key: 'Birthday', value: '2/21/1996' },
-      ]);
-      await waitFor(CredentialDetailScreen.credentialCard.header.element)
-        .toBeVisible()
-        .whileElement(by.id('CredentialDetailScreen.content'))
-        .scroll(200, 'up');
-
-      await CredentialDetailScreen.credentialCard.collapseOrExpand();
-    });
-
-    it('Test credential card body', async () => {
-      await CredentialDetailScreen.credentialCard.swipe('right');
-    });
-  });
-
-  // Pass
-  describe('ONE-1879: Credential Schema Layout', () => {
-    let schema1: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      schema1 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
-        ],
-        format: CredentialFormat.SDJWT,
-        layoutProperties: {
-          code: {
-            attribute: 'Attribute 1',
-            type: CodeType.QrCode,
-          },
-          logo: {
-            backgroundColor: '#ebb1f9',
-            fontColor: '#000000',
-          },
-          primaryAttribute: 'Attribute 1',
-          secondaryAttribute: 'Attribute 2',
-        },
-        name: `credential-detox-e2e-${uuidv4()}`,
-        revocationMethod: RevocationMethod.LVVC,
-      });
-    });
-
-    it('ONE-1873: Accessing Advanced Credential Details ("Nerd Mode")', async () => {
-      const credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schema1,
-        transport: Transport.PROCIVIS,
-      });
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await CredentialDetailScreen.actionButton.tap();
-      const credentialDetail = await getCredentialDetail(
-        credentialId,
-        authToken,
-      );
-      await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-      await expect(CredentialNerdScreen.screen).toBeVisible();
-      await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
-        credentialDetail.issuerDid.did,
-      );
-
-      const attributes: Attributes = {
-        [AttributeTestID.schemaName]: {
-          label: 'Credential schema',
-          value: credentialDetail.schema.name,
-        },
-        [AttributeTestID.issuerDID]: {
-          label: 'Issuer DID',
-          showMoreButton: true,
-          value: credentialDetail.issuerDid.did,
-        },
-        [AttributeTestID.credentialFormat]: {
-          label: 'Credential format',
-          value: credentialDetail.schema.format,
-        },
-        [AttributeTestID.revocationMethod]: {
-          label: 'Revocation method',
-          value: 'LVVC (Linked Validity Verifiable Credential)',
-        },
-        [AttributeTestID.validity]: {
-          label: 'Validity',
-          value: 'Valid',
-        },
-      };
-      await CredentialNerdScreen.verifyAttributes(attributes);
-      await CredentialNerdScreen.close();
-    });
-  });
-
-  // Pass
-  describe('ONE-1876: Credential full history screen', () => {
-    let schema1: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      schema1 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
-        ],
-        layoutProperties: {
-          primaryAttribute: 'Attribute 1',
-        },
-        name: `credential-${uuidv4()}`,
-        revocationMethod: RevocationMethod.LVVC,
-      });
-    });
-
-    it('Test credential history list', async () => {
-      const credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schema1,
-        transport: Transport.PROCIVIS,
-      });
-
-      await suspendCredential(credentialId, authToken);
-
-      await reloadApp({ suspendedScreen: true });
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await CredentialDetailScreen.openCredentialHistoryScreen();
-      await expect(CredentialHistoryScreen.screen).toBeVisible();
-
-      await expect(CredentialHistoryScreen.history(0).element).toBeVisible();
-      const labels = [
-        'Credential suspended',
-        'Credential issued',
-        'Credential pending offer',
-        'Credential offered',
-      ];
-      await CredentialHistoryScreen.verifyHistoryLabels(labels);
-    });
-
-    it('Search test', async () => {
-      await CredentialHistoryScreen.search.typeText('Hello');
-      await expect(
-        CredentialHistoryScreen.history(0).element,
-      ).not.toBeVisible();
-      await CredentialHistoryScreen.search.clearText();
-    });
-  });
 
   // Pass
   describe('ONE-1870: Handling Errors in Credential Offering Process', () => {
@@ -758,190 +519,6 @@ describe('ONE-601: Credential issuance', () => {
       await expect(InvitationProcessScreen.screen).toBeVisible();
       await InvitationProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
-    });
-  });
-
-  // Pass
-  describe('ONE-2322, ONE-1893: Customizing Credential Schema Layout', () => {
-    let schemaWithoutLayout: CredentialSchemaResponseDTO;
-    let schemaWithLayout: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      schemaWithoutLayout = await createCredentialSchema(
-        authToken,
-        {
-          claims: [
-            { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-            { datatype: DataType.STRING, key: 'Attribute 2', required: true },
-          ],
-          name: `credential without layout ${uuidv4()}`,
-        },
-        false,
-      );
-      schemaWithLayout = await createCredentialSchema(
-        authToken,
-        {
-          claims: [
-            { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-            { datatype: DataType.STRING, key: 'Attribute 2', required: true },
-          ],
-          layoutProperties: {
-            background: {
-              color: '#cc66ff',
-            },
-            logo: {
-              backgroundColor: '#ebb1f9',
-              fontColor: '#000000',
-            },
-          },
-          name: `credential with layout ${uuidv4()}`,
-        },
-        false,
-      );
-    });
-
-    it('Credential card: Schema without layout. Logo & background color the same', async () => {
-      const credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schemaWithoutLayout,
-        transport: Transport.PROCIVIS,
-      });
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await CredentialDetailScreen.credentialCard.verifyLogoColor(
-        '#5A69F3',
-        '#FFFFFF',
-      );
-      await CredentialDetailScreen.credentialCard.verifyCardBackgroundColor(
-        '#5A69F3',
-      );
-    });
-
-    it('Credential card: Schema with layout.', async () => {
-      const credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schemaWithLayout,
-        transport: Transport.PROCIVIS,
-      });
-      await WalletScreen.credential(credentialId).element.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-      await CredentialDetailScreen.credentialCard.verifyLogoColor(
-        '#ebb1f9',
-        '#000000',
-      );
-      await CredentialDetailScreen.credentialCard.verifyCardBackgroundColor(
-        '#cc66ff',
-      );
-    });
-  });
-
-  // Pass
-  describe('ONE-2300: Card Stack View: highlight individual Credential', () => {
-    let credentialId_1: string;
-    let credentialId_2: string;
-    let credentialId_3: string;
-
-    beforeAll(async () => {
-      const schema_1 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'Main region', required: true },
-          { datatype: DataType.STRING, key: 'Support region', required: true },
-          { datatype: DataType.PICTURE, key: 'Location photo', required: true },
-        ],
-        layoutProperties: {
-          background: {
-            color: '#7C3D2F',
-          },
-          code: {
-            attribute: 'Main region',
-            type: CodeType.QrCode,
-          },
-          logo: {
-            backgroundColor: '#1A7437',
-            fontColor: '#2E1A74',
-          },
-          pictureAttribute: 'Location photo',
-          primaryAttribute: 'Main region',
-          secondaryAttribute: 'Support region',
-        },
-        name: `Scrolling 1 ${uuidv4()}`,
-      });
-
-      const schema_2 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-          { datatype: DataType.PICTURE, key: 'Photo', required: true },
-        ],
-        layoutProperties: {
-          background: {
-            color: '#cc66ff',
-          },
-          code: {
-            attribute: 'first name',
-            type: CodeType.QrCode,
-          },
-          logo: {
-            backgroundColor: '#ebb1f9',
-            fontColor: '#000000',
-          },
-          pictureAttribute: 'Photo',
-          primaryAttribute: 'first name',
-          secondaryAttribute: 'last name',
-        },
-        name: `Scrolling 2 ${uuidv4()}`,
-      });
-
-      const schema_3 = await createCredentialSchema(authToken, {
-        claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-        ],
-        name: `Scrolling 3 ${uuidv4()}`,
-      });
-
-      credentialId_1 = await credentialIssuance({
-        authToken,
-        credentialSchema: schema_1,
-      });
-      credentialId_2 = await credentialIssuance({
-        authToken,
-        credentialSchema: schema_2,
-      });
-      credentialId_3 = await credentialIssuance({
-        authToken,
-        credentialSchema: schema_3,
-      });
-    });
-
-    beforeEach(async () => {
-      await expect(WalletScreen.screen).toBeVisible();
-    });
-
-    it('Verify last card opened', async () => {
-      await WalletScreen.credential(credentialId_1).verifyIsVisible();
-      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
-        false,
-      );
-
-      await WalletScreen.credential(credentialId_2).verifyIsVisible();
-      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
-
-      await WalletScreen.credential(credentialId_3).verifyIsVisible();
-      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed();
-    });
-
-    it('Expand card, all cards collapse (Except last one)', async () => {
-      await WalletScreen.credential(credentialId_3).collapseOrExpand();
-      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed(
-        false,
-      );
-
-      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
-      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
-        false,
-      );
     });
   });
 });

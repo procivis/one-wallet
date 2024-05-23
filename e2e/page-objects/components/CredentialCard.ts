@@ -1,6 +1,11 @@
 import { expect } from 'detox';
 
-import { formatDateTime } from '../../utils/date';
+export enum CarouselImageType {
+  Barcode = 'Barcode',
+  MRZ = 'MRZ',
+  Photo = 'Photo',
+  QrCode = 'QrCode',
+}
 
 export default function CredentialCard(testID: string) {
   const cardId = `${testID}.card`;
@@ -28,7 +33,20 @@ export default function CredentialCard(testID: string) {
           );
         },
         get carousel() {
-          return element(by.id(id));
+          return {
+            get cardImage() {
+              return element(by.id(`${id}.cardImage`));
+            },
+            get element() {
+              return element(by.id(id));
+            },
+            image: function (type: CarouselImageType) {
+              return element(by.id(`${id}.${type.toString()}`));
+            },
+            get imageSource() {
+              return element(by.id(`${id}.imageSource`));
+            },
+          };
         },
         dot: function (index: number) {
           return element(by.id(`${id}.dot.${index}`));
@@ -58,7 +76,14 @@ export default function CredentialCard(testID: string) {
       const id = `${cardId}.header`;
       return {
         get detail() {
-          return element(by.id(`${id}.detail`));
+          return {
+            get primaryDetail() {
+              return element(by.id(`${id}.detail`));
+            },
+            get secondaryDetail() {
+              return element(by.id(`${id}.secondaryDetail`));
+            },
+          };
         },
         get element() {
           return element(by.id(id));
@@ -99,7 +124,7 @@ export default function CredentialCard(testID: string) {
     showAllAttributes: async function () {
       await waitFor(this.showAllAttributesButton)
         .toBeVisible()
-        .whileElement(by.id('CredentialDetailScreen.content'))
+        .whileElement(by.id('CredentialDetailScreen.scroll'))
         .scroll(200, 'down');
       await this.showAllAttributesButton.tap();
     },
@@ -108,7 +133,7 @@ export default function CredentialCard(testID: string) {
     },
     swipe: async function (direction: 'left' | 'right') {
       await this.verifyCarouselIsVisible();
-      await this.body.carousel.swipe(direction);
+      await this.body.carousel.element.swipe(direction);
     },
     verifyAttributeValue: async function (key: string, value: string) {
       await expect(this.attribute(key).value).toHaveText(value);
@@ -125,31 +150,36 @@ export default function CredentialCard(testID: string) {
     },
     verifyCarouselIsVisible: async function (visible: boolean = true) {
       if (visible) {
-        await expect(this.body.carousel).toBeVisible();
+        await expect(this.body.carousel.element).toBeVisible();
       } else {
-        await expect(this.body.carousel).not.toBeVisible();
+        await expect(this.body.carousel.element).not.toBeVisible();
       }
     },
     verifyCredentialName: async function (credentialName: string) {
       await expect(this.header.name).toHaveText(credentialName);
     },
     verifyDetailLabel: async function (
-      primaryAttr?: string,
+      primaryAttr: string,
       secondaryAttr?: string,
-      issuanceDate?: string,
     ) {
-      let contentDetail = '';
-      if (primaryAttr) {
-        contentDetail += primaryAttr;
-      } else if (issuanceDate) {
-        contentDetail += formatDateTime(new Date(issuanceDate));
-      }
+      await expect(this.header.detail.primaryDetail).toBeVisible();
+      await expect(this.header.detail.primaryDetail).toHaveText(primaryAttr);
       if (secondaryAttr) {
-        const interpunct = ' · ';
-        contentDetail += `${interpunct}${secondaryAttr}`;
+        await expect(this.header.detail.secondaryDetail).toBeVisible();
+        await expect(this.header.detail.secondaryDetail).toHaveText(
+          secondaryAttr,
+        );
       }
-      await expect(this.header.detail).toBeVisible();
-      await expect(this.header.detail).toHaveText(contentDetail);
+    },
+    verifyImageIsVisible: async function (
+      imageType: CarouselImageType,
+      visible: boolean = true,
+    ) {
+      if (visible) {
+        await expect(this.body.carousel.image(imageType)).toBeVisible();
+      } else {
+        await expect(this.body.carousel.image(imageType)).not.toBeVisible();
+      }
     },
     verifyIsCardCollapsed: async function (collapsed: boolean = true) {
       if (collapsed) {

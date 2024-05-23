@@ -185,7 +185,11 @@ export const getCredentialCardPropsFromCredential = (
   const { layoutProperties } = credential.schema;
 
   const result: Omit<CredentialCardProps, 'onHeaderPress' | 'style'> = {
-    cardCarouselImages: getCarouselImagesFromClaims(claims, layoutProperties),
+    cardCarouselImages: getCarouselImagesFromClaims(
+      claims,
+      layoutProperties,
+      concatTestID(testID, 'carousel'),
+    ),
     cardImage: layoutProperties?.background?.image
       ? { imageSource: { uri: layoutProperties.background.image } }
       : undefined,
