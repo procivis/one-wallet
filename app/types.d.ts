@@ -1,4 +1,3 @@
-declare module '@carimus/metro-symlinked-deps';
 declare module '@react-native/normalize-color';
 
 declare module '*.svg' {
