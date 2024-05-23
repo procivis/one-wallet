@@ -18,6 +18,7 @@ import {
   QrCode,
 } from '../components/credential/credential-carousel-images';
 import { findClaimByPath } from './credential';
+import { isASCII } from './string';
 
 const styles = StyleSheet.create({
   container: {
@@ -73,7 +74,10 @@ export const getCarouselImagesFromClaims = (
         ),
         type: CarouselImageType.QrCode,
       });
-    } else if (code.type === CredentialSchemaCodeType.BARCODE) {
+    } else if (
+      code.type === CredentialSchemaCodeType.BARCODE &&
+      isASCII(claim.value)
+    ) {
       result.push({
         element: (
           <Barcode
