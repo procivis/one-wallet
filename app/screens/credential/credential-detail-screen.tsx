@@ -146,6 +146,9 @@ const CredentialDetailScreen: FC = () => {
         testID: 'CredentialDetailScreen.header',
         title: credential.schema.name,
       }}
+      scrollView={{
+        testID: 'CredentialDetailScreen.scroll',
+      }}
       testID="CredentialDetailScreen"
     >
       <CredentialDetailsCard

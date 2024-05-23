@@ -151,14 +151,14 @@ const WalletScreen: FunctionComponent = observer(() => {
         credential.claims,
         config,
         undefined,
-        testID,
+        concatTestID(testID, 'card'),
       );
       const headerAccessory = (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleCredentialPress(credential.id)}
           style={styles.headerAccessory}
-          testID={testID}
+          testID={concatTestID(testID, 'openDetail')}
         >
           <NextIcon
             color={colorScheme.text}
@@ -166,6 +166,7 @@ const WalletScreen: FunctionComponent = observer(() => {
             testID={concatTestID(
               'WalletScreen.credential',
               credential.schema.name,
+              'openDetail',
             )}
           />
         </TouchableOpacity>
