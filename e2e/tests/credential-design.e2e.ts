@@ -445,7 +445,7 @@ describe('ONE-2014: Credential design', () => {
       await CredentialDetailScreen.credentialCard.collapseOrExpand();
     });
 
-    it('Test credential card body', async () => {
+    it('Test credential carousel', async () => {
       await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
         CarouselImageType.Photo,
       );
