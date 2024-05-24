@@ -16,6 +16,9 @@ export default function CredentialCard(testID: string) {
         get element() {
           return element(by.id(id));
         },
+        get image() {
+          return element(by.id(`${id}.image`));
+        },
         get title() {
           return element(by.id(`${id}.title`));
         },
@@ -175,10 +178,45 @@ export default function CredentialCard(testID: string) {
       imageType: CarouselImageType,
       visible: boolean = true,
     ) {
-      if (visible) {
-        await expect(this.body.carousel.image(imageType)).toBeVisible();
-      } else {
-        await expect(this.body.carousel.image(imageType)).not.toBeVisible();
+      interface Result {
+        invisible: number[];
+        visible: number[];
+      }
+      const result: Result = {
+        invisible: [],
+        visible: [],
+      };
+
+      for (let i = 0; i < 4; i++) {
+        try {
+          const image = this.body.carousel.image(imageType).atIndex(i);
+          if (visible) {
+            await expect(image).toBeVisible();
+            result.visible.push(i);
+            console.log('VISIBLE', imageType, i);
+            break;
+          } else {
+            await expect(image).not.toBeVisible();
+            result.invisible.push(i);
+            console.log('NO VISIBLE', imageType, i);
+          }
+        } catch (error) {
+          if (visible) {
+            result.invisible.push(i);
+          } else {
+            result.visible.push(i);
+          }
+        }
+      }
+
+      if (visible && result.visible.length === 0) {
+        throw Error(`Expected image of type ${imageType} is not visible.`);
+      }
+
+      if (!visible && result.invisible.length !== 4) {
+        throw Error(
+          `Expected image of type ${imageType} to be invisible, but it was visible.`,
+        );
       }
     },
     verifyIsCardCollapsed: async function (collapsed: boolean = true) {
