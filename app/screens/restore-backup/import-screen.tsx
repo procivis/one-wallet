@@ -1,5 +1,7 @@
 import {
+  BackupScreen,
   ImportIcon,
+  SettingsButton,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
@@ -14,8 +16,6 @@ import {
   unlink,
 } from 'react-native-fs';
 
-import { BackupScreen } from '../../components/backup/backup-screen';
-import SettingsButton from '../../components/settings/settings-button';
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { reportException } from '../../utils/reporting';
@@ -51,6 +51,7 @@ const ImportScreen: FC = () => {
       cta={translate('restoreBackup.import.cta')}
       description={translate('restoreBackup.import.description')}
       isCtaDisabled={!selectedFilePath}
+      onBack={navigation.goBack}
       onCta={() =>
         navigation.navigate('RecoveryPassword', {
           inputPath: selectedFilePath!,

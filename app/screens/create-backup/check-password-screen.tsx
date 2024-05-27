@@ -1,7 +1,7 @@
+import { BackupScreen } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { BackupScreen } from '../../components/backup/backup-screen';
 import Input from '../../components/common/text-input';
 import { translate } from '../../i18n';
 import {
@@ -38,6 +38,7 @@ const CheckPasswordScreen: FC = () => {
       cta={translate('createBackup.checkPassword.cta')}
       description={translate('createBackup.checkPassword.description')}
       isCtaDisabled={!entry}
+      onBack={navigation.goBack}
       onCta={onConfirm}
       testID="CreateBackupCheckPasswordScreen"
       title={translate('createBackup.checkPassword.title')}

@@ -1,5 +1,7 @@
 import {
   concatTestID,
+  HistoryActionIcon,
+  HistoryActionIconType,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -16,7 +18,6 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { translate } from '../../i18n';
 import { HistoryListItemWithDid } from '../../models/core/history';
 import { getEntryTitle } from '../../utils/history';
-import { HistoryActionIcon, HistoryActionIconType } from '../icon/history-icon';
 
 const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
   switch (historyItem.action) {
