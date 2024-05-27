@@ -41,6 +41,11 @@ const PreviewScreen: FC = () => {
     navigation.replace('Creating', params);
   }, [navigation, params]);
 
+  const showExportable =
+    exportableCredentials && exportableCredentials.length > 0;
+  const showNonExportable =
+    nonExportableCredentials && nonExportableCredentials.length > 0;
+
   return (
     <ScrollViewScreen
       header={{
@@ -57,23 +62,34 @@ const PreviewScreen: FC = () => {
           {translate('createBackup.preview.description')}
         </Typography>
 
-        <Typography
-          color={colorScheme.text}
-          preset="m"
-          style={styles.sectionHeader}
-        >
-          {translate('createBackup.preview.backedUp')}
-        </Typography>
-        <PreviewCredentials credentials={exportableCredentials} fullWidth />
+        {showExportable && (
+          <Typography
+            color={colorScheme.text}
+            preset="m"
+            style={styles.sectionHeader}
+          >
+            {translate('createBackup.preview.backedUp')}
+          </Typography>
+        )}
+        {showExportable && (
+          <PreviewCredentials credentials={exportableCredentials} fullWidth />
+        )}
 
-        <Typography
-          color={colorScheme.text}
-          preset="m"
-          style={styles.sectionHeader}
-        >
-          {translate('createBackup.preview.notBackedUp')}
-        </Typography>
-        <PreviewCredentials credentials={nonExportableCredentials} fullWidth />
+        {showNonExportable && (
+          <Typography
+            color={colorScheme.text}
+            preset="m"
+            style={styles.sectionHeader}
+          >
+            {translate('createBackup.preview.notBackedUp')}
+          </Typography>
+        )}
+        {showNonExportable && (
+          <PreviewCredentials
+            credentials={nonExportableCredentials}
+            fullWidth
+          />
+        )}
       </View>
       <View style={styles.bottom}>
         <Button

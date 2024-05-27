@@ -23,6 +23,7 @@ import { removePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { resetNavigationAction } from '../../utils/navigation';
 import { reportException, reportTraceInfo } from '../../utils/reporting';
 
 const DeleteWalletProcessScreen: FunctionComponent = () => {
@@ -69,8 +70,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
   }, []);
 
   const closeButtonHandler = useCallback(() => {
-    rootNavigation.popToTop();
-    rootNavigation.replace('Onboarding');
+    resetNavigationAction(rootNavigation, [{ name: 'Onboarding' }]);
   }, [rootNavigation]);
   const { closeTimeout } = useCloseButtonTimeout(
     state === LoaderViewState.Success,

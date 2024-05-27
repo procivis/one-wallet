@@ -9,6 +9,7 @@ import { storePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { resetNavigationAction } from '../../utils/navigation';
 
 const PinCodeInitializationScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
@@ -18,8 +19,9 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers();
   const finishSetup = useCallback(() => {
     initializeONECoreIdentifiers();
-    rootNavigation.popToTop();
-    rootNavigation.replace('Dashboard', { screen: 'Wallet' });
+    resetNavigationAction(rootNavigation, [
+      { name: 'Dashboard', params: { screen: 'Wallet' } },
+    ]);
   }, [rootNavigation, initializeONECoreIdentifiers]);
 
   const screen = useRef<PinCodeActions>(null);
