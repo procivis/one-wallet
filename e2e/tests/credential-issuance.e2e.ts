@@ -22,6 +22,8 @@ import { formatDateTime } from '../utils/date';
 import {
   CredentialFormat,
   DataType,
+  DidMethod,
+  KeyType,
   LoadingResultState,
   RevocationMethod,
   Transport,
@@ -525,6 +527,41 @@ describe('ONE-601: Credential issuance', () => {
       await expect(InvitationProcessScreen.screen).toBeVisible();
       await InvitationProcessScreen.closeButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
+
+  describe('ONE-2054: Issue mdoc credentials', () => {
+    let mdocSchema: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      mdocSchema = await createCredentialSchema(authToken, {
+        claims: [
+          {
+            claims: [
+              { datatype: DataType.STRING, key: 'country', required: true },
+              { datatype: DataType.STRING, key: 'region', required: true },
+              { datatype: DataType.STRING, key: 'city', required: true },
+              { datatype: DataType.STRING, key: 'street', required: true },
+            ],
+            datatype: DataType.OBJECT,
+            key: 'Address',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.MDOC,
+        revocationMethod: RevocationMethod.NONE,
+        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
+      });
+    });
+
+    it('Issue mdoc credential', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: mdocSchema,
+        didMethod: DidMethod.MDL,
+        keyAlgorithms: KeyType.ES256,
+        transport: Transport.OPENID4VC,
+      });
     });
   });
 });

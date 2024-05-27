@@ -4,8 +4,18 @@ import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProce
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
-import { bffLogin, createCredential, offerCredential } from '../utils/bff-api';
-import { LoadingResultState, Transport } from '../utils/enums';
+import {
+  bffLogin,
+  createCredential,
+  getLocalDid,
+  offerCredential,
+} from '../utils/bff-api';
+import {
+  DidMethod,
+  KeyType,
+  LoadingResultState,
+  Transport,
+} from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface CredentialIssuanceProps {
@@ -16,6 +26,8 @@ interface CredentialIssuanceProps {
     value: string;
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
+  didMethod?: DidMethod;
+  keyAlgorithms?: KeyType;
   redirectUri?: string;
   transport?: Transport;
 }
@@ -75,11 +87,16 @@ export const credentialIssuance = async (
   if (!data.authToken) {
     data.authToken = await bffLogin();
   }
+  const did: Record<string, any> = await getLocalDid(data.authToken, {
+    didMethods: data.didMethod,
+    keyAlgorithms: data.keyAlgorithms,
+  });
   const credentialId = await createCredential(
     data.authToken,
     data.credentialSchema,
     {
       claimValues: data.claimValues,
+      issuerDid: did.id,
       redirectUri: data.redirectUri,
       transport: data.transport,
     },
