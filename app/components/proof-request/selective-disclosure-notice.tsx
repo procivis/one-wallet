@@ -1,3 +1,4 @@
+import { CredentialWarningIcon } from '@procivis/one-react-native-components';
 import {
   Typography,
   useAppColorScheme,
@@ -6,7 +7,6 @@ import React, { FunctionComponent } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
-import { AlertOutlineIcon } from '../icon/credential-icon';
 
 export const SelectiveDislosureNotice: FunctionComponent<{
   style?: StyleProp<ViewStyle>;
@@ -18,7 +18,7 @@ export const SelectiveDislosureNotice: FunctionComponent<{
       style={[styles.notice, { backgroundColor: colorScheme.notice }, style]}
       testID={testID}
     >
-      <AlertOutlineIcon />
+      <CredentialWarningIcon />
       <Typography color={colorScheme.noticeText} size="sml" style={styles.text}>
         {translate('proofRequest.selectiveDisclosure.notice')}
       </Typography>
