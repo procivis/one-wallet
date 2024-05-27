@@ -193,12 +193,10 @@ export default function CredentialCard(testID: string) {
           if (visible) {
             await expect(image).toBeVisible();
             result.visible.push(i);
-            console.log('VISIBLE', imageType, i);
             break;
           } else {
             await expect(image).not.toBeVisible();
             result.invisible.push(i);
-            console.log('NO VISIBLE', imageType, i);
           }
         } catch (error) {
           if (visible) {
