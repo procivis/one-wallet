@@ -1,4 +1,8 @@
-import { Button, concatTestID } from '@procivis/one-react-native-components';
+import {
+  Button,
+  concatTestID,
+  ScrollViewScreen,
+} from '@procivis/one-react-native-components';
 import { CredentialStateEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -11,7 +15,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { Credential } from '../../components/proof-request/credential';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {

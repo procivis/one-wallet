@@ -1,5 +1,10 @@
 import {
   ColorScheme,
+  CredentialSuspendedIcon,
+  CredentialSuspendedTempIcon,
+  CredentialValidIcon,
+  NerdModeItemProps,
+  NerdModeScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -13,13 +18,7 @@ import React, { FunctionComponent, ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
-import {
-  CredentialSuspendedIcon,
-  CredentialSuspendedTempIcon,
-  CredentialValidIcon,
-} from '../../components/icon/nerd-view-icon';
-import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
-import NerdModeScreen from '../../components/screens/nerd-mode-screen';
+import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -67,6 +66,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   const nav = useNavigation();
   const colorScheme = useAppColorScheme();
   const route = useRoute<NerdModeRouteProp<'CredentialNerdMode'>>();
+  const copyToClipboard = useCopyToClipboard();
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
@@ -79,7 +79,9 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
 
-  const nerdModeFields: Array<NerdModeItemProps> = [
+  const nerdModeFields: Array<
+    Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
+  > = [
     {
       attributeKey: translate('credentialDetail.credential.schema'),
       highlightedText: credentialDetail.schema.name,
@@ -142,7 +144,12 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
           credentialDetail?.issuerDid ??
           translate('credentialOffer.unknownIssuer'),
       }}
+      labels={{
+        collapse: translate('nerdView.action.collapseAttribute'),
+        expand: translate('nerdView.action.expandAttribute'),
+      }}
       onClose={nav.goBack}
+      onCopyToClipboard={copyToClipboard}
       sections={[
         {
           data: nerdModeFields,

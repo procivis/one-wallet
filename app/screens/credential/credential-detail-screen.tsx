@@ -5,6 +5,7 @@ import {
   concatTestID,
   CredentialCardShadow,
   CredentialDetailsCard,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -26,7 +27,6 @@ import {
   HeaderBackButton,
   HeaderOptionsButton,
 } from '../../components/navigation/header-buttons';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useHistory } from '../../hooks/core/history';

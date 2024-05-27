@@ -1,7 +1,9 @@
 import {
   BackButton,
+  FoldableHeader,
   NavigationHeader,
   useAppColorScheme,
+  useListContentInset,
 } from '@procivis/one-react-native-components';
 import {
   HistoryEntityTypeEnum,
@@ -11,10 +13,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { FoldableSearchHeader } from '../../components/header/foldable-header';
 import { HistorySectionList } from '../../components/history/history-list';
 import { useCredentialDetail } from '../../hooks/core/credentials';
-import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { translate } from '../../i18n';
 import {
   CredentialDetailNavigationProp,
@@ -92,7 +92,7 @@ export const CredentialHistoryScreen: FC = () => {
         query={query}
         testID="CredentialHistoryScreen.list"
       />
-      <FoldableSearchHeader
+      <FoldableHeader
         header={
           <NavigationHeader
             backgroundColor={'transparent'}

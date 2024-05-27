@@ -1,11 +1,14 @@
+import {
+  NerdModeItemProps,
+  NerdModeScreen,
+} from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
 
 import { Transport } from '../../../e2e/utils/enums';
-import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
-import NerdModeScreen from '../../components/screens/nerd-mode-screen';
+import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -14,6 +17,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 const ProofDetailNerdView: FunctionComponent = () => {
   const nav = useNavigation<RootNavigationProp>();
   const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
+  const copyToClipboard = useCopyToClipboard();
 
   const { proofId } = route.params;
 
@@ -38,7 +42,9 @@ const ProofDetailNerdView: FunctionComponent = () => {
       ]
     : [];
 
-  const nerdModeFields: Array<NerdModeItemProps> = [
+  const nerdModeFields: Array<
+    Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
+  > = [
     {
       attributeKey: translate('credentialDetail.credential.transport'),
       attributeText: translate(
@@ -63,7 +69,12 @@ const ProofDetailNerdView: FunctionComponent = () => {
         entityName:
           proofDetail?.verifierDid ?? translate('proofRequest.unknownVerifier'),
       }}
+      labels={{
+        collapse: translate('nerdView.action.collapseAttribute'),
+        expand: translate('nerdView.action.expandAttribute'),
+      }}
       onClose={nav.goBack}
+      onCopyToClipboard={copyToClipboard}
       sections={[
         {
           data: [...didField, ...nerdModeFields],

@@ -3,6 +3,7 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   EntityCluster,
+  ScrollViewScreen,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
@@ -14,7 +15,6 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
   useCredentialDetail,
