@@ -1,12 +1,15 @@
-import { formatDateTime } from '@procivis/one-react-native-components';
+import {
+  formatDateTime,
+  NerdModeItemProps,
+  NerdModeScreen,
+} from '@procivis/one-react-native-components';
 import { useMemoAsync } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC } from 'react';
 import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
-import { NerdModeItemProps } from '../../components/nerd-view/nerd-mode-item';
-import NerdModeScreen from '../../components/screens/nerd-mode-screen';
+import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useONECore } from '../../hooks/core/core-context';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
@@ -14,10 +17,13 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 const AppInformationNerdScreen: FC = () => {
   const navigation =
     useNavigation<SettingsNavigationProp<'AppInformationNerd'>>();
+  const copyToClipboard = useCopyToClipboard();
 
   const appVersion = `v${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()}`;
   const appFlavor = `${Config.CONFIG_NAME}, ${Config.ENVIRONMENT}`;
-  const appFields: Array<NerdModeItemProps> = [
+  const appFields: Array<
+    Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
+  > = [
     {
       attributeKey: translate('appInformationNerd.version'),
       canBeCopied: true,
@@ -37,7 +43,9 @@ const AppInformationNerdScreen: FC = () => {
   const coreBuildDate = coreInfo
     ? formatDateTime(new Date(coreInfo.buildTime))
     : undefined;
-  const coreFields: Array<NerdModeItemProps> = [
+  const coreFields: Array<
+    Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
+  > = [
     {
       attributeKey: translate('appInformationNerd.version'),
       canBeCopied: true,
@@ -57,7 +65,12 @@ const AppInformationNerdScreen: FC = () => {
 
   return (
     <NerdModeScreen
+      labels={{
+        collapse: translate('nerdView.action.collapseAttribute'),
+        expand: translate('nerdView.action.expandAttribute'),
+      }}
       onClose={navigation.goBack}
+      onCopyToClipboard={copyToClipboard}
       sections={[
         {
           data: appFields,
