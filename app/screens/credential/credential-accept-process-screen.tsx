@@ -17,7 +17,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -45,8 +45,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
   const { walletStore } = useStores();
   const [error, setError] = useState<unknown>();
-
-  useBlockOSBackNavigation();
 
   const requiredStorageType = credential?.schema.walletStorageType;
   const didId = useMemo(() => {
@@ -112,6 +110,12 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     closeButtonHandler,
   );
 
+  const androidBackHandler = useCallback(() => {
+    closeButtonHandler();
+    return false;
+  }, [closeButtonHandler]);
+  useBlockOSBackNavigation(Platform.OS === 'ios', androidBackHandler);
+
   const infoPressHandler = useCallback(() => {
     if (!error) {
       return;
@@ -144,7 +148,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
         leftItem: HeaderCloseModalButton,
         modalHandleVisible: true,
         rightItem:
-          state === LoaderViewState.Warning ? (
+          state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton onPress={infoPressHandler} />
           ) : undefined,
         title: translate('credentialOffer.title'),
