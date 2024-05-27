@@ -11,10 +11,14 @@ import { ProofSchemaResponseDTO } from '../types/proof';
 import {
   CredentialFormat,
   DataType,
+  DidMethod,
+  KeyRole,
+  KeyType,
   LayoutType,
   RevocationMethod,
   Transport,
 } from './enums';
+import { objectToQueryParams } from './query-params';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
@@ -121,18 +125,37 @@ async function getProofSchemaDetail(
   return apiRequest(`/api/proof-schema/v1/${proofSchemaId}`, authToken);
 }
 
-async function getLocalDid(authToken: string, algorithm: string = 'EDDSA') {
-  return apiRequest(
-    `/api/did/v1?page=0&pageSize=1&type=LOCAL&deactivated=false&keyAlgorithms=${algorithm}`,
-    authToken,
-  ).then((response) => {
-    return response.values[0];
+interface DidQueryParams {
+  didMethods?: DidMethod | DidMethod[];
+  keyAlgorithms?: KeyType | KeyType[];
+}
+
+export async function getLocalDid(authToken: string, params?: DidQueryParams) {
+  const queryParams = objectToQueryParams({
+    deactivated: false,
+    didMethods: params?.didMethods ?? DidMethod.KEY,
+    keyAlgorithms: params?.keyAlgorithms ?? KeyType.EDDSA,
+    keyRoles: [KeyRole.ASSERTION_METHOD],
+    page: 0,
+    pageSize: 1,
+    type: DidType.LOCAL,
   });
+  return apiRequest(`/api/did/v1?${queryParams}`, authToken).then(
+    (response) => {
+      const did = response.values[0];
+      if (!did) {
+        throw new Error('Did not found');
+      }
+      return did;
+    },
+  );
 }
 
 export interface CredentialData {
-  claimValues: Array<{ claimId: string; value: string }>;
-  redirectUri: string;
+  claimValues?: Array<{ claimId: string; value: string }>;
+  issuerDid: string;
+  issuerKey?: string;
+  redirectUri?: string;
   transport?: Transport;
 }
 
@@ -187,16 +210,14 @@ const claimsFilling = (claims: CredentialClaimSchemaResponseDTO[]) => {
 export async function createCredential(
   authToken: string,
   schema: CredentialSchemaResponseDTO,
-  credentialData?: Partial<CredentialData>,
+  credentialData?: CredentialData,
 ): Promise<string> {
-  const credentialSchema: Record<string, any> =
-    schema ?? (await getCredentialSchema(authToken));
-  const did: Record<string, any> = await getLocalDid(authToken);
   const claimValues = claimsFilling(schema.claims);
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
-    credentialSchemaId: credentialSchema.id,
-    issuerDid: did.id,
+    credentialSchemaId: schema.id,
+    issuerDid: credentialData?.issuerDid,
+    issuerKey: credentialData?.issuerKey,
     transport: credentialData?.transport ?? Transport.PROCIVIS,
   };
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
