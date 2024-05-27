@@ -2,11 +2,15 @@ import {
   Button,
   concatTestID,
   CredentialDetailsCardListItem,
+  FoldableHeader,
   Header,
+  NextIcon,
+  NoCredentialsIcon,
   ScanButton,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
+  useListContentInset,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import {
@@ -34,9 +38,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { FoldableSearchHeader } from '../../components/header/foldable-header';
-import { NextIcon } from '../../components/icon/common-icon';
-import { NoCredentialsIcon } from '../../components/icon/wallet-icon';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
@@ -44,7 +45,6 @@ import {
   usePagedCredentials,
 } from '../../hooks/core/credentials';
 import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
-import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -316,7 +316,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         testID="WalletScreen.credentialList"
       />
       {!isEmpty && <ScanButton onPress={handleScanPress} />}
-      <FoldableSearchHeader
+      <FoldableHeader
         header={
           <Header
             rightButton={optionsButton}

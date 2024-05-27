@@ -1,8 +1,18 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useAppColorScheme } from '@procivis/one-react-native-components';
+import {
+  ButtonSetting,
+  ButtonSettingProps,
+  ListSectionHeader,
+  ListSectionHeaderProps,
+  SectionListScreen,
+  SettingItemSeparator,
+  SwitchSetting,
+  SwitchSettingProps,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import {
   SectionListProps,
   StyleProp,
@@ -22,14 +32,7 @@ import {
   RestoreBackupIcon,
   TouchIDIcon,
 } from '../../components/icon/settings-icon';
-import ListSectionHeader, {
-  ListSectionHeaderProps,
-} from '../../components/list/list-section-header';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
-import SectionListScreen from '../../components/screens/section-list-screen';
-import ButtonSetting from '../../components/settings/button-setting';
-import SettingItemSeparator from '../../components/settings/setting-item-separator';
-import SwitchSetting from '../../components/settings/switch-setting';
 import { config } from '../../config';
 import { Biometry, useBiometricType } from '../../hooks/pin-code/biometric';
 import { useBiometricSetting } from '../../hooks/settings/biometric';
@@ -112,10 +115,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
 
   type SettingsListItem =
     | {
-        buttonSetting: ComponentProps<typeof ButtonSetting>;
+        buttonSetting: ButtonSettingProps;
       }
     | {
-        switchSetting: ComponentProps<typeof SwitchSetting>;
+        switchSetting: SwitchSettingProps;
       };
 
   const renderSettingsSectionHeader: SectionListProps<
