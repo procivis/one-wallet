@@ -1,5 +1,6 @@
 import {
   CredentialFormat,
+  DataType,
   LayoutType,
   RevocationMethod,
   WalletKeyStorageType,
@@ -30,13 +31,21 @@ export interface LayoutProperties {
   secondaryAttribute?: string;
 }
 
+export interface CredentialClaimSchemaRequestDTO {
+  claims?: CredentialClaimSchemaRequestDTO[];
+  datatype: DataType;
+  key: string;
+  required: boolean;
+}
+
 export interface CredentialSchemaData {
-  claims: Array<{ datatype: string; key: string; required: boolean }>;
+  claims: CredentialClaimSchemaRequestDTO[];
   format: CredentialFormat;
   layoutProperties?: LayoutProperties;
   layoutType: LayoutType;
   name: string;
   revocationMethod: RevocationMethod;
+  schemaId?: string;
   walletStorageType?: WalletKeyStorageType;
 }
 

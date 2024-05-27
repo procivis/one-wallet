@@ -4,6 +4,14 @@ export enum KeyType {
   ES256 = 'ES256',
 }
 
+export enum KeyRole {
+  ASSERTION_METHOD = 'ASSERTION_METHOD',
+  AUTHENTICATION = 'AUTHENTICATION',
+  CAPABILITY_DELEGATION = 'CAPABILITY_DELEGATION',
+  CAPABILITY_INVOCATION = 'CAPABILITY_INVOCATION',
+  KEY_AGREEMENT = 'KEY_AGREEMENT',
+}
+
 export enum StorageType {
   AZURE_VAULT = 'AZURE_VAULT',
   INTERNAL = 'INTERNAL',
@@ -16,8 +24,10 @@ export enum DidType {
 }
 
 export enum DidMethod {
+  ION = 'UNIVERSAL_RESOLVER',
   JWK = 'JWK',
   KEY = 'KEY',
+  MDL = 'MDL',
   WEB = 'WEB',
   X509 = 'X509',
 }

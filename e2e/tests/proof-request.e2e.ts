@@ -23,7 +23,12 @@ import {
   revokeCredential,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { CredentialFormat, RevocationMethod, Transport } from '../utils/enums';
+import {
+  CredentialFormat,
+  DataType,
+  RevocationMethod,
+  Transport,
+} from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -98,8 +103,8 @@ describe('ONE-614: Proof request', () => {
       await launchApp({ delete: true });
 
       const claims: CredentialSchemaData['claims'] = [
-        { datatype: 'STRING', key: 'field1', required: true },
-        { datatype: 'STRING', key: 'field2', required: true },
+        { datatype: DataType.STRING, key: 'field1', required: true },
+        { datatype: DataType.STRING, key: 'field2', required: true },
       ];
       jwtCredentialSchema = await createCredentialSchema(authToken, {
         claims,
@@ -145,23 +150,14 @@ describe('ONE-614: Proof request', () => {
     });
 
     it('displays selective disclosure notice on affected options', async () => {
-      const sdjwtCredentialId = await createCredential(
-        authToken,
-        sdjwtCredentialSchema,
-        {
-          claimValues: [
-            { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
-            { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
-          ],
-        },
-      );
-      const sdjwtCredentialInvitationUrl = await offerCredential(
-        sdjwtCredentialId,
-        authToken,
-      );
-      await scanURL(sdjwtCredentialInvitationUrl);
-      await CredentialOfferScreen.acceptButton.tap();
-      await CredentialAcceptProcessScreen.closeButton.tap();
+      const sdjwtCredentialId = await credentialIssuance({
+        authToken: authToken,
+        claimValues: [
+          { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
+          { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
+        ],
+        credentialSchema: sdjwtCredentialSchema,
+      });
 
       const proofRequestId = await createProofRequest(
         authToken,
@@ -325,7 +321,9 @@ describe('ONE-614: Proof request', () => {
       await launchApp({ delete: true });
 
       const pictureCredentialSchema = await createCredentialSchema(authToken, {
-        claims: [{ datatype: 'PICTURE', key: pictureKey, required: true }],
+        claims: [
+          { datatype: DataType.PICTURE, key: pictureKey, required: true },
+        ],
       });
       pictureProofSchema = await createProofSchema(authToken, [
         pictureCredentialSchema,
