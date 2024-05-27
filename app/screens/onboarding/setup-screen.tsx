@@ -2,6 +2,7 @@ import {
   Button,
   ButtonType,
   ContrastingStatusBar,
+  CredentialCardShadow,
   CredentialDetailsCard,
   Typography,
   useAppColorScheme,
@@ -149,17 +150,10 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 11,
   },
-  // eslint-disable-next-line react-native/no-color-literals
   credential: {
+    ...CredentialCardShadow,
     alignSelf: 'center',
     position: 'absolute',
-    shadowColor: '#102742',
-    shadowOffset: {
-      height: 0,
-      width: 5,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 14,
   },
   description: {
     marginTop: 8,
