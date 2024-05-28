@@ -387,6 +387,7 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginHorizontal: 16,
+    overflow: 'visible',
     paddingHorizontal: 0,
   },
   listItem: {
