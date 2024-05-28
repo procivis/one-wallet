@@ -269,3 +269,68 @@ export const detailsCardFromCredential = (
     card,
   };
 };
+
+// Converts a flat list of attributes into a nested structure
+// modifies the names to not include slashes
+export const nestAttributes = (
+  attributes: CredentialAttribute[],
+): CredentialAttribute[] => {
+  const result: CredentialAttribute[] = [];
+
+  for (const attribute of attributes) {
+    const attributePath = attribute.name.split('/');
+    if (attributePath.length === 0) {
+      result.push(attribute);
+    } else {
+      const parent = result.find((a) => a.name === attributePath[0]);
+      if (parent) {
+        insertAttributeInObject(attribute, parent);
+      } else {
+        result.push(nestAttributeInDummyObject(attribute));
+      }
+    }
+  }
+
+  return result;
+};
+
+// We nest the leaf node in a (one or more) nested object(s)
+// to make sure the tree structure is correctly rendered in proof request screens.
+const nestAttributeInDummyObject = (
+  attribute: CredentialAttribute,
+): CredentialAttribute => {
+  const pathParts = attribute.name.split('/');
+  const [first, ...rest] = pathParts;
+  if (!rest.length) {
+    return attribute;
+  }
+
+  // The dummy object is not selectable, and contains a placeholder ID
+  // the user can't interact with it.
+  return {
+    attributes: [
+      nestAttributeInDummyObject({ ...attribute, name: rest.join('/') }),
+    ],
+    disabled: true,
+    id: `${attribute.id}/${first}`,
+    name: first,
+  };
+};
+
+// Recursively insert an attribute into an object
+// Will create nested objects if necessary
+const insertAttributeInObject = (
+  attribute: CredentialAttribute,
+  object: CredentialAttribute,
+) => {
+  const pathParts = attribute.name.split('/');
+  const [first, ...rest] = pathParts;
+
+  const nextParent = object.attributes?.find((a) => a.name === first);
+
+  if (!nextParent) {
+    object.attributes?.push(nestAttributeInDummyObject(attribute));
+  } else {
+    insertAttributeInObject({ ...attribute, name: rest.join('/') }, nextParent);
+  }
+};
