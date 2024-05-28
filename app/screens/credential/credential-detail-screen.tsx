@@ -3,6 +3,7 @@ import {
   Button,
   ButtonType,
   concatTestID,
+  CredentialCardShadow,
   CredentialDetailsCard,
   Typography,
   useAppColorScheme,
@@ -151,18 +152,19 @@ const CredentialDetailScreen: FC = () => {
       }}
       testID="CredentialDetailScreen"
     >
-      <CredentialDetailsCard
-        attributes={attributes}
-        card={{
-          ...card,
-          onHeaderPress,
-        }}
-        expanded={expanded}
-        onImagePreview={onImagePreview}
-        showAllButtonLabel={translate('common.seeAll')}
-        style={styles.credential}
-        testID={testID}
-      />
+      <View style={styles.credentialWrapper}>
+        <CredentialDetailsCard
+          attributes={attributes}
+          card={{
+            ...card,
+            onHeaderPress,
+          }}
+          expanded={expanded}
+          onImagePreview={onImagePreview}
+          showAllButtonLabel={translate('common.seeAll')}
+          testID={testID}
+        />
+      </View>
       <HistorySection
         historyEntries={credentialHistory}
         onSeeAllHistory={onSeeAllHistory}
@@ -234,7 +236,8 @@ const HistorySection: FC<{
 };
 
 const styles = StyleSheet.create({
-  credential: {
+  credentialWrapper: {
+    ...CredentialCardShadow,
     marginBottom: 12,
     marginHorizontal: 16,
   },
