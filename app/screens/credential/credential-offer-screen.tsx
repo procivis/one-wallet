@@ -1,5 +1,6 @@
 import {
   Button,
+  CredentialCardShadow,
   CredentialDetailsCard,
   EntityCluster,
   useAppColorScheme,
@@ -101,17 +102,19 @@ const CredentialOfferScreen: FunctionComponent = () => {
           <ActivityIndicator />
         ) : (
           <>
-            <CredentialDetailsCard
-              attributes={attributes}
-              card={{
-                ...card,
-                onHeaderPress,
-              }}
-              expanded={expanded}
-              onImagePreview={onImagePreview}
-              showAllButtonLabel={translate('common.seeAll')}
-              testID="CredentialOfferScreen.detail"
-            />
+            <View style={styles.credentialWrapper}>
+              <CredentialDetailsCard
+                attributes={attributes}
+                card={{
+                  ...card,
+                  onHeaderPress,
+                }}
+                expanded={expanded}
+                onImagePreview={onImagePreview}
+                showAllButtonLabel={translate('common.seeAll')}
+                testID="CredentialOfferScreen.detail"
+              />
+            </View>
             <View style={styles.bottom}>
               <Button
                 onPress={onAccept}
@@ -137,6 +140,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
+  },
+  credentialWrapper: {
+    ...CredentialCardShadow,
   },
   issuer: {
     borderBottomWidth: 1,
