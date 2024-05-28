@@ -7,7 +7,6 @@ import { Credential } from '../credential/credential';
 
 interface PreviewCredentialsProps {
   credentials: CredentialListItem[] | undefined;
-  fullWidth?: boolean;
 }
 
 export const PreviewCredentials: FC<PreviewCredentialsProps> = ({

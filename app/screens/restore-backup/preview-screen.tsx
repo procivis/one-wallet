@@ -89,7 +89,7 @@ const PreviewScreen: FC = () => {
         >
           {translate('restoreBackup.preview.description')}
         </Typography>
-        <PreviewCredentials credentials={credentials} fullWidth />
+        <PreviewCredentials credentials={credentials} />
         <SafeAreaView edges={['bottom']} style={styles.bottom}>
           <Button
             delayLongPress={longPressTimeSeconds * 1000}

@@ -1,6 +1,8 @@
 import {
   BackButton,
   formatDateTime,
+  HistoryStatusIcon,
+  HistoryStatusIconType,
   NavigationHeader,
   Typography,
   useAppColorScheme,
@@ -17,10 +19,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { DataItem } from '../../components/common/data-item';
 import { Credential } from '../../components/credential/credential';
-import {
-  HistoryStatusIcon,
-  HistoryStatusIconType,
-} from '../../components/icon/history-icon';
 import { HeaderInfoButton } from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useProofDetail } from '../../hooks/core/proofs';
