@@ -1,5 +1,10 @@
 import {
+  ButtonSetting,
   LinkIcon,
+  ListSectionHeader,
+  ListSectionHeaderProps,
+  SectionListScreen,
+  SettingItemSeparator,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -13,13 +18,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import ListSectionHeader, {
-  ListSectionHeaderProps,
-} from '../../components/list/list-section-header';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
-import SectionListScreen from '../../components/screens/section-list-screen';
-import ButtonSetting from '../../components/settings/button-setting';
-import SettingItemSeparator from '../../components/settings/setting-item-separator';
 import { useUpdatedTranslate } from '../../hooks/updated-translate';
 import { SettingsRouteProp } from '../../navigators/settings/settings-routes';
 import { nonEmptyFilter } from '../../utils/filtering';
