@@ -2,6 +2,7 @@ import {
   Button,
   ButtonType,
   Checkbox,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -10,7 +11,6 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 

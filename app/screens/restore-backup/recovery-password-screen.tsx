@@ -1,7 +1,7 @@
+import { BackupScreen } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
 
-import { BackupScreen } from '../../components/backup/backup-screen';
 import Input from '../../components/common/text-input';
 import { translate } from '../../i18n';
 import {
@@ -36,6 +36,7 @@ const RecoveryPasswordScreen: FC = () => {
       cta={translate('restoreBackup.recoveryPassword.cta')}
       description={translate('restoreBackup.recoveryPassword.description')}
       isCtaDisabled={!password || route.params.error}
+      onBack={navigation.goBack}
       onCta={handleCta}
       testID="RestoreBackupRecoveryPasswordScreen"
       title={translate('restoreBackup.recoveryPassword.title')}

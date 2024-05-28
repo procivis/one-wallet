@@ -1,16 +1,19 @@
+import {
+  NerdModeScreen,
+  NerdModeSection,
+} from '@procivis/one-react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 
-import NerdModeScreen, {
-  NerdModeSection,
-} from '../../components/screens/nerd-mode-screen';
+import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
 const ErrorNerdScreen: FC = () => {
   const navigation = useNavigation();
   const route = useRoute<NerdModeRouteProp<'ErrorNerdMode'>>();
+  const copyToClipboard = useCopyToClipboard();
 
   const { error } = route.params;
 
@@ -72,7 +75,12 @@ const ErrorNerdScreen: FC = () => {
 
   return (
     <NerdModeScreen
+      labels={{
+        collapse: translate('nerdView.action.collapseAttribute'),
+        expand: translate('nerdView.action.expandAttribute'),
+      }}
       onClose={navigation.goBack}
+      onCopyToClipboard={copyToClipboard}
       sections={sections}
       testID="InvitationErrorDetailsScreen"
       title={translate('errorDetail.title')}

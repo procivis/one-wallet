@@ -1,5 +1,6 @@
 import {
   concatTestID,
+  HistoryStatusAcceptedIcon,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -8,7 +9,6 @@ import React, { FC, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
-import { HistoryStatusAcceptedIcon } from '../icon/history-icon';
 import { PurposeInfoIcon } from '../icon/purpose-icon';
 
 export interface PasswordStrengthProps {

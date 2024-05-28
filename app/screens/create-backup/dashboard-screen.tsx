@@ -1,4 +1,5 @@
 import {
+  BackupScreen,
   formatDateTime,
   TouchableOpacity,
   Typography,
@@ -11,7 +12,6 @@ import { NativeModules, Platform, StyleSheet, View } from 'react-native';
 import { unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
-import { BackupScreen } from '../../components/backup/backup-screen';
 import { useHistory } from '../../hooks/core/history';
 import { translate } from '../../i18n';
 import {
@@ -91,6 +91,7 @@ const DashboardScreen: FC = () => {
     <BackupScreen
       cta={translate('createBackup.dashboard.cta')}
       description={translate('createBackup.dashboard.description')}
+      onBack={navigation.goBack}
       onCta={() => navigation.navigate('SetPassword')}
       testID="CreateBackupDashboardScreen"
       title={translate('createBackup.dashboard.title')}

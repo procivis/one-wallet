@@ -1,5 +1,6 @@
 import {
   Button,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -9,7 +10,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useBackupInfo } from '../../hooks/core/backup';
 import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
@@ -72,7 +72,7 @@ const PreviewScreen: FC = () => {
           </Typography>
         )}
         {showExportable && (
-          <PreviewCredentials credentials={exportableCredentials} fullWidth />
+          <PreviewCredentials credentials={exportableCredentials} />
         )}
 
         {showNonExportable && (
@@ -85,10 +85,7 @@ const PreviewScreen: FC = () => {
           </Typography>
         )}
         {showNonExportable && (
-          <PreviewCredentials
-            credentials={nonExportableCredentials}
-            fullWidth
-          />
+          <PreviewCredentials credentials={nonExportableCredentials} />
         )}
       </View>
       <View style={styles.bottom}>

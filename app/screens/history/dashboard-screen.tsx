@@ -1,8 +1,11 @@
 import {
   BackButton,
+  FilterButton,
+  FoldableHeader,
   NavigationHeader,
   Typography,
   useAppColorScheme,
+  useListContentInset,
 } from '@procivis/one-react-native-components';
 import {
   HistoryEntityTypeEnum,
@@ -14,11 +17,8 @@ import { debounce } from 'lodash';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { FoldableSearchHeader } from '../../components/header/foldable-header';
 import { CredentialSchemaPicker } from '../../components/history/credential-schema-picker';
-import { FilterButton } from '../../components/history/filter-button';
 import { HistorySectionList } from '../../components/history/history-list';
-import { useListContentInset } from '../../hooks/list/list-content-inset';
 import { translate } from '../../i18n';
 import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 
@@ -125,7 +125,7 @@ const HistoryDashboardScreen: FC = () => {
         selected={queryParams.credentialSchemaId}
         visible={isFilterModalOpened}
       />
-      <FoldableSearchHeader
+      <FoldableHeader
         header={
           <NavigationHeader
             backgroundColor={'transparent'}

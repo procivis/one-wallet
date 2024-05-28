@@ -2,6 +2,7 @@ import {
   Button,
   concatTestID,
   EntityCluster,
+  ScrollViewScreen,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
@@ -30,7 +31,6 @@ import {
 } from '../../components/navigation/header-buttons';
 import { CredentialSelect } from '../../components/proof-request/credential-select';
 import { Group } from '../../components/proof-request/group';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
 import { useONECore } from '../../hooks/core/core-context';
 import {
   useCredentialRevocationCheck,
