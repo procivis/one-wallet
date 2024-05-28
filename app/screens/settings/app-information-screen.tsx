@@ -1,6 +1,8 @@
 import {
   BackButton,
+  ButtonSetting,
   LinkIcon,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -9,8 +11,6 @@ import React, { FC, useCallback } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 
 import { HeaderInfoButton } from '../../components/navigation/header-buttons';
-import ScrollViewScreen from '../../components/screens/scroll-view-screen';
-import ButtonSetting from '../../components/settings/button-setting';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
