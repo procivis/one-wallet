@@ -198,8 +198,8 @@ export const shareCredentialCardAttributeFromClaim = (
   };
 };
 
-// Will propagate the attribute status for all nested fields
-// Note: This function MUTATES the attribute object
+// Will propagate the attribute status (right accessory + selected?) for all nested attributes
+// Note: This function MUTATES the input attribute
 const setStatusForNestedObjectFields = (
   attribute: CredentialAttribute,
   status?: SelectorStatus,
@@ -215,16 +215,17 @@ const setStatusForNestedObjectFields = (
     return attribute;
   } else {
     // The object can be optional (tappable radio-checkmark), or required (checkmark)
-    // The accessory is rendered next to the object title,
-    // The nested attributes have no accessory, and can not be selected
     if (
       status === SelectorStatus.SelectedCheckmark ||
       status === SelectorStatus.Empty
     ) {
+      // If it's a selectable object, the accessory is rendered next to the object title,
+      // The nested attributes have no accessory, and can not be selected
       attribute.rightAccessory = accessory;
       setStatusForNestedObjectFields(attribute, undefined, true);
     } else {
-      // The object is required / rejected, the accessory is rendered next to each nested attribute (except other object titles), all fields are disabled
+      // If the object is required / rejected, the accessory is rendered next to each nested attribute (except other object titles)
+      // all fields are disabled
       for (const nestedAttribute of attribute.attributes) {
         setStatusForNestedObjectFields(nestedAttribute, status, true);
       }
