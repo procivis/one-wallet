@@ -1,3 +1,3 @@
-import LoadingResult from './components/LoadingResult';
+import LoadingResult from '../components/LoadingResult';
 
 export default LoadingResult('ProofRequestAcceptProcessScreen');
