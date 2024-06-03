@@ -333,7 +333,7 @@ dependency_track:react-native:policy_violations:
 
 license_generate:
   image:
-    name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.1.1
+    name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.2.0
     entrypoint: [""]
   variables:
     BASE_URL: ${DEPENDENCY_TRACK_BASE_URL}
@@ -343,7 +343,7 @@ license_generate:
     BRANCH_NAME: "update_licenses-${CI_PIPELINE_ID}"
   script:
     - git remote set-url origin "https://gitlab-ci-token:${GITLAB_PRIVATE_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
-    - python /app/main.py
+    - python /app/main.py --project wallet
     - git add .
     - git -c user.email="${GITLAB_USER_EMAIL}" -c user.name="${GITLAB_USER_NAME}" commit -m "Update Open Source licenses"
     - git push origin HEAD:refs/heads/${BRANCH_NAME}
