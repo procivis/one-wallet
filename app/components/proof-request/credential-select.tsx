@@ -196,6 +196,7 @@ export const CredentialSelect: FunctionComponent<{
         { borderColor: colorScheme.background },
         style,
       ]}
+      testID={testID}
     />
   );
 };
