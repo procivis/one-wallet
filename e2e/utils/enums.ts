@@ -32,7 +32,7 @@ export enum DidMethod {
   X509 = 'X509',
 }
 
-export enum Transport {
+export enum Exchange {
   MDL = 'MDL',
   OPENID4VC = 'OPENID4VC',
   PROCIVIS = 'PROCIVIS_TEMPORARY',
@@ -45,7 +45,8 @@ export enum RevocationMethod {
 }
 
 export enum CredentialFormat {
-  JSON_LD = 'JSON_LD',
+  JSON_LD_BBSPLUS = 'JSON_LD_BBSPLUS',
+  JSON_LD_CLASSIC = 'JSON_LD_CLASSIC',
   JWT = 'JWT',
   MDOC = 'MDOC',
   SDJWT = 'SDJWT',
@@ -87,13 +88,6 @@ export enum CodeType {
   BarCode = 'BARCODE',
   Mrz = 'MRZ',
   QrCode = 'QR_CODE',
-}
-
-export enum LoadingResultState {
-  Error = 'error',
-  Failure = 'failure',
-  InProgress = 'inProgress',
-  Success = 'success',
 }
 
 export enum CredentialRole {
