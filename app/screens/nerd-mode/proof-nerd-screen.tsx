@@ -48,7 +48,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
     {
       attributeKey: translate('credentialDetail.credential.transport'),
       attributeText: translate(
-        `proofRequest.transport.${proofDetail?.transport as Transport}`,
+        `proofRequest.transport.${proofDetail?.exchange as Transport}`,
       ),
     },
     {
