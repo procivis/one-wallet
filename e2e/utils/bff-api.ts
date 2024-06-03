@@ -7,16 +7,22 @@ import {
   CredentialSchemaResponseDTO,
 } from '../types/credential';
 import { CredentialSchemaData } from '../types/credentialSchema';
-import { ProofSchemaResponseDTO } from '../types/proof';
+import { DidDetailDTO, DidListItemDTO } from '../types/did';
+import {
+  CreateProofSchemaRequestDTO,
+  ProofRequestData,
+  ProofSchemaResponseDTO,
+} from '../types/proof';
 import {
   CredentialFormat,
   DataType,
   DidMethod,
+  DidType,
+  Exchange,
   KeyRole,
   KeyType,
   LayoutType,
   RevocationMethod,
-  Transport,
 } from './enums';
 import { objectToQueryParams } from './query-params';
 
@@ -26,11 +32,6 @@ const LOGIN = {
   method: 'PASSWORD',
   password: 'tester26',
 };
-
-export enum DidType {
-  LOCAL = 'LOCAL',
-  REMOTE = 'REMOTE',
-}
 
 /**
  * Login to BFF
@@ -72,16 +73,6 @@ async function apiRequest(
     }
     return res.json();
   });
-}
-
-async function getCredentialSchema(
-  authToken: string,
-): Promise<CredentialSchemaResponseDTO> {
-  const schemaId = await apiRequest(
-    '/api/credential-schema/v1?page=0&pageSize=1',
-    authToken,
-  ).then((res) => res?.values?.[0]?.id);
-  return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }
 
 export async function createCredentialSchema(
@@ -130,7 +121,10 @@ interface DidQueryParams {
   keyAlgorithms?: KeyType | KeyType[];
 }
 
-export async function getLocalDid(authToken: string, params?: DidQueryParams) {
+export async function getLocalDid(
+  authToken: string,
+  params?: DidQueryParams,
+): Promise<DidListItemDTO> {
   const queryParams = objectToQueryParams({
     deactivated: false,
     didMethods: params?.didMethods ?? DidMethod.KEY,
@@ -151,12 +145,19 @@ export async function getLocalDid(authToken: string, params?: DidQueryParams) {
   );
 }
 
+export async function getDidDetail(
+  authToken: string,
+  didId: string,
+): Promise<DidDetailDTO> {
+  return apiRequest(`api/did/v1/${didId}`, authToken);
+}
+
 export interface CredentialData {
   claimValues?: Array<{ claimId: string; value: string }>;
+  exchange?: Exchange;
   issuerDid: string;
   issuerKey?: string;
   redirectUri?: string;
-  transport?: Transport;
 }
 
 const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
@@ -216,40 +217,20 @@ export async function createCredential(
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: schema.id,
+    exchange: credentialData?.exchange ?? Exchange.PROCIVIS,
     issuerDid: credentialData?.issuerDid,
     issuerKey: credentialData?.issuerKey,
-    transport: credentialData?.transport ?? Transport.PROCIVIS,
+    redirectUri: credentialData?.redirectUri,
   };
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );
 }
 
-export interface ProofSchemaData {
-  claimSchemas: Array<{ id: string; required: boolean }>;
-  expireDuration: number;
-  name: string;
-}
-
 export async function createProofSchema(
   authToken: string,
-  credentialSchemas: CredentialSchemaResponseDTO[],
-  expireDuration?: number,
+  proofSchemaData: CreateProofSchemaRequestDTO,
 ): Promise<ProofSchemaResponseDTO> {
-  const proofInputSchemas = credentialSchemas.map((credSchema) => ({
-    claimSchemas: credSchema.claims.map((claim) => ({
-      id: claim.id,
-      required: claim.required,
-    })),
-    credentialSchemaId: credSchema.id,
-    validityConstraint:
-      credSchema.revocationMethod === RevocationMethod.LVVC ? 10 : undefined,
-  }));
-  const proofSchemaData = {
-    expireDuration: expireDuration || 0,
-    name: `proof-schema-${uuidv4()}`,
-    proofInputSchemas: proofInputSchemas,
-  };
   return await apiRequest(
     '/api/proof-schema/v1',
     authToken,
@@ -258,26 +239,16 @@ export async function createProofSchema(
   ).then((res) => getProofSchemaDetail(res.id, authToken));
 }
 
-export interface ProofRequestData {
-  redirectUri: string;
-  transport: Transport;
-}
-
 export async function createProofRequest(
   authToken: string,
-  proofSchema?: Record<string, any>,
-  proofRequestData?: Partial<ProofRequestData>,
-  credentialSchema?: CredentialSchemaResponseDTO,
+  proofRequestData: Partial<ProofRequestData>,
 ): Promise<string> {
-  const did: Record<string, any> = await getLocalDid(authToken);
-  const credSchema = credentialSchema ?? (await getCredentialSchema(authToken));
-  const schema: Record<string, any> =
-    proofSchema ?? (await createProofSchema(authToken, [credSchema]));
   const data = {
-    proofSchemaId: schema.id,
-    transport: Transport.PROCIVIS,
-    verifierDid: did.id,
-    ...proofRequestData,
+    exchange: proofRequestData?.exchange ?? Exchange.OPENID4VC,
+    proofSchemaId: proofRequestData?.proofSchemaId,
+    redirectUri: proofRequestData?.redirectUri,
+    verifierDid: proofRequestData?.verifierDid,
+    verifierKey: proofRequestData?.verifierKey,
   };
   return await apiRequest(
     '/api/proof-request/v1',

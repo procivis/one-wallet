@@ -7,12 +7,25 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
 
-import { Transport } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+
+enum ProcivisExchangeProtocol {
+  MDL = 'MDL',
+  OPENID4VC = 'OPENID4VC',
+  PROCIVIS = 'PROCIVIS_TEMPORARY',
+}
+
+const isProcivisProtocol = (
+  protocol: string,
+): ProcivisExchangeProtocol | undefined => {
+  return ProcivisExchangeProtocol[
+    protocol as keyof typeof ProcivisExchangeProtocol
+  ];
+};
 
 const ProofDetailNerdView: FunctionComponent = () => {
   const nav = useNavigation<RootNavigationProp>();
@@ -42,13 +55,17 @@ const ProofDetailNerdView: FunctionComponent = () => {
       ]
     : [];
 
+  const procivisExchangeProtocol = isProcivisProtocol(proofDetail.exchange);
+
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
-      attributeKey: translate('credentialDetail.credential.transport'),
-      attributeText: translate(
-        `proofRequest.transport.${proofDetail?.exchange as Transport}`,
+      attributeKey: translate('credentialDetail.credential.exchange'),
+      attributeText: isProcivisProtocol(
+        (procivisExchangeProtocol &&
+          translate(`proofRequest.exchange.${procivisExchangeProtocol}`)) ||
+          proofDetail.exchange,
       ),
     },
     {

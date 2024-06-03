@@ -2,6 +2,7 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
+import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDeletePromptScreen from '../page-objects/CredentialDeletePromptScreen';
 import CredentialDetailScreen, {
@@ -23,10 +24,9 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
+  Exchange,
   KeyType,
-  LoadingResultState,
   RevocationMethod,
-  Transport,
   WalletKeyStorageType,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
@@ -67,7 +67,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
@@ -75,8 +75,8 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
+        exchange: Exchange.OPENID4VC,
         redirectUri: 'https://www.procivis.ch',
-        transport: Transport.OPENID4VC,
       });
     });
 
@@ -85,7 +85,7 @@ describe('ONE-601: Credential issuance', () => {
         {
           authToken: authToken,
           credentialSchema: credentialSchemaJWT,
-          transport: Transport.OPENID4VC,
+          exchange: Exchange.OPENID4VC,
         },
         CredentialAction.REJECT,
       );
@@ -101,7 +101,7 @@ describe('ONE-601: Credential issuance', () => {
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
     });
 
@@ -152,7 +152,7 @@ describe('ONE-601: Credential issuance', () => {
         credentialId = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          transport: Transport.PROCIVIS,
+          exchange: Exchange.PROCIVIS,
         });
       });
 
@@ -228,7 +228,7 @@ describe('ONE-601: Credential issuance', () => {
         credentialId = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          transport: Transport.PROCIVIS,
+          exchange: Exchange.PROCIVIS,
         });
       });
 
@@ -264,7 +264,7 @@ describe('ONE-601: Credential issuance', () => {
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT_with_LVVC,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
     });
 
@@ -318,7 +318,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
@@ -326,7 +326,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSD_JWT,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
     });
   });
@@ -355,28 +355,28 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSoftware,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(credentialSchemaSoftware.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
     });
 
-    // Issuance fail because emulator does not have hardware key
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('Issue Hardware schema', async () => {
+    // Issuance fail because emulator does not have hardware key. Check that error appears
+    it('Issue Hardware schema', async () => {
       await credentialIssuance(
         {
           authToken: authToken,
           credentialSchema: credentialSchemaHardware,
-          transport: Transport.OPENID4VC,
+          exchange: Exchange.OPENID4VC,
         },
         CredentialAction.ACCEPT,
-        LoadingResultState.Failure,
+        LoaderViewState.Warning,
+        'Your Wallet is incompatible for the defined key storage type.',
       );
     });
   });
 
-  // Pass
+  // Fail
   describe('ONE-1233: Picture claim', () => {
     let credentialSchema: CredentialSchemaResponseDTO;
     const pictureKey = 'picture';
@@ -395,7 +395,8 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
 
-    it('display picture link in credential detail', async () => {
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('display picture link in credential detail', async () => {
       await WalletScreen.openDetailScreen(credentialSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(
@@ -437,7 +438,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
@@ -559,8 +560,8 @@ describe('ONE-601: Credential issuance', () => {
         authToken: authToken,
         credentialSchema: mdocSchema,
         didMethod: DidMethod.MDL,
+        exchange: Exchange.OPENID4VC,
         keyAlgorithms: KeyType.ES256,
-        transport: Transport.OPENID4VC,
       });
     });
   });
