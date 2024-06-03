@@ -1,5 +1,6 @@
 import { expect, waitFor } from 'detox';
 
+import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
@@ -10,12 +11,7 @@ import {
   getLocalDid,
   offerCredential,
 } from '../utils/bff-api';
-import {
-  DidMethod,
-  KeyType,
-  LoadingResultState,
-  Transport,
-} from '../utils/enums';
+import { DidMethod, Exchange, KeyType } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface CredentialIssuanceProps {
@@ -27,9 +23,9 @@ interface CredentialIssuanceProps {
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
   didMethod?: DidMethod;
-  keyAlgorithms?: KeyType;
+  exchange?: Exchange;
+  keyAlgorithms?: KeyType | KeyType[];
   redirectUri?: string;
-  transport?: Transport;
 }
 
 export enum CredentialAction {
@@ -40,7 +36,8 @@ export enum CredentialAction {
 const acceptCredentialTestCase = async (
   credentialId: string,
   data: CredentialIssuanceProps,
-  expectedResult: LoadingResultState,
+  expectedResult: LoaderViewState,
+  visibleText?: string,
 ) => {
   await device.disableSynchronization();
   await expect(CredentialOfferScreen.card).toBeVisible();
@@ -53,14 +50,28 @@ const acceptCredentialTestCase = async (
   await CredentialOfferScreen.acceptButton.tap();
   await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
 
-  if (expectedResult === LoadingResultState.Success) {
-    await waitFor(CredentialAcceptProcessScreen.closeButton)
+  if (expectedResult === LoaderViewState.Success) {
+    await waitFor(CredentialAcceptProcessScreen.status.success)
       .toBeVisible()
-      .withTimeout(3000);
-    await expect(CredentialAcceptProcessScreen.status.success).toBeVisible();
-  } else if (expectedResult === LoadingResultState.Failure) {
-    await expect(CredentialAcceptProcessScreen.status.failure).toBeVisible();
+      .withTimeout(5000);
+
+    if (data.redirectUri) {
+      await waitFor(CredentialAcceptProcessScreen.button.redirect)
+        .toBeVisible()
+        .withTimeout(2000);
+    } else {
+      await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
+    }
+  } else if (expectedResult === LoaderViewState.Warning) {
+    await waitFor(CredentialAcceptProcessScreen.status.warning)
+      .toBeVisible()
+      .withTimeout(2000);
+    if (visibleText) {
+      await CredentialAcceptProcessScreen.hasText(visibleText);
+    }
     await CredentialAcceptProcessScreen.closeButton.tap();
+    await expect(WalletScreen.screen).toBeVisible();
+    await device.enableSynchronization();
     return;
   }
   await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
@@ -82,12 +93,13 @@ const rejectCredentialTestCase = async () => {
 export const credentialIssuance = async (
   data: CredentialIssuanceProps,
   action: CredentialAction = CredentialAction.ACCEPT,
-  expectedResult: LoadingResultState = LoadingResultState.Success,
+  expectedResult: LoaderViewState = LoaderViewState.Success,
+  visibleText?: string,
 ) => {
   if (!data.authToken) {
     data.authToken = await bffLogin();
   }
-  const did: Record<string, any> = await getLocalDid(data.authToken, {
+  const did = await getLocalDid(data.authToken, {
     didMethods: data.didMethod,
     keyAlgorithms: data.keyAlgorithms,
   });
@@ -96,9 +108,10 @@ export const credentialIssuance = async (
     data.credentialSchema,
     {
       claimValues: data.claimValues,
+      exchange: data.exchange,
       issuerDid: did.id,
+      // TODO: issuerKey: did.key,
       redirectUri: data.redirectUri,
-      transport: data.transport,
     },
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
@@ -106,7 +119,12 @@ export const credentialIssuance = async (
 
   await expect(CredentialOfferScreen.screen).toBeVisible();
   if (action === CredentialAction.ACCEPT) {
-    await acceptCredentialTestCase(credentialId, data, expectedResult);
+    await acceptCredentialTestCase(
+      credentialId,
+      data,
+      expectedResult,
+      visibleText,
+    );
   } else {
     await rejectCredentialTestCase();
   }

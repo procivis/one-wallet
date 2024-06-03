@@ -18,8 +18,7 @@ export async function scanURL(url: string) {
       locale: 'en-US',
     },
     newInstance: true,
-    // workaround detox bug: https://github.com/wix/Detox/issues/2549
-    url: device.getPlatform() === 'android' ? url.replace(/&/g, '\\&') : url,
+    url: url,
   });
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
