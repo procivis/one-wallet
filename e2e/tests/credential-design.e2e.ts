@@ -23,8 +23,9 @@ import {
   CodeType,
   CredentialFormat,
   DataType,
+  DidMethod,
+  Exchange,
   RevocationMethod,
-  Transport,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 
@@ -69,7 +70,8 @@ describe('ONE-2014: Credential design', () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
+        didMethod: DidMethod.JWK,
+        exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schema1.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
@@ -135,7 +137,7 @@ describe('ONE-2014: Credential design', () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
 
       await suspendCredential(credentialId, authToken);
@@ -208,7 +210,7 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schemaWithoutLayout,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schemaWithoutLayout.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
@@ -225,7 +227,7 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schemaWithLayout,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schemaWithLayout.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
@@ -308,17 +310,17 @@ describe('ONE-2014: Credential design', () => {
       credentialId_1 = await credentialIssuance({
         authToken,
         credentialSchema: schema_1,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
       credentialId_2 = await credentialIssuance({
         authToken,
         credentialSchema: schema_2,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
       credentialId_3 = await credentialIssuance({
         authToken,
         credentialSchema: schema_3,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
     });
 
@@ -410,7 +412,7 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        transport: Transport.OPENID4VC,
+        exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schema1.name);
     });

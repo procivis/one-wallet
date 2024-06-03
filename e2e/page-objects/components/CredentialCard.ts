@@ -7,6 +7,15 @@ export enum CarouselImageType {
   QrCode = 'QrCode',
 }
 
+export enum CardHeaderOption {
+  detail = 'detail',
+  missing = 'missing',
+  multiple = 'multiple',
+  revoked = 'revoked',
+  secondaryDetail = 'secondaryDetail',
+  suspended = 'suspended',
+}
+
 export default function CredentialCard(testID: string) {
   const cardId = `${testID}.card`;
   return {
@@ -67,6 +76,28 @@ export default function CredentialCard(testID: string) {
         get expanded() {
           return element(by.id(`${testID}.expanded`));
         },
+        get notice() {
+          const noticeId = `${cardId}.notice`;
+          return {
+            get element() {
+              return element(by.id(noticeId));
+            },
+            get multiple() {
+              const multipleId = `${noticeId}.multiple`;
+              return {
+                get element() {
+                  return element(by.id(multipleId));
+                },
+                get selectButton() {
+                  return element(by.id(`${multipleId}.button`));
+                },
+              };
+            },
+            get text() {
+              return element(by.id(`${noticeId}.text`));
+            },
+          };
+        },
       };
     },
     collapseOrExpand: async function () {
@@ -80,6 +111,12 @@ export default function CredentialCard(testID: string) {
       return {
         get detail() {
           return {
+            get missing() {
+              return element(by.id(`${id}.missing`));
+            },
+            get multiple() {
+              return element(by.id(`${id}.multiple`));
+            },
             get primaryDetail() {
               return element(by.id(`${id}.detail`));
             },
@@ -123,6 +160,18 @@ export default function CredentialCard(testID: string) {
           return element(by.id(`${id}.name`));
         },
       };
+    },
+    multipleCredentialsAvailable: async function () {
+      await expect(this.header.detail.multiple).toBeVisible();
+      await expect(this.header.detail.multiple).toHaveText(
+        'Multiple credentials available',
+      );
+    },
+    selectiveDisclosureMessageVisible: async function () {
+      await expect(this.card.notice.element).toBeVisible();
+      await expect(this.card.notice.text).toHaveText(
+        'This credential requires you to share all attributes to work.',
+      );
     },
     showAllAttributes: async function () {
       await waitFor(this.showAllAttributesButton)
@@ -224,8 +273,12 @@ export default function CredentialCard(testID: string) {
         await expect(this.card.expanded).toBeVisible();
       }
     },
-    verifyIsVisible: async function () {
-      await expect(this.element).toBeVisible();
+    verifyIsVisible: async function (visible: boolean = true) {
+      if (visible) {
+        await expect(this.element).toBeVisible();
+      } else {
+        await expect(this.element).not.toBeVisible();
+      }
     },
     verifyLogoColor: async function (
       backgroundColor: string,

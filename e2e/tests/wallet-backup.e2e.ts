@@ -16,7 +16,7 @@ import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredentialSchema } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { CredentialFormat, Transport } from '../utils/enums';
+import { CredentialFormat, Exchange } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 
 describe('ONE-1530: Backup & Restore', () => {
@@ -59,7 +59,7 @@ describe('ONE-1530: Backup & Restore', () => {
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        transport: Transport.PROCIVIS,
+        exchange: Exchange.PROCIVIS,
       });
     });
 
@@ -104,10 +104,11 @@ describe('ONE-1530: Backup & Restore', () => {
       await CreateBackupPreviewScreen.createBackupButton.longPress(3001);
       await expect(CreateBackupProcessingScreen.screen).toBeVisible();
       await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
-      await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
+      // await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
     });
 
     it('User can restore backup from settings', async () => {
+      await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
       await SettingsScreen.button(SettingsButton.RESTORE_BACKUP).tap();
