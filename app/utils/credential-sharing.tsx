@@ -74,7 +74,7 @@ export const validityCheckedCardFromCredential = (
     credential.claims,
     config,
     notice,
-    testID,
+    concatTestID(testID, 'card'),
   );
   return {
     ...card,
@@ -103,7 +103,7 @@ export const missingCredentialCardFromRequest = (
       credentialDetailPrimary: translate(
         'proofRequest.missingCredential.title',
       ),
-      credentialDetailTestID: concatTestID(testID, 'subtitle', 'missing'),
+      credentialDetailTestID: concatTestID(testID, 'missing'),
       credentialName: request.name ?? request.id,
       statusIcon: CredentialWarningIcon,
     },
@@ -254,6 +254,7 @@ export const shareCredentialCardFromCredential = (
           noticeIcon: CredentialNoticeWarningIcon,
         }
       : undefined;
+  const headerTestId = concatTestID(testID, 'card.header');
   const card = credential
     ? validityCheckedCardFromCredential(
         credential,
@@ -262,9 +263,9 @@ export const shareCredentialCardFromCredential = (
         multipleCredentialsAvailable,
         config,
         notice,
-        testID,
+        headerTestId,
       )
-    : missingCredentialCardFromRequest(request, notice, testID);
+    : missingCredentialCardFromRequest(request, notice, headerTestId);
   const validityState = getValidityState(credential);
   const attributes: CredentialAttribute[] = getDisplayedAttributes(
     request,

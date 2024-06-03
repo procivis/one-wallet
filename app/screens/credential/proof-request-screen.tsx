@@ -253,6 +253,9 @@ const ProofRequestScreen: FunctionComponent = () => {
         title: translate('proofRequest.title'),
       }}
       modalPresentation
+      scrollView={{
+        testID: 'ProofRequestSharingScreen.scroll',
+      }}
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
@@ -314,6 +317,7 @@ const ProofRequestScreen: FunctionComponent = () => {
               <Button
                 disabled={!allSelectionsValid}
                 onPress={onSubmit}
+                testID="ProofRequestSharingScreen.shareButton"
                 title={translate('proofRequest.confirm')}
               />
             </View>
