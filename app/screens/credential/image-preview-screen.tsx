@@ -1,4 +1,4 @@
-import { ImagePreviewScreen as ImagePreviewLayout } from '@procivis/react-native-components';
+import { ImagePreviewScreen as ImagePreviewLayout } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
 
@@ -15,7 +15,7 @@ const ImagePreviewScreen: FunctionComponent = () => {
   return (
     <ImagePreviewLayout
       image={typeof image === 'string' ? { uri: image } : image}
-      onBack={navigation.goBack}
+      onClose={navigation.goBack}
       testID="ImagePreviewScreen"
       title={title}
     />
