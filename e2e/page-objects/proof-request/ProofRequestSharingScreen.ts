@@ -1,4 +1,4 @@
-import CredentialCard from '../components/CredentialCard';
+import ProofCredentialCard from '../components/ProofCredentialCard';
 
 export default abstract class ProofRequestSharingScreen {
   static get screen() {
@@ -24,7 +24,7 @@ export default abstract class ProofRequestSharingScreen {
   }
 
   static credential(credentialIndex: number) {
-    return CredentialCard(
+    return ProofCredentialCard(
       `ProofRequestSharingScreen.credential.input_${credentialIndex}`,
     );
   }

@@ -559,7 +559,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: mdocSchema,
-        didMethod: DidMethod.MDL,
+        didMethods: DidMethod.MDL,
         exchange: Exchange.OPENID4VC,
         keyAlgorithms: KeyType.ES256,
       });
