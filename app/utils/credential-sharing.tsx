@@ -57,14 +57,14 @@ export const validityCheckedCardFromCredential = (
     credentialHeaderDetail = {
       credentialDetailErrorColor: true,
       credentialDetailPrimary: translate('credentialDetail.log.revoked'),
-      credentialDetailTestID: concatTestID(testID, 'invalid'),
+      credentialDetailTestID: concatTestID(testID, 'header.invalid'),
     };
   } else if (!expanded && multipleCredentialsAvailable) {
     credentialHeaderDetail = {
       credentialDetailPrimary: translate(
         'proofRequest.multipleCredentials.detail',
       ),
-      credentialDetailTestID: concatTestID(testID, 'multiple'),
+      credentialDetailTestID: concatTestID(testID, 'header.multiple'),
       statusIcon: CredentialWarningIcon,
     };
   }
@@ -74,7 +74,7 @@ export const validityCheckedCardFromCredential = (
     credential.claims,
     config,
     notice,
-    concatTestID(testID, 'card'),
+    testID,
   );
   return {
     ...card,
@@ -103,7 +103,7 @@ export const missingCredentialCardFromRequest = (
       credentialDetailPrimary: translate(
         'proofRequest.missingCredential.title',
       ),
-      credentialDetailTestID: concatTestID(testID, 'missing'),
+      credentialDetailTestID: concatTestID(testID, 'header.missing'),
       credentialName: request.name ?? request.id,
       statusIcon: CredentialWarningIcon,
     },
@@ -254,7 +254,7 @@ export const shareCredentialCardFromCredential = (
           noticeIcon: CredentialNoticeWarningIcon,
         }
       : undefined;
-  const headerTestId = concatTestID(testID, 'card.header');
+  const cardTestId = concatTestID(testID, 'card');
   const card = credential
     ? validityCheckedCardFromCredential(
         credential,
@@ -263,9 +263,9 @@ export const shareCredentialCardFromCredential = (
         multipleCredentialsAvailable,
         config,
         notice,
-        headerTestId,
+        cardTestId,
       )
-    : missingCredentialCardFromRequest(request, notice, headerTestId);
+    : missingCredentialCardFromRequest(request, notice, cardTestId);
   const validityState = getValidityState(credential);
   const attributes: CredentialAttribute[] = getDisplayedAttributes(
     request,

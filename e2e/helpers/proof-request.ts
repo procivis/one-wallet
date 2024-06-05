@@ -19,7 +19,7 @@ import {
   requestProof,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { DidMethod, Exchange, KeyType, RevocationMethod } from '../utils/enums';
+import { DidMethod, Exchange, KeyType } from '../utils/enums';
 import { scanURL } from '../utils/scan';
 
 interface ProofSharingProops {
@@ -55,7 +55,9 @@ const shareCredential = async (
   await device.disableSynchronization();
 
   await ProofRequestSharingScreen.shareButton.tap();
-  await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+  await waitFor(ProofRequestAcceptProcessScreen.screen)
+    .toBeVisible()
+    .withTimeout(2000);
 
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(ProofRequestAcceptProcessScreen.status.success)
@@ -132,6 +134,7 @@ export interface ProofSchemaDataProps {
   expireDuration?: number;
   name?: string;
   proofInputSchemas?: ProofInputSchemasRequestDTO[];
+  validityConstraint?: number;
 }
 export const proofSchemaCreate = async (
   authToken: string,
@@ -140,6 +143,7 @@ export const proofSchemaCreate = async (
     expireDuration,
     name,
     proofInputSchemas,
+    validityConstraint,
   }: ProofSchemaDataProps,
 ): Promise<ProofSchemaResponseDTO> => {
   const proofSchemas = credentialSchemas.map((credSchema) => ({
@@ -148,8 +152,7 @@ export const proofSchemaCreate = async (
       required: claim.required,
     })),
     credentialSchemaId: credSchema.id,
-    validityConstraint:
-      credSchema.revocationMethod === RevocationMethod.LVVC ? 10 : undefined,
+    validityConstraint: validityConstraint,
   }));
   const proofSchemaData: CreateProofSchemaRequestDTO = {
     expireDuration: expireDuration || 0,

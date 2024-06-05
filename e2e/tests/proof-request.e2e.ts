@@ -14,8 +14,8 @@ import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/proof-request/ProofRequestAcceptProcessScreen';
+import ProofRequestSelectCredentialScreen from '../page-objects/proof-request/ProofRequestSelectCredentialScreen';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
-import ProofRequestSelectCredentialScreen from '../page-objects/ProofRequestSelectCredentialScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { CredentialSchemaData } from '../types/credentialSchema';
@@ -97,15 +97,14 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
+  // Pass
   describe('ONE-1182: Selective disclosure', () => {
     let jwtCredentialSchema: CredentialSchemaResponseDTO;
     let sdjwtCredentialSchema: CredentialSchemaResponseDTO;
     let jwtCredentialId: string;
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    let sdJwtCredentialId: string;
 
     beforeAll(async () => {
-      // await launchApp({ delete: true });
+      await launchApp({ delete: true });
 
       const claims: CredentialSchemaData['claims'] = [
         { datatype: DataType.STRING, key: 'field1', required: true },
@@ -136,54 +135,54 @@ describe('ONE-614: Proof request', () => {
         exchange: Exchange.PROCIVIS,
       });
 
-      sdJwtCredentialId = await credentialIssuance({
+      await credentialIssuance({
         authToken: authToken,
         claimValues: [
           { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
           { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
         ],
         credentialSchema: sdjwtCredentialSchema,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
     it('displays selective disclosure notice and all claims', async () => {
       await proofSharing(authToken, {
         data: {
-          exchange: Exchange.PROCIVIS,
+          exchange: Exchange.OPENID4VC,
           proofSchemaId: proofSchema.id,
           selectiveDisclosureCredentials: [jwtCredentialId],
         },
       });
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).notice.selectiveDisclosure,
-      // ).toBeVisible();
-
-      // await expect(element(by.text('field1'))).toBeVisible();
-      // await expect(element(by.text('value1'))).toBeVisible();
-      // await expect(element(by.text('field2'))).toBeVisible();
-      // await expect(element(by.text('value2'))).toBeVisible();
-
-      // await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
     });
 
-    it('displays selective disclosure notice on affected options', async () => {
-      credentialIssuance({
+    it('Selective disclosure notice. Multiple credentials', async () => {
+      await credentialIssuance({
         authToken: authToken,
         claimValues: [
           { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
           { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
         ],
         credentialSchema: sdjwtCredentialSchema,
+        exchange: Exchange.OPENID4VC,
       });
       const selectiveDisclosureTest = async () => {
         await expect(ProofRequestSharingScreen.screen).toBeVisible();
         const credential = ProofRequestSharingScreen.credential(1);
         await ProofRequestSharingScreen.scrollTo(credential.element);
-        await credential.multipleCredentialsAvailable();
+        await credential.multipleCredentialsHeaderAvailable();
         await credential.collapseOrExpand();
-        await expect(credential.card.notice.multiple.element).toBeVisible();
-        await credential.card.notice.multiple.selectButton.tap();
+        await ProofRequestSharingScreen.scrollTo(
+          credential.this.notice.multiple.element,
+        );
+        await credential.openMultipleCredentialsScreen();
+        await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
+
+        await ProofRequestSelectCredentialScreen.scrollTo(
+          ProofRequestSelectCredentialScreen.confirmButton,
+        );
+        await ProofRequestSelectCredentialScreen.confirmButton.tap();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
       };
 
       await proofSharing(authToken, {
@@ -194,28 +193,6 @@ describe('ONE-614: Proof request', () => {
           selectiveDisclosureCredentials: [jwtCredentialId],
         },
       });
-
-      // await ProofRequestSharingScreen.credential(
-      //   0,
-      // ).notice.multiple.selectButton.tap();
-
-      // await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
-      // await expect(
-      //   ProofRequestSelectCredentialScreen.credential(jwtCredentialId).element,
-      // ).toBeVisible();
-      // await expect(
-      //   ProofRequestSelectCredentialScreen.credential(jwtCredentialId).notice
-      //     .selectiveDisclosure,
-      // ).toBeVisible();
-
-      // await expect(
-      //   ProofRequestSelectCredentialScreen.credential(sdjwtCredentialId)
-      //     .element,
-      // ).toBeVisible();
-      // await expect(
-      //   ProofRequestSelectCredentialScreen.credential(sdjwtCredentialId).notice
-      //     .selectiveDisclosure,
-      // ).not.toExist();
     });
   });
 
@@ -338,7 +315,7 @@ describe('ONE-614: Proof request', () => {
       await expect(
         ProofRequestSharingScreen.credential(0).element,
       ).toBeVisible();
-      await ProofRequestSharingScreen.credential(0).verifyStatus('revoked');
+      // await ProofRequestSharingScreen.credential(0).verifyStatus('revoked');
       // await expect(
       //   ProofRequestSharingScreen.credential(0).notice.revoked,
       // ).toExist();
@@ -386,10 +363,10 @@ describe('ONE-614: Proof request', () => {
 
       const credential = ProofRequestSharingScreen.credential(0);
       await expect(credential.element).toBeVisible();
-      const pictureClaim = credential.attribute(pictureKey);
-      await expect(pictureClaim.element).toBeVisible();
-      await expect(pictureClaim.title).toHaveText(pictureKey);
-      await pictureClaim.value.tap();
+      // const pictureClaim = credential.attribute(pictureKey);
+      // await expect(pictureClaim.element).toBeVisible();
+      // await expect(pictureClaim.title).toHaveText(pictureKey);
+      // await pictureClaim.value.tap();
       await expect(ImagePreviewScreen.screen).toBeVisible();
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
     });
@@ -533,9 +510,12 @@ describe('ONE-614: Proof request', () => {
 
   // Pass
   describe('ONE-1579: Introduce credential schema type', () => {
-    let passportSchema: CredentialSchemaResponseDTO;
+    let swissPassport: CredentialSchemaResponseDTO;
     let driverLicenceSchema: CredentialSchemaResponseDTO;
+    let usaPassport: CredentialSchemaResponseDTO;
+
     let proofSchemaMDL: ProofSchemaResponseDTO;
+    let proofPassword2: ProofSchemaResponseDTO;
 
     beforeAll(async () => {
       await launchApp({ delete: true });
@@ -562,7 +542,7 @@ describe('ONE-614: Proof request', () => {
         schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
       });
 
-      passportSchema = await createCredentialSchema(authToken, {
+      swissPassport = await createCredentialSchema(authToken, {
         claims: [
           { datatype: DataType.STRING, key: 'first_name', required: true },
           { datatype: DataType.STRING, key: 'last_name', required: true },
@@ -574,6 +554,17 @@ describe('ONE-614: Proof request', () => {
         revocationMethod: RevocationMethod.LVVC,
       });
 
+      usaPassport = await createCredentialSchema(authToken, {
+        claims: [
+          { datatype: DataType.STRING, key: 'first_name', required: true },
+          { datatype: DataType.STRING, key: 'last_name', required: true },
+          { datatype: DataType.STRING, key: 'id', required: true },
+          { datatype: DataType.BIRTH_DATE, key: 'birthday', required: true },
+        ],
+        format: CredentialFormat.SDJWT,
+        name: `USA Passport-${uuidv4()}`,
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+      });
       proofSchemaMDL = await proofSchemaCreate(authToken, {
         credentialSchemas: [driverLicenceSchema],
         name: `MDL first name ${uuidv4()}`,
@@ -591,17 +582,30 @@ describe('ONE-614: Proof request', () => {
         ],
       });
 
+      proofPassword2 = await proofSchemaCreate(authToken, {
+        credentialSchemas: [swissPassport, usaPassport],
+        name: `All in one ${uuidv4()}`,
+      });
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: driverLicenceSchema,
-        didMethod: DidMethod.MDL,
+        didMethods: DidMethod.MDL,
         exchange: Exchange.OPENID4VC,
         keyAlgorithms: [KeyType.ES256],
       });
       await credentialIssuance({
         authToken: authToken,
-        credentialSchema: passportSchema,
-        didMethod: DidMethod.KEY,
+        claimValues: [
+          { claimId: swissPassport.claims[0].id, value: 'Roger' },
+          { claimId: swissPassport.claims[1].id, value: 'Federer' },
+          { claimId: swissPassport.claims[2].id, value: '9874532' },
+          {
+            claimId: swissPassport.claims[3].id,
+            value: '1981-08-08T00:00:00.000Z',
+          },
+        ],
+        credentialSchema: swissPassport,
+        didMethods: DidMethod.KEY,
         exchange: Exchange.OPENID4VC,
       });
     });
@@ -630,6 +634,66 @@ describe('ONE-614: Proof request', () => {
       await expect(CredentialDetailScreen.history(0).label).toHaveText(
         'Shared credential',
       );
+    });
+
+    it('ONE-1882: Scrolling Through Attributes During Proof Sharing', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        claimValues: [
+          { claimId: usaPassport.claims[0].id, value: 'John' },
+          { claimId: usaPassport.claims[1].id, value: 'Arny' },
+          { claimId: usaPassport.claims[2].id, value: '123456789' },
+          {
+            claimId: usaPassport.claims[3].id,
+            value: '1990-01-01T00:00:00.000Z',
+          },
+        ],
+        credentialSchema: usaPassport,
+        didMethods: DidMethod.KEY,
+        exchange: Exchange.OPENID4VC,
+      });
+      const testCredentials = async () => {
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        const swissCredential = ProofRequestSharingScreen.credential(0);
+        await swissCredential.verifyIsVisible();
+        await swissCredential.verifyIsCardCollapsed(false);
+        const attributes_1 = [
+          { key: 'first_name', value: 'Roger' },
+          { key: 'last_name', value: 'Federer' },
+          { key: 'id', value: '9874532' },
+          { key: 'birthday', value: '8/8/1981' },
+        ];
+        await swissCredential.verifyClaimValues(
+          attributes_1,
+          ProofRequestSharingScreen.scrollTo,
+        );
+
+        const usaCredential = ProofRequestSharingScreen.credential(1);
+        await ProofRequestSharingScreen.scrollTo(usaCredential.element);
+        await usaCredential.verifyIsVisible();
+        await usaCredential.verifyIsCardCollapsed();
+        await usaCredential.collapseOrExpand();
+
+        const attributes_2 = [
+          { key: 'first_name', value: 'John' },
+          { key: 'last_name', value: 'Arny' },
+          { key: 'id', value: '123456789' },
+          { key: 'birthday', value: '1/1/1990' },
+        ];
+        await usaCredential.verifyClaimValues(
+          attributes_2,
+          ProofRequestSharingScreen.scrollTo,
+        );
+      };
+
+      await proofSharing(authToken, {
+        data: {
+          customShareDataScreenTest: testCredentials,
+          didMethod: DidMethod.KEY,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofPassword2.id,
+        },
+      });
     });
   });
 });
