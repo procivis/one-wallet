@@ -22,7 +22,7 @@ interface CredentialIssuanceProps {
     value: string;
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
-  didMethod?: DidMethod;
+  didMethods?: DidMethod | DidMethod[];
   exchange?: Exchange;
   keyAlgorithms?: KeyType | KeyType[];
   redirectUri?: string;
@@ -100,7 +100,7 @@ export const credentialIssuance = async (
     data.authToken = await bffLogin();
   }
   const did = await getLocalDid(data.authToken, {
-    didMethods: data.didMethod,
+    didMethods: data.didMethods,
     keyAlgorithms: data.keyAlgorithms,
   });
   const credentialId = await createCredential(

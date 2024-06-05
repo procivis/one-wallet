@@ -64,6 +64,9 @@ const SelectCredentialScreen: FunctionComponent = () => {
         title: translate('proofRequest.selectCredential.title'),
       }}
       modalPresentation
+      scrollView={{
+        testID: 'ProofRequestSelectCredentialScreen.scroll',
+      }}
       testID="ProofRequestSelectCredentialScreen"
     >
       <View
