@@ -70,7 +70,7 @@ describe('ONE-2014: Credential design', () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        didMethod: DidMethod.JWK,
+        didMethods: DidMethod.JWK,
         exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schema1.name);
@@ -411,6 +411,16 @@ describe('ONE-2014: Credential design', () => {
       });
       await credentialIssuance({
         authToken: authToken,
+        claimValues: [
+          { claimId: schema1.claims[0].id, value: 'John' },
+          { claimId: schema1.claims[1].id, value: 'Connor' },
+          { claimId: schema1.claims[2].id, value: '1984-10-26T21:00:00.000Z' },
+          {
+            claimId: schema1.claims[3].id,
+            value:
+              'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+          },
+        ],
         credentialSchema: schema1,
         exchange: Exchange.OPENID4VC,
       });
@@ -425,8 +435,8 @@ describe('ONE-2014: Credential design', () => {
         schema1.name,
       );
       await CredentialDetailScreen.credentialCard.verifyDetailLabel(
-        'string',
-        'string',
+        'John',
+        'Connor',
       );
     });
 
@@ -434,9 +444,9 @@ describe('ONE-2014: Credential design', () => {
       await CredentialDetailScreen.credentialCard.showAllAttributes();
 
       await CredentialDetailScreen.credentialCard.verifyAttributeValues([
-        { key: 'first name', value: 'string' },
-        { key: 'Last name', value: 'string' },
-        { key: 'Birthday', value: '2/21/1996' },
+        { key: 'first name', value: 'John' },
+        { key: 'Last name', value: 'Connor' },
+        { key: 'Birthday', value: '10/26/1984' },
       ]);
 
       await CredentialDetailScreen.scrollTo(
