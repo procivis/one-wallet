@@ -1,5 +1,6 @@
 import {
   BackButton,
+  DataItem,
   formatDateTime,
   HistoryStatusIcon,
   HistoryStatusIconType,
@@ -17,7 +18,6 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
-import { DataItem } from '../../components/common/data-item';
 import { Credential } from '../../components/credential/credential';
 import { HeaderInfoButton } from '../../components/navigation/header-buttons';
 import { useCredentialDetail } from '../../hooks/core/credentials';
