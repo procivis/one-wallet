@@ -44,6 +44,7 @@ const PreviewScreen: FC = () => {
     if (skipRollback.current) {
       return;
     }
+    navigation.navigate('RestoreBackupDashboard');
     try {
       await rollbackImport();
     } catch (e) {
@@ -58,7 +59,6 @@ const PreviewScreen: FC = () => {
   }, [processingNavigation]);
 
   const onClose = useCallback(() => {
-    skipRollback.current = true;
     navigation.navigate('RestoreBackupDashboard');
   }, [navigation]);
 
