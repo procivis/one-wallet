@@ -1,10 +1,11 @@
 import {
   BackButton,
   DataItem,
+  EntityCluster,
   formatDateTime,
   HistoryStatusIcon,
   HistoryStatusIconType,
-  NavigationHeader,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -14,8 +15,7 @@ import {
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { Credential } from '../../components/credential/credential';
@@ -69,7 +69,6 @@ const getStatusTextColor = (status: HistoryStatusIconType) => {
 
 export const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
 
@@ -93,6 +92,11 @@ export const HistoryDetailScreen: FC = () => {
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   const from = issuedCredential?.issuerDid ?? proof?.verifierDid;
+  const entityName = from
+    ? replaceBreakingHyphens(from)
+    : issuedCredential
+    ? translate('credentialOffer.unknownIssuer')
+    : translate('proofRequest.unknownVerifier');
   const actionStatus = getActionStatus(entry.action);
   const actionValueColor = getStatusTextColor(actionStatus);
 
@@ -138,121 +142,111 @@ export const HistoryDetailScreen: FC = () => {
   }, [entry, rootNavigation]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: colorScheme.background,
-          paddingTop: insets.top,
-        },
-      ]}
+    <ScrollViewScreen
+      header={{
+        leftItem: <BackButton onPress={navigation.goBack} />,
+        rightItem: moreInfoIcon,
+        static: true,
+        title: getEntryTitle(entry),
+      }}
+      scrollView={{
+        style: styles.content,
+      }}
       testID="HistoryDetailScreen"
     >
-      <NavigationHeader
-        leftItem={<BackButton onPress={navigation.goBack} />}
-        rightItem={moreInfoIcon}
-        title={getEntryTitle(entry)}
-      />
-      <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          { paddingBottom: 24 + insets.bottom },
-        ]}
-      >
-        <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
-          {from && (
-            <DataItem
-              attribute={translate('historyDetail.from')}
-              multiline={true}
-              value={replaceBreakingHyphens(from)}
-            />
+      <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
+        {from && (
+          <EntityCluster
+            entityName={entityName}
+            style={[styles.entity, { borderColor: colorScheme.background }]}
+          />
+        )}
+        <DataItem
+          attribute={translate('historyDetail.date')}
+          value={formatDateTime(new Date(entry.createdDate)) ?? ''}
+        />
+        <DataItem
+          attribute={translate('historyDetail.type')}
+          value={translate(`history.entityType.${entry.entityType}`)}
+        />
+        <DataItem
+          attribute={translate('historyDetail.action')}
+          last
+          value={capitalizeFirstLetter(
+            translate(`history.action.${entry.action}`),
           )}
-          <DataItem
-            attribute={translate('historyDetail.date')}
-            value={formatDateTime(new Date(entry.createdDate)) ?? ''}
-          />
-          <DataItem
-            attribute={translate('historyDetail.type')}
-            value={translate(`history.entityType.${entry.entityType}`)}
-          />
-          <DataItem
-            attribute={translate('historyDetail.action')}
-            last
-            value={capitalizeFirstLetter(
-              translate(`history.action.${entry.action}`),
-            )}
-            valueColor={actionValueColor}
-            valueIcon={<HistoryStatusIcon type={actionStatus} />}
-          />
-        </View>
+          valueColor={actionValueColor}
+          valueIcon={<HistoryStatusIcon type={actionStatus} />}
+        />
+      </View>
 
-        {backupInfo?.credentials.length ? (
-          <>
-            <Typography
-              color={colorScheme.text}
-              preset="m"
-              style={styles.sectionHeader}
-            >
-              {translate('createBackup.preview.notBackedUp')}
-            </Typography>
-            <PreviewCredentials credentials={backupInfo.credentials} />
-          </>
-        ) : null}
+      {backupInfo?.credentials.length ? (
+        <>
+          <Typography
+            color={colorScheme.text}
+            preset="m"
+            style={styles.sectionHeader}
+          >
+            {translate('createBackup.preview.notBackedUp')}
+          </Typography>
+          <PreviewCredentials credentials={backupInfo.credentials} />
+        </>
+      ) : null}
 
-        {issuedCredential && (
-          <>
-            <Typography
-              color={colorScheme.text}
-              preset="m"
-              style={styles.sectionHeader}
-            >
-              {translate('historyDetail.credential')}
-            </Typography>
-            <Credential
-              credentialId={issuedCredential.id}
-              expanded={expandedCredential === issuedCredential.id}
-              lastItem
-              onHeaderPress={onHeaderPress}
-            />
-          </>
-        )}
+      {issuedCredential && (
+        <>
+          <Typography
+            color={colorScheme.text}
+            preset="m"
+            style={styles.sectionHeader}
+          >
+            {translate('historyDetail.credential')}
+          </Typography>
+          <Credential
+            credentialId={issuedCredential.id}
+            expanded={expandedCredential === issuedCredential.id}
+            lastItem
+            onHeaderPress={onHeaderPress}
+          />
+        </>
+      )}
 
-        {proof && (
-          <>
-            <Typography
-              color={colorScheme.text}
-              preset="m"
-              style={styles.sectionHeader}
-            >
-              {translate('historyDetail.response')}
-            </Typography>
-            {proofCredentials.map((proofCredential, index, { length }) => (
-              <View key={proofCredential.id} style={styles.credential}>
-                <Credential
-                  credentialId={proofCredential.id}
-                  expanded={expandedCredential === proofCredential.id}
-                  lastItem={index === length - 1}
-                  onHeaderPress={onHeaderPress}
-                />
-              </View>
-            ))}
-          </>
-        )}
-      </ScrollView>
-    </View>
+      {proof && (
+        <>
+          <Typography
+            color={colorScheme.text}
+            preset="m"
+            style={styles.sectionHeader}
+          >
+            {translate('historyDetail.response')}
+          </Typography>
+          {proofCredentials.map((proofCredential, index, { length }) => (
+            <View key={proofCredential.id} style={styles.credential}>
+              <Credential
+                credentialId={proofCredential.id}
+                expanded={expandedCredential === proofCredential.id}
+                lastItem={index === length - 1}
+                onHeaderPress={onHeaderPress}
+              />
+            </View>
+          ))}
+        </>
+      )}
+    </ScrollViewScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   content: {
     paddingHorizontal: 16,
     paddingTop: 12,
   },
   credential: {
     marginBottom: 4,
+  },
+  entity: {
+    borderBottomWidth: 1,
+    paddingBottom: 8,
   },
   section: {
     borderRadius: 8,
