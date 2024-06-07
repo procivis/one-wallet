@@ -1,15 +1,18 @@
 import {
-  concatTestID,
-  Typography,
+  HistoryListItem,
+  HistorySectionHeader as HistorySectionHeaderView,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import moment from 'moment';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
 import { HistoryGroupByDaySection } from '../../utils/history';
-import { HistoryItem, HistoryItemProps } from './history-item';
+import {
+  getHistoryItemLabelAndIconForAction,
+  HistoryItemProps,
+} from './history-item';
 
 // components used on the history section lists (Settings->History, CredentialDetail->History)
 // https://www.figma.com/file/52qDYWUMjXAGre1dcnz5bz/Procivis-One-Wallet?type=design&node-id=1246-51813&mode=dev
@@ -18,8 +21,6 @@ export const HistorySectionHeader: FC<{
   section: HistoryGroupByDaySection;
   testID?: string;
 }> = ({ section, testID }) => {
-  const colorScheme = useAppColorScheme();
-
   const day = useMemo(() => {
     const now = moment();
     const date = moment(section.date);
@@ -33,25 +34,11 @@ export const HistorySectionHeader: FC<{
   }, [section.date]);
 
   return (
-    <View style={styles.header}>
-      <Typography
-        accessibilityRole="header"
-        color={colorScheme.text}
-        preset="m"
-        testID={concatTestID(testID, 'title')}
-      >
-        {day}
-      </Typography>
-      {section.firstYearEntry && (
-        <Typography
-          color={colorScheme.accent}
-          preset="s/line-height-small"
-          style={styles.year}
-        >
-          {section.date.year()}
-        </Typography>
-      )}
-    </View>
+    <HistorySectionHeaderView
+      day={day}
+      testID={testID}
+      year={section.firstYearEntry ? section.date.year().toString() : undefined}
+    />
   );
 };
 
@@ -61,10 +48,21 @@ export interface HistorySectionItemProps extends HistoryItemProps {
 
 export const HistorySectionItem: FC<HistorySectionItemProps> = ({
   first,
+  item,
   last,
-  ...props
+  onPress,
+  style,
+  testID,
 }) => {
   const colorScheme = useAppColorScheme();
+  const { label, icon } = getHistoryItemLabelAndIconForAction(item);
+  const time = moment(item.createdDate);
+  const timeLabel = time.format('H:mm');
+
+  const pressHandler = useCallback(() => {
+    onPress?.(item);
+  }, [onPress, item]);
+
   return (
     <View
       style={[
@@ -74,7 +72,15 @@ export const HistorySectionItem: FC<HistorySectionItemProps> = ({
         { backgroundColor: colorScheme.white },
       ]}
     >
-      <HistoryItem absoluteTime={true} last={last} {...props} />
+      <HistoryListItem
+        did={item.did ?? ''}
+        icon={icon}
+        label={label}
+        onPress={pressHandler}
+        style={style}
+        testID={testID}
+        time={timeLabel}
+      />
     </View>
   );
 };
@@ -86,12 +92,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 12,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 16,
-    paddingHorizontal: 4,
-  },
   item: {
     paddingHorizontal: 12,
   },
@@ -100,8 +100,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     marginBottom: 12,
     paddingBottom: 12,
-  },
-  year: {
-    opacity: 0.7,
   },
 });

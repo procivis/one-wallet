@@ -1,9 +1,8 @@
-import { BackupScreen } from '@procivis/one-react-native-components';
+import { BackupScreen, TextInput } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
 
 import { PasswordStrength } from '../../components/common/password-strength';
-import Input from '../../components/common/text-input';
 import { translate } from '../../i18n';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
 
@@ -27,7 +26,7 @@ const SetPasswordScreen: FC = () => {
       testID="CreateBackupSetPasswordScreen"
       title={translate('createBackup.setPassword.title')}
     >
-      <Input
+      <TextInput
         label={translate('createBackup.setPassword.password')}
         onAccessoryPress={() => setPassword('')}
         onChangeText={setPassword}
