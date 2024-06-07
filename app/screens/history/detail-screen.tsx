@@ -14,7 +14,7 @@ import {
   HistoryEntityTypeEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
@@ -90,6 +90,14 @@ export const HistoryDetailScreen: FC = () => {
     .filter(nonEmptyFilter);
 
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
+
+  // by default the first credential is expanded
+  useEffect(() => {
+    const credential = issuedCredential ?? proofCredentials?.[0];
+    if (!expandedCredential && credential) {
+      onHeaderPress(credential.id);
+    }
+  }, [expandedCredential, issuedCredential, proofCredentials, onHeaderPress]);
 
   const from = issuedCredential?.issuerDid ?? proof?.verifierDid;
   const entityName = from
