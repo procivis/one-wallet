@@ -1,8 +1,7 @@
-import { BackupScreen } from '@procivis/one-react-native-components';
+import { BackupScreen, TextInput } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
 
-import Input from '../../components/common/text-input';
 import { translate } from '../../i18n';
 import {
   RestoreBackupNavigationProp,
@@ -41,7 +40,7 @@ const RecoveryPasswordScreen: FC = () => {
       testID="RestoreBackupRecoveryPasswordScreen"
       title={translate('restoreBackup.recoveryPassword.title')}
     >
-      <Input
+      <TextInput
         error={
           route.params.error
             ? translate('restoreBackup.recoveryPassword.wrongPassword')

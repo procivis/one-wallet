@@ -1,10 +1,7 @@
 import {
-  concatTestID,
   HistoryActionIcon,
   HistoryActionIconType,
-  TouchableOpacity,
-  Typography,
-  useAppColorScheme,
+  HistoryListItem as HistoryListItemView,
 } from '@procivis/one-react-native-components';
 import {
   HistoryActionEnum,
@@ -12,14 +9,16 @@ import {
   HistoryListItem,
 } from '@procivis/react-native-one-core';
 import moment from 'moment';
-import React, { FC } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import React, { FC, useCallback } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
 import { HistoryListItemWithDid } from '../../models/core/history';
 import { getEntryTitle } from '../../utils/history';
 
-const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
+export const getHistoryItemLabelAndIconForAction = (
+  historyItem: HistoryListItem,
+) => {
   switch (historyItem.action) {
     case HistoryActionEnum.PENDING:
       return {
@@ -88,7 +87,6 @@ const getLabelAndIconForAction = (historyItem: HistoryListItem) => {
 };
 
 export interface HistoryItemProps {
-  absoluteTime?: boolean;
   item: HistoryListItemWithDid;
   last?: boolean;
   onPress?: (item: HistoryListItemWithDid) => void;
@@ -99,82 +97,28 @@ export interface HistoryItemProps {
 export const HistoryItem: FC<HistoryItemProps> = ({
   item,
   last,
-  style,
-  absoluteTime,
   onPress,
+  style,
   testID,
 }) => {
-  const colorScheme = useAppColorScheme();
-  const { label, icon } = getLabelAndIconForAction(item);
+  const { label, icon } = getHistoryItemLabelAndIconForAction(item);
   const time = moment(item.createdDate);
-  const timeLabel = absoluteTime ? time.format('H:mm') : time.fromNow();
+  const timeLabel = time.fromNow();
+
+  const pressHandler = useCallback(() => {
+    onPress?.(item);
+  }, [onPress, item]);
 
   return (
-    <TouchableOpacity
-      disabled={!onPress}
-      onPress={() => onPress?.(item)}
-      style={[
-        styles.historyItemContainer,
-        {
-          backgroundColor: colorScheme.white,
-          borderColor: colorScheme.background,
-        },
-        last && styles.last,
-        style,
-      ]}
+    <HistoryListItemView
+      did={item.did ?? ''}
+      icon={icon}
+      label={label}
+      last={last}
+      onPress={pressHandler}
+      style={style}
       testID={testID}
-    >
-      {icon}
-      <View style={styles.labelAndDid}>
-        <Typography
-          color={colorScheme.text}
-          preset="s"
-          style={styles.label}
-          testID={concatTestID(testID, 'label')}
-        >
-          {label}
-        </Typography>
-        <Typography
-          color={colorScheme.text}
-          numberOfLines={1}
-          preset="s/line-height-small"
-          style={styles.shaded}
-          testID={concatTestID(testID, 'did')}
-        >
-          {item.did}
-        </Typography>
-      </View>
-      <Typography
-        color={colorScheme.text}
-        preset="xs/line-height-small"
-        style={styles.shaded}
-        testID={concatTestID(testID, 'timeLabel')}
-      >
-        {timeLabel}
-      </Typography>
-    </TouchableOpacity>
+      time={timeLabel}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  historyItemContainer: {
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingRight: 8,
-    paddingVertical: 12,
-  },
-  label: {
-    marginBottom: 2,
-  },
-  labelAndDid: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
-  last: {
-    borderBottomWidth: 0,
-  },
-  shaded: {
-    opacity: 0.7,
-  },
-});
