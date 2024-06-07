@@ -1,19 +1,9 @@
 import {
-  Selector,
-  SelectorStatus,
-  TouchableOpacity,
-  Typography,
-  useAppColorScheme,
+  RadioGroup as RadioGroupView,
+  RadioGroupProps as RadioGroupViewProps,
 } from '@procivis/one-react-native-components';
-import React, { FunctionComponent } from 'react';
-import {
-  FlatList,
-  FlatListProps,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, { FunctionComponent, useCallback } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import { translate } from '../../i18n';
 
@@ -23,99 +13,28 @@ export type RadioGroupItem = {
   style?: StyleProp<ViewStyle>;
 };
 
-export interface RadioGroupProps {
-  containerStyle?: StyleProp<ViewStyle>;
-  items: RadioGroupItem[];
-  listFooter?: FlatListProps<RadioGroupItem>['ListFooterComponent'];
-  listFooterStyle?: FlatListProps<RadioGroupItem>['ListFooterComponentStyle'];
-  onEndReached?: FlatListProps<RadioGroupItem>['onEndReached'];
-  onSelected: (item: RadioGroupItem, index: number) => void;
-  selectedItem?: React.Key;
-  style?: StyleProp<ViewStyle>;
-}
+export type RadioGroupProps = Omit<
+  RadioGroupViewProps,
+  'onGetItemAccessibilityLabel'
+>;
 
-const RadioGroup: FunctionComponent<RadioGroupProps> = ({
-  containerStyle,
-  items,
-  selectedItem,
-  onSelected,
-  style,
-  listFooter,
-  listFooterStyle,
-  onEndReached,
-}) => {
-  const colorScheme = useAppColorScheme();
+const RadioGroup: FunctionComponent<RadioGroupProps> = (props) => {
+  const getItemAccessibilityLabel = useCallback(
+    (current: number, length: number) => {
+      return translate('accessibility.control.order', {
+        current,
+        length,
+      });
+    },
+    [],
+  );
 
   return (
-    <FlatList<RadioGroupItem>
-      ListFooterComponent={listFooter}
-      ListFooterComponentStyle={listFooterStyle}
-      contentContainerStyle={containerStyle}
-      data={items}
-      onEndReached={onEndReached}
-      renderItem={({ item, index }) => {
-        const selected = selectedItem === item.key;
-        return (
-          <React.Fragment key={item.key}>
-            <TouchableOpacity
-              accessibilityLabel={item.label}
-              accessibilityRole="button"
-              accessibilityState={{ selected }}
-              accessibilityValue={
-                items.length > 1
-                  ? {
-                      text: translate('accessibility.control.order', {
-                        current: index + 1,
-                        length: items.length,
-                      }),
-                    }
-                  : undefined
-              }
-              activeOpacity={selected ? 1 : undefined}
-              onPress={() => {
-                onSelected(item, index);
-              }}
-              style={[styles.item, item.style]}
-            >
-              <Typography color={colorScheme.text}>{item.label}</Typography>
-              <Selector
-                status={
-                  selected ? SelectorStatus.SelectedRadio : SelectorStatus.Empty
-                }
-                style={styles.selector}
-              />
-            </TouchableOpacity>
-            <View
-              style={[
-                styles.divider,
-                { backgroundColor: colorScheme.background },
-              ]}
-            />
-          </React.Fragment>
-        );
-      }}
-      showsVerticalScrollIndicator={false}
-      style={style}
+    <RadioGroupView
+      onGetItemAccessibilityLabel={getItemAccessibilityLabel}
+      {...props}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    width: '100%',
-  },
-  item: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 24,
-    width: '100%',
-  },
-  selector: {
-    marginLeft: 4,
-    paddingTop: 0,
-  },
-});
 
 export default RadioGroup;
