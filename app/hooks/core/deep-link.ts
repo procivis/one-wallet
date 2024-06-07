@@ -4,9 +4,11 @@ import { Linking } from 'react-native';
 
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException, reportTraceInfo } from '../../utils/reporting';
+import { usePinCodeInitialized } from '../pin-code/pin-code';
 
-export const useRuntimeDeepLinkHandling = (enabled: boolean) => {
+export const useRuntimeDeepLinkHandling = () => {
   const handleInvitationUrl = useInvitationHandling();
+  const pinInitialized = usePinCodeInitialized();
 
   const [deepLinkURL, setDeepLinkURL] = useState<string>();
   useEffect(() => {
@@ -18,11 +20,11 @@ export const useRuntimeDeepLinkHandling = (enabled: boolean) => {
   }, []);
 
   useEffect(() => {
-    if (deepLinkURL && enabled) {
+    if (deepLinkURL && pinInitialized) {
       setDeepLinkURL(undefined);
       handleInvitationUrl(deepLinkURL);
     }
-  }, [deepLinkURL, enabled, handleInvitationUrl]);
+  }, [deepLinkURL, pinInitialized, handleInvitationUrl]);
 };
 
 let initialDeepLinkHandled = false;
