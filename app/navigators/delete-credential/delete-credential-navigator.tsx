@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import CredentialDeleteProcessScreen from '../../screens/credential/credential-delete-process-screen';
-import CredentialDeletePromptScreen from '../../screens/credential/credential-delete-promp-screen';
+import CredentialDeletePromptScreen from '../../screens/credential/credential-delete-prompt-screen';
 import { DeleteCredentialNavigatorParamList } from './delete-credential-routes';
 
 const Stack = createNativeStackNavigator<DeleteCredentialNavigatorParamList>();
