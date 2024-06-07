@@ -5,7 +5,7 @@ import {
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
 import {
@@ -13,6 +13,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import { useBackupFinalizeImportProcedure } from '../../hooks/core/backup';
+import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
@@ -28,6 +29,7 @@ const ProcessingScreen: FC = () => {
   const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState(LoaderViewState.InProgress);
   const [error, setError] = useState<unknown>();
+  const dismissed = useRef(false);
 
   useBlockOSBackNavigation();
 
@@ -49,14 +51,19 @@ const ProcessingScreen: FC = () => {
 
   const closeButtonHandler = useCallback(() => {
     // TODO: implement possible restoring termination
-    if (pinInitialized) {
-      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-    } else if (state === LoaderViewState.Success) {
-      rootNavigation.replace('Onboarding', { screen: 'UserAgreement' });
-    } else {
+    if (dismissed.current === true) {
+      return;
+    }
+    dismissed.current = true;
+    if (state === LoaderViewState.Warning) {
       navigation.navigate('RestoreBackupDashboard');
+    } else if (pinInitialized) {
+      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+    } else {
+      rootNavigation.replace('Onboarding', { screen: 'UserAgreement' });
     }
   }, [pinInitialized, navigation, rootNavigation, state]);
+  useBeforeRemove(closeButtonHandler);
 
   const { closeTimeout } = useCloseButtonTimeout(
     state === LoaderViewState.Success,
