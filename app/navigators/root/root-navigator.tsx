@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
 import { Platform } from 'react-native';
 
+import { useRuntimeDeepLinkHandling } from '../../hooks/core/deep-link';
 import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
@@ -19,6 +20,7 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 const RootNavigator: FunctionComponent = () => {
   const initialRouteName = useInitialRoute();
   useAutomaticPinCodeCoverLogic(initialRouteName === 'Dashboard');
+  useRuntimeDeepLinkHandling();
 
   return initialRouteName ? (
     <RootStack.Navigator
