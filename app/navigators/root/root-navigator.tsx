@@ -65,7 +65,16 @@ const RootNavigator: FunctionComponent = () => {
         component={CredentialDetailNavigator}
         name="CredentialDetail"
       />
-      <RootStack.Screen component={ImagePreviewScreen} name="ImagePreview" />
+      <RootStack.Screen
+        component={ImagePreviewScreen}
+        name="ImagePreview"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'fullScreenModal',
+        }}
+      />
     </RootStack.Navigator>
   ) : null;
 };
