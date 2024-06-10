@@ -219,7 +219,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, [interactionId, isFocused, rejectProof]);
 
   const onSubmit = useCallback(() => {
-    sharingNavigation.navigate('Processing', {
+    sharingNavigation.replace('Processing', {
       credentials: selectedCredentials as Record<
         string,
         PresentationSubmitCredentialRequest
