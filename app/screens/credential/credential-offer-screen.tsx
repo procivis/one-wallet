@@ -65,7 +65,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const onAccept = useCallback(() => {
     skipRejection.current = true;
-    navigation.navigate('Processing', {
+    navigation.replace('Processing', {
       credentialId,
       interactionId,
     });
