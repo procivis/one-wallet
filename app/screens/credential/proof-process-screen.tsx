@@ -2,8 +2,8 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
