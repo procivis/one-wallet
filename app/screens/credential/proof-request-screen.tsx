@@ -21,6 +21,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
@@ -139,14 +140,19 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, [presentationDefinition, allCredentials]);
 
   // by default the first credential is expanded
+  const initialExpansionPerformed = useRef(false);
   useEffect(() => {
-    if (!expandedCredential) {
-      const [credentialId] =
-        Object.entries(selectedCredentials).find(([_, v]) => v !== undefined) ??
-        [];
-      onHeaderPress(credentialId);
+    const firstCredentialId =
+      presentationDefinition?.requestGroups[0]?.requestedCredentials[0]?.id;
+    if (
+      !expandedCredential &&
+      firstCredentialId &&
+      !initialExpansionPerformed.current
+    ) {
+      initialExpansionPerformed.current = true;
+      onHeaderPress(firstCredentialId);
     }
-  }, [expandedCredential, selectedCredentials, onHeaderPress]);
+  }, [expandedCredential, presentationDefinition, onHeaderPress]);
 
   const [activeSelection, setActiveSelection] =
     useState<PresentationDefinitionRequestedCredential['id']>();

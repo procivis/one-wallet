@@ -1,4 +1,4 @@
-import { useMemoAsync } from '@procivis/react-native-components';
+import { useMemoAsync } from '@procivis/one-react-native-components';
 import { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import {
