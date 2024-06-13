@@ -8,6 +8,7 @@ import './mock-react-native-ultimate-config';
 import './mock-rnfs';
 import './mock-sentry';
 import './mock-localize';
+import './mock-camera';
 
 require('react-native-reanimated').setUpTests();
 

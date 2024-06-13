@@ -1,4 +1,4 @@
-import { useAppColorScheme } from '@procivis/react-native-components';
+import { useAppColorScheme } from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
 import Svg, { Circle, G, Path, SvgProps } from 'react-native-svg';
 
