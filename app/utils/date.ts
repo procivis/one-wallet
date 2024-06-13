@@ -1,4 +1,7 @@
-import { formatDate, formatDateTime } from '@procivis/react-native-components';
+import {
+  formatDate,
+  formatDateTime,
+} from '@procivis/one-react-native-components';
 import I18n from 'i18n-js';
 import { Platform } from 'react-native';
 import { format } from 'timeago.js';

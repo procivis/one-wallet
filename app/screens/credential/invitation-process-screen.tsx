@@ -1,8 +1,8 @@
 import {
   LoaderViewState,
   LoadingResultScreen,
+  useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { useBlockOSBackNavigation } from '@procivis/react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import {
   useIsFocused,

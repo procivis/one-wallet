@@ -18,6 +18,7 @@ jest.doMock('react-native', () => {
         ),
         resolveAssetSource: jest.fn((source) => mockFile), // eslint-disable-line @typescript-eslint/no-unused-vars
       },
+      StyleSheet: ReactNative.StyleSheet,
     },
     ReactNative,
   );
