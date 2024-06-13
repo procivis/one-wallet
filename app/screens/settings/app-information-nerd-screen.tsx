@@ -2,8 +2,8 @@ import {
   formatDateTime,
   NerdModeItemProps,
   NerdModeScreen,
+  useMemoAsync,
 } from '@procivis/one-react-native-components';
-import { useMemoAsync } from '@procivis/react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC } from 'react';
 import DeviceInfo from 'react-native-device-info';
