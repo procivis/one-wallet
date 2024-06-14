@@ -19,6 +19,9 @@ export const CardSkeleton = (testID: string) => {
         get element() {
           return element(by.id(claimId));
         },
+        get image() {
+          return element(by.id(`${claimId}.image`));
+        },
         get title() {
           return element(by.id(`${claimId}.title`));
         },
@@ -28,7 +31,7 @@ export const CardSkeleton = (testID: string) => {
       };
     },
     get element() {
-      return element(by.id('CredentialCardSkeleton'));
+      return element(by.id(testID));
     },
     get header() {
       const headerId = `${cardId}.header`;
@@ -44,6 +47,15 @@ export const CardSkeleton = (testID: string) => {
         },
         get multiple() {
           return element(by.id(`${headerId}.multiple`));
+        },
+        get name() {
+          return element(by.id(`${headerId}.name`));
+        },
+        get revoked() {
+          return element(by.id(`${headerId}.revoked`));
+        },
+        get suspended() {
+          return element(by.id(`${headerId}.suspended`));
         },
       };
     },
@@ -112,13 +124,18 @@ export default function ProofCredentialCard(testID: string) {
     verifyClaimValue: async function (
       index: number,
       key: string,
-      value: string,
+      value?: string,
+      image?: boolean,
     ) {
       await expect(card.claim(index).title).toHaveText(key);
-      await expect(card.claim(index).value).toHaveText(value);
+      if (image) {
+        await expect(card.claim(index).image).toBeVisible();
+      } else if (value) {
+        await expect(card.claim(index).value).toHaveText(value);
+      }
     },
     verifyClaimValues: async function (
-      attributes: Array<{ key: string; value: string }>,
+      attributes: Array<{ image?: boolean; key: string; value?: string }>,
       scrollTo: (
         element: Detox.IndexableNativeElement,
         direction: 'up' | 'down',
@@ -130,6 +147,9 @@ export default function ProofCredentialCard(testID: string) {
       }
     },
 
+    verifyCredentialName: async function (credentialName: string) {
+      await expect(card.header.name).toHaveText(credentialName);
+    },
     verifyIsCardCollapsed: async function (collapsed: boolean = true) {
       if (collapsed) {
         await expect(card.card.collapsed).toBeVisible();
@@ -143,6 +163,11 @@ export default function ProofCredentialCard(testID: string) {
       } else {
         await expect(this.element).not.toBeVisible();
       }
+    },
+    verifyStatus: async function (
+      status: 'missing' | 'invalid' | 'multiple' | 'revoked' | 'suspended',
+    ) {
+      await expect(card.header[status]).toBeVisible();
     },
   };
 }
