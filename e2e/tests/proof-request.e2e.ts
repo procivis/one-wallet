@@ -51,6 +51,7 @@ describe('ONE-614: Proof request', () => {
     authToken = await bffLogin();
     credentialSchema = await createCredentialSchema(authToken, {
       format: CredentialFormat.SDJWT,
+      name: `Credential ${uuidv4()}`,
       revocationMethod: RevocationMethod.STATUSLIST2021,
     });
     proofSchema = await proofSchemaCreate(authToken, {
@@ -196,28 +197,42 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
-  // Fail
-  describe.skip('Proof request without credentials', () => {
+  // Pass
+  describe('Proof request without credentials', () => {
     beforeEach(async () => {
       await launchApp({ delete: true });
     });
 
     it('Without credentials', async () => {
-      // const proofRequestId = await proofSchemaCreate(authToken, {});
-      // const invitationUrl = await requestProof(proofRequestId, authToken);
-      // await scanURL(invitationUrl);
-      // await expect(ProofRequestSharingScreen.screen).toBeVisible();
-      // await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);
+      const proofSharingWithoutCredentials = async () => {
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        const credentialCard = ProofRequestSharingScreen.credential(0);
+        await credentialCard.verifyIsVisible();
+        await credentialCard.verifyStatus('missing');
+        await credentialCard.verifyCredentialName(credentialSchema.name);
+        await credentialCard.collapseOrExpand();
+        await credentialCard.verifyClaimValue(0, 'field', 'Attribute Missing');
+      };
+
+      await proofSharing(authToken, {
+        action: ProofAction.SHARE_BLOCKED,
+        data: {
+          customShareDataScreenTest: proofSharingWithoutCredentials,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofSchema.id,
+        },
+      });
     });
   });
 
   // Fail
-  describe.skip('ONE-620: Revoked credentials', () => {
+  describe('ONE-620: Revoked credentials', () => {
     const credentialIds: string[] = [];
+
     beforeAll(async () => {
       await launchApp({ delete: true });
-
-      for (let i = 0; i < 3; i++) {
+      // TODO Fix another tests and increase the number of credentials
+      for (let i = 0; i < 1; i++) {
         const credentialId = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchema,
@@ -227,20 +242,29 @@ describe('ONE-614: Proof request', () => {
       }
     });
 
-    it('2 valid one revoked', async () => {
-      await revokeCredential(credentialIds[2], authToken);
-      const proofRequestId = await createProofRequest(authToken, {
-        proofSchemaId: proofSchema.id,
+    it('Revoked credential', async () => {
+      await revokeCredential(credentialIds[0], authToken);
+
+      const proofSharingRevokation = async () => {
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        const credentialCard_1 = ProofRequestSharingScreen.credential(0);
+        await credentialCard_1.verifyIsVisible();
+        await credentialCard_1.verifyStatus('revoked');
+        await expect(credentialCard_1.this.notice.revoked).toBeVisible();
+      };
+
+      await proofSharing(authToken, {
+        action: ProofAction.SHARE_BLOCKED,
+        data: {
+          customShareDataScreenTest: proofSharingRevokation,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofSchema.id,
+        },
       });
-      const invitationUrl = await requestProof(proofRequestId, authToken);
-      await scanURL(invitationUrl);
+    });
 
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
-      await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
-
-      await expect(
-        ProofRequestSharingScreen.credential(0).element,
-      ).toBeVisible();
+    it.skip('2 valid one revoked', async () => {
+      await revokeCredential(credentialIds[2], authToken);
       // await expect(
       //   ProofRequestSharingScreen.credential(0).title(credentialIds[1]),
       // ).toExist();
@@ -276,7 +300,7 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
     });
 
-    it('2 revoked one valid', async () => {
+    it.skip('2 revoked one valid', async () => {
       await revokeCredential(credentialIds[1], authToken);
       const proofRequestId = await createProofRequest(authToken, {
         proofSchemaId: proofSchema.id,
@@ -301,7 +325,7 @@ describe('ONE-614: Proof request', () => {
       await expect(WalletScreen.screen).toBeVisible();
     });
 
-    it('all revoked', async () => {
+    it.skip('all revoked', async () => {
       await revokeCredential(credentialIds[0], authToken);
       const proofRequestId = await createProofRequest(authToken, {
         proofSchemaId: proofSchema.id,
