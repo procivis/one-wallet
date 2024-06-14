@@ -72,6 +72,7 @@ export enum DataType {
   COUNT = 'COUNT',
   DATE = 'DATE',
   EMAIL = 'EMAIL',
+  MDL_PICTURE = 'MDL_PICTURE',
   NUMBER = 'NUMBER',
   OBJECT = 'OBJECT',
   PICTURE = 'PICTURE',

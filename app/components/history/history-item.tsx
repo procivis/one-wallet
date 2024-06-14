@@ -111,8 +111,8 @@ export const HistoryItem: FC<HistoryItemProps> = ({
 
   return (
     <HistoryListItemView
-      did={item.did ?? ''}
       icon={icon}
+      info={item.did ?? ''}
       label={label}
       last={last}
       onPress={pressHandler}
