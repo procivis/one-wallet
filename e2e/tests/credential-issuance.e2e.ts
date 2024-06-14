@@ -376,7 +376,7 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  // Fail
+  // Pass
   describe('ONE-1233: Picture claim', () => {
     let credentialSchema: CredentialSchemaResponseDTO;
     const pictureKey = 'picture';
@@ -395,8 +395,7 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
 
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('display picture link in credential detail', async () => {
+    it('display picture link in credential detail', async () => {
       await WalletScreen.openDetailScreen(credentialSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(
@@ -410,6 +409,8 @@ describe('ONE-601: Credential issuance', () => {
         .image.tap();
       await expect(ImagePreviewScreen.screen).toBeVisible();
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
+      await ImagePreviewScreen.closeButton.tap();
+      await expect(CredentialDetailScreen.screen).toBeVisible();
     });
   });
 
