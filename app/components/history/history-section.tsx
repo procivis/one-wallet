@@ -73,8 +73,8 @@ export const HistorySectionItem: FC<HistorySectionItemProps> = ({
       ]}
     >
       <HistoryListItem
-        did={item.did ?? ''}
         icon={icon}
+        info={item.did ?? ''}
         label={label}
         onPress={pressHandler}
         style={style}
