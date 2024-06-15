@@ -1,4 +1,5 @@
 import {
+  formatTime,
   HistoryActionIcon,
   HistoryActionIconType,
   HistoryListItem as HistoryListItemView,
@@ -8,7 +9,6 @@ import {
   HistoryEntityTypeEnum,
   HistoryListItem,
 } from '@procivis/react-native-one-core';
-import moment from 'moment';
 import React, { FC, useCallback } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
@@ -102,8 +102,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
   testID,
 }) => {
   const { label, icon } = getHistoryItemLabelAndIconForAction(item);
-  const time = moment(item.createdDate);
-  const timeLabel = time.fromNow();
+  const timeLabel = formatTime(new Date(item.createdDate)) ?? '';
 
   const pressHandler = useCallback(() => {
     onPress?.(item);
