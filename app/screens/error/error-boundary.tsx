@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    reportException(error, errorInfo?.componentStack);
+    reportException(error, errorInfo?.componentStack ?? undefined);
   }
 
   // Reset the error back to null

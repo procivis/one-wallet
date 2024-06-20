@@ -66,6 +66,7 @@ export async function save(key: string, value: unknown): Promise<boolean> {
 export async function remove(key: string): Promise<void> {
   try {
     await AsyncStorage.removeItem(key);
+    // eslint-disable-next-line no-empty
   } catch {}
 }
 
@@ -75,5 +76,6 @@ export async function remove(key: string): Promise<void> {
 export async function clear(): Promise<void> {
   try {
     await AsyncStorage.clear();
+    // eslint-disable-next-line no-empty
   } catch {}
 }
