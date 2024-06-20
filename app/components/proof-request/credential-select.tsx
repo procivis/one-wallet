@@ -27,11 +27,11 @@ export const CredentialSelect: FunctionComponent<{
   credentialId: string;
   expanded?: boolean;
   lastItem?: boolean;
-  onHeaderPress?: (credentialId?: string) => void;
+  onHeaderPress?: (_credentialId?: string) => void;
   onSelectCredential?: () => void;
   onSelectField: (
-    id: PresentationDefinitionField['id'],
-    selected: boolean,
+    _id: PresentationDefinitionField['id'],
+    _selected: boolean,
   ) => void;
   request: PresentationDefinitionRequestedCredential;
   selectedCredentialId?: CredentialListItem['id'];
