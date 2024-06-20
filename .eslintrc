@@ -10,9 +10,10 @@
     "typescript-sort-keys"
   ],
   "extends": [
+    "@react-native",
+    "plugin:jest/recommended",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "@react-native-community",
     "plugin:react/recommended",
     "plugin:react-native/all",
     "plugin:react-hooks/recommended"
