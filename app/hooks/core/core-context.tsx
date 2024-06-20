@@ -2,6 +2,7 @@ import { initializeCore, ONECore } from '@procivis/react-native-one-core';
 import React, {
   createContext,
   FC,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -23,7 +24,7 @@ const defaultContextValue: ContextValue = {
 
 const ONECoreContext = createContext<ContextValue>(defaultContextValue);
 
-export const ONECoreContextProvider: FC = ({ children }) => {
+export const ONECoreContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [core, setCore] = useState<ONECore>();
 
   const initialize = useCallback(

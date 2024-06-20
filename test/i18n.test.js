@@ -1,3 +1,5 @@
+import { describe, expect, test } from '@jest/globals';
+
 const en = require('../app/i18n/en/translation.json');
 const { exec } = require('child_process');
 
@@ -42,6 +44,7 @@ function iterate(obj, stack, array) {
  */
 
 describe('i18n', () => {
+  // eslint-disable-next-line jest/no-done-callback
   test('There are no missing keys', (done) => {
     // Actual command output:
     // grep "Tx=\"\S*\"\|tx=\"\S*\"\|translate(\"\S*\"" -ohr './app' | grep -o "\".*\""
@@ -54,6 +57,7 @@ describe('i18n', () => {
       for (let i = 0; i < allTranslationsUsed.length; i += 1) {
         if (!EXCEPTIONS.includes(allTranslationsUsed[i])) {
           // You can add keys to EXCEPTIONS (above) if you don't want them included in the test
+          // eslint-disable-next-line jest/no-conditional-expect
           expect(allTranslationsDefined).toContainEqual(allTranslationsUsed[i]);
         }
       }

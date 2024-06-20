@@ -7,7 +7,7 @@ import {
   Route,
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 
 // Dummy navigation object
 const outsideTreeNavigation: NavigationProp<
@@ -39,7 +39,9 @@ const outsideTreeRoute: Route<string, undefined> = {
 };
 
 // Dummy navigation context provider used for UI components that need access to navigation objects
-export const OutsideTreeNavigationProvider: React.FC = ({ children }) => (
+export const OutsideTreeNavigationProvider: FC<PropsWithChildren> = ({
+  children,
+}) => (
   <NavigationContext.Provider value={outsideTreeNavigation}>
     <NavigationRouteContext.Provider value={outsideTreeRoute}>
       {children}
