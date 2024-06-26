@@ -215,14 +215,12 @@ export const detailsCardAttributeFromClaim = (
   testID?: string,
 ): CredentialAttribute => {
   const value = detailsCardAttributeValueFromClaim(claim, config, testID);
-  return Object.assign(
-    {
-      id: claim.id,
-      name: claim.key,
-      testID: concatTestID(testID, 'attribute', claim.key),
-    },
-    value,
-  );
+  return {
+    id: claim.id,
+    name: claim.key,
+    testID: concatTestID(testID, 'attribute', claim.key),
+    ...value,
+  };
 };
 
 const detailsCardAttributeValueFromClaim = (
@@ -231,29 +229,38 @@ const detailsCardAttributeValueFromClaim = (
   testID?: string,
 ): CredentialAttributeValue => {
   const typeConfig = config?.datatype[claim.dataType];
-  switch (typeConfig?.type) {
-    case DataTypeEnum.Object: {
-      return {
-        attributes: (claim.value as Claim[]).map((nestedClaim) =>
-          detailsCardAttributeFromClaim(nestedClaim, config, testID),
-        ),
-      };
-    }
-    case DataTypeEnum.Date: {
-      const date = claim.value as string;
-      return {
-        value: formatDate(new Date(date)) ?? date,
-      };
-    }
-    case DataTypeEnum.File: {
-      if (typeConfig.params?.showAs === 'IMAGE') {
-        return { image: { uri: claim.value as string } };
-      } else {
-        return { value: claim.value as string };
+
+  if (claim.array) {
+    return {
+      values: claim.value.map((arrayValue) => {
+        return detailsCardAttributeFromClaim(arrayValue, config, testID);
+      }),
+    };
+  } else {
+    switch (typeConfig?.type) {
+      case DataTypeEnum.Object: {
+        return {
+          attributes: (claim.value as Claim[]).map((nestedClaim) =>
+            detailsCardAttributeFromClaim(nestedClaim, config, testID),
+          ),
+        };
       }
+      case DataTypeEnum.Date: {
+        const date = claim.value as string;
+        return {
+          value: formatDate(new Date(date)) ?? date,
+        };
+      }
+      case DataTypeEnum.File: {
+        if (typeConfig.params?.showAs === 'IMAGE') {
+          return { image: { uri: claim.value as string } };
+        } else {
+          return { value: claim.value as string };
+        }
+      }
+      default:
+        return { value: String(claim.value) };
     }
-    default:
-      return { value: String(claim.value) };
   }
 };
 
