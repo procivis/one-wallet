@@ -200,35 +200,37 @@ export const shareCredentialCardAttributeFromClaim = (
 
 // Will propagate the attribute status (right accessory + selected?) for all nested attributes
 // Note: This function MUTATES the input attribute
-const setStatusForNestedObjectFields = (
+const setStatusForNestedObjectOrArrayFields = (
   attribute: CredentialAttribute,
   status?: SelectorStatus,
   disabled?: boolean,
 ) => {
   const accessory = status && <Selector status={status} />;
   const isObject = attribute.attributes && attribute.attributes.length > 0;
+  const isArray = attribute.values && attribute.values.length > 0;
 
-  // If the attribute is not an object, we update the attribute and return
-  if (!isObject) {
+  // If the attribute is not an object or array, we update the attribute and return
+  if (!isObject && !isArray) {
     attribute.rightAccessory = accessory;
     attribute.disabled = disabled;
     return attribute;
+  }
+
+  // The object can be optional (tappable radio-checkmark), or required (checkmark)
+  if (
+    status === SelectorStatus.SelectedCheckmark ||
+    status === SelectorStatus.Empty
+  ) {
+    // If it's a selectable object, the accessory is rendered next to the object title,
+    // The nested attributes have no accessory, and can not be selected
+    attribute.rightAccessory = accessory;
+    setStatusForNestedObjectOrArrayFields(attribute, undefined, true);
   } else {
-    // The object can be optional (tappable radio-checkmark), or required (checkmark)
-    if (
-      status === SelectorStatus.SelectedCheckmark ||
-      status === SelectorStatus.Empty
-    ) {
-      // If it's a selectable object, the accessory is rendered next to the object title,
-      // The nested attributes have no accessory, and can not be selected
-      attribute.rightAccessory = accessory;
-      setStatusForNestedObjectFields(attribute, undefined, true);
-    } else {
-      // If the object is required / rejected, the accessory is rendered next to each nested attribute (except other object titles)
-      // all fields are disabled
-      for (const nestedAttribute of attribute.attributes) {
-        setStatusForNestedObjectFields(nestedAttribute, status, true);
-      }
+    const nested = attribute.attributes ?? attribute.values;
+    // If the object is required / rejected, the accessory is rendered next to each nested attribute (except other object titles)
+    // all fields are disabled
+    for (const nestedAttribute of nested) {
+      setStatusForNestedObjectOrArrayFields(nestedAttribute, status, true);
     }
   }
 };
@@ -267,23 +269,27 @@ export const shareCredentialCardFromCredential = (
       )
     : missingCredentialCardFromRequest(request, notice, cardTestId);
   const validityState = getValidityState(credential);
-  const attributes: CredentialAttribute[] = getDisplayedAttributes(
+  const displayedAttributes = getDisplayedAttributes(
     request,
     validityState,
     credential,
     selectiveDisclosureSupported,
     selectedFields,
-  ).map(({ claim, field, id, selected, status }, index) => {
-    const disabled = !credential || !field || field.required;
-    const attribute: CredentialAttribute = {
-      ...shareCredentialCardAttributeFromClaim(id, claim, field, config),
-      selected,
-      testID: concatTestID(testID, 'claim', `${index}`),
-    };
+  );
 
-    setStatusForNestedObjectFields(attribute, status, disabled);
-    return attribute;
-  });
+  const attributes: CredentialAttribute[] = displayedAttributes.map(
+    ({ claim, field, id, selected, status }, index) => {
+      const disabled = !credential || !field || field.required;
+      const attribute: CredentialAttribute = {
+        ...shareCredentialCardAttributeFromClaim(id, claim, field, config),
+        selected,
+        testID: concatTestID(testID, 'claim', `${index}`),
+      };
+
+      setStatusForNestedObjectOrArrayFields(attribute, status, disabled);
+      return attribute;
+    },
+  );
   return {
     attributes: nestAttributes(attributes),
     card,
