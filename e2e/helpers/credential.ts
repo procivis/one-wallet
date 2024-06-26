@@ -19,6 +19,7 @@ interface CredentialIssuanceProps {
   claimValues?: Array<{
     claimId: string;
     claims?: CredentialIssuanceProps['claimValues'][];
+    path: string;
     value: string;
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
