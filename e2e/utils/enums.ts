@@ -69,6 +69,7 @@ export enum WalletKeyStorageType {
 
 export enum DataType {
   BIRTH_DATE = 'BIRTH_DATE',
+  BOOLEAN = 'BOOLEAN',
   COUNT = 'COUNT',
   DATE = 'DATE',
   EMAIL = 'EMAIL',
