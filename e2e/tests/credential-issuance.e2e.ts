@@ -566,4 +566,49 @@ describe('ONE-601: Credential issuance', () => {
       });
     });
   });
+
+  describe('ONE-2063: Boolean DataType', () => {
+    let booleanSchema: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      booleanSchema = await createCredentialSchema(authToken, {
+        claims: [
+          {
+            datatype: DataType.BOOLEAN,
+            key: 'Vip?',
+            required: true,
+          },
+          {
+            datatype: DataType.BOOLEAN,
+            key: 'Married?',
+            required: true,
+          },
+          {
+            datatype: DataType.STRING,
+            key: 'First name',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.SDJWT,
+        name: `Boolean schema ${uuidv4()}`,
+        revocationMethod: RevocationMethod.LVVC,
+      });
+    });
+
+    it('Issue credential with boolean', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: booleanSchema,
+        didMethods: DidMethod.WEB,
+        exchange: Exchange.OPENID4VC,
+        keyAlgorithms: KeyType.ES256,
+      });
+      await WalletScreen.openDetailScreen(booleanSchema.name);
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      const card = CredentialDetailScreen.credentialCard;
+      await expect(card.attribute('Vip?').value).toHaveText('true');
+      await expect(card.attribute('Married?').value).toHaveText('true');
+      await expect(card.attribute('First name').value).toHaveText('string');
+    });
+  });
 });
