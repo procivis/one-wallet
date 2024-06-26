@@ -153,7 +153,7 @@ export async function getDidDetail(
 }
 
 export interface CredentialData {
-  claimValues?: Array<{ claimId: string; value: string }>;
+  claimValues?: Array<{ claimId: string; path: string; value: string }>;
   exchange?: Exchange;
   issuerDid: string;
   issuerKey?: string;
@@ -186,6 +186,9 @@ const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
     case DataType.EMAIL:
       value = 'test.support@procivis.ch';
       break;
+    case DataType.BOOLEAN:
+      value = 'true';
+      break;
   }
   return value;
 };
@@ -201,6 +204,7 @@ const claimsFilling = (claims: CredentialClaimSchemaResponseDTO[]) => {
     const value: string = claimValue(claim);
     claimValues.push({
       claimId: claim.id,
+      path: claim.key,
       value,
     });
   });

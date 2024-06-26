@@ -412,11 +412,24 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: schema1.claims[0].id, value: 'John' },
-          { claimId: schema1.claims[1].id, value: 'Connor' },
-          { claimId: schema1.claims[2].id, value: '1984-10-26T21:00:00.000Z' },
+          {
+            claimId: schema1.claims[0].id,
+            path: schema1.claims[0].key,
+            value: 'John',
+          },
+          {
+            claimId: schema1.claims[1].id,
+            path: schema1.claims[1].key,
+            value: 'Connor',
+          },
+          {
+            claimId: schema1.claims[2].id,
+            path: schema1.claims[2].key,
+            value: '1984-10-26T21:00:00.000Z',
+          },
           {
             claimId: schema1.claims[3].id,
+            path: schema1.claims[3].key,
             value:
               'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
           },
