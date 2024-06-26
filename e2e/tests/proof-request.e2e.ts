@@ -129,8 +129,16 @@ describe('ONE-614: Proof request', () => {
       jwtCredentialId = await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: jwtCredentialSchema.claims[0].id, value: 'value1' },
-          { claimId: jwtCredentialSchema.claims[1].id, value: 'value2' },
+          {
+            claimId: jwtCredentialSchema.claims[0].id,
+            path: jwtCredentialSchema.claims[0].key,
+            value: 'value1',
+          },
+          {
+            claimId: jwtCredentialSchema.claims[1].id,
+            path: jwtCredentialSchema.claims[1].key,
+            value: 'value2',
+          },
         ],
         credentialSchema: jwtCredentialSchema,
         exchange: Exchange.PROCIVIS,
@@ -139,8 +147,16 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
-          { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
+          {
+            claimId: sdjwtCredentialSchema.claims[0].id,
+            path: sdjwtCredentialSchema.claims[0].key,
+            value: 'value1',
+          },
+          {
+            claimId: sdjwtCredentialSchema.claims[1].id,
+            path: sdjwtCredentialSchema.claims[1].key,
+            value: 'value2',
+          },
         ],
         credentialSchema: sdjwtCredentialSchema,
         exchange: Exchange.OPENID4VC,
@@ -161,8 +177,16 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: sdjwtCredentialSchema.claims[0].id, value: 'value1' },
-          { claimId: sdjwtCredentialSchema.claims[1].id, value: 'value2' },
+          {
+            claimId: sdjwtCredentialSchema.claims[0].id,
+            path: sdjwtCredentialSchema.claims[0].key,
+            value: 'value1',
+          },
+          {
+            claimId: sdjwtCredentialSchema.claims[1].id,
+            path: sdjwtCredentialSchema.claims[1].key,
+            value: 'value2',
+          },
         ],
         credentialSchema: sdjwtCredentialSchema,
         exchange: Exchange.OPENID4VC,
@@ -620,11 +644,24 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: swissPassport.claims[0].id, value: 'Roger' },
-          { claimId: swissPassport.claims[1].id, value: 'Federer' },
-          { claimId: swissPassport.claims[2].id, value: '9874532' },
+          {
+            claimId: swissPassport.claims[0].id,
+            path: swissPassport.claims[0].key,
+            value: 'Roger',
+          },
+          {
+            claimId: swissPassport.claims[1].id,
+            path: swissPassport.claims[1].key,
+            value: 'Federer',
+          },
+          {
+            claimId: swissPassport.claims[2].id,
+            path: swissPassport.claims[2].key,
+            value: '9874532',
+          },
           {
             claimId: swissPassport.claims[3].id,
+            path: swissPassport.claims[3].key,
             value: '1981-08-08T00:00:00.000Z',
           },
         ],
@@ -664,11 +701,24 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
-          { claimId: usaPassport.claims[0].id, value: 'John' },
-          { claimId: usaPassport.claims[1].id, value: 'Arny' },
-          { claimId: usaPassport.claims[2].id, value: '123456789' },
+          {
+            claimId: usaPassport.claims[0].id,
+            path: usaPassport.claims[0].key,
+            value: 'John',
+          },
+          {
+            claimId: usaPassport.claims[1].id,
+            path: usaPassport.claims[1].key,
+            value: 'Arny',
+          },
+          {
+            claimId: usaPassport.claims[2].id,
+            path: usaPassport.claims[2].key,
+            value: '123456789',
+          },
           {
             claimId: usaPassport.claims[3].id,
+            path: usaPassport.claims[3].key,
             value: '1990-01-01T00:00:00.000Z',
           },
         ],
