@@ -33,7 +33,7 @@
     "@expo/react-native-action-sheet": "^3.13.0",
     "@procivis/one-react-native-components": "0.1.13",
     "@procivis/react-native-components": "0.1.19",
-    "@procivis/react-native-one-core": "1.20105.0",
+    "@procivis/react-native-one-core": "1.20367.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-clipboard/clipboard": "1.14.0",
