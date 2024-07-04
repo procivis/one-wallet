@@ -1,4 +1,4 @@
-import { initializeCore, ONECore } from '@procivis/react-native-one-core';
+import { initializeHolderCore, ONECore } from '@procivis/react-native-one-core';
 import React, {
   createContext,
   FC,
@@ -34,7 +34,7 @@ export const ONECoreContextProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       try {
-        const coreInstance = await initializeCore();
+        const coreInstance = await initializeHolderCore();
         setCore(coreInstance);
         return coreInstance;
       } catch (e) {
