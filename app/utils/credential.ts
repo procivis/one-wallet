@@ -1,6 +1,7 @@
 import {
   concatTestID,
   CredentialAttribute,
+  CredentialAttributeValue,
   CredentialCardProps,
   CredentialDetailsCardProps,
   CredentialErrorIcon,
@@ -212,39 +213,47 @@ export const detailsCardAttributeFromClaim = (
   config?: Config,
   testID?: string,
 ): CredentialAttribute => {
+  const value = detailsCardAttributeValueFromClaim(claim, config, testID);
+  return Object.assign(
+    {
+      id: claim.id,
+      name: claim.key,
+      testID: concatTestID(testID, 'attribute', claim.key),
+    },
+    value,
+  );
+};
+
+const detailsCardAttributeValueFromClaim = (
+  claim: Claim,
+  config?: Config,
+  testID?: string,
+): CredentialAttributeValue => {
   const typeConfig = config?.datatype[claim.dataType];
-
-  const attribute: Partial<CredentialAttribute> = {
-    id: claim.id,
-    name: claim.key,
-    testID: concatTestID(testID, 'attribute', claim.key),
-  };
-
   switch (typeConfig?.type) {
     case DataTypeEnum.Object: {
-      attribute.attributes = (claim.value as Claim[]).map((nestedClaim) =>
-        detailsCardAttributeFromClaim(nestedClaim, config, testID),
-      );
-      break;
+      return {
+        attributes: (claim.value as Claim[]).map((nestedClaim) =>
+          detailsCardAttributeFromClaim(nestedClaim, config, testID),
+        ),
+      };
     }
     case DataTypeEnum.Date: {
-      attribute.value =
-        formatDate(new Date(claim.value as string)) ?? (claim.value as string);
-      break;
+      const date = claim.value as string;
+      return {
+        value: formatDate(new Date(date)) ?? date,
+      };
     }
     case DataTypeEnum.File: {
       if (typeConfig.params?.showAs === 'IMAGE') {
-        attribute.image = { uri: claim.value as string };
+        return { image: { uri: claim.value as string } };
       } else {
-        attribute.value = claim.value as string;
+        return { value: claim.value as string };
       }
-      break;
     }
     default:
-      attribute.value = claim.value as string;
-      break;
+      return { value: String(claim.value) };
   }
-  return attribute as CredentialAttribute;
 };
 
 export const detailsCardFromCredential = (
