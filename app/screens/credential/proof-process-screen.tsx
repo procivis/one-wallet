@@ -78,7 +78,7 @@ const ProofProcessScreen: FunctionComponent = () => {
         setState(LoaderViewState.Warning);
         setError(e);
       }
-    }, 1000);
+    }, 3000);
   }, [acceptProof, didId, credentials, interactionId]);
 
   useEffect(() => {
