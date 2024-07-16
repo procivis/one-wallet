@@ -6,12 +6,84 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+// eslint-disable-next-line react-native/split-platform-components
+import { PermissionsAndroid, Platform, StyleSheet, View } from 'react-native';
 import { Code } from 'react-native-vision-camera';
 
 import { useInvitationHandling } from '../../hooks/core/deep-link';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
+
+const permissions = [
+  {
+    info: {
+      buttonNegative: 'Cancel',
+      buttonNeutral: 'Ask Me Later',
+      buttonPositive: 'OK',
+      message: 'App needs access to your camera ',
+      title: 'App Camera Permission',
+    },
+    type: PermissionsAndroid.PERMISSIONS.CAMERA,
+  },
+  {
+    info: {
+      buttonNegative: 'Cancel',
+      buttonNeutral: 'Ask Me Later',
+      buttonPositive: 'OK',
+      message: 'App needs access to your bluetooth',
+      title: 'App Bluetooth Permission',
+    },
+    type: PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+  },
+  {
+    info: {
+      buttonNegative: 'Cancel',
+      buttonNeutral: 'Ask Me Later',
+      buttonPositive: 'OK',
+      message: 'App needs access to your bluetooth',
+      title: 'App Bluetooth Scan Permission',
+    },
+    type: PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+  },
+  {
+    info: {
+      buttonNegative: 'Cancel',
+      buttonNeutral: 'Ask Me Later',
+      buttonPositive: 'OK',
+      message: 'App needs access to your bluetooth',
+      title: 'App Bluetooth Advertise Permission',
+    },
+    type: PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
+  },
+  {
+    info: {
+      buttonNegative: 'Cancel',
+      buttonNeutral: 'Ask Me Later',
+      buttonPositive: 'OK',
+      message: 'App needs access to your location',
+      title: 'App Location Permission',
+    },
+    type: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  },
+];
+
+const requestCameraPermission = async () => {
+  for await (const permission of permissions) {
+    try {
+      const granted = await PermissionsAndroid.request(
+        permission.type,
+        permission.info,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+};
 
 const QRCodeScannerScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -26,6 +98,12 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     },
     [code, setCode],
   );
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      requestCameraPermission();
+    }
+  }, []);
 
   const handleInvitationUrl = useInvitationHandling();
   useEffect(() => {
