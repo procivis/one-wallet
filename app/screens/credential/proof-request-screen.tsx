@@ -53,8 +53,9 @@ const ProofRequestScreen: FunctionComponent = () => {
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
-  const isFocused = useIsFocused();
   const { core } = useONECore();
+  const { mutateAsync: rejectProof } = useProofReject();
+  const isFocused = useIsFocused();
 
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
   const { data: allCredentials } = useCredentials();
@@ -64,7 +65,6 @@ const ProofRequestScreen: FunctionComponent = () => {
     selectedCredentialId,
   } = route.params;
 
-  const { mutateAsync: rejectProof } = useProofReject();
   const { data: proof } = useProofDetail(proofId);
 
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();

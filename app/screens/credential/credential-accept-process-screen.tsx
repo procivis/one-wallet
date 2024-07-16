@@ -81,7 +81,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
         setState(LoaderViewState.Warning);
         setError(e);
       }
-    }, 1000);
+    }, 3000);
   }, [acceptCredential, interactionId, didId]);
 
   useEffect(() => {
