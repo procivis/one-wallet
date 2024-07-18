@@ -16,6 +16,7 @@ import {
   CredentialDetail,
   CredentialListItem,
   CredentialListQuery,
+  CredentialSchema,
   CredentialStateEnum,
   DataTypeEnum,
   FormatFeatureEnum,
@@ -343,3 +344,28 @@ const insertAttributeInObject = (
     insertAttributeInObject({ ...attribute, name: rest.join('/') }, nextParent);
   }
 };
+
+function parseBase64Image(image: string | undefined) {
+  return image ? '__BASE64IMAGE__' : '';
+}
+
+export function getCredentialSchemaWithoutImages(
+  credentialSchema: CredentialSchema,
+) {
+  return {
+    ...credentialSchema,
+    layoutProperties: {
+      ...credentialSchema.layoutProperties,
+      background: {
+        ...credentialSchema.layoutProperties?.background,
+        image: parseBase64Image(
+          credentialSchema.layoutProperties?.background?.image,
+        ),
+      },
+      logo: {
+        ...credentialSchema.layoutProperties?.logo,
+        image: parseBase64Image(credentialSchema.layoutProperties?.logo?.image),
+      },
+    },
+  };
+}
