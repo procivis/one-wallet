@@ -3,6 +3,7 @@ import {
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
   CredentialValidIcon,
+  formatDateTime,
   NerdModeItemProps,
   NerdModeScreen,
   Typography,
@@ -22,6 +23,8 @@ import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { addElementIf } from '../../utils/array';
+import { getCredentialSchemaWithoutImages } from '../../utils/credential';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
@@ -77,7 +80,16 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
 
   const didSections = credentialDetail.issuerDid?.split(':') ?? [];
   const identifier = didSections.pop();
-  const didMethod = didSections.join(':') + ':';
+  const didMethod = didSections.length ? didSections.join(':') + ':' : '';
+
+  const validityData = getCredentialValidityValue(
+    credentialDetail,
+    colorScheme,
+  );
+
+  const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages(
+    credentialDetail.schema,
+  );
 
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
@@ -87,6 +99,23 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       highlightedText: credentialDetail.schema.name,
       testID: 'schemaName',
     },
+    ...addElementIf(!!validityData, {
+      attributeKey: translate('credentialDetail.credential.validity'),
+      element: (
+        <View style={styles.validityEntryContainer}>
+          {validityData?.icon}
+          <Typography
+            color={validityData?.textColor || ''}
+            preset="s/code"
+            style={styles.validityEntryText}
+            testID="CredentialNerdView.validity.attributeValue"
+          >
+            {validityData?.text}
+          </Typography>
+        </View>
+      ),
+      testID: 'validity',
+    }),
     {
       attributeKey: translate('credentialDetail.credential.issuerDid'),
       attributeText: identifier,
@@ -95,9 +124,19 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       testID: 'issuerDID',
     },
     {
+      attributeKey: translate('credentialDetail.credential.dateAdded'),
+      attributeText: formatDateTime(new Date(credentialDetail?.createdDate)),
+      testID: 'dateAdded',
+    },
+    {
       attributeKey: translate('credentialDetail.credential.format'),
       attributeText: credentialDetail.schema.format,
       testID: 'credentialFormat',
+    },
+    {
+      attributeKey: translate('credentialDetail.credential.documentType'),
+      attributeText: credentialDetail.schema.schemaId,
+      testID: 'documentType',
     },
     {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
@@ -108,34 +147,18 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       ),
       testID: 'revocationMethod',
     },
+    {
+      attributeKey: translate('credentialDetail.credential.storageType'),
+      attributeText: credentialDetail.schema.walletStorageType,
+      testID: 'storageType',
+    },
+    {
+      attributeKey: translate('credentialDetail.credential.schema'),
+      attributeText: JSON.stringify(credentialSchemaWithoutImages, null, 1),
+      canBeCopied: true,
+      testID: 'schema',
+    },
   ];
-
-  const validityData = getCredentialValidityValue(
-    credentialDetail,
-    colorScheme,
-  );
-
-  if (validityData) {
-    const { icon, text, textColor } = validityData;
-
-    nerdModeFields.push({
-      attributeKey: translate('credentialDetail.credential.validity'),
-      element: (
-        <View style={styles.validityEntryContainer}>
-          {icon}
-          <Typography
-            color={textColor}
-            preset="s/code"
-            style={styles.validityEntryText}
-            testID="CredentialNerdView.validity.attributeValue"
-          >
-            {text}
-          </Typography>
-        </View>
-      ),
-      testID: 'validity',
-    });
-  }
 
   return (
     <NerdModeScreen
