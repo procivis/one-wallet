@@ -14,14 +14,13 @@ import { Credential } from '../../components/credential/credential';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { translate } from '../../i18n';
 import {
-  CredentialManagementNavigationProp,
-  CredentialManagementRouteProp,
-} from '../../navigators/credential-management/credential-management-routes';
+  RootNavigationProp,
+  RootRouteProp,
+} from '../../navigators/root/root-routes';
 
 const StatusCheckResultScreen: FunctionComponent = () => {
-  const navigation =
-    useNavigation<CredentialManagementNavigationProp<'StatusCheckResult'>>();
-  const route = useRoute<CredentialManagementRouteProp<'StatusCheckResult'>>();
+  const navigation = useNavigation<RootNavigationProp<'StatusCheckResult'>>();
+  const route = useRoute<RootRouteProp<'StatusCheckResult'>>();
   const colorScheme = useAppColorScheme();
 
   const insets = useSafeAreaInsets();
