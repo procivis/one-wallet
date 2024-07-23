@@ -50,9 +50,8 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
         .map(({ credentialId }) => credentialId);
 
       if (updatedCredentialIds.length && navigation.isFocused()) {
-        navigation.navigate('CredentialManagement', {
-          params: { credentialIds: updatedCredentialIds },
-          screen: 'StatusCheckResult',
+        navigation.navigate('StatusCheckResult', {
+          credentialIds: updatedCredentialIds,
         });
       }
     },

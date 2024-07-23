@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import StatusCheckResultScreen from '../../screens/credential/status-check-result-screen';
 import InvitationNavigator from '../invitation/invitation-navigator';
 import IssueCredentialNavigator from '../issue-credential/issue-credential-navigator';
 import ShareCredentialNavigator from '../share-credential/share-credential-navigator';
@@ -21,10 +20,6 @@ const CredentialManagementNavigator = () => {
       <Stack.Screen
         component={ShareCredentialNavigator}
         name="ShareCredential"
-      />
-      <Stack.Screen
-        component={StatusCheckResultScreen}
-        name="StatusCheckResult"
       />
     </Stack.Navigator>
   );

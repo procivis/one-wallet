@@ -83,7 +83,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     <LoadingResultScreen
       header={{
         leftItem: HeaderCloseModalButton,
-        modalHandleVisible: true,
         rightItem:
           state === LoaderViewState.Warning ? (
             <HeaderInfoButton onPress={infoPressHandler} />

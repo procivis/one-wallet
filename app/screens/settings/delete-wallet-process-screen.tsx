@@ -103,7 +103,6 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
       }
       header={{
         leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
-        modalHandleVisible: true,
         rightItem:
           state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton onPress={infoPressHandler} />

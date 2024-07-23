@@ -1,4 +1,3 @@
-import { CredentialListItem } from '@procivis/react-native-one-core';
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -10,9 +9,6 @@ export type CredentialManagementNavigatorParamList = {
   Invitation: NavigatorScreenParams<InvitationNavigatorParamList>;
   IssueCredential: NavigatorScreenParams<IssueCredentialNavigatorParamList>;
   ShareCredential: NavigatorScreenParams<ShareCredentialNavigatorParamList>;
-  StatusCheckResult: {
-    credentialIds: Array<CredentialListItem['id']>;
-  };
 };
 
 export type CredentialManagementRouteProp<

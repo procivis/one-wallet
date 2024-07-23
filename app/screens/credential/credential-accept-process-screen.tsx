@@ -146,7 +146,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       }
       header={{
         leftItem: HeaderCloseModalButton,
-        modalHandleVisible: true,
         rightItem:
           state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton onPress={infoPressHandler} />
