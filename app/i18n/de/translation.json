@@ -89,6 +89,8 @@
   "credentialHistory.shared": "Geteilter Nachweis",
   "credentialHistory.suspended": "Nachweis suspendiert",
   "credentialOffer.accept": "Akzeptieren",
+  "credentialOffer.closeAlert.message": "Mit dem Schliessen lehnen Sie dieses Angebot ab. Dies kann nicht rückgängig gemacht werden.",
+  "credentialOffer.closeAlert.title": "Angebot ablehnen",
   "credentialOffer.credential": "Ausgestellter Nachweis",
   "credentialOffer.process.inProgress.title": "Nachweis ausstellen",
   "credentialOffer.process.warning.incompatible.title": "Ihre Wallet ist nicht kompatibel mit dem definierten Schlüsselspeichertyp.",

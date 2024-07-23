@@ -1,3 +1,4 @@
+import { CredentialListItem } from '@procivis/react-native-one-core';
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ImageSourcePropType } from 'react-native';
@@ -23,6 +24,9 @@ export type RootNavigatorParamList = {
     disableBiometry: boolean;
   };
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
+  StatusCheckResult: {
+    credentialIds: Array<CredentialListItem['id']>;
+  };
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =

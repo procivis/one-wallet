@@ -137,7 +137,6 @@ const ProofProcessScreen: FunctionComponent = () => {
       }
       header={{
         leftItem: HeaderCloseModalButton,
-        modalHandleVisible: true,
         rightItem:
           state === LoaderViewState.Warning ? (
             <HeaderInfoButton onPress={infoPressHandler} />

@@ -122,6 +122,8 @@
   "credentialHistory.shared": "Shared credential",
   "credentialHistory.suspended": "Credential suspended",
   "credentialOffer.accept": "Accept",
+  "credentialOffer.closeAlert.message": "By closing you are rejecting this offering. This cannot be undone.",
+  "credentialOffer.closeAlert.title": "Reject offering",
   "credentialOffer.nerdView.section.title": "Credential offer data",
   "credentialOffer.process.inProgress.subtitle": "Credential(s) are being transmitted...",
   "credentialOffer.process.inProgress.title": "Issuing credential",

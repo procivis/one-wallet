@@ -253,7 +253,6 @@ const ProofRequestScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: HeaderCloseModalButton,
-        modalHandleVisible: Platform.OS === 'ios',
         rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
         static: true,
         title: translate('proofRequest.title'),
