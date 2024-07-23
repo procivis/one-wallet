@@ -11,7 +11,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { Credential } from '../../components/proof-request/credential';
@@ -59,7 +59,6 @@ const SelectCredentialScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: HeaderBackButton,
-        modalHandleVisible: Platform.OS === 'ios',
         static: true,
         title: translate('proofRequest.selectCredential.title'),
       }}
