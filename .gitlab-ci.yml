@@ -156,6 +156,8 @@ build:
   rules:
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
+    - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ /^release-v\d+\.\d+$/
+      when: manual
     - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
       when: never
     - when: manual
