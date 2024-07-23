@@ -54,6 +54,8 @@
 	<string>${APP_NAME} needs access to your camera to scan QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(APP_NAME) to use FaceID.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Used to connect to verifiers and, upon confirmation, share proofs with them.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UIAppFonts</key>
