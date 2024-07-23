@@ -8,8 +8,8 @@ import {
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useRef } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -77,11 +77,33 @@ const CredentialOfferScreen: FunctionComponent = () => {
     ? detailsCardFromCredential(credential, config)
     : { attributes: [], card: undefined };
 
+  const onCloseButtonPress = useCallback(() => {
+    Alert.alert(
+      translate('credentialOffer.closeAlert.title'),
+      translate('credentialOffer.closeAlert.message'),
+      [
+        { text: translate('common.cancel') },
+        {
+          onPress: () =>
+            rootNavigation.navigate('Dashboard', {
+              screen: 'Wallet',
+            }),
+          style: 'destructive',
+          text: translate('common.reject'),
+        },
+      ],
+    );
+  }, [rootNavigation]);
+
+  const closeButton = useMemo(
+    () => <HeaderCloseModalButton onPress={onCloseButtonPress} />,
+    [onCloseButtonPress],
+  );
+
   return (
     <ScrollViewScreen
       header={{
-        leftItem: HeaderCloseModalButton,
-        modalHandleVisible: Platform.OS === 'ios',
+        leftItem: closeButton,
         rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
         static: true,
         title: translate('credentialOffer.title'),
