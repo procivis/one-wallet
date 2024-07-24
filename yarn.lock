@@ -2851,10 +2851,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/one-react-native-components@npm:0.1.13":
-  version: 0.1.13
-  resolution: "@procivis/one-react-native-components@npm:0.1.13::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.1.13.tgz"
+"@procivis/one-react-native-components@npm:0.1.24":
+  version: 0.1.24
+  resolution: "@procivis/one-react-native-components@npm:0.1.24::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.1.24.tgz"
   peerDependencies:
+    "@procivis/react-native-picker": "*"
     "@react-native-community/blur": "*"
     "@react-native/normalize-color": "*"
     "@react-navigation/native": "*"
@@ -2866,13 +2867,13 @@ __metadata:
     react-native-safe-area-context: "*"
     react-native-svg: "*"
     react-native-vision-camera: "*"
-  checksum: 01c80034c47e1da745e9416b2b4c1c5ceb95bd0d33c25eb2b58c22edb24e9781066d85b8877f52c1e99bef060156840c179ff5640ff9c7301de2d2d95488d1fa
+  checksum: e2df950281caf4c1ff4cc7a104426aeb2bcb8b18605340accc657c6928fdff098f43b66ab744f8f5770f1302dcc7dc63aecb708df4da6a272493c1e6bba3aeb7
   languageName: node
   linkType: hard
 
-"@procivis/react-native-components@npm:0.1.19":
-  version: 0.1.19
-  resolution: "@procivis/react-native-components@npm:0.1.19::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F45%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-components%2F-%2F%40procivis%2Freact-native-components-0.1.19.tgz"
+"@procivis/react-native-components@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@procivis/react-native-components@npm:0.1.23::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F45%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-components%2F-%2F%40procivis%2Freact-native-components-0.1.23.tgz"
   peerDependencies:
     "@procivis/react-native-picker": "*"
     "@react-native/normalize-color": "*"
@@ -2885,7 +2886,7 @@ __metadata:
     react-native-draggable-flatlist: "*"
     react-native-safe-area-context: "*"
     react-native-svg: "*"
-  checksum: 37aa485dd757c2e66fc6fe71b451345e60f4d3e198d5e8f1327e5bac06a2a972af54bdf82adf4abb6ec7b8bbe77679e795be554e022001eb4ac63a59c1d3d382
+  checksum: f353d64d9406b33d012a5d07376999f7450ea39a65bad40cad68135c95591411ce09a5b1ded9efc731093250780a15f6f5b068609b1164eef1fe442c07b3e16c
   languageName: node
   linkType: hard
 
@@ -12429,8 +12430,8 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/one-react-native-components": "npm:0.1.13"
-    "@procivis/react-native-components": "npm:0.1.19"
+    "@procivis/one-react-native-components": "npm:0.1.24"
+    "@procivis/react-native-components": "npm:0.1.23"
     "@procivis/react-native-one-core": "npm:1.20596.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
