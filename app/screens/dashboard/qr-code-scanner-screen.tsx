@@ -1,4 +1,4 @@
-import { QRCodeScanner } from '@procivis/one-react-native-components';
+import { QRCodeScannerScreen as ScannerScreenComponent } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -38,7 +38,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   return (
     <View style={styles.screen}>
       {isFocused && (
-        <QRCodeScanner
+        <ScannerScreenComponent
           onClose={navigation.goBack}
           onQRCodeRead={handleCodeScan}
           title={translate('wallet.qrCodeScannerScreen.title')}

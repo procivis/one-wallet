@@ -288,7 +288,7 @@ export const nestAttributes = (
   const result: CredentialAttribute[] = [];
 
   for (const attribute of attributes) {
-    const attributePath = attribute.name.split('/');
+    const attributePath = attribute.name!.split('/');
     if (attributePath.length === 0) {
       result.push(attribute);
     } else {
@@ -309,7 +309,7 @@ export const nestAttributes = (
 const nestAttributeInDummyObject = (
   attribute: CredentialAttribute,
 ): CredentialAttribute => {
-  const pathParts = attribute.name.split('/');
+  const pathParts = attribute.name!.split('/');
   const [first, ...rest] = pathParts;
   if (!rest.length) {
     return attribute;
@@ -333,7 +333,7 @@ const insertAttributeInObject = (
   attribute: CredentialAttribute,
   object: CredentialAttribute,
 ) => {
-  const pathParts = attribute.name.split('/');
+  const pathParts = attribute.name!.split('/');
   const [first, ...rest] = pathParts;
 
   const nextParent = object.attributes?.find((a) => a.name === first);
