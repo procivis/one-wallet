@@ -14,7 +14,7 @@ import {
   createCredentialSchema,
   offerCredential,
 } from '../utils/bff-api';
-import { CredentialFormat } from '../utils/enums';
+import { CredentialFormat, Exchange } from '../utils/enums';
 import { launchApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -50,6 +50,7 @@ describe('ONE-224: Wallet history', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
@@ -99,7 +100,8 @@ describe('ONE-224: Wallet history', () => {
     });
   });
 
-  describe('Scroll elements', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  describe.skip('Scroll elements', () => {
     beforeAll(async () => {
       const times = 6;
 

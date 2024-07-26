@@ -32,6 +32,7 @@ export interface LayoutProperties {
 }
 
 export interface CredentialClaimSchemaRequestDTO {
+  array: boolean;
   claims?: CredentialClaimSchemaRequestDTO[];
   datatype: DataType;
   key: string;

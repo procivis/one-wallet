@@ -45,8 +45,18 @@ describe('ONE-2014: Credential design', () => {
     beforeAll(async () => {
       schema1 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Attribute 1',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Attribute 2',
+            required: true,
+          },
         ],
         format: CredentialFormat.SDJWT,
         layoutProperties: {
@@ -122,8 +132,18 @@ describe('ONE-2014: Credential design', () => {
       await launchApp({ delete: true });
       schema1 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-          { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Attribute 1',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Attribute 2',
+            required: true,
+          },
         ],
         layoutProperties: {
           primaryAttribute: 'Attribute 1',
@@ -177,8 +197,18 @@ describe('ONE-2014: Credential design', () => {
         authToken,
         {
           claims: [
-            { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-            { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'Attribute 1',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'Attribute 2',
+              required: true,
+            },
           ],
           name: `credential without layout ${uuidv4()}`,
         },
@@ -188,8 +218,18 @@ describe('ONE-2014: Credential design', () => {
         authToken,
         {
           claims: [
-            { datatype: DataType.STRING, key: 'Attribute 1', required: true },
-            { datatype: DataType.STRING, key: 'Attribute 2', required: true },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'Attribute 1',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'Attribute 2',
+              required: true,
+            },
           ],
           layoutProperties: {
             background: {
@@ -251,9 +291,24 @@ describe('ONE-2014: Credential design', () => {
       await launchApp({ delete: true });
       const schema_1 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'Main region', required: true },
-          { datatype: DataType.STRING, key: 'Support region', required: true },
-          { datatype: DataType.PICTURE, key: 'Location photo', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Main region',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Support region',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.PICTURE,
+            key: 'Location photo',
+            required: true,
+          },
         ],
         layoutProperties: {
           background: {
@@ -276,9 +331,24 @@ describe('ONE-2014: Credential design', () => {
 
       const schema_2 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-          { datatype: DataType.PICTURE, key: 'Photo', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.PICTURE,
+            key: 'Photo',
+            required: true,
+          },
         ],
         layoutProperties: {
           background: {
@@ -301,8 +371,18 @@ describe('ONE-2014: Credential design', () => {
 
       const schema_3 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last name',
+            required: true,
+          },
         ],
         name: `Scrolling 3 ${uuidv4()}`,
       });
@@ -322,7 +402,7 @@ describe('ONE-2014: Credential design', () => {
         credentialSchema: schema_3,
         exchange: Exchange.PROCIVIS,
       });
-    });
+    }, 200000);
 
     beforeEach(async () => {
       await expect(WalletScreen.screen).toBeVisible();
@@ -361,8 +441,18 @@ describe('ONE-2014: Credential design', () => {
     beforeAll(async () => {
       const schema = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last name',
+            required: true,
+          },
         ],
         name: `Scrolling test ${uuidv4()}`,
       });
@@ -380,7 +470,7 @@ describe('ONE-2014: Credential design', () => {
     });
   });
 
-  // Pass
+  // Fail
   describe('ONE-1893: Credential Schema Layout', () => {
     let schema1: CredentialSchemaResponseDTO;
 
@@ -389,10 +479,30 @@ describe('ONE-2014: Credential design', () => {
 
       schema1 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'Last name', required: false },
-          { datatype: DataType.BIRTH_DATE, key: 'Birthday', required: true },
-          { datatype: DataType.PICTURE, key: 'Photo', required: false },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Last name',
+            required: false,
+          },
+          {
+            array: false,
+            datatype: DataType.BIRTH_DATE,
+            key: 'Birthday',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.PICTURE,
+            key: 'Photo',
+            required: false,
+          },
         ],
         layoutProperties: {
           code: {

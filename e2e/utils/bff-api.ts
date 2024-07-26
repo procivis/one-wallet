@@ -91,7 +91,14 @@ export async function createCredentialSchema(
   };
   const schemaData: CredentialSchemaData = Object.assign(
     {
-      claims: [{ datatype: DataType.STRING, key: 'field', required: true }],
+      claims: [
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'field',
+          required: true,
+        },
+      ],
       format: CredentialFormat.SDJWT,
       layoutType: LayoutType.CARD,
       name: `detox-e2e-${uuidv4()}`,
@@ -193,18 +200,22 @@ const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
   return value;
 };
 
-const claimsFilling = (claims: CredentialClaimSchemaResponseDTO[]) => {
+const claimsFilling = (
+  claims: CredentialClaimSchemaResponseDTO[],
+  path?: string,
+) => {
   const claimValues: CredentialData['claimValues'] = [];
   claims.forEach((claim) => {
+    const fullPath = path ? `${path}/${claim.key}` : claim.key;
     if (claim.datatype === DataType.OBJECT) {
-      const nestedValues = claimsFilling(claim.claims!);
+      const nestedValues = claimsFilling(claim.claims!, fullPath);
       claimValues.push(...nestedValues);
       return;
     }
     const value: string = claimValue(claim);
     claimValues.push({
       claimId: claim.id,
-      path: claim.key,
+      path: fullPath,
       value,
     });
   });

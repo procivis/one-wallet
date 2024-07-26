@@ -108,8 +108,18 @@ describe('ONE-614: Proof request', () => {
       await launchApp({ delete: true });
 
       const claims: CredentialSchemaData['claims'] = [
-        { datatype: DataType.STRING, key: 'field1', required: true },
-        { datatype: DataType.STRING, key: 'field2', required: true },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'field1',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'field2',
+          required: true,
+        },
       ];
       jwtCredentialSchema = await createCredentialSchema(authToken, {
         claims,
@@ -383,7 +393,12 @@ describe('ONE-614: Proof request', () => {
 
       const pictureCredentialSchema = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.PICTURE, key: pictureKey, required: true },
+          {
+            array: false,
+            datatype: DataType.PICTURE,
+            key: pictureKey,
+            required: true,
+          },
         ],
       });
       pictureProofSchema = await proofSchemaCreate(authToken, {
@@ -570,10 +585,22 @@ describe('ONE-614: Proof request', () => {
       driverLicenceSchema = await createCredentialSchema(authToken, {
         claims: [
           {
+            array: false,
             claims: [
-              { datatype: DataType.STRING, key: 'first_name', required: true },
-              { datatype: DataType.STRING, key: 'last_name', required: true },
               {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'first_name',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'last_name',
+                required: true,
+              },
+              {
+                array: false,
                 datatype: DataType.STRING,
                 key: 'license_number',
                 required: true,
@@ -592,10 +619,30 @@ describe('ONE-614: Proof request', () => {
 
       swissPassport = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first_name', required: true },
-          { datatype: DataType.STRING, key: 'last_name', required: true },
-          { datatype: DataType.STRING, key: 'id', required: true },
-          { datatype: DataType.BIRTH_DATE, key: 'birthday', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first_name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last_name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'id',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.BIRTH_DATE,
+            key: 'birthday',
+            required: true,
+          },
         ],
         format: CredentialFormat.SDJWT,
         name: `Swiss Passport-${uuidv4()}`,
@@ -604,10 +651,30 @@ describe('ONE-614: Proof request', () => {
 
       usaPassport = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first_name', required: true },
-          { datatype: DataType.STRING, key: 'last_name', required: true },
-          { datatype: DataType.STRING, key: 'id', required: true },
-          { datatype: DataType.BIRTH_DATE, key: 'birthday', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first_name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last_name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'id',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.BIRTH_DATE,
+            key: 'birthday',
+            required: true,
+          },
         ],
         format: CredentialFormat.SDJWT,
         name: `USA Passport-${uuidv4()}`,

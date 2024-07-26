@@ -158,7 +158,12 @@ export const HistoryDetailScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <BackButton onPress={navigation.goBack} />,
+        leftItem: (
+          <BackButton
+            onPress={navigation.goBack}
+            testID="HistoryDetailScreen.header.back"
+          />
+        ),
         rightItem: moreInfoIcon,
         static: true,
         title: getEntryTitle(entry),

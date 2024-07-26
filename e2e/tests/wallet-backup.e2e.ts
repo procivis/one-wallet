@@ -1,7 +1,6 @@
 import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
-import CreateBackupProcessingScreen from '../page-objects/backup/BackupProcessingScreen';
 import CreateBackupCheckPasswordScreen from '../page-objects/backup/CreateBackupCheckPasswordScreen';
 import CreateBackupDashboardScreen from '../page-objects/backup/CreateBackupDashboardScreen';
 import CreateBackupPreviewScreen from '../page-objects/backup/CreateBackupPreviewScreen';
@@ -83,13 +82,13 @@ describe('ONE-1530: Backup & Restore', () => {
       await CreateBackupSetPasswordScreen.fillPassword(`${password}\n`); // \n provide clicking "setPasswordButton"
 
       await expect(CreateBackupCheckPasswordScreen.screen).toBeVisible();
-
       await verifyButtonEnabled(
         CreateBackupCheckPasswordScreen.submitButton,
         false,
       );
-      await CreateBackupCheckPasswordScreen.password(password);
-      await device.pressBack(); // hide a keyboard
+      await CreateBackupCheckPasswordScreen.fillPassword(`${password}`, {
+        pressBack: true,
+      });
       await verifyButtonEnabled(
         CreateBackupCheckPasswordScreen.submitButton,
         true,
@@ -100,10 +99,10 @@ describe('ONE-1530: Backup & Restore', () => {
       await CreateBackupPreviewScreen.credentialCard(
         credentialId,
       ).verifyIsVisible();
-
-      await CreateBackupPreviewScreen.createBackupButton.longPress(3001);
-      await expect(CreateBackupProcessingScreen.screen).toBeVisible();
-      await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
+      // Will be opened folder navigation and it will block the app
+      // await CreateBackupPreviewScreen.createBackupButton.longPress(4001);
+      // await expect(CreateBackupProcessingScreen.screen).toBeVisible();
+      // await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
       // await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
     });
 
