@@ -30,22 +30,64 @@ describe('ONE-614: Proof request', () => {
     mdocSchema = await createCredentialSchema(authToken, {
       claims: [
         {
+          array: false,
           claims: [
-            { datatype: DataType.STRING, key: 'country', required: true },
-            { datatype: DataType.STRING, key: 'region', required: true },
-            { datatype: DataType.STRING, key: 'city', required: true },
-            { datatype: DataType.STRING, key: 'street', required: true },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'country',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'region',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'city',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'street',
+              required: true,
+            },
           ],
           datatype: DataType.OBJECT,
           key: 'Address',
           required: true,
         },
         {
+          array: false,
           claims: [
-            { datatype: DataType.STRING, key: 'first name', required: true },
-            { datatype: DataType.STRING, key: 'last name', required: true },
-            { datatype: DataType.MDL_PICTURE, key: 'portrait', required: true },
-            { datatype: DataType.BIRTH_DATE, key: 'birthdate', required: true },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'first name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'last name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.MDL_PICTURE,
+              key: 'portrait',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.BIRTH_DATE,
+              key: 'birthdate',
+              required: true,
+            },
           ],
           datatype: DataType.OBJECT,
           key: 'Credentials',
@@ -57,7 +99,6 @@ describe('ONE-614: Proof request', () => {
       revocationMethod: RevocationMethod.NONE,
       schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
     });
-
     singleClaimMdocProofSchema = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema],
       proofInputSchemas: [
@@ -110,16 +151,19 @@ describe('ONE-614: Proof request', () => {
     const diplomaJwtSchema = await createCredentialSchema(authToken, {
       claims: [
         {
+          array: false,
           datatype: DataType.STRING,
           key: 'Faculty',
           required: true,
         },
         {
+          array: false,
           datatype: DataType.STRING,
           key: 'Department',
           required: true,
         },
         {
+          array: false,
           datatype: DataType.STRING,
           key: 'Education',
           required: true,
@@ -152,6 +196,7 @@ describe('ONE-614: Proof request', () => {
             { id: diplomaJwtSchema.claims[2].id, required: true },
           ],
           credentialSchemaId: diplomaJwtSchema.id,
+          validityConstraint: 86400,
         },
       ],
     });
