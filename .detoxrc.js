@@ -53,12 +53,6 @@ module.exports = {
         avdName: 'Pixel_2_API_31',
       },
     },
-    emulator: {
-      type: 'android.emulator',
-      device: {
-        avdName: 'Pixel_8_API_35',
-      },
-    },
   },
   configurations: {
     'ios.sim.debug': {
