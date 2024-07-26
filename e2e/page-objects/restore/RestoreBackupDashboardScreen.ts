@@ -4,7 +4,7 @@ export default abstract class RestoreBackupDashboardScreen {
   }
 
   static get back() {
-    return element(by.id('Screen.back'));
+    return element(by.id('RestoreBackupDashboardScreen.back'));
   }
 
   static get restoreButton() {

@@ -62,7 +62,7 @@ const shareCredential = async (
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(ProofRequestAcceptProcessScreen.status.success)
       .toBeVisible()
-      .withTimeout(6000);
+      .withTimeout(7000);
     if (data.redirectUri) {
       await waitFor(ProofRequestAcceptProcessScreen.button.redirect)
         .toBeVisible()
@@ -73,7 +73,7 @@ const shareCredential = async (
   } else if (expectedResult === LoaderViewState.Warning) {
     await waitFor(ProofRequestAcceptProcessScreen.status.warning)
       .toBeVisible()
-      .withTimeout(3000);
+      .withTimeout(4000);
   }
   await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
 

@@ -8,7 +8,7 @@ export default abstract class WalletScreen {
   }
 
   static get settingsButton() {
-    return element(by.id('WalletScreen.header.action-settings'));
+    return element(by.id('WalletScreen.header.action-settings')).atIndex(0);
   }
 
   static credential(credentialId: string) {

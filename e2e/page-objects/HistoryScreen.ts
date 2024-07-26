@@ -10,16 +10,13 @@ export default abstract class HistoryScreen {
   }
 
   private static historyEntry(index: number) {
-    const id = `HistoryScreen.history.${index}`;
+    const id = `HistoryScreen.list.item.${index}`;
     const record = element(by.id(id));
     return {
       get element() {
         return record;
       },
     };
-  }
-  static get listItems() {
-    return element(by.id('HistoryScreen.list'));
   }
 
   static history(index: number) {
@@ -48,7 +45,7 @@ export default abstract class HistoryScreen {
   static get filter() {
     return {
       close() {
-        return element(by.id('HistoryScreen.filter.close')).tap();
+        return element(by.id('CredentialSchemaPicker.close')).tap();
       },
       open() {
         return element(by.id('HistoryScreen.filter')).tap();
