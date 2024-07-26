@@ -385,7 +385,12 @@ describe('ONE-601: Credential issuance', () => {
       await launchApp({ delete: true });
       credentialSchema = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.PICTURE, key: pictureKey, required: true },
+          {
+            array: false,
+            datatype: DataType.PICTURE,
+            key: pictureKey,
+            required: true,
+          },
         ],
       });
 
@@ -418,13 +423,34 @@ describe('ONE-601: Credential issuance', () => {
   describe('ONE-1861: Nested claim', () => {
     let credentialSchemaName: string;
     const claims = [
-      { datatype: DataType.EMAIL, key: 'email', required: true },
+      { array: false, datatype: DataType.EMAIL, key: 'email', required: true },
       {
+        array: false,
         claims: [
-          { datatype: DataType.STRING, key: 'country', required: true },
-          { datatype: DataType.STRING, key: 'region', required: true },
-          { datatype: DataType.STRING, key: 'city', required: true },
-          { datatype: DataType.STRING, key: 'street', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'country',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'region',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'city',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'street',
+            required: true,
+          },
         ],
         datatype: DataType.OBJECT,
         key: 'address',
@@ -458,17 +484,47 @@ describe('ONE-601: Credential issuance', () => {
       await launchApp({ delete: true });
       schema1 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-          { datatype: DataType.EMAIL, key: 'email', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.EMAIL,
+            key: 'email',
+            required: true,
+          },
         ],
         name: `Schema-1-${uuidv4()}`,
       });
       schema2 = await createCredentialSchema(authToken, {
         claims: [
-          { datatype: DataType.STRING, key: 'first name', required: true },
-          { datatype: DataType.STRING, key: 'last name', required: true },
-          { datatype: DataType.EMAIL, key: 'email', required: true },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'first name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'last name',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.EMAIL,
+            key: 'email',
+            required: true,
+          },
         ],
         name: `Schema-2-${uuidv4()}`,
       });
@@ -539,11 +595,32 @@ describe('ONE-601: Credential issuance', () => {
       mdocSchema = await createCredentialSchema(authToken, {
         claims: [
           {
+            array: false,
             claims: [
-              { datatype: DataType.STRING, key: 'country', required: true },
-              { datatype: DataType.STRING, key: 'region', required: true },
-              { datatype: DataType.STRING, key: 'city', required: true },
-              { datatype: DataType.STRING, key: 'street', required: true },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'country',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'region',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'city',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'street',
+                required: true,
+              },
             ],
             datatype: DataType.OBJECT,
             key: 'Address',
@@ -574,16 +651,19 @@ describe('ONE-601: Credential issuance', () => {
       booleanSchema = await createCredentialSchema(authToken, {
         claims: [
           {
+            array: false,
             datatype: DataType.BOOLEAN,
             key: 'Vip?',
             required: true,
           },
           {
+            array: false,
             datatype: DataType.BOOLEAN,
             key: 'Married?',
             required: true,
           },
           {
+            array: false,
             datatype: DataType.STRING,
             key: 'First name',
             required: true,

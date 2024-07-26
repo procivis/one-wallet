@@ -118,6 +118,7 @@ const HistoryDashboardScreen: FC = () => {
           },
         )}
         query={queryParams}
+        testID="HistoryScreen.list"
       />
       <CredentialSchemaPicker
         onClose={() => setIsFilterModalOpened(false)}

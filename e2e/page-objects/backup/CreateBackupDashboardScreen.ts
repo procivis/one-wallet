@@ -4,7 +4,7 @@ export default abstract class CreateBackupDashboardScreen {
   }
 
   static get back() {
-    return element(by.id('Screen.back'));
+    return element(by.id('CreateBackupDashboardScreen.back'));
   }
 
   static get history() {
