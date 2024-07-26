@@ -27,7 +27,7 @@ ios/.xcode.env.local
 build/
 .idea
 .gradle
-local.properties
+*/local.properties
 *.iml
 *.hprof
 *.keystore
