@@ -69,6 +69,9 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
+  // If this is true, we should not attempt to reject in useBeforeRemove
+  const proofAccepted = useRef<boolean>(false);
+
   const presentationDefinition = useMemoAsync(async () => {
     const definition = await core.getPresentationDefinition(proofId);
 
@@ -216,15 +219,16 @@ const ProofRequestScreen: FunctionComponent = () => {
   );
 
   const reject = useCallback(() => {
-    if (!isFocused) {
+    if (!isFocused || proofAccepted.current) {
       return;
     }
     rejectProof(interactionId).catch((err) => {
       reportException(err, 'Reject Proof failure');
     });
-  }, [interactionId, isFocused, rejectProof]);
+  }, [interactionId, isFocused, rejectProof, proofAccepted.current]);
 
   const onSubmit = useCallback(() => {
+    proofAccepted.current = true;
     sharingNavigation.replace('Processing', {
       credentials: selectedCredentials as Record<
         string,
