@@ -225,7 +225,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     rejectProof(interactionId).catch((err) => {
       reportException(err, 'Reject Proof failure');
     });
-  }, [interactionId, isFocused, rejectProof, proofAccepted.current]);
+  }, [interactionId, isFocused, rejectProof]);
 
   const onSubmit = useCallback(() => {
     proofAccepted.current = true;
