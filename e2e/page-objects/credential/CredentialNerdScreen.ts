@@ -2,9 +2,12 @@ import { expect } from 'detox';
 
 export enum AttributeTestID {
   credentialFormat = 'credentialFormat',
+  dateAdded = 'dateAdded',
+  documentType = 'documentType',
   issuerDID = 'issuerDID',
   revocationMethod = 'revocationMethod',
   schemaName = 'schemaName',
+  storageType = 'storageType',
   validity = 'validity',
 }
 

@@ -19,6 +19,7 @@ import {
   getCredentialDetail,
   suspendCredential,
 } from '../utils/bff-api';
+import { formatDateTime } from '../utils/date';
 import {
   CodeType,
   CredentialFormat,
@@ -101,22 +102,37 @@ describe('ONE-2014: Credential design', () => {
           label: 'Credential schema',
           value: credentialDetail.schema.name,
         },
+        [AttributeTestID.validity]: {
+          label: 'Validity',
+          value: 'Valid',
+        },
         [AttributeTestID.issuerDID]: {
           label: 'Issuer DID',
           showMoreButton: true,
           value: credentialDetail.issuerDid.did,
         },
+        [AttributeTestID.dateAdded]: {
+          label: 'Date added',
+          value: formatDateTime(
+            new Date(credentialDetail?.createdDate),
+          ) as string,
+        },
         [AttributeTestID.credentialFormat]: {
           label: 'Credential format',
           value: credentialDetail.schema.format,
+        },
+        [AttributeTestID.documentType]: {
+          label: 'Document type',
+          value: credentialDetail.schema.schemaId,
         },
         [AttributeTestID.revocationMethod]: {
           label: 'Revocation method',
           value: 'LVVC (Linked Validity Verifiable Credential)',
         },
-        [AttributeTestID.validity]: {
-          label: 'Validity',
-          value: 'Valid',
+        [AttributeTestID.storageType]: {
+          label: 'Storage type',
+          showMoreButton: true,
+          value: credentialDetail.schema.walletStorageType as string,
         },
       };
       await CredentialNerdScreen.verifyAttributes(attributes);
