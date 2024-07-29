@@ -58,4 +58,6 @@ export interface CredentialDetailCredSchemaDTO {
   name: string;
   organisationId: string;
   revocationMethod: RevocationMethod;
+  schemaId: string;
+  walletStorageType?: WalletKeyStorageType;
 }
