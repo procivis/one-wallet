@@ -299,9 +299,10 @@ export const nestAttributes = (
     if (attributePath.length === 0) {
       result.push(attribute);
     } else {
-      const parent = result.find((a) => a.name === attributePath[0]);
+      const [first, ...rest] = attributePath;
+      const parent = result.find((a) => a.name === first);
       if (parent) {
-        insertAttributeInObject(attribute, parent);
+        insertAttributeInObject({ ...attribute, name: rest.join('/') }, parent);
       } else {
         result.push(nestAttributeInDummyObject(attribute));
       }
