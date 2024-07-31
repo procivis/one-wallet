@@ -97,7 +97,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        missingDimensionStrategy 'react-native-camera', 'mlkit' // For: react-native-camera
 
         // detox
         testBuildType System.getProperty('testBuildType', 'debug')
