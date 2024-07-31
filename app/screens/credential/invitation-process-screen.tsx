@@ -13,6 +13,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -20,6 +21,10 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import {
+  useBlePermissions,
+  useOpenBleSettings,
+} from '../../hooks/ble-permissions';
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
@@ -40,11 +45,67 @@ const InvitationProcessScreen: FunctionComponent = () => {
   useBlockOSBackNavigation();
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
+  const { permissionStatus, checkPermissions, requestPermission } =
+    useBlePermissions();
+
+  const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
+  const { openAppPermissionSettings, openBleSettings, inFocusFromSettings } =
+    useOpenBleSettings();
+
+  const isBleInteraction = useMemo(
+    () => invitationUrl.toLocaleLowerCase().startsWith('openid4vp://connect?'),
+    [invitationUrl],
+  );
 
   const [state, setState] = useState<
     LoaderViewState.InProgress | LoaderViewState.Warning
   >(LoaderViewState.InProgress);
+
   useEffect(() => {
+    if (permissionStatus === 'denied') {
+      requestPermission();
+    }
+  }, [permissionStatus, requestPermission]);
+
+  useEffect(() => {
+    if (inFocusFromSettings.current && isBleInteraction && isFocused) {
+      checkPermissions();
+      setAdapterEnabled(true);
+      inFocusFromSettings.current = false;
+    }
+  }, [
+    isFocused,
+    isBleInteraction,
+    checkPermissions,
+    requestPermission,
+    inFocusFromSettings,
+  ]);
+
+  const allPermissionsGranted = useMemo(() => {
+    if (!isBleInteraction) {
+      return true;
+    }
+
+    return permissionStatus && permissionStatus === 'granted';
+  }, [isBleInteraction, permissionStatus]);
+
+  useEffect(() => {
+    if (!isBleInteraction) {
+      setState(LoaderViewState.InProgress);
+    } else {
+      if (allPermissionsGranted === false || adapterEnabled === false) {
+        setState(LoaderViewState.Warning);
+      } else {
+        setState(LoaderViewState.InProgress);
+      }
+    }
+  }, [isBleInteraction, adapterEnabled, allPermissionsGranted]);
+
+  useEffect(() => {
+    if (isBleInteraction && (!allPermissionsGranted || !adapterEnabled)) {
+      return;
+    }
+
     handleInvitation(invitationUrl)
       .then((result) => {
         if ('credentialIds' in result) {
@@ -63,11 +124,23 @@ const InvitationProcessScreen: FunctionComponent = () => {
         }
       })
       .catch((err: OneError) => {
-        reportException(err, 'Invitation failure');
-        setState(LoaderViewState.Warning);
-        setError(err);
+        // TODO Propagate proper error code from core
+        if (err.message.includes('adapter is disabled')) {
+          setAdapterEnabled(false);
+        } else {
+          reportException(err, 'Invitation failure');
+          setError(err);
+        }
       });
-  }, [handleInvitation, invitationUrl, managementNavigation]);
+  }, [
+    handleInvitation,
+    invitationUrl,
+    managementNavigation,
+    allPermissionsGranted,
+    adapterEnabled,
+    isFocused,
+    isBleInteraction,
+  ]);
 
   const infoPressHandler = useCallback(() => {
     if (!error) {
@@ -79,8 +152,48 @@ const InvitationProcessScreen: FunctionComponent = () => {
     });
   }, [error, rootNavigation]);
 
+  const openSettingsButton = useMemo(() => {
+    if (state !== LoaderViewState.Warning || !isBleInteraction) {
+      return;
+    }
+
+    return {
+      onPress: () => {
+        if (!allPermissionsGranted) {
+          // application settings, user can enable required permissions
+          openAppPermissionSettings();
+        } else if (!adapterEnabled) {
+          // os Bluetooth adapter settings, user can enable Bluetooth or allow for new connections (iOS)
+          openBleSettings();
+        }
+      },
+      title: translate('common.openSettings'),
+    };
+  }, [
+    state,
+    isBleInteraction,
+    openAppPermissionSettings,
+    openBleSettings,
+    allPermissionsGranted,
+    adapterEnabled,
+  ]);
+
+  const label = useMemo(() => {
+    if (state === LoaderViewState.Warning && isBleInteraction) {
+      if (!allPermissionsGranted) {
+        return translate('invitation.process.blePermissionMissing.title');
+      }
+      if (!adapterEnabled) {
+        return translate('invitation.process.bleAdapterDisabled.title');
+      }
+    }
+
+    return translate(`invitation.process.${state}.title`);
+  }, [state, allPermissionsGranted, adapterEnabled, isBleInteraction]);
+
   return (
     <LoadingResultScreen
+      button={openSettingsButton}
       header={{
         leftItem: HeaderCloseModalButton,
         rightItem:
@@ -90,7 +203,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       }}
       loader={{
         animate: isFocused,
-        label: translate(`invitation.process.${state}.title`),
+        label,
         state,
         testID: 'InvitationProcessScreen.animation',
       }}
