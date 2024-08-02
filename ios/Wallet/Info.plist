@@ -56,8 +56,8 @@
 	<string>Allow $(APP_NAME) to use FaceID.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Used to connect to verifiers and, upon confirmation, share proofs with them.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Used to connect to verifiers and, upon confirmation, share proofs with them.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexMono-Regular.ttf</string>

@@ -68,11 +68,16 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [permissionStatus, requestPermission]);
 
   useEffect(() => {
-    if (inFocusFromSettings.current && isBleInteraction && isFocused) {
-      checkPermissions();
-      setAdapterEnabled(true);
-      inFocusFromSettings.current = false;
-    }
+    // Let the PinCode screen render / vanish before we update the state.
+    // If we don't the loader animation blocks the UI and the PinCode screen can not be interacted with.
+    // Remove once ONE-3014 is fixed.
+    setTimeout(() => {
+      if (inFocusFromSettings.current && isBleInteraction && isFocused) {
+        checkPermissions();
+        setAdapterEnabled(true);
+        inFocusFromSettings.current = false;
+      }
+    }, 0);
   }, [
     isFocused,
     isBleInteraction,
