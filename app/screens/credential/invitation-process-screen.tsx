@@ -68,16 +68,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [permissionStatus, requestPermission]);
 
   useEffect(() => {
-    // Let the PinCode screen render / vanish before we update the state.
-    // If we don't the loader animation blocks the UI and the PinCode screen can not be interacted with.
-    // Remove once ONE-3014 is fixed.
-    setTimeout(() => {
-      if (inFocusFromSettings.current && isBleInteraction && isFocused) {
-        checkPermissions();
-        setAdapterEnabled(true);
-        inFocusFromSettings.current = false;
-      }
-    }, 0);
+    if (inFocusFromSettings.current && isBleInteraction && isFocused) {
+      checkPermissions();
+      setAdapterEnabled(true);
+      inFocusFromSettings.current = false;
+    }
   }, [
     isFocused,
     isBleInteraction,
@@ -111,39 +106,41 @@ const InvitationProcessScreen: FunctionComponent = () => {
       return;
     }
 
-    handleInvitation(invitationUrl)
-      .then((result) => {
-        if ('credentialIds' in result) {
-          managementNavigation.replace('IssueCredential', {
-            params: {
-              credentialId: result.credentialIds[0],
-              interactionId: result.interactionId,
-            },
-            screen: 'CredentialOffer',
-          });
-        } else {
-          managementNavigation.replace('ShareCredential', {
-            params: { request: result },
-            screen: 'ProofRequest',
-          });
-        }
-      })
-      .catch((err: OneError) => {
-        // TODO Propagate proper error code from core
-        if (err.message.includes('adapter is disabled')) {
-          setAdapterEnabled(false);
-        } else {
-          reportException(err, 'Invitation failure');
-          setError(err);
-        }
-      });
+    setTimeout(() => {
+      handleInvitation(invitationUrl)
+        .then((result) => {
+          if ('credentialIds' in result) {
+            managementNavigation.replace('IssueCredential', {
+              params: {
+                credentialId: result.credentialIds[0],
+                interactionId: result.interactionId,
+              },
+              screen: 'CredentialOffer',
+            });
+          } else {
+            managementNavigation.replace('ShareCredential', {
+              params: { request: result },
+              screen: 'ProofRequest',
+            });
+          }
+        })
+        .catch((err: OneError) => {
+          // TODO Propagate proper error code from core
+          if (err.message.includes('adapter is disabled')) {
+            setAdapterEnabled(false);
+          } else {
+            reportException(err, 'Invitation failure');
+            setError(err);
+          }
+          setState(LoaderViewState.Warning);
+        });
+    }, 1000);
   }, [
     handleInvitation,
     invitationUrl,
     managementNavigation,
     allPermissionsGranted,
     adapterEnabled,
-    isFocused,
     isBleInteraction,
   ]);
 
@@ -159,6 +156,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const openSettingsButton = useMemo(() => {
     if (state !== LoaderViewState.Warning || !isBleInteraction) {
+      return;
+    }
+
+    if (allPermissionsGranted && adapterEnabled) {
       return;
     }
 
