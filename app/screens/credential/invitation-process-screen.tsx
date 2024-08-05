@@ -62,10 +62,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
   >(LoaderViewState.InProgress);
 
   useEffect(() => {
-    if (permissionStatus === 'denied') {
+    if (permissionStatus === 'denied' && isBleInteraction) {
       requestPermission();
     }
-  }, [permissionStatus, requestPermission]);
+  }, [permissionStatus, requestPermission, isBleInteraction]);
 
   useEffect(() => {
     if (inFocusFromSettings.current && isBleInteraction && isFocused) {
