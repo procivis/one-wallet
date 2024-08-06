@@ -352,6 +352,8 @@
   "wallet.credentialsList.empty.title": "No credentials yet",
   "wallet.credentialsList.title": "All credentials (%{credentialsCount})",
   "wallet.credentialsList.title.empty": "All credentials",
+  "wallet.qrCodeScannerScreen.permissions.camera.description": "In order to use QR Code scanner, please enable camera permissions in Settings",
+  "wallet.qrCodeScannerScreen.permissions.camera.title": "Permission Required",
   "wallet.qrCodeScannerScreen.title": "Scan the QR code to connect",
   "wallet.search": "Search",
   "wallet.settings": "Settings",
