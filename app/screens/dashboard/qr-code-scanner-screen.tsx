@@ -16,6 +16,7 @@ import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-ro
 
 const QRCodeScannerScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeScanner'>>();
   const [code, setCode] = useState<string>();
   const { hasPermission } = useCameraPermission();
@@ -37,7 +38,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     }
   }, [code, navigation, handleInvitationUrl]);
 
-  if (!hasPermission) {
+  if (!hasPermission && !isAlertVisible) {
+    setIsAlertVisible(true);
     Alert.alert(
       translate('wallet.qrCodeScannerScreen.permissions.camera.title'),
       translate('wallet.qrCodeScannerScreen.permissions.camera.description'),
@@ -46,7 +48,13 @@ const QRCodeScannerScreen: FunctionComponent = () => {
           onPress: navigation.goBack,
           text: translate('common.cancel'),
         },
-        { onPress: openSettings, text: translate('common.openSettings') },
+        {
+          onPress: () => {
+            setIsAlertVisible(false);
+            openSettings();
+          },
+          text: translate('common.openSettings'),
+        },
       ],
     );
   }
