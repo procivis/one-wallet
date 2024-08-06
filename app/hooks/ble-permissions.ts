@@ -1,7 +1,9 @@
 import { useMemoAsync } from '@procivis/one-react-native-components';
 import { useCallback, useRef, useState } from 'react';
-import { Linking, Platform } from 'react-native';
+// eslint-disable-next-line react-native/split-platform-components
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import {
+  AndroidPermission,
   checkMultiple,
   openSettings,
   PERMISSIONS,
@@ -12,11 +14,17 @@ import {
 
 const permissions =
   Platform.OS === 'android'
-    ? [
-        PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      ]
+    ? Platform.Version > 30
+      ? [
+          PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+          PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ]
+      : ([
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        ] as AndroidPermission[])
     : [PERMISSIONS.IOS.BLUETOOTH];
 
 export const useBlePermissions = () => {
