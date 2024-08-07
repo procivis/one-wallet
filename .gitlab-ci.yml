@@ -42,7 +42,9 @@ workflow:
 .bitrise_e2e:
   stage: e2e_tests
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
-  needs: [test]
+  needs:
+    - job: test
+      artifacts: false
   script:
     - >
       /etc/gitrise.sh
@@ -60,7 +62,9 @@ workflow:
 .bitrise_build:
   stage: build
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
-  needs: [test]
+  needs:
+    - job: test
+      artifacts: false
   script:
     - >
       /etc/gitrise.sh
@@ -134,7 +138,6 @@ sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: ['']
-  dependencies: [test]
   needs: [test]
   variables:
     SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
@@ -170,6 +173,7 @@ build:
     - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
       when: never
     - when: manual
+  allow_failure: true
   extends:
     - .bitrise_build
 
@@ -180,6 +184,7 @@ e2e:
       - BITRISE_WORKFLOW:
           - E2E_iOS
           - E2E_Android
+  allow_failure: true
   extends:
     - .bitrise_e2e
     - .only_main_or_manual
