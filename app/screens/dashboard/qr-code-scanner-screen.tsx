@@ -8,8 +8,9 @@ import React, {
 } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { openSettings } from 'react-native-permissions';
-import { Code, useCameraPermission } from 'react-native-vision-camera';
+import { Code } from 'react-native-vision-camera';
 
+import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useInvitationHandling } from '../../hooks/core/deep-link';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
@@ -18,7 +19,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeScanner'>>();
   const [code, setCode] = useState<string>();
-  const { hasPermission } = useCameraPermission();
+  const { cameraPermission } = useCameraPermission();
 
   const handleCodeScan = useCallback(
     (scannedCode: Code[]) => {
@@ -38,7 +39,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   }, [code, navigation, handleInvitationUrl]);
 
   useEffect(() => {
-    if (!hasPermission) {
+    if (cameraPermission === 'blocked') {
       Alert.alert(
         translate('wallet.qrCodeScannerScreen.permissions.camera.title'),
         translate('wallet.qrCodeScannerScreen.permissions.camera.description'),
@@ -55,7 +56,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasPermission]);
+  }, [cameraPermission]);
 
   return (
     <View style={styles.screen}>
