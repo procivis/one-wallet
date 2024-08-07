@@ -49,8 +49,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     useBlePermissions();
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
-  const { openAppPermissionSettings, openBleSettings, inFocusFromSettings } =
-    useOpenBleSettings();
+  const { openAppPermissionSettings, openBleSettings } = useOpenBleSettings();
 
   const isBleInteraction = useMemo(
     () => invitationUrl.toLocaleLowerCase().startsWith('openid4vp://connect?'),
@@ -68,18 +67,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [permissionStatus, requestPermission, isBleInteraction]);
 
   useEffect(() => {
-    if (inFocusFromSettings.current && isBleInteraction && isFocused) {
+    if (isBleInteraction && isFocused) {
       checkPermissions();
       setAdapterEnabled(true);
-      inFocusFromSettings.current = false;
     }
-  }, [
-    isFocused,
-    isBleInteraction,
-    checkPermissions,
-    requestPermission,
-    inFocusFromSettings,
-  ]);
+  }, [isFocused, isBleInteraction, checkPermissions, requestPermission]);
 
   const allPermissionsGranted = useMemo(() => {
     if (!isBleInteraction) {

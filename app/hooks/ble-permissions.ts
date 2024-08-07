@@ -1,5 +1,5 @@
 import { useMemoAsync } from '@procivis/one-react-native-components';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 // eslint-disable-next-line react-native/split-platform-components
 import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import {
@@ -76,25 +76,19 @@ const getStrictestResult = (results: PermissionStatus[]) => {
 };
 
 export const useOpenBleSettings = () => {
-  const inFocusFromSettings = useRef<boolean>(false);
-
   const openBleSettings = useCallback(() => {
     if (Platform.OS === 'ios') {
       Linking.openURL('App-Prefs:Bluetooth');
     } else {
       Linking.sendIntent('android.settings.BLUETOOTH_SETTINGS');
     }
-
-    inFocusFromSettings.current = true;
   }, []);
 
   const openAppPermissionSettings = useCallback(() => {
     openSettings();
-    inFocusFromSettings.current = true;
   }, []);
 
   return {
-    inFocusFromSettings,
     openAppPermissionSettings,
     openBleSettings,
   };
