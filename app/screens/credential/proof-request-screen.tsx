@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonType,
   concatTestID,
   EntityCluster,
   ScrollViewScreen,
@@ -328,6 +329,9 @@ const ProofRequestScreen: FunctionComponent = () => {
                 onPress={onSubmit}
                 testID="ProofRequestSharingScreen.shareButton"
                 title={translate('proofRequest.confirm')}
+                type={
+                  allSelectionsValid ? ButtonType.Primary : ButtonType.Secondary
+                }
               />
             </View>
           </>
