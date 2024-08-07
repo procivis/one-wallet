@@ -14,7 +14,8 @@ variables:
   BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
   DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
   YARN_NPM_AUTH_TOKEN: ${CI_JOB_TOKEN}
-
+  CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
+  RELEASE_BRANCH_PATTERN: /^release-v\d+\.\d+$/
 
 workflow:
   rules:
@@ -24,8 +25,14 @@ workflow:
 
 .only_main:
   rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
+
+.only_main_or_tag:
+  rules:
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
+    - when: never
 
 .only_main_or_manual:
   rules:
@@ -156,7 +163,9 @@ build:
   rules:
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
-    - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ /^release-v\d+\.\d+$/
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_TEST' || $BITRISE_WORKFLOW == 'iOS_TEST')
+      when: on_success
+    - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
       when: manual
     - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
       when: never
@@ -192,6 +201,8 @@ e2e:
 .dTrack_metrics_validation:
   stage: scan_validation
   allow_failure: true
+  extends:
+    - .only_main_or_tag
   script:
     - *dTrack_metrics
     - critical=$(echo ${metrics} | jq -r .critical)
@@ -207,6 +218,8 @@ e2e:
 .dTrack_policy_validation:
   stage: scan_validation
   allow_failure: true
+  extends:
+    - .only_main_or_tag
   script:
     - *dTrack_metrics
     - violated_licences=$(echo ${metrics} | jq -r .policyViolationsFail)
@@ -225,6 +238,9 @@ e2e:
     FETCH_LICENSE: "true"
     PROJECT: "js"
     PROJECT_PATH: "."
+  extends:
+    - .modules_setup
+    - .only_main_or_tag
   before_script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
     - npm install -g @cyclonedx/cdxgen
@@ -243,7 +259,7 @@ e2e:
         - ${SBOM_FILE_PATH}
 
 
-dependency_track:android:upload-bom:
+dtrack:android:upload-bom:
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.76.0-0.1
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
@@ -251,11 +267,9 @@ dependency_track:android:upload-bom:
     PROJECT: "java"
     PROJECT_PATH: "android/"
   extends:
-      - .modules_setup
       - .upload_bom
-      - .only_main_or_manual
 
-dependency_track:ios:upload-bom:
+dtrack:ios:upload-bom:
   image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
   variables:
     D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
@@ -284,51 +298,48 @@ dependency_track:ios:upload-bom:
         -F "bom=@${SBOM_FILE_PATH}"
   extends:
     - .upload_bom
-    - .only_main_or_manual
 
-dependency_track:react-native:upload-bom:
+dtrack:react-native:upload-bom:
   variables:
     SBOM_FILE_PATH: "rn-bom.xml"
   extends:
-    - .modules_setup
     - .upload_bom
-    - .only_main_or_manual
 
-dependency_track:android:metrics:
-  needs: [dependency_track:android:upload-bom]
+dtrack:android:metrics:
+  needs: [dtrack:android:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
   extends:
     - .dTrack_metrics_validation
 
-dependency_track:android:policy_violations:
-  needs: [dependency_track:android:upload-bom]
+dtrack:android:policy_violations:
+  needs: [dtrack:android:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
   extends:
     - .dTrack_policy_validation
 
-dependency_track:ios:metrics:
-  needs: [dependency_track:ios:upload-bom]
+dtrack:ios:metrics:
+  needs: [dtrack:ios:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
   extends:
     - .dTrack_metrics_validation
 
-dependency_track:ios:policy_violations:
-  needs: [dependency_track:ios:upload-bom]
+dtrack:ios:policy_violations:
+  needs: [dtrack:ios:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
   extends:
     - .dTrack_policy_validation
 
-dependency_track:react-native:metrics:
-  needs: [dependency_track:react-native:upload-bom]
+dtrack:react-native:metrics:
+  needs: [dtrack:react-native:upload-bom]
   extends:
     - .dTrack_metrics_validation
 
-dependency_track:react-native:policy_violations:
-  needs: [dependency_track:react-native:upload-bom]
+dtrack:react-native:policy_violations:
+  needs: [dtrack:react-native:upload-bom]
   extends:
     - .dTrack_policy_validation
 
