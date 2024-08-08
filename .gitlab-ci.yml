@@ -168,11 +168,15 @@ build:
       when: on_success
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_TEST' || $BITRISE_WORKFLOW == 'iOS_TEST')
       when: on_success
-    - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
+      when: never
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
       when: manual
     - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
       when: never
-    - when: manual
+    - if: $CI_COMMIT_BRANCH != 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
+      when: manual
+    - when: never
   allow_failure: true
   extends:
     - .bitrise_build
