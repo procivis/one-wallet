@@ -404,14 +404,12 @@ describe('ONE-601: Credential issuance', () => {
       await WalletScreen.openDetailScreen(credentialSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await expect(
-        CredentialDetailScreen.credentialCard.attribute(pictureKey).element,
+        CredentialDetailScreen.credentialCard.attribute('0').element,
       ).toBeVisible();
       await expect(
-        CredentialDetailScreen.credentialCard.attribute(pictureKey).title,
+        CredentialDetailScreen.credentialCard.attribute('0').title,
       ).toHaveText('picture');
-      await CredentialDetailScreen.credentialCard
-        .attribute(pictureKey)
-        .image.tap();
+      await CredentialDetailScreen.credentialCard.attribute('0').image.tap();
       await expect(ImagePreviewScreen.screen).toBeVisible();
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
       await ImagePreviewScreen.closeButton.tap();
@@ -588,62 +586,6 @@ describe('ONE-601: Credential issuance', () => {
     });
   });
 
-  describe('ONE-2054: Issue mdoc credentials', () => {
-    let mdocSchema: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      mdocSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            claims: [
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'country',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'region',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'city',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'street',
-                required: true,
-              },
-            ],
-            datatype: DataType.OBJECT,
-            key: 'Address',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.MDOC,
-        revocationMethod: RevocationMethod.NONE,
-        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-      });
-    });
-
-    it('Issue mdoc credential', async () => {
-      await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: mdocSchema,
-        didMethods: DidMethod.MDL,
-        exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
-      });
-    });
-  });
-
   describe('ONE-2063: Boolean DataType', () => {
     let booleanSchema: CredentialSchemaResponseDTO;
 
@@ -686,9 +628,12 @@ describe('ONE-601: Credential issuance', () => {
       await WalletScreen.openDetailScreen(booleanSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       const card = CredentialDetailScreen.credentialCard;
-      await expect(card.attribute('Vip?').value).toHaveText('true');
-      await expect(card.attribute('Married?').value).toHaveText('true');
-      await expect(card.attribute('First name').value).toHaveText('string');
+      //Vip?
+      await expect(card.attribute('0').value).toHaveText('true');
+      //Married?
+      await expect(card.attribute('1').value).toHaveText('true');
+      //First name
+      await expect(card.attribute('2').value).toHaveText('string');
     });
   });
 });

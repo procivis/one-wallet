@@ -59,8 +59,11 @@ export default abstract class WalletScreen {
   static async verifyEmptyCredentialList() {
     const el = element(by.id('WalletScreen.credentialList'));
     await expect(el).toBeVisible();
-    await expect(el).toHaveLabel(
-      'No credentials yet Connect to an issuer to add your first credential. Scan QR Code',
+    await expect(element(by.id('WalletScreen.empty.title'))).toHaveText(
+      'No credentials yet',
+    );
+    await expect(element(by.id('WalletScreen.empty.subtitle'))).toHaveText(
+      'Connect to an issuer to add your first credential.',
     );
   }
 }

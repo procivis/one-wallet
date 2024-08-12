@@ -228,4 +228,132 @@ describe('ONE-614: Proof request', () => {
       expectedResult: LoaderViewState.Warning,
     });
   });
+
+  describe('ONE-2227: Verify mdoc array credentials', () => {
+    let driverLicenceSchema: CredentialSchemaResponseDTO;
+    let driverLicenceProofSchema: ProofSchemaResponseDTO;
+
+    beforeAll(async () => {
+      driverLicenceSchema = await createCredentialSchema(authToken, {
+        claims: [
+          {
+            array: false,
+            claims: [
+              {
+                array: false,
+                claims: [],
+                datatype: DataType.STRING,
+                key: 'Full Name',
+                required: true,
+              },
+              {
+                array: true,
+                claims: [
+                  {
+                    array: false,
+                    claims: [],
+                    datatype: DataType.STRING,
+                    key: 'Category Name',
+                    required: true,
+                  },
+                  {
+                    array: false,
+                    claims: [],
+                    datatype: DataType.DATE,
+                    key: 'Issue Date',
+                    required: true,
+                  },
+                  {
+                    array: false,
+                    claims: [],
+                    datatype: DataType.DATE,
+                    key: 'Expiry Date',
+                    required: true,
+                  },
+                ],
+                datatype: DataType.OBJECT,
+                key: 'Category',
+                required: true,
+              },
+            ],
+            datatype: DataType.OBJECT,
+            key: 'User data',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.MDOC,
+        name: `Driver Licence-${uuidv4()}`,
+        revocationMethod: RevocationMethod.NONE,
+        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
+      });
+
+      driverLicenceProofSchema = await proofSchemaCreate(authToken, {
+        credentialSchemas: [driverLicenceSchema],
+        proofInputSchemas: [
+          {
+            claimSchemas: [
+              {
+                id: driverLicenceSchema.claims[0].claims![0].id,
+                required: true,
+              }, // Full Name
+              {
+                id: driverLicenceSchema.claims[0].claims![1].id,
+                required: true,
+              }, // Category
+            ],
+            credentialSchemaId: driverLicenceSchema.id,
+          },
+        ],
+      });
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: driverLicenceSchema,
+        didMethods: DidMethod.MDL,
+        exchange: Exchange.OPENID4VC,
+        keyAlgorithms: KeyType.ES256,
+      });
+    });
+
+    it('Verify Single credential with array claims', async () => {
+      const mdocCredentialTest = async () => {
+        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        const credentialCard = ProofRequestSharingScreen.credential(0);
+        await credentialCard.verifyIsVisible();
+        await credentialCard.verifyCredentialName(driverLicenceSchema.name);
+        const claims = [
+          { key: 'Full Name', value: 'string' },
+          {
+            array: true,
+            key: 'Category',
+            values: [
+              {
+                key: 'Category Name',
+                value: 'string',
+              },
+              {
+                key: 'Issue Date',
+                value: '8/21/2023',
+              },
+              {
+                key: 'Expiry Date',
+                value: '8/21/2023',
+              },
+            ],
+          },
+        ];
+        await credentialCard.verifyClaimValues(
+          claims,
+          ProofRequestSharingScreen.scrollTo,
+        );
+      };
+
+      await proofSharing(authToken, {
+        data: {
+          customShareDataScreenTest: mdocCredentialTest,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: driverLicenceProofSchema.id,
+        },
+      });
+    });
+  });
 });

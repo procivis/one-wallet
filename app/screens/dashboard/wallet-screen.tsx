@@ -236,6 +236,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                     color={colorScheme.text}
                     preset="l/line-height-large"
                     style={styles.emptyTitle}
+                    testID="WalletScreen.empty.title"
                   >
                     {translate('wallet.credentialsList.empty.title')}
                   </Typography>
@@ -243,6 +244,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                     align="center"
                     color={colorScheme.text}
                     style={styles.emptySubtitle}
+                    testID="WalletScreen.empty.subtitle"
                   >
                     {translate('wallet.credentialsList.empty.subtitle')}
                   </Typography>

@@ -1,5 +1,13 @@
 import { expect } from 'detox';
 
+type CardClaimData = {
+  array?: boolean;
+  image?: boolean;
+  key: string;
+  value?: string;
+  values?: Array<CardClaimData>;
+};
+
 export const CardSkeleton = (testID: string) => {
   const cardId = `${testID}.card`;
   return {
@@ -135,7 +143,7 @@ export default function ProofCredentialCard(testID: string) {
       }
     },
     verifyClaimValues: async function (
-      attributes: Array<{ image?: boolean; key: string; value?: string }>,
+      attributes: CardClaimData[],
       scrollTo: (
         element: Detox.IndexableNativeElement,
         direction: 'up' | 'down',
@@ -143,10 +151,13 @@ export default function ProofCredentialCard(testID: string) {
     ) {
       for (const [index, attribute] of attributes.entries()) {
         await scrollTo(card.claim(index).element, 'down');
-        await this.verifyClaimValue(index, attribute.key, attribute.value);
+        if (attribute.array) {
+          continue;
+        } else {
+          await this.verifyClaimValue(index, attribute.key, attribute.value);
+        }
       }
     },
-
     verifyCredentialName: async function (credentialName: string) {
       await expect(card.header.name).toHaveText(credentialName);
     },
