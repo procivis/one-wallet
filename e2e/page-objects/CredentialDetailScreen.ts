@@ -56,7 +56,7 @@ export default abstract class CredentialDetailScreen {
 
   static scrollTo(
     element: Detox.IndexableNativeElement,
-    direction: 'up' | 'down',
+    direction: 'up' | 'down' = 'down',
   ) {
     return waitFor(element)
       .toBeVisible()

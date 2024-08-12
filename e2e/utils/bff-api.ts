@@ -203,10 +203,15 @@ const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
 const claimsFilling = (
   claims: CredentialClaimSchemaResponseDTO[],
   path?: string,
+  array_key: string = '0',
 ) => {
   const claimValues: CredentialData['claimValues'] = [];
   claims.forEach((claim) => {
-    const fullPath = path ? `${path}/${claim.key}` : claim.key;
+    let fullPath = path ? `${path}/${claim.key}` : claim.key;
+    if (claim.array) {
+      fullPath = `${fullPath}/${array_key}`;
+    }
+
     if (claim.datatype === DataType.OBJECT) {
       const nestedValues = claimsFilling(claim.claims!, fullPath);
       claimValues.push(...nestedValues);
