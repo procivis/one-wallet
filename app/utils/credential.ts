@@ -218,7 +218,6 @@ export const detailsCardAttributeFromClaim = (
   return {
     id: claim.id,
     name: claim.key,
-    testID: concatTestID(testID, 'attribute', claim.key),
     ...value,
   };
 };
@@ -232,34 +231,43 @@ const detailsCardAttributeValueFromClaim = (
 
   if (claim.array) {
     return {
-      values: claim.value.map((arrayValue) => {
-        return detailsCardAttributeFromClaim(arrayValue, config, testID);
+      values: claim.value.map((arrayValue, index) => {
+        return detailsCardAttributeFromClaim(
+          arrayValue,
+          config,
+          concatTestID(testID, index.toString()),
+        );
       }),
     };
   } else {
     switch (typeConfig?.type) {
       case DataTypeEnum.Object: {
         return {
-          attributes: (claim.value as Claim[]).map((nestedClaim) =>
-            detailsCardAttributeFromClaim(nestedClaim, config, testID),
+          attributes: (claim.value as Claim[]).map((nestedClaim, index) =>
+            detailsCardAttributeFromClaim(
+              nestedClaim,
+              config,
+              concatTestID(testID, index.toString()),
+            ),
           ),
         };
       }
       case DataTypeEnum.Date: {
         const date = claim.value as string;
         return {
+          testID: testID,
           value: formatDate(new Date(date)) ?? date,
         };
       }
       case DataTypeEnum.File: {
         if (typeConfig.params?.showAs === 'IMAGE') {
-          return { image: { uri: claim.value as string } };
+          return { image: { uri: claim.value as string }, testID: testID };
         } else {
-          return { value: claim.value as string };
+          return { testID: testID, value: claim.value as string };
         }
       }
       default:
-        return { value: String(claim.value) };
+        return { testID: testID, value: String(claim.value) };
     }
   }
 };
@@ -269,8 +277,13 @@ export const detailsCardFromCredential = (
   config?: Config,
   testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
-  const attributes: CredentialAttribute[] = credential.claims.map((claim) =>
-    detailsCardAttributeFromClaim(claim, config, testID),
+  const attributes: CredentialAttribute[] = credential.claims.map(
+    (claim, index) =>
+      detailsCardAttributeFromClaim(
+        claim,
+        config,
+        concatTestID(testID, 'attribute', index.toString()),
+      ),
   );
 
   const card = getCredentialCardPropsFromCredential(
