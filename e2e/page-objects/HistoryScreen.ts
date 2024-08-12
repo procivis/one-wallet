@@ -1,4 +1,4 @@
-import { expect } from 'detox';
+import { device, expect } from 'detox';
 
 export default abstract class HistoryScreen {
   static get screen() {
@@ -30,13 +30,19 @@ export default abstract class HistoryScreen {
   static get searchField() {
     const field = element(by.id('HistoryScreen.search'));
     return {
+      get clearButton() {
+        return element(by.id('HistoryScreen.search.clear'));
+      },
       clearText() {
         return field.clearText();
       },
       get element() {
         return field;
       },
-      typeText(text: string) {
+      async typeText(text: string) {
+        if (device.getPlatform() === 'ios') {
+          await field.tap(); // this opens the software keyboard
+        }
         return field.typeText(text);
       },
     };

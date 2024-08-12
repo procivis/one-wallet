@@ -1,4 +1,4 @@
-import { expect } from 'detox';
+import { device, expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
 import CreateBackupCheckPasswordScreen from '../page-objects/backup/CreateBackupCheckPasswordScreen';
@@ -86,14 +86,20 @@ describe('ONE-1530: Backup & Restore', () => {
         CreateBackupCheckPasswordScreen.submitButton,
         false,
       );
-      await CreateBackupCheckPasswordScreen.fillPassword(`${password}`, {
-        pressBack: true,
-      });
-      await verifyButtonEnabled(
-        CreateBackupCheckPasswordScreen.submitButton,
-        true,
-      );
-      await CreateBackupCheckPasswordScreen.submitButton.tap();
+
+      if (device.getPlatform() === 'ios') {
+        // hiding keyboard not supported for iOS by detox, submit form using keyboard with \n
+        await CreateBackupCheckPasswordScreen.fillPassword(`${password}\n`);
+      } else {
+        await CreateBackupCheckPasswordScreen.fillPassword(password, {
+          pressBack: true,
+        });
+        await verifyButtonEnabled(
+          CreateBackupCheckPasswordScreen.submitButton,
+          true,
+        );
+        await CreateBackupCheckPasswordScreen.submitButton.tap();
+      }
 
       await expect(CreateBackupPreviewScreen.screen).toBeVisible();
       await CreateBackupPreviewScreen.credentialCard(
