@@ -69,7 +69,7 @@ describe('ONE-224: Wallet history', () => {
     it('Search field. No results', async () => {
       await expect(HistoryScreen.screen).toBeVisible();
       await expect(HistoryScreen.history(1).element).toBeVisible();
-      await HistoryScreen.searchField.typeText('text');
+      await HistoryScreen.searchField.typeText('text\n');
       await HistoryScreen.verifyContainsText('No entries');
       await HistoryScreen.verifyContainsText(
         'You have not interacted with your wallet yet.',
@@ -83,13 +83,11 @@ describe('ONE-224: Wallet history', () => {
         .toBeVisible()
         .withTimeout(2000);
       await expect(HistoryScreen.history(1).element).toBeVisible();
-      await HistoryScreen.searchField.typeText('string');
-      // hide a keyboard
-      await device.pressBack();
+      await HistoryScreen.searchField.typeText('string\n');
       await expect(HistoryScreen.history(0).element).toBeVisible();
       await expect(HistoryScreen.history(1).element).toBeVisible();
       await expect(HistoryScreen.history(2).element).toBeVisible();
-      await HistoryScreen.searchField.clearText();
+      await HistoryScreen.searchField.clearButton.tap();
     });
 
     it('Filter select', async () => {
