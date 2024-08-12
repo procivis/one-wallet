@@ -26,6 +26,7 @@ export interface CredentialSchemaListResponseDTO {
   schemaType: string;
 }
 export interface CredentialClaimSchemaResponseDTO {
+  array: boolean;
   claims?: CredentialClaimSchemaResponseDTO[];
   createdDate: string;
   datatype: DataType;
@@ -45,6 +46,7 @@ export interface CredentialSchemaResponseDTO
 }
 
 interface CredentialSchemaClaimDetailDTO {
+  array: boolean;
   createdDate: string;
   datatype: DataType;
   id: string;
