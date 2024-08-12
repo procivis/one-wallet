@@ -5,6 +5,7 @@ import {
   EntityCluster,
   ScrollViewScreen,
   useAppColorScheme,
+  useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
 import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -94,6 +95,13 @@ const CredentialOfferScreen: FunctionComponent = () => {
       ],
     );
   }, [rootNavigation]);
+
+  const androidBackHandler = useCallback(() => {
+    onCloseButtonPress();
+    return true;
+  }, [onCloseButtonPress]);
+
+  useBlockOSBackNavigation(Platform.OS === 'android', androidBackHandler);
 
   const closeButton = useMemo(
     () => <HeaderCloseModalButton onPress={onCloseButtonPress} />,
