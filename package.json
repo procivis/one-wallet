@@ -78,7 +78,7 @@
     "react-native-ultimate-config": "6.0.1",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-uuid": "^2.0.1",
-    "react-native-vision-camera": "^3.9.2",
+    "react-native-vision-camera": "^4.5.1",
     "react-query": "^3.39.3",
     "timeago.js": "^4.0.2",
     "validate.js": "0.13.1"
