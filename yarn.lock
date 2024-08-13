@@ -12521,7 +12521,7 @@ __metadata:
     react-native-ultimate-config: "npm:6.0.1"
     react-native-url-polyfill: "npm:^1.3.0"
     react-native-uuid: "npm:^2.0.1"
-    react-native-vision-camera: "npm:^3.9.2"
+    react-native-vision-camera: "npm:^4.5.1"
     react-native-web: "npm:^0.16.3"
     react-powerplug: "npm:1.0.0"
     react-query: "npm:^3.39.3"
@@ -13879,17 +13879,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-vision-camera@npm:^3.9.2":
-  version: 3.9.2
-  resolution: "react-native-vision-camera@npm:3.9.2"
+"react-native-vision-camera@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "react-native-vision-camera@npm:4.5.1"
   peerDependencies:
+    "@shopify/react-native-skia": "*"
     react: "*"
     react-native: "*"
+    react-native-reanimated: "*"
     react-native-worklets-core: "*"
   peerDependenciesMeta:
+    "@shopify/react-native-skia":
+      optional: true
+    react-native-reanimated:
+      optional: true
     react-native-worklets-core:
       optional: true
-  checksum: baf17915b9ab974ad1495df7816577b692f7eb621ab5d7cecd3976353ea4f16517fa197f8084842d904970b48b143ab27f9e77e6de5dddbc6e47c41e70193a64
+  checksum: 03cc5b8f76231aff64456b4fa8afed73b02022b1b0a987b9c2375d0a7344e7e7352479a2004573ce4b080ffe7f8513346dcc1d1f6154f36817f8e401dd27eabd
   languageName: node
   linkType: hard
 
