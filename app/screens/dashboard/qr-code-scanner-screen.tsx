@@ -2,6 +2,7 @@ import { QRCodeScannerScreen as ScannerScreenComponent } from '@procivis/one-rea
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
+  memo,
   useCallback,
   useEffect,
   useState,
@@ -39,34 +40,34 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   }, [code, navigation, handleInvitationUrl]);
 
   useEffect(() => {
-    if (cameraPermission === 'blocked') {
+    const isCameraRestricted =
+      cameraPermission === 'blocked' || cameraPermission === 'denied';
+    if (isCameraRestricted && isFocused) {
       Alert.alert(
         translate('wallet.qrCodeScannerScreen.permissions.camera.title'),
         translate('wallet.qrCodeScannerScreen.permissions.camera.description'),
         [
           {
-            onPress: navigation.goBack,
+            onPress: () => navigation.goBack(),
             text: translate('common.cancel'),
           },
           {
-            onPress: openSettings,
+            onPress: () => openSettings(),
             text: translate('common.openSettings'),
           },
         ],
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cameraPermission]);
+  }, [cameraPermission, isFocused]);
 
   return (
     <View style={styles.screen}>
-      {isFocused && (
-        <ScannerScreenComponent
-          onClose={navigation.goBack}
-          onQRCodeRead={handleCodeScan}
-          title={translate('wallet.qrCodeScannerScreen.title')}
-        />
-      )}
+      <ScannerScreenComponent
+        onClose={navigation.goBack}
+        onQRCodeRead={handleCodeScan}
+        title={translate('wallet.qrCodeScannerScreen.title')}
+      />
     </View>
   );
 };
@@ -80,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QRCodeScannerScreen;
+export default memo(QRCodeScannerScreen);
