@@ -105,3 +105,7 @@ modules.json
 # SBOM
 bom*.json
 bom*.xml
+
+# Yalc
+/.yalc
+yalc.lock
