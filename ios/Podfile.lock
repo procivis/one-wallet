@@ -1124,9 +1124,11 @@ PODS:
   - SocketRocket (0.6.1)
   - TouchID (4.4.1):
     - React
-  - VisionCamera (3.9.2):
-    - React
-    - React-callinvoker
+  - VisionCamera (4.5.1):
+    - VisionCamera/Core (= 4.5.1)
+    - VisionCamera/React (= 4.5.1)
+  - VisionCamera/Core (4.5.1)
+  - VisionCamera/React (4.5.1):
     - React-Core
   - Yoga (1.14.0)
 
@@ -1442,7 +1444,7 @@ SPEC CHECKSUMS:
   Sentry: 2f6baed15a3f8056b875fc903dc3dcb2903117f4
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
-  VisionCamera: 36c460338692788a0d377dce7d32f8ba049fb4f2
+  VisionCamera: 104de00dce2e04dec51bfb6027eff0312fa3174e
   Yoga: 2a16e58450c48e110211dae1159fb114bbcdcfc0
 
 PODFILE CHECKSUM: a5a3fbd63e28a0612bb4d0b7d72d39af07e66128
