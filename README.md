@@ -5,7 +5,6 @@
 | ------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Demo          | [![Build Status](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687/status.svg?token=asgEvbNJgYbMPW707rocOA&branch=main)](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687) |
 
-
 # Installation
 
 ### Prerequisites
@@ -13,15 +12,14 @@
 For using private Procivis registry you need to create [Personal Access token](https://gitlab.procivis.ch/-/profile/personal_access_tokens)
 with `read_api` permissions
 
-* Edit (or create) file `~/.yarnrc.yml` (home directory) with:
+- Edit (or create) file `~/.yarnrc.yml` (home directory) with:
+
 ```yaml
 npmScopes:
   procivis:
-    npmRegistryServer: "https://gitlab.procivis.ch/api/v4/packages/npm/"
+    npmRegistryServer: 'https://gitlab.procivis.ch/api/v4/packages/npm/'
     npmAuthToken: <YOUR_PERSONAL_TOKEN>
 ```
-
-
 
 # App Flavors
 
@@ -43,6 +41,13 @@ yarn rnuc:dev
 yarn start
 yarn ios
 ```
+
+## Linking packages
+
+1. Install yalc: `yarn global add yalc`
+2. Go to dep package and increase package version in package.json
+3. Run in dep package: `yalc publish --push`
+4. Go to one-wallet and run: `yalc add my-package-name`
 
 ## Configurations, UI themes, and assets
 
