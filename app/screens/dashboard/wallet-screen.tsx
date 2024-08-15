@@ -255,7 +255,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                       styles.emptyButton,
                       { bottom: Math.max(24, safeAreaInsets.bottom) },
                     ]}
-                    testID="OnboardingSetupScreen.setup"
+                    testID="WalletScreen.scanQrCode"
                     title={translate('wallet.credentialsList.empty.scanQrCode')}
                   />
                 </>

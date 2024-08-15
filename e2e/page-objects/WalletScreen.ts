@@ -66,4 +66,8 @@ export default abstract class WalletScreen {
       'Connect to an issuer to add your first credential.',
     );
   }
+
+  static get scanQRCodeButton() {
+    return element(by.id('WalletScreen.scanQrCode'));
+  }
 }

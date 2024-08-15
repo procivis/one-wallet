@@ -105,6 +105,7 @@
     "@typescript-eslint/parser": "5.59.2",
     "babel-jest": "^29.6.3",
     "babel-loader": "8.2.2",
+    "cross-env": "^7.0.3",
     "deprecated-react-native-prop-types": "^4.1.0",
     "detox": "^20.22.2",
     "eslint": "^8.19.0",
