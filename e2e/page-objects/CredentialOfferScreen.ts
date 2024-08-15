@@ -21,4 +21,25 @@ export default abstract class CredentialOfferScreen {
       .whileElement(by.id('CredentialOfferScreen.accept'))
       .scroll(600, 'down', NaN, 0.85);
   }
+
+  static get rejectAlert() {
+    return {
+      get cancelButton() {
+        return element(by.text('CANCEL'));
+      },
+      get message() {
+        return element(
+          by.text(
+            'By closing you are rejecting this offering. This cannot be undone.',
+          ),
+        );
+      },
+      get rejectButton() {
+        return element(by.text('REJECT'));
+      },
+      get title() {
+        return element(by.text('Reject offering'));
+      },
+    };
+  }
 }
