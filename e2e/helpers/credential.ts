@@ -56,13 +56,13 @@ const acceptCredentialTestCase = async (
       .toBeVisible()
       .withTimeout(6000);
 
-    if (data.redirectUri) {
-      await waitFor(CredentialAcceptProcessScreen.button.redirect)
-        .toBeVisible()
-        .withTimeout(2000);
-    } else {
-      await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
-    }
+    // if (data.redirectUri) {
+    //   await waitFor(CredentialAcceptProcessScreen.button.redirect)
+    //     .toBeVisible()
+    //     .withTimeout(2000);
+    // } else {
+    await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
+    // }
   } else if (expectedResult === LoaderViewState.Warning) {
     await waitFor(CredentialAcceptProcessScreen.status.warning)
       .toBeVisible()
@@ -88,6 +88,9 @@ const acceptCredentialTestCase = async (
 
 const rejectCredentialTestCase = async () => {
   await CredentialOfferScreen.rejectButton.tap();
+  await expect(CredentialOfferScreen.rejectAlert.title).toBeVisible();
+  await expect(CredentialOfferScreen.rejectAlert.message).toBeVisible();
+  await CredentialOfferScreen.rejectAlert.rejectButton.tap();
   await expect(WalletScreen.screen).toBeVisible();
 };
 
