@@ -277,18 +277,31 @@ export const detailsCardFromCredential = (
   config?: Config,
   testID?: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
-  const attributes: CredentialAttribute[] = credential.claims.map(
-    (claim, index) =>
-      detailsCardAttributeFromClaim(
-        claim,
-        config,
-        concatTestID(testID, 'attribute', index.toString()),
-      ),
+  return detailsCardFromCredentialWithClaims(
+    credential,
+    credential.claims,
+    config,
+    testID,
+  );
+};
+
+export const detailsCardFromCredentialWithClaims = (
+  credential: CredentialDetail,
+  claims: Claim[],
+  config?: Config,
+  testID?: string,
+): Omit<CredentialDetailsCardProps, 'expanded'> => {
+  const attributes: CredentialAttribute[] = claims.map((claim, index) =>
+    detailsCardAttributeFromClaim(
+      claim,
+      config,
+      concatTestID(testID, 'attribute', index.toString()),
+    ),
   );
 
   const card = getCredentialCardPropsFromCredential(
     credential,
-    credential.claims,
+    claims,
     config,
     undefined,
     concatTestID(testID, 'card'),

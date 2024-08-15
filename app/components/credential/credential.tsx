@@ -3,15 +3,17 @@ import {
   CredentialDetailsCardListItem,
   CredentialHeaderProps,
 } from '@procivis/one-react-native-components';
+import { Claim } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useCoreConfig } from '../../hooks/core/core-config';
 import { useCredentialDetail } from '../../hooks/core/credentials';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { detailsCardFromCredential } from '../../utils/credential';
+import { detailsCardFromCredentialWithClaims } from '../../utils/credential';
 
 export interface CredentialProps {
+  claims?: Claim[];
   credentialId: string;
   expanded?: boolean;
   headerAccessory?: CredentialHeaderProps['accessory'];
@@ -20,6 +22,7 @@ export interface CredentialProps {
 }
 
 export const Credential: FC<CredentialProps> = ({
+  claims,
   credentialId,
   expanded = false,
   lastItem,
@@ -36,8 +39,9 @@ export const Credential: FC<CredentialProps> = ({
   }
   const testID = concatTestID('Credential.credential', credential.id);
 
-  const { card, attributes } = detailsCardFromCredential(
+  const { card, attributes } = detailsCardFromCredentialWithClaims(
     credential,
+    claims ?? credential.claims,
     config,
     testID,
   );
