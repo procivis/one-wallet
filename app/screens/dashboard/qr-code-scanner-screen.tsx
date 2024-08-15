@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { openSettings } from 'react-native-permissions';
+import { openSettings, RESULTS } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
 import { ScannerScreen } from '../../components/vision-camera/vision-camera';
@@ -20,7 +20,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeScanner'>>();
   const [code, setCode] = useState<string>();
-  const { cameraPermission } = useCameraPermission();
+  const { status: cameraPermissionStatus, request: requestCameraPermission } =
+    useCameraPermission();
 
   const handleCodeScan = useCallback(
     (scannedCode: Code[]) => {
@@ -40,9 +41,19 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   }, [code, navigation, handleInvitationUrl]);
 
   useEffect(() => {
-    const isCameraRestricted =
-      cameraPermission === 'blocked' || cameraPermission === 'denied';
-    if (isCameraRestricted && isFocused) {
+    if (cameraPermissionStatus === RESULTS.DENIED) {
+      requestCameraPermission().then((result) => {
+        if (result === RESULTS.DENIED) {
+          // this case only happens on Android: If request is denied (but can be retried),
+          // user is navigated back and the OS prompt will be repeated when coming back to this screen
+          navigation.goBack();
+        }
+      });
+    }
+  }, [cameraPermissionStatus, navigation, requestCameraPermission]);
+
+  useEffect(() => {
+    if (cameraPermissionStatus === RESULTS.BLOCKED && isFocused) {
       Alert.alert(
         translate('wallet.qrCodeScannerScreen.permissions.camera.title'),
         translate('wallet.qrCodeScannerScreen.permissions.camera.description'),
@@ -58,16 +69,17 @@ const QRCodeScannerScreen: FunctionComponent = () => {
         ],
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cameraPermission, isFocused]);
+  }, [cameraPermissionStatus, navigation, isFocused]);
 
   return (
     <View style={styles.screen} testID="QRCodeScannerScreen">
-      <ScannerScreen
-        onClose={navigation.goBack}
-        onQRCodeRead={handleCodeScan}
-        title={translate('wallet.qrCodeScannerScreen.title')}
-      />
+      {cameraPermissionStatus === RESULTS.GRANTED && (
+        <ScannerScreen
+          onClose={navigation.goBack}
+          onQRCodeRead={handleCodeScan}
+          title={translate('wallet.qrCodeScannerScreen.title')}
+        />
+      )}
     </View>
   );
 };
