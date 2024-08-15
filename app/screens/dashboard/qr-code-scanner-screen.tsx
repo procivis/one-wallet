@@ -1,4 +1,3 @@
-import { QRCodeScannerScreen as ScannerScreenComponent } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -11,6 +10,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { openSettings } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
+import { ScannerScreen } from '../../components/vision-camera/vision-camera';
 import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useInvitationHandling } from '../../hooks/core/deep-link';
 import { translate } from '../../i18n';
@@ -62,8 +62,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   }, [cameraPermission, isFocused]);
 
   return (
-    <View style={styles.screen}>
-      <ScannerScreenComponent
+    <View style={styles.screen} testID="QRCodeScannerScreen">
+      <ScannerScreen
         onClose={navigation.goBack}
         onQRCodeRead={handleCodeScan}
         title={translate('wallet.qrCodeScannerScreen.title')}
