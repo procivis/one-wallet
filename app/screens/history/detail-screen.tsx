@@ -10,6 +10,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
+  Claim,
   HistoryActionEnum,
   HistoryEntityTypeEnum,
 } from '@procivis/react-native-one-core';
@@ -86,7 +87,21 @@ export const HistoryDetailScreen: FC = () => {
       : undefined,
   );
   const proofCredentials = (proof?.proofInputs ?? [])
-    .map(({ credential }) => credential)
+    .map(({ claims, credential }) => {
+      if (!credential) {
+        return undefined;
+      }
+      return {
+        ...credential,
+        claims: claims.map(
+          (c) =>
+            ({
+              ...c.schema,
+              value: c.value,
+            } as unknown as Claim),
+        ),
+      };
+    })
     .filter(nonEmptyFilter);
 
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
@@ -242,6 +257,7 @@ export const HistoryDetailScreen: FC = () => {
           {proofCredentials.map((proofCredential, index, { length }) => (
             <View key={proofCredential.id} style={styles.credential}>
               <Credential
+                claims={proofCredential.claims}
                 credentialId={proofCredential.id}
                 expanded={expandedCredential === proofCredential.id}
                 lastItem={index === length - 1}
