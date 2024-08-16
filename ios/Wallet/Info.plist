@@ -39,25 +39,26 @@
 	<key>ITSEncryptionExportComplianceCode</key>
 	<string>${APP_IOS_EXPORT_KEY}</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>${APP_NAME} needs access to your camera to scan QR codes.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Allow $(APP_NAME) to use FaceID.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Used to connect to verifiers and, upon confirmation, share proofs with them.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Used to connect to verifiers and, upon confirmation, share proofs with them.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>${APP_NAME} needs access to your camera to scan QR codes.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Allow $(APP_NAME) to use FaceID.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow $(APP_NAME) to use location.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexMono-Regular.ttf</string>

@@ -8,6 +8,8 @@ def node_require(script)
     )", __dir__]).strip
 end
 
+$VCEnableLocation = false
+
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
