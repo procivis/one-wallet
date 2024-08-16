@@ -12,26 +12,30 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/Procivis Wallet.app',
+      binaryPath:
+        'ios/build/Build/Products/Debug-iphonesimulator/Procivis Wallet.app',
       build:
-        'cross-env RN_SRC_EXT=e2e.tsx xcodebuild -workspace ios/Wallet.xcworkspace -scheme Wallet -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+        'cross-env RN_DETOX_BUILD=1 xcodebuild -workspace ios/Wallet.xcworkspace -scheme Wallet -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'ios.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/Procivis Wallet.app',
+      binaryPath:
+        'ios/build/Build/Products/Release-iphonesimulator/Procivis Wallet.app',
       build:
-        'cross-env RN_SRC_EXT=e2e.tsx xcodebuild -workspace ios/Wallet.xcworkspace -scheme Wallet -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
+        'cross-env RN_DETOX_BUILD=1 xcodebuild -workspace ios/Wallet.xcworkspace -scheme Wallet -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'android.debug': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
-      build: 'cd android && cross-env RN_SRC_EXT=e2e.tsx ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
+      build:
+        'cd android && cross-env RN_DETOX_BUILD=1 ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
       reversePorts: [8081],
     },
     'android.release': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
-      build: 'cd android && cross-env RN_SRC_EXT=e2e.tsx ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
+      build:
+        'cd android && cross-env RN_DETOX_BUILD=1 ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
     },
   },
   devices: {
