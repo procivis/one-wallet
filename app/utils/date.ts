@@ -3,7 +3,7 @@ import {
   formatDateTime,
 } from '@procivis/one-react-native-components';
 import I18n from 'i18n-js';
-import { Platform } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { format } from 'timeago.js';
 
 import { translate } from '../i18n';
@@ -108,4 +108,18 @@ export const formatDateOnlyFromUTCTimestamp = (
       ),
     ) ?? ''
   );
+};
+
+const locale = (
+  Platform.OS === 'ios'
+    ? NativeModules.SettingsManager.settings.AppleLocale
+    : NativeModules.I18nManager.localeIdentifier
+).replace('_', '-');
+
+export const formatDateTimeLocalized = (date: Date) => {
+  return formatDateTime(date, locale);
+};
+
+export const formatDateLocalized = (date: Date) => {
+  return formatDate(date, locale);
 };

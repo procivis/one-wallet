@@ -2,7 +2,6 @@ import {
   BackButton,
   DataItem,
   EntityCluster,
-  formatDateTime,
   HistoryStatusIcon,
   HistoryStatusIconType,
   ScrollViewScreen,
@@ -30,6 +29,7 @@ import {
   HistoryRouteProp,
 } from '../../navigators/history/history-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { formatDateTimeLocalized } from '../../utils/date';
 import { nonEmptyFilter } from '../../utils/filtering';
 import { getEntryTitle } from '../../utils/history';
 import {
@@ -197,7 +197,7 @@ export const HistoryDetailScreen: FC = () => {
         )}
         <DataItem
           attribute={translate('historyDetail.date')}
-          value={formatDateTime(new Date(entry.createdDate)) ?? ''}
+          value={formatDateTimeLocalized(new Date(entry.createdDate)) ?? ''}
         />
         <DataItem
           attribute={translate('historyDetail.type')}
