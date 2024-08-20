@@ -1,5 +1,4 @@
 import {
-  formatDateTime,
   NerdModeItemProps,
   NerdModeScreen,
   useMemoAsync,
@@ -13,6 +12,7 @@ import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useONECore } from '../../hooks/core/core-context';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+import { formatDateTimeLocalized } from '../../utils/date';
 
 const AppInformationNerdScreen: FC = () => {
   const navigation =
@@ -41,7 +41,7 @@ const AppInformationNerdScreen: FC = () => {
   const coreVersion = coreInfo ? `v${coreInfo.pipelineId}` : undefined;
   const coreRev = coreInfo?.tag || coreInfo?.commit;
   const coreBuildDate = coreInfo
-    ? formatDateTime(new Date(coreInfo.buildTime))
+    ? formatDateTimeLocalized(new Date(coreInfo.buildTime))
     : undefined;
   const coreFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>

@@ -3,7 +3,6 @@ import {
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
   CredentialValidIcon,
-  formatDateTime,
   NerdModeItemProps,
   NerdModeScreen,
   Typography,
@@ -25,6 +24,7 @@ import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { addElementIf } from '../../utils/array';
 import { getCredentialSchemaWithoutImages } from '../../utils/credential';
+import { formatDateTimeLocalized } from '../../utils/date';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
@@ -125,7 +125,9 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.dateAdded'),
-      attributeText: formatDateTime(new Date(credentialDetail?.createdDate)),
+      attributeText: formatDateTimeLocalized(
+        new Date(credentialDetail?.createdDate),
+      ),
       testID: 'dateAdded',
     },
     {
