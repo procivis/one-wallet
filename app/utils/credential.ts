@@ -7,8 +7,6 @@ import {
   CredentialErrorIcon,
   CredentialHeaderProps,
   CredentialWarningIcon,
-  formatDate,
-  formatDateTime,
 } from '@procivis/one-react-native-components';
 import {
   Claim,
@@ -24,6 +22,7 @@ import {
 
 import { translate } from '../i18n';
 import { getCarouselImagesFromClaims } from './credential-images';
+import { formatDateLocalized, formatDateTimeLocalized } from './date';
 
 export enum ValidityState {
   Revoked = 'revoked',
@@ -93,7 +92,7 @@ const formatCredentialDetail = (claim: Claim, config?: Config) => {
   const typeConfig = config?.datatype[claim.dataType];
 
   if (typeConfig?.type === DataTypeEnum.Date) {
-    return formatDate(new Date(claim.value as string)) as string;
+    return formatDateLocalized(new Date(claim.value as string)) as string;
   }
 
   return claim.value as string;
@@ -106,7 +105,7 @@ export const cardHeaderFromCredentialListItem = (
   testID?: string,
 ): Omit<CredentialHeaderProps, 'style'> => {
   let credentialDetailPrimary =
-    formatDateTime(new Date(credential.issuanceDate)) ?? '';
+    formatDateTimeLocalized(new Date(credential.issuanceDate)) ?? '';
 
   let credentialDetailSecondary: string | undefined;
   let credentialDetailErrorColor: boolean | undefined;
@@ -119,7 +118,7 @@ export const cardHeaderFromCredentialListItem = (
     case CredentialStateEnum.SUSPENDED:
       credentialDetailPrimary = credential.suspendEndDate
         ? translate('credentialDetail.validity.suspendedUntil', {
-            date: formatDateTime(new Date(credential.suspendEndDate)),
+            date: formatDateTimeLocalized(new Date(credential.suspendEndDate)),
           })
         : translate('credentialDetail.validity.suspended');
       credentialDetailTestID = concatTestID(testID, 'suspended');
@@ -256,7 +255,7 @@ const detailsCardAttributeValueFromClaim = (
         const date = claim.value as string;
         return {
           testID: testID,
-          value: formatDate(new Date(date)) ?? date,
+          value: formatDateLocalized(new Date(date)) ?? date,
         };
       }
       case DataTypeEnum.File: {
