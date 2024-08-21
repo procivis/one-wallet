@@ -79,7 +79,7 @@
   "credentialDelete.success.title": "Credential deleted",
   "credentialDelete.title": "Credential deletion",
   "credentialDelete.warning.title": "Deletion failed",
-  "credentialDeletePrompt.confirm.subtitle": "Hold button for %{seconds}s",
+  "credentialDeletePrompt.confirm.subtitle": "Hold for %{seconds} seconds",
   "credentialDeletePrompt.confirm.title": "Yes, delete credential",
   "credentialDeletePrompt.subtitle": "Are you sure you want to delete this credential?",
   "credentialDetail.action.delete": "Delete credential",
