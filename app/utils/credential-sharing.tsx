@@ -137,11 +137,11 @@ const getAttributeSelectorStatus = (
 // Returns a spread list of all claims with their full JSON path as key, including all intermediate objects
 const spreadClaims = (claims: Claim[], parentClaimPath = ''): Claim[] => {
   return claims.reduce((acc, claim) => {
-    const claimPath = parentClaimPath
-      ? `${parentClaimPath}/${claim.key}`
-      : claim.key;
-    const result = [{ ...claim, key: claimPath }];
+    const result = [claim];
     if (Array.isArray(claim.value)) {
+      const claimPath = parentClaimPath
+        ? `${parentClaimPath}/${claim.key}`
+        : claim.key;
       result.push(...spreadClaims(claim.value, claimPath));
     }
     return [...acc, ...result];
