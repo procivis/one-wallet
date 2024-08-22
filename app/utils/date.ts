@@ -114,7 +114,9 @@ const locale = (
   Platform.OS === 'ios'
     ? NativeModules.SettingsManager.settings.AppleLocale
     : NativeModules.I18nManager.localeIdentifier
-).replace('_', '-');
+)
+  .split('@')[0]
+  .replace('_', '-');
 
 export const formatDateTimeLocalized = (date: Date) => {
   return formatDateTime(date, locale);
