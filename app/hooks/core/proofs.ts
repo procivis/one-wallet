@@ -71,3 +71,16 @@ export const useProofReject = () => {
     },
   );
 };
+
+export const useProposeProof = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async () => ({ shareUrl: 'this is a very fake qr code' }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
+      },
+    },
+  );
+};
