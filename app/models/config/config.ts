@@ -8,6 +8,7 @@ export interface BackendConfiguration {
 }
 
 export interface FeatureFlags {
+  isoMdl: boolean;
   localization: boolean;
 }
 
