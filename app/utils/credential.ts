@@ -88,8 +88,14 @@ export const findClaimByPath = (
   claims: Claim[] | undefined,
 ) => (path ? findClaimByPathParts(path.split('/'), claims) : undefined);
 
-const formatCredentialDetail = (claim: Claim, config?: Config) => {
+const formatCredentialDetail = (claim: Claim, config?: Config): string => {
   const typeConfig = config?.datatype[claim.dataType];
+
+  if (claim.array) {
+    return (claim.value as Claim[])
+      .map((c) => formatCredentialDetail(c, config))
+      .join(', ');
+  }
 
   if (typeConfig?.type === DataTypeEnum.Date) {
     return formatDateLocalized(new Date(claim.value as string)) as string;
@@ -232,7 +238,10 @@ const detailsCardAttributeValueFromClaim = (
     return {
       values: claim.value.map((arrayValue, index) => {
         return detailsCardAttributeFromClaim(
-          arrayValue,
+          {
+            ...arrayValue,
+            id: `${arrayValue.id}/${index}`,
+          },
           config,
           concatTestID(testID, index.toString()),
         );
