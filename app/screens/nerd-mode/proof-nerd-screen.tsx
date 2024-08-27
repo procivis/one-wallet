@@ -10,14 +10,9 @@ import React, { FunctionComponent } from 'react';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
+import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-
-enum ProcivisExchangeProtocol {
-  MDL = 'MDL',
-  OPENID4VC = 'OPENID4VC',
-  PROCIVIS = 'PROCIVIS_TEMPORARY',
-}
 
 const isProcivisProtocol = (
   protocol: string,

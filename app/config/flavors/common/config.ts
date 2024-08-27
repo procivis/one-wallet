@@ -2,7 +2,7 @@ import { Configuration } from '../../../models/config/config';
 
 export const commonConfig: Pick<Configuration, 'featureFlags'> = {
   featureFlags: {
-    isoMdl: false,
+    isoMdl: true,
     localization: true,
   },
 };
