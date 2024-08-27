@@ -270,7 +270,7 @@
   "proofRequest.attributes": "Angeforderte Attribute",
   "proofRequest.confirm": "Teilen",
   "proofRequest.createDate": "Erstellt am",
-  "proofRequest.exchange.MDL": "ISO mDL",
+  "proofRequest.exchange.ISO_MDL": "ISO mDL",
   "proofRequest.exchange.OPENID4VC": "OpenID4VC",
   "proofRequest.exchange.PROCIVIS_TEMPORARY": "Procivis",
   "proofRequest.invalidCredential.notice": "Die Gültigkeit des Nachweises konnte nicht bestätigt werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
