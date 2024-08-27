@@ -7,7 +7,7 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
+import { OneError, ProofStateEnum } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
@@ -16,20 +16,26 @@ import { RESULTS } from 'react-native-permissions';
 import BleWarning from '../../components/ble/ble-warning';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useBlePermissions } from '../../hooks/ble-permissions';
-import { useProposeProof } from '../../hooks/core/proofs';
+import { useProofState, useProposeProof } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
+import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
 
 const QRCodeShareScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeShare'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const isFocused = useIsFocused();
   const { mutateAsync: proposeProof } = useProposeProof();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions();
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
   const [shareUrl, setShareUrl] = useState<string>();
+  const [proofId, setProofId] = useState<string>();
+  const [interactionId, setInteractionId] = useState<string>();
+  const { data: proofState } = useProofState(proofId, true);
 
   useEffect(() => {
     if (permissionStatus !== 'granted') {
@@ -48,9 +54,11 @@ const QRCodeShareScreen: FunctionComponent = () => {
     if (adapterDisabled) {
       return;
     }
-    proposeProof()
+    proposeProof(ProcivisExchangeProtocol.ISO_MDL)
       .then((result) => {
-        setShareUrl(result.shareUrl);
+        setProofId(result.proofId);
+        setInteractionId(result.interactionId);
+        setShareUrl(result.url);
       })
       .catch((e: OneError) => {
         if (e.message.includes('adapter is disabled')) {
@@ -74,6 +82,21 @@ const QRCodeShareScreen: FunctionComponent = () => {
       <ActivityIndicator color={colorScheme.accent} size={42} />
     );
   }, [adapterDisabled, permissionStatus, shareUrl, colorScheme.accent]);
+
+  useEffect(() => {
+    if (!proofId || !interactionId || !proofState) {
+      return;
+    }
+    if (proofState === ProofStateEnum.REQUESTED) {
+      rootNavigation.navigate('CredentialManagement', {
+        params: {
+          params: { request: { interactionId, proofId } },
+          screen: 'ProofRequest',
+        },
+        screen: 'ShareCredential',
+      });
+    }
+  }, [interactionId, proofId, proofState, rootNavigation]);
 
   const testID = 'QRCodeShareScreen';
 
