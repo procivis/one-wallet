@@ -32,7 +32,9 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const route = useRoute<DeleteCredentialRouteProp<'Processing'>>();
   const [error, setError] = useState<unknown>();
 
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const { credentialId } = route.params;
   const { mutateAsync: deleteCredential } = useCredentialDelete();
 

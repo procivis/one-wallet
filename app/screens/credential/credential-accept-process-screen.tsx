@@ -39,7 +39,9 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const { credentialId, interactionId } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
