@@ -1,4 +1,5 @@
 import {
+  formatTime,
   HistoryListItem,
   HistorySectionHeader as HistorySectionHeaderView,
   useAppColorScheme,
@@ -56,8 +57,6 @@ export const HistorySectionItem: FC<HistorySectionItemProps> = ({
 }) => {
   const colorScheme = useAppColorScheme();
   const { label, icon } = getHistoryItemLabelAndIconForAction(item);
-  const time = moment(item.createdDate);
-  const timeLabel = time.format('H:mm');
 
   const pressHandler = useCallback(() => {
     onPress?.(item);
@@ -76,10 +75,11 @@ export const HistorySectionItem: FC<HistorySectionItemProps> = ({
         icon={icon}
         info={item.did ?? ''}
         label={label}
+        last={last}
         onPress={pressHandler}
         style={style}
         testID={testID}
-        time={timeLabel}
+        time={formatTime(new Date(item.createdDate)) ?? ''}
       />
     </View>
   );
