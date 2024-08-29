@@ -27,7 +27,9 @@ const ProcessingScreen: FC = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure();
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const [error, setError] = useState<unknown>();
   const dismissed = useRef(false);
 

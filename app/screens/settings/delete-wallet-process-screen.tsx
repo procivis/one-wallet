@@ -29,7 +29,9 @@ import { reportException, reportTraceInfo } from '../../utils/reporting';
 const DeleteWalletProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const isFocused = useIsFocused();
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const { core, initialize } = useONECore();
   const queryClient = useQueryClient();
   const [error, setError] = useState<unknown>();

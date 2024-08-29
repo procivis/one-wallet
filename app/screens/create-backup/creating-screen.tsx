@@ -36,7 +36,9 @@ const CreatingScreen: FC = () => {
   const {
     params: { password },
   } = useRoute<CreateBackupProcessingRouteProp<'Creating'>>();
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const { mutateAsync: createBackup } = useCreateBackup();
   const [error, setError] = useState<unknown>();
 

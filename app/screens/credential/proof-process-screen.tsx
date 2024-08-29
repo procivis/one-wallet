@@ -38,7 +38,9 @@ const ProofProcessScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
-  const [state, setState] = useState(LoaderViewState.InProgress);
+  const [state, setState] = useState<
+    Exclude<LoaderViewState, LoaderViewState.Error>
+  >(LoaderViewState.InProgress);
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
