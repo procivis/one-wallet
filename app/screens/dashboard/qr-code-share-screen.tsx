@@ -30,7 +30,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const { mutateAsync: proposeProof } = useProposeProof();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions();
+    useBlePermissions(ProcivisExchangeProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
   const [shareUrl, setShareUrl] = useState<string>();
   const [proofId, setProofId] = useState<string>();
