@@ -32,6 +32,7 @@ const DeleteWalletScreen: FunctionComponent = () => {
         leftItem: HeaderBackButton,
         title: translate('deleteWalletScreen.title'),
       }}
+      style={{ backgroundColor: colorScheme.white }}
       testID="DeleteWalletScreen"
     >
       <View style={styles.contentWrapper}>
@@ -42,7 +43,10 @@ const DeleteWalletScreen: FunctionComponent = () => {
         <View style={styles.bottom}>
           <Checkbox
             onValueChanged={setConfirmation}
-            style={[styles.checkbox, { backgroundColor: colorScheme.grayDark }]}
+            style={[
+              styles.checkbox,
+              { backgroundColor: colorScheme.background },
+            ]}
             testID="DeleteWalletScreen.checkbox"
             text={translate('deleteWalletScreen.confirm')}
             value={confirmation}
