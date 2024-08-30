@@ -27,6 +27,7 @@ import {
 } from '../../hooks/ble-permissions';
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
+import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -46,7 +47,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions();
+    useBlePermissions(ProcivisExchangeProtocol.OPENID4VC);
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
   const { openAppPermissionSettings, openBleSettings } = useOpenBleSettings();
