@@ -17,6 +17,7 @@ import {
   SectionListProps,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native';
 
@@ -129,6 +130,13 @@ const DashboardScreen: FunctionComponent = observer(() => {
       return null;
     }
     return <ListSectionHeader title={section.title} />;
+  };
+
+  const renderSettingsSectionFooter: SectionListProps<
+    SettingsListItem,
+    ListSectionHeaderProps
+  >['renderSectionFooter'] = () => {
+    return <View style={styles.sectionFooter} />;
   };
 
   const renderSettingsItem: SectionListProps<
@@ -275,6 +283,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
       list={{
         ItemSeparatorComponent: SettingItemSeparator,
         renderItem: renderSettingsItem,
+        renderSectionFooter: renderSettingsSectionFooter,
         renderSectionHeader: renderSettingsSectionHeader,
         sections,
         testID: 'SettingsScreen.content',
@@ -292,6 +301,9 @@ const styles = StyleSheet.create({
   sectionFirstItem: {
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+  },
+  sectionFooter: {
+    height: 24,
   },
   sectionLastItem: {
     borderBottomLeftRadius: 12,
