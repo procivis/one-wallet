@@ -12,7 +12,13 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 
-const permissions =
+import { ProcivisExchangeProtocol } from '../models/proofs';
+
+type BLEExchange =
+  | ProcivisExchangeProtocol.OPENID4VC
+  | ProcivisExchangeProtocol.ISO_MDL;
+
+const centralPermissions =
   Platform.OS === 'android'
     ? Platform.Version > 30
       ? [
@@ -27,9 +33,27 @@ const permissions =
         ] as AndroidPermission[])
     : [PERMISSIONS.IOS.BLUETOOTH];
 
-export const useBlePermissions = () => {
+const peripheralPermissions =
+  Platform.OS === 'android'
+    ? Platform.Version > 30
+      ? [
+          PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE,
+          PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+        ]
+      : ([
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+        ] as AndroidPermission[])
+    : [PERMISSIONS.IOS.BLUETOOTH];
+
+export const useBlePermissions = (exchange: BLEExchange) => {
   const [interactiveStatus, setInteractiveStatus] =
     useState<PermissionStatus>();
+
+  const permissions =
+    exchange === ProcivisExchangeProtocol.OPENID4VC
+      ? centralPermissions
+      : peripheralPermissions;
 
   const initialStatus = useMemoAsync(async () => {
     const statuses = await checkMultiple(permissions);
@@ -45,7 +69,7 @@ export const useBlePermissions = () => {
     if (result !== status) {
       setInteractiveStatus(getStrictestResult(Object.values(statuses)));
     }
-  }, [status]);
+  }, [permissions, status]);
 
   const requestPermission = useCallback(async () => {
     if (status !== RESULTS.DENIED) {
@@ -56,7 +80,7 @@ export const useBlePermissions = () => {
     if (summary !== status) {
       setInteractiveStatus(getStrictestResult(Object.values(results)));
     }
-  }, [status]);
+  }, [permissions, status]);
 
   return { checkPermissions, permissionStatus: status, requestPermission };
 };
