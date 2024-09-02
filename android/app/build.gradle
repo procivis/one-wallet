@@ -58,7 +58,7 @@ apply from: "../../node_modules/react-native-ultimate-config/android/rnuc.gradle
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+ext.enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -81,6 +81,11 @@ def jscFlavor = 'org.webkit:android-jsc-intl:+'
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+}
+
+def proguardEnabled() {
+    def isDetoxBuild = System.getenv('RN_DETOX_BUILD') == "1"
+    return isDetoxBuild ? false : enableProguardInReleaseBuilds
 }
 
 android {
@@ -124,9 +129,8 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
+            minifyEnabled proguardEnabled()
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
 
