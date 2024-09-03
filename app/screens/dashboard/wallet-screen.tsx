@@ -107,11 +107,10 @@ const WalletScreen: FunctionComponent = observer(() => {
     [],
   );
   useEffect(() => {
+    //@ts-ignore - typing issue related to searchText / searchType.
     handleSearchPhraseChange((prev) => ({
       ...prev,
       name: searchPhrase || undefined,
-      searchType: undefined,
-      searchText: undefined,
     }));
   }, [handleSearchPhraseChange, searchPhrase]);
 
