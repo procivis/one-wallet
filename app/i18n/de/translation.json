@@ -295,7 +295,7 @@
   "proofRequest.selectiveDisclosure.notice": "Dieser Nachweis erfordert, dass Sie alle Attribute teilen.",
   "proofRequest.suspendedCredential.notice": "Ihre Nachweise wurden von der ausstellenden Behörde suspendiert. Bitte wenden Sie sich an die ausstellende Behörde, um mehr zu erfahren.",
   "proofRequest.suspendedCredential.title": "Suspendiert",
-  "proofRequest.title": "Data teilen",
+  "proofRequest.title": "Nachweis teilen",
   "proofRequest.unknownVerifier": "Unbekannter Überprüfer",
   "proofRequest.verifierDid": "Überprüfer DID",
   "restoreBackup.dashboard.cta": "Fortsetzen",
