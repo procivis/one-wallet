@@ -66,7 +66,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       requestPermission();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [!permissionStatus]);
 
   useEffect(() => {
     if (isBleInteraction && isFocused) {
