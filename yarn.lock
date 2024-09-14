@@ -2890,12 +2890,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-one-core@npm:1.23859.0":
-  version: 1.23859.0
-  resolution: "@procivis/react-native-one-core@npm:1.23859.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.23859.0.tgz"
+"@procivis/react-native-one-core@npm:1.23910.0":
+  version: 1.23910.0
+  resolution: "@procivis/react-native-one-core@npm:1.23910.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.23910.0.tgz"
   peerDependencies:
     react-native: "*"
-  checksum: ea8e0e4c84fe122029e4e33217a701eea577344dfecccfa8297394854967160d1cab09b0bcac844d6469f7cea1ffc4d2210a40bcb79e6799d5809a77e1a9e3af
+  checksum: d6638aec6f28295f71cb3bfc20ce2ce36809d1def8630da57d96f267e736517c45debfc57f3d8cb6f54e901d89b4cda926c73376f55c0ec79c346dcf533b9c4f
   languageName: node
   linkType: hard
 
@@ -12444,7 +12444,7 @@ __metadata:
     "@expo/react-native-action-sheet": "npm:^3.13.0"
     "@procivis/one-react-native-components": "npm:0.1.35"
     "@procivis/react-native-components": "npm:0.1.23"
-    "@procivis/react-native-one-core": "npm:1.23859.0"
+    "@procivis/react-native-one-core": "npm:1.23910.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-clipboard/clipboard": "npm:1.14.0"
