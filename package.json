@@ -1,7 +1,11 @@
 {
   "name": "one-wallet",
   "version": "0.0.1",
-  "private": true,
+  "author": "Procivis AG (https://procivis.ch)",
+  "license": "Apache-2.0",
+  "description": "ONE Wallet React Native App",
+  "homepage": "https://procivis.ch",
+
   "scripts": {
     "start": "react-native start",
     "ios": "react-native run-ios",
