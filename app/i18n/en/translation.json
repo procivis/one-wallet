@@ -295,7 +295,7 @@
   "proofRequest.selectiveDisclosure.notice": "This credential requires you to share all attributes to work.",
   "proofRequest.suspendedCredential.notice": "Your credential(s) have been suspended by the issuing authority. Please contact the issuing authority to learn more.",
   "proofRequest.suspendedCredential.title": "Suspended",
-  "proofRequest.title": "Share data",
+  "proofRequest.title": "Share credential",
   "proofRequest.unknownVerifier": "Unknown verifier",
   "proofRequest.verifierDid": "Verifier DID",
   "restoreBackup.dashboard.cta": "Continue",
