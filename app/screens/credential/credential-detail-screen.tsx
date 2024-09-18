@@ -9,7 +9,6 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   HistoryEntityTypeEnum,
   HistoryListItem,
@@ -20,7 +19,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { HistoryItem } from '../../components/history/history-item';
 import {

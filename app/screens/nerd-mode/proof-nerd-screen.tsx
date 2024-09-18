@@ -2,10 +2,10 @@ import {
   NerdModeItemProps,
   NerdModeScreen,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useProofDetail } from '../../hooks/core/proofs';

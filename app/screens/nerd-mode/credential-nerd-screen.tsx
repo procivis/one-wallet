@@ -8,14 +8,13 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialDetail,
   CredentialStateEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';

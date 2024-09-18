@@ -7,10 +7,15 @@ import {
   useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
-import { Alert, Platform, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import {
   HeaderCloseModalButton,

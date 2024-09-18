@@ -6,7 +6,6 @@ import {
   ScrollViewScreen,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialStateEnum,
   PresentationDefinitionField,
@@ -25,7 +24,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,

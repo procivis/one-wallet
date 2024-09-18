@@ -12,7 +12,6 @@ import {
   useAppColorScheme,
   useListContentInset,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import {
   CredentialListIncludeEntityType,
   CredentialListItem,
@@ -30,6 +29,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  ActivityIndicator,
   ActivityIndicator as LoadingIndicator,
   Animated,
   SectionListRenderItemInfo,
