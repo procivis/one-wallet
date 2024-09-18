@@ -1,7 +1,7 @@
 import {
   ErrorScreen,
   ErrorScreenVariation,
-} from '@procivis/react-native-components';
+} from '@procivis/one-react-native-components';
 import React from 'react';
 
 import { translate } from '../../i18n';
