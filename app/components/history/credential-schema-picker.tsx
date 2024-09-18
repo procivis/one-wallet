@@ -1,9 +1,9 @@
 import {
+  ActionModal,
   Button,
   ButtonType,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { ActionModal } from '@procivis/react-native-components';
 import { CredentialSchema } from '@procivis/react-native-one-core';
 import React, { FC, useCallback } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
