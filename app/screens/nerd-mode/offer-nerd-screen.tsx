@@ -2,9 +2,9 @@ import {
   NerdModeItemProps,
   NerdModeScreen,
 } from '@procivis/one-react-native-components';
-import { ActivityIndicator } from '@procivis/react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';

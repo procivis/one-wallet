@@ -82,7 +82,12 @@
       "error",
       {
         "selector": "property",
-        "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
+        "format": [
+          "camelCase",
+          "PascalCase",
+          "snake_case",
+          "UPPER_CASE"
+        ],
         "leadingUnderscore": "allow"
       }
     ],
@@ -95,20 +100,19 @@
         "paths": [
           {
             "name": "react-native",
-            "importNames": ["SafeAreaView"],
+            "importNames": [
+              "SafeAreaView"
+            ],
             "message": "Please use SafeAreaView from 'react-native-safe-area-context' instead."
-          },
-          {
-            "name": "@procivis/react-native-components",
-            "importNames": ["BackButton"],
-            "message": "Please use the accessible wrapper version from components"
           },
           {
             "name": "@react-navigation/core",
             "message": "Please use '@react-navigation/native'"
           }
         ],
-        "patterns": ["**/theme/flavors/**/*"]
+        "patterns": [
+          "**/theme/flavors/**/*"
+        ]
       }
     ],
     "sort-keys": "off",
