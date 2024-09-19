@@ -123,6 +123,7 @@ const getAttributeSelectorStatus = (
   field: PresentationDefinitionField,
   validityState: ValidityState,
   credential?: CredentialDetail,
+  claim?: Claim,
   selected?: boolean,
 ): SelectorStatus => {
   if (!credential || validityState !== ValidityState.Valid) {
@@ -130,6 +131,13 @@ const getAttributeSelectorStatus = (
   }
   if (field.required) {
     return SelectorStatus.Required;
+  }
+  if (!claim) {
+    if (field.required) {
+      return SelectorStatus.Rejected;
+    } else {
+      return SelectorStatus.Disabled;
+    }
   }
   return selected ? SelectorStatus.SelectedCheckmark : SelectorStatus.Empty;
 };
@@ -165,18 +173,18 @@ const getDisplayedAttributes = (
 
   return request.fields.map((field) => {
     const selected = !field.required && selectedFields?.includes(field.id);
-    const status = getAttributeSelectorStatus(
-      field,
-      validityState,
-      credential,
-      selected,
-    );
-
     const claim =
       credential &&
       spreadClaims(credential.claims).find(({ key }) => {
         return key === field.keyMap[credential.id];
       });
+    const status = getAttributeSelectorStatus(
+      field,
+      validityState,
+      credential,
+      claim,
+      selected,
+    );
     return { claim, field, id: field.id, selected, status };
   });
 };
@@ -279,7 +287,7 @@ export const shareCredentialCardFromCredential = (
 
   const attributes: CredentialAttribute[] = displayedAttributes.map(
     ({ claim, field, id, selected, status }, index) => {
-      const disabled = !credential || !field || field.required;
+      const disabled = !credential || !field || field.required || !claim;
       const attribute: CredentialAttribute = {
         ...shareCredentialCardAttributeFromClaim(id, claim, field, config),
         selected,
