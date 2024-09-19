@@ -176,7 +176,6 @@ export default function CredentialCard(testID: string) {
       ) => Promise<void>,
     ) {
       for (const attribute of attributes) {
-        console.log('attribute', attribute);
         await scrollTo?.(this.attribute(attribute.index).element, 'down', 0.5);
         await this.verifyAttributeValue(
           attribute.index,
