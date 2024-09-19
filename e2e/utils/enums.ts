@@ -1,5 +1,6 @@
 export enum KeyType {
-  BBS = 'BBS+',
+  BBS_PLUS = 'BBS_PLUS',
+  DILITHIUM = 'DILITHIUM',
   EDDSA = 'EDDSA',
   ES256 = 'ES256',
 }
@@ -49,6 +50,7 @@ export enum CredentialFormat {
   JSON_LD_CLASSIC = 'JSON_LD_CLASSIC',
   JWT = 'JWT',
   MDOC = 'MDOC',
+  PHYSICAL_CARD = 'PHYSICAL_CARD',
   SDJWT = 'SDJWT',
 }
 
