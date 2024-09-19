@@ -143,12 +143,12 @@ export const mDocCredentialClaims = (
     },
     {
       claimId: mdocSchema.claims![2].claims![0].claims![1].id,
-      path: 'Data/Categories/1/Expired',
+      path: 'Data/Categories/0/Expired',
       value: '2026-09-29T21:00:00.000Z',
     },
     {
       claimId: mdocSchema.claims![2].claims![0].claims![0].id,
-      path: 'Data/Categories/0/Category',
+      path: 'Data/Categories/1/Category',
       value: 'B',
     },
     {
