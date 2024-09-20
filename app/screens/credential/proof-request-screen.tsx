@@ -251,7 +251,10 @@ const ProofRequestScreen: FunctionComponent = () => {
             id === selection.credentialId &&
             state === CredentialStateEnum.ACCEPTED,
         ),
-    );
+    ) &&
+    Object.values(selectedCredentials).flatMap(
+      (credential) => credential?.submitClaims ?? [],
+    ).length > 0;
 
   return (
     <ScrollViewScreen
