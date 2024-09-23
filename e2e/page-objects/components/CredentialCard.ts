@@ -147,14 +147,42 @@ export default function CredentialCard(testID: string) {
       await this.verifyCarouselIsVisible();
       await this.body.carousel.element.swipe(direction);
     },
-    verifyAttributeValue: async function (key: string, value: string) {
-      await expect(this.attribute(key).value).toHaveText(value);
+    verifyAttributeValue: async function (
+      index: string,
+      title: string,
+      value?: string,
+      image?: boolean,
+    ) {
+      await expect(this.attribute(index).title).toHaveText(title);
+      if (image) {
+        await expect(this.attribute(index).image).toBeVisible();
+      } else if (value) {
+        await expect(this.attribute(index).value).toHaveText(value);
+      } else {
+        throw new Error('Attribute value or image must be provided');
+      }
     },
     verifyAttributeValues: async function (
-      attributes: Array<{ key: string; value: string }>,
+      attributes: Array<{
+        image?: boolean;
+        index: string;
+        key: string;
+        value?: string;
+      }>,
+      scrollTo?: (
+        element: Detox.IndexableNativeElement,
+        direction: 'up' | 'down',
+        startPositionY: number,
+      ) => Promise<void>,
     ) {
       for (const attribute of attributes) {
-        await this.verifyAttributeValue(attribute.key, attribute.value);
+        await scrollTo?.(this.attribute(attribute.index).element, 'down', 0.5);
+        await this.verifyAttributeValue(
+          attribute.index,
+          attribute.key,
+          attribute.value,
+          attribute.image,
+        );
       }
     },
     verifyCardBackgroundColor: async function (backgroundColor: string) {
