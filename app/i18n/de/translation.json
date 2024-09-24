@@ -123,7 +123,7 @@
   "credentialDetail.status.SUSPENDED": "Suspendiert",
   "credentialDetail.validity.revoked": "Zurückgezogen",
   "credentialDetail.validity.suspended": "Suspendiert",
-  "credentialDetail.validity.suspendedUntil": "Suspendiert bis {date}",
+  "credentialDetail.validity.suspendedUntil": "Suspendiert bis %{date}",
   "credentialDetail.validity.valid": "Gültig",
   "credentialHistory.accepted": "Nachweis ausgestellt",
   "credentialHistory.offerError": "Nachweisausstellung fehlgeschlagen",
