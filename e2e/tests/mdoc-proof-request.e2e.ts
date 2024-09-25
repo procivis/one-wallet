@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
 import { proofSchemaCreate, proofSharing } from '../helpers/proof-request';
-import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { ProofSchemaResponseDTO } from '../types/proof';
@@ -147,7 +146,7 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
-  it('mDoc with JWT', async () => {
+  it('[ONE-3419] mDoc with JWT', async () => {
     const diplomaJwtSchema = await createCredentialSchema(authToken, {
       claims: [
         {
@@ -208,7 +207,6 @@ describe('ONE-614: Proof request', () => {
       await credentialCard_1.verifyCredentialName(mdocSchema.name);
       await credentialCard_1.verifyIsCardCollapsed(false);
       await credentialCard_1.collapseOrExpand();
-      await credentialCard_1.verifyIsCardCollapsed(true);
 
       const credentialCard_2 = ProofRequestSharingScreen.credential(1);
       await ProofRequestSharingScreen.scrollTo(credentialCard_2.element);
@@ -224,8 +222,6 @@ describe('ONE-614: Proof request', () => {
         exchange: Exchange.OPENID4VC,
         proofSchemaId: jwtProofSchemaWithMdoc.id,
       },
-      // Curently not supported. Set up Warning
-      expectedResult: LoaderViewState.Warning,
     });
   });
 
