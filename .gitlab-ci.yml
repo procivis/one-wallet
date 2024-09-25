@@ -1,5 +1,10 @@
 image: node:18.16.0-alpine
 
+include:
+  - project: "procivis/one/one-operations"
+    file:
+      - "gitlab/github.gitlab-ci.yml"
+
 stages:
   - prepare
   - test
@@ -8,6 +13,7 @@ stages:
   - build
   - e2e_tests
   - license
+  - github
 
 variables:
   # ONE-wallet project on Bitrise
@@ -16,6 +22,9 @@ variables:
   YARN_NPM_AUTH_TOKEN: ${CI_JOB_TOKEN}
   CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   RELEASE_BRANCH_PATTERN: /^release-v\d+\.\d+$/
+  GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
+  GITHUB_PROJECT: "procivis/one-wallet"
+
 
 workflow:
   rules:
@@ -30,7 +39,7 @@ workflow:
 
 .only_main_or_tag:
   rules:
-    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN || $CI_COMMIT_TAG =~ $GITHUB_TAG_PATTERN
     - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
     - when: never
 
@@ -247,6 +256,7 @@ e2e:
     FETCH_LICENSE: "true"
     PROJECT: "js"
     PROJECT_PATH: "."
+    AUTHOR: "Procivis"
   extends:
     - .modules_setup
     - .only_main_or_tag
@@ -261,20 +271,23 @@ e2e:
       --api-key ${DEPENDENCY_TRACK_API_KEY}
       --project-name ${DEPENDENCY_TRACK_PROJECT_NAME}
       --project-version ${D_TRACK_PROJECT_VERSION}
+      --author ${AUTHOR}
       ${PROJECT_PATH}
   artifacts:
+    when: always
+    paths:
+      - ${SBOM_FILE_PATH}
     reports:
       cyclonedx:
         - ${SBOM_FILE_PATH}
 
 
 dtrack:android:upload-bom:
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.76.0-0.1
+  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.80.0-0.3
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
-    SBOM_FILE_PATH: "android-bom.json"
+    SBOM_FILE_PATH: "android-sbom.json"
     PROJECT: "java"
-    PROJECT_PATH: "android/"
   extends:
       - .upload_bom
 
@@ -283,7 +296,7 @@ dtrack:ios:upload-bom:
   variables:
     D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
-    SBOM_FILE_PATH: "artifacts/bom.xml"
+    SBOM_FILE_PATH: "artifacts/ios-sbom.xml"
   before_script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
   script:
@@ -310,7 +323,7 @@ dtrack:ios:upload-bom:
 
 dtrack:react-native:upload-bom:
   variables:
-    SBOM_FILE_PATH: "rn-bom.xml"
+    SBOM_FILE_PATH: "react-native-sbom.json"
   extends:
     - .upload_bom
 
@@ -354,6 +367,7 @@ dtrack:react-native:policy_violations:
 
 
 license_generate:
+  stage: license
   image:
     name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.2.0
     entrypoint: [""]
@@ -389,3 +403,25 @@ license_generate:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
+
+
+github:push:
+  extends:
+    - .github:push
+
+github:release:
+  variables:
+    FILES_TO_ATTACH: >-
+      react-native-sbom.json
+      android-sbom.json
+      artifacts/ios-sbom.xml
+  extends:
+    - .github:release
+  needs:
+    - job: github:push
+    - job: dtrack:ios:upload-bom
+      artifacts: true
+    - job: dtrack:android:upload-bom
+      artifacts: true
+    - job: dtrack:react-native:upload-bom
+      artifacts: true
