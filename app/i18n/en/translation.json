@@ -170,6 +170,7 @@
   "errorScreen.friendlySubtitle": "An unexpected error has occurred. Please restart the app.",
   "errorScreen.title": "Something went wrong!",
   "history.action.ACCEPTED": "accepted",
+  "history.action.CLAIMS_REMOVED": "claims removed",
   "history.action.CREATED": "created",
   "history.action.DEACTIVATED": "deactivated",
   "history.action.DELETED": "deleted",
