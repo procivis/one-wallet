@@ -7,20 +7,6 @@
 
 # Installation
 
-### Prerequisites
-
-For using private Procivis registry you need to create [Personal Access token](https://gitlab.procivis.ch/-/profile/personal_access_tokens)
-with `read_api` permissions
-
-- Edit (or create) file `~/.yarnrc.yml` (home directory) with:
-
-```yaml
-npmScopes:
-  procivis:
-    npmRegistryServer: 'https://gitlab.procivis.ch/api/v4/packages/npm/'
-    npmAuthToken: <YOUR_PERSONAL_TOKEN>
-```
-
 # App Flavors
 
 ## Building
@@ -67,6 +53,8 @@ Round icon under `android/src/main/res/minimap-{screen-size}/ic_launcher_{CONFIG
 
 Splashscreen image is added in assets folder under `Splashscreen.{CONFIG_NAME}` image set, and in addition there is a separate Storyboard named `LaunchScreen.{CONFIG_NAME}.storyboard` for each flavor.
 Icons are in asstes folder under `AppIcon.{CONFIG_NAME}` image set.
+
+--- 
 
 ## Detox E2E
 
@@ -115,8 +103,14 @@ Source:
 
 Installation:
 
+- Install `cdxgen`
 ```shell
 npm install -g @cyclonedx/cdxgen
+```
+
+- Install `blint` (python) for generate `android` SBOM (optional)
+```shell
+pip install blint
 ```
 
 - Prepare env
@@ -128,13 +122,11 @@ export FETCH_LICENSE=true
 - ReactNative SBOM
 
 ```shell
-export DEPENDENCY_TRACK_PROJECT_NAME="ONE-Wallet"
-cdxgen --required-only -p -t js -o bom-rn.xml
+cdxgen --required-only -p -t js -o react-native-sbom.json
 ```
 
-- Android SBOM
+- Android (Java) SBOM
 
 ```shell
-export DEPENDENCY_TRACK_PROJECT_NAME="ONE-Wallet-Android"
-cdxgen --required-only -p -t java -o bom-android.xml android/
+cdxgen --required-only -p -t java -o android-sbom.json
 ```
