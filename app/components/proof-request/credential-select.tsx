@@ -110,7 +110,6 @@ export const CredentialSelect: FunctionComponent<{
             align="center"
             color={colorScheme.text}
             preset="s/line-height-capped"
-            style={styles.notice}
           >
             {translate('proofRequest.revokedCredential.notice')}
           </Typography>
@@ -127,7 +126,6 @@ export const CredentialSelect: FunctionComponent<{
             align="center"
             color={colorScheme.text}
             preset="s/line-height-capped"
-            style={styles.notice}
           >
             {translate('proofRequest.suspendedCredential.notice')}
           </Typography>
@@ -145,7 +143,6 @@ export const CredentialSelect: FunctionComponent<{
             align="center"
             color={colorScheme.text}
             preset="s/line-height-capped"
-            style={styles.notice}
           >
             {translate('proofRequest.invalidCredential.notice')}
           </Typography>
