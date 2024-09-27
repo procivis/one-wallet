@@ -74,13 +74,20 @@ const findClaimByPathParts = (
   if (!claims?.length) {
     return undefined;
   }
-  const [first, ...rest] = path;
+  const [first, second, ...rest] = path;
   const claim = claims.find((c) => c.key === first);
-  if (!claim || !rest.length || claim.dataType !== DataTypeEnum.Object) {
+  if (
+    claim === undefined ||
+    second === undefined ||
+    claim.dataType !== DataTypeEnum.Object
+  ) {
     return claim;
   }
 
-  return findClaimByPathParts(rest, claim.value as Claim[]);
+  return findClaimByPathParts(
+    [`${first}/${second}`, ...rest],
+    claim.value as Claim[],
+  );
 };
 
 export const findClaimByPath = (
