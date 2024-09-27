@@ -636,4 +636,43 @@ describe('ONE-601: Credential issuance', () => {
       await expect(card.attribute('2').value).toHaveText('string');
     });
   });
+
+  // Pass
+  describe('ONE-2980: Credentials ordering', () => {
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaSD_JWT,
+        exchange: Exchange.OPENID4VC,
+      });
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT,
+        exchange: Exchange.OPENID4VC,
+      });
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJWT_with_LVVC,
+        exchange: Exchange.OPENID4VC,
+      });
+    });
+
+    it('Wrong share URI', async () => {
+      const schemaNames = [
+        credentialSchemaSD_JWT.name,
+        credentialSchemaJWT.name,
+        credentialSchemaJWT_with_LVVC.name,
+      ].sort();
+
+      const card1 = await WalletScreen.credentialAtIndex(0);
+      await expect(card1.header.name).toHaveText(schemaNames[0]);
+      const card2 = await WalletScreen.credentialAtIndex(1);
+      await expect(card2.header.name).toHaveText(schemaNames[1]);
+      const card3 = await WalletScreen.credentialAtIndex(2);
+      await expect(card3.header.name).toHaveText(schemaNames[2]);
+
+      await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
 });

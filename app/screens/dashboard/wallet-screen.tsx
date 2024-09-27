@@ -17,6 +17,7 @@ import {
   CredentialListItem,
   CredentialListQuery,
   CredentialStateEnum,
+  SortableCredentialColumnEnum,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
@@ -68,6 +69,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
     include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
+    sort: SortableCredentialColumnEnum.SCHEMA_NAME,
     status: [
       CredentialStateEnum.ACCEPTED,
       CredentialStateEnum.SUSPENDED,
