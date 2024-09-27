@@ -15,6 +15,20 @@ export default abstract class WalletScreen {
     return CredentialCard(`WalletScreen.credential.${credentialId}`);
   }
 
+  static async credentialAtIndex(index: number) {
+    const cardAttributes = await element(
+      by.id(/^WalletScreen.credential.[\w-]+.card$/),
+    )
+      .atIndex(index)
+      .getAttributes();
+    const id = (
+      'elements' in cardAttributes
+        ? cardAttributes.elements[0].identifier
+        : cardAttributes.identifier
+    ).replace('.card', '');
+    return CredentialCard(id);
+  }
+
   static async openDetailScreen(
     credentialIdOrName: string,
     atIndex: number = 0,
