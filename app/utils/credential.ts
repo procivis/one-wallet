@@ -229,7 +229,7 @@ export const detailsCardAttributeFromClaim = (
   const value = detailsCardAttributeValueFromClaim(claim, config, testID);
   return {
     id: claim.id,
-    name: claim.key,
+    name: claim.key.split('/').pop(),
     ...value,
   };
 };
