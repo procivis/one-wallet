@@ -170,6 +170,7 @@
   "errorScreen.friendlySubtitle": "Es ist ein unerwarteter Fehler aufgetreten. Bitte starten Sie die App erneut.",
   "errorScreen.title": "Es ist ein Fehler aufgetreten!",
   "history.action.ACCEPTED": "akzeptiert",
+  "history.action.CLAIMS_REMOVED": "Nachweisdaten entfernt",
   "history.action.CREATED": "erstellt",
   "history.action.DEACTIVATED": "deaktiviert",
   "history.action.DELETED": "gelöscht",
