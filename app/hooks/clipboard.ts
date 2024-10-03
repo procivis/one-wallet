@@ -1,5 +1,5 @@
 import { useAppColorScheme } from '@procivis/one-react-native-components';
-import { useClipboard } from '@react-native-clipboard/clipboard';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { useCallback } from 'react';
 // eslint-disable-next-line react-native/split-platform-components
 import { Alert, Platform, ToastAndroid } from 'react-native';
@@ -8,11 +8,10 @@ import { translate } from '../i18n/translate';
 
 export function useCopyToClipboard() {
   const { darkMode } = useAppColorScheme();
-  const [, setClipboard] = useClipboard();
 
   return useCallback(
     (content: string) => {
-      setClipboard(content);
+      Clipboard.setString(content);
       if (Platform.OS === 'android') {
         ToastAndroid.showWithGravity(
           translate('common.copiedToClipboard'),
@@ -33,6 +32,6 @@ export function useCopyToClipboard() {
         );
       }
     },
-    [darkMode, setClipboard],
+    [darkMode],
   );
 }
