@@ -191,6 +191,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           }}
           detailsCardStyle={styles.listItemExpanded}
           expanded={expanded}
+          key={`${index}-${lastItem ? 'last' : ''}`}
           lastItem={lastItem}
           style={styles.listItem}
           testID={testID}
@@ -295,7 +296,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           }
           contentContainerStyle={contentInsetsStyle}
           extraData={expandedCredential}
-          key={locale + (credentials.length === 1 ? 'single' : '')}
+          key={locale}
           keyExtractor={(item) => item.id}
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.1}
