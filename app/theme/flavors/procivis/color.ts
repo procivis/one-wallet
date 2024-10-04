@@ -22,6 +22,7 @@ export const colorScheme: ColorScheme = {
     codeHighlightText: 'rgba(232, 135, 114, 1)',
   },
   success: '#00D066',
+  successText: '#006B34',
   text: '#0D0E10',
   warning: '#F7BF0B',
   white: '#FFFFFF',
