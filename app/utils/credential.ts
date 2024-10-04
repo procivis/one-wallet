@@ -96,19 +96,8 @@ export const findClaimByPath = (
 ) => (path ? findClaimByPathParts(path.split('/'), claims) : undefined);
 
 const formatCredentialDetail = (claim: Claim, config?: Config): string => {
-  const typeConfig = config?.datatype[claim.dataType];
-
-  if (claim.array) {
-    return (claim.value as Claim[])
-      .map((c) => formatCredentialDetail(c, config))
-      .join(', ');
-  }
-
-  if (typeConfig?.type === DataTypeEnum.Date) {
-    return formatDateLocalized(new Date(claim.value as string)) as string;
-  }
-
-  return claim.value as string;
+  const attributeValue = detailsCardAttributeValueFromClaim(claim, config);
+  return attributeValue.value ?? '';
 };
 
 export const cardHeaderFromCredentialListItem = (
