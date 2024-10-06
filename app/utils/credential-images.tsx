@@ -60,6 +60,10 @@ export const getCarouselImagesFromClaims = (
   if (code) {
     const claim = findClaimByPath(code.attribute, claims);
 
+    if (claim && typeof claim.value === 'number') {
+      claim.value = String(claim.value);
+    }
+
     if (!claim || typeof claim.value !== 'string') {
       return result;
     }
