@@ -1,5 +1,6 @@
 export enum KeyType {
-  BBS = 'BBS+',
+  BBS_PLUS = 'BBS_PLUS',
+  DILITHIUM = 'DILITHIUM',
   EDDSA = 'EDDSA',
   ES256 = 'ES256',
 }
