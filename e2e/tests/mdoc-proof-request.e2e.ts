@@ -225,6 +225,242 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
+  it('[ONE-3419] mDoc with SDJWT', async () => {
+    const diplomaSdjwtSchema = await createCredentialSchema(authToken, {
+      claims: [
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Faculty',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Department',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Education',
+          required: true,
+        },
+      ],
+      format: CredentialFormat.SDJWT,
+      name: `University Diploma ${uuidv4()}`,
+      revocationMethod: RevocationMethod.LVVC,
+    });
+    await credentialIssuance({
+      authToken: authToken,
+      credentialSchema: diplomaSdjwtSchema,
+      exchange: Exchange.OPENID4VC,
+    });
+    const sdjwtProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
+      credentialSchemas: [mdocSchema, diplomaSdjwtSchema],
+      proofInputSchemas: [
+        {
+          claimSchemas: [
+            { id: mdocSchema.claims[0].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![2].id, required: true },
+          ],
+          credentialSchemaId: mdocSchema.id,
+        },
+        {
+          claimSchemas: [
+            { id: diplomaSdjwtSchema.claims[0].id, required: true },
+            { id: diplomaSdjwtSchema.claims[1].id, required: true },
+            { id: diplomaSdjwtSchema.claims[2].id, required: true },
+          ],
+          credentialSchemaId: diplomaSdjwtSchema.id,
+          validityConstraint: 86400,
+        },
+      ],
+    });
+
+    const mdocCredentialSharingTest = async () => {
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      const credentialCard_1 = ProofRequestSharingScreen.credential(0);
+      await credentialCard_1.verifyIsVisible();
+      await credentialCard_1.verifyCredentialName(mdocSchema.name);
+      await credentialCard_1.verifyIsCardCollapsed(false);
+      await credentialCard_1.collapseOrExpand();
+
+      const credentialCard_2 = ProofRequestSharingScreen.credential(1);
+      await ProofRequestSharingScreen.scrollTo(credentialCard_2.element);
+      await credentialCard_2.verifyIsVisible();
+      await credentialCard_2.verifyCredentialName(diplomaSdjwtSchema.name);
+      await credentialCard_2.verifyIsCardCollapsed(true);
+    };
+
+    await proofSharing(authToken, {
+      data: {
+        customShareDataScreenTest: mdocCredentialSharingTest,
+        exchange: Exchange.OPENID4VC,
+        proofSchemaId: sdjwtProofSchemaWithMdoc.id,
+      },
+    });
+  });
+
+  it('[ONE-3419] mDoc with JSON-LD BBS+', async () => {
+    const diplomaBBSSchema = await createCredentialSchema(authToken, {
+      claims: [
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Faculty',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Department',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Education',
+          required: true,
+        },
+      ],
+      format: CredentialFormat.JSON_LD_BBSPLUS,
+      name: `University Diploma ${uuidv4()}`,
+      revocationMethod: RevocationMethod.LVVC,
+    });
+    await credentialIssuance({
+      authToken: authToken,
+      credentialSchema: diplomaBBSSchema,
+      exchange: Exchange.OPENID4VC,
+      keyAlgorithms: KeyType.BBS_PLUS,
+    });
+    const bbsProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
+      credentialSchemas: [mdocSchema, diplomaBBSSchema],
+      proofInputSchemas: [
+        {
+          claimSchemas: [
+            { id: mdocSchema.claims[0].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![2].id, required: true },
+          ],
+          credentialSchemaId: mdocSchema.id,
+        },
+        {
+          claimSchemas: [
+            { id: diplomaBBSSchema.claims[0].id, required: true },
+            { id: diplomaBBSSchema.claims[1].id, required: true },
+            { id: diplomaBBSSchema.claims[2].id, required: true },
+          ],
+          credentialSchemaId: diplomaBBSSchema.id,
+          validityConstraint: 86400,
+        },
+      ],
+    });
+
+    const mdocCredentialSharingTest = async () => {
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      const credentialCard_1 = ProofRequestSharingScreen.credential(0);
+      await credentialCard_1.verifyIsVisible();
+      await credentialCard_1.verifyCredentialName(mdocSchema.name);
+      await credentialCard_1.verifyIsCardCollapsed(false);
+      await credentialCard_1.collapseOrExpand();
+
+      const credentialCard_2 = ProofRequestSharingScreen.credential(1);
+      await ProofRequestSharingScreen.scrollTo(credentialCard_2.element);
+      await credentialCard_2.verifyIsVisible();
+      await credentialCard_2.verifyCredentialName(diplomaBBSSchema.name);
+      await credentialCard_2.verifyIsCardCollapsed(true);
+    };
+
+    await proofSharing(authToken, {
+      data: {
+        customShareDataScreenTest: mdocCredentialSharingTest,
+        exchange: Exchange.OPENID4VC,
+        proofSchemaId: bbsProofSchemaWithMdoc.id,
+      },
+    });
+  });
+
+  it('[ONE-3419] mDoc with JSON-LD', async () => {
+    const diplomajsonLDSchema = await createCredentialSchema(authToken, {
+      claims: [
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Faculty',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Department',
+          required: true,
+        },
+        {
+          array: false,
+          datatype: DataType.STRING,
+          key: 'Education',
+          required: true,
+        },
+      ],
+      format: CredentialFormat.JSON_LD_CLASSIC,
+      name: `University Diploma ${uuidv4()}`,
+      revocationMethod: RevocationMethod.LVVC,
+    });
+    await credentialIssuance({
+      authToken: authToken,
+      credentialSchema: diplomajsonLDSchema,
+      exchange: Exchange.OPENID4VC,
+    });
+    const jsonLDProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
+      credentialSchemas: [mdocSchema, diplomajsonLDSchema],
+      proofInputSchemas: [
+        {
+          claimSchemas: [
+            { id: mdocSchema.claims[0].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![0].id, required: true },
+            { id: mdocSchema.claims[1].claims![2].id, required: true },
+          ],
+          credentialSchemaId: mdocSchema.id,
+        },
+        {
+          claimSchemas: [
+            { id: diplomajsonLDSchema.claims[0].id, required: true },
+            { id: diplomajsonLDSchema.claims[1].id, required: true },
+            { id: diplomajsonLDSchema.claims[2].id, required: true },
+          ],
+          credentialSchemaId: diplomajsonLDSchema.id,
+          validityConstraint: 86400,
+        },
+      ],
+    });
+
+    const mdocCredentialSharingTest = async () => {
+      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      const credentialCard_1 = ProofRequestSharingScreen.credential(0);
+      await credentialCard_1.verifyIsVisible();
+      await credentialCard_1.verifyCredentialName(mdocSchema.name);
+      await credentialCard_1.verifyIsCardCollapsed(false);
+      await credentialCard_1.collapseOrExpand();
+
+      const credentialCard_2 = ProofRequestSharingScreen.credential(1);
+      await ProofRequestSharingScreen.scrollTo(credentialCard_2.element);
+      await credentialCard_2.verifyIsVisible();
+      await credentialCard_2.verifyCredentialName(diplomajsonLDSchema.name);
+      await credentialCard_2.verifyIsCardCollapsed(true);
+      await credentialCard_2.selectiveDisclosureMessageVisible();
+    };
+
+    await proofSharing(authToken, {
+      data: {
+        customShareDataScreenTest: mdocCredentialSharingTest,
+        exchange: Exchange.OPENID4VC,
+        proofSchemaId: jsonLDProofSchemaWithMdoc.id,
+      },
+    });
+  });
+
   describe('ONE-2227: Verify mdoc array credentials', () => {
     let driverLicenceSchema: CredentialSchemaResponseDTO;
     let driverLicenceProofSchema: ProofSchemaResponseDTO;
