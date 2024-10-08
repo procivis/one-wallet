@@ -4,6 +4,8 @@ include:
   - project: "procivis/one/one-operations"
     file:
       - "gitlab/github.gitlab-ci.yml"
+      - "gitlab/merge.gitlab-ci.yml"
+      - "gitlab/rules.gitlab-ci.yml"
 
 stages:
   - prepare
@@ -11,6 +13,7 @@ stages:
   - scan
   - scan_validation
   - build
+  - sdk
   - e2e_tests
   - license
   - github
@@ -31,7 +34,6 @@ workflow:
     - if: $CI_COMMIT_BRANCH
     - if: $CI_COMMIT_TAG
 
-
 .only_main:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
@@ -45,12 +47,14 @@ workflow:
 
 .only_main_or_manual:
   rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
     - !reference [.only_main, rules]
     - when: manual
 
 .bitrise_e2e:
   stage: e2e_tests
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
   needs:
     - job: test
       artifacts: false
@@ -70,7 +74,7 @@ workflow:
 
 .bitrise_build:
   stage: build
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
   needs:
     - job: test
       artifacts: false
@@ -84,13 +88,13 @@ workflow:
       --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
 
 .install-node-modules: &install-node-modules
+  - yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
   - >
     if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
       echo "node_modules exists and seems valid, not re-installing deps."
     else
       echo "node_modules does not exist or is not valid, re-installing deps."
       apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
-      yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
       yarn dlx node-gyp @mapbox/node-pre-gyp
       YARN_NETWORK_CONCURRENCY=1 yarn install --immutable
       yarn rnuc:dev
@@ -120,21 +124,27 @@ build_deps:
 lint:
   stage: test
   needs: [build_deps]
-  extends: .modules_setup
+  extends:
+    - .modules_setup
+    - .skip_in_multi_project
   script:
     - yarn lint
 
 compile:
   stage: test
   needs: [build_deps]
-  extends: .modules_setup
+  extends:
+    - .modules_setup
+    - .skip_in_multi_project
   script:
     - yarn compile
 
 test:
   stage: test
   needs: [build_deps]
-  extends: .modules_setup
+  extends:
+    - .modules_setup
+    - .skip_in_multi_project
   script:
     - yarn test --coverage
   artifacts:
@@ -173,6 +183,8 @@ build:
           - Android_TRIAL
           - iOS_TRIAL
   rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_TEST' || $BITRISE_WORKFLOW == 'iOS_TEST')
@@ -283,7 +295,7 @@ e2e:
 
 
 dtrack:android:upload-bom:
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/core-base:1.80.0-0.3
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.1
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
     SBOM_FILE_PATH: "android-sbom.json"
@@ -292,7 +304,7 @@ dtrack:android:upload-bom:
       - .upload_bom
 
 dtrack:ios:upload-bom:
-  image: registry.gitlab.procivis.ch/procivis/one/one-operations/bitrise-builder:0.1.0
+  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
   variables:
     D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
@@ -369,7 +381,7 @@ dtrack:react-native:policy_violations:
 license_generate:
   stage: license
   image:
-    name: registry.gitlab.procivis.ch/procivis/one/one-operations/wallet-licenses:v0.2.0
+    name: $CI_REGISTRY/procivis/one/one-operations/wallet-licenses:v0.2.0
     entrypoint: [""]
   variables:
     BASE_URL: ${DEPENDENCY_TRACK_BASE_URL}
@@ -404,7 +416,6 @@ license_generate:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
 
-
 github:push:
   extends:
     - .github:push
@@ -425,3 +436,22 @@ github:release:
       artifacts: true
     - job: dtrack:react-native:upload-bom
       artifacts: true
+
+sdk:new_core_binding_mr:
+  image: node:18.16.0-alpine
+  stage: sdk
+  extends:
+    - .modules_setup
+    - .create_merge_request
+  variables:
+    YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    FILES_TO_COMMIT: "package.json yarn.lock"
+  before_script:
+    - *install-node-modules
+    - apk add --update git jq curl
+    - jq --arg version "$NEW_VERSION" '.dependencies["@procivis/react-native-one-core"] = $version' package.json > package-updated.json
+    - mv package-updated.json package.json
+    - yarn install
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: always
