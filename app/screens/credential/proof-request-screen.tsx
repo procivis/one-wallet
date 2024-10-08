@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   ButtonType,
   concatTestID,
@@ -24,7 +25,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -278,7 +279,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           style={styles.verifier}
         />
         {!presentationDefinition || !allCredentials ? (
-          <ActivityIndicator />
+          <ActivityIndicator animate={isFocused} />
         ) : (
           <>
             {presentationDefinition.requestGroups.map(

@@ -1,11 +1,15 @@
 import {
+  ActivityIndicator,
   NerdModeItemProps,
   NerdModeScreen,
 } from '@procivis/one-react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
-import { ActivityIndicator } from 'react-native';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { useProofDetail } from '../../hooks/core/proofs';
@@ -23,6 +27,7 @@ const isProcivisProtocol = (
 };
 
 const ProofDetailNerdView: FunctionComponent = () => {
+  const isFocused = useIsFocused();
   const nav = useNavigation<RootNavigationProp>();
   const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
@@ -32,7 +37,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const { data: proofDetail } = useProofDetail(proofId);
 
   if (!proofDetail) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator animate={isFocused} />;
   }
 
   const didSections = proofDetail.verifierDid?.split(':') ?? [];

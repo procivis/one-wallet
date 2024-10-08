@@ -1,15 +1,12 @@
 import {
+  ActivityIndicator,
   concatTestID,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { HistoryListQuery } from '@procivis/react-native-one-core';
+import { useIsFocused } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  Animated,
-  SectionListProps,
-  StyleSheet,
-} from 'react-native';
+import { Animated, SectionListProps, StyleSheet } from 'react-native';
 
 import { useHistory } from '../../hooks/core/history';
 import { HistoryListItemWithDid } from '../../models/core/history';
@@ -17,6 +14,7 @@ import {
   groupEntriesByDay,
   HistoryGroupByDaySection,
 } from '../../utils/history';
+import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 import {
   HistorySectionHeader,
   HistorySectionItem,
@@ -48,6 +46,7 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
   onScroll,
   ...props
 }) => {
+  const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const {
     data: historyData,
@@ -77,14 +76,17 @@ export const HistorySectionList: FC<HistorySectionListProps> = ({
   }, [fetchNextHistoryPage, hasNextHistoryPage]);
 
   if (!history) {
-    return <ActivityIndicator color={colorScheme.accent} />;
+    return <ActivityIndicator animate={isFocused} />;
   }
 
   return (
     <Animated.SectionList<HistoryListItemWithDid, HistoryGroupByDaySection>
       ListFooterComponent={
         isLoading ? (
-          <ActivityIndicator color={colorScheme.accent} style={styles.footer} />
+          <ListPageLoadingIndicator
+            color={colorScheme.accent}
+            style={styles.footer}
+          />
         ) : undefined
       }
       contentContainerStyle={[styles.listContent, contentContainerStyle]}

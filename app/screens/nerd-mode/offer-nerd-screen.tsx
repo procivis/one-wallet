@@ -1,10 +1,14 @@
 import {
+  ActivityIndicator,
   NerdModeItemProps,
   NerdModeScreen,
 } from '@procivis/one-react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
-import { ActivityIndicator } from 'react-native';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
@@ -13,6 +17,7 @@ import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
+  const isFocused = useIsFocused();
   const nav = useNavigation();
   const route = useRoute<NerdModeRouteProp<'OfferNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
@@ -22,7 +27,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const { data: credentialDetail } = useCredentialDetail(credentialId);
 
   if (!credentialDetail) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator animate={isFocused} />;
   }
 
   const didSections = credentialDetail.issuerDid?.split(':') ?? [];

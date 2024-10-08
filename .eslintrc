@@ -106,6 +106,13 @@
             "message": "Please use SafeAreaView from 'react-native-safe-area-context' instead."
           },
           {
+            "name": "react-native",
+            "importNames": [
+              "ActivityIndicator"
+            ],
+            "message": "Please use ActivityIndicator from '@procivis/one-react-native-components' or ListPageLoadingIndicator instead."
+          },
+          {
             "name": "@react-navigation/core",
             "message": "Please use '@react-navigation/native'"
           }

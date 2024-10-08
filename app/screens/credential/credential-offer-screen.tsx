@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   CredentialCardShadow,
   CredentialDetailsCard,
@@ -7,15 +8,13 @@ import {
   useAppColorScheme,
   useBlockOSBackNavigation,
 } from '@procivis/one-react-native-components';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -39,6 +38,7 @@ import { detailsCardFromCredential } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const CredentialOfferScreen: FunctionComponent = () => {
+  const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const rootNavigation = useNavigation<RootNavigationProp>();
   const navigation =
@@ -134,7 +134,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
         />
         {!credential || !config || !card ? (
-          <ActivityIndicator />
+          <ActivityIndicator animate={isFocused} />
         ) : (
           <>
             <View style={styles.credentialWrapper}>

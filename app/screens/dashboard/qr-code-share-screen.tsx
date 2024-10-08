@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   ButtonType,
   concatTestID,
@@ -10,7 +11,7 @@ import {
 import { OneError, ProofStateEnum } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
 
 import BleWarning from '../../components/ble/ble-warning';
@@ -79,9 +80,9 @@ const QRCodeShareScreen: FunctionComponent = () => {
     return shareUrl ? (
       <QrCode content={shareUrl} />
     ) : (
-      <ActivityIndicator color={colorScheme.accent} size={42} />
+      <ActivityIndicator animate={isFocused} />
     );
-  }, [adapterDisabled, permissionStatus, shareUrl, colorScheme.accent]);
+  }, [adapterDisabled, permissionStatus, shareUrl, isFocused]);
 
   useEffect(() => {
     if (!proofId || !interactionId || !proofState) {

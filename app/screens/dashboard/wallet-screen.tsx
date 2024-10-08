@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   concatTestID,
   CredentialDetailsCardListItem,
@@ -30,8 +31,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  ActivityIndicator,
-  ActivityIndicator as LoadingIndicator,
   Animated,
   SectionListRenderItemInfo,
   StyleSheet,
@@ -39,6 +38,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import ListPageLoadingIndicator from '../../components/list/list-page-loading-indicator';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
 import { useCoreConfig } from '../../hooks/core/core-config';
 import {
@@ -53,6 +53,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getCredentialCardPropsFromCredential } from '../../utils/credential';
 
 const WalletScreen: FunctionComponent = observer(() => {
+  const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
   const { data: config } = useCoreConfig();
@@ -141,7 +142,6 @@ const WalletScreen: FunctionComponent = observer(() => {
       // TODO Fix / discuss. This is ineficient.
       // The list item contains no claims. Without claims we can not render
       // all preview fields (primaryAttribute, photoAttribute, MRZ, etc.)
-      const isFocused = useIsFocused();
       const { data: credential } = useCredentialDetail(item.id, isFocused);
 
       if (!credential) {
@@ -205,6 +205,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       foldCards,
       handleCredentialPress,
       onHeaderPress,
+      isFocused,
     ],
   );
 
@@ -231,7 +232,7 @@ const WalletScreen: FunctionComponent = observer(() => {
     >
       {!credentials && (
         <View style={styles.loadingIndicator}>
-          <ActivityIndicator />
+          <ActivityIndicator animate={isFocused} />
         </View>
       )}
       {credentials && isEmpty && (
@@ -286,7 +287,7 @@ const WalletScreen: FunctionComponent = observer(() => {
             credentials && credentials.length > 0 ? (
               <View style={styles.footer}>
                 {hasNextPage && (
-                  <LoadingIndicator
+                  <ListPageLoadingIndicator
                     color={colorScheme.accent}
                     style={styles.pageLoadingIndicator}
                   />
