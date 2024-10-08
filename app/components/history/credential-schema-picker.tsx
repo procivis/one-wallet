@@ -1,17 +1,20 @@
 import {
   ActionModal,
+  ActivityIndicator,
   Button,
   ButtonType,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { CredentialSchema } from '@procivis/react-native-one-core';
+import { useIsFocused } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useCredentialSchemas } from '../../hooks/core/credential-schemas';
 import { translate } from '../../i18n';
 import RadioGroup, { RadioGroupItem } from '../common/radio-group';
+import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 
 export interface CredentialSchemaPickerProps {
   onClose: () => void;
@@ -26,6 +29,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
   onSelection,
   onClose,
 }) => {
+  const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const { bottom: bottomInset } = useSafeAreaInsets();
 
@@ -70,7 +74,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
           ]}
           listFooter={
             isLoading ? (
-              <ActivityIndicator
+              <ListPageLoadingIndicator
                 color={colorScheme.accent}
                 style={styles.footer}
               />
@@ -82,7 +86,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
           style={styles.filterGroup}
         />
       ) : (
-        <ActivityIndicator color={colorScheme.accent} />
+        <ActivityIndicator animate={isFocused} />
       )}
       <Button
         onPress={onClose}

@@ -1,5 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
+  ActivityIndicator,
   Button,
   ButtonType,
   concatTestID,
@@ -19,7 +20,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { HistoryItem } from '../../components/history/history-item';
 import {
@@ -123,7 +124,7 @@ const CredentialDetailScreen: FC = () => {
   }, [rootNavigation]);
 
   if (!credential) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator animate={isFocused} />;
   }
   const testID = 'CredentialDetailScreen.detailsCard';
   const { card, attributes } = detailsCardFromCredential(
