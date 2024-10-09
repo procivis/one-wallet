@@ -457,7 +457,8 @@ sdk:new_core_binding_mr:
   before_script:
     - *install-node-modules
     - apk add --update git jq curl
-    - jq --arg version "$NEW_VERSION" '.dependencies["@procivis/react-native-one-core"] = $version' package.json > package-updated.json
+    - new_version=$(echo "$NEW_VERSION" | sed 's/^v//')
+    - jq --arg version "$new_version" '.dependencies["@procivis/react-native-one-core"] = $version' package.json > package-updated.json
     - mv package-updated.json package.json
     - yarn install
   rules:
