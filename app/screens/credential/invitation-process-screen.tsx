@@ -25,6 +25,13 @@ import {
   useBlePermissions,
   useOpenBleSettings,
 } from '../../hooks/ble-permissions';
+import {
+  BluetoothState,
+  getInvitationUrlTransports,
+  InternetState,
+  Transport,
+  useAvailableTransports,
+} from '../../hooks/connectivity';
 import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { ProcivisExchangeProtocol } from '../../models/proofs';
@@ -42,6 +49,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const { invitationUrl } = route.params;
   const [error, setError] = useState<unknown>();
+  const [canHandleInvitation, setCanHandleInvitation] = useState<boolean>();
+  const { availableTransport, transportError } = useAvailableTransports();
+  const [invitationSupportedTransports] = useState(
+    getInvitationUrlTransports(route.params.invitationUrl),
+  );
 
   useBlockOSBackNavigation();
 
@@ -52,10 +64,22 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
   const { openAppPermissionSettings, openBleSettings } = useOpenBleSettings();
 
-  const isBleInteraction = useMemo(
-    () => invitationUrl.toLocaleLowerCase().startsWith('openid4vp://connect?'),
-    [invitationUrl],
-  );
+  const isBleInteraction = useMemo(() => {
+    if (!invitationSupportedTransports.includes(Transport.Bluetooth)) {
+      return false;
+    }
+    if (invitationSupportedTransports.length === 1) {
+      return true;
+    }
+    if (!availableTransport) {
+      return false;
+    }
+    return (
+      (availableTransport.length === 1 &&
+        availableTransport[0] === Transport.Bluetooth) ||
+      (availableTransport.length === 0 && permissionStatus === 'denied')
+    );
+  }, [availableTransport, invitationSupportedTransports, permissionStatus]);
 
   const [state, setState] = useState<
     LoaderViewState.InProgress | LoaderViewState.Warning
@@ -84,24 +108,60 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [isBleInteraction, permissionStatus]);
 
   useEffect(() => {
-    if (!isBleInteraction) {
-      setState(LoaderViewState.InProgress);
-    } else {
-      if (allPermissionsGranted === false || adapterEnabled === false) {
-        setState(LoaderViewState.Warning);
-      } else {
-        setState(LoaderViewState.InProgress);
-      }
+    if (canHandleInvitation !== undefined) {
+      return;
     }
-  }, [isBleInteraction, adapterEnabled, allPermissionsGranted]);
+    if (!availableTransport) {
+      setState(LoaderViewState.InProgress);
+      return;
+    }
+    if (
+      availableTransport.length === 0 &&
+      transportError.ble &&
+      transportError.internet
+    ) {
+      if (isBleInteraction && permissionStatus === 'denied') {
+        setState(LoaderViewState.InProgress);
+      } else {
+        setState(LoaderViewState.Warning);
+        setCanHandleInvitation(false);
+      }
+      return;
+    }
+    const transportAvailable = invitationSupportedTransports.some((t) =>
+      availableTransport.includes(t),
+    );
+    if (transportAvailable) {
+      setCanHandleInvitation(true);
+      setState(LoaderViewState.InProgress);
+      return;
+    }
+    setState(LoaderViewState.Warning);
+    setCanHandleInvitation(false);
+  }, [
+    isBleInteraction,
+    adapterEnabled,
+    allPermissionsGranted,
+    availableTransport,
+    invitationSupportedTransports,
+    permissionStatus,
+    transportError,
+    canHandleInvitation,
+  ]);
 
   useEffect(() => {
-    if (isBleInteraction && (!allPermissionsGranted || !adapterEnabled)) {
+    if (!canHandleInvitation || !availableTransport) {
       return;
     }
 
     setTimeout(() => {
-      handleInvitation(invitationUrl)
+      const transports = invitationSupportedTransports.filter((t) =>
+        availableTransport.includes(t),
+      );
+      const transport = transports.includes(Transport.MQTT)
+        ? Transport.MQTT
+        : transports[0];
+      handleInvitation({ invitationUrl, transport })
         .then((result) => {
           if ('credentialIds' in result) {
             managementNavigation.replace('IssueCredential', {
@@ -130,12 +190,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
         });
     }, 1000);
   }, [
+    availableTransport,
+    canHandleInvitation,
     handleInvitation,
+    invitationSupportedTransports,
     invitationUrl,
     managementNavigation,
-    allPermissionsGranted,
-    adapterEnabled,
-    isBleInteraction,
   ]);
 
   const infoPressHandler = useCallback(() => {
@@ -149,47 +209,88 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [error, rootNavigation]);
 
   const openSettingsButton = useMemo(() => {
-    if (state !== LoaderViewState.Warning || !isBleInteraction) {
+    if (state !== LoaderViewState.Warning) {
       return;
     }
 
-    if (allPermissionsGranted && adapterEnabled) {
+    if (
+      !transportError.internet &&
+      (!transportError.ble || transportError.ble === BluetoothState.Unavailable)
+    ) {
       return;
     }
 
     return {
       onPress: () => {
-        if (!allPermissionsGranted) {
-          // application settings, user can enable required permissions
-          openAppPermissionSettings();
-        } else if (!adapterEnabled) {
+        if (
+          transportError.internet !== undefined ||
+          transportError.ble !== BluetoothState.Unauthorized
+        ) {
           // os Bluetooth adapter settings, user can enable Bluetooth or allow for new connections (iOS)
           openBleSettings();
+        } else {
+          // application settings, user can enable required permissions
+          openAppPermissionSettings();
         }
       },
       title: translate('common.openSettings'),
     };
-  }, [
-    state,
-    isBleInteraction,
-    openAppPermissionSettings,
-    openBleSettings,
-    allPermissionsGranted,
-    adapterEnabled,
-  ]);
+  }, [state, transportError, openBleSettings, openAppPermissionSettings]);
 
   const label = useMemo(() => {
-    if (state === LoaderViewState.Warning && isBleInteraction) {
-      if (!allPermissionsGranted) {
-        return translate('invitation.process.blePermissionMissing.title');
-      }
-      if (!adapterEnabled) {
+    if (canHandleInvitation) {
+      if (
+        state === LoaderViewState.Warning &&
+        isBleInteraction &&
+        !adapterEnabled
+      ) {
         return translate('invitation.process.bleAdapterDisabled.title');
+      }
+      return translate(`invitation.process.${state}.title`);
+    }
+    if (state !== LoaderViewState.Warning) {
+      return translate(`invitation.process.${state}.title`);
+    }
+    if (
+      invitationSupportedTransports.includes(Transport.Bluetooth) &&
+      invitationSupportedTransports.includes(Transport.MQTT) &&
+      transportError.internet &&
+      transportError.ble
+    ) {
+      return translate('invitation.process.connectivityUnavailable.title');
+    } else if (
+      invitationSupportedTransports.includes(Transport.Bluetooth) &&
+      transportError.ble
+    ) {
+      switch (transportError.ble) {
+        case BluetoothState.Unauthorized:
+          return translate('invitation.process.blePermissionMissing.title');
+        case BluetoothState.Unavailable:
+          return translate('invitation.process.bleAdapterUnavailable.title');
+        case BluetoothState.Disabled:
+          return translate('invitation.process.bleAdapterDisabled.title');
+      }
+    } else if (
+      (invitationSupportedTransports.includes(Transport.MQTT) ||
+        invitationSupportedTransports.includes(Transport.HTTP)) &&
+      transportError.internet
+    ) {
+      if (transportError.internet === InternetState.Unreachable) {
+        return translate('invitation.process.internetUnreachable.title');
+      } else {
+        return translate('invitation.process.internetDisabled.title');
       }
     }
 
     return translate(`invitation.process.${state}.title`);
-  }, [state, allPermissionsGranted, adapterEnabled, isBleInteraction]);
+  }, [
+    canHandleInvitation,
+    state,
+    invitationSupportedTransports,
+    transportError,
+    isBleInteraction,
+    adapterEnabled,
+  ]);
 
   return (
     <LoadingResultScreen
