@@ -13,6 +13,7 @@ import {
 } from 'react-query';
 
 import { getQueryKeyFromListQueryParams } from '../../utils/credential';
+import { Transport } from '../connectivity';
 import { useONECore } from './core-context';
 import { ONE_CORE_ORGANISATION_ID } from './core-init';
 import { CREDENTIAL_SCHEMA_LIST_QUERY_KEY } from './credential-schemas';
@@ -101,8 +102,16 @@ export const useInvitationHandler = () => {
   const { core } = useONECore();
 
   return useMutation(
-    async (invitationUrl: string) =>
-      core.handleInvitation(invitationUrl, ONE_CORE_ORGANISATION_ID),
+    async ({
+      invitationUrl,
+      transport,
+    }: {
+      invitationUrl: string;
+      transport: Transport;
+    }) =>
+      core.handleInvitation(invitationUrl, ONE_CORE_ORGANISATION_ID, [
+        transport,
+      ]),
     {
       onSuccess: (result: InvitationResult) => {
         if ('credentialIds' in result) {

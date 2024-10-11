@@ -10,6 +10,8 @@ import './mock-rnfs';
 import './mock-sentry';
 import './mock-localize';
 import './mock-camera';
+import './mock-react-native-community-netinfo';
+import './mock-react-native-bluetooth-state-manager';
 
 require('react-native-reanimated').setUpTests();
 

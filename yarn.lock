@@ -2871,12 +2871,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/react-native-one-core@npm:1.25565.0":
-  version: 1.25565.0
-  resolution: "@procivis/react-native-one-core@npm:1.25565.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.25565.0.tgz"
+"@procivis/react-native-one-core@npm:1.25793.0":
+  version: 1.25793.0
+  resolution: "@procivis/react-native-one-core@npm:1.25793.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.25793.0.tgz"
   peerDependencies:
     react-native: "*"
-  checksum: 8940862e3b63666d6490e4103de18765743a952d973fa88070b7ae274827fbe5badda0d198560be06664d6efe1a2d9a3c71eded53d1703578d5fb9ba65e52474
+  checksum: c78d0d8d9fa51f4e072aceca80772551179260c0f1b34d946b5785cdb17baa35a0feaa348abda9edc5c4f5a64742adafed783045322eb711b55533e4d48f195a
   languageName: node
   linkType: hard
 
@@ -3096,6 +3096,15 @@ __metadata:
   bin:
     react-native: build/bin.js
   checksum: 0117a4f212fd0eccf6e03d524c08734c1b9b1796ccabf6aacaa2d4c37313e1bd9c7c0a2d30a65eb361ed47dff52d3c728d5dedee97c36af55c3e36c14a3f6174
+  languageName: node
+  linkType: hard
+
+"@react-native-community/netinfo@npm:^11.4.1":
+  version: 11.4.1
+  resolution: "@react-native-community/netinfo@npm:11.4.1"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: 118ba6d495bd14c2dab3d228a0c1857620a293ae8592d170d70eaf88a6ac6a4e35c7f84527975a9054e36891a9694aacc8ec053326b5f05961459ed08a70dd35
   languageName: node
   linkType: hard
 
@@ -4003,6 +4012,13 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: 1d3012ab2fcdad1ba313e1d065b737578f6506c8958e2a7a5bdbdef517c7e930796cb1599ee067d5dee942fb3a764df64b5eef7e9ae98548d776e86dcffba985
+  languageName: node
+  linkType: hard
+
+"@types/parse-path@npm:^7.0.0":
+  version: 7.0.3
+  resolution: "@types/parse-path@npm:7.0.3"
+  checksum: 8344b6c7acba4e4e5a8d542f56f53c297685fa92f9b0c085d7532cc7e1b661432cecfc1c75c76cdb0d161c95679b6ecfe0573d9fef7c836962aacf604150a984
   languageName: node
   linkType: hard
 
@@ -12413,11 +12429,12 @@ __metadata:
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
     "@procivis/one-react-native-components": "npm:0.1.58"
-    "@procivis/react-native-one-core": "npm:1.25565.0"
+    "@procivis/react-native-one-core": "npm:1.25793.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-clipboard/clipboard": "npm:1.14.0"
     "@react-native-community/blur": "npm:^4.4.0"
+    "@react-native-community/netinfo": "npm:^11.4.1"
     "@react-native/babel-preset": "npm:0.73.21"
     "@react-native/eslint-config": "npm:0.74.0"
     "@react-native/metro-config": "npm:0.73.5"
@@ -12470,6 +12487,7 @@ __metadata:
     mobx-state-tree: "npm:5.1.8"
     node-fetch: "npm:^3.3.2"
     npm-run-all: "npm:4.1.5"
+    parse-url: "npm:^9.2.0"
     patch-package: "npm:6.4.7"
     prettier: "npm:^2.8.8"
     pure-svg-code: "npm:1.0.6"
@@ -12478,6 +12496,7 @@ __metadata:
     react-devtools-core: "npm:4.10.1"
     react-dom: "npm:^17.0.2"
     react-native: "npm:0.73.8"
+    react-native-bluetooth-state-manager: "npm:^1.3.5"
     react-native-bootsplash: "npm:^4.6.0"
     react-native-camera: "npm:^4.2.1"
     react-native-clean-project: "npm:^3.6.3"
@@ -12708,6 +12727,25 @@ __metadata:
   version: 1.0.1
   resolution: "parse-node-version@npm:1.0.1"
   checksum: 999cd3d7da1425c2e182dce82b226c6dc842562d3ed79ec47f5c719c32a7f6c1a5352495b894fc25df164be7f2ede4224758255da9902ddef81f2b77ba46bb2c
+  languageName: node
+  linkType: hard
+
+"parse-path@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "parse-path@npm:7.0.0"
+  dependencies:
+    protocols: "npm:^2.0.0"
+  checksum: e7646f6b998b083bbd40102643d803557ce4ae18ae1704e6cc7ae2525ea7c5400f4a3635aca3244cfe65ce4dd0ff77db1142dde4d080e8a80c364c4b3e8fe8d2
+  languageName: node
+  linkType: hard
+
+"parse-url@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "parse-url@npm:9.2.0"
+  dependencies:
+    "@types/parse-path": "npm:^7.0.0"
+    parse-path: "npm:^7.0.0"
+  checksum: b8f56cdb01e76616255dff82544f4b5ab4378f6f4bac8604ed6fde03a75b0f71c547d92688386d8f22f38fad3c928c075abf69458677c6185da76c841bfd7a93
   languageName: node
   linkType: hard
 
@@ -13365,6 +13403,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"protocols@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "protocols@npm:2.0.1"
+  checksum: 016cc58a596e401004a028a2f7005e3444bf89ee8f606409c411719374d1e8bba0464fc142a065cce0d19f41669b2f7ffe25a8bde4f16ce3b6eb01fabc51f2e7
+  languageName: node
+  linkType: hard
+
 "proxy-from-env@npm:^1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
@@ -13573,6 +13618,16 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 2bdb6b93fbb1820b024b496042cce405c57e2f85e777c9aabd55f9b26d145408f9f74f5934676ffdc46f3dcff656d78413a6e43968e7b3f92eea35b3052e9053
+  languageName: node
+  linkType: hard
+
+"react-native-bluetooth-state-manager@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "react-native-bluetooth-state-manager@npm:1.3.5"
+  peerDependencies:
+    prop-types: "*"
+    react-native: ">= 0.44"
+  checksum: cafa6177d59929fb4e107f9068269744295992d7ace99fb5d3def0deba902b3b9d73210b61e52611585f21c8b0468ace163a550f03571eef4a8087431da31104
   languageName: node
   linkType: hard
 
