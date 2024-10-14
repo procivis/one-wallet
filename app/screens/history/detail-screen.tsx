@@ -10,8 +10,11 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   Claim,
+  ClaimValue,
+  DataTypeEnum,
   HistoryActionEnum,
   HistoryEntityTypeEnum,
+  ProofInputClaim,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useEffect, useMemo, useRef } from 'react';
@@ -68,6 +71,50 @@ const getStatusTextColor = (status: HistoryStatusIconType) => {
   }
 };
 
+const claimFromProofInputClaim = (
+  input: ProofInputClaim,
+): Claim | undefined => {
+  const value = claimValueFromProofInputClaim(input);
+  if (!value) {
+    return undefined;
+  }
+  return {
+    ...value,
+    id: input.schema.id,
+    key: input.schema.key,
+  };
+};
+
+const claimValueFromProofInputClaim = ({
+  schema,
+  value,
+}: ProofInputClaim): ClaimValue | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  if (Array.isArray(value)) {
+    const values = value.map(claimFromProofInputClaim).filter(nonEmptyFilter);
+    return schema.dataType === DataTypeEnum.Object
+      ? {
+          array: schema.array,
+          dataType: DataTypeEnum.Object,
+          value: values,
+        }
+      : {
+          array: true,
+          dataType: schema.dataType,
+          value: values,
+        };
+  }
+
+  return {
+    array: false,
+    dataType: schema.dataType,
+    value,
+  };
+};
+
 export const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
@@ -93,13 +140,7 @@ export const HistoryDetailScreen: FC = () => {
       }
       return {
         ...credential,
-        claims: claims.map(
-          (c) =>
-            ({
-              ...c.schema,
-              value: c.value,
-            } as unknown as Claim),
-        ),
+        claims: claims.map(claimFromProofInputClaim).filter(nonEmptyFilter),
       };
     })
     .filter(nonEmptyFilter);
