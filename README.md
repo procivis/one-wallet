@@ -8,14 +8,27 @@
 ![Procivis One Wallet](docs/assets/logo_dark_One_Wallet.png#gh-light-mode-only)
 ![Procivis One Wallet](docs/assets/logo_light_One_Wallet.png#gh-dark-mode-only)
 
+## Table of Contents
+
+- [Key features](#key-features)
+- [How to use the Procivis One Wallet](#how-to-use-the-procivis-one-wallet)
+- [Getting started](#getting-started)
+- [Background](#background)
+- [eIDAS 2.0](#eidas-20)
+- [Interoperability and conformance](#interoperability-and-conformance)
+- [Supported standards](#supported-standards)
+- [Support](#support)
+- [License](#license)
+
 The **Procivis One Wallet** is a digital wallet solution for decentralized digital
 identities and credentials. The Wallet enables the secure storage, management, and
 sharing of identity data, credentials, and attributes as needed via a multitude of
 technologies and protocols.
 
-The Procivis One Wallet uses the [react-native-one-core][rncore] for all SSI functionality.
+The Procivis One Wallet uses the [Procivis One Core][core] for all SSI functionality
+via the [One Core React Native SDK][rncore].
 
-The [Procivis One Core][core] is a complete solution capable of powering every element
+The Procivis One Core is a complete solution capable of powering every element
 of the digital identity credential lifecycle. See the complete solution [architecture][archi].
 
 ## Key features
@@ -39,7 +52,7 @@ of the digital identity credential lifecycle. See the complete solution [archite
 ## How to use the Procivis One Wallet
 
 - Use the Wallet for a free-standing solution that can be white-labeled
-- Use the [React Native One Core][rncore] to embed wallet capabilities into an existing app
+- Use the [One Core React Native SDK][rncore] to embed wallet capabilities into an existing app
 - Use the [components][comp] library for UI elements for your digital wallet app
 
 ## Getting started
@@ -249,7 +262,7 @@ and regulations mature and harden.
     - [OID4VP over BLE][ble]; optimized version of Draft 00
     - [OID4VP over MQTT][mqtt]; proprietary adaptation of OID4VP over BLE via MQTT channel
 - [ISO/IEC 18013-5][iso]
-  - QR-code engagement and offline device retrieval over BLE
+  - QR code engagement and offline device retrieval over BLE
 
 ### Key storage
 
@@ -275,7 +288,7 @@ Version 2.0](./LICENSE).
 
 © Procivis AG, [https://www.procivis.ch](https://www.procivis.ch).
 
-[archi]: https://github.com/procivis/one-core?tab=readme-ov-file#architecture
+[archi]: https://github.com/procivis#architecture
 [ble]: https://openid.net/specs/openid-4-verifiable-presentations-over-ble-1_0.html
 [canivc]: https://canivc.com/implementations/procivis-one-core/
 [comp]: https://github.com/procivis/one-react-native-components
