@@ -6,6 +6,7 @@ import {
   CredentialDetailsCardProps,
   CredentialErrorIcon,
   CredentialHeaderProps,
+  CredentialNoticeWarningIcon,
   CredentialWarningIcon,
 } from '@procivis/one-react-native-components';
 import {
@@ -100,8 +101,22 @@ const formatCredentialDetail = (claim: Claim, config?: Config): string => {
   return attributeValue.value ?? '';
 };
 
-export const cardHeaderFromCredentialListItem = (
-  credential: CredentialListItem,
+const hasMsoValidityIssues = (credential: CredentialDetail): boolean => {
+  const mdocMsoValidity =
+    credential.schema.format === 'MDOC'
+      ? credential.mdocMsoValidity
+      : undefined;
+
+  const mdocMsoValidityIssue = Boolean(
+    mdocMsoValidity?.nextUpdate &&
+      new Date(mdocMsoValidity.nextUpdate) < new Date(),
+  );
+
+  return mdocMsoValidityIssue;
+};
+
+export const cardHeaderFromCredential = (
+  credential: CredentialDetail,
   claims: Claim[] = [],
   config?: Config,
   testID?: string,
@@ -133,25 +148,33 @@ export const cardHeaderFromCredentialListItem = (
       statusIcon = CredentialErrorIcon;
       break;
     default: {
-      const primary = findClaimByPath(
-        layoutProperties?.primaryAttribute,
-        claims,
-      );
+      if (hasMsoValidityIssues(credential)) {
+        credentialDetailPrimary = translate(
+          'credentialDetail.validity.msoValidityIssue',
+        );
+        credentialDetailTestID = concatTestID(testID, 'validity-issue');
+        statusIcon = CredentialWarningIcon;
+      } else {
+        const primary = findClaimByPath(
+          layoutProperties?.primaryAttribute,
+          claims,
+        );
 
-      if (primary) {
-        credentialDetailPrimary = formatCredentialDetail(primary, config);
+        if (primary) {
+          credentialDetailPrimary = formatCredentialDetail(primary, config);
+        }
+
+        const secondary = findClaimByPath(
+          layoutProperties?.secondaryAttribute,
+          claims,
+        );
+
+        if (secondary) {
+          credentialDetailSecondary = formatCredentialDetail(secondary, config);
+        }
+
+        credentialDetailTestID = concatTestID(testID, 'detail');
       }
-
-      const secondary = findClaimByPath(
-        layoutProperties?.secondaryAttribute,
-        claims,
-      );
-
-      if (secondary) {
-        credentialDetailSecondary = formatCredentialDetail(secondary, config);
-      }
-
-      credentialDetailTestID = concatTestID(testID, 'detail');
       break;
     }
   }
@@ -176,7 +199,7 @@ export const cardHeaderFromCredentialListItem = (
 };
 
 export const getCredentialCardPropsFromCredential = (
-  credential: CredentialListItem,
+  credential: CredentialDetail,
   claims: Claim[] = [],
   config?: Config,
   notice?: {
@@ -186,6 +209,13 @@ export const getCredentialCardPropsFromCredential = (
   testID?: string,
 ): Omit<CredentialCardProps, 'onHeaderPress' | 'style'> => {
   const { layoutProperties } = credential.schema;
+
+  if (hasMsoValidityIssues(credential)) {
+    notice = {
+      notice: translate('credentialDetail.validity.msoValidityIssue.notice'),
+      noticeIcon: CredentialNoticeWarningIcon,
+    };
+  }
 
   const result: Omit<CredentialCardProps, 'onHeaderPress' | 'style'> = {
     cardCarouselImages: getCarouselImagesFromClaims(
@@ -197,7 +227,7 @@ export const getCredentialCardPropsFromCredential = (
       ? { imageSource: { uri: layoutProperties.background.image } }
       : undefined,
     color: layoutProperties?.background?.color,
-    header: cardHeaderFromCredentialListItem(
+    header: cardHeaderFromCredential(
       credential,
       claims,
       config,
