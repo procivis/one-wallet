@@ -22,14 +22,23 @@ buildscript {
 }
 
 allprojects {
-   repositories {
+    afterEvaluate {
+        if (it.hasProperty('android')){
+            android {
+                defaultConfig {
+                    minSdkVersion 23
+                }
+            }
+        }
+    }
+    repositories {
         maven {
             url("$rootDir/../node_modules/detox/Detox-android")
         }
 
         flatDir { dirs "$rootDir/../node_modules/@procivis/react-native-one-core/android/libs" }
         mavenCentral()
-   }
+    }
 }
 
 apply plugin: "com.facebook.react.rootproject"
