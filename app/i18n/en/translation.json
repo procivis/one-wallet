@@ -121,6 +121,8 @@
   "credentialDetail.status.REJECTED": "Rejected",
   "credentialDetail.status.REVOKED": "Revoked",
   "credentialDetail.status.SUSPENDED": "Suspended",
+  "credentialDetail.validity.msoValidityIssue": "Validity update issue",
+  "credentialDetail.validity.msoValidityIssue.notice": "The validity of your credential is not updating. Please contact the issuing authority for clarification.",
   "credentialDetail.validity.revoked": "Revoked",
   "credentialDetail.validity.suspended": "Suspended",
   "credentialDetail.validity.suspendedUntil": "Suspended until %{date}",
