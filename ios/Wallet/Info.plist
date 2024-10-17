@@ -40,6 +40,8 @@
 	<string>${APP_IOS_EXPORT_KEY}</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
+	<key>LSMinimumSystemVersion</key>
+	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
