@@ -120,7 +120,7 @@ Round icon under `android/src/main/res/minimap-{screen-size}/ic_launcher_{CONFIG
 Splashscreen image is added in assets folder under `Splashscreen.{CONFIG_NAME}` image set, and in addition there is a separate Storyboard named `LaunchScreen.{CONFIG_NAME}.storyboard` for each flavor.
 Icons are in asstes folder under `AppIcon.{CONFIG_NAME}` image set.
 
---- 
+---
 
 ### Detox E2E
 
@@ -128,7 +128,7 @@ In order to run the E2E tests, one needs to build a proper detox app build first
 
 See the `.detoxrc.js` for all possible configurations.
 
-#### Android detox
+#### Android
 
 - build (once)
 
@@ -142,7 +142,7 @@ npx detox build --configuration android.emu.release
 npx detox test --configuration android.emu.release
 ```
 
-#### iOS detox
+#### iOS
 
 ```shell
 npx detox build --configuration ios.sim.release
@@ -283,8 +283,8 @@ Need support or have feedback? [Contact us](https://www.procivis.ch/en/contact).
 Some rights reserved. This library is published under the [Apache License
 Version 2.0](./LICENSE).
 
-![Procivis AG](assets/logo_light_mode_Procivis.svg#gh-light-mode-only)
-![Procivis AG](assets/logo_dark_mode_Procivis.svg#gh-dark-mode-only)
+![Procivis AG](docs/assets/logo_light_mode_Procivis.svg#gh-light-mode-only)
+![Procivis AG](docs/assets/logo_dark_mode_Procivis.svg#gh-dark-mode-only)
 
 © Procivis AG, [https://www.procivis.ch](https://www.procivis.ch).
 
