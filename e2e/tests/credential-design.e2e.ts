@@ -2,6 +2,10 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
+import {
+  mDocCredentialClaims,
+  mDocCredentialSchema,
+} from '../helpers/credentialSchemas';
 import { CarouselImageType } from '../page-objects/components/CredentialCard';
 import CredentialHistoryScreen from '../page-objects/credential/CredentialHistoryScreen';
 import CredentialNerdScreen, {
@@ -26,6 +30,7 @@ import {
   DataType,
   DidMethod,
   Exchange,
+  KeyType,
   RevocationMethod,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
@@ -123,6 +128,7 @@ describe('ONE-2014: Credential design', () => {
         },
         [AttributeTestID.documentType]: {
           label: 'Document type',
+          showMoreButton: true,
           value: credentialDetail.schema.schemaId,
         },
         [AttributeTestID.revocationMethod]: {
@@ -486,7 +492,7 @@ describe('ONE-2014: Credential design', () => {
     });
   });
 
-  // Fail
+  // Pass
   describe('ONE-1893: Credential Schema Layout', () => {
     let schema1: CredentialSchemaResponseDTO;
 
@@ -551,7 +557,7 @@ describe('ONE-2014: Credential design', () => {
           {
             claimId: schema1.claims[2].id,
             path: schema1.claims[2].key,
-            value: '1984-10-26T21:00:00.000Z',
+            value: '1984-10-26T00:00:00.000Z',
           },
           {
             claimId: schema1.claims[3].id,
@@ -582,11 +588,15 @@ describe('ONE-2014: Credential design', () => {
     it('Test credential card attributes', async () => {
       await CredentialDetailScreen.credentialCard.showAllAttributes();
 
-      await CredentialDetailScreen.credentialCard.verifyAttributeValues([
-        { key: 'first name', value: 'John' },
-        { key: 'Last name', value: 'Connor' },
-        { key: 'Birthday', value: '10/26/1984' },
-      ]);
+      await CredentialDetailScreen.credentialCard.verifyAttributeValues(
+        [
+          { index: '0', key: 'first name', value: 'John' },
+          { index: '1', key: 'Last name', value: 'Connor' },
+          { index: '2', key: 'Birthday', value: '10/26/1984' },
+          { image: true, index: '3', key: 'Photo' },
+        ],
+        CredentialDetailScreen.scrollTo,
+      );
 
       await CredentialDetailScreen.scrollTo(
         CredentialDetailScreen.credentialCard.header.name,
@@ -613,6 +623,102 @@ describe('ONE-2014: Credential design', () => {
       await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
         CarouselImageType.Photo,
         false,
+      );
+    });
+  });
+
+  describe('ONE-2395: Credential Layout mDoc', () => {
+    let mdocSchema: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      mdocSchema = await mDocCredentialSchema(authToken);
+      await credentialIssuance({
+        authToken: authToken,
+        claimValues: mDocCredentialClaims(mdocSchema),
+        credentialSchema: mdocSchema,
+        didMethods: DidMethod.MDL,
+        exchange: Exchange.OPENID4VC,
+        keyAlgorithms: KeyType.ES256,
+      });
+      await WalletScreen.openDetailScreen(mdocSchema.name);
+    });
+
+    it('Test credential card header', async () => {
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
+
+      await CredentialDetailScreen.credentialCard.verifyCredentialName(
+        mdocSchema.name,
+      );
+      await CredentialDetailScreen.credentialCard.verifyDetailLabel(
+        'Wade',
+        'Wilson',
+      );
+    });
+
+    it('Test collapse & expand card', async () => {
+      await CredentialDetailScreen.credentialCard.collapseOrExpand();
+      await CredentialDetailScreen.credentialCard.verifyIsCardCollapsed();
+      await CredentialDetailScreen.credentialCard.collapseOrExpand();
+      await CredentialDetailScreen.credentialCard.verifyIsCardCollapsed(false);
+    });
+
+    it('Test credential carousel', async () => {
+      await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
+        CarouselImageType.Photo,
+      );
+      await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
+        CarouselImageType.QrCode,
+        false,
+      );
+
+      await CredentialDetailScreen.credentialCard.swipe('right');
+
+      await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
+        CarouselImageType.QrCode,
+      );
+      await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
+        CarouselImageType.Photo,
+        false,
+      );
+    });
+
+    it('Test credential background color', async () => {
+      await CredentialDetailScreen.credentialCard.verifyCardBackgroundColor(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        mdocSchema.layoutProperties.background?.color!,
+      );
+    });
+
+    it('Test logo background colors', async () => {
+      await CredentialDetailScreen.credentialCard.verifyLogoColor(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        mdocSchema.layoutProperties.logo?.backgroundColor!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        mdocSchema.layoutProperties.logo?.fontColor!,
+      );
+    });
+
+    it('Test credential card attributes', async () => {
+      await CredentialDetailScreen.credentialCard.verifyAttributeValues(
+        [
+          { index: '0.0', key: 'country', value: 'CH' },
+          { index: '0.1', key: 'region', value: 'Zurich' },
+          { index: '0.2', key: 'city', value: 'Zurich' },
+          { index: '0.3', key: 'street', value: 'strasse' },
+          { index: '1.0', key: 'first name', value: 'Wade' },
+          { index: '1.1', key: 'last name', value: 'Wilson' },
+          { index: '1.2', key: 'Birthday', value: '1/17/2018' },
+          { image: true, index: '1.3', key: 'image' },
+          { index: '2.0.0.0', key: 'Category', value: 'A' },
+          { index: '2.0.0.1', key: 'Expired', value: '9/29/2026' },
+          { index: '2.0.1.0', key: 'Category', value: 'B' },
+          { index: '2.0.1.1', key: 'Expired', value: '9/30/2030' },
+          { index: '2.0.2.0', key: 'Category', value: 'C' },
+          { index: '2.0.2.1', key: 'Expired', value: '9/28/2027' },
+        ],
+        CredentialDetailScreen.scrollTo,
       );
     });
   });

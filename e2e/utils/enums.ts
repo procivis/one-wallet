@@ -50,6 +50,7 @@ export enum CredentialFormat {
   JSON_LD_CLASSIC = 'JSON_LD_CLASSIC',
   JWT = 'JWT',
   MDOC = 'MDOC',
+  PHYSICAL_CARD = 'PHYSICAL_CARD',
   SDJWT = 'SDJWT',
 }
 
