@@ -50,9 +50,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const { invitationUrl } = route.params;
   const [error, setError] = useState<unknown>();
   const [canHandleInvitation, setCanHandleInvitation] = useState<boolean>();
-  const { availableTransport, transportError } = useAvailableTransports();
   const [invitationSupportedTransports] = useState(
     getInvitationUrlTransports(route.params.invitationUrl),
+  );
+  const { availableTransport, transportError } = useAvailableTransports(
+    invitationSupportedTransports,
   );
 
   useBlockOSBackNavigation();

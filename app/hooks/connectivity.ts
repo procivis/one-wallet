@@ -1,9 +1,11 @@
 import {
   addEventListener as onNetworkStateChange,
   NetInfoStateType,
+  NetInfoSubscription,
 } from '@react-native-community/netinfo';
 import parseUrl from 'parse-url';
 import { useEffect, useMemo, useState } from 'react';
+import { EventSubscription } from 'react-native';
 import BTStateManager from 'react-native-bluetooth-state-manager';
 
 export enum InternetState {
@@ -34,7 +36,9 @@ export type TransportError = {
   internet?: InternetError;
 };
 
-export const useAvailableTransports = (): {
+export const useAvailableTransports = (
+  supportedTransports: Transport[],
+): {
   availableTransport: Transport[] | undefined;
   transportError: TransportError;
 } => {
@@ -42,43 +46,59 @@ export const useAvailableTransports = (): {
   const [bluetoothState, setBluetoothState] = useState<BluetoothState>();
 
   useEffect(() => {
-    const btSubscription = BTStateManager.onStateChange((state) => {
-      switch (state) {
-        case 'PoweredOn':
-          setBluetoothState(BluetoothState.Available);
-          break;
-        case 'PoweredOff':
-          setBluetoothState(BluetoothState.Disabled);
-          break;
-        case 'Unauthorized':
-          setBluetoothState(BluetoothState.Unauthorized);
-          break;
-        default:
-          setBluetoothState(BluetoothState.Unavailable);
-      }
-    }, true);
-    const netSubscription = onNetworkStateChange((state) => {
-      if (state.type === NetInfoStateType.none) {
-        setInternetState(InternetState.Disabled);
-        return;
-      }
-      if (state.isInternetReachable === null) {
-        return;
-      }
-      if (state.isInternetReachable) {
-        setInternetState(InternetState.Available);
-      } else {
-        setInternetState(InternetState.Unreachable);
-      }
-    });
+    let btSubscription: EventSubscription | undefined;
+    if (supportedTransports.includes(Transport.Bluetooth)) {
+      btSubscription = BTStateManager.onStateChange((state) => {
+        switch (state) {
+          case 'PoweredOn':
+            setBluetoothState(BluetoothState.Available);
+            break;
+          case 'PoweredOff':
+            setBluetoothState(BluetoothState.Disabled);
+            break;
+          case 'Unauthorized':
+            setBluetoothState(BluetoothState.Unauthorized);
+            break;
+          default:
+            setBluetoothState(BluetoothState.Unavailable);
+        }
+      }, true);
+    }
+    let netSubscription: NetInfoSubscription | undefined;
+    if (
+      supportedTransports.includes(Transport.HTTP) ||
+      supportedTransports.includes(Transport.MQTT)
+    ) {
+      netSubscription = onNetworkStateChange((state) => {
+        if (state.type === NetInfoStateType.none) {
+          setInternetState(InternetState.Disabled);
+          return;
+        }
+        if (state.isInternetReachable === null) {
+          return;
+        }
+        if (state.isInternetReachable) {
+          setInternetState(InternetState.Available);
+        } else {
+          setInternetState(InternetState.Unreachable);
+        }
+      });
+    }
     return () => {
-      btSubscription.remove();
-      netSubscription();
+      btSubscription?.remove();
+      netSubscription?.();
     };
-  }, []);
+  }, [supportedTransports]);
 
   const transportStatus = useMemo(() => {
-    if (internetState === undefined || bluetoothState === undefined) {
+    const waitingForInternetState =
+      (supportedTransports.includes(Transport.HTTP) ||
+        supportedTransports.includes(Transport.MQTT)) &&
+      internetState === undefined;
+    const waitingForBluetoothState =
+      supportedTransports.includes(Transport.Bluetooth) &&
+      bluetoothState === undefined;
+    if (waitingForInternetState || waitingForBluetoothState) {
       return {
         availableTransport: undefined,
         transportError: {},
@@ -98,7 +118,7 @@ export const useAvailableTransports = (): {
       transportError.ble = bluetoothState;
     }
     return { availableTransport, transportError };
-  }, [bluetoothState, internetState]);
+  }, [bluetoothState, internetState, supportedTransports]);
 
   return transportStatus;
 };
