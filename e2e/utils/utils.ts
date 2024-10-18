@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const objectToQueryParams = (obj: Record<string, any>): string => {
   const params = new URLSearchParams();
 
@@ -19,4 +21,8 @@ export const objectToQueryParams = (obj: Record<string, any>): string => {
   });
 
   return params.toString();
+};
+
+export const shortUUID = () => {
+  return uuidv4().split('-')[0];
 };

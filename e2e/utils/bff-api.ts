@@ -24,7 +24,7 @@ import {
   LayoutType,
   RevocationMethod,
 } from './enums';
-import { objectToQueryParams } from './query-params';
+import { objectToQueryParams } from './utils';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
