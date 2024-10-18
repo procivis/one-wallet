@@ -62,11 +62,10 @@ const ProofDetailNerdView: FunctionComponent = () => {
   > = [
     {
       attributeKey: translate('credentialDetail.credential.exchange'),
-      attributeText: isProcivisProtocol(
+      attributeText:
         (procivisExchangeProtocol &&
           translate(`proofRequest.exchange.${procivisExchangeProtocol}`)) ||
-          proofDetail.exchange,
-      ),
+        proofDetail.exchange,
     },
     {
       attributeKey: translate('proofRequest.createDate'),
