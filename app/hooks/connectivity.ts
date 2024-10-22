@@ -139,7 +139,7 @@ export const getInvitationUrlTransports = (url: string): Transport[] => {
     if (
       parsedUrl.query.key &&
       parsedUrl.query.brokerUrl &&
-      parsedUrl.query.proofId
+      parsedUrl.query.topicId
     ) {
       transports.push(Transport.MQTT);
     }
