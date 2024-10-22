@@ -9,13 +9,13 @@ describe('getInvitationUrlTransports', () => {
   });
   test('MQTT OpenID4VP url', () => {
     const transports = getInvitationUrlTransports(
-      'OPENID4VP://connect?key=24c810cb01a8b12200bdb66dc5a7ac9b49a4cfdd5c4b89f51e03206be3abac5b&brokerUrl=mqtt://dev.procivis-one.com&proofId=540684a4-430c-441c-b188-786653f5ab35',
+      'OPENID4VP://connect?key=24c810cb01a8b12200bdb66dc5a7ac9b49a4cfdd5c4b89f51e03206be3abac5b&brokerUrl=mqtt://dev.procivis-one.com&topicId=540684a4-430c-441c-b188-786653f5ab35',
     );
     expect(transports).toStrictEqual([Transport.MQTT]);
   });
   test('Mixed BLE/MQTT OpenID4VP url', () => {
     const transports = getInvitationUrlTransports(
-      'OPENID4VP://connect?name=XFwsduA5&key=24c810cb01a8b12200bdb66dc5a7ac9b49a4cfdd5c4b89f51e03206be3abac5b&brokerUrl=mqtt://dev.procivis-one.com&proofId=540684a4-430c-441c-b188-786653f5ab35',
+      'OPENID4VP://connect?name=XFwsduA5&key=24c810cb01a8b12200bdb66dc5a7ac9b49a4cfdd5c4b89f51e03206be3abac5b&brokerUrl=mqtt://dev.procivis-one.com&topicId=540684a4-430c-441c-b188-786653f5ab35',
     );
     expect(transports).toStrictEqual([Transport.Bluetooth, Transport.MQTT]);
   });
