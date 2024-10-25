@@ -87,6 +87,13 @@ const InvitationProcessScreen: FunctionComponent = () => {
     LoaderViewState.InProgress | LoaderViewState.Warning
   >(LoaderViewState.InProgress);
 
+  const [transitionEnded, setTransitionEnded] = useState(false);
+  useEffect(() => {
+    return managementNavigation.addListener('transitionEnd', () => {
+      setTransitionEnded(true);
+    });
+  }, [managementNavigation]);
+
   useEffect(() => {
     if (permissionStatus === 'denied' && isBleInteraction) {
       requestPermission();
@@ -152,45 +159,47 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   useEffect(() => {
-    if (!canHandleInvitation || !availableTransport) {
+    if (!canHandleInvitation || !availableTransport || !transitionEnded) {
       return;
     }
 
-    setTimeout(() => {
-      const transports = invitationSupportedTransports.filter((t) =>
-        availableTransport.includes(t),
-      );
-      const transport = transports.includes(Transport.MQTT)
-        ? Transport.MQTT
-        : transports[0];
-      handleInvitation({ invitationUrl, transport })
-        .then((result) => {
-          if ('credentialIds' in result) {
-            managementNavigation.replace('IssueCredential', {
-              params: {
-                credentialId: result.credentialIds[0],
-                interactionId: result.interactionId,
-              },
-              screen: 'CredentialOffer',
-            });
-          } else {
-            managementNavigation.replace('ShareCredential', {
-              params: { request: result },
-              screen: 'ProofRequest',
-            });
-          }
-        })
-        .catch((err: OneError) => {
-          // TODO Propagate proper error code from core
-          if (err.message.includes('adapter is disabled')) {
-            setAdapterEnabled(false);
-          } else {
-            reportException(err, 'Invitation failure');
-            setError(err);
-          }
-          setState(LoaderViewState.Warning);
-        });
-    }, 1000);
+    const transports = invitationSupportedTransports.filter((t) =>
+      availableTransport.includes(t),
+    );
+    const transport = transports.includes(Transport.MQTT)
+      ? Transport.MQTT
+      : transports[0];
+    if (!transport) {
+      return;
+    }
+
+    handleInvitation({ invitationUrl, transport })
+      .then((result) => {
+        if ('credentialIds' in result) {
+          managementNavigation.replace('IssueCredential', {
+            params: {
+              credentialId: result.credentialIds[0],
+              interactionId: result.interactionId,
+            },
+            screen: 'CredentialOffer',
+          });
+        } else {
+          managementNavigation.replace('ShareCredential', {
+            params: { request: result },
+            screen: 'ProofRequest',
+          });
+        }
+      })
+      .catch((err: OneError) => {
+        // TODO Propagate proper error code from core
+        if (err.message.includes('adapter is disabled')) {
+          setAdapterEnabled(false);
+        } else {
+          reportException(err, 'Invitation failure');
+          setError(err);
+        }
+        setState(LoaderViewState.Warning);
+      });
   }, [
     availableTransport,
     canHandleInvitation,
@@ -198,6 +207,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     invitationSupportedTransports,
     invitationUrl,
     managementNavigation,
+    transitionEnded,
   ]);
 
   const infoPressHandler = useCallback(() => {
@@ -300,7 +310,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       header={{
         leftItem: HeaderCloseModalButton,
         rightItem:
-          state === LoaderViewState.Warning ? (
+          state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton onPress={infoPressHandler} />
           ) : undefined,
       }}
