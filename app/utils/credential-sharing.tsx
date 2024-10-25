@@ -130,14 +130,14 @@ const getAttributeSelectorStatus = (
     return SelectorStatus.Rejected;
   }
   if (field.required) {
-    return SelectorStatus.Required;
+    if (claim) {
+      return SelectorStatus.Required;
+    } else {
+      return SelectorStatus.Rejected;
+    }
   }
   if (!claim) {
-    if (field.required) {
-      return SelectorStatus.Rejected;
-    } else {
-      return SelectorStatus.Disabled;
-    }
+    return SelectorStatus.Disabled;
   }
   return selected ? SelectorStatus.SelectedCheckmark : SelectorStatus.Empty;
 };
@@ -375,7 +375,15 @@ export const selectCredentialCardFromCredential = (
     );
     return {
       ...attribute,
-      rightAccessory: RequiredAttributeIcon,
+      rightAccessory: (
+        <Selector
+          status={
+            field.required && !claim
+              ? SelectorStatus.Rejected
+              : SelectorStatus.Required
+          }
+        />
+      ),
     };
   });
   return {

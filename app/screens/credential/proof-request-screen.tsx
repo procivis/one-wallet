@@ -9,6 +9,7 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   CredentialStateEnum,
+  PresentationDefinition,
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
@@ -48,6 +49,23 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { reportException } from '../../utils/reporting';
+
+const isCredentialApplicable = (
+  presentationDefinition: PresentationDefinition,
+  requestedCredentialId: string,
+  selectedCredentialId: string,
+) => {
+  return presentationDefinition.requestGroups
+    .find((group) =>
+      group.requestedCredentials.find(
+        (credential) => credential.id === requestedCredentialId,
+      ),
+    )
+    ?.requestedCredentials.find(
+      (credential) => credential.id === requestedCredentialId,
+    )
+    ?.applicableCredentials.includes(selectedCredentialId);
+};
 
 const ProofRequestScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
@@ -119,12 +137,22 @@ const ProofRequestScreen: FunctionComponent = () => {
     > = {};
     presentationDefinition.requestGroups.forEach((group) =>
       group.requestedCredentials.forEach((credential) => {
-        const credentialId =
-          allCredentials.find(
+        let selectedCredential = allCredentials.find(
+          ({ id, state }) =>
+            state === CredentialStateEnum.ACCEPTED &&
+            credential.applicableCredentials.includes(id),
+        );
+        if (!selectedCredential) {
+          selectedCredential = allCredentials.find(
             ({ id, state }) =>
               state === CredentialStateEnum.ACCEPTED &&
-              credential.applicableCredentials.includes(id),
-          )?.id ?? credential.applicableCredentials[0];
+              credential.inapplicableCredentials.includes(id),
+          );
+        }
+        const credentialId =
+          selectedCredential?.id ??
+          credential.applicableCredentials[0] ??
+          credential.inapplicableCredentials[0];
         if (!credentialId) {
           preselected[credential.id] = undefined;
           return;
@@ -244,9 +272,14 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const allSelectionsValid =
     presentationDefinition &&
-    Object.values(selectedCredentials).every(
-      (selection) =>
+    Object.entries(selectedCredentials).every(
+      ([requestedCredentialId, selection]) =>
         selection?.credentialId &&
+        isCredentialApplicable(
+          presentationDefinition,
+          requestedCredentialId,
+          selection.credentialId,
+        ) &&
         allCredentials?.some(
           ({ id, state }) =>
             id === selection.credentialId &&

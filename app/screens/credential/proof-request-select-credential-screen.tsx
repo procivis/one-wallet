@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonType,
   concatTestID,
   ScrollViewScreen,
 } from '@procivis/one-react-native-components';
@@ -34,6 +35,9 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>(
     preselectedCredentialId,
   );
+  const canSubmitCredential = useMemo(() => {
+    return request.applicableCredentials.includes(selectedCredentialId);
+  }, [request.applicableCredentials, selectedCredentialId]);
   const onConfirm = useCallback(() => {
     navigation.navigate({
       merge: true,
@@ -46,12 +50,14 @@ const SelectCredentialScreen: FunctionComponent = () => {
 
   const selectionOptions = useMemo(
     () =>
-      request.applicableCredentials.filter((credentialId) =>
-        allCredentials?.some(
-          ({ id, state }) =>
-            id === credentialId && state === CredentialStateEnum.ACCEPTED,
+      request.inapplicableCredentials
+        .concat(request.applicableCredentials)
+        .filter((credentialId) =>
+          allCredentials?.some(
+            ({ id, state }) =>
+              id === credentialId && state === CredentialStateEnum.ACCEPTED,
+          ),
         ),
-      ),
     [allCredentials, request],
   );
 
@@ -97,9 +103,11 @@ const SelectCredentialScreen: FunctionComponent = () => {
       </View>
       <View style={styles.bottom}>
         <Button
+          disabled={!canSubmitCredential}
           onPress={onConfirm}
           testID="ProofRequestSelectCredentialScreen.confirm"
           title={translate('proofRequest.selectCredential.select')}
+          type={canSubmitCredential ? ButtonType.Primary : ButtonType.Secondary}
         />
       </View>
     </ScrollViewScreen>

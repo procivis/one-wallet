@@ -61,13 +61,15 @@ export const CredentialSelect: FunctionComponent<{
 
   const selectionOptions = useMemo(
     () =>
-      request.applicableCredentials.filter((applicableCredentialId) =>
-        allCredentials.some(
-          ({ id, state }) =>
-            id === applicableCredentialId &&
-            state === CredentialStateEnum.ACCEPTED,
+      request.applicableCredentials
+        .concat(request.inapplicableCredentials)
+        .filter((applicableCredentialId) =>
+          allCredentials.some(
+            ({ id, state }) =>
+              id === applicableCredentialId &&
+              state === CredentialStateEnum.ACCEPTED,
+          ),
         ),
-      ),
     [allCredentials, request],
   );
   const multipleCredentialsAvailable = selectionOptions.length > 1;
