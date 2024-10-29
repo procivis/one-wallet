@@ -1,12 +1,5 @@
-[![pipeline status](https://gitlab.procivis.ch/procivis/one/one-wallet/badges/main/pipeline.svg)](https://gitlab.procivis.ch/procivis/one/one-wallet/-/pipelines)
-[![Quality Gate Status](https://sonarqube.dev.procivis-one.com/api/project_badges/measure?project=procivis_one_one-wallet_AYvSDHFdRCeOFTM-0S1y&metric=alert_status&token=sqb_c804296305ad5b64ba9148f4bd3d8404ed2ed60a)](https://sonarqube.dev.procivis-one.com/dashboard?id=procivis_one_one-wallet_AYvSDHFdRCeOFTM-0S1y)
-
-| Configuration |                                                                                              Build Status                                                                                               |
-| ------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| Demo          | [![Build Status](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687/status.svg?token=asgEvbNJgYbMPW707rocOA&branch=main)](https://app.bitrise.io/app/6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687) |
-
-![Procivis One Wallet](docs/assets/logo_dark_One_Wallet.png#gh-light-mode-only)
-![Procivis One Wallet](docs/assets/logo_light_One_Wallet.png#gh-dark-mode-only)
+![Procivis One](https://assets.procivis-one.com/static/logo/logo_dark_One_Wallet.png#gh-light-mode-only)
+![Procivis One](https://assets.procivis-one.com/static/logo/logo_light_One_Wallet.png#gh-dark-mode-only)
 
 ## Table of Contents
 
@@ -194,7 +187,7 @@ often referred to as Self-Sovereign Identity, or SSI.
 If you want to provide an **EUDI Wallet**, *Procivis One* provides production grade open
 source components to get certified and connect your organization to the eIDAS 2.0 ecosystem.
 
-![Procivis One in the eIDAS ARF](docs/assets/eIDAS_Architecture.png)
+![Procivis One in the eIDAS ARF](https://assets.procivis-one.com/static/diff/eIDAS_Architecture.png)
 
 For an EUDI Wallet, use the [One Core React Native SDK][rncore] for embedding into
 an existing app, or use the [Procivis One Wallet][pow] with adaptations to fit your
@@ -265,8 +258,8 @@ Need support or have feedback? [Contact us](https://www.procivis.ch/en/contact).
 Some rights reserved. This library is published under the [Apache License
 Version 2.0](./LICENSE).
 
-![Procivis AG](docs/assets/logo_light_mode_Procivis.svg#gh-light-mode-only)
-![Procivis AG](docs/assets/logo_dark_mode_Procivis.svg#gh-dark-mode-only)
+![Procivis AG](https://assets.procivis-one.com/static/logo/logo_light_mode_Procivis.svg#gh-light-mode-only)
+![Procivis AG](https://assets.procivis-one.com/static/logo/logo_dark_mode_Procivis.svg#gh-dark-mode-only)
 
 © Procivis AG, [https://www.procivis.ch](https://www.procivis.ch).
 
