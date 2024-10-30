@@ -134,6 +134,7 @@
   "credentialHistory.pending": "Credential pending",
   "credentialHistory.revalidated": "Credential revalidated",
   "credentialHistory.revoked": "Credential revoked",
+  "credentialHistory.shareAccepted": "Request accepted",
   "credentialHistory.shareError": "Proof request failed",
   "credentialHistory.shareRejected": "Rejected share request",
   "credentialHistory.shared": "Shared credential",
