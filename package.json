@@ -5,6 +5,7 @@
   "license": "Apache-2.0",
   "description": "ONE Wallet React Native App",
   "homepage": "https://procivis.ch",
+  "repository": "https://github.com/procivis/one-wallet",
   "scripts": {
     "start": "react-native start",
     "ios": "react-native run-ios",
@@ -34,7 +35,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
-    "@procivis/one-react-native-components": "0.1.58",
+    "@procivis/one-react-native-components": "0.1.63",
     "@procivis/react-native-one-core": "1.26730.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
