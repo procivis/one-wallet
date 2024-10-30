@@ -21,6 +21,12 @@ export const getHistoryItemLabelAndIconForAction = (
 ) => {
   switch (historyItem.action) {
     case HistoryActionEnum.PENDING:
+      if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
+        return {
+          icon: <HistoryActionIcon type={HistoryActionIconType.Share} />,
+          label: translate('credentialHistory.shared'),
+        };
+      }
       return {
         icon: <HistoryActionIcon type={HistoryActionIconType.Issue} />,
         label: translate('credentialHistory.pending'),
@@ -34,7 +40,7 @@ export const getHistoryItemLabelAndIconForAction = (
       if (historyItem.entityType === HistoryEntityTypeEnum.PROOF) {
         return {
           icon: <HistoryActionIcon type={HistoryActionIconType.Share} />,
-          label: translate('credentialHistory.shared'),
+          label: translate('credentialHistory.shareAccepted'),
         };
       }
       return {
