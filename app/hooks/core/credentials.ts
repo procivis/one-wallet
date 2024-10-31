@@ -133,11 +133,13 @@ export const useCredentialAccept = () => {
       interactionId,
       didId,
       keyId,
+      txCode,
     }: {
       didId: string;
       interactionId: string;
       keyId?: string;
-    }) => core.holderAcceptCredential(interactionId, didId, keyId),
+      txCode?: string;
+    }) => core.holderAcceptCredential(interactionId, didId, keyId, txCode),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CREDENTIAL_LIST_QUERY_KEY);
