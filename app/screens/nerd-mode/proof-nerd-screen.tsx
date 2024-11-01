@@ -1,7 +1,9 @@
 import {
   ActivityIndicator,
+  ExchangeProtocol,
   NerdModeItemProps,
   NerdModeScreen,
+  useProofDetail,
 } from '@procivis/one-react-native-components';
 import {
   useIsFocused,
@@ -12,18 +14,14 @@ import moment from 'moment';
 import React, { FunctionComponent } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
-import { useProofDetail } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
-import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
-const isProcivisProtocol = (
+const parseExchangeProtocol = (
   protocol: string,
-): ProcivisExchangeProtocol | undefined => {
-  return ProcivisExchangeProtocol[
-    protocol as keyof typeof ProcivisExchangeProtocol
-  ];
+): ExchangeProtocol | undefined => {
+  return ExchangeProtocol[protocol as keyof typeof ExchangeProtocol];
 };
 
 const ProofDetailNerdView: FunctionComponent = () => {
@@ -55,7 +53,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
       ]
     : [];
 
-  const procivisExchangeProtocol = isProcivisProtocol(proofDetail.exchange);
+  const procivisExchangeProtocol = parseExchangeProtocol(proofDetail.exchange);
 
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>

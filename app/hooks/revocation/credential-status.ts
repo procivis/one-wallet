@@ -1,4 +1,8 @@
 import {
+  useCredentialRevocationCheck,
+  useCredentials,
+} from '@procivis/one-react-native-components';
+import {
   CredentialListItem,
   CredentialStateEnum,
 } from '@procivis/react-native-one-core';
@@ -8,10 +12,6 @@ import RNBootSplash from 'react-native-bootsplash';
 
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
-import {
-  useCredentialRevocationCheck,
-  useCredentials,
-} from '../core/credentials';
 
 /**
  * Runs revocation check on background for all potential updates

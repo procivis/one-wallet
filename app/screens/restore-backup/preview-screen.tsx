@@ -3,6 +3,9 @@ import {
   NavigationHeader,
   Typography,
   useAppColorScheme,
+  useBeforeRemove,
+  useCredentials,
+  useRollbackImport,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useRef } from 'react';
@@ -20,9 +23,6 @@ import {
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import { useRollbackImport } from '../../hooks/core/backup';
-import { useCredentials } from '../../hooks/core/credentials';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
 import { RestoreBackupProcessingNavigationProp } from '../../navigators/restore-backup/restore-backup-processing-routes';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';

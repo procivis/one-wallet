@@ -4,7 +4,11 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import { AccessibilityLanguageProvider } from '@procivis/one-react-native-components';
+import {
+  AccessibilityLanguageProvider,
+  ONECoreContextProvider,
+  ONECoreUseType,
+} from '@procivis/one-react-native-components';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -14,7 +18,6 @@ import {
 import i18n from 'i18n-js';
 import React from 'react';
 
-import { ONECoreContextProvider } from '../hooks/core/core-context';
 import { useStores } from '../models';
 import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';
@@ -51,7 +54,7 @@ export const AppNavigator = (props: NavigationProps) => {
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}
     >
-      <ONECoreContextProvider>
+      <ONECoreContextProvider type={ONECoreUseType.holder}>
         <NavigationContainer
           onStateChange={onNavigationChange}
           ref={navigationRef}

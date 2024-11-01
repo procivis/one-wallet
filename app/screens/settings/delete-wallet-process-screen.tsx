@@ -3,6 +3,8 @@ import {
   LoaderViewState,
   LoadingResultScreen,
   useBlockOSBackNavigation,
+  useCloseButtonTimeout,
+  useONECore,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
@@ -17,8 +19,6 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { useONECore } from '../../hooks/core/core-context';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { removePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
