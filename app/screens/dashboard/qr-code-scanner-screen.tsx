@@ -19,7 +19,7 @@ import { Code } from 'react-native-vision-camera';
 import { ScannerScreen } from '../../components/vision-camera/vision-camera';
 import { config } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
-import { useInvitationHandling } from '../../hooks/core/deep-link';
+import { useInvitationHandling } from '../../hooks/navigation/deep-link';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 

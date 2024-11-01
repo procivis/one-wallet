@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
 import { Platform } from 'react-native';
 
-import { useRuntimeDeepLinkHandling } from '../../hooks/core/deep-link';
+import { useRuntimeDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import StatusCheckResultScreen from '../../screens/credential/status-check-result-screen';

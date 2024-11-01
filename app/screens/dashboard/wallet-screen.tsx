@@ -4,6 +4,7 @@ import {
   concatTestID,
   CredentialDetailsCardListItem,
   FoldableHeader,
+  getCredentialCardPropsFromCredential,
   Header,
   NextIcon,
   NoCredentialsIcon,
@@ -11,7 +12,11 @@ import {
   TouchableOpacity,
   Typography,
   useAppColorScheme,
+  useCoreConfig,
+  useCredentialDetail,
+  useCredentialListExpandedCard,
   useListContentInset,
+  usePagedCredentials,
 } from '@procivis/one-react-native-components';
 import {
   CredentialListIncludeEntityType,
@@ -40,17 +45,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ListPageLoadingIndicator from '../../components/list/list-page-loading-indicator';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
-import { useCoreConfig } from '../../hooks/core/core-config';
-import {
-  useCredentialDetail,
-  usePagedCredentials,
-} from '../../hooks/core/credentials';
-import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { getCredentialCardPropsFromCredential } from '../../utils/credential';
+import { credentialCardLabels } from '../../utils/credential';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
@@ -144,7 +143,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       // all preview fields (primaryAttribute, photoAttribute, MRZ, etc.)
       const { data: credential } = useCredentialDetail(item.id, isFocused);
 
-      if (!credential) {
+      if (!credential || !config) {
         return null;
       }
 
@@ -155,6 +154,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         config,
         undefined,
         concatTestID(testID, 'card'),
+        credentialCardLabels(),
       );
       const headerAccessory = (
         <TouchableOpacity
