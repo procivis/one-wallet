@@ -1,4 +1,7 @@
-import { useMemoAsync } from '@procivis/one-react-native-components';
+import {
+  ExchangeProtocol,
+  useMemoAsync,
+} from '@procivis/one-react-native-components';
 import { useCallback, useState } from 'react';
 // eslint-disable-next-line react-native/split-platform-components
 import { Linking, PermissionsAndroid, Platform } from 'react-native';
@@ -12,11 +15,7 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 
-import { ProcivisExchangeProtocol } from '../models/proofs';
-
-type BLEExchange =
-  | ProcivisExchangeProtocol.OPENID4VC
-  | ProcivisExchangeProtocol.ISO_MDL;
+type BLEExchange = ExchangeProtocol.OPENID4VC | ExchangeProtocol.ISO_MDL;
 
 const centralPermissions =
   Platform.OS === 'android'
@@ -51,7 +50,7 @@ export const useBlePermissions = (exchange: BLEExchange) => {
     useState<PermissionStatus>();
 
   const permissions =
-    exchange === ProcivisExchangeProtocol.OPENID4VC
+    exchange === ExchangeProtocol.OPENID4VC
       ? centralPermissions
       : peripheralPermissions;
 

@@ -1,5 +1,6 @@
 import {
   BackButton,
+  CredentialDetails,
   DataItem,
   EntityCluster,
   HistoryStatusIcon,
@@ -7,6 +8,9 @@ import {
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
+  useCredentialDetail,
+  useCredentialListExpandedCard,
+  useProofDetail,
 } from '@procivis/one-react-native-components';
 import {
   Claim,
@@ -21,17 +25,15 @@ import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
-import { Credential } from '../../components/credential/credential';
 import { HeaderInfoButton } from '../../components/navigation/header-buttons';
-import { useCredentialDetail } from '../../hooks/core/credentials';
-import { useProofDetail } from '../../hooks/core/proofs';
-import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
   HistoryNavigationProp,
   HistoryRouteProp,
 } from '../../navigators/history/history-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { credentialCardLabels } from '../../utils/credential';
 import { formatDateTimeLocalized } from '../../utils/date';
 import { nonEmptyFilter } from '../../utils/filtering';
 import { getEntryTitle } from '../../utils/history';
@@ -119,6 +121,7 @@ export const HistoryDetailScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
+  const onImagePreview = useCredentialImagePreview();
 
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
@@ -277,11 +280,13 @@ export const HistoryDetailScreen: FC = () => {
           >
             {translate('historyDetail.credential')}
           </Typography>
-          <Credential
+          <CredentialDetails
             credentialId={issuedCredential.id}
             expanded={expandedCredential === issuedCredential.id}
+            labels={credentialCardLabels()}
             lastItem
             onHeaderPress={onHeaderPress}
+            onImagePreview={onImagePreview}
           />
         </>
       )}
@@ -297,12 +302,14 @@ export const HistoryDetailScreen: FC = () => {
           </Typography>
           {proofCredentials.map((proofCredential, index, { length }) => (
             <View key={proofCredential.id} style={styles.credential}>
-              <Credential
+              <CredentialDetails
                 claims={proofCredential.claims}
                 credentialId={proofCredential.id}
                 expanded={expandedCredential === proofCredential.id}
+                labels={credentialCardLabels()}
                 lastItem={index === length - 1}
                 onHeaderPress={onHeaderPress}
+                onImagePreview={onImagePreview}
               />
             </View>
           ))}

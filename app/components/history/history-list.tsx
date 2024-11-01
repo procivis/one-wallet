@@ -2,13 +2,13 @@ import {
   ActivityIndicator,
   concatTestID,
   useAppColorScheme,
+  useHistory,
 } from '@procivis/one-react-native-components';
 import { HistoryListQuery } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Animated, SectionListProps, StyleSheet } from 'react-native';
 
-import { useHistory } from '../../hooks/core/history';
 import { HistoryListItemWithDid } from '../../models/core/history';
 import {
   groupEntriesByDay,
