@@ -6,9 +6,14 @@ import {
   concatTestID,
   CredentialCardShadow,
   CredentialDetailsCard,
+  detailsCardFromCredential,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
+  useCoreConfig,
+  useCredentialCardExpanded,
+  useCredentialDetail,
+  useHistory,
 } from '@procivis/one-react-native-components';
 import {
   HistoryEntityTypeEnum,
@@ -27,10 +32,6 @@ import {
   HeaderBackButton,
   HeaderOptionsButton,
 } from '../../components/navigation/header-buttons';
-import { useCoreConfig } from '../../hooks/core/core-config';
-import { useCredentialDetail } from '../../hooks/core/credentials';
-import { useHistory } from '../../hooks/core/history';
-import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
@@ -40,7 +41,7 @@ import {
   CredentialDetailRouteProp,
 } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { detailsCardFromCredential } from '../../utils/credential';
+import { credentialCardLabels } from '../../utils/credential';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
@@ -123,7 +124,7 @@ const CredentialDetailScreen: FC = () => {
     rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
-  if (!credential) {
+  if (!credential || !config) {
     return <ActivityIndicator animate={isFocused} />;
   }
   const testID = 'CredentialDetailScreen.detailsCard';
@@ -131,6 +132,7 @@ const CredentialDetailScreen: FC = () => {
     credential,
     config,
     testID,
+    credentialCardLabels(),
   );
 
   return (

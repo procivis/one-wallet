@@ -1,7 +1,14 @@
 import {
+  BluetoothState,
+  ExchangeProtocol,
+  getInvitationUrlTransports,
+  InternetState,
   LoaderViewState,
   LoadingResultScreen,
+  Transport,
+  useAvailableTransports,
   useBlockOSBackNavigation,
+  useInvitationHandler,
 } from '@procivis/one-react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import {
@@ -25,16 +32,7 @@ import {
   useBlePermissions,
   useOpenBleSettings,
 } from '../../hooks/ble-permissions';
-import {
-  BluetoothState,
-  getInvitationUrlTransports,
-  InternetState,
-  Transport,
-  useAvailableTransports,
-} from '../../hooks/connectivity';
-import { useInvitationHandler } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
-import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -61,7 +59,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions(ProcivisExchangeProtocol.OPENID4VC);
+    useBlePermissions(ExchangeProtocol.OPENID4VC);
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
   const { openAppPermissionSettings, openBleSettings } = useOpenBleSettings();

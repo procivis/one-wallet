@@ -4,6 +4,7 @@ import {
   Button,
   ButtonType,
   useAppColorScheme,
+  useCredentialSchemas,
 } from '@procivis/one-react-native-components';
 import { CredentialSchema } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
@@ -11,7 +12,6 @@ import React, { FC, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useCredentialSchemas } from '../../hooks/core/credential-schemas';
 import { translate } from '../../i18n';
 import RadioGroup, { RadioGroupItem } from '../common/radio-group';
 import ListPageLoadingIndicator from '../list/list-page-loading-indicator';

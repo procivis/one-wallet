@@ -4,8 +4,17 @@ import {
   ButtonType,
   concatTestID,
   EntityCluster,
+  ProofRequestGroup,
   ScrollViewScreen,
+  ShareCredential,
+  useBeforeRemove,
+  useCredentialListExpandedCard,
+  useCredentialRevocationCheck,
+  useCredentials,
   useMemoAsync,
+  useONECore,
+  useProofDetail,
+  useProofReject,
 } from '@procivis/one-react-native-components';
 import {
   CredentialStateEnum,
@@ -32,22 +41,14 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { CredentialSelect } from '../../components/proof-request/credential-select';
-import { Group } from '../../components/proof-request/group';
-import { useONECore } from '../../hooks/core/core-context';
-import {
-  useCredentialRevocationCheck,
-  useCredentials,
-} from '../../hooks/core/credentials';
-import { useProofDetail, useProofReject } from '../../hooks/core/proofs';
-import { useCredentialListExpandedCard } from '../../hooks/credential-card/credential-card-expanding';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
+import { shareCredentialLabels } from '../../utils/credential-sharing';
 import { reportException } from '../../utils/reporting';
 
 const isCredentialApplicable = (
@@ -72,6 +73,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const onImagePreview = useCredentialImagePreview();
   const { core } = useONECore();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
@@ -315,50 +317,46 @@ const ProofRequestScreen: FunctionComponent = () => {
           <ActivityIndicator animate={isFocused} />
         ) : (
           <>
-            {presentationDefinition.requestGroups.map(
-              (group, index, { length }) => (
-                <Group
-                  key={group.id}
-                  last={length === index + 1}
-                  request={group}
-                >
-                  {group.requestedCredentials.map(
-                    (
-                      credential,
-                      credentialIndex,
-                      { length: credentialsLength },
-                    ) => (
-                      <CredentialSelect
-                        allCredentials={allCredentials}
-                        credentialId={credential.id}
-                        expanded={expandedCredential === credential.id}
-                        key={credential.id}
-                        lastItem={credentialIndex === credentialsLength - 1}
-                        onHeaderPress={onHeaderPress}
-                        onSelectCredential={onSelectCredential(credential.id)}
-                        onSelectField={onSelectField(credential.id)}
-                        request={credential}
-                        selectedCredentialId={
-                          selectedCredentials[credential.id]?.credentialId
-                        }
-                        selectedFields={
-                          selectedCredentials[credential.id]?.submitClaims
-                        }
-                        style={[
-                          styles.requestedCredential,
-                          credentialsLength === credentialIndex + 1 &&
-                            styles.requestedCredentialLast,
-                        ]}
-                        testID={concatTestID(
-                          'ProofRequestSharingScreen.credential',
-                          credential.id,
-                        )}
-                      />
-                    ),
-                  )}
-                </Group>
-              ),
-            )}
+            {presentationDefinition.requestGroups.map((group) => (
+              <ProofRequestGroup key={group.id}>
+                {group.requestedCredentials.map(
+                  (
+                    credential,
+                    credentialIndex,
+                    { length: credentialsLength },
+                  ) => (
+                    <ShareCredential
+                      allCredentials={allCredentials}
+                      credentialId={credential.id}
+                      expanded={expandedCredential === credential.id}
+                      key={credential.id}
+                      labels={shareCredentialLabels()}
+                      lastItem={credentialIndex === credentialsLength - 1}
+                      onHeaderPress={onHeaderPress}
+                      onImagePreview={onImagePreview}
+                      onSelectCredential={onSelectCredential(credential.id)}
+                      onSelectField={onSelectField(credential.id)}
+                      request={credential}
+                      selectedCredentialId={
+                        selectedCredentials[credential.id]?.credentialId
+                      }
+                      selectedFields={
+                        selectedCredentials[credential.id]?.submitClaims
+                      }
+                      style={[
+                        styles.requestedCredential,
+                        credentialsLength === credentialIndex + 1 &&
+                          styles.requestedCredentialLast,
+                      ]}
+                      testID={concatTestID(
+                        'ProofRequestSharingScreen.credential',
+                        credential.id,
+                      )}
+                    />
+                  ),
+                )}
+              </ProofRequestGroup>
+            ))}
             <View style={styles.bottom}>
               <Button
                 disabled={!allSelectionsValid}

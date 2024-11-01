@@ -2,7 +2,10 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  useBeforeRemove,
   useBlockOSBackNavigation,
+  useCloseButtonTimeout,
+  useCreateBackup,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -20,9 +23,6 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { useCreateBackup } from '../../hooks/core/backup';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { CreateBackupProcessingRouteProp } from '../../navigators/create-backup/create-backup-processing-routes';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';

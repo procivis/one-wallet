@@ -3,6 +3,9 @@ import {
   LoaderViewState,
   LoadingResultScreen,
   useBlockOSBackNavigation,
+  useCloseButtonTimeout,
+  useCredentialAccept,
+  useCredentialDetail,
 } from '@procivis/one-react-native-components';
 import { WalletStorageType } from '@procivis/react-native-one-core';
 import {
@@ -23,11 +26,6 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import {
-  useCredentialAccept,
-  useCredentialDetail,
-} from '../../hooks/core/credentials';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
 import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';

@@ -2,7 +2,10 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  useBeforeRemove,
   useBlockOSBackNavigation,
+  useCloseButtonTimeout,
+  useCredentialDelete,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -18,9 +21,6 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { useCredentialDelete } from '../../hooks/core/credentials';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';

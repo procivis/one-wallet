@@ -17,7 +17,7 @@ import { RESULTS } from 'react-native-permissions';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
-import { useInitialDeepLinkHandling } from '../../hooks/core/deep-link';
+import { useInitialDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import {
   biometricAuthenticate,
   useBiometricType,

@@ -2,6 +2,7 @@ import {
   Button,
   ButtonType,
   concatTestID,
+  CredentialDetails,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -10,19 +11,21 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { Credential } from '../../components/credential/credential';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
   DeleteCredentialNavigationProp,
   DeleteCredentialRouteProp,
 } from '../../navigators/delete-credential/delete-credential-routes';
+import { credentialCardLabels } from '../../utils/credential';
 
 const LONG_PRESS_TIMEOUT = 3;
 
 const CredentialDeletePromptScreen: FC = () => {
   const navigation = useNavigation<DeleteCredentialNavigationProp<'Prompt'>>();
   const route = useRoute<DeleteCredentialRouteProp<'Prompt'>>();
+  const onImagePreview = useCredentialImagePreview();
   const colorScheme = useAppColorScheme();
 
   const { credentialId } = route.params;
@@ -65,7 +68,12 @@ const CredentialDeletePromptScreen: FC = () => {
             credentialId,
           )}
         >
-          <Credential credentialId={credentialId} headerAccessory={<View />} />
+          <CredentialDetails
+            credentialId={credentialId}
+            headerAccessory={<View />}
+            labels={credentialCardLabels()}
+            onImagePreview={onImagePreview}
+          />
         </View>
 
         <View style={styles.bottom}>

@@ -2,6 +2,7 @@ import {
   NerdModeItemProps,
   NerdModeScreen,
   useMemoAsync,
+  useONECore,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC } from 'react';
@@ -9,7 +10,6 @@ import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
-import { useONECore } from '../../hooks/core/core-context';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { formatDateTimeLocalized } from '../../utils/date';

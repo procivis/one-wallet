@@ -2,6 +2,7 @@ import {
   LoaderViewState,
   LoadingResultScreen,
   useBlockOSBackNavigation,
+  useUnpackBackup,
 } from '@procivis/one-react-native-components';
 import {
   useIsFocused,
@@ -13,7 +14,6 @@ import { InteractionManager, Platform } from 'react-native';
 import { unlink } from 'react-native-fs';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import { useUnpackBackup } from '../../hooks/core/backup';
 import { translate } from '../../i18n';
 import {
   RestoreBackupProcessingNavigationProp,

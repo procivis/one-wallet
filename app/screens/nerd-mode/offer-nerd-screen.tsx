@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   NerdModeItemProps,
   NerdModeScreen,
+  useCredentialDetail,
 } from '@procivis/one-react-native-components';
 import {
   useIsFocused,
@@ -12,7 +13,6 @@ import React, { FunctionComponent } from 'react';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
-import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 

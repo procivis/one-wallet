@@ -3,6 +3,7 @@ import {
   FoldableHeader,
   NavigationHeader,
   useAppColorScheme,
+  useCredentialDetail,
   useListContentInset,
 } from '@procivis/one-react-native-components';
 import {
@@ -14,7 +15,6 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import { HistorySectionList } from '../../components/history/history-list';
-import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
   CredentialDetailNavigationProp,

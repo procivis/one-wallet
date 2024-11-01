@@ -4,10 +4,12 @@ import {
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
   CredentialValidIcon,
+  getCredentialSchemaWithoutImages,
   NerdModeItemProps,
   NerdModeScreen,
   Typography,
   useAppColorScheme,
+  useCredentialDetail,
 } from '@procivis/one-react-native-components';
 import {
   CredentialDetail,
@@ -23,11 +25,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
-import { useCredentialDetail } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { addElementIf } from '../../utils/array';
-import { getCredentialSchemaWithoutImages } from '../../utils/credential';
 import { formatDateTimeLocalized } from '../../utils/date';
 
 const getCredentialValidityValue = (

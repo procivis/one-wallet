@@ -15,6 +15,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import {
   AccessibilityFocusHistoryProvider,
   ColorSchemeProvider,
+  queryClient,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import * as Sentry from '@sentry/react-native';
@@ -28,7 +29,6 @@ import {
 import Config from 'react-native-ultimate-config';
 import { QueryClientProvider } from 'react-query';
 
-import { queryClient } from './hooks/core/query';
 import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';

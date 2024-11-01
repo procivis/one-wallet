@@ -2,13 +2,13 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  useCloseButtonTimeout,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { Platform } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { translate } from '../../i18n';
 import {
   SettingsNavigationProp,

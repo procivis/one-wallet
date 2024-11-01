@@ -3,10 +3,16 @@ import {
   Button,
   CredentialCardShadow,
   CredentialDetailsCard,
+  detailsCardFromCredential,
   EntityCluster,
   ScrollViewScreen,
   useAppColorScheme,
+  useBeforeRemove,
   useBlockOSBackNavigation,
+  useCoreConfig,
+  useCredentialCardExpanded,
+  useCredentialDetail,
+  useCredentialReject,
 } from '@procivis/one-react-native-components';
 import {
   useIsFocused,
@@ -20,21 +26,14 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { useCoreConfig } from '../../hooks/core/core-config';
-import {
-  useCredentialDetail,
-  useCredentialReject,
-} from '../../hooks/core/credentials';
-import { useCredentialCardExpanded } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { detailsCardFromCredential } from '../../utils/credential';
+import { credentialCardLabels } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
 
 const CredentialOfferScreen: FunctionComponent = () => {
@@ -79,9 +78,15 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const onImagePreview = useCredentialImagePreview();
 
-  const { card, attributes } = credential
-    ? detailsCardFromCredential(credential, config)
-    : { attributes: [], card: undefined };
+  const { card, attributes } =
+    credential && config
+      ? detailsCardFromCredential(
+          credential,
+          config,
+          'CredentialOfferScreen.detail',
+          credentialCardLabels(),
+        )
+      : { attributes: [], card: undefined };
 
   const onCloseButtonPress = useCallback(() => {
     Alert.alert(
@@ -147,7 +152,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
                 expanded={expanded}
                 onImagePreview={onImagePreview}
                 showAllButtonLabel={translate('common.seeAll')}
-                testID="CredentialOfferScreen.detail"
               />
             </View>
             <View style={styles.bottom}>

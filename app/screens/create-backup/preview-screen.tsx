@@ -3,6 +3,8 @@ import {
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
+  useBackupInfo,
+  useCredentials,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
@@ -10,8 +12,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { PreviewCredentials } from '../../components/backup/preview-credentials';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
-import { useBackupInfo } from '../../hooks/core/backup';
-import { useCredentials } from '../../hooks/core/credentials';
 import { translate } from '../../i18n';
 import {
   CreateBackupProcessingNavigationProp,

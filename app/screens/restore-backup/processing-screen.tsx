@@ -2,7 +2,10 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  useBackupFinalizeImportProcedure,
+  useBeforeRemove,
   useBlockOSBackNavigation,
+  useCloseButtonTimeout,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
@@ -12,11 +15,9 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { useBackupFinalizeImportProcedure } from '../../hooks/core/backup';
-import { useBeforeRemove } from '../../hooks/navigation/before-remove';
-import { useCloseButtonTimeout } from '../../hooks/navigation/close-button-timeout';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
@@ -25,6 +26,7 @@ const ProcessingScreen: FC = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
+  const { walletStore } = useStores();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure();
   const [state, setState] = useState<
@@ -37,14 +39,16 @@ const ProcessingScreen: FC = () => {
 
   const handleBackupRestore = useCallback(async () => {
     try {
-      await finalizeImport();
+      await finalizeImport().then(([hwDidId, swDidId]) => {
+        walletStore.walletSetup(hwDidId, swDidId);
+      });
       setState(LoaderViewState.Success);
     } catch (e) {
       reportException(e, 'Backup restoring failure');
       setState(LoaderViewState.Warning);
       setError(e);
     }
-  }, [finalizeImport]);
+  }, [finalizeImport, walletStore]);
 
   useEffect(() => {
     handleBackupRestore();

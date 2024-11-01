@@ -3,6 +3,7 @@ import {
   TouchableOpacity,
   Typography,
   useAppColorScheme,
+  useHistory,
 } from '@procivis/one-react-native-components';
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -11,7 +12,6 @@ import { NativeModules, Platform, StyleSheet, View } from 'react-native';
 import { unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
-import { useHistory } from '../../hooks/core/history';
 import { translate } from '../../i18n';
 import {
   CreateBackupNavigationProp,

@@ -3,10 +3,13 @@ import {
   Button,
   ButtonType,
   concatTestID,
+  ExchangeProtocol,
   QrCode,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
+  useProofState,
+  useProposeProof,
 } from '@procivis/one-react-native-components';
 import { OneError, ProofStateEnum } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
@@ -17,9 +20,7 @@ import { RESULTS } from 'react-native-permissions';
 import BleWarning from '../../components/ble/ble-warning';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useBlePermissions } from '../../hooks/ble-permissions';
-import { useProofState, useProposeProof } from '../../hooks/core/proofs';
 import { translate } from '../../i18n';
-import { ProcivisExchangeProtocol } from '../../models/proofs';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
@@ -31,7 +32,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const { mutateAsync: proposeProof } = useProposeProof();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions(ProcivisExchangeProtocol.ISO_MDL);
+    useBlePermissions(ExchangeProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
   const [shareUrl, setShareUrl] = useState<string>();
   const [proofId, setProofId] = useState<string>();
@@ -55,7 +56,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
     if (adapterDisabled) {
       return;
     }
-    proposeProof(ProcivisExchangeProtocol.ISO_MDL)
+    proposeProof(ExchangeProtocol.ISO_MDL)
       .then((result) => {
         setProofId(result.proofId);
         setInteractionId(result.interactionId);
