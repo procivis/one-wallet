@@ -1,6 +1,5 @@
 import {
   concatTestID,
-  CredentialAttribute,
   CredentialCardProps,
   CredentialDetailsCardProps,
   CredentialHeaderProps,
@@ -21,6 +20,7 @@ import React from 'react';
 
 import { translate } from '../i18n';
 import {
+  CredentialAttributeWithPath,
   detailsCardAttributeFromClaim,
   getCredentialCardPropsFromCredential,
   getValidityState,
@@ -194,13 +194,14 @@ export const shareCredentialCardAttributeFromClaim = (
   claim?: Claim,
   field?: PresentationDefinitionField,
   config?: Config,
-): CredentialAttribute => {
+): CredentialAttributeWithPath => {
   if (claim) {
     return { ...detailsCardAttributeFromClaim(claim, config), id };
   }
   return {
     id,
-    name: field?.name ?? id,
+    name: field?.name?.split('/').pop() ?? id,
+    path: field?.name ?? id,
     value: translate('proofRequest.missingAttribute'),
     valueErrorColor: true,
   };
@@ -209,7 +210,7 @@ export const shareCredentialCardAttributeFromClaim = (
 // Will propagate the attribute status (right accessory + selected?) for all nested attributes
 // Note: This function MUTATES the input attribute
 const setStatusForNestedObjectOrArrayFields = (
-  attribute: CredentialAttribute,
+  attribute: CredentialAttributeWithPath,
   status?: SelectorStatus,
   disabled?: boolean,
 ) => {
@@ -238,7 +239,11 @@ const setStatusForNestedObjectOrArrayFields = (
     // If the object is required / rejected, the accessory is rendered next to each nested attribute (except other object titles)
     // all fields are disabled
     for (const nestedAttribute of nested) {
-      setStatusForNestedObjectOrArrayFields(nestedAttribute, status, true);
+      setStatusForNestedObjectOrArrayFields(
+        nestedAttribute as CredentialAttributeWithPath,
+        status,
+        true,
+      );
     }
   }
 };
@@ -285,10 +290,10 @@ export const shareCredentialCardFromCredential = (
     selectedFields,
   );
 
-  const attributes: CredentialAttribute[] = displayedAttributes.map(
+  const attributes: CredentialAttributeWithPath[] = displayedAttributes.map(
     ({ claim, field, id, selected, status }, index) => {
       const disabled = !credential || !field || field.required || !claim;
-      const attribute: CredentialAttribute = {
+      const attribute: CredentialAttributeWithPath = {
         ...shareCredentialCardAttributeFromClaim(id, claim, field, config),
         selected,
         testID: concatTestID(testID, 'claim', `${index}`),
@@ -309,7 +314,7 @@ export const selectCredentialCardAttributeFromClaim = (
   claim?: Claim,
   field?: PresentationDefinitionField,
   config?: Config,
-): CredentialAttribute => {
+): CredentialAttributeWithPath => {
   const attribute = shareCredentialCardAttributeFromClaim(
     id,
     claim,
@@ -362,30 +367,32 @@ export const selectCredentialCardFromCredential = (
     },
     ...cardProps,
   };
-  const attributes: CredentialAttribute[] = request.fields.map((field) => {
-    const claim = spreadClaims(credential.claims).find(({ key }) => {
-      return key === field.keyMap[credential.id];
-    });
+  const attributes: CredentialAttributeWithPath[] = request.fields.map(
+    (field) => {
+      const claim = spreadClaims(credential.claims).find(({ key }) => {
+        return key === field.keyMap[credential.id];
+      });
 
-    const attribute = selectCredentialCardAttributeFromClaim(
-      field.id,
-      claim,
-      field,
-      config,
-    );
-    return {
-      ...attribute,
-      rightAccessory: (
-        <Selector
-          status={
-            field.required && !claim
-              ? SelectorStatus.Rejected
-              : SelectorStatus.Required
-          }
-        />
-      ),
-    };
-  });
+      const attribute = selectCredentialCardAttributeFromClaim(
+        field.id,
+        claim,
+        field,
+        config,
+      );
+      return {
+        ...attribute,
+        rightAccessory: (
+          <Selector
+            status={
+              field.required && !claim
+                ? SelectorStatus.Rejected
+                : SelectorStatus.Required
+            }
+          />
+        ),
+      };
+    },
+  );
   return {
     attributes: nestAttributes(attributes),
     card,
