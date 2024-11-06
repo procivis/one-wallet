@@ -74,7 +74,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       }
 
       try {
-        await acceptCredential({ didId, interactionId });
+        await acceptCredential({ didId, interactionId, txCode: null });
         setState(LoaderViewState.Success);
       } catch (e) {
         reportException(e, 'Accept credential failure');
