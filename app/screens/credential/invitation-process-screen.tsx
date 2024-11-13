@@ -85,13 +85,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     LoaderViewState.InProgress | LoaderViewState.Warning
   >(LoaderViewState.InProgress);
 
-  const [transitionEnded, setTransitionEnded] = useState(false);
-  useEffect(() => {
-    return managementNavigation.addListener('transitionEnd', () => {
-      setTransitionEnded(true);
-    });
-  }, [managementNavigation]);
-
   useEffect(() => {
     if (permissionStatus === 'denied' && isBleInteraction) {
       requestPermission();
@@ -157,7 +150,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   useEffect(() => {
-    if (!canHandleInvitation || !availableTransport || !transitionEnded) {
+    if (!canHandleInvitation || !availableTransport) {
       return;
     }
 
@@ -205,7 +198,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     invitationSupportedTransports,
     invitationUrl,
     managementNavigation,
-    transitionEnded,
   ]);
 
   const infoPressHandler = useCallback(() => {

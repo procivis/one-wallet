@@ -66,22 +66,20 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     return translate(txKeyPath);
   }, [didId, state]);
 
-  const handleCredentialAccept = useCallback(() => {
-    setTimeout(async () => {
-      if (!didId) {
-        setState(LoaderViewState.Warning);
-        return;
-      }
+  const handleCredentialAccept = useCallback(async () => {
+    if (!didId) {
+      setState(LoaderViewState.Warning);
+      return;
+    }
 
-      try {
-        await acceptCredential({ didId, interactionId, txCode: null });
-        setState(LoaderViewState.Success);
-      } catch (e) {
-        reportException(e, 'Accept credential failure');
-        setState(LoaderViewState.Warning);
-        setError(e);
-      }
-    }, 1000);
+    try {
+      await acceptCredential({ didId, interactionId, txCode: null });
+      setState(LoaderViewState.Success);
+    } catch (e) {
+      reportException(e, 'Accept credential failure');
+      setState(LoaderViewState.Warning);
+      setError(e);
+    }
   }, [acceptCredential, interactionId, didId]);
 
   useEffect(() => {
