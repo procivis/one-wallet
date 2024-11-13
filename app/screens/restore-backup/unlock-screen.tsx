@@ -10,7 +10,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect } from 'react';
-import { InteractionManager, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import { unlink } from 'react-native-fs';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
@@ -43,24 +43,17 @@ const UnlockScreen: FC = () => {
       processingNavigation.replace('Preview');
     } catch (e) {
       reportException(e, 'Backup unpacking failure');
-      InteractionManager.runAfterInteractions(() => {
-        setTimeout(() => {
-          navigation.navigate({
-            merge: true,
-            name: 'RecoveryPassword',
-            params: { error: true, inputPath },
-          });
-        }, 300);
+      navigation.navigate({
+        merge: true,
+        name: 'RecoveryPassword',
+        params: { error: true, inputPath },
       });
     }
   }, [navigation, processingNavigation, route.params, unpackBackup]);
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      handleBackupUnlock();
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    handleBackupUnlock();
+  }, [handleBackupUnlock]);
 
   const onClose = useCallback(() => {
     navigation.goBack();
