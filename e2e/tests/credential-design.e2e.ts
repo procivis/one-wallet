@@ -64,7 +64,7 @@ describe('ONE-2014: Credential design', () => {
             required: true,
           },
         ],
-        format: CredentialFormat.SDJWT,
+        format: CredentialFormat.SD_JWT,
         layoutProperties: {
           code: {
             attribute: 'Attribute 1',
@@ -86,7 +86,9 @@ describe('ONE-2014: Credential design', () => {
       const credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        didMethods: DidMethod.JWK,
+        didFilter: {
+          didMethods: DidMethod.JWK,
+        },
         exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(schema1.name);
@@ -184,7 +186,11 @@ describe('ONE-2014: Credential design', () => {
 
       await suspendCredential(credentialId, authToken);
 
-      await reloadApp({ suspendedScreen: true });
+      await reloadApp({
+        credentialUpdate: [
+          { expectedLabel: 'Suspended', index: 0, status: 'suspended' },
+        ],
+      });
       await WalletScreen.openDetailScreen(schema1.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.openCredentialHistoryScreen();
@@ -201,6 +207,10 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Search test', async () => {
+      await WalletScreen.openDetailScreen(schema1.name);
+      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await CredentialDetailScreen.openCredentialHistoryScreen();
+      await expect(CredentialHistoryScreen.screen).toBeVisible();
       await CredentialHistoryScreen.search.typeText('Hello');
       await expect(
         CredentialHistoryScreen.history(0).element,
@@ -305,10 +315,6 @@ describe('ONE-2014: Credential design', () => {
 
   // Pass
   describe('ONE-2300: Card Stack View: highlight individual Credential', () => {
-    let credentialId_1: string;
-    let credentialId_2: string;
-    let credentialId_3: string;
-
     beforeAll(async () => {
       await launchApp({ delete: true });
       const schema_1 = await createCredentialSchema(authToken, {
@@ -409,20 +415,20 @@ describe('ONE-2014: Credential design', () => {
         name: `Scrolling 3 ${uuidv4()}`,
       });
 
-      credentialId_1 = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema: schema_1,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
-      credentialId_2 = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema: schema_2,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
-      credentialId_3 = await credentialIssuance({
+      await credentialIssuance({
         authToken,
         credentialSchema: schema_3,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
     }, 200000);
 
@@ -431,28 +437,33 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Verify last card opened', async () => {
-      await WalletScreen.credential(credentialId_1).verifyIsVisible();
-      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
-        false,
-      );
+      const card_0 = await WalletScreen.credentialAtIndex(0);
+      await card_0.verifyIsVisible();
+      await card_0.verifyIsCardCollapsed();
 
-      await WalletScreen.credential(credentialId_2).verifyIsVisible();
-      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
+      const card_1 = await WalletScreen.credentialAtIndex(1);
+      await card_1.verifyIsVisible();
+      await card_1.verifyIsCardCollapsed();
 
-      await WalletScreen.credential(credentialId_3).verifyIsVisible();
-      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed();
+      const card_2 = await WalletScreen.credentialAtIndex(2);
+      await card_2.verifyIsVisible();
+      await card_2.verifyIsCardCollapsed(false);
     });
 
     it('Expand card, all cards collapse (Except last one)', async () => {
-      await WalletScreen.credential(credentialId_3).collapseOrExpand();
-      await WalletScreen.credential(credentialId_3).verifyIsCardCollapsed(
-        false,
-      );
+      const card_0 = await WalletScreen.credentialAtIndex(0);
+      const card_1 = await WalletScreen.credentialAtIndex(1);
+      const card_2 = await WalletScreen.credentialAtIndex(2);
 
-      await WalletScreen.credential(credentialId_2).verifyIsCardCollapsed();
-      await WalletScreen.credential(credentialId_1).verifyIsCardCollapsed(
-        false,
-      );
+      await card_0.collapseOrExpand();
+      await card_0.verifyIsCardCollapsed(false);
+      await card_1.verifyIsCardCollapsed();
+      await card_2.verifyIsCardCollapsed(false);
+
+      await card_1.collapseOrExpand();
+      await card_0.verifyIsCardCollapsed();
+      await card_1.verifyIsCardCollapsed(false);
+      await card_2.verifyIsCardCollapsed(false);
     });
   });
 
@@ -637,9 +648,11 @@ describe('ONE-2014: Credential design', () => {
         authToken: authToken,
         claimValues: mDocCredentialClaims(mdocSchema),
         credentialSchema: mdocSchema,
-        didMethods: DidMethod.MDL,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: KeyType.ES256,
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
       });
       await WalletScreen.openDetailScreen(mdocSchema.name);
     });

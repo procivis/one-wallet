@@ -128,8 +128,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
       }}
       modalPresentation
       scrollView={{
-        testID: 'CredentialOfferScreen',
+        testID: 'CredentialOfferScreen.scroll',
       }}
+      testID="CredentialOfferScreen"
     >
       <View style={styles.content} testID="CredentialOfferScreen.content">
         <EntityCluster

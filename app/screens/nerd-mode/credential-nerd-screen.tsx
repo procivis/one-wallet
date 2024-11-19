@@ -23,7 +23,6 @@ import {
 import React, { FunctionComponent, ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -147,11 +146,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
-      attributeText: translate(
-        `credentialDetail.credential.revocation.${
-          credentialDetail.schema.revocationMethod as RevocationMethod
-        }`,
-      ),
+      attributeText: credentialDetail.schema.revocationMethod,
       testID: 'revocationMethod',
     },
     {

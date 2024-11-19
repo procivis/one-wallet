@@ -117,7 +117,9 @@ describe('ONE-224: Wallet history', () => {
         await CredentialAcceptProcessScreen.closeButton.tap();
         await expect(WalletScreen.screen).toBeVisible();
         await expect(
-          WalletScreen.credential(credentialId).element,
+          (
+            await WalletScreen.credentialAtIndex(i)
+          ).element,
         ).toBeVisible();
       }
     });

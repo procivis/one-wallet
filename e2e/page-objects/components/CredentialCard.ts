@@ -67,14 +67,11 @@ export default function CredentialCard(testID: string) {
     },
     get card() {
       return {
-        get body() {
-          return element(by.id(cardId));
-        },
         get collapsed() {
-          return element(by.id(`${testID}.collapsed`));
+          return element(by.id(`${cardId}.collapsed`));
         },
         get expanded() {
-          return element(by.id(`${testID}.expanded`));
+          return element(by.id(`${cardId}.expanded`));
         },
       };
     },
@@ -82,7 +79,7 @@ export default function CredentialCard(testID: string) {
       await this.header.element.tap();
     },
     get element() {
-      return element(by.id(testID));
+      return element(by.id(cardId));
     },
     get header() {
       const id = `${cardId}.header`;
@@ -277,8 +274,14 @@ export default function CredentialCard(testID: string) {
       ).toBeVisible();
       await expect(this.header.logo.textColor(textColor)).toBeVisible();
     },
-    verifyStatus: async function (status: 'revoked' | 'suspended') {
+    verifyStatus: async function (
+      status: 'revoked' | 'suspended',
+      label?: string,
+    ) {
       await expect(this.header.label[status]).toBeVisible();
+      if (label) {
+        await expect(this.header.label[status]).toHaveText(label);
+      }
     },
   };
 }

@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
-import { v4 as uuidv4 } from 'uuid';
 
 import {
+  CreateDidRequestDTO,
+  CreateKeyRequestDTO,
   CredentialClaimSchemaResponseDTO,
   CredentialDetailResponseDTO,
   CredentialSchemaResponseDTO,
@@ -13,6 +14,7 @@ import {
   ProofRequestData,
   ProofSchemaResponseDTO,
 } from '../types/proof';
+import { getDidRequestData, getKeyRequestData } from './data-utils';
 import {
   CredentialFormat,
   DataType,
@@ -23,8 +25,9 @@ import {
   KeyType,
   LayoutType,
   RevocationMethod,
+  StorageType,
 } from './enums';
-import { objectToQueryParams } from './utils';
+import { objectToQueryParams, shortUUID } from './utils';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
@@ -91,6 +94,7 @@ export async function createCredentialSchema(
   };
   const schemaData: CredentialSchemaData = Object.assign(
     {
+      allowSuspension: true,
       claims: [
         {
           array: false,
@@ -99,9 +103,9 @@ export async function createCredentialSchema(
           required: true,
         },
       ],
-      format: CredentialFormat.SDJWT,
+      format: CredentialFormat.SD_JWT,
       layoutType: LayoutType.CARD,
-      name: `detox-e2e-${uuidv4()}`,
+      name: `e2e ${shortUUID()}`,
       revocationMethod: RevocationMethod.NONE,
     },
     data,
@@ -156,7 +160,7 @@ export async function getDidDetail(
   authToken: string,
   didId: string,
 ): Promise<DidDetailDTO> {
-  return apiRequest(`api/did/v1/${didId}`, authToken);
+  return apiRequest(`/api/did/v1/${didId}`, authToken);
 }
 
 export interface CredentialData {
@@ -340,4 +344,53 @@ export async function getCredentialDetail(
   authToken: string,
 ): Promise<CredentialDetailResponseDTO> {
   return apiRequest(`/api/credential/v1/${credentialId}`, authToken);
+}
+
+export async function revalidateCredential(
+  credentialId: string,
+  authToken: string,
+): Promise<undefined> {
+  return apiRequest(
+    `/api/credential/v1/${credentialId}/reactivate`,
+    authToken,
+    'POST',
+  );
+}
+
+export const createKey = async (
+  authToken: string,
+  data: CreateKeyRequestDTO,
+) => {
+  return apiRequest('/api/key/v1', authToken, 'POST', data).then(
+    (res) => res.id,
+  );
+};
+
+export const createDid = async (
+  authToken: string,
+  data: CreateDidRequestDTO,
+) => {
+  return apiRequest('/api/did/v1', authToken, 'POST', data).then(
+    (res) => res.id,
+  );
+};
+
+interface CreateDidWithKey {
+  didMethod: DidMethod;
+  keyType: KeyType;
+}
+
+export async function createDidWithKey(
+  authToken: string,
+  data: CreateDidWithKey,
+) {
+  const keyId = await createKey(
+    authToken,
+    getKeyRequestData(data.keyType, StorageType.INTERNAL),
+  );
+  const didId = await createDid(
+    authToken,
+    getDidRequestData(data.didMethod, keyId),
+  );
+  return getDidDetail(authToken, didId);
 }

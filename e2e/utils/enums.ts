@@ -41,6 +41,7 @@ export enum Exchange {
 
 export enum RevocationMethod {
   LVVC = 'LVVC',
+  MDOC_MSO_UPDATE_SUSPENSION = 'MDOC_MSO_UPDATE_SUSPENSION',
   NONE = 'NONE',
   STATUSLIST2021 = 'BITSTRINGSTATUSLIST',
 }
@@ -51,7 +52,7 @@ export enum CredentialFormat {
   JWT = 'JWT',
   MDOC = 'MDOC',
   PHYSICAL_CARD = 'PHYSICAL_CARD',
-  SDJWT = 'SDJWT',
+  SD_JWT = 'SD_JWT',
 }
 
 export declare enum HistoryEntityTypeEnum {

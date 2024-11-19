@@ -82,3 +82,26 @@ export interface CredentialDetailResponseDTO {
   schema: CredentialDetailCredSchemaDTO;
   state: CredentialState;
 }
+
+export interface CreateDidRequestKeysDTO {
+  assertionMethod: string[];
+  authentication: string[];
+  capabilityDelegation: string[];
+  capabilityInvocation: string[];
+  keyAgreement: string[];
+}
+
+export interface CreateDidRequestDTO {
+  keys: CreateDidRequestKeysDTO;
+  method: string;
+  name: string;
+  params?: Record<string, string>;
+}
+
+export interface CreateKeyRequestDTO {
+  keyParams: Record<string, never>;
+  keyType: string;
+  name: string;
+  storageParams: Record<string, never>;
+  storageType: string;
+}

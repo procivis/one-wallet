@@ -40,16 +40,13 @@ export const formatTime = (date: Date, locale?: string) => {
  */
 export const formatDateTime = (date: Date, locale?: string) => {
   try {
-    return date
-      .toLocaleString(locale || defaultLocale, {
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        month: 'numeric',
-        year: 'numeric',
-      })
-      .replace(' AM', ' AM')
-      .replace(' PM', ' PM');
+    return date.toLocaleString(locale || defaultLocale, {
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      month: 'numeric',
+      year: 'numeric',
+    });
   } catch {
     return undefined;
   }

@@ -2,10 +2,18 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
+import {
+  mDocCredentialClaims,
+  mDocCredentialSchema,
+} from '../helpers/credentialSchemas';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
-import { bffLogin, createCredentialSchema } from '../utils/bff-api';
+import {
+  bffLogin,
+  createCredentialSchema,
+  suspendCredential,
+} from '../utils/bff-api';
 import {
   CredentialFormat,
   DataType,
@@ -14,7 +22,7 @@ import {
   KeyType,
   RevocationMethod,
 } from '../utils/enums';
-import { launchApp } from '../utils/init';
+import { launchApp, reloadApp } from '../utils/init';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
@@ -73,9 +81,11 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: mdocSchema,
-        didMethods: DidMethod.MDL,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: KeyType.ES256,
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
       });
     });
   });
@@ -142,9 +152,11 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: driverLicenceSchema,
-        didMethods: DidMethod.MDL,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: KeyType.ES256,
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
       });
 
       await WalletScreen.openDetailScreen(driverLicenceSchema.name);
@@ -171,6 +183,39 @@ describe('ONE-601: Credential issuance', () => {
       await expect(
         CredentialDetailScreen.credentialCard.attribute('0.1.2').element,
       ).toBeVisible();
+    });
+  });
+
+  describe('ONE-2908: Suspension of mdoc credentials', () => {
+    let mdocSchema: CredentialSchemaResponseDTO;
+    let credentialId: string;
+
+    beforeAll(async () => {
+      await launchApp({ delete: true });
+      mdocSchema = await mDocCredentialSchema(
+        authToken,
+        RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
+      );
+      credentialId = await credentialIssuance({
+        authToken: authToken,
+        claimValues: mDocCredentialClaims(mdocSchema),
+        credentialSchema: mdocSchema,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: KeyType.ES256,
+        },
+        exchange: Exchange.OPENID4VC,
+      });
+    });
+
+    it('Suspend mDoc credential with infinite date', async () => {
+      await WalletScreen.openDetailScreen(mdocSchema.name);
+      await CredentialDetailScreen.credentialCard.verifyDetailLabel(
+        'Wade',
+        'Wilson',
+      );
+      await suspendCredential(credentialId, authToken);
+      await reloadApp();
     });
   });
 });

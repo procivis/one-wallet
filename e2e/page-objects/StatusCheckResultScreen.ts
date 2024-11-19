@@ -12,4 +12,18 @@ export default abstract class StatusCheckResultScreen {
   static credentialCard(credentialId: string) {
     return CredentialCard(`Credential.credential.${credentialId}`);
   }
+
+  static async credentialAtIndex(index: number) {
+    const cardAttributes = await element(
+      by.id(/^Credential.credential.[\w-]+.card$/),
+    )
+      .atIndex(index)
+      .getAttributes();
+    const id = (
+      'elements' in cardAttributes
+        ? cardAttributes.elements[0].identifier
+        : cardAttributes.identifier
+    ).replace('.card', '');
+    return CredentialCard(id);
+  }
 }
