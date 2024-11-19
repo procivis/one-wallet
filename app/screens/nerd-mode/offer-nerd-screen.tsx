@@ -11,7 +11,6 @@ import {
 } from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
 
-import { RevocationMethod } from '../../../e2e/utils/enums';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -58,11 +57,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.revocationMethod'),
-      attributeText: translate(
-        `credentialDetail.credential.revocation.${
-          credentialDetail.schema.revocationMethod as RevocationMethod
-        }`,
-      ),
+      attributeText: credentialDetail.schema.revocationMethod,
     },
   ];
 

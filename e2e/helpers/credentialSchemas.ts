@@ -10,7 +10,10 @@ import {
 } from '../utils/enums';
 import { shortUUID } from '../utils/utils';
 
-export const mDocCredentialSchema = async (authToken: string) => {
+export const mDocCredentialSchema = async (
+  authToken: string,
+  revocationMethod: RevocationMethod = RevocationMethod.NONE,
+) => {
   const uuid = shortUUID();
   const claims = [
     {
@@ -107,6 +110,8 @@ export const mDocCredentialSchema = async (authToken: string) => {
     },
   ];
   const data: CredentialSchemaData = {
+    allowSuspension:
+      revocationMethod === RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
     claims: claims,
     format: CredentialFormat.MDOC,
     layoutProperties: {
@@ -127,7 +132,7 @@ export const mDocCredentialSchema = async (authToken: string) => {
     },
     layoutType: LayoutType.CARD,
     name: `Driver's license ${uuid}`,
-    revocationMethod: RevocationMethod.NONE,
+    revocationMethod,
     schemaId: `org.iso.18013.5.1.mDL-${uuid}`,
   };
   return await createCredentialSchema(authToken, data, false);

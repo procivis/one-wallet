@@ -114,9 +114,11 @@ describe('ONE-614: Proof request', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: mdocSchema,
-      didMethods: DidMethod.MDL,
+      didFilter: {
+        didMethods: DidMethod.MDL,
+        keyAlgorithms: KeyType.ES256,
+      },
       exchange: Exchange.OPENID4VC,
-      keyAlgorithms: KeyType.ES256,
     });
   });
 
@@ -225,7 +227,7 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
-  it('[ONE-3419] mDoc with SDJWT', async () => {
+  it('[ONE-3419] mDoc with SD_JWT', async () => {
     const diplomaSdjwtSchema = await createCredentialSchema(authToken, {
       claims: [
         {
@@ -247,7 +249,7 @@ describe('ONE-614: Proof request', () => {
           required: true,
         },
       ],
-      format: CredentialFormat.SDJWT,
+      format: CredentialFormat.SD_JWT,
       name: `University Diploma ${uuidv4()}`,
       revocationMethod: RevocationMethod.LVVC,
     });
@@ -332,8 +334,10 @@ describe('ONE-614: Proof request', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaBBSSchema,
+      didFilter: {
+        keyAlgorithms: KeyType.BBS_PLUS,
+      },
       exchange: Exchange.OPENID4VC,
-      keyAlgorithms: KeyType.BBS_PLUS,
     });
     const bbsProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema, diplomaBBSSchema],
@@ -540,9 +544,11 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: driverLicenceSchema,
-        didMethods: DidMethod.MDL,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: KeyType.ES256,
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
       });
     });
 

@@ -1,11 +1,14 @@
-export default abstract class CredentialOfferScreen {
+import CredentialCard from './components/CredentialCard';
+
+export default class CredentialOfferScreen {
   static get screen() {
     return element(by.id('CredentialOfferScreen'));
   }
 
-  static get card() {
-    return element(by.id('CredentialOfferScreen.detail.card'));
+  static get credentialCard() {
+    return CredentialCard('CredentialOfferScreen.detail');
   }
+
   static get rejectButton() {
     return element(by.id('Screen.closeButton'));
   }
@@ -14,12 +17,14 @@ export default abstract class CredentialOfferScreen {
     return element(by.id('CredentialOfferScreen.accept'));
   }
 
-  static scrollTo() {
-    const element = this.card;
-    return waitFor(element)
+  static async scrollTo(
+    element: Detox.IndexableNativeElement,
+    direction: 'up' | 'down' = 'down',
+  ) {
+    await waitFor(element)
       .toBeVisible()
-      .whileElement(by.id('CredentialOfferScreen.accept'))
-      .scroll(600, 'down', NaN, 0.85);
+      .whileElement(by.id('CredentialOfferScreen.scroll'))
+      .scroll(600, direction, NaN, 0.3);
   }
 
   static get rejectAlert() {

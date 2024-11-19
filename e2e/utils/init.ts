@@ -7,6 +7,7 @@ import UserAgreementScreen from '../page-objects/onboarding/UserAgreementScreen'
 import StatusCheckResultScreen from '../page-objects/StatusCheckResultScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { verifyButtonEnabled } from './button';
+import { CredentialUpdateProps, statusScreenCheck } from './status-check';
 
 /**
  * correct app PIN is '111111' used among all test suites
@@ -20,13 +21,11 @@ export async function pinSetup() {
   await expect(WalletScreen.screen).toBeVisible();
 }
 
-type ReloadAllType = {
-  credentialIds?: string[];
-  revokedScreen?: boolean;
-  suspendedScreen?: boolean;
+type ReloadAppProps = {
+  credentialUpdate?: CredentialUpdateProps[];
 };
 
-export async function reloadApp(values?: ReloadAllType) {
+export async function reloadApp(values?: ReloadAppProps) {
   await device.launchApp({
     languageAndLocale: {
       language: 'en-US',
@@ -37,18 +36,11 @@ export async function reloadApp(values?: ReloadAllType) {
   await expect(PinCodeScreen.Check.screen).toBeVisible();
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
 
-  if (values?.suspendedScreen || values?.revokedScreen) {
-    await expect(StatusCheckResultScreen.screen).toBeVisible();
-    const status = values.revokedScreen ? 'revoked' : 'suspended';
-    for (const credentialId of values.credentialIds || []) {
-      await expect(
-        StatusCheckResultScreen.credentialCard(credentialId).element,
-      ).toBeVisible();
-      await StatusCheckResultScreen.credentialCard(credentialId).verifyStatus(
-        status,
-      );
-    }
-
+  if (values?.credentialUpdate) {
+    await waitFor(StatusCheckResultScreen.screen)
+      .toBeVisible()
+      .withTimeout(10000);
+    await statusScreenCheck(values.credentialUpdate);
     await StatusCheckResultScreen.closeButton.tap();
   }
   await expect(WalletScreen.screen).toBeVisible();
