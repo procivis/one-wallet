@@ -10,7 +10,6 @@ import {
 } from '../helpers/proof-request';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
-// import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/proof-request/ProofRequestAcceptProcessScreen';
@@ -50,7 +49,7 @@ describe('ONE-614: Proof request', () => {
     await launchApp();
     authToken = await bffLogin();
     credentialSchema = await createCredentialSchema(authToken, {
-      format: CredentialFormat.SDJWT,
+      format: CredentialFormat.SD_JWT,
       name: `Credential ${uuidv4()}`,
       revocationMethod: RevocationMethod.STATUSLIST2021,
     });
@@ -128,7 +127,7 @@ describe('ONE-614: Proof request', () => {
       });
       sdjwtCredentialSchema = await createCredentialSchema(authToken, {
         claims,
-        format: CredentialFormat.SDJWT,
+        format: CredentialFormat.SD_JWT,
         name: `sd jwt elective-disclosure-${uuidv4()}`,
       });
 
@@ -448,8 +447,8 @@ describe('ONE-614: Proof request', () => {
     }
 
     const SUPPORTED = {
-      credentialFormat: [CredentialFormat.JWT, CredentialFormat.SDJWT],
-      issuanceExchange: [Exchange.PROCIVIS, Exchange.OPENID4VC],
+      credentialFormat: [CredentialFormat.JWT, CredentialFormat.SD_JWT],
+      issuanceExchange: [Exchange.OPENID4VC],
       proofExchange: [Exchange.PROCIVIS, Exchange.OPENID4VC],
     };
 
@@ -526,12 +525,12 @@ describe('ONE-614: Proof request', () => {
 
     it('Proof request checks LVVC', async () => {
       const proofRequestId = await createProofRequest(authToken, {
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
         proofSchemaId: proofSchemaLVVC.id,
       });
       await requestProof(proofRequestId, authToken);
 
-      await WalletScreen.credential(credentialId).header.element.tap();
+      await (await WalletScreen.credentialAtIndex(0)).header.element.tap();
       // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
       // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
       //   'LVVC',
@@ -550,7 +549,7 @@ describe('ONE-614: Proof request', () => {
       await requestProof(proofRequestId, authToken);
       await expect(WalletScreen.screen).toBeVisible();
 
-      await WalletScreen.credential(credentialId).header.element.tap();
+      await (await WalletScreen.credentialAtIndex(0)).header.element.tap();
       // await expect(CredentialDetailScreen.status.value).toHaveText('Valid');
       // await expect(CredentialDetailScreen.revocationMethod.value).toHaveText(
       // 'LVVC',
@@ -644,7 +643,7 @@ describe('ONE-614: Proof request', () => {
             required: true,
           },
         ],
-        format: CredentialFormat.SDJWT,
+        format: CredentialFormat.SD_JWT,
         name: `Swiss Passport-${uuidv4()}`,
         revocationMethod: RevocationMethod.LVVC,
       });
@@ -676,7 +675,7 @@ describe('ONE-614: Proof request', () => {
             required: true,
           },
         ],
-        format: CredentialFormat.SDJWT,
+        format: CredentialFormat.SD_JWT,
         name: `USA Passport-${uuidv4()}`,
         revocationMethod: RevocationMethod.STATUSLIST2021,
       });
@@ -704,9 +703,11 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: driverLicenceSchema,
-        didMethods: DidMethod.MDL,
+        didFilter: {
+          didMethods: DidMethod.MDL,
+          keyAlgorithms: [KeyType.ES256],
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: [KeyType.ES256],
       });
       await credentialIssuance({
         authToken: authToken,
@@ -733,7 +734,9 @@ describe('ONE-614: Proof request', () => {
           },
         ],
         credentialSchema: swissPassport,
-        didMethods: DidMethod.KEY,
+        didFilter: {
+          didMethods: DidMethod.KEY,
+        },
         exchange: Exchange.OPENID4VC,
       });
     });
@@ -790,7 +793,9 @@ describe('ONE-614: Proof request', () => {
           },
         ],
         credentialSchema: usaPassport,
-        didMethods: DidMethod.KEY,
+        didFilter: {
+          didMethods: DidMethod.KEY,
+        },
         exchange: Exchange.OPENID4VC,
       });
       const testCredentials = async () => {

@@ -5,6 +5,7 @@ import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProce
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
+import { DidDetailDTO } from '../types/did';
 import {
   bffLogin,
   createCredential,
@@ -13,6 +14,11 @@ import {
 } from '../utils/bff-api';
 import { DidMethod, Exchange, KeyType } from '../utils/enums';
 import { scanURL } from '../utils/scan';
+
+interface DidFilter {
+  didMethods?: DidMethod | DidMethod[];
+  keyAlgorithms?: KeyType | KeyType[];
+}
 
 interface CredentialIssuanceProps {
   authToken?: string;
@@ -23,9 +29,9 @@ interface CredentialIssuanceProps {
     value: string;
   }>;
   credentialSchema: CredentialSchemaResponseDTO;
-  didMethods?: DidMethod | DidMethod[];
+  didData?: DidDetailDTO;
+  didFilter?: DidFilter;
   exchange?: Exchange;
-  keyAlgorithms?: KeyType | KeyType[];
   redirectUri?: string;
 }
 
@@ -41,12 +47,9 @@ const acceptCredentialTestCase = async (
   visibleText?: string,
 ) => {
   await device.disableSynchronization();
-  await expect(CredentialOfferScreen.card).toBeVisible();
+  await CredentialOfferScreen.credentialCard.verifyIsVisible();
 
-  await waitFor(CredentialOfferScreen.acceptButton)
-    .toBeVisible()
-    .whileElement(by.id('CredentialOfferScreen'))
-    .scroll(400, 'down');
+  await CredentialOfferScreen.scrollTo(CredentialOfferScreen.acceptButton);
 
   await CredentialOfferScreen.acceptButton.tap();
   await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
@@ -103,25 +106,33 @@ export const credentialIssuance = async (
   if (!data.authToken) {
     data.authToken = await bffLogin();
   }
-  const did = await getLocalDid(data.authToken, {
-    didMethods: data.didMethods,
-    keyAlgorithms: data.keyAlgorithms,
-  });
+
+  let issuerDidId: string;
+  if (data.didData) {
+    issuerDidId = data.didData.id;
+  } else {
+    const did = await getLocalDid(data.authToken, {
+      didMethods: data.didFilter?.didMethods,
+      keyAlgorithms: data.didFilter?.keyAlgorithms,
+    });
+    issuerDidId = did.id;
+  }
+
   const credentialId = await createCredential(
     data.authToken,
     data.credentialSchema,
     {
       claimValues: data.claimValues,
       exchange: data.exchange,
-      issuerDid: did.id,
+      issuerDid: issuerDidId,
       // TODO: issuerKey: did.key,
       redirectUri: data.redirectUri,
     },
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
+  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(8000);
 
-  await expect(CredentialOfferScreen.screen).toBeVisible();
   if (action === CredentialAction.ACCEPT) {
     await acceptCredentialTestCase(
       credentialId,

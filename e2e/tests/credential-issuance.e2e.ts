@@ -47,10 +47,11 @@ describe('ONE-601: Credential issuance', () => {
       revocationMethod: RevocationMethod.STATUSLIST2021,
     });
     credentialSchemaSD_JWT = await createCredentialSchema(authToken, {
-      format: CredentialFormat.SDJWT,
+      format: CredentialFormat.SD_JWT,
       revocationMethod: RevocationMethod.STATUSLIST2021,
     });
     credentialSchemaJWT_with_LVVC = await createCredentialSchema(authToken, {
+      allowSuspension: true,
       format: CredentialFormat.JWT,
       revocationMethod: RevocationMethod.LVVC,
     });
@@ -93,53 +94,6 @@ describe('ONE-601: Credential issuance', () => {
   });
 
   // Pass
-  describe('ONE-620: Credential revocation', () => {
-    let credentialId: string;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      credentialId = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.PROCIVIS,
-      });
-    });
-
-    it('Credential not revoked initially', async () => {
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await expect(
-        WalletScreen.credential(credentialId).header.label.revoked,
-      ).not.toExist();
-    });
-
-    it('Credential revoked remotely', async () => {
-      await revokeCredential(credentialId, authToken);
-
-      await reloadApp({ credentialIds: [credentialId], revokedScreen: true });
-
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
-      await expect(
-        WalletScreen.credential(credentialId).header.label.revoked,
-      ).toExist();
-    });
-
-    it('Revoked credential detail screen', async () => {
-      await WalletScreen.openDetailScreen(credentialId);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
-
-      await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
-
-      await expect(
-        CredentialDetailScreen.credentialCard.header.label.revoked,
-      ).toHaveText('Revoked');
-      await expect(CredentialDetailScreen.history(0).element).toExist();
-      await expect(CredentialDetailScreen.history(0).label).toHaveText(
-        'Credential revoked',
-      );
-    });
-  });
-
-  // Fail
   describe('ONE-1313: LVVC; Credential revocation & Suspension', () => {
     let credentialId: string;
 
@@ -152,12 +106,11 @@ describe('ONE-601: Credential issuance', () => {
         credentialId = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          exchange: Exchange.PROCIVIS,
+          exchange: Exchange.OPENID4VC,
         });
       });
 
-      // eslint-disable-next-line jest/no-disabled-tests
-      it.skip('Suspended credential with specified date', async () => {
+      it('Suspended credential with specified date', async () => {
         await expect(
           WalletScreen.credentialName(
             credentialSchemaJWT_with_LVVC.name,
@@ -175,23 +128,31 @@ describe('ONE-601: Credential issuance', () => {
         );
 
         await reloadApp({
-          credentialIds: [credentialId],
-          suspendedScreen: true,
+          credentialUpdate: [
+            {
+              expectedLabel: `Suspended until ${formattedDate}`,
+              index: 0,
+              status: 'suspended',
+            },
+          ],
         });
-        await WalletScreen.credential(credentialId).verifyStatus('suspended');
-        await WalletScreen.openDetailScreen(credentialId);
+        const card = await WalletScreen.credentialAtIndex(0);
+        await card.verifyStatus(
+          'suspended',
+          `Suspended until ${formattedDate}`,
+        );
+        await WalletScreen.openDetailScreen(credentialSchemaJWT_with_LVVC.name);
 
-        await expect(CredentialDetailScreen.screen).toExist();
-        await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
+        await expect(CredentialDetailScreen.screen).toBeVisible();
+        await CredentialDetailScreen.credentialCard.verifyStatus(
+          'suspended',
+          `Suspended until ${formattedDate}`,
+        );
 
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
           'Credential suspended',
         );
-
-        await expect(
-          CredentialDetailScreen.credentialCard.header.label.suspended,
-        ).toHaveText(`Suspended until ${formattedDate}`);
       });
 
       it('Suspended credential without date limits', async () => {
@@ -204,17 +165,19 @@ describe('ONE-601: Credential issuance', () => {
         await suspendCredential(credentialId, authToken);
 
         await reloadApp({
-          credentialIds: [credentialId],
-          suspendedScreen: true,
+          credentialUpdate: [
+            { expectedLabel: 'Suspended', index: 0, status: 'suspended' },
+          ],
         });
-        await WalletScreen.credential(credentialId).verifyStatus('suspended');
+        const card = await WalletScreen.credentialAtIndex(0);
+        await card.verifyStatus('suspended');
         await WalletScreen.openDetailScreen(credentialSchemaJWT_with_LVVC.name);
 
-        await expect(CredentialDetailScreen.screen).toExist();
-        await CredentialDetailScreen.credentialCard.verifyStatus('suspended');
-        await expect(
-          CredentialDetailScreen.credentialCard.header.label.suspended,
-        ).toHaveText('Suspended');
+        await expect(CredentialDetailScreen.screen).toBeVisible();
+        await CredentialDetailScreen.credentialCard.verifyStatus(
+          'suspended',
+          'Suspended',
+        );
 
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
@@ -228,29 +191,29 @@ describe('ONE-601: Credential issuance', () => {
         credentialId = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          exchange: Exchange.PROCIVIS,
+          exchange: Exchange.OPENID4VC,
         });
       });
 
       it('Revoke credential', async () => {
         await revokeCredential(credentialId, authToken);
         await reloadApp({
-          credentialIds: [credentialId],
-          revokedScreen: true,
+          credentialUpdate: [
+            { expectedLabel: 'Revoked', index: 0, status: 'revoked' },
+          ],
         });
-
-        await WalletScreen.credential(credentialId).verifyStatus('revoked');
-        await WalletScreen.openDetailScreen(credentialId);
+        const card = await WalletScreen.credentialAtIndex(0);
+        await card.verifyStatus('revoked', 'Revoked');
+        await WalletScreen.openDetailScreen(credentialSchemaJWT_with_LVVC.name);
 
         await expect(CredentialDetailScreen.history(0).element).toExist();
         await expect(CredentialDetailScreen.history(0).label).toHaveText(
           'Credential revoked',
         );
-        await CredentialDetailScreen.credentialCard.verifyStatus('revoked');
-
-        await expect(
-          CredentialDetailScreen.credentialCard.header.label.revoked,
-        ).toHaveText('Revoked');
+        await CredentialDetailScreen.credentialCard.verifyStatus(
+          'revoked',
+          'Revoked',
+        );
       });
     });
   });
@@ -264,12 +227,16 @@ describe('ONE-601: Credential issuance', () => {
       credentialId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT_with_LVVC,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
     beforeEach(async () => {
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await expect(
+        (
+          await WalletScreen.credentialAtIndex(0)
+        ).element,
+      ).toBeVisible();
       await WalletScreen.openDetailScreen(credentialId);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
@@ -288,14 +255,14 @@ describe('ONE-601: Credential issuance', () => {
 
       await CredentialDetailScreen.backButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).element).toBeVisible();
+      await expect(
+        (
+          await WalletScreen.credentialAtIndex(0)
+        ).element,
+      ).toBeVisible();
     });
 
     it('Accept confirmation', async () => {
-      // Long press is not working on android emulator
-      if (device.getPlatform() === 'android') {
-        return;
-      }
       await device.disableSynchronization();
       await CredentialDeletePromptScreen.deleteButton.longPress(3001);
       await waitFor(CredentialDeleteProcessScreen.screen)
@@ -308,7 +275,11 @@ describe('ONE-601: Credential issuance', () => {
       await CredentialDeleteProcessScreen.closeButton.tap();
       await device.enableSynchronization();
       await expect(WalletScreen.screen).toBeVisible();
-      await expect(WalletScreen.credential(credentialId).element).not.toExist();
+      await expect(
+        (
+          await WalletScreen.credentialAtIndex(0)
+        ).element,
+      ).not.toExist();
     });
   });
 
@@ -576,7 +547,7 @@ describe('ONE-601: Credential issuance', () => {
       await scanURL(invitationUrl);
 
       await expect(InvitationProcessScreen.screen).toBeVisible();
-      await expect(element(by.text('Something went wrong.'))).toBeVisible();
+      await expect(element(by.text('Connection failed'))).toBeVisible();
       await InvitationProcessScreen.infoButton.tap();
       await expect(InvitationErrorDetailsScreen.screen).toBeVisible();
       await InvitationErrorDetailsScreen.close.tap();
@@ -611,7 +582,7 @@ describe('ONE-601: Credential issuance', () => {
             required: true,
           },
         ],
-        format: CredentialFormat.SDJWT,
+        format: CredentialFormat.SD_JWT,
         name: `Boolean schema ${uuidv4()}`,
         revocationMethod: RevocationMethod.LVVC,
       });
@@ -621,9 +592,11 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: booleanSchema,
-        didMethods: DidMethod.WEB,
+        didFilter: {
+          didMethods: DidMethod.WEB,
+          keyAlgorithms: KeyType.ES256,
+        },
         exchange: Exchange.OPENID4VC,
-        keyAlgorithms: KeyType.ES256,
       });
       await WalletScreen.openDetailScreen(booleanSchema.name);
       await expect(CredentialDetailScreen.screen).toBeVisible();

@@ -40,6 +40,7 @@ export interface CredentialClaimSchemaRequestDTO {
 }
 
 export interface CredentialSchemaData {
+  allowSuspension?: boolean;
   claims: CredentialClaimSchemaRequestDTO[];
   format: CredentialFormat;
   layoutProperties?: LayoutProperties;
