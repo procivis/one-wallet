@@ -34,29 +34,34 @@ workflow:
     - if: $CI_COMMIT_BRANCH
     - if: $CI_COMMIT_TAG
 
-
-.rule:skip_in_multi_project:
+.rule:skip_in_schedule:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "pipeline"
+    - !reference [ .rule:skip_in_multi_project, rules ]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
+
+.rule:all_branches:
+  rules:
+    - !reference [.rule:skip_in_schedule, rules]
+    - when: on_success
 
 .only_main:
   rules:
-    - !reference [.rule:skip_in_multi_project, rules]
+    - !reference [.rule:skip_in_schedule, rules]
     - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
 
 .only_main_or_tag:
   rules:
-    - !reference [.rule:skip_in_multi_project, rules]
+    - !reference [.rule:skip_in_schedule, rules]
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN || $CI_COMMIT_TAG =~ $GITHUB_TAG_PATTERN
     - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
     - when: never
 
-.only_main_or_manual:
+.rule:e2e_tests:
   rules:
     - !reference [.rule:skip_in_multi_project, rules]
-    - !reference [.only_main, rules]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
     - when: manual
 
 .bitrise_e2e:
@@ -65,6 +70,7 @@ workflow:
   needs:
     - job: test
       artifacts: false
+      optional: true
   script:
     - >
       /etc/gitrise.sh
@@ -122,7 +128,9 @@ workflow:
 # CODE CHECKS
 build_deps:
   stage: prepare
-  extends: .modules_setup
+  extends:
+    - .modules_setup
+    - .rule:all_branches
   script:
     - ''
   cache:
@@ -133,7 +141,7 @@ lint:
   needs: [build_deps]
   extends:
     - .modules_setup
-    - .skip_in_multi_project
+    - .rule:all_branches
   script:
     - yarn lint
 
@@ -142,7 +150,7 @@ compile:
   needs: [build_deps]
   extends:
     - .modules_setup
-    - .skip_in_multi_project
+    - .rule:all_branches
   script:
     - yarn compile
 
@@ -151,7 +159,7 @@ test:
   needs: [build_deps]
   extends:
     - .modules_setup
-    - .skip_in_multi_project
+    - .rule:all_branches
   script:
     - yarn test --coverage
   artifacts:
@@ -181,16 +189,16 @@ build:
   parallel:
     matrix:
       - BITRISE_WORKFLOW:
-          - Android_DEV
-          - iOS_DEV
-          - Android_TEST
-          - iOS_TEST
-          - Android_DEMO
-          - iOS_DEMO
-          - Android_TRIAL
-          - iOS_TRIAL
+        - Android_DEV
+        - iOS_DEV
+        - Android_TEST
+        - iOS_TEST
+        - Android_DEMO
+        - iOS_DEMO
+        - Android_TRIAL
+        - iOS_TRIAL
   rules:
-    - if: $CI_PIPELINE_SOURCE == "pipeline"
+    - if: $CI_PIPELINE_SOURCE == "pipeline" ||  $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
@@ -214,12 +222,12 @@ e2e:
   parallel:
     matrix:
       - BITRISE_WORKFLOW:
-          - E2E_iOS
-          - E2E_Android
+        - E2E_iOS
+        - E2E_Android
   allow_failure: true
   extends:
     - .bitrise_e2e
-    - .only_main_or_manual
+    - .rule:e2e_tests
 
 
 .dTrack_metrics: &dTrack_metrics
