@@ -6,6 +6,7 @@ include:
       - "gitlab/github.gitlab-ci.yml"
       - "gitlab/merge.gitlab-ci.yml"
       - "gitlab/rules.gitlab-ci.yml"
+      - "gitlab/ci-tools.gitlab-ci.yml"
 
 stages:
   - prepare
@@ -17,6 +18,7 @@ stages:
   - e2e_tests
   - license
   - github
+  - sync_with_jira
 
 variables:
   # ONE-wallet project on Bitrise
@@ -472,3 +474,8 @@ sdk:new_core_binding_mr:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: always
+
+set_jira_version:
+  stage: sync_with_jira
+  extends:
+    - .ci-tool:set_jira_version
