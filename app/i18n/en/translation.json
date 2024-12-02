@@ -129,7 +129,6 @@
   "credentialHistory.offerRejected": "Credential offer rejected",
   "credentialHistory.offered": "Credential offered",
   "credentialHistory.pending": "Credential pending",
-  "credentialHistory.revalidated": "Credential revalidated",
   "credentialHistory.revoked": "Credential revoked",
   "credentialHistory.shareAccepted": "Request accepted",
   "credentialHistory.shareError": "Proof request failed",
