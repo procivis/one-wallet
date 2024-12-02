@@ -79,11 +79,6 @@ export const getHistoryItemLabelAndIconForAction = (
         icon: <HistoryActionIcon type={HistoryActionIconType.Suspend} />,
         label: translate('credentialHistory.suspended'),
       };
-    case HistoryActionEnum.REACTIVATED:
-      return {
-        icon: <HistoryActionIcon type={HistoryActionIconType.Revalidate} />,
-        label: translate('credentialHistory.revalidated'),
-      };
   }
 
   return {

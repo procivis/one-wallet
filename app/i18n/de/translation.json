@@ -129,7 +129,6 @@
   "credentialHistory.offerRejected": "Nachweisangebot zurückgewiesen",
   "credentialHistory.offered": "Nachweis angeboten",
   "credentialHistory.pending": "Nachweis ausstehend",
-  "credentialHistory.revalidated": "Nachweis revalidiert",
   "credentialHistory.revoked": "Nachweis zurückgezogen",
   "credentialHistory.shareError": "Nachweisüberprüfung fehlgeschlagen",
   "credentialHistory.shareRejected": "Datenaustausch zurückgewiesen",

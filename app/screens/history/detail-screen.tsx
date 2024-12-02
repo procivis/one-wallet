@@ -188,7 +188,6 @@ export const HistoryDetailScreen: FC = () => {
         });
       } else if (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL) {
         const credentialActions = [
-          HistoryActionEnum.REACTIVATED,
           HistoryActionEnum.SUSPENDED,
           HistoryActionEnum.REVOKED,
           HistoryActionEnum.DEACTIVATED,
