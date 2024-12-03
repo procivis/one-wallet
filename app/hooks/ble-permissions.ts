@@ -4,11 +4,10 @@ import {
 } from '@procivis/one-react-native-components';
 import { useCallback, useState } from 'react';
 // eslint-disable-next-line react-native/split-platform-components
-import { Linking, PermissionsAndroid, Platform } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import {
   AndroidPermission,
   checkMultiple,
-  openSettings,
   PERMISSIONS,
   PermissionStatus,
   requestMultiple,
@@ -96,23 +95,4 @@ const getStrictestResult = (results: PermissionStatus[]) => {
 
     return result;
   }, RESULTS.GRANTED);
-};
-
-export const useOpenBleSettings = () => {
-  const openBleSettings = useCallback(() => {
-    if (Platform.OS === 'ios') {
-      Linking.openURL('App-Prefs:Bluetooth');
-    } else {
-      Linking.sendIntent('android.settings.BLUETOOTH_SETTINGS');
-    }
-  }, []);
-
-  const openAppPermissionSettings = useCallback(() => {
-    openSettings();
-  }, []);
-
-  return {
-    openAppPermissionSettings,
-    openBleSettings,
-  };
 };
