@@ -9,6 +9,7 @@ import {
   useAvailableTransports,
   useBlockOSBackNavigation,
   useInvitationHandler,
+  useOpenSettings,
 } from '@procivis/one-react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import {
@@ -28,10 +29,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import {
-  useBlePermissions,
-  useOpenBleSettings,
-} from '../../hooks/ble-permissions';
+import { useBlePermissions } from '../../hooks/ble-permissions';
 import { translate } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
@@ -62,7 +60,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
     useBlePermissions(ExchangeProtocol.OPENID4VC);
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
-  const { openAppPermissionSettings, openBleSettings } = useOpenBleSettings();
+  const {
+    openAppPermissionSettings,
+    openBleSettings,
+    openMobileNetworkSettings,
+    openWiFiSettings,
+  } = useOpenSettings();
 
   const isBleInteraction = useMemo(() => {
     if (!invitationSupportedTransports.includes(Transport.Bluetooth)) {
@@ -221,13 +224,15 @@ const InvitationProcessScreen: FunctionComponent = () => {
     ) {
       return;
     }
+    console.log(transportError.internet);
 
     return {
       onPress: () => {
-        if (
-          transportError.internet !== undefined ||
-          transportError.ble !== BluetoothState.Unauthorized
-        ) {
+        if (transportError.internet === InternetState.Disabled) {
+          openMobileNetworkSettings();
+        } else if (transportError.internet === InternetState.Unreachable) {
+          openWiFiSettings();
+        } else if (transportError.ble !== BluetoothState.Unauthorized) {
           // os Bluetooth adapter settings, user can enable Bluetooth or allow for new connections (iOS)
           openBleSettings();
         } else {
@@ -237,7 +242,14 @@ const InvitationProcessScreen: FunctionComponent = () => {
       },
       title: translate('common.openSettings'),
     };
-  }, [state, transportError, openBleSettings, openAppPermissionSettings]);
+  }, [
+    state,
+    transportError,
+    openMobileNetworkSettings,
+    openWiFiSettings,
+    openBleSettings,
+    openAppPermissionSettings,
+  ]);
 
   const label = useMemo(() => {
     if (canHandleInvitation) {

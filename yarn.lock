@@ -2851,17 +2851,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/one-react-native-components@npm:0.2.11":
-  version: 0.2.11
-  resolution: "@procivis/one-react-native-components@npm:0.2.11::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.2.11.tgz"
+"@procivis/one-react-native-components@npm:0.2.14":
+  version: 0.2.14
+  resolution: "@procivis/one-react-native-components@npm:0.2.14::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.2.14.tgz"
   peerDependencies:
-    "@procivis/react-native-one-core": ^1.24219.0
+    "@procivis/react-native-one-core": ^1.26999.0
     "@procivis/react-native-picker": "*"
     "@react-native-community/blur": "*"
     "@react-native-community/netinfo": ^11.4.1
     "@react-native/normalize-color": "*"
     "@react-navigation/native": "*"
     "@sentry/react-native": ^5.24.1
+    apisauce: 2.0.0
     parse-url: ^9.2.0
     pure-svg-code: "*"
     qrcode-svg: "*"
@@ -2875,7 +2876,7 @@ __metadata:
     react-native-vision-camera: ^4
     react-query: ^3.39.3
     timeago.js: ^4.0.2
-  checksum: 6944bac05ac6f27d979de7acc20cac7abb526281bec15a605f979d6b464f0f121040b4b8afe60d1a69d30255707b3d3055073eadf4439b17f7828aa9d2c86d50
+  checksum: 3c9eb4511892c55ba2e98074a10479318980c432e842837b3981bc1621aa27eb6cd0ac69d0ab60bcd16cc506a7960e3c27414eea2485ada8b732be28fe9a7da0
   languageName: node
   linkType: hard
 
@@ -12436,7 +12437,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/one-react-native-components": "npm:0.2.11"
+    "@procivis/one-react-native-components": "npm:0.2.14"
     "@procivis/react-native-one-core": "npm:1.29238.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
