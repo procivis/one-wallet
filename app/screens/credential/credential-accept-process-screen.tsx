@@ -28,19 +28,26 @@ import {
 } from '../../components/navigation/header-buttons';
 import { translate, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
-import { IssueCredentialRouteProp } from '../../navigators/issue-credential/issue-credential-routes';
+import {
+  IssueCredentialNavigationProp,
+  IssueCredentialRouteProp,
+} from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
+
+const invalidCodeBRs = ['BR_0169', 'BR_0170'];
 
 const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
+  const navigation =
+    useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const [state, setState] = useState<
     Exclude<LoaderViewState, LoaderViewState.Error>
   >(LoaderViewState.InProgress);
-  const { credentialId, interactionId } = route.params;
+  const { credentialId, interactionId, txCode, txCodeValue } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
   const { walletStore } = useStores();
@@ -73,14 +80,34 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
     }
 
     try {
-      await acceptCredential({ didId, interactionId, txCode: null });
+      await acceptCredential({
+        didId,
+        interactionId,
+        txCode: txCodeValue || null,
+      });
       setState(LoaderViewState.Success);
     } catch (e) {
+      if (invalidCodeBRs.includes((e as any).code)) {
+        return navigation.replace('CredentialConfirmationCode', {
+          credentialId,
+          interactionId,
+          invalidCode: txCodeValue,
+          txCode: txCode!,
+        });
+      }
       reportException(e, 'Accept credential failure');
       setState(LoaderViewState.Warning);
       setError(e);
     }
-  }, [acceptCredential, interactionId, didId]);
+  }, [
+    didId,
+    acceptCredential,
+    interactionId,
+    txCodeValue,
+    navigation,
+    credentialId,
+    txCode,
+  ]);
 
   useEffect(() => {
     if (credential) {
