@@ -68,7 +68,7 @@ workflow:
 
 .bitrise_e2e:
   stage: e2e_tests
-  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
   needs:
     - job: test
       artifacts: false
@@ -89,18 +89,24 @@ workflow:
 
 .bitrise_build:
   stage: build
-  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
   needs:
     - job: test
       artifacts: false
   script:
-    - >
-      /etc/gitrise.sh
+    - |
+      workflow_or_pipeline=$(if [ -n "$BITRISE_WORKFLOW" ]; then
+          echo "--workflow $BITRISE_WORKFLOW"
+      elif [ -n "$BITRISE_PIPELINE" ]; then
+          echo "--pipeline $BITRISE_PIPELINE"
+      fi)
+      command="/etc/gitrise.sh
       --access-token $BITRISE_API_ACCESS_TOKEN
       --slug $BITRISE_PROJECT_SLUG
-      --workflow $BITRISE_WORKFLOW
-      --commit "$CI_COMMIT_SHA"
-      --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
+      $workflow_or_pipeline
+      --commit $CI_COMMIT_SHA
+      --env CI_PIPELINE_ID:$CI_PIPELINE_ID"
+      $command
 
 .install-node-modules: &install-node-modules
   - yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
@@ -194,17 +200,18 @@ build:
         - Android_DEV
         - iOS_DEV
         - Android_TEST
-        - iOS_TEST
         - Android_DEMO
-        - iOS_DEMO
         - Android_TRIAL
-        - iOS_TRIAL
+      - BITRISE_PIPELINE:
+        - iOS_TEST_and_review
+        - iOS_DEMO_and_review
+        - iOS_TRIAL_and_review
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline" ||  $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
-    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_TEST' || $BITRISE_WORKFLOW == 'iOS_TEST')
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_TEST' || $BITRISE_PIPELINE == 'iOS_TEST_and_review')
       when: on_success
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: never
@@ -321,7 +328,7 @@ dtrack:android:upload-bom:
       - .upload_bom
 
 dtrack:ios:upload-bom:
-  image: $CI_REGISTRY/procivis/one/one-operations/bitrise-builder:0.2.0
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
   variables:
     D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
