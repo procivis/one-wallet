@@ -43,7 +43,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
-  const { credentialId, interactionId } = route.params;
+  const { credentialId, interactionId, txCode } = route.params;
+
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -70,11 +71,20 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const onAccept = useCallback(() => {
     skipRejection.current = true;
-    navigation.replace('Processing', {
-      credentialId,
-      interactionId,
-    });
-  }, [credentialId, interactionId, navigation]);
+
+    if (txCode) {
+      navigation.replace('CredentialConfirmationCode', {
+        credentialId,
+        interactionId,
+        txCode,
+      });
+    } else {
+      navigation.replace('Processing', {
+        credentialId,
+        interactionId,
+      });
+    }
+  }, [credentialId, interactionId, navigation, txCode]);
 
   const onImagePreview = useCredentialImagePreview();
 
