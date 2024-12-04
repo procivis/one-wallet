@@ -442,25 +442,26 @@ license_generate:
       when: manual
 
 github:push:
+  stage: github
   extends:
-    - .github:push
-
-github:release:
+    - .ci-tool:open_source_release
   variables:
     FILES_TO_ATTACH: >-
       react-native-sbom.json
       android-sbom.json
       artifacts/ios-sbom.xml
-  extends:
-    - .github:release
   needs:
-    - job: github:push
     - job: dtrack:ios:upload-bom
       artifacts: true
     - job: dtrack:android:upload-bom
       artifacts: true
     - job: dtrack:react-native:upload-bom
       artifacts: true
+
+set_jira_version:
+  stage: sync_with_jira
+  extends:
+    - .ci-tool:set_jira_version
 
 sdk:new_core_binding_mr:
   image: node:18.16.0-alpine
@@ -481,8 +482,3 @@ sdk:new_core_binding_mr:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: always
-
-set_jira_version:
-  stage: sync_with_jira
-  extends:
-    - .ci-tool:set_jira_version
