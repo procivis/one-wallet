@@ -174,6 +174,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
             params: {
               credentialId: result.credentialIds[0],
               interactionId: result.interactionId,
+              txCode: result?.txCode,
             },
             screen: 'CredentialOffer',
           });
