@@ -1,4 +1,4 @@
-image: node:18.16.0-alpine
+image: node:18.17.0-alpine
 
 include:
   - project: "procivis/one/one-operations"
