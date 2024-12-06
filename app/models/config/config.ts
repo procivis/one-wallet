@@ -16,6 +16,7 @@ export interface Configuration {
   appName: string;
   backendConfig: BackendConfiguration;
   featureFlags: FeatureFlags;
+  trustAnchorPublisherReference: string;
 }
 
 export type LocaleOverride = Record<string /* language */, unknown>;
