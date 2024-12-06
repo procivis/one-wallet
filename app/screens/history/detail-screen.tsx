@@ -21,6 +21,7 @@ import {
   ProofInputClaim,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { omit } from 'lodash';
 import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -166,7 +167,7 @@ export const HistoryDetailScreen: FC = () => {
 
   const from = issuedCredential?.issuerDid ?? proof?.verifierDid;
   const entityName = from
-    ? replaceBreakingHyphens(from)
+    ? replaceBreakingHyphens(from.did)
     : issuedCredential
     ? translate('credentialOffer.unknownIssuer')
     : translate('proofRequest.unknownVerifier');
@@ -266,7 +267,14 @@ export const HistoryDetailScreen: FC = () => {
           >
             {translate('createBackup.preview.notBackedUp')}
           </Typography>
-          <PreviewCredentials credentials={backupInfo.credentials} />
+          <PreviewCredentials
+            credentials={backupInfo.credentials.map((credential) => {
+              return {
+                issuerDid: credential.issuerDid?.did,
+                ...omit(credential, 'issuerDid'),
+              };
+            })}
+          />
         </>
       ) : null}
 
