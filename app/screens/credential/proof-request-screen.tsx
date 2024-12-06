@@ -3,7 +3,7 @@ import {
   Button,
   ButtonType,
   concatTestID,
-  EntityCluster,
+  EntityDetails,
   ProofRequestGroup,
   ScrollViewScreen,
   ShareCredential,
@@ -22,6 +22,7 @@ import {
   PresentationDefinitionField,
   PresentationDefinitionRequestedCredential,
   PresentationSubmitCredentialRequest,
+  TrustEntityRoleEnum,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -50,6 +51,7 @@ import {
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialLabels } from '../../utils/credential-sharing';
 import { reportException } from '../../utils/reporting';
+import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const isCredentialApplicable = (
   presentationDefinition: PresentationDefinition,
@@ -307,10 +309,10 @@ const ProofRequestScreen: FunctionComponent = () => {
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        <EntityCluster
-          entityName={
-            proof?.verifierDid?.did ?? translate('proofRequest.unknownVerifier')
-          }
+        <EntityDetails
+          did={proof?.verifierDid}
+          labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
+          role={TrustEntityRoleEnum.VERIFIER}
           style={styles.verifier}
         />
         {!presentationDefinition || !allCredentials ? (

@@ -358,6 +358,7 @@
   "settings.security.pincode": "Change PIN code",
   "settings.security.title": "Security",
   "settings.title": "Settings",
+  "trustEntity.notTrusted": "Not trusted",
   "wallet.credentialsList.empty.scanQrCode": "Scan QR code",
   "wallet.credentialsList.empty.search.subtitle": "There are no credentials available matching your search criteria.",
   "wallet.credentialsList.empty.search.title": "No credentials found",

@@ -1,0 +1,16 @@
+import { EntityDetailsLabels } from '@procivis/one-react-native-components';
+import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
+
+import { translate } from '../i18n';
+
+export const trustEntityDetailsLabels = (
+  role: Exclude<TrustEntityRoleEnum, TrustEntityRoleEnum.BOTH>,
+): EntityDetailsLabels => {
+  return {
+    notTrusted: translate('trustEntity.notTrusted'),
+    unknown:
+      role === TrustEntityRoleEnum.ISSUER
+        ? translate('credentialOffer.unknownIssuer')
+        : translate('proofRequest.unknownVerifier'),
+  };
+};

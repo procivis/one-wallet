@@ -2,7 +2,7 @@ import {
   BackButton,
   CredentialDetails,
   DataItem,
-  EntityCluster,
+  EntityDetails,
   HistoryStatusIcon,
   HistoryStatusIconType,
   ScrollViewScreen,
@@ -19,6 +19,7 @@ import {
   HistoryActionEnum,
   HistoryEntityTypeEnum,
   ProofInputClaim,
+  TrustEntityRoleEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { omit } from 'lodash';
@@ -38,10 +39,8 @@ import { credentialCardLabels } from '../../utils/credential';
 import { formatDateTimeLocalized } from '../../utils/date';
 import { nonEmptyFilter } from '../../utils/filtering';
 import { getEntryTitle } from '../../utils/history';
-import {
-  capitalizeFirstLetter,
-  replaceBreakingHyphens,
-} from '../../utils/string';
+import { capitalizeFirstLetter } from '../../utils/string';
+import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const getActionStatus = (action: HistoryActionEnum) => {
   switch (action) {
@@ -165,12 +164,6 @@ export const HistoryDetailScreen: FC = () => {
     }
   }, [expandedCredential, issuedCredential, proofCredentials, onHeaderPress]);
 
-  const from = issuedCredential?.issuerDid ?? proof?.verifierDid;
-  const entityName = from
-    ? replaceBreakingHyphens(from.did)
-    : issuedCredential
-    ? translate('credentialOffer.unknownIssuer')
-    : translate('proofRequest.unknownVerifier');
   const actionStatus = getActionStatus(entry.action);
   const actionValueColor = getStatusTextColor(actionStatus);
 
@@ -233,10 +226,20 @@ export const HistoryDetailScreen: FC = () => {
       testID="HistoryDetailScreen"
     >
       <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
-        {from && (
-          <EntityCluster
-            entityName={entityName}
-            style={[styles.entity, { borderColor: colorScheme.background }]}
+        {issuedCredential?.issuerDid && (
+          <EntityDetails
+            did={issuedCredential.issuerDid}
+            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
+            role={TrustEntityRoleEnum.ISSUER}
+            style={[styles.entity, { borderColor: colorScheme.grayDark }]}
+          />
+        )}
+        {proof?.verifierDid && (
+          <EntityDetails
+            did={proof.verifierDid}
+            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
+            role={TrustEntityRoleEnum.VERIFIER}
+            style={[styles.entity, { borderColor: colorScheme.grayDark }]}
           />
         )}
         <DataItem
