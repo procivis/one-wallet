@@ -38,7 +38,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didSections = proofDetail.verifierDid?.split(':') ?? [];
+  const didSections = proofDetail.verifierDid?.did.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
 
@@ -81,7 +81,8 @@ const ProofDetailNerdView: FunctionComponent = () => {
     <NerdModeScreen
       entityCluster={{
         entityName:
-          proofDetail?.verifierDid ?? translate('proofRequest.unknownVerifier'),
+          proofDetail?.verifierDid?.did ??
+          translate('proofRequest.unknownVerifier'),
       }}
       labels={{
         collapse: translate('nerdView.action.collapseAttribute'),

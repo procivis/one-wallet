@@ -29,7 +29,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didSections = credentialDetail.issuerDid?.split(':') ?? [];
+  const didSections = credentialDetail.issuerDid?.did.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
 
@@ -65,7 +65,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     <NerdModeScreen
       entityCluster={{
         entityName:
-          credentialDetail?.issuerDid ??
+          credentialDetail?.issuerDid?.did ??
           translate('credentialOffer.unknownIssuer'),
       }}
       labels={{

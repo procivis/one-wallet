@@ -145,7 +145,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
       <View style={styles.content} testID="CredentialOfferScreen.content">
         <EntityCluster
           entityName={
-            credential?.issuerDid ?? translate('credentialOffer.unknownIssuer')
+            credential?.issuerDid?.did ??
+            translate('credentialOffer.unknownIssuer')
           }
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
         />

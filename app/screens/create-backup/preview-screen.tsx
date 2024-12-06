@@ -7,6 +7,7 @@ import {
   useCredentials,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { omit } from 'lodash';
 import React, { FC, useCallback } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
@@ -85,7 +86,14 @@ const PreviewScreen: FC = () => {
           </Typography>
         )}
         {showNonExportable && (
-          <PreviewCredentials credentials={nonExportableCredentials} />
+          <PreviewCredentials
+            credentials={nonExportableCredentials?.map((credential) => {
+              return {
+                issuerDid: credential.issuerDid?.did,
+                ...omit(credential, 'issuerDid'),
+              };
+            })}
+          />
         )}
       </View>
       <View style={styles.bottom}>

@@ -309,7 +309,7 @@ const ProofRequestScreen: FunctionComponent = () => {
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
         <EntityCluster
           entityName={
-            proof?.verifierDid ?? translate('proofRequest.unknownVerifier')
+            proof?.verifierDid?.did ?? translate('proofRequest.unknownVerifier')
           }
           style={styles.verifier}
         />
