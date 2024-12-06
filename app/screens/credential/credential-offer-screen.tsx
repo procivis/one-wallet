@@ -4,7 +4,7 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
-  EntityCluster,
+  EntityDetails,
   ScrollViewScreen,
   useAppColorScheme,
   useBeforeRemove,
@@ -14,6 +14,7 @@ import {
   useCredentialDetail,
   useCredentialReject,
 } from '@procivis/one-react-native-components';
+import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -35,6 +36,7 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { reportException } from '../../utils/reporting';
+import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -143,11 +145,10 @@ const CredentialOfferScreen: FunctionComponent = () => {
       testID="CredentialOfferScreen"
     >
       <View style={styles.content} testID="CredentialOfferScreen.content">
-        <EntityCluster
-          entityName={
-            credential?.issuerDid?.did ??
-            translate('credentialOffer.unknownIssuer')
-          }
+        <EntityDetails
+          did={credential?.issuerDid}
+          labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
+          role={TrustEntityRoleEnum.ISSUER}
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
         />
         {!credential || !config || !card ? (
