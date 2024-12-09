@@ -3940,13 +3940,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/i18n-js@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@types/i18n-js@npm:3.0.3"
-  checksum: 2cfb60f12f5850e9f6f0e9b4e11b3147f1dbca9898dbfe2f5236e468932421813e310d7109e95aae634d9104cb0eb92df2ed23c1e9450d9eec4df02a9bcd5b35
-  languageName: node
-  linkType: hard
-
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.4
   resolution: "@types/istanbul-lib-coverage@npm:2.0.4"
@@ -12470,7 +12463,6 @@ __metadata:
     "@react-navigation/native": "npm:~6.1.6"
     "@react-navigation/native-stack": "npm:^6.9.12"
     "@sentry/react-native": "npm:^5.24.1"
-    "@types/i18n-js": "npm:3.0.3"
     "@types/jest": "npm:^29.5.11"
     "@types/lodash": "npm:^4"
     "@types/qrcode-svg": "npm:^1"

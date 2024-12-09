@@ -1,14 +1,72 @@
 import {
   NerdModeScreen,
   NerdModeSection,
+  reportException,
 } from '@procivis/one-react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+
+const getDataFields = (error: unknown): NerdModeSection['data'] => {
+  if (error instanceof OneError) {
+    const result = [
+      {
+        attributeKey: translate('errorDetail.code'),
+        canBeCopied: true,
+        highlightedText: error.code,
+      },
+      {
+        attributeKey: translate('errorDetail.message'),
+        attributeText: error.message,
+        canBeCopied: true,
+      },
+    ];
+
+    if (error.cause) {
+      result.push({
+        attributeKey: translate('errorDetail.cause'),
+        attributeText: error.cause,
+        canBeCopied: true,
+      });
+    }
+
+    return result;
+  }
+
+  if (error instanceof Error) {
+    return [
+      {
+        attributeKey: translate('errorDetail.name'),
+        canBeCopied: true,
+        highlightedText: error.name,
+      },
+      {
+        attributeKey: translate('errorDetail.message'),
+        attributeText: error.message,
+        canBeCopied: true,
+      },
+    ];
+  }
+
+  let message = 'Unknown error';
+  try {
+    message = JSON.stringify(error);
+  } catch (e) {
+    reportException(e, 'Formatting unknown error');
+  }
+
+  return [
+    {
+      attributeKey: translate('errorDetail.message'),
+      attributeText: message,
+      canBeCopied: true,
+    },
+  ];
+};
 
 const ErrorNerdScreen: FC = () => {
   const navigation = useNavigation();
@@ -17,61 +75,15 @@ const ErrorNerdScreen: FC = () => {
 
   const { error } = route.params;
 
-  const sections: NerdModeSection[] = [];
-  if (error instanceof OneError) {
-    sections.push({
-      data: [
-        {
-          attributeKey: translate('errorDetail.code'),
-          canBeCopied: true,
-          highlightedText: error.code,
-        },
-        {
-          attributeKey: translate('errorDetail.message'),
-          attributeText: error.message,
-          canBeCopied: true,
-        },
-        {
-          attributeKey: translate('errorDetail.cause'),
-          attributeText: (error.cause as any)?.message,
-          canBeCopied: true,
-        },
-      ],
-      title: translate('errorDetail.error'),
-    });
-  } else if (
-    typeof error === 'object' &&
-    error &&
-    'name' in error &&
-    'message' in error
-  ) {
-    sections.push({
-      data: [
-        {
-          attributeKey: translate('errorDetail.name'),
-          canBeCopied: true,
-          highlightedText: (error as any).name as string,
-        },
-        {
-          attributeKey: translate('errorDetail.message'),
-          attributeText: (error as any).message as string,
-          canBeCopied: true,
-        },
-      ],
-      title: translate('errorDetail.error'),
-    });
-  } else {
-    sections.push({
-      data: [
-        {
-          attributeKey: translate('errorDetail.message'),
-          attributeText: JSON.stringify(error),
-          canBeCopied: true,
-        },
-      ],
-      title: translate('errorDetail.error'),
-    });
-  }
+  const sections = useMemo<NerdModeSection[]>(
+    () => [
+      {
+        data: getDataFields(error),
+        title: translate('errorDetail.error'),
+      },
+    ],
+    [error],
+  );
 
   return (
     <NerdModeScreen

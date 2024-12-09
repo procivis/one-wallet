@@ -16,7 +16,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -111,7 +111,10 @@ const ProcessingScreen: FC = () => {
       }}
       loader={{
         animate: isFocused,
-        label: translate(`restoreBackup.processing.${state}`),
+        label: translateError(
+          error,
+          translate(`restoreBackup.processing.${state}`),
+        ),
         state,
         testID: 'RestoreBackupProcessingScreen.animation',
       }}

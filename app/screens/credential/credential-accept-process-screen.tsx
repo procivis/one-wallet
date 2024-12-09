@@ -26,7 +26,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { translate, TxKeyPath } from '../../i18n';
+import { translate, translateError, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
 import {
   IssueCredentialNavigationProp,
@@ -70,8 +70,8 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       state === LoaderViewState.Warning && !didId
         ? 'credentialOffer.process.warning.incompatible.title'
         : `credentialOffer.process.${state}.title`;
-    return translate(txKeyPath);
-  }, [didId, state]);
+    return translateError(error, translate(txKeyPath));
+  }, [didId, state, error]);
 
   const handleCredentialAccept = useCallback(async () => {
     if (!didId) {
