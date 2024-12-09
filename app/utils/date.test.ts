@@ -2,6 +2,14 @@ import { Platform } from 'react-native';
 
 import { convertDateStrToLocalDate, convertDateToUTCTimestamp } from './date';
 
+jest.mock('i18n-js', () => ({
+  I18n: () => {
+    return {
+      t: jest.fn((str: string) => str),
+    };
+  },
+}));
+
 const TIMES = [
   [
     '2000-01-02', // without daylight-saving

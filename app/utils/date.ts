@@ -2,11 +2,11 @@ import {
   formatDate,
   formatDateTime,
 } from '@procivis/one-react-native-components';
-import I18n from 'i18n-js';
 import { NativeModules, Platform } from 'react-native';
 import { format } from 'timeago.js';
 
 import { translate } from '../i18n';
+import i18n from '../i18n/i18n';
 
 const MINUTE = 60 * 1000;
 const DAY = 24 * 60 * MINUTE;
@@ -16,7 +16,7 @@ const DAY = 24 * 60 * MINUTE;
  */
 export const formatMonth = (
   date: Date,
-  locale: string = I18n.locale,
+  locale: string = i18n.locale,
 ): string => {
   return `${date.toLocaleString(locale, {
     month: 'long',
@@ -28,7 +28,7 @@ export const formatMonth = (
  */
 export const formatTimeAgo = (
   date: Date,
-  locale: string = I18n.locale,
+  locale: string = i18n.locale,
 ): string => {
   return format(date, locale);
 };
@@ -38,7 +38,7 @@ export const formatTimeAgo = (
  */
 export const formatTimestamp = (
   date: Date,
-  locale: string = I18n.locale,
+  locale: string = i18n.locale,
 ): string => {
   const now = Date.now();
   const timestamp = date.getTime();
