@@ -1,7 +1,7 @@
-import i18n from 'i18n-js';
 import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 
 import { Locale, Locales } from '../../i18n';
+import i18n from '../../i18n/i18n';
 
 /**
  * Store containing Wallet info
