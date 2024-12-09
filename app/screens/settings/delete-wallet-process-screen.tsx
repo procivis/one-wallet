@@ -20,7 +20,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import { removePin } from '../../hooks/pin-code/pin-code';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { resetNavigationAction } from '../../utils/navigation';
@@ -113,7 +113,10 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
       }}
       loader={{
         animate: isFocused,
-        label: translate(`deleteWalletProcess.${state}.title`),
+        label: translateError(
+          error,
+          translate(`deleteWalletProcess.${state}.title`),
+        ),
         state,
         testID: 'DeleteWalletProcessScreen.animation',
       }}

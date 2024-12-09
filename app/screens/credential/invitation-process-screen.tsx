@@ -11,7 +11,6 @@ import {
   useInvitationHandler,
   useOpenSettings,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -30,7 +29,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import { useBlePermissions } from '../../hooks/ble-permissions';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -185,7 +184,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
           });
         }
       })
-      .catch((err: OneError) => {
+      .catch((err: Error) => {
         // TODO Propagate proper error code from core
         if (err.message.includes('adapter is disabled')) {
           setAdapterEnabled(false);
@@ -225,7 +224,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     ) {
       return;
     }
-    console.log(transportError.internet);
 
     return {
       onPress: () => {
@@ -261,8 +259,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
       ) {
         return translate('invitation.process.bleAdapterDisabled.title');
       }
-      return translate(`invitation.process.${state}.title`);
+      return translateError(
+        error,
+        translate(`invitation.process.${state}.title`),
+      );
     }
+
     if (state !== LoaderViewState.Warning) {
       return translate(`invitation.process.${state}.title`);
     }
@@ -297,8 +299,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
       }
     }
 
-    return translate(`invitation.process.${state}.title`);
+    return translateError(
+      error,
+      translate(`invitation.process.${state}.title`),
+    );
   }, [
+    error,
     canHandleInvitation,
     state,
     invitationSupportedTransports,

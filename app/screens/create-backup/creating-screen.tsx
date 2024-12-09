@@ -23,7 +23,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { CreateBackupProcessingRouteProp } from '../../navigators/create-backup/create-backup-processing-routes';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -133,7 +133,10 @@ const CreatingScreen: FC = () => {
       }}
       loader={{
         animate: true,
-        label: translate(`createBackup.processing.${state}`),
+        label: translateError(
+          error,
+          translate(`createBackup.processing.${state}`),
+        ),
         state,
       }}
       testID="CreateBackupProcessingScreen"

@@ -27,7 +27,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
@@ -149,7 +149,10 @@ const ProofProcessScreen: FunctionComponent = () => {
       }}
       loader={{
         animate: isFocused,
-        label: translate(`proofRequest.process.${state}.title`),
+        label: translateError(
+          error,
+          translate(`proofRequest.process.${state}.title`),
+        ),
         state,
         testID: 'ProofRequestAcceptProcessScreen.animation',
       }}
