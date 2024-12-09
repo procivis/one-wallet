@@ -1,7 +1,7 @@
-import i18n from 'i18n-js';
 import { onSnapshot } from 'mobx-state-tree';
 
 import { defaultLocale } from '../../i18n';
+import i18n from '../../i18n/i18n';
 import * as storage from '../../utils/storage';
 import { Environment } from '../environment';
 import {

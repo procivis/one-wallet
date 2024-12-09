@@ -15,10 +15,10 @@ import {
   NavigationState,
   PartialState,
 } from '@react-navigation/native';
-import i18n from 'i18n-js';
 import React from 'react';
 
 import { config } from '../config';
+import i18n from '../i18n/i18n';
 import { useStores } from '../models';
 import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';

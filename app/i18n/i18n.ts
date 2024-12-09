@@ -1,4 +1,4 @@
-import i18n from 'i18n-js';
+import { I18n } from 'i18n-js';
 import { findBestLanguageTag } from 'react-native-localize';
 import { register } from 'timeago.js';
 import timeAgoDe from 'timeago.js/lib/lang/de';
@@ -13,10 +13,12 @@ const translations = {
   en: Object.assign(en, localeOverride?.en),
 };
 
+const i18n = new I18n();
+
 i18n.defaultSeparator = '/';
 i18n.translations = translations;
 i18n.defaultLocale = 'en';
-i18n.fallbacks = true;
+i18n.enableFallback = true;
 
 export type Locale = keyof typeof translations;
 export const Locales = Object.keys(translations) as Locale[];
@@ -57,3 +59,5 @@ export const registerTimeAgoLocales = () => {
   register('en', timeAgoEn);
   register('de', timeAgoDe);
 };
+
+export default i18n;

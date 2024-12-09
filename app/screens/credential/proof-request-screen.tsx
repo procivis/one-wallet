@@ -15,6 +15,7 @@ import {
   useONECore,
   useProofDetail,
   useProofReject,
+  useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
   CredentialStateEnum,
@@ -42,6 +43,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -79,17 +81,14 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { core } = useONECore();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
-
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
   const { data: allCredentials } = useCredentials();
-
   const {
     request: { interactionId, proofId },
     selectedCredentialId,
   } = route.params;
-
   const { data: proof } = useProofDetail(proofId);
-
+  const { data: trustEntity } = useTrustEntity(proof?.verifierDid?.id);
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   // If this is true, we should not attempt to reject in useBeforeRemove
@@ -370,6 +369,10 @@ const ProofRequestScreen: FunctionComponent = () => {
                 }
               />
             </View>
+            <ShareDisclaimer
+              ppUrl={trustEntity?.privacyUrl}
+              tosUrl={trustEntity?.termsUrl}
+            />
           </>
         )}
       </View>
