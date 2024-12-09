@@ -26,6 +26,7 @@ const getDebugExceptionInfo = (
 export function reportException(e: unknown, message?: string) {
   // `code` can be set in the native code
   const code = (e as any)?.code ?? '';
+  const cause = (e as any)?.cause;
 
   if (!__DEV__) {
     try {
@@ -35,6 +36,9 @@ export function reportException(e: unknown, message?: string) {
         }
         if (code) {
           scope.setExtra('code', code);
+        }
+        if (cause) {
+          scope.setExtra('cause', cause);
         }
         Sentry.captureException(e);
       });

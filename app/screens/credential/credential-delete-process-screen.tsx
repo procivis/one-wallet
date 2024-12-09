@@ -21,7 +21,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { translate } from '../../i18n';
+import { translate, translateError } from '../../i18n';
 import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { reportException } from '../../utils/reporting';
@@ -107,7 +107,10 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
       }}
       loader={{
         animate: true,
-        label: translate(`credentialDelete.${state}.title`),
+        label: translateError(
+          error,
+          translate(`credentialDelete.${state}.title`),
+        ),
         state,
         testID: 'CredentialDeleteProcessScreen.animation',
       }}
