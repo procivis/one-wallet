@@ -97,7 +97,6 @@
     "@react-native/eslint-config": "0.74.0",
     "@react-native/metro-config": "0.73.5",
     "@react-native/typescript-config": "0.73.1",
-    "@types/i18n-js": "3.0.3",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4",
     "@types/qrcode-svg": "^1",

@@ -23,7 +23,7 @@ const reactInterpolate = (
   }, {} as TranslateOptions);
 
   return reactStringReplace(message, i18nFn.placeholder, (match, i) => {
-    let value: string = '';
+    let value: string | React.ReactElement<unknown> = '';
     const placeholder = match as string;
     const name = placeholder.replace(i18nFn.placeholder, '$1');
 
