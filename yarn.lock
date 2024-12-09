@@ -5503,6 +5503,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:*":
+  version: 9.1.2
+  resolution: "bignumber.js@npm:9.1.2"
+  checksum: e17786545433f3110b868725c449fa9625366a6e675cd70eb39b60938d6adbd0158cb4b3ad4f306ce817165d37e63f4aa3098ba4110db1d9a3b9f66abfbaf10d
+  languageName: node
+  linkType: hard
+
 "bl@npm:^4.0.3, bl@npm:^4.1.0":
   version: 4.1.0
   resolution: "bl@npm:4.1.0"
@@ -9048,10 +9055,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18n-js@npm:3.8.0":
-  version: 3.8.0
-  resolution: "i18n-js@npm:3.8.0"
-  checksum: 5095b7aa4a6257bf425af38dab2268092b7b2e9348af1f2563d2ce3f859f16726c3f9db62c9578f32a9a6743afcd2d39715c19c7154abe6c57b0074f4a91cbef
+"i18n-js@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "i18n-js@npm:4.5.0"
+  dependencies:
+    bignumber.js: "npm:*"
+    lodash: "npm:*"
+    make-plural: "npm:*"
+  checksum: d316b38dc6f8203d9f744cbcf9e627b056fe33e869e4c72de27ee71487b5fe416c9a666b58ec561184e3e8f72552e2565cb7072ecaf0f4f02614dee6079db567
   languageName: node
   linkType: hard
 
@@ -10989,17 +11000,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:*, lodash@npm:^4.17.11, lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
 "lodash@npm:^3.10.1":
   version: 3.10.1
   resolution: "lodash@npm:3.10.1"
   checksum: f5f6d3d87503c3f1db27d49b30a00bb38dc1bd9de716c5febe8970259cc7b447149a0e320452ccaf5996a7a4abd63d94df341bb91bd8d336584ad518d8eab144
-  languageName: node
-  linkType: hard
-
-"lodash@npm:^4.17.11, lodash@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
   languageName: node
   linkType: hard
 
@@ -11141,6 +11152,13 @@ __metadata:
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
   checksum: 43b9f6dcbc6fe8b8604cb6396957c3698857a15ba4dbc38284f7f0e61f248300585ef1eb8cc62df54e9c724af977e45b5cdfd88320ef7f53e45070ed3488da55
+  languageName: node
+  linkType: hard
+
+"make-plural@npm:*":
+  version: 7.4.0
+  resolution: "make-plural@npm:7.4.0"
+  checksum: 10f24e932865c88d4cdb14d4bb809ce8e615cae7d083c63ad008b3bcaf0d22941ca0bd76acd9cdd7ae4047563501104fff3c37ce8ad2bc5671facde1818fa57f
   languageName: node
   linkType: hard
 
@@ -12483,7 +12501,7 @@ __metadata:
     eslint-plugin-typescript-sort-keys: "npm:^3.1.0"
     fbjs-scripts: "npm:3.0.0"
     husky: "npm:^7.0.4"
-    i18n-js: "npm:3.8.0"
+    i18n-js: "npm:^4.5.0"
     jest: "npm:^29.6.3"
     jest-junit: "npm:^16.0.0"
     jetifier: "npm:1.6.6"
@@ -12534,6 +12552,7 @@ __metadata:
     react-native-web: "npm:^0.16.3"
     react-powerplug: "npm:1.0.0"
     react-query: "npm:^3.39.3"
+    react-string-replace: "npm:^1.1.1"
     shelljs: "npm:^0.8.4"
     solidarity: "npm:2.3.1"
     sort-json: "npm:^2.0.0"
@@ -14064,6 +14083,13 @@ __metadata:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: c194d741792e86043a4ae272f7353c1cb9412bc649945c4220c6a101a6ea5410cceb3d65d5a4d750f11a24f7426e8eec7977e8a4e3ad5d3ee235ca2b18166fa8
+  languageName: node
+  linkType: hard
+
+"react-string-replace@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "react-string-replace@npm:1.1.1"
+  checksum: 5a4a4fd9c3758b4680da113adf411342116238b4dc68fa4c4e9b04c046cb757d4f00d6ba441301fa3afb44c847dacc17a2707865698ff1fc78a369182458e894
   languageName: node
   linkType: hard
 
