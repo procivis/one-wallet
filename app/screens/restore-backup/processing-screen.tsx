@@ -2,6 +2,7 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
   useBackupFinalizeImportProcedure,
   useBeforeRemove,
   useBlockOSBackNavigation,
@@ -20,7 +21,6 @@ import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 const ProcessingScreen: FC = () => {
   const isFocused = useIsFocused();

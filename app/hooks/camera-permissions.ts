@@ -1,3 +1,4 @@
+import { reportException } from '@procivis/one-react-native-components';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import {
@@ -8,7 +9,6 @@ import {
 } from 'react-native-permissions';
 
 import { useIsAppActive } from '../utils/appState';
-import { reportException } from '../utils/reporting';
 
 const platformPermission =
   Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA;

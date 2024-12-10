@@ -26,7 +26,6 @@ import { HeaderCloseModalButton } from '../../components/navigation/header-butto
 import { translate } from '../../i18n';
 import { RestoreBackupProcessingNavigationProp } from '../../navigators/restore-backup/restore-backup-processing-routes';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
-import { reportException } from '../../utils/reporting';
 
 const longPressTimeSeconds = 3;
 
@@ -45,11 +44,7 @@ const PreviewScreen: FC = () => {
       return;
     }
     navigation.navigate('RestoreBackupDashboard');
-    try {
-      await rollbackImport();
-    } catch (e) {
-      reportException(e, 'Backup rollbacking failure');
-    }
+    await rollbackImport();
   };
   useBeforeRemove(rollback);
 

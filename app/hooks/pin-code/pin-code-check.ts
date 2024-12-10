@@ -1,3 +1,4 @@
+import { reportError } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
 import { DeviceEventEmitter } from 'react-native';
@@ -8,7 +9,6 @@ import {
   RootNavigatorParamList,
 } from '../../navigators/root/root-routes';
 import { useIsAppActive } from '../../utils/appState';
-import { reportError } from '../../utils/reporting';
 import { useOnPinCodeInitialized } from './pin-code';
 
 const PIN_CODE_INACTIVE_TIMEOUT = 60000;

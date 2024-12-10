@@ -1,6 +1,7 @@
 import {
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
   useBlockOSBackNavigation,
   useUnpackBackup,
 } from '@procivis/one-react-native-components';
@@ -20,7 +21,6 @@ import {
   RestoreBackupProcessingRouteProp,
 } from '../../navigators/restore-backup/restore-backup-processing-routes';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
-import { reportException } from '../../utils/reporting';
 
 const UnlockScreen: FC = () => {
   const isFocused = useIsFocused();

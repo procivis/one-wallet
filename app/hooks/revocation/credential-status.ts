@@ -1,4 +1,5 @@
 import {
+  reportTraceInfo,
   useCredentialRevocationCheck,
   useCredentials,
 } from '@procivis/one-react-native-components';
@@ -11,7 +12,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 /**
  * Runs revocation check on background for all potential updates
@@ -35,7 +35,7 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
 
       const results = await check(checkedCredentials.map(({ id }) => id)).catch(
         (e) => {
-          reportException(e, 'Revocation check failed');
+          reportTraceInfo('Wallet', 'Credential status check failed', e);
           return [];
         },
       );
