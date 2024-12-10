@@ -2851,9 +2851,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/one-react-native-components@npm:0.1.58":
-  version: 0.1.58
-  resolution: "@procivis/one-react-native-components@npm:0.1.58::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.1.58.tgz"
+"@procivis/one-react-native-components@npm:0.1.63":
+  version: 0.1.63
+  resolution: "@procivis/one-react-native-components@npm:0.1.63"
   peerDependencies:
     "@procivis/react-native-picker": "*"
     "@react-native-community/blur": "*"
@@ -2867,13 +2867,13 @@ __metadata:
     react-native-safe-area-context: "*"
     react-native-svg: "*"
     react-native-vision-camera: ^4
-  checksum: d20fb4dd4ddaa04733fb1429dec0e177aa3dae5ff0c6a677c32f7026168a15426dc85c31be135a789e56f555e65354e1333626fed346525569193e5cad912e3a
+  checksum: bafc290ffbaa036db83dd4bcec9f2978ff3907585aa4c63a51d8b75b938bccc506bab93483a232aab3101d45490117e0753cd041d7c18542d6ba0bc6d424824d
   languageName: node
   linkType: hard
 
 "@procivis/react-native-one-core@npm:1.26999.0":
   version: 1.26999.0
-  resolution: "@procivis/react-native-one-core@npm:1.26999.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.26999.0.tgz"
+  resolution: "@procivis/react-native-one-core@npm:1.26999.0"
   peerDependencies:
     react-native: "*"
   checksum: c80652c7e5edcb661fbeec22dbd4e86c3f01b64dc8402156d1647a94397722ef2bddc455e4d72cb7146c4233bb91cdd8d631f584e284f4c56091154801090b2a
@@ -2882,10 +2882,10 @@ __metadata:
 
 "@procivis/react-native-picker@npm:5.0.3":
   version: 5.0.3
-  resolution: "@procivis/react-native-picker@npm:5.0.3::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F76%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-picker%2F-%2F%40procivis%2Freact-native-picker-5.0.3.tgz"
+  resolution: "@procivis/react-native-picker@npm:5.0.3"
   dependencies:
     prop-types: "npm:^15.8.1"
-  checksum: af916022d29e2425378075aac490f8a7cd1bfef5ad5de84ca0dcddbb143fa8d160743fb7fd2275520595ecc4270e1948ca551afcee719310b900cd1cd07478b4
+  checksum: e6516963cabbce203599fcb2e867e5d4a19e64f944f162dba1a44659c780dd1ac7e5f946f0c3be58d4990b0782c5af097e5bc0dcb34245dfabba818ef92fa504
   languageName: node
   linkType: hard
 
@@ -12428,7 +12428,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/one-react-native-components": "npm:0.1.58"
+    "@procivis/one-react-native-components": "npm:0.1.63"
     "@procivis/react-native-one-core": "npm:1.26999.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
