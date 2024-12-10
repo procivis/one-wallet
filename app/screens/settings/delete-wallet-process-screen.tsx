@@ -2,6 +2,8 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
+  reportTraceInfo,
   useBlockOSBackNavigation,
   useCloseButtonTimeout,
   useONECore,
@@ -24,7 +26,6 @@ import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { resetNavigationAction } from '../../utils/navigation';
-import { reportException, reportTraceInfo } from '../../utils/reporting';
 
 const DeleteWalletProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();

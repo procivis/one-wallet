@@ -2,6 +2,7 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
   useBlockOSBackNavigation,
   useCloseButtonTimeout,
   useCredentialDetail,
@@ -31,7 +32,6 @@ import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
-import { reportException } from '../../utils/reporting';
 
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
@@ -77,7 +77,6 @@ const ProofProcessScreen: FunctionComponent = () => {
         });
         setState(LoaderViewState.Success);
       } catch (e) {
-        reportException(e, 'Submit Proof failure');
         setState(LoaderViewState.Warning);
         setError(e);
       }

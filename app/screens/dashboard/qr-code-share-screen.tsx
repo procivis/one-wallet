@@ -23,7 +23,6 @@ import { useBlePermissions } from '../../hooks/ble-permissions';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 const QRCodeShareScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
@@ -62,11 +61,12 @@ const QRCodeShareScreen: FunctionComponent = () => {
         setInteractionId(result.interactionId);
         setShareUrl(result.url);
       })
-      .catch((e: OneError) => {
-        if (e.message.includes('adapter is disabled')) {
+      .catch((e: unknown) => {
+        if (
+          e instanceof OneError &&
+          e.cause?.includes('BLE adapter not enabled')
+        ) {
           setAdapterDisabled(true);
-        } else {
-          reportException(e, 'Proof proposal failure');
         }
       });
   }, [adapterDisabled, proposeProof]);

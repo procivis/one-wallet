@@ -1,5 +1,6 @@
 import {
   BackupScreen,
+  reportException,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -21,7 +22,6 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { formatDateTimeLocalized, formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
-import { reportException } from '../../utils/reporting';
 
 const DashboardScreen: FC = () => {
   const colorScheme = useAppColorScheme();

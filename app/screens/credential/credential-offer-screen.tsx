@@ -35,7 +35,6 @@ import {
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
-import { reportException } from '../../utils/reporting';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const CredentialOfferScreen: FunctionComponent = () => {
@@ -64,9 +63,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
     if (!skipRejection.current) {
-      rejectCredential(interactionId).catch((e) =>
-        reportException(e, 'Reject credential offer failed'),
-      );
+      rejectCredential(interactionId);
     }
   }, [interactionId, rejectCredential]);
   useBeforeRemove(reject);

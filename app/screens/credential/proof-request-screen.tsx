@@ -52,7 +52,6 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialLabels } from '../../utils/credential-sharing';
-import { reportException } from '../../utils/reporting';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const isCredentialApplicable = (
@@ -105,9 +104,7 @@ const ProofRequestScreen: FunctionComponent = () => {
         ),
       ),
     );
-    await checkRevocation(Array.from(credentialIds)).catch((e) =>
-      reportException(e, 'Revocation check failed'),
-    );
+    await checkRevocation(Array.from(credentialIds));
 
     return definition;
   }, [checkRevocation, core, proofId]);
@@ -254,9 +251,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     if (!isFocused || proofAccepted.current) {
       return;
     }
-    rejectProof(interactionId).catch((err) => {
-      reportException(err, 'Reject Proof failure');
-    });
+    rejectProof(interactionId);
   }, [interactionId, isFocused, rejectProof]);
 
   const onSubmit = useCallback(() => {

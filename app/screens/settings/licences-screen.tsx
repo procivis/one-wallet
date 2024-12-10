@@ -3,6 +3,7 @@ import {
   LinkIcon,
   ListSectionHeader,
   ListSectionHeaderProps,
+  reportException,
   SectionListScreen,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -22,7 +23,6 @@ import { config } from '../../config';
 import { useUpdatedTranslate } from '../../hooks/updated-translate';
 import { LibrariesLicences } from '../../models/licences/licences';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-import { reportException } from '../../utils/reporting';
 
 type LicencesListItem =
   | {

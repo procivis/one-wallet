@@ -28,7 +28,6 @@ import { CreateBackupProcessingRouteProp } from '../../navigators/create-backup/
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getBackupFileName } from '../../utils/backup';
-import { reportException } from '../../utils/reporting';
 
 const CreatingScreen: FC = () => {
   const navigation = useNavigation<CreateBackupNavigationProp<'Processing'>>();
@@ -58,7 +57,6 @@ const CreatingScreen: FC = () => {
       });
       setState(LoaderViewState.Success);
     } catch (e) {
-      reportException(e, 'Backup creation failure');
       setState(LoaderViewState.Warning);
       setError(e);
     }

@@ -16,6 +16,7 @@ import {
   AccessibilityFocusHistoryProvider,
   ColorSchemeProvider,
   queryClient,
+  reportException,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import * as Sentry from '@sentry/react-native';
@@ -34,7 +35,6 @@ import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';
 import { ErrorBoundary } from './screens';
 import { AppColorScheme, useFlavorColorScheme } from './theme';
-import { reportException } from './utils/reporting';
 
 if (!__DEV__) {
   Sentry.init({

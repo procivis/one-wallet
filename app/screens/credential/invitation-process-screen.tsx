@@ -11,6 +11,7 @@ import {
   useInvitationHandler,
   useOpenSettings,
 } from '@procivis/one-react-native-components';
+import { OneError } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -33,7 +34,6 @@ import { translate, translateError } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 const InvitationProcessScreen: FunctionComponent = () => {
   const rootNavigation =
@@ -184,12 +184,14 @@ const InvitationProcessScreen: FunctionComponent = () => {
           });
         }
       })
-      .catch((err: Error) => {
+      .catch((err: unknown) => {
         // TODO Propagate proper error code from core
-        if (err.message.includes('adapter is disabled')) {
+        if (
+          err instanceof OneError &&
+          err.cause?.includes('BLE adapter not enabled')
+        ) {
           setAdapterEnabled(false);
         } else {
-          reportException(err, 'Invitation failure');
           setError(err);
         }
         setState(LoaderViewState.Warning);

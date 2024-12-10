@@ -1,7 +1,10 @@
+import {
+  reportError,
+  reportException,
+} from '@procivis/one-react-native-components';
 import { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
-import { reportError, reportException } from '../../utils/reporting';
 import { Sha256 } from '../../utils/sha256';
 import { loadString, remove, saveString } from '../../utils/storage';
 
