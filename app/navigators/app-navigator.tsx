@@ -8,6 +8,7 @@ import {
   AccessibilityLanguageProvider,
   ONECoreContextProvider,
   ONECoreUseType,
+  reportTraceInfo,
 } from '@procivis/one-react-native-components';
 import {
   DefaultTheme,
@@ -20,7 +21,6 @@ import React from 'react';
 import { config } from '../config';
 import i18n from '../i18n/i18n';
 import { useStores } from '../models';
-import { reportTraceInfo } from '../utils/reporting';
 import { navigationRef } from './navigation-utilities';
 import RootNavigator from './root/root-navigator';
 

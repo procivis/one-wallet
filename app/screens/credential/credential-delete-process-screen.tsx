@@ -24,7 +24,6 @@ import {
 import { translate, translateError } from '../../i18n';
 import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const rootNavigation =
@@ -46,7 +45,6 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
       await deleteCredential(credentialId);
       setState(LoaderViewState.Success);
     } catch (e) {
-      reportException(e, 'Delete credential failure');
       setState(LoaderViewState.Warning);
       setError(e);
     }

@@ -1,7 +1,7 @@
+import { reportException } from '@procivis/one-react-native-components';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 import { OutsideTreeNavigationProvider } from '../../utils/navigation';
-import { reportException } from '../../utils/reporting';
 import { ErrorComponent } from './error-component';
 
 interface Props {

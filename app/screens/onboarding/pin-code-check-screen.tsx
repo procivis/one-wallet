@@ -1,4 +1,7 @@
-import { useBlockOSBackNavigation } from '@procivis/one-react-native-components';
+import {
+  reportTraceInfo,
+  useBlockOSBackNavigation,
+} from '@procivis/one-react-native-components';
 import {
   useFocusEffect,
   useNavigation,
@@ -32,7 +35,6 @@ import {
   RootNavigationProp,
   RootRouteProp,
 } from '../../navigators/root/root-routes';
-import { reportTraceInfo } from '../../utils/reporting';
 
 const hideSplashAndroidOnly = () =>
   Platform.OS === 'android' ? hideSplashScreen() : undefined;

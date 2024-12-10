@@ -1,8 +1,8 @@
+import { reportException } from '@procivis/one-react-native-components';
 import { useEffect, useMemo } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
-import { reportException } from '../../utils/reporting';
 import { RootNavigatorParamList } from './root-routes';
 
 /**
