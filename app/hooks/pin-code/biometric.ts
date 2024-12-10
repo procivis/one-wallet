@@ -1,4 +1,7 @@
-import { useMemoAsync } from '@procivis/one-react-native-components';
+import {
+  reportException,
+  useMemoAsync,
+} from '@procivis/one-react-native-components';
 import { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import {
@@ -9,8 +12,6 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import TouchID from 'react-native-touch-id';
-
-import { reportException } from '../../utils/reporting';
 
 export enum Biometry {
   FaceID = 'faceID',

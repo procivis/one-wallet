@@ -1,6 +1,7 @@
 import {
   BackupScreen,
   ImportIcon,
+  reportException,
   SettingsButton,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -18,7 +19,6 @@ import {
 
 import { translate } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
-import { reportException } from '../../utils/reporting';
 
 const ImportScreen: FC = () => {
   const colorScheme = useAppColorScheme();

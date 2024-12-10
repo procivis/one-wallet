@@ -5,6 +5,7 @@ import {
   ContrastingStatusBar,
   Header,
   LinkIcon,
+  reportException,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -16,7 +17,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
-import { reportException } from '../../utils/reporting';
 
 const Link: FC<{ label: string; testID?: string; url: string }> = ({
   label,

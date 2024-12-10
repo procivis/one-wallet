@@ -2,12 +2,13 @@ import {
   ButtonType,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
   useBlockOSBackNavigation,
   useCloseButtonTimeout,
   useCredentialAccept,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
-import { WalletStorageType } from '@procivis/react-native-one-core';
+import { OneError, WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -33,7 +34,6 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { reportException } from '../../utils/reporting';
 
 const invalidCodeBRs = ['BR_0169', 'BR_0170'];
 
@@ -83,11 +83,11 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       await acceptCredential({
         didId,
         interactionId,
-        txCode: txCodeValue || null,
+        txCode: txCodeValue,
       });
       setState(LoaderViewState.Success);
     } catch (e) {
-      if (invalidCodeBRs.includes((e as any).code)) {
+      if (e instanceof OneError && invalidCodeBRs.includes(e.code)) {
         return navigation.replace('CredentialConfirmationCode', {
           credentialId,
           interactionId,
@@ -95,7 +95,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
           txCode: txCode!,
         });
       }
-      reportException(e, 'Accept credential failure');
+
       setState(LoaderViewState.Warning);
       setError(e);
     }
