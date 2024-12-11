@@ -2851,9 +2851,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@procivis/one-react-native-components@npm:0.2.22":
-  version: 0.2.22
-  resolution: "@procivis/one-react-native-components@npm:0.2.22::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.2.22.tgz"
+"@procivis/one-react-native-components@npm:0.2.25":
+  version: 0.2.25
+  resolution: "@procivis/one-react-native-components@npm:0.2.25::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F101%2Fpackages%2Fnpm%2F%40procivis%2Fone-react-native-components%2F-%2F%40procivis%2Fone-react-native-components-0.2.25.tgz"
   peerDependencies:
     "@procivis/react-native-one-core": ^1.30135.0
     "@procivis/react-native-picker": "*"
@@ -2876,16 +2876,16 @@ __metadata:
     react-native-vision-camera: ^4
     react-query: ^3.39.3
     timeago.js: ^4.0.2
-  checksum: 4251ff797ff2c9d12b03a73ffe968e0915713d1598553bfdcf3ebbf90b7a4d483bd13aa0ae46e1c6dfe4f602fd32ee805b3ca78abec637aaf8fcbb40c56b9062
+  checksum: c5b8987e343296cca3b80b79dbf46194e35f51fe5f157d443b9dcb76af3304ed2bfaee1a17b9e5cafeffaead838afa501128fbed1116a3f811256bfb5c2bb49b
   languageName: node
   linkType: hard
 
-"@procivis/react-native-one-core@npm:1.30135.1":
-  version: 1.30135.1
-  resolution: "@procivis/react-native-one-core@npm:1.30135.1::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.30135.1.tgz"
+"@procivis/react-native-one-core@npm:1.30300.0":
+  version: 1.30300.0
+  resolution: "@procivis/react-native-one-core@npm:1.30300.0::__archiveUrl=https%3A%2F%2Fgitlab.procivis.ch%2Fapi%2Fv4%2Fprojects%2F88%2Fpackages%2Fnpm%2F%40procivis%2Freact-native-one-core%2F-%2F%40procivis%2Freact-native-one-core-1.30300.0.tgz"
   peerDependencies:
     react-native: "*"
-  checksum: 7b84a751f6849b8b3b85bc432f8a83d01ff22d3371988177a5ae31b9e5ec56cd7bd73b42e5596a44cd6b52a08fe57450626cb0f879008515da22a31c0fa0e579
+  checksum: df5dfe2219168acf4ca34ffad2534f20eb74182b5d03786cdaab922961e004946ce5419d6d1171547e1f4aef6e2cbd1b54f0e8b3801ff5618c8a64da2e839a1f
   languageName: node
   linkType: hard
 
@@ -12486,8 +12486,8 @@ __metadata:
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.21.0"
     "@expo/react-native-action-sheet": "npm:^3.13.0"
-    "@procivis/one-react-native-components": "npm:0.2.22"
-    "@procivis/react-native-one-core": "npm:1.30135.1"
+    "@procivis/one-react-native-components": "npm:0.2.25"
+    "@procivis/react-native-one-core": "npm:1.30300.0"
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-clipboard/clipboard": "npm:1.14.0"
