@@ -443,11 +443,11 @@ license_generate:
 
 github:push:
   stage: github
-  image:
-    name: ${CI_REGISTRY}/procivis/one/one-operations/ci-tools:v0.2.4
   extends:
     - .ci-tool:open_source_release
   variables:
+    CMD_ARGS: --modify-yarn-lock
+    YARN_ENABLE_IMMUTABLE_INSTALLS: false
     FILES_TO_ATTACH: >-
       react-native-sbom.json
       android-sbom.json
