@@ -446,6 +446,8 @@ github:push:
   extends:
     - .ci-tool:open_source_release
   variables:
+    CMD_ARGS: --modify-yarn-lock
+    YARN_ENABLE_IMMUTABLE_INSTALLS: false
     FILES_TO_ATTACH: >-
       react-native-sbom.json
       android-sbom.json
