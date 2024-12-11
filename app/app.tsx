@@ -38,6 +38,7 @@ import { AppColorScheme, useFlavorColorScheme } from './theme';
 
 if (!__DEV__) {
   Sentry.init({
+    // Sentry event payload is limited to 200KB, if exceeded, the event report is dumped -> minimize reported data
     beforeBreadcrumb: (breadcrumb: Sentry.Breadcrumb) => {
       if (breadcrumb.category === 'console') {
         breadcrumb.data = {};
@@ -45,17 +46,8 @@ if (!__DEV__) {
       }
       return breadcrumb;
     },
-    beforeSend: (event) => {
-      const exceptionValue = event.exception?.values?.[0]?.value;
-      if (exceptionValue?.includes('BLE adapter is disabled')) {
-        return null;
-      }
-      return event;
-    },
     dsn: 'https://b98a05fd083c47f1a770d74d04df0425@o153694.ingest.sentry.io/4505114160201728',
     environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}`,
-
-    // Sentry event payload is limited to 200KB, if exceeded, the event report is dumped -> minimize reported data
     maxBreadcrumbs: 50,
   });
 }
