@@ -220,6 +220,8 @@ and regulations mature and harden.
 
 ## Supported standards
 
+### Credential data models
+
 #### Verifiable Credentials
 
 - [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
