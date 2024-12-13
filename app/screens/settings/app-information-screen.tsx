@@ -2,6 +2,7 @@ import {
   BackButton,
   ButtonSetting,
   LinkIcon,
+  reportException,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -17,7 +18,9 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 const Link: FC<{ label: string; url: string }> = ({ label, url }) => {
   const colorScheme = useAppColorScheme();
   const openURL = useCallback(() => {
-    Linking.openURL(url);
+    Linking.openURL(url).catch((e) =>
+      reportException(e, 'Failed to open about link'),
+    );
   }, [url]);
 
   return (
@@ -48,39 +51,26 @@ const AppInformationScreen: FC = () => {
           />
         ),
         rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
-        title: translate('appInformation.app.title'),
+        title: translate('appInformation.title'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID="AppInformationScreen"
     >
       <View style={styles.contentContainer}>
         <Typography color={colorScheme.text} style={styles.contentDescription}>
-          {translate('appInformation.app.description')}
-        </Typography>
-        <Link
-          label={translate('appInformation.oneProject.label')}
-          url={translate('appInformation.oneProject.link')}
-        />
-        <Link
-          label={translate('appInformation.oneDocumentation.label')}
-          url={translate('appInformation.oneDocumentation.link')}
-        />
-
-        <Typography
-          accessibilityRole="header"
-          color={colorScheme.text}
-          preset="l"
-          style={styles.header}
-          testID="AppInformationScreen.title"
-        >
-          {translate('appInformation.company.title')}
-        </Typography>
-        <Typography color={colorScheme.text} style={styles.contentDescription}>
-          {translate('appInformation.company.description')}
+          {translate('appInformation.description')}
         </Typography>
         <Link
           label={translate('appInformation.company.label')}
           url={translate('appInformation.company.link')}
+        />
+        <Link
+          label={translate('appInformation.documentation.label')}
+          url={translate('appInformation.documentation.link')}
+        />
+        <Link
+          label={translate('appInformation.github.label')}
+          url={translate('appInformation.github.link')}
         />
       </View>
     </ScrollViewScreen>
@@ -93,10 +83,7 @@ const styles = StyleSheet.create({
   },
   contentDescription: {
     marginBottom: 24,
-  },
-  header: {
-    marginBottom: 24,
-    marginTop: 40,
+    opacity: 0.7,
   },
   link: {
     borderRadius: 12,
