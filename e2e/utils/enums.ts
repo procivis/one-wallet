@@ -44,6 +44,7 @@ export enum RevocationMethod {
   MDOC_MSO_UPDATE_SUSPENSION = 'MDOC_MSO_UPDATE_SUSPENSION',
   NONE = 'NONE',
   STATUSLIST2021 = 'BITSTRINGSTATUSLIST',
+  TOKENSTATUSLIST = 'TOKENSTATUSLIST',
 }
 
 export enum CredentialFormat {
@@ -53,6 +54,7 @@ export enum CredentialFormat {
   MDOC = 'MDOC',
   PHYSICAL_CARD = 'PHYSICAL_CARD',
   SD_JWT = 'SD_JWT',
+  SD_JWT_VC = 'SD_JWT_VC',
 }
 
 export declare enum HistoryEntityTypeEnum {
