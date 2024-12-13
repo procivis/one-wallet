@@ -220,14 +220,24 @@ and regulations mature and harden.
 
 ## Supported standards
 
-### Credential data models
+#### Verifiable Credentials
 
-- [Verifiable Credentials][vcdm] (VCs)
-  - JSON-LD
-  - SD-JWT
-  - JWT
-- [ISO/IEC 18013-5:2021][iso]
-  - mdoc
+- [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
+
+| Securing mechanism                           | Supported representations                           | Supported proof/signature types                                                          |
+| -------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------ |
+| [W3C Data Integrity Proofs][vcdi] (embedded) | [JSON-LD][jld] in Compacted Document Form | <ul><li>[W3C Data Integrity ECDSA Cryptosuites v1.0][ecd] / [ecdsa-rdfc-2019][ecd2019]</li><li>[W3C Data Integrity EdDSA Cryptosuites v1.0][edd] / [eddsa-rdfc-2022][edd2022]</li><li>[W3C Data Integrity BBS Cryptosuites v1.0][bbs] / [bbs-2023][bbs2023]</li></ul> |
+| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]* |
+
+\* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
+Support for the recently published [FIPS-204][fips] is planned for the near future.
+
+#### ISO mdocs
+
+- [ISO/IEC 18013-5:2021][iso] standard for mdoc credentials.
+  - [COSE][cose] proofs
+    - ECDSA [ES256][es2]
+    - EdDSA [Ed25519][ed255]
 
 ### Exchange and transport
 
