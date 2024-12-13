@@ -28,6 +28,8 @@ const credentialFormatIssuance = (format: CredentialFormat) => {
       break;
     case CredentialFormat.SD_JWT:
       break;
+    case CredentialFormat.SD_JWT_VC:
+      break;
     case CredentialFormat.JSON_LD_BBSPLUS:
       keyType = KeyType.BBS_PLUS;
       break;
@@ -57,6 +59,19 @@ const COMBINATIONS_BASE = SUPPORTED_BASE_FORMATS.credentialFormat.flatMap(
     })),
 );
 
+const SUPPORTED_VC_FORMATS = {
+  credentialFormat: [CredentialFormat.SD_JWT_VC],
+  revocationMethod: [RevocationMethod.TOKENSTATUSLIST],
+};
+
+const COMBINATIONS_VC = SUPPORTED_VC_FORMATS.credentialFormat.flatMap(
+  (credentialFormat) =>
+    SUPPORTED_VC_FORMATS.revocationMethod.flatMap((revocationMethod) => ({
+      credentialFormat,
+      revocationMethod,
+    })),
+);
+
 describe('ONE-620: Credential revocation', () => {
   let authToken: string;
 
@@ -71,6 +86,7 @@ describe('ONE-620: Credential revocation', () => {
       let credentialId: string;
 
       beforeAll(async () => {
+        await launchApp({ delete: true });
         credentialSchema = await createCredentialSchema(authToken, {
           allowSuspension: true,
           format: credentialFormat,
@@ -95,7 +111,7 @@ describe('ONE-620: Credential revocation', () => {
         });
       });
 
-      it(`Suspend credential`, async () => {
+      it('Suspend credential', async () => {
         await suspendCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
@@ -104,7 +120,59 @@ describe('ONE-620: Credential revocation', () => {
         });
       });
 
-      it(`Revoke credential`, async () => {
+      it('Revoke credential', async () => {
+        await revokeCredential(credentialId, authToken);
+        await reloadApp({
+          credentialUpdate: [
+            { expectedLabel: 'Revoked', index: 0, status: 'revoked' },
+          ],
+        });
+      });
+    });
+  }
+
+  for (const { revocationMethod, credentialFormat } of COMBINATIONS_VC) {
+    describe(`Revocation: ${revocationMethod}; Format: ${credentialFormat}`, () => {
+      let credentialSchema: CredentialSchemaResponseDTO;
+      let credentialId: string;
+
+      beforeAll(async () => {
+        await launchApp({ delete: true });
+        credentialSchema = await createCredentialSchema(authToken, {
+          allowSuspension: true,
+          format: credentialFormat,
+          name: `detox wallet. ${credentialFormat} ${revocationMethod}; ${shortUUID()}`,
+          revocationMethod,
+          schemaId: shortUUID(),
+          walletStorageType: WalletKeyStorageType.SOFTWARE,
+        });
+      });
+
+      beforeEach(async () => {
+        const { exchange, keyType, didMethod } =
+          credentialFormatIssuance(credentialFormat);
+        const didData = await createDidWithKey(authToken, {
+          didMethod,
+          keyType,
+        });
+        credentialId = await credentialIssuance({
+          authToken,
+          credentialSchema,
+          didData,
+          exchange,
+        });
+      });
+
+      it('Suspend credential', async () => {
+        await suspendCredential(credentialId, authToken);
+        await reloadApp({
+          credentialUpdate: [
+            { expectedLabel: 'Suspended', index: 0, status: 'suspended' },
+          ],
+        });
+      });
+
+      it('Revoke credential', async () => {
         await revokeCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
