@@ -14,6 +14,7 @@ import {
 import {
   CredentialDetail,
   CredentialStateEnum,
+  TrustEntityRoleEnum,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -28,6 +29,7 @@ import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { addElementIf } from '../../utils/array';
 import { formatDateTimeLocalized } from '../../utils/date';
+import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
@@ -82,7 +84,8 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didSections = credentialDetail.issuerDid?.did.split(':') ?? [];
+  const didId = credentialDetail.issuerDid?.did || '';
+  const didSections = didId.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.length ? didSections.join(':') + ':' : '';
 
@@ -120,13 +123,13 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       ),
       testID: 'validity',
     }),
-    {
+    ...addElementIf(Boolean(didMethod), {
       attributeKey: translate('credentialDetail.credential.issuerDid'),
       attributeText: identifier,
       canBeCopied: true,
       highlightedText: didMethod,
       testID: 'issuerDID',
-    },
+    }),
     {
       attributeKey: translate('credentialDetail.credential.dateAdded'),
       attributeText: formatDateTimeLocalized(
@@ -165,14 +168,11 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        entityName:
-          credentialDetail?.issuerDid?.did ??
-          translate('credentialOffer.unknownIssuer'),
+        did: credentialDetail.issuerDid!,
+        entityLabels: entityLabels,
+        role: TrustEntityRoleEnum.ISSUER,
       }}
-      labels={{
-        collapse: translate('nerdView.action.collapseAttribute'),
-        expand: translate('nerdView.action.expandAttribute'),
-      }}
+      labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[

@@ -10,6 +10,7 @@ import React, { FC, useMemo } from 'react';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { attributesLabels } from './utils';
 
 const getDataFields = (error: unknown): NerdModeSection['data'] => {
   if (error instanceof OneError) {
@@ -87,10 +88,7 @@ const ErrorNerdScreen: FC = () => {
 
   return (
     <NerdModeScreen
-      labels={{
-        collapse: translate('nerdView.action.collapseAttribute'),
-        expand: translate('nerdView.action.expandAttribute'),
-      }}
+      labels={attributesLabels}
       onClose={navigation.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={sections}

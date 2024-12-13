@@ -1,10 +1,15 @@
 import {
   ActivityIndicator,
   ExchangeProtocol,
+  getCredentialSchemaWithoutImages,
   NerdModeItemProps,
   NerdModeScreen,
   useProofDetail,
 } from '@procivis/one-react-native-components';
+import {
+  TrustEntity,
+  TrustEntityRoleEnum,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -12,11 +17,14 @@ import {
 } from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
+import { UseQueryResult } from 'react-query';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { addElementIf } from '../../utils/array';
+import { attributesLabels, entityLabels } from './utils';
 
 const parseExchangeProtocol = (
   protocol: string,
@@ -24,40 +32,37 @@ const parseExchangeProtocol = (
   return ExchangeProtocol[protocol as keyof typeof ExchangeProtocol];
 };
 
+export const getTrustEntities = (
+  trustEntities: UseQueryResult<TrustEntity>[],
+) => {
+  if (trustEntities.some(({ isLoading }) => isLoading)) {
+    return [];
+  }
+
+  return trustEntities.map(({ data }) => data);
+};
+
 const ProofDetailNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const nav = useNavigation<RootNavigationProp>();
   const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
-
   const { proofId } = route.params;
-
   const { data: proofDetail } = useProofDetail(proofId);
 
   if (!proofDetail) {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didSections = proofDetail.verifierDid?.did.split(':') ?? [];
-  const identifier = didSections.pop();
-  const didMethod = didSections.join(':') + ':';
-
-  const didField = identifier
-    ? [
-        {
-          attributeKey: translate('proofRequest.verifierDid'),
-          attributeText: identifier,
-          canBeCopied: true,
-          highlightedText: didMethod,
-        },
-      ]
-    : [];
-
   const procivisExchangeProtocol = parseExchangeProtocol(proofDetail.exchange);
 
-  const nerdModeFields: Array<
+  const proofRequestFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
+    {
+      attributeKey: translate('common.proofSchemaName'),
+      highlightedText: proofDetail.proofSchema?.name,
+    },
     {
       attributeKey: translate('credentialDetail.credential.exchange'),
       attributeText:
@@ -67,34 +72,86 @@ const ProofDetailNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('proofRequest.createDate'),
+      attributeText: JSON.stringify(proofDetail.proofSchema),
+    },
+    {
+      attributeKey: translate('common.proofschema'),
       attributeText: moment(proofDetail?.createdDate).format(
         'DD.MM.YYYY, HH:mm',
       ),
     },
-    {
-      attributeKey: translate('proofRequest.requestDate'),
-      attributeText: moment().format('DD.MM.YYYY, HH:mm'),
-    },
-  ];
+  ].filter((el) => Boolean(el?.highlightedText || el?.attributeText));
+
+  const credentialsFields = proofDetail.proofInputs
+    .map((proofInput) => [
+      {
+        attributeKey: translate('credentialDetail.credential.schemaName'),
+        highlightedText: proofInput.credentialSchema.name,
+      },
+      {
+        attributeKey: 'entityCluster',
+        did: proofInput.credential?.issuerDid,
+        entityLabels: entityLabels,
+        role: TrustEntityRoleEnum.ISSUER,
+      },
+      {
+        attributeKey: translate('proofRequest.createDate'),
+        attributeText: moment(proofInput.credential?.createdDate).format(
+          'DD.MM.YYYY, HH:mm',
+        ),
+      },
+      {
+        attributeKey: translate('common.credentialFormat'),
+        attributeText: proofInput.credentialSchema.format,
+        testID: 'credentialFormat',
+      },
+      {
+        attributeKey: translate('common.documentType'),
+        attributeText: proofInput.credentialSchema.schemaId,
+        testID: 'documentType',
+      },
+      {
+        attributeKey: translate('common.revocationMethod'),
+        attributeText: proofInput.credentialSchema.revocationMethod,
+        testID: 'revocationMethod',
+      },
+      {
+        attributeKey: translate('common.storageType'),
+        attributeText: proofInput.credentialSchema.walletStorageType,
+        testID: 'storageType',
+      },
+      {
+        attributeKey: translate('common.credentialSchema'),
+        attributeText: JSON.stringify(
+          getCredentialSchemaWithoutImages(proofInput.credentialSchema),
+          null,
+          1,
+        ),
+        canBeCopied: true,
+        testID: 'schema',
+      },
+    ])
+    .flat(1);
 
   return (
     <NerdModeScreen
       entityCluster={{
-        entityName:
-          proofDetail?.verifierDid?.did ??
-          translate('proofRequest.unknownVerifier'),
+        did: proofDetail.holderDid!,
+        entityLabels: entityLabels,
+        role: TrustEntityRoleEnum.VERIFIER,
       }}
-      labels={{
-        collapse: translate('nerdView.action.collapseAttribute'),
-        expand: translate('nerdView.action.expandAttribute'),
-      }}
+      labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[
         {
-          data: [...didField, ...nerdModeFields],
-          title: translate('proofRequest.nerdView.section.title'),
+          data: proofRequestFields,
+          title: translate('common.proofRequest'),
         },
+        ...addElementIf(Boolean(proofDetail.proofInputs.length), {
+          data: credentialsFields,
+          title: translate('common.credentials'),
+        }),
       ]}
       testID="ProofRequest.nerdView"
       title={translate('credentialDetail.action.moreInfo')}

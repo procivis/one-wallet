@@ -13,6 +13,7 @@ import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { formatDateTimeLocalized } from '../../utils/date';
+import { attributesLabels } from '../nerd-mode/utils';
 
 const AppInformationNerdScreen: FC = () => {
   const navigation =
@@ -65,10 +66,7 @@ const AppInformationNerdScreen: FC = () => {
 
   return (
     <NerdModeScreen
-      labels={{
-        collapse: translate('nerdView.action.collapseAttribute'),
-        expand: translate('nerdView.action.expandAttribute'),
-      }}
+      labels={attributesLabels}
       onClose={navigation.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[

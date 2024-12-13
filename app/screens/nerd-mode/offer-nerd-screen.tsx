@@ -14,22 +14,22 @@ import React, { FunctionComponent } from 'react';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { attributesLabels } from './utils';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const nav = useNavigation();
   const route = useRoute<NerdModeRouteProp<'OfferNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
-
   const { credentialId } = route.params;
-
   const { data: credentialDetail } = useCredentialDetail(credentialId);
 
   if (!credentialDetail) {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didSections = credentialDetail.issuerDid?.did.split(':') ?? [];
+  const didId = credentialDetail.issuerDid?.did || '';
+  const didSections = didId.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
 
@@ -63,15 +63,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
 
   return (
     <NerdModeScreen
-      entityCluster={{
-        entityName:
-          credentialDetail?.issuerDid?.did ??
-          translate('credentialOffer.unknownIssuer'),
-      }}
-      labels={{
-        collapse: translate('nerdView.action.collapseAttribute'),
-        expand: translate('nerdView.action.expandAttribute'),
-      }}
+      labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[
