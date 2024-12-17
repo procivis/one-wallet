@@ -158,12 +158,21 @@ const ProofRequestScreen: FunctionComponent = () => {
           return;
         }
 
-        const requiredClaims = credential.fields
-          .filter((field) => field.required)
-          .map((field) => field.id);
+        const requiredFields = credential.fields.filter(
+          (field) => field.required,
+        );
+
+        let preselectedFields = requiredFields;
+        // if no required fields, preselect all present claims
+        if (!preselectedFields.length) {
+          preselectedFields = credential.fields.filter(
+            (field) => credentialId in field.keyMap,
+          );
+        }
+
         preselected[credential.id] = {
           credentialId,
-          submitClaims: requiredClaims,
+          submitClaims: preselectedFields.map((field) => field.id),
         };
       }),
     );
