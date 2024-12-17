@@ -1,5 +1,8 @@
-![Procivis One](https://assets.procivis-one.com/static/logo/logo_dark_One_Wallet.png#gh-light-mode-only)
-![Procivis One](https://assets.procivis-one.com/static/logo/logo_light_One_Wallet.png#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.procivis-one.com/static/logo/logo_light_One_Wallet.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.procivis-one.com/static/logo/logo_dark_One_Wallet.png">
+  <img alt="Shows a Procivis One Wallet black logo in light color mode and a white one in dark color mode." src="https://assets.procivis-one.com/static/logo/logo_dark_One_Wallet.png">
+</picture>
 
 ## Table of Contents
 
@@ -220,9 +223,9 @@ and regulations mature and harden.
 
 ## Supported standards
 
-### Credential data models
+### Credential models
 
-#### Verifiable Credentials
+#### W3C VC
 
 - [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
 
@@ -234,12 +237,23 @@ and regulations mature and harden.
 \* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
 Support for the recently published [FIPS-204][fips] is planned for the near future.
 
-#### ISO mdocs
+#### ISO mdoc
 
 - [ISO/IEC 18013-5:2021][iso] standard for mdoc credentials.
   - [COSE][cose] proofs
     - ECDSA [ES256][es2]
     - EdDSA [Ed25519][ed255]
+
+#### IETF SD-JWT VC
+
+- [IETF SD-JWT-based Verifiable Credentials][sdjwtvc]:
+
+| Standard       | Supported representations | Supported proof/signature types                                                                                                          |
+| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| IETF SD-JWT VC | SD-JWT                    | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]\*</li></ul> |
+
+\* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
+Support for the recently published [FIPS-204][fips] is planned for the near future.
 
 ### Exchange and transport
 
@@ -247,9 +261,10 @@ Support for the recently published [FIPS-204][fips] is planned for the near futu
   - [OID4VCI][vci]; ID-1
   - [OID4VP][vp]; ID-2
     - [OID4VP over BLE][ble]; optimized version of Draft 00
-    - OID4VP over MQTT; proprietary adaptation of OID4VP over BLE via MQTT channel
-- [ISO/IEC 18013-5][iso]
-  - QR code engagement and offline device retrieval over BLE
+    - OID4VP over MQTT; proprietary adaptation of "OID4VP over BLE" via MQTT channel
+- ISO/IEC 18013
+  - [18013-5][iso5]: QR code engagement and offline device retrieval over BLE
+  - [18013-7][iso7]: Online data retrieval via OID4VP
 
 ### Key storage
 
@@ -260,6 +275,7 @@ Support for the recently published [FIPS-204][fips] is planned for the near futu
 
 - [Bitstring Status List v1.0][sl]
 - [Linked Validity Verifiable Credentials (LVVC)][lvvc]
+- [Token Status List - Draft 03][tsl]
 
 ## Support
 
@@ -270,8 +286,11 @@ Need support or have feedback? [Contact us](https://www.procivis.ch/en/contact).
 Some rights reserved. This library is published under the [Apache License
 Version 2.0](./LICENSE).
 
-![Procivis AG](https://assets.procivis-one.com/static/logo/logo_light_mode_Procivis.svg#gh-light-mode-only)
-![Procivis AG](https://assets.procivis-one.com/static/logo/logo_dark_mode_Procivis.svg#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.procivis-one.com/static/logo/logo_dark_mode_Procivis.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.procivis-one.com/static/logo/logo_light_mode_Procivis.svg">
+  <img alt="Shows a Procivis black logo in light color mode and a white one in dark color mode." src="https://assets.procivis-one.com/static/logo/logo_dark_mode_Procivis.svg">
+</picture>
 
 © Procivis AG, [https://www.procivis.ch](https://www.procivis.ch).
 
@@ -292,7 +311,8 @@ Version 2.0](./LICENSE).
 [eudiwi]: https://issuer.eudiw.dev/
 [eudiwv]: https://verifier.eudiw.dev/home
 [fips]: https://csrc.nist.gov/pubs/fips/204/final
-[iso]: https://www.iso.org/standard/69084.html
+[iso5]: https://www.iso.org/standard/69084.html
+[iso7]: https://www.iso.org/standard/82772.html
 [jld]: https://www.w3.org/TR/json-ld11/
 [jose]: https://w3c.github.io/vc-jose-cose/
 [jw]: https://datatracker.ietf.org/doc/html/rfc7519
@@ -302,10 +322,12 @@ Version 2.0](./LICENSE).
 [pow]: https://github.com/procivis/one-wallet
 [pqc]: https://csrc.nist.gov/pqc-standardization
 [rncore]: https://github.com/procivis/react-native-one-core
-[sdjwt]: https://www.ietf.org/archive/id/draft-ietf-oauth-selective-disclosure-jwt-14.html
+[sdjwt]: https://www.ietf.org/archive/id/draft-ietf-oauth-selective-disclosure-jwt-12.html
+[sdjwtvc]: https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-05.html
 [sdkref]: https://docs.procivis.ch/sdk/overview
 [sl]: https://www.w3.org/TR/vc-bitstring-status-list/
 [trial]: https://docs.procivis.ch/trial/intro
+[tsl]: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list-03
 [vcdi]: https://www.w3.org/TR/vc-data-integrity/
 [vcdm]: https://www.w3.org/TR/vc-data-model-2.0/
 [vci]: https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0-ID1.html
