@@ -7,6 +7,7 @@ include:
       - "gitlab/merge.gitlab-ci.yml"
       - "gitlab/rules.gitlab-ci.yml"
       - "gitlab/ci-tools.gitlab-ci.yml"
+      - "gitlab/bitrise.gitlab-ci.yml"
 
 stages:
   - prepare
@@ -66,47 +67,6 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - when: manual
 
-.bitrise_e2e:
-  stage: e2e_tests
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
-  needs:
-    - job: test
-      artifacts: false
-      optional: true
-  script:
-    - >
-      /etc/gitrise.sh
-      --access-token $BITRISE_API_ACCESS_TOKEN
-      --slug $BITRISE_PROJECT_SLUG
-      --workflow $BITRISE_WORKFLOW
-      --commit "$CI_COMMIT_SHA"
-      --env "CI_PIPELINE_ID:$CI_PIPELINE_ID"
-      --output "artifacts"
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 10 days
-
-.bitrise_build:
-  stage: build
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
-  needs:
-    - job: test
-      artifacts: false
-  script:
-    - |
-      workflow_or_pipeline=$(if [ -n "$BITRISE_WORKFLOW" ]; then
-          echo "--workflow $BITRISE_WORKFLOW"
-      elif [ -n "$BITRISE_PIPELINE" ]; then
-          echo "--pipeline $BITRISE_PIPELINE"
-      fi)
-      command="/etc/gitrise.sh
-      --access-token $BITRISE_API_ACCESS_TOKEN
-      --slug $BITRISE_PROJECT_SLUG
-      $workflow_or_pipeline
-      --commit $CI_COMMIT_SHA
-      --env CI_PIPELINE_ID:$CI_PIPELINE_ID"
-      $command
 
 .install-node-modules: &install-node-modules
   - yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
@@ -194,6 +154,11 @@ sonarqube-check:
 
 # APP BUILDs
 build:
+  stage: build
+  allow_failure: true
+  needs:
+    - job: test
+      artifacts: false
   parallel:
     matrix:
       - BITRISE_WORKFLOW:
@@ -222,20 +187,24 @@ build:
     - if: $CI_COMMIT_BRANCH != 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: manual
     - when: never
-  allow_failure: true
   extends:
-    - .bitrise_build
+    - .bitrise:app_build
 
 # E2E
 e2e:
+  stage: e2e_tests
+  allow_failure: true
+  needs:
+    - job: test
+      artifacts: false
+      optional: true
   parallel:
     matrix:
       - BITRISE_WORKFLOW:
         - E2E_iOS
         - E2E_Android
-  allow_failure: true
   extends:
-    - .bitrise_e2e
+    - .bitrise:e2e_tests
     - .rule:e2e_tests
 
 
