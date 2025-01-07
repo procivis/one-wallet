@@ -6,10 +6,7 @@ import {
   NerdModeScreen,
   useProofDetail,
 } from '@procivis/one-react-native-components';
-import {
-  TrustEntity,
-  TrustEntityRoleEnum,
-} from '@procivis/react-native-one-core';
+import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -17,7 +14,6 @@ import {
 } from '@react-navigation/native';
 import moment from 'moment';
 import React, { FunctionComponent } from 'react';
-import { UseQueryResult } from 'react-query';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
@@ -30,16 +26,6 @@ const parseExchangeProtocol = (
   protocol: string,
 ): ExchangeProtocol | undefined => {
   return ExchangeProtocol[protocol as keyof typeof ExchangeProtocol];
-};
-
-export const getTrustEntities = (
-  trustEntities: UseQueryResult<TrustEntity>[],
-) => {
-  if (trustEntities.some(({ isLoading }) => isLoading)) {
-    return [];
-  }
-
-  return trustEntities.map(({ data }) => data);
 };
 
 const ProofDetailNerdView: FunctionComponent = () => {
@@ -72,13 +58,13 @@ const ProofDetailNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('proofRequest.createDate'),
-      attributeText: JSON.stringify(proofDetail.proofSchema),
-    },
-    {
-      attributeKey: translate('common.proofschema'),
       attributeText: moment(proofDetail?.createdDate).format(
         'DD.MM.YYYY, HH:mm',
       ),
+    },
+    {
+      attributeKey: translate('common.proofschema'),
+      attributeText: JSON.stringify(proofDetail.proofSchema),
     },
   ].filter((el) => Boolean(el?.highlightedText || el?.attributeText));
 
@@ -136,7 +122,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        did: proofDetail.holderDid!,
+        did: proofDetail.verifierDid,
         entityLabels: entityLabels,
         role: TrustEntityRoleEnum.VERIFIER,
       }}
