@@ -6867,9 +6867,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:^20.22.2":
-  version: 20.22.2
-  resolution: "detox@npm:20.22.2"
+"detox-copilot@npm:^0.0.27":
+  version: 0.0.27
+  resolution: "detox-copilot@npm:0.0.27"
+  checksum: 4a2f935a91fd813ca7da2e786277ad062f40620091dfadedec2400886dc8b4c0ee845e2e0c23fc7674274a50eae259ac0ca833ca12f3efb176404af895185625
+  languageName: node
+  linkType: hard
+
+"detox@npm:^20.32.0":
+  version: 20.32.0
+  resolution: "detox@npm:20.32.0"
   dependencies:
     ajv: "npm:^8.6.3"
     bunyan: "npm:^1.8.12"
@@ -6877,6 +6884,7 @@ __metadata:
     caf: "npm:^15.0.1"
     chalk: "npm:^4.0.0"
     child-process-promise: "npm:^2.2.0"
+    detox-copilot: "npm:^0.0.27"
     execa: "npm:^5.1.1"
     find-up: "npm:^5.0.0"
     fs-extra: "npm:^11.0.0"
@@ -6913,7 +6921,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: d188aa8290e3107fc317d1c6d9f347beac3fef2517d7e483c5fc9b28c2aa20cdacdc158696f06d979bc237590c32fb5130c7215e41d945a5e5a6c68f87ce0c75
+  checksum: 8e6cbeeef21fc84f924cc35d730c5df3de36b25f38e341bdc7e9cca6fee270f26b986d85ebf7e50ae6a6e25c4d8554091b582a46d52a3b7c9a41cdcdf0cab1b7
   languageName: node
   linkType: hard
 
@@ -12519,7 +12527,7 @@ __metadata:
     check-password-strength: "npm:^2.0.10"
     cross-env: "npm:^7.0.3"
     deprecated-react-native-prop-types: "npm:^4.1.0"
-    detox: "npm:^20.22.2"
+    detox: "npm:^20.32.0"
     eslint: "npm:^8.19.0"
     eslint-plugin-import: "npm:^2.29.0"
     eslint-plugin-jest: "npm:^27.6.3"
