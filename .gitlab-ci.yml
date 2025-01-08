@@ -8,6 +8,7 @@ include:
       - "gitlab/rules.gitlab-ci.yml"
       - "gitlab/ci-tools.gitlab-ci.yml"
       - "gitlab/bitrise.gitlab-ci.yml"
+      - "gitlab/dtrack.gitlab-ci.yml"
 
 stages:
   - prepare
@@ -27,7 +28,6 @@ variables:
   DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
   YARN_NPM_AUTH_TOKEN: ${CI_JOB_TOKEN}
   CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
-  RELEASE_BRANCH_PATTERN: /^release-v\d+\.\d+$/
   GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   GITHUB_PROJECT: "procivis/one-wallet"
 
@@ -58,7 +58,7 @@ workflow:
   rules:
     - !reference [.rule:skip_in_schedule, rules]
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN || $CI_COMMIT_TAG =~ $GITHUB_TAG_PATTERN
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: never
 
 .rule:e2e_tests:
@@ -172,7 +172,7 @@ build:
         - iOS_DEMO_and_review
         - iOS_TRIAL_and_review
   rules:
-    - if: $CI_PIPELINE_SOURCE == "pipeline" ||  $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE != "push"
       when: never
     - if: $CI_COMMIT_BRANCH == 'main' && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: on_success
@@ -180,7 +180,7 @@ build:
       when: on_success
     - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN && ($BITRISE_WORKFLOW == 'Android_DEV' || $BITRISE_WORKFLOW == 'iOS_DEV')
       when: never
-    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN || $CI_COMMIT_BRANCH =~ $RELEASE_BRANCH_PATTERN
+    - if: $CI_COMMIT_TAG =~ $CI_TAG_PATTERN
       when: manual
     - if: $CI_COMMIT_BRANCH != 'main' && $BITRISE_WORKFLOW != 'Android_DEV' && $BITRISE_WORKFLOW != 'iOS_DEV'
       when: never
@@ -207,51 +207,6 @@ e2e:
     - .bitrise:e2e_tests
     - .rule:e2e_tests
 
-
-.dTrack_metrics: &dTrack_metrics
-  - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
-  - apk add --update curl jq
-  - base_url=${DEPENDENCY_TRACK_BASE_URL}/api/v1/project/lookup
-  - url="${base_url}?name=${DEPENDENCY_TRACK_PROJECT_NAME}&version=${D_TRACK_PROJECT_VERSION}"
-  - echo "URL=$url"
-  - >
-    result=$(curl -X GET "${url}" \
-      -H "X-Api-Key: ${DEPENDENCY_TRACK_API_KEY}" \
-      -H "Accept: application/json")
-  - metrics=$(echo $result | jq -r .metrics)
-  - echo "Dependency Track Project Version metrics=${metrics}"
-
-.dTrack_metrics_validation:
-  stage: scan_validation
-  allow_failure: true
-  extends:
-    - .only_main_or_tag
-  script:
-    - *dTrack_metrics
-    - critical=$(echo ${metrics} | jq -r .critical)
-    - high=$(echo ${metrics} | jq -r .high)
-    - echo "Critical vulnerabilities=${critical}"
-    - echo "High vulnerabilities=${high}"
-    - >
-      if [[ ${critical} -gt 0  || ${high} -gt 0  ]]; then
-          echo "Lib vulnerabilities more that 0."
-          exit 1;
-      fi
-
-.dTrack_policy_validation:
-  stage: scan_validation
-  allow_failure: true
-  extends:
-    - .only_main_or_tag
-  script:
-    - *dTrack_metrics
-    - violated_licences=$(echo ${metrics} | jq -r .policyViolationsFail)
-    - echo "Count of violated_licences=${violated_licences}"
-    - >
-      if [[ ${violated_licences} -gt 0 ]]; then
-        echo "Violated licences more that 0."
-        exit 1;
-      fi
 
 .upload_bom:
   stage: scan
@@ -296,35 +251,35 @@ dtrack:android:upload-bom:
   extends:
       - .upload_bom
 
+dtrack:ios:generate-bom:
+  stage: scan
+  extends:
+    - .bitrise:ios:upload_sbom
+    - .only_main_or_tag
+
 dtrack:ios:upload-bom:
+  stage: scan
   image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
+  needs: 
+    - job: dtrack:ios:generate-bom
+      artifacts: true
+  extends:
+    - .dtrack:upload-bom:curl
+    - .only_main_or_tag
   variables:
-    D_TRACK_PATH: ${DEPENDENCY_TRACK_BASE_URL}/api/v1/bom
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
     SBOM_FILE_PATH: "artifacts/ios-sbom.xml"
   before_script:
-    - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
-  script:
-    - >
-      /etc/gitrise.sh
-      --access-token $BITRISE_API_ACCESS_TOKEN
-      --slug $BITRISE_PROJECT_SLUG
-      --workflow iOS_SBOM
-      --commit "$CI_COMMIT_SHA"
-      --output "artifacts"
     # remove authors from OpenSSL entry, because it breaks parsing when uploaded
     - grep -v 'mark\@openssl\.org' ${SBOM_FILE_PATH} >temp.xml
     - mv temp.xml ${SBOM_FILE_PATH}
-    - >
-      curl -X "POST" "${D_TRACK_PATH}" \
-        -H "Content-Type: multipart/form-data" \
-        -H "X-API-Key: ${DEPENDENCY_TRACK_API_KEY}" \
-        -F "autoCreate=true" \
-        -F "projectName=${DEPENDENCY_TRACK_PROJECT_NAME}" \
-        -F "projectVersion=${D_TRACK_PROJECT_VERSION}" \
-        -F "bom=@${SBOM_FILE_PATH}"
-  extends:
-    - .upload_bom
+  artifacts:
+    when: always
+    paths:
+      - ${SBOM_FILE_PATH}
+    reports:
+      cyclonedx:
+        - ${SBOM_FILE_PATH}
 
 dtrack:react-native:upload-bom:
   variables:
@@ -333,43 +288,54 @@ dtrack:react-native:upload-bom:
     - .upload_bom
 
 dtrack:android:metrics:
+  stage: scan_validation
   needs: [dtrack:android:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
   extends:
-    - .dTrack_metrics_validation
+    - .dTrack:validation:metrics
+    - .only_main_or_tag
 
 dtrack:android:policy_violations:
+  stage: scan_validation
   needs: [dtrack:android:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
   extends:
-    - .dTrack_policy_validation
+    - .dTrack:validation:policy
+    - .only_main_or_tag
 
 dtrack:ios:metrics:
+  stage: scan_validation
   needs: [dtrack:ios:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
   extends:
-    - .dTrack_metrics_validation
+    - .dTrack:validation:metrics
+    - .only_main_or_tag
 
 dtrack:ios:policy_violations:
+  stage: scan_validation
   needs: [dtrack:ios:upload-bom]
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-iOS"
   extends:
-    - .dTrack_policy_validation
+    - .dTrack:validation:policy
+    - .only_main_or_tag
 
 dtrack:react-native:metrics:
+  stage: scan_validation
   needs: [dtrack:react-native:upload-bom]
   extends:
-    - .dTrack_metrics_validation
+    - .dTrack:validation:metrics
+    - .only_main_or_tag
 
 dtrack:react-native:policy_violations:
+  stage: scan_validation
   needs: [dtrack:react-native:upload-bom]
   extends:
-    - .dTrack_policy_validation
-
+    - .dTrack:validation:policy
+    - .only_main_or_tag
 
 license_generate:
   stage: license
