@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">${APP_NAME}</string>
     <string name="associated_invitation_domain">${ASSOCIATED_INVITATION_DOMAIN}</string>
+    <string name="custom_openid_credential_offer_url_scheme">${CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME}</string>
+    <string name="custom_openid_proof_request_url_scheme">${CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME}</string>
 </resources>

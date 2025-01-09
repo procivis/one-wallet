@@ -4,8 +4,11 @@ import { Configuration } from '../../../models/config/config';
 
 export const commonConfig: Pick<
   Configuration,
-  'featureFlags' | 'trustAnchorPublisherReference'
+  'featureFlags' | 'trustAnchorPublisherReference' | 'customOpenIdUrlScheme'
 > = {
+  customOpenIdUrlScheme: rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
+    ? rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
+    : undefined,
   featureFlags: {
     isoMdl: true,
     localization: true,

@@ -7,7 +7,6 @@ export const trustEntityDetailsLabels = (
   role: Exclude<TrustEntityRoleEnum, TrustEntityRoleEnum.BOTH>,
 ): EntityDetailsLabels => {
   return {
-    notTrusted: translate('trustEntity.notTrusted'),
     unknown:
       role === TrustEntityRoleEnum.ISSUER
         ? translate('credentialOffer.unknownIssuer')
