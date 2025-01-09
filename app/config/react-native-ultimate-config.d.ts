@@ -7,6 +7,8 @@ declare module 'react-native-ultimate-config' {
   type Config = Flavor & {
     readonly APP_ID: string;
     readonly APP_NAME: string;
+    readonly CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME: string | undefined;
+    readonly CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME: string | undefined;
     readonly TRUST_ANCHOR_PUBLISHER_REFERENCE: string;
   };
   const config: Readonly<Config>;

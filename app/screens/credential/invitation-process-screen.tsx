@@ -29,6 +29,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import { config } from '../../config';
 import { useBlePermissions } from '../../hooks/ble-permissions';
 import { translate, translateError } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
@@ -46,7 +47,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const [error, setError] = useState<unknown>();
   const [canHandleInvitation, setCanHandleInvitation] = useState<boolean>();
   const [invitationSupportedTransports] = useState(
-    getInvitationUrlTransports(route.params.invitationUrl),
+    getInvitationUrlTransports(
+      route.params.invitationUrl,
+      config.customOpenIdUrlScheme,
+    ),
   );
   const { availableTransport, transportError } = useAvailableTransports(
     invitationSupportedTransports,

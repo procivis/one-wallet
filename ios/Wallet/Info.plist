@@ -29,6 +29,8 @@
 			<array>
 				<string>openid-credential-offer</string>
 				<string>openid4vp</string>
+				<string>$(CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME)</string>
+				<string>$(CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME)</string>
 			</array>
 		</dict>
 	</array>

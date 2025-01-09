@@ -15,6 +15,7 @@ export interface FeatureFlags {
 export interface Configuration {
   appName: string;
   backendConfig: BackendConfiguration;
+  customOpenIdUrlScheme?: string;
   featureFlags: FeatureFlags;
   trustAnchorPublisherReference: string;
 }
