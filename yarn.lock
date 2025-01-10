@@ -2921,13 +2921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/blur@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "@react-native-community/blur@npm:4.4.0"
+"@react-native-community/blur@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "@react-native-community/blur@npm:4.4.1"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 898a886f0ae176636be87286066d03411ad6d9ac28361f1aae5c40c37d3b42d3f0ecbae4f36ed6cddb645f02e1df3027636a372e479a75880c793482530e53c2
+  checksum: f8f3b2e0dc630d93219c5db822a5d283754beedf31b8e481c17bca6f8b2a29d0e24cad4c5013f692f120a3336490dc5b1b3990a68c714c3308151adf92686ad7
   languageName: node
   linkType: hard
 
@@ -12499,7 +12499,7 @@ __metadata:
     "@procivis/react-native-picker": "npm:5.0.3"
     "@react-native-async-storage/async-storage": "npm:^1.14.1"
     "@react-native-clipboard/clipboard": "npm:1.14.0"
-    "@react-native-community/blur": "npm:^4.4.0"
+    "@react-native-community/blur": "npm:^4.4.1"
     "@react-native-community/netinfo": "npm:^11.4.1"
     "@react-native/babel-preset": "npm:0.73.21"
     "@react-native/eslint-config": "npm:0.74.0"
