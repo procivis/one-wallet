@@ -220,10 +220,9 @@ e2e:
   extends:
     - .modules_setup
     - .only_main_or_tag
-  before_script:
+  script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
     - npm install -g @cyclonedx/cdxgen
-  script:
     - yarn rnuc:dev
     - >
       cdxgen --required-only -p -t ${PROJECT} -o ${SBOM_FILE_PATH}
