@@ -319,7 +319,10 @@ const ProofRequestScreen: FunctionComponent = () => {
           style={styles.verifier}
         />
         {!presentationDefinition || !allCredentials ? (
-          <ActivityIndicator animate={isFocused} />
+          <ActivityIndicator
+            animate={isFocused}
+            testID="ProofRequestSharingScreen.indicator.credentials"
+          />
         ) : (
           <>
             {presentationDefinition.requestGroups.map((group) => (
