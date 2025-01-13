@@ -52,14 +52,28 @@ describe('ONE-224: Wallet history', () => {
         credentialSchema: credentialSchemaJWT,
         exchange: Exchange.OPENID4VC,
       });
-    });
-
-    it('Contain records. Open detail screen', async () => {
       await expect(WalletScreen.screen).toBeVisible();
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible();
       await SettingsScreen.button(SettingsButton.HISTORY).tap();
       await expect(HistoryScreen.screen).toBeVisible();
+    });
+
+    it('Contain 2 records after issued credential', async () => {
+      const record_0 = HistoryScreen.history(0);
+      await expect(record_0.element).toBeVisible();
+      await expect(record_0.label).toHaveText('Credential issued');
+      await expect(record_0.timeLabel).toBeVisible();
+      await expect(record_0.info).toBeVisible();
+
+      const record_1 = HistoryScreen.history(1);
+      await expect(record_1.element).toBeVisible();
+      await expect(record_1.label).toHaveText('Credential pending');
+      await expect(record_1.timeLabel).toBeVisible();
+      await expect(record_1.info).toBeVisible();
+    });
+
+    it('Contain records. Open detail screen', async () => {
       await expect(HistoryScreen.history(1).element).toBeVisible();
       await HistoryScreen.history(1).element.tap();
       await expect(HistoryDetailScreen.screen).toBeVisible();
@@ -86,7 +100,6 @@ describe('ONE-224: Wallet history', () => {
       await HistoryScreen.searchField.typeText('string\n');
       await expect(HistoryScreen.history(0).element).toBeVisible();
       await expect(HistoryScreen.history(1).element).toBeVisible();
-      await expect(HistoryScreen.history(2).element).toBeVisible();
       await HistoryScreen.searchField.clearButton.tap();
     });
 
@@ -98,6 +111,7 @@ describe('ONE-224: Wallet history', () => {
     });
   });
 
+  // Long tests
   // eslint-disable-next-line jest/no-disabled-tests
   describe.skip('Scroll elements', () => {
     beforeAll(async () => {

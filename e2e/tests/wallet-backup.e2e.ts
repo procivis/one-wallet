@@ -47,7 +47,6 @@ describe('ONE-1530: Backup & Restore', () => {
   });
 
   describe('Restore proccess', () => {
-    let credentialId: string;
     let credentialSchemaJWT: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
@@ -55,10 +54,10 @@ describe('ONE-1530: Backup & Restore', () => {
       credentialSchemaJWT = await createCredentialSchema(authToken, {
         format: CredentialFormat.JWT,
       });
-      credentialId = await credentialIssuance({
+      await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.PROCIVIS,
+        exchange: Exchange.OPENID4VC,
       });
     });
 
@@ -102,8 +101,8 @@ describe('ONE-1530: Backup & Restore', () => {
       }
 
       await expect(CreateBackupPreviewScreen.screen).toBeVisible();
-      await CreateBackupPreviewScreen.credentialCard(
-        credentialId,
+      await (
+        await CreateBackupPreviewScreen.credentialAtIndex(0)
       ).verifyIsVisible();
       // Will be opened folder navigation and it will block the app
       // await CreateBackupPreviewScreen.createBackupButton.longPress(4001);

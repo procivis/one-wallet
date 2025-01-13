@@ -1,6 +1,6 @@
 import { expect } from 'detox';
 
-export default abstract class CredentialHistoryScreen {
+export default class CredentialHistoryScreen {
   static get screen() {
     return element(by.id('CredentialHistoryScreen'));
   }

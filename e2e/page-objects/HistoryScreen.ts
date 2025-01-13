@@ -11,10 +11,18 @@ export default abstract class HistoryScreen {
 
   private static historyEntry(index: number) {
     const id = `HistoryScreen.list.item.${index}`;
-    const record = element(by.id(id));
     return {
       get element() {
-        return record;
+        return element(by.id(id));
+      },
+      get info() {
+        return element(by.id(`${id}.info`));
+      },
+      get label() {
+        return element(by.id(`${id}.label`));
+      },
+      get timeLabel() {
+        return element(by.id(`${id}.timeLabel`));
       },
     };
   }

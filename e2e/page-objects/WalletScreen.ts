@@ -2,13 +2,17 @@ import { expect } from 'detox';
 
 import CredentialCard from './components/CredentialCard';
 
-export default abstract class WalletScreen {
+export default class WalletScreen {
   static get screen() {
     return element(by.id('WalletScreen'));
   }
 
   static get settingsButton() {
     return element(by.id('WalletScreen.header.action-settings')).atIndex(0);
+  }
+
+  private static get scroll() {
+    return by.id('WalletScreen.scroll');
   }
 
   static async credentialAtIndex(index: number) {
@@ -25,30 +29,21 @@ export default abstract class WalletScreen {
     return CredentialCard(id);
   }
 
-  static async openDetailScreen(
-    credentialIdOrName: string,
-    atIndex: number = 0,
-  ) {
-    await element(
-      by.id(`WalletScreen.credential.${credentialIdOrName}.openDetail`),
-    )
-      .atIndex(atIndex)
-      .tap();
+  static async openDetailScreen(index: number) {
+    const credentialCard = await this.credentialAtIndex(index);
+    await credentialCard.openDetail();
   }
 
   static credentialName(credentialName: string) {
     return element(by.text(credentialName));
-  }
-  static get credentialList() {
-    return element(by.id('WalletScreen.credentialList'));
   }
 
   static scrollTo(credentialSchemaName: string, index: number = 0) {
     const element = this.credentialName(credentialSchemaName).atIndex(index);
     return waitFor(element)
       .toBeVisible()
-      .whileElement(by.id('WalletScreen.credentialList'))
-      .scroll(600, 'down');
+      .whileElement(this.scroll)
+      .scroll(600, 'down', NaN, 0.5);
   }
 
   static get search() {
@@ -65,16 +60,25 @@ export default abstract class WalletScreen {
       },
     };
   }
+  private static get emptyDashboard() {
+    return {
+      get subtitle() {
+        return element(by.id('WalletScreen.empty.subtitle'));
+      },
+      get title() {
+        return element(by.id('WalletScreen.empty.title'));
+      },
+    };
+  }
 
   static async verifyEmptyCredentialList() {
-    const el = element(by.id('WalletScreen.credentialList'));
-    await expect(el).toBeVisible();
-    await expect(element(by.id('WalletScreen.empty.title'))).toHaveText(
-      'No credentials yet',
-    );
-    await expect(element(by.id('WalletScreen.empty.subtitle'))).toHaveText(
+    await waitFor(this.emptyDashboard.title)
+      .toHaveText('No credentials yet')
+      .withTimeout(2000);
+    await expect(this.emptyDashboard.subtitle).toHaveText(
       'Connect to an issuer to add your first credential.',
     );
+    await expect(this.scanQRCodeButton).toBeVisible();
   }
 
   static get scanQRCodeButton() {
