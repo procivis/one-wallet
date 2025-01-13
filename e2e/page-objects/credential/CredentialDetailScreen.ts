@@ -1,4 +1,4 @@
-import CredentialCard from './components/CredentialCard';
+import CredentialCard from '../components/CredentialCard';
 
 export enum Action {
   CLOSE = 'Close',
@@ -6,7 +6,7 @@ export enum Action {
   MORE_INFORMATION = 'More information',
 }
 
-export default abstract class CredentialDetailScreen {
+export default class CredentialDetailScreen {
   static get screen() {
     return element(by.id('CredentialDetailScreen'));
   }
@@ -61,7 +61,7 @@ export default abstract class CredentialDetailScreen {
     return waitFor(element)
       .toBeVisible()
       .whileElement(by.id('CredentialDetailScreen.scroll'))
-      .scroll(100, direction);
+      .scroll(100, direction, NaN, 0.4);
   }
 
   static get credentialCard() {

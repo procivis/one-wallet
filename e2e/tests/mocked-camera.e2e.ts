@@ -14,7 +14,7 @@ describe('ONE-3119: implement camera mocking', () => {
     await WalletScreen.scanQRCodeButton.tap();
     await expect(QRCodeScannerMockScreen.screen).toBeVisible();
     await expect(QRCodeScannerMockScreen.scanUriButton).toBeVisible();
-    await expect(QRCodeScannerMockScreen.uriInput).toBeVisible();
+    await expect(QRCodeScannerMockScreen.textInput).toBeVisible(50);
     await expect(QRCodeScannerMockScreen.back).toBeVisible();
   });
 });

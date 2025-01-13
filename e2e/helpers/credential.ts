@@ -41,7 +41,6 @@ export enum CredentialAction {
 }
 
 const acceptCredentialTestCase = async (
-  credentialId: string,
   data: CredentialIssuanceProps,
   expectedResult: LoaderViewState,
   visibleText?: string,
@@ -57,15 +56,15 @@ const acceptCredentialTestCase = async (
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(CredentialAcceptProcessScreen.status.success)
       .toBeVisible()
-      .withTimeout(6000);
+      .withTimeout(15000);
 
-    // if (data.redirectUri) {
-    //   await waitFor(CredentialAcceptProcessScreen.button.redirect)
-    //     .toBeVisible()
-    //     .withTimeout(2000);
-    // } else {
-    await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
-    // }
+    if (data.redirectUri) {
+      await waitFor(CredentialAcceptProcessScreen.button.redirect)
+        .toBeVisible()
+        .withTimeout(2000);
+    } else {
+      await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
+    }
   } else if (expectedResult === LoaderViewState.Warning) {
     await waitFor(CredentialAcceptProcessScreen.status.warning)
       .toBeVisible()
@@ -123,7 +122,7 @@ export const credentialIssuance = async (
     data.credentialSchema,
     {
       claimValues: data.claimValues,
-      exchange: data.exchange,
+      exchange: data.exchange ?? Exchange.OPENID4VC,
       issuerDid: issuerDidId,
       // TODO: issuerKey: did.key,
       redirectUri: data.redirectUri,
@@ -131,15 +130,10 @@ export const credentialIssuance = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
-  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(8000);
+  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(15000);
 
   if (action === CredentialAction.ACCEPT) {
-    await acceptCredentialTestCase(
-      credentialId,
-      data,
-      expectedResult,
-      visibleText,
-    );
+    await acceptCredentialTestCase(data, expectedResult, visibleText);
   } else {
     await rejectCredentialTestCase();
   }

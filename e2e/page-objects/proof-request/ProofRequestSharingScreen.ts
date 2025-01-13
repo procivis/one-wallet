@@ -1,8 +1,13 @@
+import CredentialCard from '../components/CredentialCard';
 import ProofCredentialCard from '../components/ProofCredentialCard';
 
-export default abstract class ProofRequestSharingScreen {
+export default class ProofRequestSharingScreen {
   static get screen() {
     return element(by.id('ProofRequestSharingScreen'));
+  }
+
+  static get infoButton() {
+    return element(by.id('Screen.infoButton'));
   }
 
   static get cancelButton() {
@@ -11,6 +16,9 @@ export default abstract class ProofRequestSharingScreen {
 
   static get shareButton() {
     return element(by.id('ProofRequestSharingScreen.shareButton'));
+  }
+  static get credentialLoadingIndicator() {
+    return element(by.id('ProofRequestSharingScreen.indicator.credentials'));
   }
 
   static async scrollTo(
@@ -21,6 +29,20 @@ export default abstract class ProofRequestSharingScreen {
       .toBeVisible()
       .whileElement(by.id('ProofRequestSharingScreen.scroll'))
       .scroll(400, direction);
+  }
+
+  static async credentialAtIndex(index: number) {
+    const cardAttributes = await element(
+      by.id(/^ProofRequestSharingScreen.credential.[\w-]+.card$/),
+    )
+      .atIndex(index)
+      .getAttributes();
+    const id = (
+      'elements' in cardAttributes
+        ? cardAttributes.elements[0].identifier
+        : cardAttributes.identifier
+    ).replace('.card', '');
+    return CredentialCard(id);
   }
 
   static credential(credentialIndex: number) {
