@@ -161,17 +161,9 @@ const WalletScreen: FunctionComponent = observer(() => {
           activeOpacity={1}
           onPress={() => handleCredentialPress(credential.id)}
           style={styles.headerAccessory}
-          testID={concatTestID(testID, 'openDetail')}
+          testID={concatTestID(testID, 'card.header.openDetail')}
         >
-          <NextIcon
-            color={colorScheme.text}
-            // Schema name required for OpenID4VC in detox tests
-            testID={concatTestID(
-              'WalletScreen.credential',
-              credential.schema.name,
-              'openDetail',
-            )}
-          />
+          <NextIcon color={colorScheme.text} />
         </TouchableOpacity>
       );
       const lastItem = index === section.data.length - 1;
@@ -316,7 +308,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           showsVerticalScrollIndicator={false}
           stickySectionHeadersEnabled={false}
           style={[styles.list, { backgroundColor: colorScheme.background }]}
-          testID="WalletScreen.credentialList"
+          testID="WalletScreen.scroll"
         />
       )}
       {!isEmpty && <ScanButton onPress={handleScanPress} />}

@@ -25,16 +25,17 @@ describe('ONE-1798: Accessing Settings and all screens in the settings area', ()
     await expect(SettingsScreen.screen).toBeVisible();
   });
 
-  // Temporary skipped
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('Language option', async () => {
-    // await expect(element(by.text('Settings'))).toBeVisible();
+  it('Language option', async () => {
+    await expect(
+      SettingsScreen.button(SettingsButton.LANGUAGE_CHANGE),
+    ).toHaveLabel('Change language');
     await SettingsScreen.button(SettingsButton.LANGUAGE_CHANGE).tap();
     await SettingsScreen.selectLanguage(LanguageMenu.DEUTSCH);
-    // await expect(element(by.text('Einstellungen'))).toBeVisible();
+    await expect(
+      SettingsScreen.button(SettingsButton.LANGUAGE_CHANGE),
+    ).toHaveLabel('Sprache ändern');
     await SettingsScreen.button(SettingsButton.LANGUAGE_CHANGE).tap();
     await SettingsScreen.selectLanguage(LanguageMenu.ENGLISH);
-    // await expect(element(by.text('Settings'))).toBeVisible();
   });
 
   it('History option', async () => {

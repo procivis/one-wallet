@@ -16,11 +16,84 @@ export enum CardHeaderOption {
   suspended = 'suspended',
 }
 
-export default function CredentialCard(testID: string) {
+export enum CredentialStatus {
+  INVALID = 'invalid',
+  MISSING = 'missing',
+  MULTIPLE = 'multiple',
+  REVALIDATED = 'revalidated',
+  REVORED = 'revoked',
+  SUSPENDED = 'suspended',
+}
+
+export const CredentialCardSkeleton = (testID: string) => {
   const cardId = `${testID}.card`;
   return {
-    attribute: (key: string) => {
-      const id = `${testID}.attribute.${key}`;
+    get header() {
+      const headerId = `${cardId}.header`;
+      return {
+        get element() {
+          return element(by.id(headerId));
+        },
+        get invalid() {
+          return element(by.id(`${headerId}.invalid`));
+        },
+        get missing() {
+          return element(by.id(`${headerId}.missing`));
+        },
+        get multiple() {
+          return element(by.id(`${headerId}.multiple`));
+        },
+        get name() {
+          return element(by.id(`${headerId}.name`));
+        },
+        get revoked() {
+          return element(by.id(`${headerId}.revoked`));
+        },
+        get suspended() {
+          return element(by.id(`${headerId}.suspended`));
+        },
+      };
+    },
+    get notice() {
+      const noticeId = `${testID}.notice`;
+      return {
+        get element() {
+          return element(by.id(`${cardId}.notice`));
+        },
+        get invalid() {
+          return element(by.id(`${noticeId}.invalid`));
+        },
+        get multiple() {
+          const multipleId = `${noticeId}.multiple`;
+          return {
+            get element() {
+              return element(by.id(multipleId));
+            },
+            get selectButton() {
+              return element(by.id(`${multipleId}.button`));
+            },
+          };
+        },
+        get revoked() {
+          return element(by.id(`${noticeId}.revoked`));
+        },
+        get suspended() {
+          return element(by.id(`${noticeId}.suspended`));
+        },
+        get text() {
+          return element(by.id(`${cardId}.notice.text`));
+        },
+      };
+    },
+  };
+};
+
+export default function CredentialCard(testID: string) {
+  const cardId = `${testID}.card`;
+  const sceleton = CredentialCardSkeleton(testID);
+  return {
+    attribute: (index: number | string) => {
+      const id = `${testID}.attribute.${index}`;
       return {
         get element() {
           return element(by.id(id));
@@ -97,15 +170,8 @@ export default function CredentialCard(testID: string) {
         get element() {
           return element(by.id(id));
         },
-        get label() {
-          return {
-            get revoked() {
-              return element(by.id(`${id}.revoked`));
-            },
-            get suspended() {
-              return element(by.id(`${id}.suspended`));
-            },
-          };
+        label: (status: CredentialStatus) => {
+          return element(by.id(`${id}.${status}`));
         },
         get logo() {
           return {
@@ -128,13 +194,34 @@ export default function CredentialCard(testID: string) {
         get name() {
           return element(by.id(`${id}.name`));
         },
+        get openDetailArrow() {
+          return element(by.id(`${id}.openDetail`));
+        },
       };
     },
+    multipleCredentialsHeaderAvailable: async function () {
+      await expect(sceleton.header.multiple).toBeVisible();
+      await expect(sceleton.header.multiple).toHaveText(
+        'Multiple credentials available',
+      );
+    },
+    openDetail: async function () {
+      await this.header.openDetailArrow.tap();
+    },
+    openMultipleCredentialsScreen: async function () {
+      await expect(sceleton.notice.multiple.element).toBeVisible();
+      await sceleton.notice.multiple.selectButton.tap();
+    },
+    get sceleton() {
+      return sceleton;
+    },
+    selectiveDisclosureMessageVisible: async function () {
+      await expect(sceleton.notice.element).toBeVisible();
+      await expect(sceleton.notice.text).toHaveText(
+        'This credential requires you to share all attributes to work.',
+      );
+    },
     showAllAttributes: async function () {
-      await waitFor(this.showAllAttributesButton)
-        .toBeVisible()
-        .whileElement(by.id('CredentialDetailScreen.scroll'))
-        .scroll(200, 'down');
       await this.showAllAttributesButton.tap();
     },
     get showAllAttributesButton() {
@@ -145,11 +232,12 @@ export default function CredentialCard(testID: string) {
       await this.body.carousel.element.swipe(direction);
     },
     verifyAttributeValue: async function (
-      index: string,
+      index: number | string,
       title: string,
       value?: string,
       image?: boolean,
     ) {
+      await expect(this.attribute(index).element).toBeVisible();
       await expect(this.attribute(index).title).toHaveText(title);
       if (image) {
         await expect(this.attribute(index).image).toBeVisible();
@@ -162,7 +250,7 @@ export default function CredentialCard(testID: string) {
     verifyAttributeValues: async function (
       attributes: Array<{
         image?: boolean;
-        index: string;
+        index: number | string;
         key: string;
         value?: string;
       }>,
@@ -253,16 +341,19 @@ export default function CredentialCard(testID: string) {
     },
     verifyIsCardCollapsed: async function (collapsed: boolean = true) {
       if (collapsed) {
-        await expect(this.card.collapsed).toBeVisible();
+        await expect(this.card.collapsed).toBeVisible(10);
       } else {
         await expect(this.card.expanded).toBeVisible();
       }
     },
-    verifyIsVisible: async function (visible: boolean = true) {
+    verifyIsVisible: async function (
+      visible: boolean = true,
+      pct: number = 75,
+    ) {
       if (visible) {
-        await expect(this.element).toBeVisible();
+        await expect(this.element).toBeVisible(pct);
       } else {
-        await expect(this.element).not.toBeVisible();
+        await expect(this.element).not.toBeVisible(pct);
       }
     },
     verifyLogoColor: async function (
@@ -274,13 +365,10 @@ export default function CredentialCard(testID: string) {
       ).toBeVisible();
       await expect(this.header.logo.textColor(textColor)).toBeVisible();
     },
-    verifyStatus: async function (
-      status: 'revoked' | 'suspended',
-      label?: string,
-    ) {
-      await expect(this.header.label[status]).toBeVisible();
+    verifyStatus: async function (status: CredentialStatus, label?: string) {
+      await expect(this.header.label(status)).toBeVisible();
       if (label) {
-        await expect(this.header.label[status]).toHaveText(label);
+        await expect(this.header.label(status)).toHaveText(label);
       }
     },
   };

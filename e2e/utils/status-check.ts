@@ -1,9 +1,10 @@
+import { CredentialStatus } from '../page-objects/components/CredentialCard';
 import StatusCheckResultScreen from '../page-objects/StatusCheckResultScreen';
 
 export type CredentialUpdateProps = {
   expectedLabel?: string;
   index: number;
-  status: 'revoked' | 'suspended' | 'revalidated';
+  status: CredentialStatus;
 };
 
 export const statusScreenCheck = async (
@@ -15,7 +16,7 @@ export const statusScreenCheck = async (
     );
     await card.verifyIsVisible();
 
-    if (credential.status === 'revalidated') {
+    if (credential.status === CredentialStatus.REVALIDATED) {
       if (credential.expectedLabel) {
         await card.verifyDetailLabel(credential.expectedLabel);
       }

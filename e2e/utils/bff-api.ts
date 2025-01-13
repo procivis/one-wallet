@@ -94,7 +94,7 @@ export async function createCredentialSchema(
   };
   const schemaData: CredentialSchemaData = Object.assign(
     {
-      allowSuspension: true,
+      allowSuspension: false,
       claims: [
         {
           array: false,
@@ -245,7 +245,7 @@ export async function createCredential(
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: schema.id,
-    exchange: credentialData?.exchange ?? Exchange.PROCIVIS,
+    exchange: credentialData?.exchange ?? Exchange.OPENID4VC,
     issuerDid: credentialData?.issuerDid,
     issuerKey: credentialData?.issuerKey,
     redirectUri: credentialData?.redirectUri,

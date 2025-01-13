@@ -3,7 +3,7 @@ export default abstract class QRCodeScannerMockScreen {
     return element(by.id('QRCodeScannerScreen'));
   }
 
-  static get uriInput() {
+  static get textInput() {
     return element(by.id('QRCodeScannerMockScreen.textInput'));
   }
 

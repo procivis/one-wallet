@@ -106,10 +106,22 @@ export const proofSharing = async (
   await scanURL(invitationUrl);
   await waitFor(InvitationProcessScreen.screen).toBeVisible();
   await waitFor(ProofRequestSharingScreen.screen).toBeVisible();
+  try {
+    await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
+      .toBeVisible()
+      .withTimeout(10000);
+  } catch {
+    console.debug('No loading');
+  } finally {
+    await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
+      .not.toBeVisible()
+      .withTimeout(10000);
+  }
+  const credential_0 = await ProofRequestSharingScreen.credentialAtIndex(0);
+  await waitFor(credential_0.element).toBeVisible().withTimeout(2000);
   for (const [index] of data.selectiveDisclosureCredentials?.entries() || []) {
-    await ProofRequestSharingScreen.credential(
-      index,
-    ).selectiveDisclosureMessageVisible();
+    const credential = await ProofRequestSharingScreen.credentialAtIndex(index);
+    await credential.selectiveDisclosureMessageVisible();
   }
 
   await data.customShareDataScreenTest?.();

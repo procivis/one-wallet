@@ -1,4 +1,5 @@
 import { credentialIssuance } from '../../helpers/credential';
+import { CredentialStatus } from '../../page-objects/components/CredentialCard';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import {
   bffLogin,
@@ -115,7 +116,11 @@ describe('ONE-620: Credential revocation', () => {
         await suspendCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
-            { expectedLabel: 'Suspended', index: 0, status: 'suspended' },
+            {
+              expectedLabel: 'Suspended',
+              index: 0,
+              status: CredentialStatus.SUSPENDED,
+            },
           ],
         });
       });
@@ -124,7 +129,11 @@ describe('ONE-620: Credential revocation', () => {
         await revokeCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
-            { expectedLabel: 'Revoked', index: 0, status: 'revoked' },
+            {
+              expectedLabel: 'Revoked',
+              index: 0,
+              status: CredentialStatus.REVORED,
+            },
           ],
         });
       });
@@ -167,7 +176,11 @@ describe('ONE-620: Credential revocation', () => {
         await suspendCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
-            { expectedLabel: 'Suspended', index: 0, status: 'suspended' },
+            {
+              expectedLabel: 'Suspended',
+              index: 0,
+              status: CredentialStatus.SUSPENDED,
+            },
           ],
         });
       });
@@ -176,7 +189,11 @@ describe('ONE-620: Credential revocation', () => {
         await revokeCredential(credentialId, authToken);
         await reloadApp({
           credentialUpdate: [
-            { expectedLabel: 'Revoked', index: 0, status: 'revoked' },
+            {
+              expectedLabel: 'Revoked',
+              index: 0,
+              status: CredentialStatus.REVORED,
+            },
           ],
         });
       });

@@ -6,7 +6,7 @@ import {
   mDocCredentialClaims,
   mDocCredentialSchema,
 } from '../helpers/credentialSchemas';
-import CredentialDetailScreen from '../page-objects/CredentialDetailScreen';
+import CredentialDetailScreen from '../page-objects/credential/CredentialDetailScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
@@ -159,7 +159,7 @@ describe('ONE-601: Credential issuance', () => {
         exchange: Exchange.OPENID4VC,
       });
 
-      await WalletScreen.openDetailScreen(driverLicenceSchema.name);
+      await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       // Full Name
       await expect(
@@ -209,7 +209,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Suspend mDoc credential with infinite date', async () => {
-      await WalletScreen.openDetailScreen(mdocSchema.name);
+      await WalletScreen.openDetailScreen(0);
       await CredentialDetailScreen.credentialCard.verifyDetailLabel(
         'Wade',
         'Wilson',

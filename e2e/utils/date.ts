@@ -38,13 +38,18 @@ export const formatTime = (date: Date, locale?: string) => {
 /**
  * Date and time format
  */
-export const formatDateTime = (date: Date, locale?: string) => {
+export const formatDateTime = (
+  date: Date,
+  locale?: string,
+  timeZone: string = 'UTC',
+) => {
   try {
     return date.toLocaleString(locale || defaultLocale, {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
       month: 'numeric',
+      timeZone,
       year: 'numeric',
     });
   } catch {

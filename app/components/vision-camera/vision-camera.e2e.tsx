@@ -23,6 +23,7 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({
       <TextInput
         label="qrCodeContent"
         onChangeText={setQRContent}
+        style={styles.qrCodeInput}
         testID="QRCodeScannerMockScreen.textInput"
         value={qrContent}
       />
@@ -41,6 +42,11 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
+  qrCodeInput: {
+    height: 50,
+    paddingHorizontal: 10,
+    width: '100%',
+  },
   // eslint-disable-next-line react-native/no-color-literals
   screen: {
     backgroundColor: 'white',
