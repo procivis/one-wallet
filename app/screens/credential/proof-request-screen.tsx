@@ -317,6 +317,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
           role={TrustEntityRoleEnum.VERIFIER}
           style={styles.verifier}
+          testID="EntityDetail"
         />
         {!presentationDefinition || !allCredentials ? (
           <ActivityIndicator

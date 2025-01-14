@@ -24,6 +24,7 @@ import { scanURL } from '../utils/scan';
 
 interface ProofSharingProops {
   customShareDataScreenTest?: () => Promise<void>;
+  didId?: string;
   didMethod?: DidMethod;
   exchange?: Exchange;
   keyAlgorithms?: KeyType | KeyType[];
@@ -44,7 +45,7 @@ export enum ProofAction {
   SHARE_BLOCKED = 'share-blocked',
 }
 
-const shareCredential = async (
+export const shareCredential = async (
   expectedResult: LoaderViewState,
   data: ProofSharingProops,
 ) => {
@@ -83,6 +84,32 @@ const shareCredential = async (
   await expect(WalletScreen.screen).toBeVisible();
 };
 
+export const requestProofAndReviewProofRequestSharingScreen = async (
+  authToken: string,
+  data: ProofSharingProops,
+) => {
+  let verifierDidId: string;
+  if (data.didId) {
+    verifierDidId = data.didId;
+  } else {
+    const did = await getLocalDid(authToken, {
+      didMethods: data.didMethod,
+      keyAlgorithms: data.keyAlgorithms,
+    });
+    verifierDidId = did.id;
+  }
+  const proofRequestId = await createProofRequest(authToken, {
+    exchange: data.exchange,
+    proofSchemaId: data.proofSchemaId,
+    redirectUri: data.redirectUri,
+    verifierDid: verifierDidId,
+  });
+  const invitationUrl = await requestProof(proofRequestId, authToken);
+  await scanURL(invitationUrl);
+  await waitFor(InvitationProcessScreen.screen).toBeVisible();
+  await waitFor(ProofRequestSharingScreen.screen).toBeVisible();
+};
+
 export const proofSharing = async (
   authToken: string,
   {
@@ -91,21 +118,8 @@ export const proofSharing = async (
     expectedResult = LoaderViewState.Success,
   }: ProofRequestProps,
 ) => {
-  const did = await getLocalDid(authToken, {
-    didMethods: data.didMethod,
-    keyAlgorithms: data.keyAlgorithms,
-  });
-  const proofRequestId = await createProofRequest(authToken, {
-    exchange: data.exchange,
-    proofSchemaId: data.proofSchemaId,
-    redirectUri: data.redirectUri,
-    verifierDid: did.id,
-  });
-  const invitationUrl = await requestProof(proofRequestId, authToken);
+  await requestProofAndReviewProofRequestSharingScreen(authToken, data);
 
-  await scanURL(invitationUrl);
-  await waitFor(InvitationProcessScreen.screen).toBeVisible();
-  await waitFor(ProofRequestSharingScreen.screen).toBeVisible();
   try {
     await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
       .toBeVisible()

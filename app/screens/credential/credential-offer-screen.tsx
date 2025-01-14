@@ -147,12 +147,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
           labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
           role={TrustEntityRoleEnum.ISSUER}
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
+          testID="EntityDetail"
         />
         {!credential || !config || !card ? (
           <ActivityIndicator animate={isFocused} />
         ) : (
           <>
-            <View style={styles.credentialWrapper}>
+            <View
+              style={styles.credentialWrapper}
+              testID={`HolderCredentialID.value.${credential.id}`}
+            >
               <CredentialDetailsCard
                 attributes={attributes}
                 card={{

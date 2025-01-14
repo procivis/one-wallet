@@ -1,3 +1,4 @@
+import { NativeElementActions } from 'detox/detox';
 import { v4 as uuidv4 } from 'uuid';
 
 export const objectToQueryParams = (obj: Record<string, any>): string => {
@@ -26,3 +27,12 @@ export const objectToQueryParams = (obj: Record<string, any>): string => {
 export const shortUUID = () => {
   return uuidv4().split('-')[0];
 };
+
+export async function getIdentifier(element: NativeElementActions) {
+  const attributes = await element.getAttributes();
+  if ('identifier' in attributes) {
+    return attributes.identifier;
+  } else {
+    throw new Error('Mutliple elements');
+  }
+}
