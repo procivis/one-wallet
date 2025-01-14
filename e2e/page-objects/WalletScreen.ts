@@ -34,6 +34,13 @@ export default class WalletScreen {
     await credentialCard.openDetail();
   }
 
+  static async openDetailScreenByCredentialId(credentialId: string) {
+    const credentialCard = CredentialCard(
+      `WalletScreen.credential.${credentialId}`,
+    );
+    await credentialCard.openDetail();
+  }
+
   static credentialName(credentialName: string) {
     return element(by.text(credentialName));
   }

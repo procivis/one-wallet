@@ -26,6 +26,7 @@ import {
   LayoutType,
   RevocationMethod,
   StorageType,
+  TrustEntityRole,
 } from './enums';
 import { objectToQueryParams, shortUUID } from './utils';
 
@@ -163,6 +164,34 @@ export async function getDidDetail(
   return apiRequest(`/api/did/v1/${didId}`, authToken);
 }
 
+export interface TrustAnchorDetailDTO {
+  createdDate: string;
+  id: string;
+  isPublisher: boolean;
+  lastModified: string;
+  name: string;
+  publisherReference: string;
+  type: string;
+}
+
+export async function getTrustAnchor(
+  authToken: string,
+  name?: string,
+): Promise<TrustAnchorDetailDTO> {
+  const queryParams = objectToQueryParams({
+    name: name,
+  });
+  return apiRequest(`/api/trust-anchor/v1?${queryParams}`, authToken).then(
+    (response) => {
+      const trustAnchor = response.values[0];
+      if (!trustAnchor) {
+        throw new Error('Trust Anchor not found');
+      }
+      return trustAnchor;
+    },
+  );
+}
+
 export interface CredentialData {
   claimValues?: Array<{ claimId: string; path: string; value: string }>;
   exchange?: Exchange;
@@ -253,6 +282,50 @@ export async function createCredential(
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );
+}
+
+export interface CreateTrustEntityRequestDTO {
+  didId: string;
+  logo?: string | null;
+  name: string;
+  privacyUrl?: string | null;
+  role: TrustEntityRole;
+  termsUrl?: string | null;
+  trustAnchorId: string;
+  website?: string | null;
+}
+
+export async function createTrustEntity(
+  authToken: string,
+  trustEntityRequest: CreateTrustEntityRequestDTO,
+): Promise<string> {
+  return await apiRequest(
+    '/api/trust-entity/v1',
+    authToken,
+    'POST',
+    trustEntityRequest,
+  ).then((res) => res.id);
+}
+
+export interface TrustEntityResponseDTO {
+  createdDate: string;
+  did: DidDetailDTO;
+  id: string;
+  lastModified: string;
+  logo?: string | null;
+  name: string;
+  privacyUrl?: string | null;
+  role: TrustEntityRole;
+  state: string;
+  termsUrl?: string | null;
+  website?: string | null;
+}
+
+export async function getTrustEntityDetail(
+  trustEntityId: string,
+  authToken: string,
+): Promise<TrustEntityResponseDTO> {
+  return apiRequest(`/api/trust-entity/v1/${trustEntityId}`, authToken);
 }
 
 export async function createProofSchema(

@@ -14,6 +14,7 @@ import {
 } from '../utils/bff-api';
 import { DidMethod, Exchange, KeyType } from '../utils/enums';
 import { scanURL } from '../utils/scan';
+import { getIdentifier } from '../utils/utils';
 
 interface DidFilter {
   didMethods?: DidMethod | DidMethod[];
@@ -40,7 +41,7 @@ export enum CredentialAction {
   REJECT = 'reject',
 }
 
-const acceptCredentialTestCase = async (
+export const acceptCredentialTestCase = async (
   data: CredentialIssuanceProps,
   expectedResult: LoaderViewState,
   visibleText?: string,
@@ -96,11 +97,8 @@ const rejectCredentialTestCase = async () => {
   await expect(WalletScreen.screen).toBeVisible();
 };
 
-export const credentialIssuance = async (
+export const offerCredentialAndReviewCredentialOfferScreen = async (
   data: CredentialIssuanceProps,
-  action: CredentialAction = CredentialAction.ACCEPT,
-  expectedResult: LoaderViewState = LoaderViewState.Success,
-  visibleText?: string,
 ) => {
   if (!data.authToken) {
     data.authToken = await bffLogin();
@@ -130,6 +128,24 @@ export const credentialIssuance = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
+  await CredentialOfferScreen.credentialCard.verifyIsVisible();
+  const holderCredentialId =
+    (
+      await getIdentifier(element(by.id(/^HolderCredentialID.value.[\w-]+$/)))
+    )?.replace('HolderCredentialID.value.', '') || '';
+  return holderCredentialId;
+};
+
+export const credentialIssuance = async (
+  data: CredentialIssuanceProps,
+  action: CredentialAction = CredentialAction.ACCEPT,
+  expectedResult: LoaderViewState = LoaderViewState.Success,
+  visibleText?: string,
+) => {
+  const credentialId = await offerCredentialAndReviewCredentialOfferScreen(
+    data,
+  );
+
   await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(15000);
 
   if (action === CredentialAction.ACCEPT) {

@@ -113,3 +113,9 @@ export enum CredentialState {
   REVOKED = 'REVOKED',
   SUSPENDED = 'SUSPENDED',
 }
+
+export enum TrustEntityRole {
+  BOTH = 'BOTH',
+  ISSUER = 'ISSUER',
+  VERIFIER = 'VERIFIER',
+}
