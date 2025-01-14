@@ -240,6 +240,7 @@ export const HistoryDetailScreen: FC = () => {
             labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
             role={TrustEntityRoleEnum.VERIFIER}
             style={[styles.entity, { borderColor: colorScheme.grayDark }]}
+            testID="EntityDetail"
           />
         )}
         <DataItem
