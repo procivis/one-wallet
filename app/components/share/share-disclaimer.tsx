@@ -1,23 +1,26 @@
 import {
+  reportException,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import React, { FunctionComponent, useCallback } from 'react';
+import { TranslateOptions } from 'i18n-js/typings';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { Linking, StyleSheet, Text } from 'react-native';
 
 import { translate } from '../../i18n';
 
 const Link: FunctionComponent<{
   label: string;
-  testID: string;
   url: string;
-}> = ({ label, url, testID }) => {
+}> = ({ label, url }) => {
   const openURL = useCallback(() => {
-    Linking.openURL(url);
+    Linking.openURL(url).catch((e) =>
+      reportException(e, 'Opening share disclaimer link'),
+    );
   }, [url]);
 
   return (
-    <Text onPress={openURL} style={styles.link} testID={testID}>
+    <Text onPress={openURL} style={styles.link}>
       {label}
     </Text>
   );
@@ -26,72 +29,48 @@ const Link: FunctionComponent<{
 const ShareDisclaimer: FunctionComponent<{
   action: string;
   ppUrl?: string;
+  testID: string;
   tosUrl?: string;
-}> = ({ tosUrl, ppUrl, action }) => {
+}> = ({ tosUrl, ppUrl, testID, action }) => {
   const colorScheme = useAppColorScheme();
   const lowerCaseAction = action.toLowerCase();
 
-  if (tosUrl && ppUrl) {
-    return (
-      <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
-        {translate('shareDisclaimer.tosAndPp', {
-          action: lowerCaseAction,
-          pp: (
-            <Link
-              label={translate('common.privacyPolicy')}
-              testID="privacyPolicy"
-              url={ppUrl}
-            />
-          ),
-          tos: (
-            <Link
-              label={translate('common.termsOfServices')}
-              testID="termsOfServices"
-              url={tosUrl}
-            />
-          ),
-        })}
-      </Typography>
-    );
-  }
+  const opts = useMemo(() => {
+    const result: TranslateOptions = { action: lowerCaseAction };
+    if (tosUrl) {
+      result.tos = (
+        <Link label={translate('common.termsOfServices')} url={tosUrl} />
+      );
+    }
+    if (ppUrl) {
+      result.pp = (
+        <Link label={translate('common.privacyPolicy')} url={ppUrl} />
+      );
+    }
+    return result;
+  }, [lowerCaseAction, tosUrl, ppUrl]);
 
-  if (tosUrl && !ppUrl) {
-    return (
-      <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
-        {translate('shareDisclaimer.tosOnly', {
-          action: lowerCaseAction,
-          tos: (
-            <Link
-              label={translate('common.termsOfServices')}
-              testID="termsOfServices"
-              url={tosUrl}
-            />
-          ),
-        })}
-      </Typography>
-    );
-  }
-
-  if (ppUrl && !tosUrl) {
-    return (
-      <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
-        {translate('shareDisclaimer.ppOnly', {
-          action: lowerCaseAction,
-          pp: (
-            <Link
-              label={translate('common.privacyPolicy')}
-              testID="termsOfServices"
-              url={ppUrl}
-            />
-          ),
-        })}
-      </Typography>
-    );
-  }
+  const label = useMemo(() => {
+    if (tosUrl && ppUrl) {
+      return 'tosAndPp';
+    }
+    if (tosUrl) {
+      return 'tosOnly';
+    }
+    if (ppUrl) {
+      return 'ppOnly';
+    }
+    return 'noUrls';
+  }, [tosUrl, ppUrl]);
 
   return (
-    <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
-      {translate('shareDisclaimer.noUrls')}
+    <Typography
+      color={colorScheme.text}
+      preset="s"
+      style={styles.text}
+      testID={testID}
+    >
+      {translate(`shareDisclaimer.${label}`, opts)}
     </Typography>
   );
 };
@@ -102,7 +81,7 @@ const styles = StyleSheet.create({
   link: {
     textDecorationLine: 'underline',
   },
-  wrapper: {
+  text: {
     paddingTop: 16,
     textAlign: 'center',
   },
