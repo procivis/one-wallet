@@ -72,7 +72,7 @@ const ShareDisclaimer: FunctionComponent<{
     return (
       <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
         {translate('shareDisclaimer.ppOnly', {
-          tos: (
+          pp: (
             <Link
               label={translate('common.privacyPolicy')}
               testID="termsOfServices"
