@@ -157,7 +157,9 @@ const LicenceDetailsScreen: FC = () => {
     <SectionListScreen<LicenceDetailsListItem, Partial<ListSectionHeaderProps>>
       header={{
         backgroundColor: colorScheme.white,
-        leftItem: HeaderBackButton,
+        leftItem: (
+          <HeaderBackButton testID="LicenceDetailsScreen.header.back" />
+        ),
         static: true,
         title: library.name,
       }}
@@ -168,6 +170,7 @@ const LicenceDetailsScreen: FC = () => {
         sections: sections,
       }}
       style={{ backgroundColor: colorScheme.white }}
+      testID="LicenceDetailsScreen"
     />
   );
 };

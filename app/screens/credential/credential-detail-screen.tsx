@@ -138,12 +138,17 @@ const CredentialDetailScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <HeaderBackButton onPress={backButtonHandler} />,
+        leftItem: (
+          <HeaderBackButton
+            onPress={backButtonHandler}
+            testID="CredentialDetailScreen.header.back"
+          />
+        ),
         rightItem: (
           <HeaderOptionsButton
             accessibilityLabel={'wallet.settings'}
             onPress={onActions}
-            testID={'CredentialDetailScreen.header.action'}
+            testID="CredentialDetailScreen.header.action"
           />
         ),
         testID: 'CredentialDetailScreen.header',

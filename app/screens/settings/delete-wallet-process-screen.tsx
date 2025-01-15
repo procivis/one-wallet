@@ -105,10 +105,18 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
           : undefined
       }
       header={{
-        leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={closeButtonHandler}
+            testID="DeleteWalletProcessScreen.header.close"
+          />
+        ),
         rightItem:
           state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="DeleteWalletProcessScreen.header.info"
+            />
           ) : undefined,
         title: translate('deleteWalletProcess.title'),
       }}

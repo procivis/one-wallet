@@ -95,11 +95,19 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
           : undefined
       }
       header={{
-        leftItem: <HeaderCloseModalButton onPress={onClose} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={onClose}
+            testID="CredentialDeleteProcessScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         rightItem:
           state === LoaderViewState.Warning ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="CredentialDeleteProcessScreen.header.info"
+            />
           ) : undefined,
         title: translate('credentialDelete.title'),
       }}

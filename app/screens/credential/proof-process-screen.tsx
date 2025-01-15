@@ -139,10 +139,15 @@ const ProofProcessScreen: FunctionComponent = () => {
           : undefined
       }
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: (
+          <HeaderCloseModalButton testID="ProofRequestAcceptProcessScreen.header.close" />
+        ),
         rightItem:
           state === LoaderViewState.Warning ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="ProofRequestAcceptProcessScreen.header.info"
+            />
           ) : undefined,
         title: translate('proofRequest.title'),
       }}
