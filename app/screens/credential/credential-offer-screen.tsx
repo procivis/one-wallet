@@ -13,6 +13,7 @@ import {
   useCredentialCardExpanded,
   useCredentialDetail,
   useCredentialReject,
+  useTrustEntity,
 } from '@procivis/one-react-native-components';
 import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
 import {
@@ -27,6 +28,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
@@ -47,6 +49,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { credentialId, interactionId, txCode } = route.params;
 
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: trustEntity } = useTrustEntity(credential?.issuerDid?.id);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
@@ -185,6 +188,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
                 title={translate('credentialOffer.accept')}
               />
             </View>
+            <ShareDisclaimer
+              action={translate('common.accept')}
+              ppUrl={trustEntity?.privacyUrl}
+              tosUrl={trustEntity?.termsUrl}
+            />
           </>
         )}
       </View>

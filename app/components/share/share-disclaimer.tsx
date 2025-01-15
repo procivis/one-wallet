@@ -24,15 +24,18 @@ const Link: FunctionComponent<{
 };
 
 const ShareDisclaimer: FunctionComponent<{
+  action: string;
   ppUrl?: string;
   tosUrl?: string;
-}> = ({ tosUrl, ppUrl }) => {
+}> = ({ tosUrl, ppUrl, action }) => {
   const colorScheme = useAppColorScheme();
+  const lowerCaseAction = action.toLowerCase();
 
   if (tosUrl && ppUrl) {
     return (
       <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
         {translate('shareDisclaimer.tosAndPp', {
+          action: lowerCaseAction,
           pp: (
             <Link
               label={translate('common.privacyPolicy')}
@@ -56,6 +59,7 @@ const ShareDisclaimer: FunctionComponent<{
     return (
       <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
         {translate('shareDisclaimer.tosOnly', {
+          action: lowerCaseAction,
           tos: (
             <Link
               label={translate('common.termsOfServices')}
@@ -72,6 +76,7 @@ const ShareDisclaimer: FunctionComponent<{
     return (
       <Typography color={colorScheme.text} preset="s" style={styles.wrapper}>
         {translate('shareDisclaimer.ppOnly', {
+          action: lowerCaseAction,
           pp: (
             <Link
               label={translate('common.privacyPolicy')}
