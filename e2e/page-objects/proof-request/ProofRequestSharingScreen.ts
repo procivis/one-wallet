@@ -12,11 +12,11 @@ export default class ProofRequestSharingScreen {
   }
 
   static get infoButton() {
-    return element(by.id('Screen.infoButton'));
+    return element(by.id('ProofRequestSharingScreen.header.info'));
   }
 
   static get cancelButton() {
-    return element(by.id('Screen.closeButton'));
+    return element(by.id('ProofRequestSharingScreen.header.close'));
   }
 
   static get shareButton() {

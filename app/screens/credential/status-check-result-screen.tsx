@@ -42,7 +42,9 @@ const StatusCheckResultScreen: FunctionComponent = () => {
   return (
     <>
       <NavigationHeader
-        leftItem={HeaderCloseModalButton}
+        leftItem={
+          <HeaderCloseModalButton testID="StatusCheckResultScreen.header.close" />
+        }
         modalHandleVisible
         title={translate('credentialUpdate.title')}
       />

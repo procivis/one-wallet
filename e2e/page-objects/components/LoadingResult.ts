@@ -20,7 +20,7 @@ export default function LoadingResult(screenTestID: string) {
       };
     },
     get closeButton() {
-      return element(by.id('Screen.closeButton'));
+      return element(by.id(`${screenTestID}.header.close`));
     },
     hasText: function (text: string) {
       return expect(element(by.text(text))).toBeVisible();

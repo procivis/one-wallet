@@ -3,7 +3,7 @@ export default abstract class DeleteWalletScreen {
     return element(by.id('DeleteWalletScreen'));
   }
   static get back() {
-    return element(by.id('Screen.back'));
+    return element(by.id('DeleteWalletScreen.header.back'));
   }
 
   static get checkbox() {

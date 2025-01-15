@@ -67,7 +67,9 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
     >
       <ScrollViewScreen
         header={{
-          leftItem: HeaderCloseModalButton,
+          leftItem: (
+            <HeaderCloseModalButton testID="CredentialConfirmationCodeScreen.header.close" />
+          ),
           static: true,
           title: translate('credentialOffer.title'),
         }}

@@ -67,7 +67,9 @@ const SelectCredentialScreen: FunctionComponent = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: HeaderBackButton,
+        leftItem: (
+          <HeaderBackButton testID="ProofRequestSelectCredentialScreen.header.back" />
+        ),
         static: true,
         title: translate('proofRequest.selectCredential.title'),
       }}

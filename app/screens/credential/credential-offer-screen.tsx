@@ -123,7 +123,12 @@ const CredentialOfferScreen: FunctionComponent = () => {
   useBlockOSBackNavigation(Platform.OS === 'android', androidBackHandler);
 
   const closeButton = useMemo(
-    () => <HeaderCloseModalButton onPress={onCloseButtonPress} />,
+    () => (
+      <HeaderCloseModalButton
+        onPress={onCloseButtonPress}
+        testID="CredentialOfferScreen.header.close"
+      />
+    ),
     [onCloseButtonPress],
   );
 
@@ -131,7 +136,12 @@ const CredentialOfferScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: closeButton,
-        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        rightItem: (
+          <HeaderInfoButton
+            onPress={infoPressHandler}
+            testID="CredentialOfferScreen.header.info"
+          />
+        ),
         static: true,
         title: translate('credentialOffer.title'),
       }}

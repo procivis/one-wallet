@@ -31,7 +31,9 @@ const PinCodeSetScreen: FC = () => {
         type: ButtonType.Secondary,
       }}
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: (
+          <HeaderCloseModalButton testID="PinCodeSetScreen.header.close" />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
       }}
       loader={{

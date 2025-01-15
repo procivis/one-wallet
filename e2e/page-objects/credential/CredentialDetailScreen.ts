@@ -12,7 +12,7 @@ export default class CredentialDetailScreen {
   }
 
   static get backButton() {
-    return element(by.id('Screen.back'));
+    return element(by.id('CredentialDetailScreen.header.back'));
   }
 
   static action(actionText: Action) {

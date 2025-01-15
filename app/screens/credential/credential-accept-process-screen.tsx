@@ -170,10 +170,15 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
           : undefined
       }
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: (
+          <HeaderCloseModalButton testID="CredentialAcceptProcessScreen.header.close" />
+        ),
         rightItem:
           state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="CredentialAcceptProcessScreen.header.info"
+            />
           ) : undefined,
         title: translate('credentialOffer.title'),
       }}

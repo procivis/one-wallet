@@ -50,7 +50,12 @@ const PreviewScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <HeaderCloseModalButton onPress={navigation.goBack} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={navigation.goBack}
+            testID="CreateBackupPreviewScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
         title: translate('createBackup.preview.title'),

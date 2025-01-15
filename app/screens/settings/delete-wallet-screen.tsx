@@ -29,7 +29,7 @@ const DeleteWalletScreen: FunctionComponent = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: HeaderBackButton,
+        leftItem: <HeaderBackButton testID="DeleteWalletScreen.header.back" />,
         title: translate('deleteWalletScreen.title'),
       }}
       style={{ backgroundColor: colorScheme.white }}

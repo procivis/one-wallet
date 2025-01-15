@@ -277,7 +277,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
   return (
     <SectionListScreen<SettingsListItem, ListSectionHeaderProps>
       header={{
-        leftItem: HeaderBackButton,
+        leftItem: <HeaderBackButton testID="SettingsScreen.header.back" />,
         title: translate('settings.title'),
       }}
       list={{

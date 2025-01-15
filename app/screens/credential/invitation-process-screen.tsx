@@ -323,10 +323,15 @@ const InvitationProcessScreen: FunctionComponent = () => {
     <LoadingResultScreen
       button={openSettingsButton}
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: (
+          <HeaderCloseModalButton testID="InvitationProcessScreen.header.close" />
+        ),
         rightItem:
           state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="InvitationProcessScreen.header.info"
+            />
           ) : undefined,
       }}
       loader={{

@@ -16,7 +16,7 @@ export default abstract class ProofRequestSelectCredentialScreen {
   }
 
   static get backButton() {
-    return element(by.id('Screen.back'));
+    return element(by.id('ProofRequestSelectCredentialScreen.header.back'));
   }
 
   static get confirmButton() {

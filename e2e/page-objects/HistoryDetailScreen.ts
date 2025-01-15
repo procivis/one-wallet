@@ -4,7 +4,7 @@ export default abstract class HistoryDetailScreen {
   }
 
   static get infoButton() {
-    return element(by.id('Screen.infoButton'));
+    return element(by.id('HistoryDetailScreen.header.info'));
   }
 
   static get back() {

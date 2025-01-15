@@ -105,7 +105,12 @@ const QRCodeShareScreen: FunctionComponent = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <HeaderCloseModalButton onPress={navigation.goBack} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={navigation.goBack}
+            testID="QRCodeShareScreen.header.close"
+          />
+        ),
         static: true,
         title: translate('wallet.qrCodeShareScreen.title'),
       }}

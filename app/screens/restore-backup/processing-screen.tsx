@@ -101,11 +101,19 @@ const ProcessingScreen: FC = () => {
           : undefined
       }
       header={{
-        leftItem: <HeaderCloseModalButton onPress={closeButtonHandler} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={closeButtonHandler}
+            testID="RestoreBackupProcessingScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         rightItem:
           state === LoaderViewState.Warning ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="RestoreBackupProcessingScreen.header.info"
+            />
           ) : undefined,
         title: translate('restoreBackup.processing.title'),
       }}

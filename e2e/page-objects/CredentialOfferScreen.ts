@@ -7,7 +7,7 @@ export default class CredentialOfferScreen {
   }
 
   static get infoButton() {
-    return element(by.id('Screen.infoButton'));
+    return element(by.id('CredentialOfferScreen.header.info'));
   }
 
   static get trustEntityDetailName() {
@@ -19,7 +19,7 @@ export default class CredentialOfferScreen {
   }
 
   static get rejectButton() {
-    return element(by.id('Screen.closeButton'));
+    return element(by.id('CredentialOfferScreen.header.close'));
   }
 
   static get acceptButton() {
