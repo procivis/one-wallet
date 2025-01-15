@@ -154,6 +154,27 @@ const proofSharingWithDidTrustEntityAndVerify = async (
         trustEntity.did.did,
       );
     }
+
+    await ProofRequestSharingScreen.scrollTo(
+      ProofRequestSharingScreen.disclaimer,
+    );
+    if (trustEntity.termsUrl && trustEntity.privacyUrl) {
+      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+        'By tapping on “share” you agree to the Terms of services and Privacy policy provided by this entity.',
+      );
+    } else if (trustEntity.termsUrl) {
+      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+        'By tapping on “share” you agree to the Terms of services provided by this entity.',
+      );
+    } else if (trustEntity.privacyUrl) {
+      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+        'By tapping on “share” you agree to the Privacy policy provided by this entity.',
+      );
+    } else {
+      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+        'No terms of service or privacy policy provided.',
+      );
+    }
   } else {
     await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeaderDefault(
       verifierDid.did,

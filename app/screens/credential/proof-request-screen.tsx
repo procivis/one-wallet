@@ -387,6 +387,7 @@ const ProofRequestScreen: FunctionComponent = () => {
             <ShareDisclaimer
               action={translate('common.share')}
               ppUrl={trustEntity?.privacyUrl}
+              testID="ProofRequestSharingScreen.disclaimer"
               tosUrl={trustEntity?.termsUrl}
             />
           </>

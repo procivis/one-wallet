@@ -22,6 +22,11 @@ export default class ProofRequestSharingScreen {
   static get shareButton() {
     return element(by.id('ProofRequestSharingScreen.shareButton'));
   }
+
+  static get disclaimer() {
+    return element(by.id('ProofRequestSharingScreen.disclaimer'));
+  }
+
   static get credentialLoadingIndicator() {
     return element(by.id('ProofRequestSharingScreen.indicator.credentials'));
   }
