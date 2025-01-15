@@ -36,7 +36,9 @@ const BiometricsSetScreen: FC = () => {
         type: ButtonType.Secondary,
       }}
       header={{
-        leftItem: HeaderCloseModalButton,
+        leftItem: (
+          <HeaderCloseModalButton testID="BiometricsSetScreen.header.close" />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
       }}
       loader={{

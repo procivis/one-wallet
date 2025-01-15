@@ -204,7 +204,12 @@ export const HistoryDetailScreen: FC = () => {
       }
     };
 
-    return <HeaderInfoButton onPress={infoPressHandler} />;
+    return (
+      <HeaderInfoButton
+        onPress={infoPressHandler}
+        testID="HistoryDetailScreen.header.info"
+      />
+    );
   }, [entry, rootNavigation]);
 
   return (

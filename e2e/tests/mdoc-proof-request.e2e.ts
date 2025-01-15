@@ -136,7 +136,7 @@ describe.skip('ONE-614: Proof request', () => {
         { index: '0', key: 'Address' },
         { index: '0.1', key: 'country', value: 'string' },
         { index: '1.1', key: 'first name', value: 'string' },
-        { index: '1.2', image: true, key: 'portrait' },
+        { image: true, index: '1.2', key: 'portrait' },
       ];
       await credentialCard.verifyAttributeValues(
         attributes,

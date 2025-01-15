@@ -300,8 +300,15 @@ const ProofRequestScreen: FunctionComponent = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: HeaderCloseModalButton,
-        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        leftItem: (
+          <HeaderCloseModalButton testID="ProofRequestSharingScreen.header.close" />
+        ),
+        rightItem: (
+          <HeaderInfoButton
+            onPress={infoPressHandler}
+            testID="ProofRequestSharingScreen.header.info"
+          />
+        ),
         static: true,
         title: translate('proofRequest.title'),
       }}

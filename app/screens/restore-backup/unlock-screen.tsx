@@ -62,7 +62,12 @@ const UnlockScreen: FC = () => {
   return (
     <LoadingResultScreen
       header={{
-        leftItem: <HeaderCloseModalButton onPress={onClose} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={onClose}
+            testID="RestoreBackupUnlockScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         title: translate('restoreBackup.unlock.title'),
       }}
