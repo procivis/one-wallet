@@ -191,6 +191,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
             <ShareDisclaimer
               action={translate('common.accept')}
               ppUrl={trustEntity?.privacyUrl}
+              testID="CredentialOfferScreen.disclaimer"
               tosUrl={trustEntity?.termsUrl}
             />
           </>
