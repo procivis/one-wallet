@@ -50,7 +50,12 @@ const AppInformationScreen: FC = () => {
             testID="AppInformationScreen.back"
           />
         ),
-        rightItem: <HeaderInfoButton onPress={infoPressHandler} />,
+        rightItem: (
+          <HeaderInfoButton
+            onPress={infoPressHandler}
+            testID="AppInformationScreen.header.info"
+          />
+        ),
         title: translate('appInformation.title'),
       }}
       style={{ backgroundColor: colorScheme.white }}

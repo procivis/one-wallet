@@ -269,7 +269,6 @@ describe('ONE-614: Proof request', () => {
   });
 
   // Fail. Credential status does not update
-  // eslint-disable-next-line jest/no-disabled-tests
   describe.skip('ONE-620: Revoked credentials', () => {
     const credentialIds: string[] = [];
 

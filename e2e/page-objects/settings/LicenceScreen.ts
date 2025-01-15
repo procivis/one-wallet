@@ -4,6 +4,6 @@ export default abstract class LicencesScreen {
   }
 
   static get back() {
-    return element(by.id('Screen.back'));
+    return element(by.id('LicencesScreen.header.back'));
   }
 }

@@ -14,9 +14,13 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 export type HeaderButtonProps = {
   onPress?: () => void;
+  testID: string;
 };
 
-export const HeaderBackButton: FC<HeaderButtonProps> = ({ onPress }) => {
+export const HeaderBackButton: FC<HeaderButtonProps> = ({
+  onPress,
+  testID,
+}) => {
   const navigation = useNavigation();
   const handleBackButtonPress = useCallback(() => {
     if (onPress) {
@@ -27,10 +31,13 @@ export const HeaderBackButton: FC<HeaderButtonProps> = ({ onPress }) => {
   if (!navigation.canGoBack) {
     return null;
   }
-  return <BackButton onPress={handleBackButtonPress} testID="Screen.back" />;
+  return <BackButton onPress={handleBackButtonPress} testID={testID} />;
 };
 
-export const HeaderCloseModalButton: FC<HeaderButtonProps> = ({ onPress }) => {
+export const HeaderCloseModalButton: FC<HeaderButtonProps> = ({
+  onPress,
+  testID,
+}) => {
   const navigation = useNavigation<RootNavigationProp>();
   const handleCloseButtonPress = useCallback(() => {
     if (onPress) {
@@ -44,39 +51,26 @@ export const HeaderCloseModalButton: FC<HeaderButtonProps> = ({ onPress }) => {
     <BackButton
       icon={BackButtonIcon.Close}
       onPress={handleCloseButtonPress}
-      testID="Screen.closeButton"
-    />
-  );
-};
-
-export const HeaderModalBackButton: FC<HeaderButtonProps> = ({ onPress }) => {
-  const navigation = useNavigation<RootNavigationProp>();
-  const handleCloseButtonPress = useCallback(() => {
-    if (onPress) {
-      return onPress();
-    }
-    navigation.goBack();
-  }, [onPress, navigation]);
-  return (
-    <BackButton
-      icon={BackButtonIcon.Close}
-      onPress={handleCloseButtonPress}
-      testID="Screen.closeButton"
+      testID={testID}
     />
   );
 };
 
 export type HeaderInfoButtonProps = {
   onPress: () => void;
+  testID: string;
 };
 
-export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({ onPress }) => {
+export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({
+  onPress,
+  testID,
+}) => {
   return (
     <GhostButton
       accessibilityLabel={translate('accessibility.nav.info')}
       icon={InfoIcon}
       onPress={onPress}
-      testID="Screen.infoButton"
+      testID={testID}
     />
   );
 };

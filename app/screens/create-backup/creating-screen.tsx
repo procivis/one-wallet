@@ -121,11 +121,19 @@ const CreatingScreen: FC = () => {
           : undefined
       }
       header={{
-        leftItem: <HeaderCloseModalButton onPress={handleClose} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={handleClose}
+            testID="CreateBackupProcessingScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         rightItem:
           state === LoaderViewState.Warning ? (
-            <HeaderInfoButton onPress={infoPressHandler} />
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID="CreateBackupProcessingScreen.header.info"
+            />
           ) : undefined,
         title: translate('createBackup.processing.title'),
       }}

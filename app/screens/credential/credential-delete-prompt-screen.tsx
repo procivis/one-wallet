@@ -37,7 +37,12 @@ const CredentialDeletePromptScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem: <HeaderCloseModalButton onPress={navigation.goBack} />,
+        leftItem: (
+          <HeaderCloseModalButton
+            onPress={navigation.goBack}
+            testID="CredentialDeletePromptScreen.header.close"
+          />
+        ),
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
         title: translate('credentialDelete.title'),

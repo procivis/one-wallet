@@ -71,7 +71,12 @@ const PreviewScreen: FC = () => {
       testID="RestoreBackupPreviewScreen"
     >
       <NavigationHeader
-        leftItem={<HeaderCloseModalButton onPress={onClose} />}
+        leftItem={
+          <HeaderCloseModalButton
+            onPress={onClose}
+            testID="RestoreBackupPreviewScreen.header.close"
+          />
+        }
         modalHandleVisible={Platform.OS === 'ios'}
         title={translate('restoreBackup.preview.title')}
       />
