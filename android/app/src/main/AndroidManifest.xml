@@ -42,8 +42,8 @@
 
         <data android:scheme="openid-credential-offer" />
         <data android:scheme="openid4vp" />
-        <data android:scheme="@string/CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME" />
-        <data android:scheme="@string/CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME" />
+        <data android:scheme="${customOpenIDURLScheme}" />
+        <data android:scheme="${customOpenIDCredentialOfferURLScheme}" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
