@@ -103,6 +103,11 @@ android {
         versionCode 1
         versionName "1.43"
 
+        manifestPlaceholders = [
+            customOpenIDURLScheme: project.config.get("CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME") ?: "",
+            customOpenIDCredentialOfferURLScheme: project.config.get("CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME") ?: "",
+        ]
+
         // detox
         testBuildType System.getProperty('testBuildType', 'debug')
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
