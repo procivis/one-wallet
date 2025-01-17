@@ -20,6 +20,7 @@ import { RESULTS } from 'react-native-permissions';
 import BleWarning from '../../components/ble/ble-warning';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useBlePermissions } from '../../hooks/ble-permissions';
+import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -29,6 +30,8 @@ const QRCodeShareScreen: FunctionComponent = () => {
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const isFocused = useIsFocused();
+  useCapturePrevention();
+
   const { mutateAsync: proposeProof } = useProposeProof();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(ExchangeProtocol.ISO_MDL);

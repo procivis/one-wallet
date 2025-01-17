@@ -14,6 +14,7 @@ import React, {
   useState,
 } from 'react';
 
+import { useCapturePrevention } from '../../hooks/capture-prevention';
 import {
   PIN_CODE_LENGTH,
   usePinCodeEntry,
@@ -53,6 +54,8 @@ const PinCodeScreenContent = forwardRef<
     },
     ref,
   ) => {
+    useCapturePrevention();
+
     const entry = usePinCodeEntry(onPinEntered);
 
     const actionsRef = useRef<PinCodeScreenActions>(null);
