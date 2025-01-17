@@ -19,6 +19,7 @@ import { Code } from 'react-native-vision-camera';
 import { ScannerScreen } from '../../components/vision-camera/vision-camera';
 import { config } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
+import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { useInvitationHandling } from '../../hooks/navigation/deep-link';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
@@ -31,6 +32,8 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   const [code, setCode] = useState<string>();
   const { status: cameraPermissionStatus, request: requestCameraPermission } =
     useCameraPermission();
+
+  useCapturePrevention();
 
   const handleCodeScan = useCallback(
     (scannedCode: Code[]) => {
