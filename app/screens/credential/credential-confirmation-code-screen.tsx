@@ -12,6 +12,7 @@ import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { translate } from '../../i18n';
 import {
   IssueCredentialNavigationProp,
@@ -26,6 +27,9 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
     >();
   const route =
     useRoute<IssueCredentialRouteProp<'CredentialConfirmationCode'>>();
+
+  useCapturePrevention();
+
   const { credentialId, interactionId, txCode, invalidCode } = route.params;
   const [code, setCode] = useState<string | undefined>(invalidCode);
   const isInputLengthValid = code && code.length === txCode.length;
