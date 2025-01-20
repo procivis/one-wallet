@@ -47,7 +47,10 @@ if (!__DEV__) {
       return breadcrumb;
     },
     dsn: 'https://b98a05fd083c47f1a770d74d04df0425@o153694.ingest.sentry.io/4505114160201728',
-    environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}`,
+    enableAppHangTracking: !Config.DETOX_BUILD,
+    environment: `${Config.CONFIG_NAME}-${Config.ENVIRONMENT}${
+      Config.DETOX_BUILD ? '-detox' : ''
+    }`,
     maxBreadcrumbs: 50,
   });
 }
