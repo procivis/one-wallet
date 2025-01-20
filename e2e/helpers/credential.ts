@@ -128,6 +128,7 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
+  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(15000);
   await CredentialOfferScreen.credentialCard.verifyIsVisible();
   const holderCredentialId =
     (
@@ -145,8 +146,6 @@ export const credentialIssuance = async (
   const credentialId = await offerCredentialAndReviewCredentialOfferScreen(
     data,
   );
-
-  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(15000);
 
   if (action === CredentialAction.ACCEPT) {
     await acceptCredentialTestCase(data, expectedResult, visibleText);
