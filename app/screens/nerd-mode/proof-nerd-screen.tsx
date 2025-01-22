@@ -79,6 +79,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         did: proofInput.credential?.issuerDid,
         entityLabels: entityLabels,
         role: TrustEntityRoleEnum.ISSUER,
+        testID: `ProofRequestNerdView.issuerTrustEntity.${proofInput.credential?.id}`,
       },
       {
         attributeKey: translate('proofRequest.createDate'),
@@ -125,6 +126,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         did: proofDetail.verifierDid,
         entityLabels: entityLabels,
         role: TrustEntityRoleEnum.VERIFIER,
+        testID: 'ProofRequestNerdView.verifierTrustEntity',
       }}
       labels={attributesLabels}
       onClose={nav.goBack}
@@ -139,7 +141,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
           title: translate('common.credentials'),
         }),
       ]}
-      testID="ProofRequest.nerdView"
+      testID="ProofRequestNerdView"
       title={translate('credentialDetail.action.moreInfo')}
     />
   );
