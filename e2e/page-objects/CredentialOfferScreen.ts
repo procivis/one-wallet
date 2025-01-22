@@ -22,6 +22,10 @@ export default class CredentialOfferScreen {
     return element(by.id('CredentialOfferScreen.header.close'));
   }
 
+  static get disclaimer() {
+    return element(by.id('CredentialOfferScreen.disclaimer'));
+  }
+
   static get acceptButton() {
     return element(by.id('CredentialOfferScreen.accept'));
   }

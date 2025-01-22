@@ -16,8 +16,14 @@ import CredentialDetailScreen, {
 } from '../../page-objects/credential/CredentialDetailScreen';
 import CredentialNerdScreen from '../../page-objects/credential/CredentialNerdScreen';
 import CredentialOfferScreen from '../../page-objects/CredentialOfferScreen';
+import HistoryDetailScreen from '../../page-objects/HistoryDetailScreen';
+import HistoryScreen from '../../page-objects/HistoryScreen';
 import ProofRequestNerdScreen from '../../page-objects/proof-request/ProofRequestNerdScreen';
+import ProofRequestSharingNerdScreen from '../../page-objects/proof-request/ProofRequestSharingNerdScreen';
 import ProofRequestSharingScreen from '../../page-objects/proof-request/ProofRequestSharingScreen';
+import SettingsScreen, {
+  SettingsButton,
+} from '../../page-objects/SettingsScreen';
 import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { DidDetailDTO } from '../../types/did';
@@ -42,12 +48,19 @@ import {
 } from '../../utils/enums';
 import { launchApp } from '../../utils/init';
 
+interface credentialTrustEntityInfo {
+  credentialId: string;
+  didDetail?: DidDetailDTO;
+  isTrustedEntity: boolean;
+  trustEntity?: TrustEntityResponseDTO;
+}
+
 const issueCredentialWithDidTrustEntityAndVerify = async (
   authToken: string,
   credentialSchema: CredentialSchemaResponseDTO,
   issuerDid: DidDetailDTO,
   trustEntity?: TrustEntityResponseDTO,
-) => {
+): Promise<string> => {
   const data = {
     authToken: authToken,
     credentialSchema: credentialSchema,
@@ -69,9 +82,30 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
         trustEntity.did.did,
       );
     }
+    await CredentialOfferScreen.scrollTo(CredentialOfferScreen.disclaimer);
+    if (trustEntity.termsUrl && trustEntity.privacyUrl) {
+      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+        'By tapping on “accept” you agree to the Terms of services and Privacy policy provided by this entity.',
+      );
+    } else if (trustEntity.termsUrl) {
+      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+        'By tapping on “accept” you agree to the Terms of services provided by this entity.',
+      );
+    } else if (trustEntity.privacyUrl) {
+      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+        'By tapping on “accept” you agree to the Privacy policy provided by this entity.',
+      );
+    } else {
+      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+        'No terms of service or privacy policy provided.',
+      );
+    }
   } else {
     await CredentialOfferScreen.trustEntity.verifyEntityDetailHeaderDefault(
       issuerDid.did,
+    );
+    await expect(CredentialOfferScreen.disclaimer).toHaveText(
+      'No terms of service or privacy policy provided.',
     );
   }
   await CredentialOfferScreen.infoButton.tap();
@@ -122,6 +156,8 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     );
   }
   await CredentialNerdScreen.back.tap();
+
+  return holderCredentialId;
 };
 
 const proofSharingWithDidTrustEntityAndVerify = async (
@@ -181,6 +217,44 @@ const proofSharingWithDidTrustEntityAndVerify = async (
     );
   }
   await ProofRequestSharingScreen.infoButton.tap();
+  await expect(ProofRequestSharingNerdScreen.screen).toBeVisible();
+
+  if (trustEntity) {
+    if (
+      trustEntity.role === TrustEntityRole.BOTH ||
+      trustEntity.role === TrustEntityRole.VERIFIER
+    ) {
+      await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
+        trustEntity,
+      );
+    } else {
+      await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
+        trustEntity.did.did,
+      );
+    }
+  } else {
+    await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
+      verifierDid.did,
+    );
+  }
+  await ProofRequestSharingNerdScreen.close();
+  await shareCredential(LoaderViewState.Success, proofRequestData);
+};
+
+const verifyNewestProofRequestOnHistory = async (
+  verifierDid: DidDetailDTO,
+  trustEntity?: TrustEntityResponseDTO,
+  credentialTrustEntityList?: credentialTrustEntityInfo[],
+) => {
+  await expect(WalletScreen.screen).toBeVisible();
+  await WalletScreen.settingsButton.tap();
+  await expect(SettingsScreen.screen).toBeVisible();
+  await SettingsScreen.button(SettingsButton.HISTORY).tap();
+  await expect(HistoryScreen.screen).toBeVisible();
+
+  await HistoryScreen.history(0).element.tap();
+  await expect(HistoryDetailScreen.screen).toBeVisible();
+  await HistoryDetailScreen.infoButton.tap();
   await expect(ProofRequestNerdScreen.screen).toBeVisible();
 
   if (trustEntity) {
@@ -188,63 +262,49 @@ const proofSharingWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.VERIFIER
     ) {
-      await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
+      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader(
         trustEntity,
       );
     } else {
-      await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
+      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeaderDefault(
         trustEntity.did.did,
       );
     }
   } else {
-    await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
+    await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeaderDefault(
       verifierDid.did,
     );
   }
+
+  if (credentialTrustEntityList) {
+    for (const credentialTrustEntity of credentialTrustEntityList) {
+      await ProofRequestNerdScreen.scrollToCredentialView(
+        credentialTrustEntity.credentialId,
+      );
+      if (
+        credentialTrustEntity.isTrustedEntity &&
+        credentialTrustEntity.trustEntity
+      ) {
+        await ProofRequestNerdScreen.trustEntityByCredentialID(
+          credentialTrustEntity.credentialId,
+        ).verifyEntityDetailHeader(credentialTrustEntity.trustEntity);
+      } else if (credentialTrustEntity.didDetail) {
+        await ProofRequestNerdScreen.trustEntityByCredentialID(
+          credentialTrustEntity.credentialId,
+        ).verifyEntityDetailHeaderDefault(credentialTrustEntity.didDetail.did);
+      }
+    }
+  }
+
   await ProofRequestNerdScreen.close();
-  await shareCredential(LoaderViewState.Success, proofRequestData);
+  await expect(HistoryDetailScreen.screen).toBeVisible();
+  await HistoryDetailScreen.back.tap();
+  await expect(HistoryScreen.screen).toBeVisible();
+  await HistoryScreen.back.tap();
+  await expect(SettingsScreen.screen).toBeVisible();
+  await SettingsScreen.back.tap();
+  await expect(WalletScreen.screen).toBeVisible();
 };
-
-// const verifyNewestProofRequestOnHistory = async (
-//   verifierDid: DidDetailDTO,
-//   trustEntity?: TrustEntityResponseDTO,
-// ) => {
-//   await expect(WalletScreen.screen).toBeVisible();
-//   await WalletScreen.settingsButton.tap();
-//   await expect(SettingsScreen.screen).toBeVisible();
-//   await SettingsScreen.button(SettingsButton.HISTORY).tap();
-//   await expect(HistoryScreen.screen).toBeVisible();
-
-//   await HistoryScreen.history(0).element.tap();
-//   await expect(HistoryDetailScreen.screen).toBeVisible();
-//   await HistoryDetailScreen.infoButton.tap();
-//   await expect(ProofRequestNerdScreen.screen).toBeVisible();
-
-//   if (trustEntity) {
-//     if (
-//       trustEntity.role === TrustEntityRole.BOTH ||
-//       trustEntity.role === TrustEntityRole.VERIFIER
-//     ) {
-//       await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
-//         trustEntity,
-//       );
-//     } else {
-//       await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-//         trustEntity.did.did,
-//       );
-//     }
-//   } else {
-//     await ProofRequestNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-//       verifierDid.did,
-//     );
-//   }
-//   await ProofRequestNerdScreen.close();
-
-//   await HistoryDetailScreen.back.tap();
-//   await expect(SettingsScreen.screen).toBeVisible();
-//   await SettingsScreen.back.tap();
-//   await expect(WalletScreen.screen).toBeVisible();
-// };
 
 describe('Credential issuance with trust entity', () => {
   let authToken: string;
@@ -406,23 +466,41 @@ describe('Credential issuance with trust entity', () => {
     });
 
     it('Combined proof request', async () => {
-      await credentialIssuance({
+      const credentialWithTrustEntityId = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         didData: issuerTrustEntity.did,
         exchange: Exchange.OPENID4VC,
       });
-      await issueCredentialWithDidTrustEntityAndVerify(
-        authToken,
-        credentialSchemaSD_JWT,
-        didNotInTrustAnchor,
-      );
+      const credentialWithoutTrustEntityId =
+        await issueCredentialWithDidTrustEntityAndVerify(
+          authToken,
+          credentialSchemaSD_JWT,
+          didNotInTrustAnchor,
+        );
 
       await proofSharingWithDidTrustEntityAndVerify(
         authToken,
         combinedProofSchema.id,
         bothRoleTrustEntity.did,
         bothRoleTrustEntity,
+      );
+
+      await verifyNewestProofRequestOnHistory(
+        bothRoleTrustEntity.did,
+        bothRoleTrustEntity,
+        [
+          {
+            credentialId: credentialWithTrustEntityId,
+            isTrustedEntity: true,
+            trustEntity: issuerTrustEntity,
+          },
+          {
+            credentialId: credentialWithoutTrustEntityId,
+            didDetail: didNotInTrustAnchor,
+            isTrustedEntity: false,
+          },
+        ],
       );
     });
   });

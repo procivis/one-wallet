@@ -10,9 +10,9 @@ export default function EntityDetailHeader(screenTestID: string) {
           element(by.id(`${screenTestID}.avatar.logo`)),
         ).toBeVisible();
       }
-      await expect(
-        element(by.id(`${screenTestID}.statusIcon.trusted`)),
-      ).toBeVisible();
+      await waitFor(element(by.id(`${screenTestID}.statusIcon.trusted`)))
+        .toBeVisible()
+        .withTimeout(10000);
       await expect(element(by.id(`${screenTestID}.entityName`))).toHaveText(
         trustEntity.name,
       );

@@ -21,7 +21,7 @@ export default function TrustEntityDetail(screenTestID: string) {
         await expect(element(by.text(`Privacy policy`))).toBeVisible();
       }
       await expect(element(by.id('trustRegistry.attributeValue'))).toHaveText(
-        'Mobile trust list',
+        'Dev Trust List',
       );
       if (await ElementUtil().isElementVisible('issuerDID.expandValueButton')) {
         await element(by.id(`issuerDID.expandValueButton`)).tap();
