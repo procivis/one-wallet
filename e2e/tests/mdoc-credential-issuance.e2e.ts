@@ -196,7 +196,7 @@ describe('ONE-601: Credential issuance', () => {
         authToken,
         RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
       );
-      credentialId = await credentialIssuance({
+      const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         claimValues: mDocCredentialClaims(mdocSchema),
         credentialSchema: mdocSchema,
@@ -206,6 +206,7 @@ describe('ONE-601: Credential issuance', () => {
         },
         exchange: Exchange.OPENID4VC,
       });
+      credentialId = issuerHolderCredentialIds.issuerCredentialId;
     });
 
     it('Suspend mDoc credential with infinite date', async () => {

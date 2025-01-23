@@ -104,12 +104,13 @@ describe('ONE-620: Credential revocation', () => {
           didMethod,
           keyType,
         });
-        credentialId = await credentialIssuance({
+        const issuerHolderCredentialIds = await credentialIssuance({
           authToken,
           credentialSchema,
           didData,
           exchange,
         });
+        credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
 
       it('Suspend credential', async () => {
@@ -164,12 +165,13 @@ describe('ONE-620: Credential revocation', () => {
           didMethod,
           keyType,
         });
-        credentialId = await credentialIssuance({
+        const issuerHolderCredentialIds = await credentialIssuance({
           authToken,
           credentialSchema,
           didData,
           exchange,
         });
+        credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
 
       it('Suspend credential', async () => {

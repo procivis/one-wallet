@@ -139,7 +139,7 @@ describe('ONE-614: Proof request', () => {
         credentialSchemas: [jwtCredentialSchema, sdjwtCredentialSchema],
       });
 
-      jwtCredentialId = await credentialIssuance({
+      const jwtCredentialIds = await credentialIssuance({
         authToken: authToken,
         claimValues: [
           {
@@ -156,7 +156,7 @@ describe('ONE-614: Proof request', () => {
         credentialSchema: jwtCredentialSchema,
         exchange: Exchange.OPENID4VC,
       });
-
+      jwtCredentialId = jwtCredentialIds.issuerCredentialId;
       await credentialIssuance({
         authToken: authToken,
         claimValues: [
@@ -276,12 +276,12 @@ describe('ONE-614: Proof request', () => {
       await launchApp({ delete: true });
       // TODO Fix another tests and increase the number of credentials
       for (let i = 0; i < 3; i++) {
-        const credentialId = await credentialIssuance({
+        const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchema,
           exchange: Exchange.OPENID4VC,
         });
-        credentialIds.push(credentialId);
+        credentialIds.push(issuerHolderCredentialIds.issuerCredentialId);
       }
     });
 
@@ -447,11 +447,12 @@ describe('ONE-614: Proof request', () => {
         credentialSchemas: [pictureCredentialSchema],
       });
 
-      credentialId = await credentialIssuance({
+      const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: pictureCredentialSchema,
         exchange: Exchange.OPENID4VC,
       });
+      credentialId = issuerHolderCredentialIds.issuerCredentialId;
     });
 
     it('displays picture link on sharing screen', async () => {

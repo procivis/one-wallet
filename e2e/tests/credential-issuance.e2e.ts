@@ -104,11 +104,12 @@ describe('ONE-601: Credential issuance', () => {
 
     describe('Suspend credential', () => {
       beforeEach(async () => {
-        credentialId = await credentialIssuance({
+        const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
           exchange: Exchange.OPENID4VC,
         });
+        credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
 
       it('Suspended credential with specified date', async () => {
@@ -193,13 +194,13 @@ describe('ONE-601: Credential issuance', () => {
 
     describe('Revoke credential', () => {
       beforeEach(async () => {
-        credentialId = await credentialIssuance({
+        const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
           exchange: Exchange.OPENID4VC,
         });
+        credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
-
       it('Revoke credential', async () => {
         await revokeCredential(credentialId, authToken);
         await reloadApp({
