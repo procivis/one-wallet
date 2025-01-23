@@ -17,6 +17,6 @@ export default abstract class ProofRequestSharingNerdScreen {
     await waitFor(element)
       .toBeVisible()
       .whileElement(by.id('ProofRequestNerdView'))
-      .scroll(100, 'down');
+      .scroll(200, 'down');
   }
 }

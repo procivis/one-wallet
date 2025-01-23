@@ -67,7 +67,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     didData: issuerDid,
     exchange: Exchange.OPENID4VC,
   };
-  const holderCredentialId =
+  const issuerHolderCredentialIds =
     await offerCredentialAndReviewCredentialOfferScreen(data);
   if (trustEntity) {
     if (
@@ -131,7 +131,9 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   }
   await CredentialNerdScreen.back.tap();
   await acceptCredentialTestCase(data, LoaderViewState.Success);
-  await WalletScreen.openDetailScreenByCredentialId(holderCredentialId);
+  await WalletScreen.openDetailScreenByCredentialId(
+    issuerHolderCredentialIds.holderCredentialId,
+  );
   await expect(CredentialDetailScreen.screen).toBeVisible();
   await CredentialDetailScreen.actionButton.tap();
   await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
@@ -157,7 +159,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   }
   await CredentialNerdScreen.back.tap();
 
-  return holderCredentialId;
+  return issuerHolderCredentialIds.holderCredentialId;
 };
 
 const proofSharingWithDidTrustEntityAndVerify = async (
@@ -317,6 +319,7 @@ describe('Credential issuance with trust entity', () => {
   describe('Issue credentials with trust entity', () => {
     let credentialSchemaSD_JWT: CredentialSchemaResponseDTO;
     let credentialSchemaJWT: CredentialSchemaResponseDTO;
+    let credentialSchemaJSONLD: CredentialSchemaResponseDTO;
     let proofSchema: ProofSchemaResponseDTO;
     let combinedProofSchema: ProofSchemaResponseDTO;
     let issuerTrustEntity: TrustEntityResponseDTO;
@@ -332,11 +335,15 @@ describe('Credential issuance with trust entity', () => {
         format: CredentialFormat.JWT,
         revocationMethod: RevocationMethod.STATUSLIST2021,
       });
+      credentialSchemaJSONLD = await createCredentialSchema(authToken, {
+        format: CredentialFormat.JSON_LD_CLASSIC,
+        revocationMethod: RevocationMethod.NONE,
+      });
       proofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [credentialSchemaSD_JWT],
       });
       combinedProofSchema = await proofSchemaCreate(authToken, {
-        credentialSchemas: [credentialSchemaSD_JWT, credentialSchemaJWT],
+        credentialSchemas: [credentialSchemaJWT, credentialSchemaJSONLD],
       });
       const issuerDid = await createDidWithKey(authToken, {
         didMethod: DidMethod.KEY,
@@ -466,7 +473,7 @@ describe('Credential issuance with trust entity', () => {
     });
 
     it('Combined proof request', async () => {
-      const credentialWithTrustEntityId = await credentialIssuance({
+      const credentialWithTrustEntityIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         didData: issuerTrustEntity.did,
@@ -475,7 +482,7 @@ describe('Credential issuance with trust entity', () => {
       const credentialWithoutTrustEntityId =
         await issueCredentialWithDidTrustEntityAndVerify(
           authToken,
-          credentialSchemaSD_JWT,
+          credentialSchemaJSONLD,
           didNotInTrustAnchor,
         );
 
@@ -491,7 +498,7 @@ describe('Credential issuance with trust entity', () => {
         bothRoleTrustEntity,
         [
           {
-            credentialId: credentialWithTrustEntityId,
+            credentialId: credentialWithTrustEntityIds.holderCredentialId,
             isTrustedEntity: true,
             trustEntity: issuerTrustEntity,
           },

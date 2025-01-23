@@ -134,7 +134,10 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
     (
       await getIdentifier(element(by.id(/^HolderCredentialID.value.[\w-]+$/)))
     )?.replace('HolderCredentialID.value.', '') || '';
-  return holderCredentialId;
+  return {
+    holderCredentialId: holderCredentialId,
+    issuerCredentialId: credentialId,
+  };
 };
 
 export const credentialIssuance = async (
@@ -143,7 +146,7 @@ export const credentialIssuance = async (
   expectedResult: LoaderViewState = LoaderViewState.Success,
   visibleText?: string,
 ) => {
-  const credentialId = await offerCredentialAndReviewCredentialOfferScreen(
+  const credentialIds = await offerCredentialAndReviewCredentialOfferScreen(
     data,
   );
 
@@ -152,5 +155,5 @@ export const credentialIssuance = async (
   } else {
     await rejectCredentialTestCase();
   }
-  return credentialId;
+  return credentialIds;
 };
