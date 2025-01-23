@@ -86,7 +86,7 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('ONE-1873: Accessing Advanced Credential Details ("Nerd Mode")', async () => {
-      const credentialId = await credentialIssuance({
+      const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
         didFilter: {
@@ -94,6 +94,7 @@ describe('ONE-2014: Credential design', () => {
         },
         exchange: Exchange.OPENID4VC,
       });
+      const credentialId = issuerHolderCredentialIds.issuerCredentialId;
       await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible();
       await CredentialDetailScreen.actionButton.tap();
@@ -183,11 +184,12 @@ describe('ONE-2014: Credential design', () => {
 
     // TODO
     it('Test credential history list', async () => {
-      const credentialId = await credentialIssuance({
+      const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
         exchange: Exchange.OPENID4VC,
       });
+      const credentialId = issuerHolderCredentialIds.issuerCredentialId;
 
       await suspendCredential(credentialId, authToken);
 
