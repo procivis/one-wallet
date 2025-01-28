@@ -1,10 +1,23 @@
 import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 
+const PinCodeSecurityModel = types.model({
+  failedAttempts: types.number,
+  lastAttemptTimestamp: types.maybe(types.number),
+});
+
 export const UserSettingsStoreModel = types
   .model('UserSettingsStore', {
     biometrics: types.boolean,
+    pinCodeSecurity: PinCodeSecurityModel,
   })
   .actions((self) => ({
+    setPinCodeSecurity: (
+      failedAttempts: number,
+      lastAttemptTimestamp: number | undefined,
+    ) => {
+      self.pinCodeSecurity.failedAttempts = failedAttempts;
+      self.pinCodeSecurity.lastAttemptTimestamp = lastAttemptTimestamp;
+    },
     switchBiometrics: (enabled: boolean) => {
       self.biometrics = enabled;
     },
