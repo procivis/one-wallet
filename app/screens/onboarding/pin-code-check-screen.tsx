@@ -1,6 +1,8 @@
 import {
+  PinLockModal,
   reportTraceInfo,
   useBlockOSBackNavigation,
+  usePinCodeSecurity,
 } from '@procivis/one-react-native-components';
 import {
   useFocusEffect,
@@ -35,6 +37,7 @@ import {
   RootNavigationProp,
   RootRouteProp,
 } from '../../navigators/root/root-routes';
+import { pinLockModalLabels } from '../../utils/pinLock';
 
 const hideSplashAndroidOnly = () =>
   Platform.OS === 'android' ? hideSplashScreen() : undefined;
@@ -49,11 +52,23 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   useBlockOSBackNavigation();
 
   const biometry = useBiometricType();
-  const { userSettings } = useStores();
+  const {
+    userSettings: {
+      biometrics,
+      pinCodeSecurity: { failedAttempts, lastAttemptTimestamp },
+      setPinCodeSecurity,
+    },
+  } = useStores();
 
   const [error, setError] = useState<string>();
 
   const validatePin = usePinCodeValidation();
+  const { addFailedAttempt, blockRemainingTime, isBlocked, resetPinSecurity } =
+    usePinCodeSecurity(
+      failedAttempts,
+      lastAttemptTimestamp,
+      setPinCodeSecurity,
+    );
 
   const handleInitialDeepLink = useInitialDeepLinkHandling();
   const onCheckPassed = useCallback(() => {
@@ -66,13 +81,15 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     (userEntry: string) => {
       if (validatePin(userEntry)) {
         onCheckPassed();
+        resetPinSecurity();
       } else {
         setError(translate('onboarding.pinCodeScreen.check.error'));
         screen.current?.clearEntry();
         screen.current?.shakeKeypad();
+        addFailedAttempt();
       }
     },
-    [onCheckPassed, validatePin],
+    [addFailedAttempt, onCheckPassed, resetPinSecurity, validatePin],
   );
 
   const faceIdPermissions = useFaceIDPermission();
@@ -80,20 +97,26 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     biometry &&
       faceIdPermissions.status &&
       faceIdPermissions.status !== RESULTS.BLOCKED &&
-      userSettings.biometrics &&
+      biometrics &&
       !route.params?.disableBiometry,
   );
 
   const runBiometricCheck = useCallback(() => {
+    if (isBlocked) {
+      return;
+    }
     biometricAuthenticate({
       cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
       promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
     })
-      .then(() => onCheckPassed())
+      .then(() => {
+        onCheckPassed();
+        resetPinSecurity();
+      })
       .catch((e) => {
         reportTraceInfo('Wallet', 'Biometric login failed', e);
       });
-  }, [onCheckPassed]);
+  }, [isBlocked, onCheckPassed, resetPinSecurity]);
 
   useEffect(() => {
     if (biometricCheckEnabled) {
@@ -120,16 +143,24 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   }, [biometricCheckEnabled, navigation, runBiometricCheck]);
 
   return (
-    <PinCodeScreenContent
-      biometry={biometricCheckEnabled ? biometry : undefined}
-      error={error}
-      instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
-      onBiometricPress={runBiometricCheck}
-      onPinEntered={onPinEntered}
-      ref={screen}
-      testID="PinCodeCheckScreen"
-      title={translate('onboarding.pinCodeScreen.check.title')}
-    />
+    <>
+      <PinCodeScreenContent
+        biometry={biometricCheckEnabled ? biometry : undefined}
+        error={error}
+        instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
+        onBiometricPress={runBiometricCheck}
+        onPinEntered={onPinEntered}
+        ref={screen}
+        testID="PinCodeCheckScreen"
+        title={translate('onboarding.pinCodeScreen.check.title')}
+      />
+      <PinLockModal
+        attempts={failedAttempts}
+        labels={pinLockModalLabels()}
+        open={isBlocked}
+        seconds={blockRemainingTime}
+      />
+    </>
   );
 };
 
