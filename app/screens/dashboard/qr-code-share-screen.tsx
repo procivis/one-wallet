@@ -8,12 +8,23 @@ import {
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
+  useProofRetract,
   useProofState,
   useProposeProof,
 } from '@procivis/one-react-native-components';
-import { OneError, ProofStateEnum } from '@procivis/react-native-one-core';
+import {
+  OneError,
+  ProofStateEnum,
+  ProposeProofResponse,
+} from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
 
@@ -24,22 +35,23 @@ import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { useIsAppActive } from '../../utils/appState';
 
 const QRCodeShareScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const isFocused = useIsFocused();
+  const isAppActive = useIsAppActive();
   useCapturePrevention();
 
   const { mutateAsync: proposeProof } = useProposeProof();
+  const { mutateAsync: retractProof } = useProofRetract();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(ExchangeProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
-  const [shareUrl, setShareUrl] = useState<string>();
-  const [proofId, setProofId] = useState<string>();
-  const [interactionId, setInteractionId] = useState<string>();
-  const { data: proofState } = useProofState(proofId, true);
+  const [proof, setProof] = useState<ProposeProofResponse>();
+  const { data: proofState } = useProofState(proof?.proofId, isFocused);
 
   useEffect(() => {
     if (permissionStatus !== 'granted') {
@@ -55,14 +67,13 @@ const QRCodeShareScreen: FunctionComponent = () => {
   }, [isFocused, checkPermissions, requestPermission]);
 
   useEffect(() => {
-    if (adapterDisabled) {
+    if (adapterDisabled || proof || !isAppActive || !isFocused) {
       return;
     }
+
     proposeProof(ExchangeProtocol.ISO_MDL)
       .then((result) => {
-        setProofId(result.proofId);
-        setInteractionId(result.interactionId);
-        setShareUrl(result.url);
+        setProof(result);
       })
       .catch((e: unknown) => {
         if (
@@ -72,7 +83,34 @@ const QRCodeShareScreen: FunctionComponent = () => {
           setAdapterDisabled(true);
         }
       });
-  }, [adapterDisabled, proposeProof]);
+  }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
+
+  // retract proof when app goes to background
+  useEffect(() => {
+    if (
+      isAppActive === false &&
+      proof &&
+      proofState === ProofStateEnum.PENDING
+    ) {
+      retractProof(proof.proofId).then(() => {
+        setProof(undefined);
+      });
+    }
+  }, [isAppActive, retractProof, proof, proofState]);
+
+  // retract proof when closing the screen
+  const shouldRetractOnLeaving = useRef(false);
+  useEffect(() => {
+    shouldRetractOnLeaving.current = proofState === ProofStateEnum.PENDING;
+  }, [proofState]);
+  useEffect(
+    () => () => {
+      if (proof && shouldRetractOnLeaving.current) {
+        retractProof(proof.proofId);
+      }
+    },
+    [retractProof, proof],
+  );
 
   const qrCodeContent = useMemo(() => {
     const status = adapterDisabled ? 'disabled' : permissionStatus;
@@ -81,27 +119,29 @@ const QRCodeShareScreen: FunctionComponent = () => {
       return <BleWarning status={status} />;
     }
 
-    return shareUrl ? (
-      <QrCode content={shareUrl} />
+    return proof?.url ? (
+      <QrCode content={proof.url} />
     ) : (
       <ActivityIndicator animate={isFocused} />
     );
-  }, [adapterDisabled, permissionStatus, shareUrl, isFocused]);
+  }, [adapterDisabled, permissionStatus, proof, isFocused]);
 
   useEffect(() => {
-    if (!proofId || !interactionId || !proofState) {
-      return;
-    }
-    if (proofState === ProofStateEnum.REQUESTED) {
+    if (proof && proofState === ProofStateEnum.REQUESTED) {
       rootNavigation.navigate('CredentialManagement', {
         params: {
-          params: { request: { interactionId, proofId } },
+          params: {
+            request: {
+              interactionId: proof.interactionId,
+              proofId: proof.proofId,
+            },
+          },
           screen: 'ProofRequest',
         },
         screen: 'ShareCredential',
       });
     }
-  }, [interactionId, proofId, proofState, rootNavigation]);
+  }, [proof, proofState, rootNavigation]);
 
   const testID = 'QRCodeShareScreen';
 
