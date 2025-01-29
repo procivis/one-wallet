@@ -7,7 +7,6 @@
 import {
   AccessibilityLanguageProvider,
   ONECoreContextProvider,
-  ONECoreUseType,
   reportTraceInfo,
 } from '@procivis/one-react-native-components';
 import {
@@ -57,7 +56,6 @@ export const AppNavigator = (props: NavigationProps) => {
     >
       <ONECoreContextProvider
         publisherReference={config.trustAnchorPublisherReference}
-        type={ONECoreUseType.holder}
       >
         <NavigationContainer
           onStateChange={onNavigationChange}
