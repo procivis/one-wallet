@@ -11139,6 +11139,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.product@npm:^18.10.0":
+  version: 18.10.0
+  resolution: "lodash.product@npm:18.10.0"
+  peerDependencies:
+    "@types/lodash": ^4
+    lodash: ^4
+  peerDependenciesMeta:
+    "@types/lodash":
+      optional: true
+  checksum: 02bd99c9131ad7f592ed16b766d235e928e30e87ba1feb19c81e78435b2b67af041fbdce621404255010323f3d857ede726e52c5ec42da0013eedc1c62d3a70e
+  languageName: node
+  linkType: hard
+
 "lodash.repeat@npm:^4.1.0":
   version: 4.1.0
   resolution: "lodash.repeat@npm:4.1.0"
@@ -12732,6 +12745,7 @@ __metadata:
     jetifier: "npm:1.6.6"
     license-checker-rseidelsohn: "npm:^3.1.0"
     lodash: "npm:^4.17.21"
+    lodash.product: "npm:^18.10.0"
     lottie-react-native: "npm:^7.2.2"
     metro-react-native-babel-preset: "npm:0.73.10"
     metro-react-native-babel-transformer: "npm:^0.77.0"

@@ -1,5 +1,8 @@
 /* eslint-disable jest/no-disabled-tests */
+import 'lodash.product';
+
 import { expect } from 'detox';
+import lodash from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
@@ -495,16 +498,17 @@ describe('ONE-614: Proof request', () => {
       proofExchange: [Exchange.OPENID4VC],
     };
 
-    const COMBINATIONS = SUPPORTED.credentialFormat.flatMap(
-      (credentialFormat) =>
-        SUPPORTED.issuanceExchange.flatMap((issuanceExchange) =>
-          SUPPORTED.proofExchange.flatMap<TestCombination>((proofExchange) => ({
-            credentialFormat,
-            issuanceExchange,
-            proofExchange,
-          })),
-        ),
-    );
+    const COMBINATIONS: TestCombination[] = lodash
+      .product<any>(
+        SUPPORTED.credentialFormat,
+        SUPPORTED.issuanceExchange,
+        SUPPORTED.proofExchange,
+      )
+      .map(([credentialFormat, issuanceExchange, proofExchange]) => ({
+        credentialFormat,
+        issuanceExchange,
+        proofExchange,
+      }));
 
     it.each(COMBINATIONS)(
       'Proof request: %o',

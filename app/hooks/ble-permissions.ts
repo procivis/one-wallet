@@ -16,33 +16,43 @@ import {
 
 type BLEExchange = ExchangeProtocol.OPENID4VC | ExchangeProtocol.ISO_MDL;
 
-const centralPermissions =
-  Platform.OS === 'android'
-    ? Platform.Version > 30
-      ? [
-          PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-          PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ]
-      : ([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        ] as AndroidPermission[])
-    : [PERMISSIONS.IOS.BLUETOOTH];
+const centralPermissions = (() => {
+  switch (Platform.OS) {
+    case 'android':
+      return Platform.Version > 30
+        ? [
+            PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+            PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          ]
+        : ([
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          ] as AndroidPermission[]);
 
-const peripheralPermissions =
-  Platform.OS === 'android'
-    ? Platform.Version > 30
-      ? [
-          PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE,
-          PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-        ]
-      : ([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
-        ] as AndroidPermission[])
-    : [PERMISSIONS.IOS.BLUETOOTH];
+    default:
+      return [PERMISSIONS.IOS.BLUETOOTH];
+  }
+})();
+
+const peripheralPermissions = (() => {
+  switch (Platform.OS) {
+    case 'android':
+      return Platform.Version > 30
+        ? [
+            PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE,
+            PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+          ]
+        : ([
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+          ] as AndroidPermission[]);
+
+    default:
+      return [PERMISSIONS.IOS.BLUETOOTH];
+  }
+})();
 
 export const useBlePermissions = (exchange: BLEExchange) => {
   const [interactiveStatus, setInteractiveStatus] =

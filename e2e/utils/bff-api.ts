@@ -93,25 +93,23 @@ export async function createCredentialSchema(
       fontColor: '#000000',
     },
   };
-  const schemaData: CredentialSchemaData = Object.assign(
-    {
-      allowSuspension: false,
-      claims: [
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'field',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.SD_JWT,
-      layoutType: LayoutType.CARD,
-      name: `e2e ${shortUUID()}`,
-      revocationMethod: RevocationMethod.NONE,
-    },
-    data,
-    layoutProperties ? { layoutProperties: layout } : {},
-  );
+  const schemaData: CredentialSchemaData = {
+    ...data,
+    allowSuspension: false,
+    claims: [
+      {
+        array: false,
+        datatype: DataType.STRING,
+        key: 'field',
+        required: true,
+      },
+    ],
+    format: CredentialFormat.SD_JWT,
+    layoutProperties: layoutProperties ? layout : {},
+    layoutType: LayoutType.CARD,
+    name: `e2e ${shortUUID()}`,
+    revocationMethod: RevocationMethod.NONE,
+  };
   const schemaId = await apiRequest(
     '/api/credential-schema/v1',
     authToken,
