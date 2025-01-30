@@ -122,7 +122,6 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
       claimValues: data.claimValues,
       exchange: data.exchange ?? Exchange.OPENID4VC,
       issuerDid: issuerDidId,
-      // TODO: issuerKey: did.key,
       redirectUri: data.redirectUri,
     },
   );
