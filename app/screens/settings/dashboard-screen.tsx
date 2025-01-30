@@ -216,24 +216,17 @@ const DashboardScreen: FunctionComponent = observer(() => {
           },
         },
         biometry
-          ? biometricSetting.toggleUnavailable
-            ? {
-                buttonSetting: {
-                  icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
-                  onPress: biometricSetting.onPress,
-                  testID: 'SettingsScreen.biometry',
-                  title: translate('settings.security.biometrics'),
-                },
-              }
-            : {
-                switchSetting: {
-                  icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
-                  onChange: biometricSetting.onPress,
-                  testID: 'SettingsScreen.biometry',
-                  title: translate('settings.security.biometrics'),
-                  value: userSettings.biometrics,
-                },
-              }
+          ? {
+              buttonSetting: {
+                icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
+                onPress: biometricSetting.onPress,
+                testID: 'SettingsScreen.biometry',
+                title: translate('settings.security.biometrics'),
+                value: biometricSetting.toggleUnavailable
+                  ? undefined
+                  : userSettings.biometrics,
+              },
+            }
           : null,
       ].filter(nonEmptyFilter),
       title: translate('settings.security.title'),

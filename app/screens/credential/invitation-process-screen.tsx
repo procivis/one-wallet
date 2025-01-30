@@ -1,7 +1,9 @@
 import {
+  BluetoothError,
   BluetoothState,
   ExchangeProtocol,
   getInvitationUrlTransports,
+  InternetError,
   InternetState,
   LoaderViewState,
   LoadingResultScreen,
@@ -31,7 +33,7 @@ import {
 } from '../../components/navigation/header-buttons';
 import { config } from '../../config';
 import { useBlePermissions } from '../../hooks/ble-permissions';
-import { translate, translateError } from '../../i18n';
+import { translate, translateError, TxKeyPath } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -189,7 +191,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
         }
       })
       .catch((err: unknown) => {
-        // TODO Propagate proper error code from core
         if (
           err instanceof OneError &&
           err.cause?.includes('BLE adapter not enabled')
@@ -257,6 +258,20 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   const label = useMemo(() => {
+    const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
+      [BluetoothState.Unauthorized]:
+        'invitation.process.blePermissionMissing.title',
+      [BluetoothState.Unavailable]:
+        'invitation.process.bleAdapterUnavailable.title',
+      [BluetoothState.Disabled]: 'invitation.process.bleAdapterDisabled.title',
+    };
+
+    const internetErrorKeys: Record<InternetError, TxKeyPath> = {
+      [InternetState.Unreachable]:
+        'invitation.process.internetUnreachable.title',
+      [InternetState.Disabled]: 'invitation.process.internetDisabled.title',
+    };
+
     if (canHandleInvitation) {
       if (
         state === LoaderViewState.Warning &&
@@ -285,24 +300,13 @@ const InvitationProcessScreen: FunctionComponent = () => {
       invitationSupportedTransports.includes(Transport.Bluetooth) &&
       transportError.ble
     ) {
-      switch (transportError.ble) {
-        case BluetoothState.Unauthorized:
-          return translate('invitation.process.blePermissionMissing.title');
-        case BluetoothState.Unavailable:
-          return translate('invitation.process.bleAdapterUnavailable.title');
-        case BluetoothState.Disabled:
-          return translate('invitation.process.bleAdapterDisabled.title');
-      }
+      return translate(bleErrorKeys[transportError.ble]);
     } else if (
       (invitationSupportedTransports.includes(Transport.MQTT) ||
         invitationSupportedTransports.includes(Transport.HTTP)) &&
       transportError.internet
     ) {
-      if (transportError.internet === InternetState.Unreachable) {
-        return translate('invitation.process.internetUnreachable.title');
-      } else {
-        return translate('invitation.process.internetDisabled.title');
-      }
+      return translate(internetErrorKeys[transportError.internet]);
     }
 
     return translateError(

@@ -50,7 +50,8 @@ export const getDidRequestData = (
   keyId: string,
   prefixName?: string,
 ): CreateDidRequestDTO => {
-  const name = `${prefixName || `did-${didMethod}`}-${shortUUID()}`;
+  const prefix = prefixName || `did-${didMethod}`;
+  const name = `${prefix}-${shortUUID()}`;
   const request = {
     keys: {
       assertionMethod: [keyId],

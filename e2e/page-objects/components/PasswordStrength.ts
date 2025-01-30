@@ -17,14 +17,8 @@ export default function PasswordStrength(testID: string) {
       colorScheme: 'satisfied' | 'unsatisfied',
       levelNumbers: number[],
     ) {
-      if (colorScheme === 'satisfied') {
-        for (const n of levelNumbers) {
-          await expect(this.indicator(n, colorScheme)).toBeVisible();
-        }
-      } else {
-        for (const n of levelNumbers) {
-          await expect(this.indicator(n, colorScheme)).toBeVisible();
-        }
+      for (const n of levelNumbers) {
+        await expect(this.indicator(n, colorScheme)).toBeVisible();
       }
     },
     verifyTipsAreVisible: async function (tips: Tip[]) {

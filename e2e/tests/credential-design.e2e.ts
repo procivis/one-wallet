@@ -182,7 +182,6 @@ describe('ONE-2014: Credential design', () => {
       });
     });
 
-    // TODO
     it('Test credential history list', async () => {
       const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,

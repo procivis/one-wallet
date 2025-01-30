@@ -1,19 +1,12 @@
 import {
   ActivityIndicator,
   Button,
-  concatTestID,
-  CredentialDetailsCardListItem,
   FoldableHeader,
-  getCredentialCardPropsFromCredential,
   Header,
-  NextIcon,
   NoCredentialsIcon,
   ScanButton,
-  TouchableOpacity,
   Typography,
   useAppColorScheme,
-  useCoreConfig,
-  useCredentialDetail,
   useCredentialListExpandedCard,
   useListContentInset,
   usePagedCredentials,
@@ -45,17 +38,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ListPageLoadingIndicator from '../../components/list/list-page-loading-indicator';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
+import WalletCredentialListItem from '../../components/wallet/credential-list-item';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { credentialCardLabels } from '../../utils/credential';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
-  const { data: config } = useCoreConfig();
   const safeAreaInsets = useSafeAreaInsets();
   const contentInsetsStyle = useListContentInset({
     headerHeight: 120 + 8,
@@ -138,67 +130,19 @@ const WalletScreen: FunctionComponent = observer(() => {
       index,
       section,
     }: SectionListRenderItemInfo<CredentialListItem>) => {
-      // TODO Fix / discuss. This is ineficient.
-      // The list item contains no claims. Without claims we can not render
-      // all preview fields (primaryAttribute, photoAttribute, MRZ, etc.)
-      const { data: credential } = useCredentialDetail(item.id, isFocused);
-
-      if (!credential || !config) {
-        return null;
-      }
-
-      const testID = concatTestID('WalletScreen.credential', credential.id);
-      const { header, ...cardProps } = getCredentialCardPropsFromCredential(
-        credential,
-        credential.claims,
-        config,
-        undefined,
-        concatTestID(testID, 'card'),
-        credentialCardLabels(),
-      );
-      const headerAccessory = (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => handleCredentialPress(credential.id)}
-          style={styles.headerAccessory}
-          testID={concatTestID(testID, 'card.header.openDetail')}
-        >
-          <NextIcon color={colorScheme.text} />
-        </TouchableOpacity>
-      );
-      const lastItem = index === section.data.length - 1;
-      const expanded = lastItem || expandedCredential === credential.id;
       return (
-        <CredentialDetailsCardListItem
-          attributes={[]}
-          card={{
-            ...cardProps,
-            credentialId: credential.id,
-            header: {
-              ...header,
-              accessory: headerAccessory,
-            },
-            onCardPress: expanded ? foldCards : undefined,
-            onHeaderPress: lastItem ? foldCards : onHeaderPress,
-          }}
-          detailsCardStyle={styles.listItemExpanded}
-          expanded={expanded}
-          key={`${index}-${lastItem ? 'last' : ''}`}
-          lastItem={lastItem}
-          style={styles.listItem}
-          testID={testID}
+        <WalletCredentialListItem
+          expandedCredentialId={expandedCredential}
+          handleCredentialPress={handleCredentialPress}
+          index={index}
+          item={item}
+          onFoldCards={foldCards}
+          onHeaderPress={onHeaderPress}
+          section={section}
         />
       );
     },
-    [
-      config,
-      colorScheme.text,
-      expandedCredential,
-      foldCards,
-      handleCredentialPress,
-      onHeaderPress,
-      isFocused,
-    ],
+    [expandedCredential, foldCards, handleCredentialPress, onHeaderPress],
   );
 
   useEffect(() => {
@@ -376,12 +320,6 @@ const styles = StyleSheet.create({
   footer: {
     minHeight: 20,
   },
-  headerAccessory: {
-    alignItems: 'center',
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
   headerWithSearchBar: {
     marginTop: 0,
     paddingBottom: 18,
@@ -391,12 +329,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     overflow: 'visible',
     paddingHorizontal: 0,
-  },
-  listItem: {
-    marginBottom: 8,
-  },
-  listItemExpanded: {
-    marginBottom: 32,
   },
   loadingIndicator: {
     height: '100%',

@@ -51,6 +51,7 @@
     "check-password-strength": "^2.0.10",
     "i18n-js": "^4.5.0",
     "lodash": "^4.17.21",
+    "lodash.product": "^18.10.0",
     "lottie-react-native": "^7.2.2",
     "mobx": "6.9.0",
     "mobx-react-lite": "3.4.3",

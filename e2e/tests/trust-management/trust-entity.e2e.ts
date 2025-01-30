@@ -48,7 +48,7 @@ import {
 } from '../../utils/enums';
 import { launchApp } from '../../utils/init';
 
-interface credentialTrustEntityInfo {
+interface CredentialTrustEntityInfo {
   credentialId: string;
   didDetail?: DidDetailDTO;
   isTrustedEntity: boolean;
@@ -246,7 +246,7 @@ const proofSharingWithDidTrustEntityAndVerify = async (
 const verifyNewestProofRequestOnHistory = async (
   verifierDid: DidDetailDTO,
   trustEntity?: TrustEntityResponseDTO,
-  credentialTrustEntityList?: credentialTrustEntityInfo[],
+  credentialTrustEntityList?: CredentialTrustEntityInfo[],
 ) => {
   await expect(WalletScreen.screen).toBeVisible();
   await WalletScreen.settingsButton.tap();

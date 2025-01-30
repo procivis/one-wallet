@@ -56,7 +56,6 @@ const ProcessingScreen: FC = () => {
   }, []);
 
   const closeButtonHandler = useCallback(() => {
-    // TODO: implement possible restoring termination
     if (dismissed.current === true) {
       return;
     }
