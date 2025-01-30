@@ -277,7 +277,6 @@ describe('ONE-614: Proof request', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      // TODO Fix another tests and increase the number of credentials
       for (let i = 0; i < 3; i++) {
         const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
@@ -343,15 +342,6 @@ describe('ONE-614: Proof request', () => {
           proofSchemaId: proofSchema.id,
         },
       });
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).title(credentialIds[1]),
-      // ).toExist();
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).notice.multiple.element,
-      // ).toBeVisible();
-      // await ProofRequestSharingScreen.credential(
-      //   0,
-      // ).notice.multiple.selectButton.tap();
 
       await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
       await expect(
@@ -392,13 +382,6 @@ describe('ONE-614: Proof request', () => {
       await expect(
         ProofRequestSharingScreen.credential(0).element,
       ).toBeVisible();
-      // no selection possible
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).notice.multiple.element,
-      // ).not.toExist();
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).title(credentialIds[0]),
-      // ).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
@@ -417,10 +400,6 @@ describe('ONE-614: Proof request', () => {
       await expect(
         ProofRequestSharingScreen.credential(0).element,
       ).toBeVisible();
-      // await ProofRequestSharingScreen.credential(0).verifyStatus('revoked');
-      // await expect(
-      //   ProofRequestSharingScreen.credential(0).notice.revoked,
-      // ).toExist();
       await ProofRequestSharingScreen.cancelButton.tap();
       await expect(WalletScreen.screen).toBeVisible();
     });
