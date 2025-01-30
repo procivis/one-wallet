@@ -16,41 +16,43 @@ import {
 
 type BLEExchange = ExchangeProtocol.OPENID4VC | ExchangeProtocol.ISO_MDL;
 
+const centralPermissionsAndroid = [
+  PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+  PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+  PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+];
+const centralPermissionsAndroidOld = [
+  PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+  PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+] as AndroidPermission[];
+const centralPermissionsIOS = [PERMISSIONS.IOS.BLUETOOTH];
 const centralPermissions = (() => {
-  switch (Platform.OS) {
-    case 'android':
-      return Platform.Version > 30
-        ? [
-            PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-            PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-          ]
-        : ([
-            PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-            PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          ] as AndroidPermission[]);
-
-    default:
-      return [PERMISSIONS.IOS.BLUETOOTH];
+  if (Platform.OS === 'android') {
+    return Platform.Version > 30
+      ? centralPermissionsAndroid
+      : centralPermissionsAndroidOld;
+  } else {
+    return centralPermissionsIOS;
   }
 })();
 
+const peripheralPermissionsAndroid = [
+  PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE,
+  PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+];
+const peripheralPermissionsAndroidOld = [
+  PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+  PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+] as AndroidPermission[];
+const peripheralPermissionsIOS = [PERMISSIONS.IOS.BLUETOOTH];
 const peripheralPermissions = (() => {
-  switch (Platform.OS) {
-    case 'android':
-      return Platform.Version > 30
-        ? [
-            PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE,
-            PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-          ]
-        : ([
-            PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-            PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
-          ] as AndroidPermission[]);
-
-    default:
-      return [PERMISSIONS.IOS.BLUETOOTH];
+  if (Platform.OS === 'android') {
+    return Platform.Version > 30
+      ? peripheralPermissionsAndroid
+      : peripheralPermissionsAndroidOld;
+  } else {
+    return peripheralPermissionsIOS;
   }
 })();
 
