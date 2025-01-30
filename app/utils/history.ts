@@ -80,7 +80,7 @@ export const groupEntriesByDay = (entries: HistoryListItemWithDid[]) => {
 };
 
 export const getEntryTitle = (entry: HistoryListItem) => {
-  return `${translate(`history.entityType.${entry.entityType}`)} ${translate(
-    `history.action.${entry.action}`,
-  )}`;
+  const entityType = translate(`history.entityType.${entry.entityType}`);
+  const action = translate(`history.action.${entry.action}`);
+  return `${entityType} ${action}`;
 };

@@ -81,7 +81,7 @@ export const PasswordStrength: FC<PasswordStrengthProps> = ({
       <View style={styles.strengthIndicators}>
         {Array.from({ length: TIPS.length }).map((_, index) => (
           <View
-            key={index}
+            key={`tip-${TIPS[index]}`}
             style={[
               styles.indicator,
               !index && styles.firstIndicator,
