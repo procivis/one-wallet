@@ -194,23 +194,42 @@ const ProofRequestScreen: FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCredentialId]);
 
+  const selectedCredentialsWithUpdatedSelection = (
+    currentSelectedCredentials: Record<
+      string,
+      PresentationSubmitCredentialRequest | undefined
+    >,
+    updatedCredentialId: PresentationDefinitionRequestedCredential['id'],
+    updatedFieldId: PresentationDefinitionField['id'],
+    selected: boolean,
+  ) => {
+    const prevSelection = currentSelectedCredentials[
+      updatedCredentialId
+    ] as PresentationSubmitCredentialRequest;
+    let submitClaims = [...prevSelection.submitClaims];
+    if (selected) {
+      submitClaims.push(updatedFieldId);
+    } else {
+      submitClaims = submitClaims.filter(
+        (claimId) => claimId !== updatedFieldId,
+      );
+    }
+    return {
+      ...currentSelectedCredentials,
+      [updatedCredentialId]: { ...prevSelection, submitClaims },
+    };
+  };
+
   const onSelectField = useCallback(
     (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
-      (id: PresentationDefinitionField['id'], selected: boolean) => {
-        setSelectedCredentials((prev) => {
-          const prevSelection = prev[
-            requestCredentialId
-          ] as PresentationSubmitCredentialRequest;
-          let submitClaims = [...prevSelection.submitClaims];
-          if (selected) {
-            submitClaims.push(id);
-          } else {
-            submitClaims = submitClaims.filter((claimId) => claimId !== id);
-          }
-          return {
-            ...prev,
-            [requestCredentialId]: { ...prevSelection, submitClaims },
-          };
+      (fieldId: PresentationDefinitionField['id'], selected: boolean) => {
+        setSelectedCredentials((current) => {
+          return selectedCredentialsWithUpdatedSelection(
+            current,
+            requestCredentialId,
+            fieldId,
+            selected,
+          );
         });
       },
     [],
