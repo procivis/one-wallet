@@ -18,13 +18,16 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
   const { walletStore } = useStores();
 
-  const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers();
+  const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
+    generateHwKey: true,
+    generateSwKey: true,
+  });
   const finishSetup = useCallback(() => {
     if (walletStore.holderDidId) {
       return;
     }
     initializeONECoreIdentifiers().then(([hwDidId, swDidId]) => {
-      walletStore.walletSetup(hwDidId, swDidId);
+      walletStore.walletSetup(hwDidId, swDidId!);
     });
     resetNavigationAction(rootNavigation, [
       { name: 'Dashboard', params: { screen: 'Wallet' } },
