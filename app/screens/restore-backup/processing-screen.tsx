@@ -28,7 +28,10 @@ const ProcessingScreen: FC = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
   const { walletStore } = useStores();
   const pinInitialized = usePinCodeInitialized();
-  const finalizeImport = useBackupFinalizeImportProcedure();
+  const finalizeImport = useBackupFinalizeImportProcedure({
+    generateHwKey: true,
+    generateSwKey: true,
+  });
   const [state, setState] = useState<
     Exclude<LoaderViewState, LoaderViewState.Error>
   >(LoaderViewState.InProgress);
@@ -40,7 +43,7 @@ const ProcessingScreen: FC = () => {
   const handleBackupRestore = useCallback(async () => {
     try {
       await finalizeImport().then(([hwDidId, swDidId]) => {
-        walletStore.walletSetup(hwDidId, swDidId);
+        walletStore.walletSetup(hwDidId, swDidId!);
       });
       setState(LoaderViewState.Success);
     } catch (e) {
