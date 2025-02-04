@@ -239,7 +239,7 @@ Support for the recently published [FIPS-204][fips] is planned for the near futu
 
 #### ISO mdoc
 
-- [ISO/IEC 18013-5:2021][iso] standard for mdoc credentials.
+- [ISO/IEC 18013-5:2021][iso5] standard for mdoc credentials.
   - [COSE][cose] proofs
     - ECDSA [ES256][es2]
     - EdDSA [Ed25519][ed255]
@@ -299,6 +299,8 @@ Version 2.0](./LICENSE).
 [bbs2023]: https://www.w3.org/TR/vc-di-bbs/#bbs-2023
 [ble]: https://openid.net/specs/openid-4-verifiable-presentations-over-ble-1_0.html
 [canivc]: https://canivc.com/implementations/procivis-one-core/
+[comp]: https://github.com/procivis/one-react-native-components
+[core]: https://github.com/procivis/one-core
 [cose]: https://www.rfc-editor.org/rfc/rfc9052
 [crydi3]: https://datatracker.ietf.org/doc/html/draft-ietf-cose-dilithium-01
 [docs]: https://docs.procivis.ch/
