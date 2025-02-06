@@ -110,3 +110,8 @@ bom*.xml
 # Yalc
 /.yalc
 yalc.lock
+
+# Sbom files from CI
+android-sbom.json
+react-native-sbom.json
+artifacts
