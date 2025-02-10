@@ -118,6 +118,10 @@ android {
         }
     }
 
+    buildFeatures {
+        dataBinding true
+    }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')

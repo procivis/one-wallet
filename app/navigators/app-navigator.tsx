@@ -48,11 +48,12 @@ const onNavigationChange = (state?: NavigationState) => {
 interface NavigationProps
   extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
+const coreConfig = {
+  keyStorage: { UBIQU_RSE: { disabled: false } },
+};
+
 export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
-  const coreConfig = {
-    keyStorage: { UBIQU_RSE: { disabled: false } },
-  };
   return (
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}
