@@ -1,8 +1,15 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
+    </style>
+
+    <style name="BootTheme.procivis" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#000000</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="AppTheme.procivis" parent="BaseTheme">
@@ -11,13 +18,29 @@
         <item name="colorAccent">#0F151A</item>
         <item name="android:statusBarColor">#FFFFFF</item>
         <item name="android:windowLightStatusBar">true</item>
-    </style>
+        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
 
-    <style name="BootTheme.procivis" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#000000</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
-        <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <!-- Ubiqu pinpad styling -->
+        <item name="ubqsdk_numericKeyPadBackground">#FFFFFF</item>
+        <item name="ubqsdk_numericKeyPadTopSpacing">0dp</item>
+        <item name="ubqsdk_numericKeyPadBottomSpacing">0dp</item>
+
+        <item name="ubqsdk_numericButtonWidth">72dp</item>
+        <item name="ubqsdk_numericButtonHeight">72dp</item>
+        <item name="ubqsdk_numericButtonCornerRadius">100dp</item>
+        <item name="ubqsdk_numericButtonTextSize">26dp</item>
+        <item name="ubqsdk_numericButtonFontFamily">@font/procivis_book</item>
+        <item name="ubqsdk_numericButtonIconSize">24dp</item>
+        <item name="ubqsdk_numericButtonTextColor">#141414</item>
+        <item name="ubqsdk_numericButtonBackgroundColor">#F1F3F5</item>
+        <item name="ubqsdk_numericButtonAlphaSelected">0.8</item>
+        <item name="ubqsdk_numericButtonBackgroundColorSelected">#FFFFFF</item>
+
+        <item name="ubqsdk_numericButtonIconColor">#141414</item>
+        <item name="ubqsdk_extraButtonBackgroundColor">#FFFFFF</item>
+        <item name="ubqsdk_extraButtonAlphaSelected">0.8</item>
+        <item name="ubqsdk_extraButtonBackgroundColorSelected">#FFFFFF</item>
     </style>
 
 </resources>
