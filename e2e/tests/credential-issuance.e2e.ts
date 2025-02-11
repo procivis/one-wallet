@@ -295,6 +295,7 @@ describe('ONE-601: Credential issuance', () => {
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         exchange: Exchange.OPENID4VC,
+        redirectUri: 'http://www.procivis.ch',
       });
     });
 
