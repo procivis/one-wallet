@@ -81,7 +81,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { core } = useONECore();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
-  const { mutateAsync: checkRevocation } = useCredentialRevocationCheck();
+  const { mutateAsync: checkRevocation } = useCredentialRevocationCheck(false);
   const { data: allCredentials } = useCredentials();
   const {
     request: { interactionId, proofId },
