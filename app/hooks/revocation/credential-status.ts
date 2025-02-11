@@ -21,7 +21,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
  */
 export const useCredentialStatusCheck = (credentialIds?: string[]) => {
   const navigation = useNavigation<RootNavigationProp>();
-  const { mutateAsync: check } = useCredentialRevocationCheck();
+  const { mutateAsync: check } = useCredentialRevocationCheck(false);
   const { data: credentials } = useCredentials({
     ids: credentialIds,
     status: [CredentialStateEnum.ACCEPTED, CredentialStateEnum.SUSPENDED],
