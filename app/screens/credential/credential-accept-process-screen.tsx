@@ -8,12 +8,17 @@ import {
   useCredentialAccept,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
-import { OneError, WalletStorageType } from '@procivis/react-native-one-core';
+import {
+  OneError,
+  Ubiqu,
+  WalletStorageType,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
   useCallback,
@@ -27,6 +32,7 @@ import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
+import { useCreateRSE } from '../../hooks/rse';
 import { translate, translateError, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
 import {
@@ -35,9 +41,11 @@ import {
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
+const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
+
 const invalidCodeBRs = ['BR_0169', 'BR_0170'];
 
-const CredentialAcceptProcessScreen: FunctionComponent = () => {
+const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const navigation =
@@ -52,6 +60,10 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
   const { walletStore } = useStores();
   const [error, setError] = useState<unknown>();
+  const { generateRSE } = useCreateRSE();
+  const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
+  const [rseInitialized, setRseInitialized] = useState(false);
+  const [createdRseDidId, setCreatedRseDidId] = useState<string>();
 
   const requiredStorageType = credential?.schema.walletStorageType;
   const didId = useMemo(() => {
@@ -60,25 +72,59 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
         return walletStore.holderDidSwId;
       case WalletStorageType.HARDWARE:
         return walletStore.holderDidHwId;
+      case WalletStorageType.REMOTE_SECURE_ELEMENT:
+        return createdRseDidId ?? walletStore.holderDidRseId;
       default:
         return walletStore.holderDidId;
     }
-  }, [walletStore, requiredStorageType]);
+  }, [walletStore, requiredStorageType, createdRseDidId]);
+
+  useEffect(() => {
+    return addRSEEventListener((event) => {
+      if (event.type !== PinEventType.SHOW_PIN) {
+        return;
+      }
+      if (walletStore.holderDidRseId) {
+        rootNavigation.navigate('RSESign');
+      } else {
+        navigation.navigate('RSEPinSetup');
+      }
+    });
+  }, [navigation, rootNavigation, walletStore.holderDidRseId]);
 
   const loaderLabel = useMemo(() => {
+    if (
+      !error &&
+      !didId &&
+      requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT
+    ) {
+      return translate('credentialOffer.process.creatingRSE.title');
+    }
     const txKeyPath: TxKeyPath =
       state === LoaderViewState.Warning && !didId
         ? 'credentialOffer.process.warning.incompatible.title'
         : `credentialOffer.process.${state}.title`;
     return translateError(error, translate(txKeyPath));
-  }, [didId, state, error]);
+  }, [error, didId, requiredStorageType, state]);
 
-  const handleCredentialAccept = useCallback(async () => {
-    if (!didId) {
-      setState(LoaderViewState.Warning);
+  const initializeRSE = useCallback(() => {
+    if (rseInitialized) {
       return;
     }
+    setRseInitialized(true);
+    generateRSE()
+      .then(setCreatedRseDidId)
+      .catch((e) => {
+        setState(LoaderViewState.Warning);
+        setError(e);
+      });
+  }, [generateRSE, rseInitialized]);
 
+  const handleCredentialAccept = useCallback(async () => {
+    if (acceptanceInitialized) {
+      return;
+    }
+    setAcceptanceInitialized(true);
     try {
       await acceptCredential({
         didId,
@@ -100,6 +146,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       setError(e);
     }
   }, [
+    acceptanceInitialized,
     didId,
     acceptCredential,
     interactionId,
@@ -110,11 +157,25 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
   ]);
 
   useEffect(() => {
-    if (credential) {
-      handleCredentialAccept();
+    if (!credential) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!credential]);
+    if (!didId) {
+      if (requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT) {
+        initializeRSE();
+      } else {
+        setState(LoaderViewState.Warning);
+      }
+      return;
+    }
+    handleCredentialAccept();
+  }, [
+    credential,
+    didId,
+    handleCredentialAccept,
+    initializeRSE,
+    requiredStorageType,
+  ]);
 
   const redirectUri = credential?.redirectUri;
   const closeButtonHandler = useCallback(() => {
@@ -191,6 +252,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = () => {
       testID="CredentialAcceptProcessScreen"
     />
   );
-};
+});
 
 export default CredentialAcceptProcessScreen;

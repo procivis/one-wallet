@@ -15,7 +15,10 @@ import {
   useCredentialReject,
   useTrustEntity,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
+import {
+  TrustEntityRoleEnum,
+  WalletStorageType,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -31,6 +34,7 @@ import {
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -50,6 +54,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: trustEntity } = useTrustEntity(credential?.issuerDid?.id);
+  const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
@@ -74,7 +79,17 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const onAccept = useCallback(() => {
     skipRejection.current = true;
 
-    if (txCode) {
+    const requiredStorageType = credential?.schema.walletStorageType;
+
+    if (
+      requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT &&
+      !walletStore.holderDidRseId
+    ) {
+      navigation.navigate('RSEInfo', {
+        credentialId,
+        interactionId,
+      });
+    } else if (txCode) {
       navigation.replace('CredentialConfirmationCode', {
         credentialId,
         interactionId,
@@ -86,7 +101,14 @@ const CredentialOfferScreen: FunctionComponent = () => {
         interactionId,
       });
     }
-  }, [credentialId, interactionId, navigation, txCode]);
+  }, [
+    credential?.schema.walletStorageType,
+    credentialId,
+    interactionId,
+    navigation,
+    txCode,
+    walletStore.holderDidRseId,
+  ]);
 
   const onImagePreview = useCredentialImagePreview();
 
