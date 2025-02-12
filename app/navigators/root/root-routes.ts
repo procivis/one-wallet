@@ -13,6 +13,9 @@ import { SettingsNavigatorParamList } from '../settings/settings-routes';
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   CredentialManagement: NavigatorScreenParams<CredentialManagementNavigatorParamList>;
+  CredentialUpdateProcess: {
+    credentialId: CredentialListItem['id'];
+  };
   Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;
   ImagePreview: {
     image: string | ImageSourcePropType;
