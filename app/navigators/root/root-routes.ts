@@ -26,6 +26,7 @@ export type RootNavigatorParamList = {
   PinCodeCheck?: {
     disableBiometry: boolean;
   };
+  RSESign: undefined;
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;
