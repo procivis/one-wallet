@@ -20,6 +20,11 @@ export type IssueCredentialNavigatorParamList = {
     txCode?: OpenID4VCITxCode;
     txCodeValue?: string;
   };
+  RSEInfo: {
+    credentialId: string;
+    interactionId: string;
+  };
+  RSEPinSetup: undefined;
 };
 
 export type IssueCredentialRouteProp<
