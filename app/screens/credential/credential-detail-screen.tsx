@@ -70,16 +70,23 @@ const CredentialDetailScreen: FC = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const options = useMemo(
     () => ({
-      cancelButtonIndex: 2,
-      destructiveButtonIndex: 1,
+      cancelButtonIndex: 3,
+      destructiveButtonIndex: 2,
       options: [
         translate('credentialDetail.action.moreInfo'),
+        translate('credentialDetail.action.refreshCredential'),
         translate('credentialDetail.action.delete'),
         translate('common.close'),
       ],
     }),
     [],
   );
+
+  const handleRefresh = useCallback(() => {
+    rootNavigation.navigate('CredentialUpdateProcess', {
+      credentialId,
+    });
+  }, [credentialId, rootNavigation]);
 
   const handleDelete = useCallback(() => {
     navigation.navigate('Delete', {
@@ -99,6 +106,9 @@ const CredentialDetailScreen: FC = () => {
             });
             return;
           case 1:
+            handleRefresh();
+            return;
+          case 2:
             handleDelete();
             return;
           default:
@@ -111,6 +121,7 @@ const CredentialDetailScreen: FC = () => {
       options,
       showActionSheetWithOptions,
       rootNavigation,
+      handleRefresh,
     ],
   );
 

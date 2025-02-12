@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 import { useRuntimeDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
+import CredentialUpdateProcessScreen from '../../screens/credential/credential-update-process-screen';
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import StatusCheckResultScreen from '../../screens/credential/status-check-result-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
@@ -60,6 +61,16 @@ const RootNavigator: FunctionComponent = () => {
           animation:
             Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
           gestureEnabled: false,
+          headerShown: false,
+          presentation: 'formSheet',
+        }}
+      />
+      <RootStack.Screen
+        component={CredentialUpdateProcessScreen}
+        name="CredentialUpdateProcess"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
           headerShown: false,
           presentation: 'formSheet',
         }}

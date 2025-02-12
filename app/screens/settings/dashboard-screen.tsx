@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 
 import {
+  ClearCacheIcon,
   CreateBackupIcon,
   DeleteIcon,
   FaceIDIcon,
@@ -112,6 +113,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
 
   const handleDeleteWallet = useCallback(() => {
     navigation.navigate('DeleteWallet');
+  }, [navigation]);
+
+  const handleClearCache = useCallback(() => {
+    navigation.navigate('ClearCache');
   }, [navigation]);
 
   type SettingsListItem =
@@ -254,6 +259,14 @@ const DashboardScreen: FunctionComponent = observer(() => {
     },
     {
       data: [
+        {
+          buttonSetting: {
+            icon: ClearCacheIcon,
+            onPress: handleClearCache,
+            testID: 'SettingsScreen.clearCache',
+            title: translate('settings.profile.clearCache'),
+          },
+        },
         {
           buttonSetting: {
             icon: DeleteIcon,

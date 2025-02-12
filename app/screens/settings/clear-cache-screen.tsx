@@ -1,0 +1,127 @@
+import {
+  Button,
+  ButtonType,
+  concatTestID,
+  HeaderBackButton,
+  RadioGroup,
+  RadioGroupItem,
+  ScrollViewScreen,
+  Typography,
+  useAppColorScheme,
+  useCacheClear,
+} from '@procivis/one-react-native-components';
+import { CacheType } from '@procivis/react-native-one-core';
+import { useNavigation } from '@react-navigation/native';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
+import { StyleSheet, View } from 'react-native';
+
+import { translate } from '../../i18n';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+
+enum ClearOptions {
+  AllCaches = 'AllCaches',
+  RevocationAndTrustData = 'RevocationAndTrustData',
+}
+
+const longPressTimeSeconds = 3;
+
+const ClearCacheScreen: FunctionComponent = () => {
+  const [clearType, setClearType] = useState<ClearOptions>(
+    ClearOptions.RevocationAndTrustData,
+  );
+  const colorScheme = useAppColorScheme();
+  const navigation =
+    useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
+  const { mutateAsync: clearCache } = useCacheClear();
+
+  const handleSelect = useCallback((item: RadioGroupItem) => {
+    setClearType(item.key as ClearOptions);
+  }, []);
+
+  const cacheEntriesToClear = useMemo(() => {
+    if (clearType === ClearOptions.RevocationAndTrustData) {
+      return [CacheType.TRUST_LIST, CacheType.STATUS_LIST_CREDENTIAL];
+    } else {
+      return Object.values(CacheType);
+    }
+  }, [clearType]);
+
+  const handlePress = useCallback(async () => {
+    await clearCache(cacheEntriesToClear);
+    navigation.navigate('SettingsDashboard');
+  }, [navigation, clearCache, cacheEntriesToClear]);
+
+  const testID = 'ClearCacheScreen';
+
+  return (
+    <ScrollViewScreen
+      header={{
+        leftItem: (
+          <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
+        ),
+        title: translate('clearCacheScreen.title'),
+      }}
+      scrollView={{
+        testID: concatTestID(testID, 'scroll'),
+      }}
+      style={{ backgroundColor: colorScheme.white }}
+      testID={testID}
+    >
+      <View style={styles.contentWrapper}>
+        <Typography color={colorScheme.text} style={styles.description}>
+          {translate('clearCacheScreen.description')}
+        </Typography>
+
+        <RadioGroup
+          containerStyle={styles.radioGroup}
+          items={[
+            {
+              key: ClearOptions.RevocationAndTrustData,
+              label: translate('settings.profile.clearRevocationAndTrustData'),
+              testID: 'ClearRevocationAndTrustData',
+            },
+            {
+              key: ClearOptions.AllCaches,
+              label: translate('settings.profile.clearAllCaches'),
+              testID: `ClearAllCaches`,
+            },
+          ]}
+          onSelected={handleSelect}
+          scrollEnabled={false}
+          selectedItem={clearType ?? ''}
+        />
+
+        <Button
+          delayLongPress={longPressTimeSeconds * 1000}
+          onLongPress={handlePress}
+          subtitle={translate('common.holdButton', {
+            seconds: longPressTimeSeconds,
+          })}
+          testID={concatTestID(testID, 'mainButton')}
+          title={translate('common.clear')}
+          type={ButtonType.Primary}
+        />
+      </View>
+    </ScrollViewScreen>
+  );
+};
+
+const styles = StyleSheet.create({
+  contentWrapper: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
+  description: {
+    opacity: 0.7,
+  },
+  radioGroup: {
+    paddingTop: 24,
+  },
+});
+
+export default ClearCacheScreen;

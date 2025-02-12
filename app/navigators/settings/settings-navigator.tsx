@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import AppInformationNerdScreen from '../../screens/settings/app-information-nerd-screen';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
+import ClearCacheScreen from '../../screens/settings/clear-cache-screen';
 import DashboardScreen from '../../screens/settings/dashboard-screen';
 import DeleteWalletProcessScreen from '../../screens/settings/delete-wallet-process-screen';
 import DeleteWalletScreen from '../../screens/settings/delete-wallet-screen';
@@ -60,6 +61,7 @@ const SettingsNavigator = () => {
           presentation: 'formSheet',
         }}
       />
+      <Stack.Screen component={ClearCacheScreen} name="ClearCache" />
       <Stack.Screen component={HistoryNavigator} name="History" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
       <Stack.Screen

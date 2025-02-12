@@ -210,3 +210,22 @@ export const DeleteIcon: FC<SvgProps> = (props) => {
     </Svg>
   );
 };
+
+// https://www.figma.com/design/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?node-id=1269-1907&t=DONfCAa25yypfNy9-0
+export const ClearCacheIcon = (props: SvgProps) => {
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <Path d="M12 5H13V13H12z" fill="#000" />
+      <Path d="M15 17H16V22H15z" fill="#000" transform="rotate(90 15 17)" />
+      <Path d="M9 13H10V18H9z" fill="#000" />
+      <Path d="M15 13H16V18H15z" fill="#000" />
+      <Path d="M8 12H17V13H8z" fill="#000" />
+      <Path d="M13 15H14V17H13z" fill="#000" />
+      <Path d="M11 15H12V17H11z" fill="#000" />
+      <Path d="M17 8H18V11H17z" fill="#000" />
+      <Path d="M6 15H7V18H6z" fill="#000" />
+      <Path d="M19 9H20V12H19z" fill="#000" transform="rotate(90 19 9)" />
+      <Path d="M8 16H9V19H8z" fill="#000" transform="rotate(90 8 16)" />
+    </Svg>
+  );
+};
