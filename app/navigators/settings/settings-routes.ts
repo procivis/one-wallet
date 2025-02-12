@@ -12,6 +12,7 @@ export type SettingsNavigatorParamList = {
   BiometricsSet: {
     enabled: boolean;
   };
+  ClearCache: undefined;
   CreateBackup: NavigatorScreenParams<CreateBackupNavigatorParamList>;
   DeleteWallet: undefined;
   DeleteWalletProcess: undefined;
