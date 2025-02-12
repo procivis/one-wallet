@@ -6,6 +6,7 @@ import { Instance, types } from 'mobx-state-tree';
 export const WalletStoreModel = types
   .model('WalletStore', {
     holderDidHwId: types.string,
+    holderDidRseId: types.string,
     holderDidSwId: types.string,
   })
   .views((self) => ({
@@ -15,9 +16,13 @@ export const WalletStoreModel = types
     },
   }))
   .actions((self) => ({
+    rseSetup: (holderDidRseId: string | null) => {
+      self.holderDidRseId = holderDidRseId ?? '';
+    },
     walletDeleted: () => {
       self.holderDidHwId = '';
       self.holderDidSwId = '';
+      self.holderDidRseId = '';
     },
     walletSetup: (holderDidHwId: string | null, holderDidSwId: string) => {
       self.holderDidHwId = holderDidHwId ?? '';

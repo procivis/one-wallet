@@ -9,7 +9,7 @@ import {
   useProofAccept,
   useProofDetail,
 } from '@procivis/one-react-native-components';
-import { WalletStorageType } from '@procivis/react-native-one-core';
+import { Ubiqu, WalletStorageType } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -32,6 +32,8 @@ import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
+
+const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
 
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
@@ -62,10 +64,22 @@ const ProofProcessScreen: FunctionComponent = () => {
         return walletStore.holderDidSwId;
       case WalletStorageType.HARDWARE:
         return walletStore.holderDidHwId;
+      case WalletStorageType.REMOTE_SECURE_ELEMENT:
+        return walletStore.holderDidRseId;
       default:
         return walletStore.holderDidId;
     }
   }, [walletStore, credentialDetail]);
+
+  useEffect(() => {
+    return addRSEEventListener((event) => {
+      switch (event.type) {
+        case PinEventType.SHOW_PIN:
+          rootNavigation.navigate('RSESign');
+          break;
+      }
+    });
+  }, [rootNavigation]);
 
   const handleProofSubmit = useCallback(
     async (didId: string) => {

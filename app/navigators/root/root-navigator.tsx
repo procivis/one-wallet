@@ -8,6 +8,7 @@ import CredentialUpdateProcessScreen from '../../screens/credential/credential-u
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import StatusCheckResultScreen from '../../screens/credential/status-check-result-screen';
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
+import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
 import CredentialManagementNavigator from '../credential-management/credential-management-navigator';
 import DashboardNavigator from '../dashboard/dashboard-navigator';
@@ -93,6 +94,16 @@ const RootNavigator: FunctionComponent = () => {
       <RootStack.Screen
         component={ImagePreviewScreen}
         name="ImagePreview"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'fullScreenModal',
+        }}
+      />
+      <RootStack.Screen
+        component={RSESignScreen}
+        name="RSESign"
         options={{
           animation:
             Platform.OS === 'android' ? 'slide_from_bottom' : undefined,

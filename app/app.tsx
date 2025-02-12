@@ -19,6 +19,7 @@ import {
   reportException,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
+import { Ubiqu } from '@procivis/react-native-one-core';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
@@ -35,6 +36,8 @@ import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';
 import { ErrorBoundary } from './screens';
 import { AppColorScheme, useFlavorColorScheme } from './theme';
+
+const { reset: resetRSE } = Ubiqu;
 
 if (!__DEV__) {
   Sentry.init({
@@ -85,6 +88,15 @@ function App() {
   }, []);
 
   const colorScheme = useFlavorColorScheme();
+
+  useEffect(() => {
+    if (!rootStore) {
+      return;
+    }
+    if (!rootStore.walletStore.holderDidRseId) {
+      resetRSE().catch(() => {});
+    }
+  }, [rootStore]);
 
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background

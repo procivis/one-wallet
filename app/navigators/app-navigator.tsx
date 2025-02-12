@@ -50,11 +50,15 @@ interface NavigationProps
 
 export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
+  const coreConfig = {
+    keyStorage: { UBIQU_RSE: { disabled: false } },
+  };
   return (
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}
     >
       <ONECoreContextProvider
+        config={coreConfig}
         publisherReference={config.trustAnchorPublisherReference}
       >
         <NavigationContainer
