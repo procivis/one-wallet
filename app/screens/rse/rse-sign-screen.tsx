@@ -1,14 +1,14 @@
 import {
   concatTestID,
   ContrastingStatusBar,
-  HeaderBackButton,
+  HeaderCloseButton,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { Pins } from '@procivis/one-react-native-components/src/ui-components/pin/pins';
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,6 +19,7 @@ const {
   addEventListener: addRSEEventListener,
   PinEventType,
   PinPad: RSEPinPad,
+  resetPinFlow: resetRSEPinFlow,
 } = Ubiqu;
 
 export interface PinCodeScreenActions {
@@ -47,13 +48,25 @@ export const RSESignScreen: FC = () => {
           break;
         case PinEventType.DIGITS_ENTERED:
           setEnteredLenght(event.digitsEntered);
+          if (event.digitsEntered > 0) {
+            setError(undefined);
+          }
           break;
         case PinEventType.INCORRECT_PIN: {
-          setError(translate('rse.sign.error.wrongPin'));
+          setError(
+            translate('rse.sign.error.wrongPin', {
+              attemptsLeft: event.attemptsLeft,
+            }),
+          );
           break;
         }
       }
     });
+  }, [rootNavigation]);
+
+  const handleClose = useCallback(() => {
+    resetRSEPinFlow();
+    rootNavigation.goBack();
   }, [rootNavigation]);
 
   return (
@@ -63,7 +76,10 @@ export const RSESignScreen: FC = () => {
     >
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <View style={styles.backButton}>
-        <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
+        <HeaderCloseButton
+          onPress={handleClose}
+          testID={concatTestID(testID, 'header.back')}
+        />
       </View>
       <View style={styles.content}>
         <View style={styles.upperContent}>

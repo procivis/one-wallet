@@ -20,6 +20,7 @@ export type IssueCredentialNavigatorParamList = {
     txCode?: OpenID4VCITxCode;
     txCodeValue?: string;
   };
+  RSEAddBiometrics: undefined;
   RSEInfo: {
     credentialId: string;
     interactionId: string;

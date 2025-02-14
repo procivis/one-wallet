@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform } from 'react-native';
 
+import { RSEAddBiometricsScreen } from '../../screens/rse/rse-add-biometrics-screen';
+import { RSEChangePinScreen } from '../../screens/rse/rse-change-pin-screen';
 import AppInformationNerdScreen from '../../screens/settings/app-information-nerd-screen';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
@@ -74,6 +76,17 @@ const SettingsNavigator = () => {
           presentation: 'formSheet',
         }}
       />
+      <Stack.Screen
+        component={RSEAddBiometricsScreen}
+        name="RSEAddBiometrics"
+        options={{
+          animation:
+            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          headerShown: false,
+          presentation: 'fullScreenModal',
+        }}
+      />
+      <Stack.Screen component={RSEChangePinScreen} name="RSEPinCodeChange" />
       <Stack.Screen component={LicencesScreen} name="Licences" />
       <Stack.Screen component={LicenceDetailsScreen} name="LicenceDetails" />
     </Stack.Navigator>

@@ -10,9 +10,11 @@ import {
   SwitchSettingProps,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
+import { Ubiqu } from '@procivis/react-native-one-core';
+import { PinFlowType } from '@procivis/react-native-one-core/dist/src/ubiqu';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useEffect } from 'react';
 import {
   SectionListProps,
   StyleProp,
@@ -44,6 +46,12 @@ import { useStores } from '../../models';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { nonEmptyFilter } from '../../utils/filtering';
 
+const {
+  addEventListener: addRSEEventListener,
+  PinEventType,
+  changePin: changeRSEPin,
+} = Ubiqu;
+
 const LocaleNames: Record<Locale, string> = {
   de: 'Deutsch',
   en: 'English',
@@ -53,10 +61,21 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation =
     useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
-  const { userSettings, locale } = useStores();
+  const { userSettings, locale, walletStore } = useStores();
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
   const { showActionSheetWithOptions } = useActionSheet();
+
+  useEffect(() => {
+    return addRSEEventListener((event) => {
+      if (event.type !== PinEventType.SHOW_PIN) {
+        return;
+      }
+      if (event.flowType === PinFlowType.CHANGE_PIN) {
+        navigation.navigate('RSEPinCodeChange');
+      }
+    });
+  }, [navigation]);
 
   const handleChangeLanguage = useCallback(() => {
     // all locales, currently selected as first
@@ -100,6 +119,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const handleChangePinCode = useCallback(() => {
     navigation.navigate('PinCodeChange');
   }, [navigation]);
+
+  const handleChangeRSEPinCode = useCallback(() => {
+    changeRSEPin();
+  }, []);
 
   const biometricSetting = useBiometricSetting();
 
@@ -220,15 +243,26 @@ const DashboardScreen: FunctionComponent = observer(() => {
             title: translate('settings.security.pinCode'),
           },
         },
-        biometry
+        walletStore.holderDidRseId
           ? {
               buttonSetting: {
+                icon: PINIcon,
+                onPress: handleChangeRSEPinCode,
+                testID: 'SettingsScreen.changeRSEPIN',
+                title: translate('settings.security.rse.pinCode'),
+              },
+            }
+          : null,
+        biometry
+          ? {
+              switchSetting: {
+                disabled: biometricSetting.toggleUnavailable,
                 icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
-                onPress: biometricSetting.onPress,
+                onChange: biometricSetting.onPress,
                 testID: 'SettingsScreen.biometry',
                 title: translate('settings.security.biometrics'),
                 value: biometricSetting.toggleUnavailable
-                  ? undefined
+                  ? false
                   : userSettings.biometrics,
               },
             }
