@@ -13,11 +13,12 @@ import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 
 const {
   addEventListener: addRSEEventListener,
   PinEventType,
+  PinFlowStage,
   PinPad: RSEPinPad,
   resetPinFlow: resetRSEPinFlow,
 } = Ubiqu;
@@ -29,45 +30,66 @@ export interface PinCodeScreenActions {
   }) => Promise<{ finished: boolean }>;
 }
 
-export const RSESignScreen: FC = () => {
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
+type Step = 'checkCurrentPin' | 'setPin' | 'confirmPin';
+const pinFlowStageMap: Record<keyof typeof PinFlowStage, Step> = {
+  [PinFlowStage.CHECK_CURRENT_PIN]: 'checkCurrentPin',
+  [PinFlowStage.NEW_FIRST_PIN]: 'setPin',
+  [PinFlowStage.NEW_SECOND_PIN]: 'confirmPin',
+};
+
+export const RSEChangePinScreen: FC = () => {
+  const navigation =
+    useNavigation<SettingsNavigationProp<'RSEPinCodeChange'>>();
   const pinLength = 5;
   const colorScheme = useAppColorScheme();
   const [shakePosition] = useState(() => new Animated.Value(0));
   const [enteredLength, setEnteredLenght] = useState(0);
+  const [step, setStep] = useState<'checkCurrentPin' | 'setPin' | 'confirmPin'>(
+    'checkCurrentPin',
+  );
   const [error, setError] = useState<string>();
 
-  const testID = 'RemoteSecureElementSignScreen';
+  const testID = 'RemoteSecureElementChangePinScreen';
 
   useEffect(() => {
     return addRSEEventListener((event) => {
       switch (event.type) {
         case PinEventType.HIDE_PIN:
-          rootNavigation.goBack();
+          navigation.goBack();
           break;
         case PinEventType.DIGITS_ENTERED:
-          setEnteredLenght(event.digitsEntered);
           if (event.digitsEntered > 0) {
             setError(undefined);
           }
+          setEnteredLenght(event.digitsEntered);
           break;
-        case PinEventType.INCORRECT_PIN: {
+        case PinEventType.PIN_STAGE: {
+          const newStep = pinFlowStageMap[event.stage];
+          setStep(newStep);
+          if (
+            newStep === 'checkCurrentPin' &&
+            step === 'confirmPin' &&
+            !error
+          ) {
+            setError(translate('rse.changePin.confirmPin.error'));
+          }
+          break;
+        }
+        case PinEventType.INCORRECT_PIN:
           setError(
-            translate('rse.sign.error.wrongPin', {
+            translate('rse.changePin.checkCurrentPin.error', {
               attemptsLeft: event.attemptsLeft,
             }),
           );
           break;
-        }
       }
     });
-  }, [rootNavigation]);
+  }, [navigation, step, error]);
 
   const handleClose = useCallback(() => {
     resetRSEPinFlow();
-    rootNavigation.goBack();
-  }, [rootNavigation]);
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <SafeAreaView
@@ -91,7 +113,7 @@ export const RSESignScreen: FC = () => {
             style={styles.title}
             testID={concatTestID(testID, 'title')}
           >
-            {translate('rse.sign.title')}
+            {translate(`rse.changePin.${step}.title`)}
           </Typography>
           <Pins
             enteredLength={enteredLength}
@@ -105,7 +127,9 @@ export const RSESignScreen: FC = () => {
             style={styles.instruction}
             testID={concatTestID(testID, 'instruction')}
           >
-            {translate('rse.sign.instruction', { pinLength })}
+            {translate(`rse.changePin.${step}.instruction`, {
+              pinLength,
+            })}
           </Typography>
           <Typography
             accessible={Boolean(error)}

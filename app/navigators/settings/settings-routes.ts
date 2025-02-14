@@ -24,6 +24,8 @@ export type SettingsNavigatorParamList = {
   Licences: undefined;
   PinCodeChange: undefined;
   PinCodeSet: undefined;
+  RSEAddBiometrics: undefined;
+  RSEPinCodeChange: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
   SettingsDashboard: undefined;
 };

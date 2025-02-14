@@ -41,7 +41,11 @@ import {
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
-const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
+const {
+  addEventListener: addRSEEventListener,
+  PinEventType,
+  PinFlowType,
+} = Ubiqu;
 
 const invalidCodeBRs = ['BR_0169', 'BR_0170'];
 
@@ -84,10 +88,12 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       if (event.type !== PinEventType.SHOW_PIN) {
         return;
       }
-      if (walletStore.holderDidRseId) {
+      if (event.flowType === PinFlowType.TRANSACTION) {
         rootNavigation.navigate('RSESign');
-      } else {
+      } else if (event.flowType === PinFlowType.SUBSCRIBE) {
         navigation.navigate('RSEPinSetup');
+      } else if (event.flowType === PinFlowType.ADD_BIOMETRICS) {
+        navigation.navigate('RSEAddBiometrics');
       }
     });
   }, [navigation, rootNavigation, walletStore.holderDidRseId]);
