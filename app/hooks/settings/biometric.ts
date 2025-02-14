@@ -1,6 +1,10 @@
-import { useAppColorScheme } from '@procivis/one-react-native-components';
+import {
+  reportException,
+  useAppColorScheme,
+} from '@procivis/one-react-native-components';
+import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Alert, Linking } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
 
@@ -10,6 +14,14 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 import { useFaceIDPermission } from '../pin-code/biometric';
 import { useExplicitPinCodeCheck } from '../pin-code/pin-code-check';
 
+const {
+  addEventListener: addRSEEventListener,
+  areBiometricsSupported: areRSEBiometricsSupported,
+  PinEventType,
+  PinFlowType,
+  setBiometrics: setRSEBiometrics,
+} = Ubiqu;
+
 /**
  * Provides toggle functionality for the biometric setting item
  */
@@ -17,19 +29,50 @@ export function useBiometricSetting() {
   const colorScheme = useAppColorScheme();
   const navigation =
     useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
-  const { userSettings } = useStores();
+  const { userSettings, walletStore } = useStores();
   const { status: faceIdStatus, request: requestFaceIdPermission } =
     useFaceIDPermission();
   const runAfterPinCheck = useExplicitPinCodeCheck();
 
   const toggleUnavailable = faceIdStatus === RESULTS.BLOCKED;
 
+  useEffect(() => {
+    return addRSEEventListener((event) => {
+      if (event.type !== PinEventType.SHOW_PIN) {
+        return;
+      }
+      if (event.flowType === PinFlowType.ADD_BIOMETRICS) {
+        navigation.navigate('RSEAddBiometrics');
+      }
+    });
+  }, [navigation]);
+
   const onPress = useCallback(() => {
     const setWithPinCheck = (enabled: boolean) =>
       runAfterPinCheck(
         () => {
-          userSettings.switchBiometrics(enabled);
-          navigation.navigate('BiometricsSet', { enabled });
+          const success = () => {
+            userSettings.switchBiometrics(enabled);
+            navigation.navigate('BiometricsSet', { enabled });
+          };
+          if (walletStore.holderDidRseId) {
+            areRSEBiometricsSupported().then((supported) => {
+              if (supported) {
+                setRSEBiometrics(enabled)
+                  .then(() => {
+                    success();
+                  })
+                  .catch((e) => {
+                    const state = enabled ? 'enabled' : 'disabled';
+                    reportException(e, `Error setting RSE biometrics ${state}`);
+                  });
+              } else {
+                success();
+              }
+            });
+          } else {
+            success();
+          }
         },
         { disableBiometry: true },
       );
@@ -68,9 +111,10 @@ export function useBiometricSetting() {
     faceIdStatus,
     runAfterPinCheck,
     userSettings,
+    walletStore.holderDidRseId,
     navigation,
     requestFaceIdPermission,
-    colorScheme,
+    colorScheme.darkMode,
   ]);
 
   return useMemo(

@@ -20,6 +20,7 @@ import {
   HistoryEntityTypeEnum,
   ProofInputClaim,
   TrustEntityRoleEnum,
+  UnexportableEntities,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { omit } from 'lodash';
@@ -125,7 +126,9 @@ export const HistoryDetailScreen: FC = () => {
 
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const { entry } = route.params;
-  const { metadata: backupInfo } = entry;
+  const { metadata } = entry;
+  const backupInfo: UnexportableEntities | undefined =
+    metadata && 'credentials' in metadata ? metadata : undefined;
   const { data: issuedCredential } = useCredentialDetail(
     entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
       ? entry.entityId
