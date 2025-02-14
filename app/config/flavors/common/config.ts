@@ -12,6 +12,7 @@ export const commonConfig: Pick<
   featureFlags: {
     isoMdl: true,
     localization: true,
+    screenCaptureBlocking: true,
   },
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,
 };

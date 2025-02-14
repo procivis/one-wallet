@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import RNScreenshotPrevent from 'react-native-screenshot-prevent';
 
+import { config } from '../config';
+
 let enabledCounter = 0;
 const enable = () => {
   if (!enabledCounter++) {
@@ -31,7 +33,7 @@ export function useCapturePrevention(enabled = true) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (enabled && isFocused) {
+    if (config.featureFlags.screenCaptureBlocking && enabled && isFocused) {
       enable();
 
       return () => {
