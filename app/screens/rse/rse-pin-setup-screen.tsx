@@ -1,14 +1,14 @@
 import {
   concatTestID,
   ContrastingStatusBar,
-  HeaderBackButton,
+  HeaderCloseButton,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { Pins } from '@procivis/one-react-native-components/src/ui-components/pin/pins';
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,7 +18,9 @@ import { IssueCredentialNavigationProp } from '../../navigators/issue-credential
 const {
   addEventListener: addRSEEventListener,
   PinEventType,
+  PinFlowStage,
   PinPad: RSEPinPad,
+  resetPinFlow: resetRSEPinFlow,
 } = Ubiqu;
 
 export interface PinCodeScreenActions {
@@ -27,6 +29,12 @@ export interface PinCodeScreenActions {
     duration?: number;
   }) => Promise<{ finished: boolean }>;
 }
+
+type Step = 'setPin' | 'confirmPin';
+const pinFlowStageMap: Partial<Record<keyof typeof PinFlowStage, Step>> = {
+  [PinFlowStage.NEW_FIRST_PIN]: 'setPin',
+  [PinFlowStage.NEW_SECOND_PIN]: 'confirmPin',
+};
 
 export const RSEPinSetupScreen: FC = () => {
   const navigation =
@@ -38,6 +46,8 @@ export const RSEPinSetupScreen: FC = () => {
   const [step, setStep] = useState<'setPin' | 'confirmPin'>('setPin');
   const [error, setError] = useState<string>();
 
+  const testID = 'RemoteSecureElementPinSetupScreen';
+
   useEffect(() => {
     return addRSEEventListener((event) => {
       switch (event.type) {
@@ -48,8 +58,10 @@ export const RSEPinSetupScreen: FC = () => {
           setEnteredLenght(event.digitsEntered);
           break;
         case PinEventType.PIN_STAGE: {
-          const newStep =
-            event.stage === 'NEW_SECOND_PIN' ? 'confirmPin' : 'setPin';
+          const newStep = pinFlowStageMap[event.stage];
+          if (!newStep) {
+            break;
+          }
           setStep(newStep);
           if (newStep === 'setPin') {
             setError(translate('rse.pinSetup.confirmPin.error'));
@@ -60,15 +72,10 @@ export const RSEPinSetupScreen: FC = () => {
     });
   }, [navigation]);
 
-  const testID = 'RemoteSecureElementPinSetupScreen';
-
-  useEffect(() => {
-    if (enteredLength === pinLength) {
-      setStep((current) => {
-        return current === 'setPin' ? 'confirmPin' : 'setPin';
-      });
-    }
-  }, [enteredLength]);
+  const handleClose = useCallback(() => {
+    resetRSEPinFlow();
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <SafeAreaView
@@ -77,7 +84,10 @@ export const RSEPinSetupScreen: FC = () => {
     >
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <View style={styles.backButton}>
-        <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
+        <HeaderCloseButton
+          onPress={handleClose}
+          testID={concatTestID(testID, 'header.back')}
+        />
       </View>
       <View style={styles.content}>
         <View style={styles.upperContent}>

@@ -4,10 +4,14 @@ import { useCallback } from 'react';
 
 import { useStores } from '../models';
 
-const { reset: resetRSE } = Ubiqu;
+const {
+  reset: resetRSE,
+  setBiometrics: setRSEBiometrics,
+  areBiometricsSupported: areRSEBiometricsSupported,
+} = Ubiqu;
 
 export const useCreateRSE = () => {
-  const { walletStore } = useStores();
+  const { userSettings, walletStore } = useStores();
   const { core, organisationId } = useONECore();
 
   const generateRSE = useCallback(() => {
@@ -37,7 +41,19 @@ export const useCreateRSE = () => {
           })
           .then((rseDidId) => {
             walletStore.rseSetup(rseDidId);
-            return rseDidId;
+            if (userSettings.biometrics) {
+              return areRSEBiometricsSupported()
+                .then(async (supported) => {
+                  if (!supported) {
+                    return rseDidId;
+                  }
+                  await setRSEBiometrics(true);
+                  return rseDidId;
+                })
+                .catch(() => rseDidId);
+            } else {
+              return rseDidId;
+            }
           })
           .catch(async (e) => {
             await resetRSE().catch(() => {});
@@ -48,7 +64,7 @@ export const useCreateRSE = () => {
         await resetRSE().catch(() => {});
         throw e;
       });
-  }, [core, organisationId, walletStore]);
+  }, [core, organisationId, userSettings.biometrics, walletStore]);
 
   return { generateRSE };
 };

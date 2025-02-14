@@ -13,7 +13,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { useStores } from '../../models';
 
 const {
   addEventListener: addRSEEventListener,
@@ -29,22 +29,22 @@ export interface PinCodeScreenActions {
   }) => Promise<{ finished: boolean }>;
 }
 
-export const RSESignScreen: FC = () => {
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
+export const RSEAddBiometricsScreen: FC = () => {
+  const navigation = useNavigation();
+  const { userSettings } = useStores();
   const pinLength = 5;
   const colorScheme = useAppColorScheme();
   const [shakePosition] = useState(() => new Animated.Value(0));
   const [enteredLength, setEnteredLenght] = useState(0);
   const [error, setError] = useState<string>();
 
-  const testID = 'RemoteSecureElementSignScreen';
+  const testID = 'RemoteSecureElementAddBiometricsScreen';
 
   useEffect(() => {
     return addRSEEventListener((event) => {
       switch (event.type) {
         case PinEventType.HIDE_PIN:
-          rootNavigation.goBack();
+          navigation.goBack();
           break;
         case PinEventType.DIGITS_ENTERED:
           setEnteredLenght(event.digitsEntered);
@@ -54,7 +54,7 @@ export const RSESignScreen: FC = () => {
           break;
         case PinEventType.INCORRECT_PIN: {
           setError(
-            translate('rse.sign.error.wrongPin', {
+            translate('rse.addBiometrics.error.wrongPin', {
               attemptsLeft: event.attemptsLeft,
             }),
           );
@@ -62,12 +62,12 @@ export const RSESignScreen: FC = () => {
         }
       }
     });
-  }, [rootNavigation]);
+  }, [navigation, userSettings]);
 
   const handleClose = useCallback(() => {
     resetRSEPinFlow();
-    rootNavigation.goBack();
-  }, [rootNavigation]);
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <SafeAreaView
@@ -91,7 +91,7 @@ export const RSESignScreen: FC = () => {
             style={styles.title}
             testID={concatTestID(testID, 'title')}
           >
-            {translate('rse.sign.title')}
+            {translate('rse.addBiometrics.title')}
           </Typography>
           <Pins
             enteredLength={enteredLength}
@@ -105,7 +105,7 @@ export const RSESignScreen: FC = () => {
             style={styles.instruction}
             testID={concatTestID(testID, 'instruction')}
           >
-            {translate('rse.sign.instruction', { pinLength })}
+            {translate('rse.addBiometrics.instruction', { pinLength })}
           </Typography>
           <Typography
             accessible={Boolean(error)}
