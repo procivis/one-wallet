@@ -1,5 +1,5 @@
 import {
-  Button,
+  HoldButton,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -18,8 +18,6 @@ import {
   CreateBackupProcessingNavigationProp,
   CreateBackupProcessingRouteProp,
 } from '../../navigators/create-backup/create-backup-processing-routes';
-
-const longPressTimeSeconds = 3;
 
 const PreviewScreen: FC = () => {
   const colorScheme = useAppColorScheme();
@@ -102,12 +100,11 @@ const PreviewScreen: FC = () => {
         )}
       </View>
       <View style={styles.bottom}>
-        <Button
-          delayLongPress={longPressTimeSeconds * 1000}
-          onLongPress={onConfirm}
-          subtitle={translate('common.holdButton', {
-            seconds: longPressTimeSeconds,
-          })}
+        <HoldButton
+          onFinished={onConfirm}
+          style={{ backgroundColor: colorScheme.white }}
+          subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
+          subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
           testID="CreateBackupPreviewScreen.mainButton"
           title={translate('createBackup.preview.cta')}
         />
