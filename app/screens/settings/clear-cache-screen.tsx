@@ -1,8 +1,7 @@
 import {
-  Button,
-  ButtonType,
   concatTestID,
   HeaderBackButton,
+  HoldButton,
   RadioGroup,
   RadioGroupItem,
   ScrollViewScreen,
@@ -27,8 +26,6 @@ enum ClearOptions {
   AllCaches = 'AllCaches',
   RevocationAndTrustData = 'RevocationAndTrustData',
 }
-
-const longPressTimeSeconds = 3;
 
 const ClearCacheScreen: FunctionComponent = () => {
   const [clearType, setClearType] = useState<ClearOptions>(
@@ -96,15 +93,12 @@ const ClearCacheScreen: FunctionComponent = () => {
           selectedItem={clearType ?? ''}
         />
 
-        <Button
-          delayLongPress={longPressTimeSeconds * 1000}
-          onLongPress={handlePress}
-          subtitle={translate('common.holdButton', {
-            seconds: longPressTimeSeconds,
-          })}
+        <HoldButton
+          onFinished={handlePress}
+          subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
+          subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
           testID={concatTestID(testID, 'mainButton')}
           title={translate('common.clear')}
-          type={ButtonType.Primary}
         />
       </View>
     </ScrollViewScreen>

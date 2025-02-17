@@ -1,7 +1,6 @@
 import {
-  Button,
-  ButtonType,
   Checkbox,
+  HoldButton,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -13,8 +12,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-
-const longPressTimeSeconds = 3;
 
 const DeleteWalletScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
@@ -51,16 +48,13 @@ const DeleteWalletScreen: FunctionComponent = () => {
             text={translate('deleteWalletScreen.confirm')}
             value={confirmation}
           />
-          <Button
-            delayLongPress={longPressTimeSeconds * 1000}
+          <HoldButton
+            onFinished={deleteAction}
             disabled={!confirmation}
-            onLongPress={deleteAction}
-            subtitle={translate('common.holdButton', {
-              seconds: longPressTimeSeconds,
-            })}
+            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
             testID="DeleteWalletScreen.mainButton"
             title={translate('common.delete')}
-            type={confirmation ? ButtonType.Primary : ButtonType.Border}
           />
         </View>
       </View>

@@ -3,6 +3,7 @@ import {
   ButtonType,
   concatTestID,
   CredentialDetails,
+  HoldButton,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -19,8 +20,6 @@ import {
   DeleteCredentialRouteProp,
 } from '../../navigators/delete-credential/delete-credential-routes';
 import { credentialCardLabels } from '../../utils/credential';
-
-const LONG_PRESS_TIMEOUT = 3;
 
 const CredentialDeletePromptScreen: FC = () => {
   const navigation = useNavigation<DeleteCredentialNavigationProp<'Prompt'>>();
@@ -82,13 +81,11 @@ const CredentialDeletePromptScreen: FC = () => {
         </View>
 
         <View style={styles.bottom}>
-          <Button
-            delayLongPress={LONG_PRESS_TIMEOUT * 1000}
-            onLongPress={onConfirm}
-            style={styles.mainButton}
-            subtitle={translate('credentialDeletePrompt.confirm.subtitle', {
-              seconds: LONG_PRESS_TIMEOUT,
-            })}
+          <HoldButton
+            onFinished={onConfirm}
+            style={[styles.mainButton, { backgroundColor: colorScheme.white }]}
+            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
             testID="CredentialDeletePromptScreen.mainButton"
             title={translate('credentialDeletePrompt.confirm.title')}
           />

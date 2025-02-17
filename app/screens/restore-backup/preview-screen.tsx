@@ -1,5 +1,5 @@
 import {
-  Button,
+  HoldButton,
   NavigationHeader,
   Typography,
   useAppColorScheme,
@@ -26,8 +26,6 @@ import { HeaderCloseModalButton } from '../../components/navigation/header-butto
 import { translate } from '../../i18n';
 import { RestoreBackupProcessingNavigationProp } from '../../navigators/restore-backup/restore-backup-processing-routes';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
-
-const longPressTimeSeconds = 3;
 
 const PreviewScreen: FC = () => {
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
@@ -91,12 +89,11 @@ const PreviewScreen: FC = () => {
         </Typography>
         <PreviewCredentials credentials={credentials} />
         <SafeAreaView edges={['bottom']} style={styles.bottom}>
-          <Button
-            delayLongPress={longPressTimeSeconds * 1000}
-            onLongPress={onConfirm}
-            subtitle={translate('common.holdButton', {
-              seconds: longPressTimeSeconds,
-            })}
+          <HoldButton
+            onFinished={onConfirm}
+            style={{ backgroundColor: colorScheme.white }}
+            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
             testID="RestoreBackupPreviewScreen.mainButton"
             title={translate('restoreBackup.preview.cta')}
           />
