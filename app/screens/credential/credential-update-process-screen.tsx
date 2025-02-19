@@ -7,7 +7,7 @@ import {
   useCredentialDetail,
   useCredentialRevocationCheck,
 } from '@procivis/one-react-native-components';
-import { CredentialDetail } from '@procivis/react-native-one-core';
+import { CredentialDetail, Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -29,6 +29,12 @@ import {
 } from '../../navigators/root/root-routes';
 import { resetNavigationAction } from '../../utils/navigation';
 
+const {
+  addEventListener: addRSEEventListener,
+  PinEventType,
+  PinFlowType,
+} = Ubiqu;
+
 const CredentialUpdateProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
@@ -41,6 +47,19 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
   const closing = useRef(false);
 
   useBlockOSBackNavigation(state === LoaderViewState.InProgress);
+
+  useEffect(
+    () =>
+      addRSEEventListener((event) => {
+        if (
+          event.type === PinEventType.SHOW_PIN &&
+          event.flowType === PinFlowType.TRANSACTION
+        ) {
+          rootNavigation.navigate('RSESign');
+        }
+      }),
+    [rootNavigation],
+  );
 
   const { mutateAsync: checkCredentialStatus } =
     useCredentialRevocationCheck(true);
