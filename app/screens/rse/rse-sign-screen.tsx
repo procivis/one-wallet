@@ -8,7 +8,7 @@ import {
 import { Pins } from '@procivis/one-react-native-components/src/ui-components/pin/pins';
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -37,15 +37,20 @@ export const RSESignScreen: FC = () => {
   const [shakePosition] = useState(() => new Animated.Value(0));
   const [enteredLength, setEnteredLenght] = useState(0);
   const [error, setError] = useState<string>();
+  const dismissed = useRef(false);
 
   const testID = 'RemoteSecureElementSignScreen';
 
   useEffect(() => {
     return addRSEEventListener((event) => {
       switch (event.type) {
-        case PinEventType.HIDE_PIN:
-          rootNavigation.goBack();
+        case PinEventType.HIDE_PIN: {
+          if (!dismissed.current) {
+            dismissed.current = true;
+            rootNavigation.goBack();
+          }
           break;
+        }
         case PinEventType.DIGITS_ENTERED:
           setEnteredLenght(event.digitsEntered);
           if (event.digitsEntered > 0) {
@@ -62,7 +67,7 @@ export const RSESignScreen: FC = () => {
         }
       }
     });
-  }, [rootNavigation]);
+  }, [dismissed, rootNavigation]);
 
   const handleClose = useCallback(() => {
     resetRSEPinFlow();
