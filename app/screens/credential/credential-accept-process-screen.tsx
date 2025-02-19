@@ -40,6 +40,7 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { isRSELockedError } from '../../utils/rse';
 
 const {
   addEventListener: addRSEEventListener,
@@ -56,9 +57,9 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
-  const [state, setState] = useState<
-    Exclude<LoaderViewState, LoaderViewState.Error>
-  >(LoaderViewState.InProgress);
+  const [state, setState] = useState<LoaderViewState>(
+    LoaderViewState.InProgress,
+  );
   const { credentialId, interactionId, txCode, txCodeValue } = route.params;
   const { mutateAsync: acceptCredential } = useCredentialAccept();
   const { data: credential, isLoading } = useCredentialDetail(credentialId);
@@ -105,6 +106,8 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT
     ) {
       return translate('credentialOffer.process.creatingRSE.title');
+    } else if (error && isRSELockedError(error)) {
+      return translate('credentialOffer.process.error.rseLocked.title');
     }
     const txKeyPath: TxKeyPath =
       state === LoaderViewState.Warning && !didId
@@ -148,8 +151,12 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
         });
       }
 
-      setState(LoaderViewState.Warning);
       setError(e);
+      if (isRSELockedError(e)) {
+        setState(LoaderViewState.Error);
+      } else {
+        setState(LoaderViewState.Warning);
+      }
     }
   }, [
     acceptanceInitialized,

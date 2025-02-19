@@ -32,6 +32,7 @@ import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
+import { isRSELockedError } from '../../utils/rse';
 
 const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
 
@@ -41,9 +42,9 @@ const ProofProcessScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
-  const [state, setState] = useState<
-    Exclude<LoaderViewState, LoaderViewState.Error>
-  >(LoaderViewState.InProgress);
+  const [state, setState] = useState<LoaderViewState>(
+    LoaderViewState.InProgress,
+  );
   const { mutateAsync: acceptProof } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
@@ -81,6 +82,16 @@ const ProofProcessScreen: FunctionComponent = () => {
     });
   }, [rootNavigation]);
 
+  const loaderLabel = useMemo(() => {
+    if (error && isRSELockedError(error)) {
+      return translate('proofRequest.process.error.rseLocked.title');
+    }
+    return translateError(
+      error,
+      translate(`proofRequest.process.${state}.title`),
+    );
+  }, [error, state]);
+
   const handleProofSubmit = useCallback(
     async (didId: string) => {
       try {
@@ -91,7 +102,11 @@ const ProofProcessScreen: FunctionComponent = () => {
         });
         setState(LoaderViewState.Success);
       } catch (e) {
-        setState(LoaderViewState.Warning);
+        if (isRSELockedError(e)) {
+          setState(LoaderViewState.Error);
+        } else {
+          setState(LoaderViewState.Warning);
+        }
         setError(e);
       }
     },
@@ -167,10 +182,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       }}
       loader={{
         animate: isFocused,
-        label: translateError(
-          error,
-          translate(`proofRequest.process.${state}.title`),
-        ),
+        label: loaderLabel,
         state,
         testID: 'ProofRequestAcceptProcessScreen.animation',
       }}
