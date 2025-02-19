@@ -1,7 +1,7 @@
 import { expect } from 'detox';
-import { v4 as uuidv4 } from 'uuid';
 
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
+import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import { CredentialStatus } from '../page-objects/components/CredentialCard';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import CredentialDetailScreen, {
@@ -43,19 +43,28 @@ describe('ONE-601: Credential issuance', () => {
     await launchApp();
 
     authToken = await bffLogin();
-    credentialSchemaJWT = await createCredentialSchema(authToken, {
-      format: CredentialFormat.JWT,
-      revocationMethod: RevocationMethod.STATUSLIST2021,
-    });
-    credentialSchemaSD_JWT = await createCredentialSchema(authToken, {
-      format: CredentialFormat.SD_JWT,
-      revocationMethod: RevocationMethod.STATUSLIST2021,
-    });
-    credentialSchemaJWT_with_LVVC = await createCredentialSchema(authToken, {
-      allowSuspension: true,
-      format: CredentialFormat.JWT,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    credentialSchemaJWT = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        format: CredentialFormat.JWT,
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+      }),
+    );
+    credentialSchemaSD_JWT = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        format: CredentialFormat.SD_JWT,
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+      }),
+    );
+    credentialSchemaJWT_with_LVVC = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        allowSuspension: true,
+        format: CredentialFormat.JWT,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
   });
 
   it('ONE-1800: Empty Credential dashboard', async () => {
@@ -119,10 +128,10 @@ describe('ONE-601: Credential issuance', () => {
           ).atIndex(0),
         ).toBeVisible();
         const suspendedDate = new Date();
-        suspendedDate.setHours(0, 0, 0, 0);
+        suspendedDate.setHours(10, 0, 0, 0);
         suspendedDate.setDate(suspendedDate.getDate() + 1);
         const formattedDate = formatDateTime(suspendedDate);
-
+        console.log('formattedDate', formattedDate);
         await suspendCredential(
           credentialId,
           authToken,
@@ -316,16 +325,22 @@ describe('ONE-601: Credential issuance', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
 
-      credentialSchemaSoftware = await createCredentialSchema(authToken, {
-        format: CredentialFormat.JWT,
-        revocationMethod: RevocationMethod.STATUSLIST2021,
-        walletStorageType: WalletKeyStorageType.SOFTWARE,
-      });
-      credentialSchemaHardware = await createCredentialSchema(authToken, {
-        format: CredentialFormat.JWT,
-        revocationMethod: RevocationMethod.STATUSLIST2021,
-        walletStorageType: WalletKeyStorageType.HARDWARE,
-      });
+      credentialSchemaSoftware = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+          walletStorageType: WalletKeyStorageType.SOFTWARE,
+        }),
+      );
+      credentialSchemaHardware = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+          walletStorageType: WalletKeyStorageType.HARDWARE,
+        }),
+      );
     });
 
     it('Issue Software schema', async () => {
@@ -360,16 +375,20 @@ describe('ONE-601: Credential issuance', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      credentialSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.PICTURE,
-            key: pictureKey,
-            required: true,
-          },
-        ],
-      });
+      credentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.PICTURE,
+              key: pictureKey,
+              required: true,
+            },
+          ],
+          format: CredentialFormat.JWT,
+        }),
+      );
 
       await credentialIssuance({
         authToken,
@@ -432,9 +451,13 @@ describe('ONE-601: Credential issuance', () => {
       },
     ];
     beforeAll(async () => {
-      const credentialSchema = await createCredentialSchema(authToken, {
-        claims: claims,
-      });
+      const credentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: claims,
+          format: CredentialFormat.JWT,
+        }),
+      );
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
@@ -455,52 +478,58 @@ describe('ONE-601: Credential issuance', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      schema1 = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'first name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'last name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.EMAIL,
-            key: 'email',
-            required: true,
-          },
-        ],
-        name: `Schema-1-${uuidv4()}`,
-      });
-      schema2 = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'first name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'last name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.EMAIL,
-            key: 'email',
-            required: true,
-          },
-        ],
-        name: `Schema-2-${uuidv4()}`,
-      });
+      schema1 = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'first name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'last name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.EMAIL,
+              key: 'email',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.SD_JWT,
+        }),
+      );
+      schema2 = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'first name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'last name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.EMAIL,
+              key: 'email',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.JSON_LD_CLASSIC,
+        }),
+      );
       await credentialIssuance({
         authToken,
         credentialSchema: schema1,
@@ -565,31 +594,33 @@ describe('ONE-601: Credential issuance', () => {
     let booleanSchema: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      booleanSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.BOOLEAN,
-            key: 'Vip?',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.BOOLEAN,
-            key: 'Married?',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'First name',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.SD_JWT,
-        name: `Boolean schema ${uuidv4()}`,
-        revocationMethod: RevocationMethod.LVVC,
-      });
+      booleanSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.BOOLEAN,
+              key: 'Vip?',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.BOOLEAN,
+              key: 'Married?',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'First name',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.SD_JWT,
+          revocationMethod: RevocationMethod.LVVC,
+        }),
+      );
     });
 
     it('Issue credential with boolean', async () => {

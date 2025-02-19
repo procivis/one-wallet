@@ -6,6 +6,7 @@ import lodash from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
+import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import {
   ProofAction,
   proofSchemaCreate,
@@ -44,6 +45,7 @@ import {
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
+import { shortUUID } from '../utils/utils';
 
 describe('ONE-614: Proof request', () => {
   let authToken: string;
@@ -53,12 +55,14 @@ describe('ONE-614: Proof request', () => {
   beforeAll(async () => {
     await launchApp();
     authToken = await bffLogin();
-    credentialSchema = await createCredentialSchema(authToken, {
-      allowSuspension: true,
-      format: CredentialFormat.SD_JWT,
-      name: `Credential ${uuidv4()}`,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    credentialSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        allowSuspension: true,
+        format: CredentialFormat.SD_JWT,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
     proofSchema = await proofSchemaCreate(authToken, {
       credentialSchemas: [credentialSchema],
       validityConstraint: 888,
@@ -127,16 +131,22 @@ describe('ONE-614: Proof request', () => {
           required: true,
         },
       ];
-      jwtCredentialSchema = await createCredentialSchema(authToken, {
-        claims,
-        format: CredentialFormat.JWT,
-        name: `jwt-selective-disclosure-${uuidv4()}`,
-      });
-      sdjwtCredentialSchema = await createCredentialSchema(authToken, {
-        claims,
-        format: CredentialFormat.SD_JWT,
-        name: `sd jwt elective-disclosure-${uuidv4()}`,
-      });
+      jwtCredentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims,
+          format: CredentialFormat.JWT,
+          name: `jwt-selective-disclosure-${shortUUID()}`,
+        }),
+      );
+      sdjwtCredentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims,
+          format: CredentialFormat.SD_JWT,
+          name: `sd jwt elective-disclosure-${shortUUID()}`,
+        }),
+      );
 
       proofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [jwtCredentialSchema, sdjwtCredentialSchema],
@@ -413,18 +423,21 @@ describe('ONE-614: Proof request', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
 
-      const pictureCredentialSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.PICTURE,
-            key: 'picture',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.JSON_LD_CLASSIC,
-        name: `Credential with picture ${uuidv4()}`,
-      });
+      const pictureCredentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.PICTURE,
+              key: 'picture',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.JSON_LD_CLASSIC,
+          name: `Credential with picture ${uuidv4()}`,
+        }),
+      );
       pictureProofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [pictureCredentialSchema],
       });
@@ -494,9 +507,8 @@ describe('ONE-614: Proof request', () => {
       async ({ credentialFormat, issuanceExchange, proofExchange }) => {
         const specificCredentialSchema = await createCredentialSchema(
           authToken,
-          { format: credentialFormat },
+          getCredentialSchemaData({ format: credentialFormat }),
         );
-
         await credentialIssuance({
           authToken: authToken,
           credentialSchema: specificCredentialSchema,
@@ -524,9 +536,13 @@ describe('ONE-614: Proof request', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
 
-      credentialSchema = await createCredentialSchema(authToken, {
-        revocationMethod: RevocationMethod.LVVC,
-      });
+      credentialSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+          revocationMethod: RevocationMethod.LVVC,
+        }),
+      );
       proofSchemaLVVC = await proofSchemaCreate(authToken, {
         credentialSchemas: [credentialSchema],
         validityConstraint: 888,
@@ -590,106 +606,114 @@ describe('ONE-614: Proof request', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      driverLicenceSchema = await createCredentialSchema(authToken, {
-        allowSuspension: true,
-        claims: [
-          {
-            array: false,
-            claims: [
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'first_name',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'last_name',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'license_number',
-                required: true,
-              },
-            ],
-            datatype: DataType.OBJECT,
-            key: 'User data',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.MDOC,
-        name: `Driver Licence-${uuidv4()}`,
-        revocationMethod: RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
-        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-      });
+      driverLicenceSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          allowSuspension: true,
+          claims: [
+            {
+              array: false,
+              claims: [
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'first_name',
+                  required: true,
+                },
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'last_name',
+                  required: true,
+                },
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'license_number',
+                  required: true,
+                },
+              ],
+              datatype: DataType.OBJECT,
+              key: 'User data',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.MDOC,
+          name: `Driver Licence-${uuidv4()}`,
+          revocationMethod: RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
+        }),
+      );
 
-      swissPassport = await createCredentialSchema(authToken, {
-        allowSuspension: true,
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'first_name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'last_name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'id',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.BIRTH_DATE,
-            key: 'birthday',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.SD_JWT,
-        name: `Swiss Passport-${uuidv4()}`,
-        revocationMethod: RevocationMethod.LVVC,
-      });
+      swissPassport = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          allowSuspension: true,
+          claims: [
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'first_name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'last_name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'id',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.BIRTH_DATE,
+              key: 'birthday',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.SD_JWT,
+          name: `Swiss Passport-${uuidv4()}`,
+          revocationMethod: RevocationMethod.LVVC,
+        }),
+      );
 
-      usaPassport = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'first_name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'last_name',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'id',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.BIRTH_DATE,
-            key: 'birthday',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.SD_JWT,
-        name: `USA Passport-${uuidv4()}`,
-        revocationMethod: RevocationMethod.STATUSLIST2021,
-      });
+      usaPassport = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'first_name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'last_name',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.STRING,
+              key: 'id',
+              required: true,
+            },
+            {
+              array: false,
+              datatype: DataType.BIRTH_DATE,
+              key: 'birthday',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.SD_JWT,
+          name: `USA Passport-${uuidv4()}`,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+        }),
+      );
       proofSchemaMDL = await proofSchemaCreate(authToken, {
         credentialSchemas: [driverLicenceSchema],
         name: `MDL first name ${uuidv4()}`,

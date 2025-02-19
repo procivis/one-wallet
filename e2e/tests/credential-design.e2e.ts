@@ -1,9 +1,9 @@
 import { expect } from 'detox';
-import { v4 as uuidv4 } from 'uuid';
 
+import { getAttributeClaims, mDocCredentialClaims } from '../helpers/claims';
 import { credentialIssuance } from '../helpers/credential';
 import {
-  mDocCredentialClaims,
+  getCredentialSchemaData,
   mDocCredentialSchema,
 } from '../helpers/credentialSchemas';
 import {
@@ -52,21 +52,9 @@ describe('ONE-2014: Credential design', () => {
     let schema1: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      schema1 = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'Attribute 1',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'Attribute 2',
-            required: true,
-          },
-        ],
+      const schemaData = getCredentialSchemaData({
+        allowSuspension: true,
+        claims: getAttributeClaims(),
         format: CredentialFormat.SD_JWT,
         layoutProperties: {
           code: {
@@ -80,9 +68,9 @@ describe('ONE-2014: Credential design', () => {
           primaryAttribute: 'Attribute 1',
           secondaryAttribute: 'Attribute 2',
         },
-        name: `credential-detox-e2e-${uuidv4()}`,
         revocationMethod: RevocationMethod.LVVC,
       });
+      schema1 = await createCredentialSchema(authToken, schemaData);
     });
 
     it('ONE-1873: Accessing Advanced Credential Details ("Nerd Mode")', async () => {
@@ -158,28 +146,16 @@ describe('ONE-2014: Credential design', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      schema1 = await createCredentialSchema(authToken, {
+      const schemaData = getCredentialSchemaData({
         allowSuspension: true,
-        claims: [
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'Attribute 1',
-            required: true,
-          },
-          {
-            array: false,
-            datatype: DataType.STRING,
-            key: 'Attribute 2',
-            required: true,
-          },
-        ],
+        claims: getAttributeClaims(),
+        format: CredentialFormat.SD_JWT,
         layoutProperties: {
           primaryAttribute: 'Attribute 1',
         },
-        name: `credential-${uuidv4()}`,
         revocationMethod: RevocationMethod.LVVC,
       });
+      schema1 = await createCredentialSchema(authToken, schemaData);
     });
 
     it('Test credential history list', async () => {
@@ -249,56 +225,32 @@ describe('ONE-2014: Credential design', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
+      const schemaDataWithoutLayout = getCredentialSchemaData({
+        claims: getAttributeClaims(),
+        format: CredentialFormat.JWT,
+      });
       schemaWithoutLayout = await createCredentialSchema(
         authToken,
-        {
-          claims: [
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'Attribute 1',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'Attribute 2',
-              required: true,
-            },
-          ],
-          name: `credential without layout ${uuidv4()}`,
-        },
-        false,
+        schemaDataWithoutLayout,
       );
+
+      const schemaDataWithLayout = getCredentialSchemaData({
+        claims: getAttributeClaims(),
+        format: CredentialFormat.JWT,
+        layoutProperties: {
+          background: {
+            color: '#cc66ff',
+          },
+          logo: {
+            backgroundColor: '#ebb1f9',
+            fontColor: '#000000',
+          },
+        },
+        revocationMethod: RevocationMethod.STATUSLIST2021,
+      });
       schemaWithLayout = await createCredentialSchema(
         authToken,
-        {
-          claims: [
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'Attribute 1',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'Attribute 2',
-              required: true,
-            },
-          ],
-          layoutProperties: {
-            background: {
-              color: '#cc66ff',
-            },
-            logo: {
-              backgroundColor: '#ebb1f9',
-              fontColor: '#000000',
-            },
-          },
-          name: `credential with layout ${uuidv4()}`,
-        },
-        false,
+        schemaDataWithLayout,
       );
     });
 
@@ -341,7 +293,7 @@ describe('ONE-2014: Credential design', () => {
   describe('ONE-2300: Card Stack View: highlight individual Credential', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
-      const schema_1 = await createCredentialSchema(authToken, {
+      const schemaData1 = getCredentialSchemaData({
         claims: [
           {
             array: false,
@@ -362,6 +314,7 @@ describe('ONE-2014: Credential design', () => {
             required: true,
           },
         ],
+        format: CredentialFormat.JWT,
         layoutProperties: {
           background: {
             color: '#7C3D2F',
@@ -378,10 +331,9 @@ describe('ONE-2014: Credential design', () => {
           primaryAttribute: 'Main region',
           secondaryAttribute: 'Support region',
         },
-        name: `Scrolling 1 ${uuidv4()}`,
       });
-
-      const schema_2 = await createCredentialSchema(authToken, {
+      const schema_1 = await createCredentialSchema(authToken, schemaData1);
+      const schemaData2 = getCredentialSchemaData({
         claims: [
           {
             array: false,
@@ -402,6 +354,7 @@ describe('ONE-2014: Credential design', () => {
             required: true,
           },
         ],
+        format: CredentialFormat.JSON_LD_CLASSIC,
         layoutProperties: {
           background: {
             color: '#cc66ff',
@@ -418,10 +371,11 @@ describe('ONE-2014: Credential design', () => {
           primaryAttribute: 'first name',
           secondaryAttribute: 'last name',
         },
-        name: `Scrolling 2 ${uuidv4()}`,
       });
 
-      const schema_3 = await createCredentialSchema(authToken, {
+      const schema_2 = await createCredentialSchema(authToken, schemaData2);
+
+      const schemaData3 = getCredentialSchemaData({
         claims: [
           {
             array: false,
@@ -436,8 +390,9 @@ describe('ONE-2014: Credential design', () => {
             required: true,
           },
         ],
-        name: `Scrolling 3 ${uuidv4()}`,
+        format: CredentialFormat.SD_JWT_VC,
       });
+      const schema_3 = await createCredentialSchema(authToken, schemaData3);
 
       await credentialIssuance({
         authToken,
@@ -497,7 +452,7 @@ describe('ONE-2014: Credential design', () => {
     let credentialName: string;
 
     beforeAll(async () => {
-      const schema = await createCredentialSchema(authToken, {
+      const schemaData = getCredentialSchemaData({
         claims: [
           {
             array: false,
@@ -512,8 +467,9 @@ describe('ONE-2014: Credential design', () => {
             required: true,
           },
         ],
-        name: `Scrolling test ${uuidv4()}`,
+        format: CredentialFormat.JWT,
       });
+      const schema = await createCredentialSchema(authToken, schemaData);
       credentialName = schema.name;
       for (let i = 0; i <= 7; i++) {
         await credentialIssuance({
@@ -534,8 +490,7 @@ describe('ONE-2014: Credential design', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-
-      schema1 = await createCredentialSchema(authToken, {
+      const schemaData = getCredentialSchemaData({
         claims: [
           {
             array: false,
@@ -562,6 +517,7 @@ describe('ONE-2014: Credential design', () => {
             required: false,
           },
         ],
+        format: CredentialFormat.SD_JWT_VC,
         layoutProperties: {
           code: {
             attribute: 'first name',
@@ -575,8 +531,8 @@ describe('ONE-2014: Credential design', () => {
           primaryAttribute: 'first name',
           secondaryAttribute: 'Last name',
         },
-        name: `credential-detox-e2e-${uuidv4()}`,
       });
+      schema1 = await createCredentialSchema(authToken, schemaData);
       await credentialIssuance({
         authToken: authToken,
         claimValues: [

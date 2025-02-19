@@ -1,6 +1,7 @@
 import { device, expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
+import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import CreateBackupCheckPasswordScreen from '../page-objects/backup/CreateBackupCheckPasswordScreen';
 import CreateBackupDashboardScreen from '../page-objects/backup/CreateBackupDashboardScreen';
 import CreateBackupPreviewScreen from '../page-objects/backup/CreateBackupPreviewScreen';
@@ -51,9 +52,12 @@ describe('ONE-1530: Backup & Restore', () => {
 
     beforeAll(async () => {
       await launchApp({ delete: true });
-      credentialSchemaJWT = await createCredentialSchema(authToken, {
-        format: CredentialFormat.JWT,
-      });
+      credentialSchemaJWT = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+        }),
+      );
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,

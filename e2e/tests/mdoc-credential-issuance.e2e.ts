@@ -1,9 +1,9 @@
 import { expect } from 'detox';
-import { v4 as uuidv4 } from 'uuid';
 
+import { mDocCredentialClaims } from '../helpers/claims';
 import { credentialIssuance } from '../helpers/credential';
 import {
-  mDocCredentialClaims,
+  getCredentialSchemaData,
   mDocCredentialSchema,
 } from '../helpers/credentialSchemas';
 import CredentialDetailScreen from '../page-objects/credential/CredentialDetailScreen';
@@ -36,45 +36,47 @@ describe('ONE-601: Credential issuance', () => {
     let mdocSchema: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      mdocSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            claims: [
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'country',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'region',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'city',
-                required: true,
-              },
-              {
-                array: false,
-                datatype: DataType.STRING,
-                key: 'street',
-                required: true,
-              },
-            ],
-            datatype: DataType.OBJECT,
-            key: 'Address',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.MDOC,
-        revocationMethod: RevocationMethod.NONE,
-        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-      });
+      mdocSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              claims: [
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'country',
+                  required: true,
+                },
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'region',
+                  required: true,
+                },
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'city',
+                  required: true,
+                },
+                {
+                  array: false,
+                  datatype: DataType.STRING,
+                  key: 'street',
+                  required: true,
+                },
+              ],
+              datatype: DataType.OBJECT,
+              key: 'Address',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.MDOC,
+          revocationMethod: RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
+        }),
+      );
     });
 
     it('Issue mdoc credential', async () => {
@@ -94,58 +96,59 @@ describe('ONE-601: Credential issuance', () => {
     let driverLicenceSchema: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
-      driverLicenceSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            claims: [
-              {
-                array: false,
-                claims: [],
-                datatype: DataType.STRING,
-                key: 'Full Name',
-                required: true,
-              },
-              {
-                array: true,
-                claims: [
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.STRING,
-                    key: 'Category Name',
-                    required: true,
-                  },
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.DATE,
-                    key: 'Issue Date',
-                    required: true,
-                  },
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.DATE,
-                    key: 'Expiry Date',
-                    required: true,
-                  },
-                ],
-                datatype: DataType.OBJECT,
-                key: 'Category',
-                required: true,
-              },
-            ],
-            datatype: DataType.OBJECT,
-            key: 'User data',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.MDOC,
-        name: `Driver Licence-${uuidv4()}`,
-        revocationMethod: RevocationMethod.NONE,
-        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-      });
+      driverLicenceSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              claims: [
+                {
+                  array: false,
+                  claims: [],
+                  datatype: DataType.STRING,
+                  key: 'Full Name',
+                  required: true,
+                },
+                {
+                  array: true,
+                  claims: [
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.STRING,
+                      key: 'Category Name',
+                      required: true,
+                    },
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.DATE,
+                      key: 'Issue Date',
+                      required: true,
+                    },
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.DATE,
+                      key: 'Expiry Date',
+                      required: true,
+                    },
+                  ],
+                  datatype: DataType.OBJECT,
+                  key: 'Category',
+                  required: true,
+                },
+              ],
+              datatype: DataType.OBJECT,
+              key: 'User data',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.MDOC,
+          revocationMethod: RevocationMethod.NONE,
+        }),
+      );
     });
 
     it('Issue mdoc array credential', async () => {

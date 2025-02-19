@@ -1,6 +1,7 @@
 import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
+import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import HistoryDetailScreen from '../page-objects/HistoryDetailScreen';
@@ -27,9 +28,12 @@ describe('ONE-224: Wallet history', () => {
     await launchApp();
 
     authToken = await bffLogin();
-    credentialSchemaJWT = await createCredentialSchema(authToken, {
-      format: CredentialFormat.JWT,
-    });
+    credentialSchemaJWT = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        format: CredentialFormat.JWT,
+      }),
+    );
   });
 
   it('Empty history list', async () => {

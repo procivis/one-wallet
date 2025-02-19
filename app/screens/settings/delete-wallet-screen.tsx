@@ -49,8 +49,8 @@ const DeleteWalletScreen: FunctionComponent = () => {
             value={confirmation}
           />
           <HoldButton
-            onFinished={deleteAction}
             disabled={!confirmation}
+            onFinished={deleteAction}
             subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
             subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
             testID="DeleteWalletScreen.mainButton"
