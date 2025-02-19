@@ -2,6 +2,7 @@ import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
 import { credentialIssuance } from '../helpers/credential';
+import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import { proofSchemaCreate, proofSharing } from '../helpers/proof-request';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
@@ -28,78 +29,79 @@ describe.skip('ONE-614: Proof request', () => {
     await launchApp();
     authToken = await bffLogin();
 
-    mdocSchema = await createCredentialSchema(authToken, {
-      claims: [
-        {
-          array: false,
-          claims: [
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'country',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'region',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'city',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'street',
-              required: true,
-            },
-          ],
-          datatype: DataType.OBJECT,
-          key: 'Address',
-          required: true,
-        },
-        {
-          array: false,
-          claims: [
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'first name',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.STRING,
-              key: 'last name',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.MDL_PICTURE,
-              key: 'portrait',
-              required: true,
-            },
-            {
-              array: false,
-              datatype: DataType.BIRTH_DATE,
-              key: 'birthdate',
-              required: true,
-            },
-          ],
-          datatype: DataType.OBJECT,
-          key: 'Credentials',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.MDOC,
-      name: `Driver Licence ${uuidv4()}`,
-      revocationMethod: RevocationMethod.NONE,
-      schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-    });
+    mdocSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        claims: [
+          {
+            array: false,
+            claims: [
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'country',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'region',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'city',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'street',
+                required: true,
+              },
+            ],
+            datatype: DataType.OBJECT,
+            key: 'Address',
+            required: true,
+          },
+          {
+            array: false,
+            claims: [
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'first name',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.STRING,
+                key: 'last name',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.MDL_PICTURE,
+                key: 'portrait',
+                required: true,
+              },
+              {
+                array: false,
+                datatype: DataType.BIRTH_DATE,
+                key: 'birthdate',
+                required: true,
+              },
+            ],
+            datatype: DataType.OBJECT,
+            key: 'Credentials',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.MDOC,
+        revocationMethod: RevocationMethod.NONE,
+      }),
+    );
     singleClaimMdocProofSchema = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema],
       proofInputSchemas: [
@@ -154,31 +156,33 @@ describe.skip('ONE-614: Proof request', () => {
   });
 
   it('[ONE-3419] mDoc with JWT', async () => {
-    const diplomaJwtSchema = await createCredentialSchema(authToken, {
-      claims: [
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Faculty',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Department',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Education',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.JWT,
-      name: `University Diploma ${uuidv4()}`,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    const diplomaJwtSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        claims: [
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Faculty',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Department',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Education',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.JWT,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaJwtSchema,
@@ -233,31 +237,33 @@ describe.skip('ONE-614: Proof request', () => {
   });
 
   it('[ONE-3419] mDoc with SD_JWT', async () => {
-    const diplomaSdjwtSchema = await createCredentialSchema(authToken, {
-      claims: [
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Faculty',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Department',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Education',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.SD_JWT,
-      name: `University Diploma ${uuidv4()}`,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    const diplomaSdjwtSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        claims: [
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Faculty',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Department',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Education',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.SD_JWT,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaSdjwtSchema,
@@ -311,31 +317,33 @@ describe.skip('ONE-614: Proof request', () => {
   });
 
   it('[ONE-3419] mDoc with JSON-LD BBS+', async () => {
-    const diplomaBBSSchema = await createCredentialSchema(authToken, {
-      claims: [
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Faculty',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Department',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Education',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.JSON_LD_BBSPLUS,
-      name: `University Diploma ${uuidv4()}`,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    const diplomaBBSSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        claims: [
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Faculty',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Department',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Education',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.JSON_LD_BBSPLUS,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaBBSSchema,
@@ -392,31 +400,34 @@ describe.skip('ONE-614: Proof request', () => {
   });
 
   it('[ONE-3419] mDoc with JSON-LD', async () => {
-    const diplomajsonLDSchema = await createCredentialSchema(authToken, {
-      claims: [
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Faculty',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Department',
-          required: true,
-        },
-        {
-          array: false,
-          datatype: DataType.STRING,
-          key: 'Education',
-          required: true,
-        },
-      ],
-      format: CredentialFormat.JSON_LD_CLASSIC,
-      name: `University Diploma ${uuidv4()}`,
-      revocationMethod: RevocationMethod.LVVC,
-    });
+    const diplomajsonLDSchema = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        claims: [
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Faculty',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Department',
+            required: true,
+          },
+          {
+            array: false,
+            datatype: DataType.STRING,
+            key: 'Education',
+            required: true,
+          },
+        ],
+        format: CredentialFormat.JSON_LD_CLASSIC,
+        name: `University Diploma ${uuidv4()}`,
+        revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomajsonLDSchema,
@@ -475,58 +486,60 @@ describe.skip('ONE-614: Proof request', () => {
     let driverLicenceProofSchema: ProofSchemaResponseDTO;
 
     beforeAll(async () => {
-      driverLicenceSchema = await createCredentialSchema(authToken, {
-        claims: [
-          {
-            array: false,
-            claims: [
-              {
-                array: false,
-                claims: [],
-                datatype: DataType.STRING,
-                key: 'Full Name',
-                required: true,
-              },
-              {
-                array: true,
-                claims: [
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.STRING,
-                    key: 'Category Name',
-                    required: true,
-                  },
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.DATE,
-                    key: 'Issue Date',
-                    required: true,
-                  },
-                  {
-                    array: false,
-                    claims: [],
-                    datatype: DataType.DATE,
-                    key: 'Expiry Date',
-                    required: true,
-                  },
-                ],
-                datatype: DataType.OBJECT,
-                key: 'Category',
-                required: true,
-              },
-            ],
-            datatype: DataType.OBJECT,
-            key: 'User data',
-            required: true,
-          },
-        ],
-        format: CredentialFormat.MDOC,
-        name: `Driver Licence-${uuidv4()}`,
-        revocationMethod: RevocationMethod.NONE,
-        schemaId: `org.iso.18013.5.1.mDL-${uuidv4()}`,
-      });
+      driverLicenceSchema = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          claims: [
+            {
+              array: false,
+              claims: [
+                {
+                  array: false,
+                  claims: [],
+                  datatype: DataType.STRING,
+                  key: 'Full Name',
+                  required: true,
+                },
+                {
+                  array: true,
+                  claims: [
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.STRING,
+                      key: 'Category Name',
+                      required: true,
+                    },
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.DATE,
+                      key: 'Issue Date',
+                      required: true,
+                    },
+                    {
+                      array: false,
+                      claims: [],
+                      datatype: DataType.DATE,
+                      key: 'Expiry Date',
+                      required: true,
+                    },
+                  ],
+                  datatype: DataType.OBJECT,
+                  key: 'Category',
+                  required: true,
+                },
+              ],
+              datatype: DataType.OBJECT,
+              key: 'User data',
+              required: true,
+            },
+          ],
+          format: CredentialFormat.MDOC,
+          name: `Driver Licence-${uuidv4()}`,
+          revocationMethod: RevocationMethod.NONE,
+        }),
+      );
 
       driverLicenceProofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [driverLicenceSchema],

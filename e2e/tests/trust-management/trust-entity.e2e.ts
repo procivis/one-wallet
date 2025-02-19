@@ -5,6 +5,7 @@ import {
   credentialIssuance,
   offerCredentialAndReviewCredentialOfferScreen,
 } from '../../helpers/credential';
+import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
 import {
   proofSchemaCreate,
   requestProofAndReviewProofRequestSharingScreen,
@@ -327,18 +328,27 @@ describe('Credential issuance with trust entity', () => {
     let bothRoleTrustEntity: TrustEntityResponseDTO;
     let didNotInTrustAnchor: DidDetailDTO;
     beforeAll(async () => {
-      credentialSchemaSD_JWT = await createCredentialSchema(authToken, {
-        format: CredentialFormat.SD_JWT,
-        revocationMethod: RevocationMethod.STATUSLIST2021,
-      });
-      credentialSchemaJWT = await createCredentialSchema(authToken, {
-        format: CredentialFormat.JWT,
-        revocationMethod: RevocationMethod.STATUSLIST2021,
-      });
-      credentialSchemaJSONLD = await createCredentialSchema(authToken, {
-        format: CredentialFormat.JSON_LD_CLASSIC,
-        revocationMethod: RevocationMethod.NONE,
-      });
+      credentialSchemaSD_JWT = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.SD_JWT,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+        }),
+      );
+      credentialSchemaJWT = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+        }),
+      );
+      credentialSchemaJSONLD = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JSON_LD_CLASSIC,
+          revocationMethod: RevocationMethod.NONE,
+        }),
+      );
       proofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [credentialSchemaSD_JWT],
       });
