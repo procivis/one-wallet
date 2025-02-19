@@ -1,4 +1,5 @@
 import { credentialIssuance } from '../../helpers/credential';
+import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
 import { CredentialStatus } from '../../page-objects/components/CredentialCard';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import {
@@ -17,7 +18,6 @@ import {
   WalletKeyStorageType,
 } from '../../utils/enums';
 import { launchApp, reloadApp } from '../../utils/init';
-import { shortUUID } from '../../utils/utils';
 
 const credentialFormatIssuance = (format: CredentialFormat) => {
   const exchange = Exchange.OPENID4VC;
@@ -88,13 +88,15 @@ describe('ONE-620: Credential revocation', () => {
 
       beforeAll(async () => {
         await launchApp({ delete: true });
-        credentialSchema = await createCredentialSchema(authToken, {
-          allowSuspension: true,
-          format: credentialFormat,
-          name: `detox wallet. ${credentialFormat} ${revocationMethod}; ${shortUUID()}`,
-          revocationMethod,
-          walletStorageType: WalletKeyStorageType.SOFTWARE,
-        });
+        credentialSchema = await createCredentialSchema(
+          authToken,
+          getCredentialSchemaData({
+            allowSuspension: true,
+            format: credentialFormat,
+            revocationMethod,
+            walletStorageType: WalletKeyStorageType.SOFTWARE,
+          }),
+        );
       });
 
       beforeEach(async () => {
@@ -148,14 +150,15 @@ describe('ONE-620: Credential revocation', () => {
 
       beforeAll(async () => {
         await launchApp({ delete: true });
-        credentialSchema = await createCredentialSchema(authToken, {
-          allowSuspension: true,
-          format: credentialFormat,
-          name: `detox wallet. ${credentialFormat} ${revocationMethod}; ${shortUUID()}`,
-          revocationMethod,
-          schemaId: shortUUID(),
-          walletStorageType: WalletKeyStorageType.SOFTWARE,
-        });
+        credentialSchema = await createCredentialSchema(
+          authToken,
+          getCredentialSchemaData({
+            allowSuspension: true,
+            format: credentialFormat,
+            revocationMethod,
+            walletStorageType: WalletKeyStorageType.SOFTWARE,
+          }),
+        );
       });
 
       beforeEach(async () => {

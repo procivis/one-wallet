@@ -16,19 +16,16 @@ import {
 } from '../types/proof';
 import { getDidRequestData, getKeyRequestData } from './data-utils';
 import {
-  CredentialFormat,
   DataType,
   DidMethod,
   DidType,
   Exchange,
   KeyRole,
   KeyType,
-  LayoutType,
-  RevocationMethod,
   StorageType,
   TrustEntityRole,
 } from './enums';
-import { objectToQueryParams, shortUUID } from './utils';
+import { objectToQueryParams } from './utils';
 
 const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
 const LOGIN = {
@@ -81,40 +78,13 @@ async function apiRequest(
 
 export async function createCredentialSchema(
   authToken: string,
-  data?: Partial<CredentialSchemaData>,
-  layoutProperties: boolean = false,
+  data: CredentialSchemaData,
 ): Promise<CredentialSchemaResponseDTO> {
-  const layout = {
-    background: {
-      color: '#1677ff',
-    },
-    logo: {
-      backgroundColor: '#ebb1f9',
-      fontColor: '#000000',
-    },
-  };
-  const schemaData: CredentialSchemaData = {
-    ...data,
-    allowSuspension: false,
-    claims: [
-      {
-        array: false,
-        datatype: DataType.STRING,
-        key: 'field',
-        required: true,
-      },
-    ],
-    format: CredentialFormat.SD_JWT,
-    layoutProperties: layoutProperties ? layout : {},
-    layoutType: LayoutType.CARD,
-    name: `e2e ${shortUUID()}`,
-    revocationMethod: RevocationMethod.NONE,
-  };
   const schemaId = await apiRequest(
     '/api/credential-schema/v1',
     authToken,
     'POST',
-    schemaData,
+    data,
   ).then((res) => res?.id);
   return apiRequest(`/api/credential-schema/v1/${schemaId}`, authToken);
 }

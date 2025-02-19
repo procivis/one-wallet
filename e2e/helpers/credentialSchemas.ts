@@ -1,5 +1,8 @@
-import { CredentialSchemaResponseDTO } from '../types/credential';
-import { CredentialSchemaData } from '../types/credentialSchema';
+import {
+  CredentialClaimSchemaRequestDTO,
+  CredentialSchemaData,
+  LayoutProperties,
+} from '../types/credentialSchema';
 import { createCredentialSchema } from '../utils/bff-api';
 import {
   CodeType,
@@ -7,8 +10,18 @@ import {
   DataType,
   LayoutType,
   RevocationMethod,
+  WalletKeyStorageType,
 } from '../utils/enums';
 import { shortUUID } from '../utils/utils';
+import { getObjectClaim, getSimpleClaims } from './claims';
+
+function getCredentialSchemaName(
+  format: CredentialFormat,
+  revocationMethod: RevocationMethod,
+  walletStorageType: WalletKeyStorageType,
+) {
+  return `${format}-${revocationMethod}-${walletStorageType}`;
+}
 
 export const mDocCredentialSchema = async (
   authToken: string,
@@ -135,83 +148,70 @@ export const mDocCredentialSchema = async (
     revocationMethod,
     schemaId: `org.iso.18013.5.1.mDL-${uuid}`,
   };
-  return await createCredentialSchema(authToken, data, false);
+  return await createCredentialSchema(authToken, data);
 };
 
-export const mDocCredentialClaims = (
-  mdocSchema: CredentialSchemaResponseDTO,
-) => {
-  return [
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
-      path: 'Data/Categories/0/Category',
-      value: 'A',
-    },
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
-      path: 'Data/Categories/0/Expired',
-      value: '2026-09-29T00:00:00.000Z',
-    },
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
-      path: 'Data/Categories/1/Category',
-      value: 'B',
-    },
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
-      path: 'Data/Categories/1/Expired',
-      value: '2030-09-30T00:00:00.000Z',
-    },
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
-      path: 'Data/Categories/2/Category',
-      value: 'C',
-    },
-    {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
-      path: 'Data/Categories/2/Expired',
-      value: '2027-09-28T00:00:00.000Z',
-    },
-    {
-      claimId: mdocSchema.claims![0].claims![0].id,
-      path: 'Address/country',
-      value: 'CH',
-    },
-    {
-      claimId: mdocSchema.claims![0].claims![1].id,
-      path: 'Address/region',
-      value: 'Zurich',
-    },
-    {
-      claimId: mdocSchema.claims![0].claims![2].id,
-      path: 'Address/city',
-      value: 'Zurich',
-    },
-    {
-      claimId: mdocSchema.claims![0].claims![3].id,
-      path: 'Address/street',
-      value: 'strasse',
-    },
-    {
-      claimId: mdocSchema.claims![1].claims![0].id,
-      path: 'Credentials/first name',
-      value: 'Wade',
-    },
-    {
-      claimId: mdocSchema.claims![1].claims![1].id,
-      path: 'Credentials/last name',
-      value: 'Wilson',
-    },
-    {
-      claimId: mdocSchema.claims![1].claims![2].id,
-      path: 'Credentials/Birthday',
-      value: '2018-01-17T00:00:00.000Z',
-    },
-    {
-      claimId: mdocSchema.claims![1].claims![3].id,
-      path: 'Credentials/image',
-      value:
-        'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-    },
-  ];
+interface GetCredentialSchemaData {
+  allowSuspension?: boolean;
+  claims?: CredentialClaimSchemaRequestDTO[];
+  format: CredentialFormat;
+  layoutProperties?: LayoutProperties;
+  name?: string;
+  organisationId?: string;
+  revocationMethod?: RevocationMethod;
+  walletStorageType?: WalletKeyStorageType;
+}
+
+export const getCredentialSchemaData = ({
+  format,
+  name,
+  revocationMethod = RevocationMethod.NONE,
+  walletStorageType = WalletKeyStorageType.SOFTWARE,
+  organisationId,
+  claims,
+  allowSuspension = false,
+  layoutProperties,
+}: GetCredentialSchemaData): CredentialSchemaData => {
+  let schemaClaims =
+    format === CredentialFormat.MDOC ? [getObjectClaim()] : getSimpleClaims();
+  if (claims) {
+    schemaClaims = claims;
+  }
+  const schemaName =
+    name ??
+    `schema-${getCredentialSchemaName(
+      format,
+      revocationMethod,
+      walletStorageType,
+    )}-${shortUUID()}`;
+  const credentialSchemaData = {
+    allowSuspension: allowSuspension ?? false,
+    claims: schemaClaims,
+    format: format,
+    layoutType: LayoutType.CARD,
+    name: `schema-${getCredentialSchemaName(
+      format,
+      revocationMethod,
+      walletStorageType,
+    )}-${shortUUID()}`,
+    organisationId: organisationId ?? process.env.IssuerOrganisationId ?? '',
+    revocationMethod: revocationMethod,
+    walletStorageType: walletStorageType,
+  };
+  if (format === CredentialFormat.MDOC) {
+    const schemaId = `org.iso.18013.5.1.${schemaName}.mDL`;
+    Object.assign(credentialSchemaData, { schemaId: schemaId });
+    if (revocationMethod === RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION) {
+      Object.assign(credentialSchemaData, { allowSuspension: true });
+    }
+  }
+  if (format === CredentialFormat.SD_JWT_VC) {
+    const schemaId = `vct-${schemaName}`;
+    Object.assign(credentialSchemaData, { schemaId: schemaId });
+  }
+  if (layoutProperties) {
+    Object.assign(credentialSchemaData, { layoutProperties: layoutProperties });
+  }
+
+  return credentialSchemaData;
 };
