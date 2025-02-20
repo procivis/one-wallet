@@ -9,7 +9,13 @@ import {
 import { HistoryEntityTypeEnum } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect } from 'react';
-import { NativeModules, Platform, StyleSheet, View } from 'react-native';
+import {
+  InteractionManager,
+  NativeModules,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
@@ -52,34 +58,36 @@ const DashboardScreen: FC = () => {
 
     const { backupFileName, backupFilePath } = params;
 
-    try {
-      const url = `file://${backupFilePath}`;
-      const filename = backupFileName;
-      const mimeType = 'application/zip';
-      let success;
-      if (Platform.OS === 'ios') {
-        const shareResponse = await Share.open({
-          failOnCancel: false,
-          filename,
-          type: mimeType,
-          url,
-        });
-        success = shareResponse.success;
-      } else {
-        await NativeModules.FileExporter.export({
-          filename,
-          mimeType,
-          url,
-        });
-        success = true;
+    InteractionManager.runAfterInteractions(async () => {
+      try {
+        const url = `file://${backupFilePath}`;
+        const filename = backupFileName;
+        const mimeType = 'application/zip';
+        let success;
+        if (Platform.OS === 'ios') {
+          const shareResponse = await Share.open({
+            failOnCancel: false,
+            filename,
+            type: mimeType,
+            url,
+          });
+          success = shareResponse.success;
+        } else {
+          await NativeModules.FileExporter.export({
+            filename,
+            mimeType,
+            url,
+          });
+          success = true;
+        }
+        if (success) {
+          await unlink(backupFilePath);
+          rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+        }
+      } catch (e) {
+        reportException(e, 'Backup move failure');
       }
-      if (success) {
-        await unlink(backupFilePath);
-        rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
-      }
-    } catch (e) {
-      reportException(e, 'Backup move failure');
-    }
+    });
   }, [rootNavigation, params]);
 
   useEffect(() => {
