@@ -1,4 +1,5 @@
 import {
+  parseUniversalLink,
   useInitialDeepLinkHandling as useCommonInitialDeepLinkHandling,
   useRuntimeDeepLinkHandling as useCommonRuntimeDeepLinkHandling,
 } from '@procivis/one-react-native-components';
@@ -26,7 +27,8 @@ export const useInvitationHandling = () => {
   const navigation = useNavigation<RootNavigationProp>();
 
   return useCallback(
-    (invitationUrl: string) => {
+    (url: string) => {
+      const invitationUrl = parseUniversalLink(url) ?? url;
       navigation.navigate('CredentialManagement', {
         params: {
           params: { invitationUrl },
