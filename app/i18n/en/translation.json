@@ -215,6 +215,7 @@
   "history.action.REJECTED": "rejected",
   "history.action.REQUESTED": "requested",
   "history.action.RESTORED": "restored",
+  "history.action.RETRACTED": "retracted",
   "history.action.REVOKED": "revoked",
   "history.action.SHARED": "shared",
   "history.action.SUSPENDED": "suspended",
