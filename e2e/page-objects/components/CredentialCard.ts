@@ -351,7 +351,7 @@ export default function CredentialCard(testID: string) {
       pct: number = 75,
     ) {
       if (visible) {
-        await expect(this.element).toBeVisible(pct);
+        await waitFor(this.element).toBeVisible(pct);
       } else {
         await expect(this.element).not.toBeVisible(pct);
       }
