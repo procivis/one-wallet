@@ -1,6 +1,7 @@
 export enum SettingsButton {
   BACK = 'SettingsScreen.header.back',
   CHANGE_PIN = 'SettingsScreen.changePIN',
+  CLEAR_CACHE = 'SettingsScreen.clearCache',
   CREATE_BACKUP = 'SettingsScreen.createBackup',
   DELETE_WALLET = 'SettingsScreen.deleteWallet',
   HISTORY = 'SettingsScreen.history',

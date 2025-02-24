@@ -5,6 +5,7 @@ import PinCodeChangeScreen from '../page-objects/ChangePinCodeScreen';
 import HistoryScreen from '../page-objects/HistoryScreen';
 import RestoreBackupDashboardScreen from '../page-objects/restore/RestoreBackupDashboardScreen';
 import AppInformationScreen from '../page-objects/settings/AppInformationScreen';
+import ClearCacheScreen from '../page-objects/settings/ClearCacheScreen';
 import DeleteWalletScreen from '../page-objects/settings/DeleteWalletScreen';
 import LicencesScreen from '../page-objects/settings/LicenceScreen';
 import SettingsScreen, {
@@ -74,6 +75,13 @@ describe('ONE-1798: Accessing Settings and all screens in the settings area', ()
     await SettingsScreen.button(SettingsButton.LICENCES).tap();
     await expect(LicencesScreen.screen).toBeVisible();
     await LicencesScreen.back.tap();
+  });
+
+  it('Clear cache option', async () => {
+    await SettingsScreen.scrollTo(SettingsButton.CLEAR_CACHE);
+    await SettingsScreen.button(SettingsButton.CLEAR_CACHE).tap();
+    await expect(ClearCacheScreen.screen).toBeVisible();
+    await ClearCacheScreen.back.tap();
   });
 
   it('Delete wallet option', async () => {

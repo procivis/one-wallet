@@ -4,6 +4,7 @@ export enum Action {
   CLOSE = 'Close',
   DELETE_CREDENTIAL = 'Delete credential',
   MORE_INFORMATION = 'More information',
+  REFRESH_CREDENTIAL = 'Refresh credential',
 }
 
 export default class CredentialDetailScreen {

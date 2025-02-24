@@ -1,5 +1,6 @@
 import {
   ButtonType,
+  concatTestID,
   LoaderViewState,
   LoadingResultScreen,
   useBlockOSBackNavigation,
@@ -143,7 +144,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
     state === LoaderViewState.Success && !credentialStateUpdated,
     onClose,
   );
-
+  const testID = 'CredentialUpdateProcessScreen';
   return (
     <LoadingResultScreen
       button={
@@ -152,7 +153,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
           : state === LoaderViewState.Success && !credentialStateUpdated
           ? {
               onPress: onClose,
-              testID: 'CredentialUpdateProcessScreen.close',
+              testID: concatTestID(testID, 'close'),
               title: translate('common.closeWithTimeout', {
                 timeout: credentialStateUpdated ? 0 : closeTimeout,
               }),
@@ -160,7 +161,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
             }
           : {
               onPress: onRetry,
-              testID: 'CredentialUpdateProcessScreen.retry',
+              testID: concatTestID(testID, 'retry'),
               title: translate('common.retry'),
               type: ButtonType.Primary,
             }
@@ -169,7 +170,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
         leftItem: (
           <HeaderCloseModalButton
             onPress={onClose}
-            testID="CredentialUpdateProcessScreen.header.close"
+            testID={concatTestID(testID, 'header.close')}
           />
         ),
         modalHandleVisible: Platform.OS === 'ios',
@@ -184,7 +185,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
                   });
                 }
               }}
-              testID="CredentialUpdateProcessScreen.header.info"
+              testID={concatTestID(testID, 'header.info')}
             />
           ) : undefined,
         title: translate('credentialUpdate.title'),
@@ -196,9 +197,9 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
           translate(`credentialUpdate.process.${state}.title`),
         ),
         state,
-        testID: 'CredentialUpdateProcessScreen.animation',
+        testID: concatTestID(testID, 'animation'),
       }}
-      testID="CredentialUpdateProcessScreen"
+      testID={testID}
     />
   );
 };
