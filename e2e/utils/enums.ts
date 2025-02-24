@@ -69,6 +69,7 @@ export declare enum HistoryEntityTypeEnum {
 
 export enum WalletKeyStorageType {
   HARDWARE = 'HARDWARE',
+  REMOTE_SECURE_ELEMENT = 'REMOTE_SECURE_ELEMENT',
   SOFTWARE = 'SOFTWARE',
 }
 

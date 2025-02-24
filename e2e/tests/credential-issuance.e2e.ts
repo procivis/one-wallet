@@ -131,7 +131,6 @@ describe('ONE-601: Credential issuance', () => {
         suspendedDate.setHours(10, 0, 0, 0);
         suspendedDate.setDate(suspendedDate.getDate() + 1);
         const formattedDate = formatDateTime(suspendedDate);
-        console.log('formattedDate', formattedDate);
         await suspendCredential(
           credentialId,
           authToken,
@@ -681,6 +680,30 @@ describe('ONE-601: Credential issuance', () => {
       await expect(card3.header.name).toHaveText(schemaNames[2]);
 
       await expect(WalletScreen.screen).toBeVisible();
+    });
+  });
+
+  describe('ON-4572: RSE wallet storage type', () => {
+    let credentialSchemaRSE: CredentialSchemaResponseDTO;
+
+    beforeAll(async () => {
+      credentialSchemaRSE = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.JWT,
+          revocationMethod: RevocationMethod.STATUSLIST2021,
+          walletStorageType: WalletKeyStorageType.REMOTE_SECURE_ELEMENT,
+        }),
+      );
+    });
+
+    it('Issue RSE credential', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaRSE,
+        exchange: Exchange.OPENID4VC,
+        redirectUri: 'https://procivis.ch',
+      });
     });
   });
 });
