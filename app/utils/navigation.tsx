@@ -1,13 +1,18 @@
 import {
   CommonActions,
+  EventArg,
   NavigationContext,
   NavigationProp,
   NavigationRouteContext,
   NavigationState,
+  ParamListBase,
   Route,
+  StackNavigationState,
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { FC, PropsWithChildren } from 'react';
+
+import { RootNavigatorParamList } from '../navigators/root/root-routes';
 
 // Dummy navigation object
 const outsideTreeNavigation: NavigationProp<
@@ -66,4 +71,16 @@ export const resetNavigationAction = <
     routes,
   });
   navigator.dispatch(resetAction);
+};
+
+export type NavigationStateUpdatedEvent<ParamList extends ParamListBase> =
+  EventArg<'state', undefined, { state: StackNavigationState<ParamList> }>;
+
+export type RootNavigationStateUpdatedEvent =
+  NavigationStateUpdatedEvent<RootNavigatorParamList>;
+
+export const getCurrentRoute = <S extends NavigationState>(state: S) => {
+  const { routes, index } = state;
+  const currentRoute = routes?.[index ?? 0]?.name;
+  return currentRoute;
 };
