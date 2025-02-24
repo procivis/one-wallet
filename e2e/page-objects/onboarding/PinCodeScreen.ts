@@ -1,4 +1,4 @@
-export default abstract class PinCodeScreen {
+export default class PinCodeScreen {
   private static screen(screenTestID: string) {
     return {
       digit(digit: number) {

@@ -1,6 +1,9 @@
 import { expect, waitFor } from 'detox';
 
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
+import RemoteSecureElementInfoScreen from '../page-objects/credential/rse/RemoteSecureElementInfoScreen';
+import RemoteSecureElementPinSetupScreen from '../page-objects/credential/rse/RemoteSecureElementPinSetupScreen';
+import RemoteSecureElementSignScreen from '../page-objects/credential/rse/RemoteSecureElementSignScreen';
 import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
 import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
 import WalletScreen from '../page-objects/WalletScreen';
@@ -12,7 +15,12 @@ import {
   getLocalDid,
   offerCredential,
 } from '../utils/bff-api';
-import { DidMethod, Exchange, KeyType } from '../utils/enums';
+import {
+  DidMethod,
+  Exchange,
+  KeyType,
+  WalletKeyStorageType,
+} from '../utils/enums';
 import { scanURL } from '../utils/scan';
 import { getIdentifier } from '../utils/utils';
 
@@ -41,6 +49,25 @@ export enum CredentialAction {
   REJECT = 'reject',
 }
 
+const acceptRSECredential = async () => {
+  await expect(RemoteSecureElementInfoScreen.screen).toBeVisible();
+  await RemoteSecureElementInfoScreen.continueButton.tap();
+  await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+  await expect(CredentialAcceptProcessScreen.status.inProgress).toBeVisible();
+  await waitFor(RemoteSecureElementPinSetupScreen.screen)
+    .toBeVisible()
+    .withTimeout(15000);
+  await RemoteSecureElementPinSetupScreen.digit(1).multiTap(5);
+  await RemoteSecureElementPinSetupScreen.digit(1).multiTap(5);
+  await waitFor(CredentialAcceptProcessScreen.screen)
+    .toBeVisible()
+    .withTimeout(15000);
+  await waitFor(RemoteSecureElementSignScreen.screen)
+    .toBeVisible()
+    .withTimeout(15000);
+  await RemoteSecureElementSignScreen.digit(1).multiTap(5);
+};
+
 export const acceptCredentialTestCase = async (
   data: CredentialIssuanceProps,
   expectedResult: LoaderViewState,
@@ -52,7 +79,15 @@ export const acceptCredentialTestCase = async (
   await CredentialOfferScreen.scrollTo(CredentialOfferScreen.acceptButton);
 
   await CredentialOfferScreen.acceptButton.tap();
-  await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
+
+  if (
+    data.credentialSchema.walletStorageType ===
+    WalletKeyStorageType.REMOTE_SECURE_ELEMENT
+  ) {
+    await acceptRSECredential();
+  } else {
+    await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
+  }
 
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(CredentialAcceptProcessScreen.status.success)
@@ -78,6 +113,7 @@ export const acceptCredentialTestCase = async (
     await device.enableSynchronization();
     return;
   }
+
   await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
   await CredentialAcceptProcessScreen.closeButton.tap();
 

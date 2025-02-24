@@ -105,6 +105,7 @@ export const RSEPinSetupScreen: FC = () => {
             enteredLength={enteredLength}
             maxLength={5}
             style={styles.pins}
+            testID={concatTestID(testID, 'pin')}
           />
           <Typography
             align="center"
