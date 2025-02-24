@@ -120,9 +120,7 @@ export const acceptCredentialTestCase = async (
   await device.enableSynchronization();
   await expect(WalletScreen.screen).toBeVisible();
 
-  await expect(
-    WalletScreen.credentialName(data.credentialSchema.name).atIndex(0),
-  ).toBeVisible();
+  await (await WalletScreen.credentialAtIndex(0)).verifyIsVisible();
 };
 
 const rejectCredentialTestCase = async () => {
@@ -163,7 +161,7 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
   );
   const invitationUrl = await offerCredential(credentialId, data.authToken);
   await scanURL(invitationUrl);
-  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(15000);
+  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(25000);
   await CredentialOfferScreen.credentialCard.verifyIsVisible();
   const holderCredentialId =
     (

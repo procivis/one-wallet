@@ -1,4 +1,4 @@
-export default abstract class AppInformationScreen {
+export default class AppInformationScreen {
   static get screen() {
     return element(by.id('AppInformationScreen'));
   }
