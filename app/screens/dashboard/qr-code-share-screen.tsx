@@ -8,7 +8,7 @@ import {
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
-  useProofRetract,
+  useProofDelete,
   useProofState,
   useProposeProof,
 } from '@procivis/one-react-native-components';
@@ -46,7 +46,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
   useCapturePrevention();
 
   const { mutateAsync: proposeProof } = useProposeProof();
-  const { mutateAsync: retractProof } = useProofRetract();
+  const { mutateAsync: deleteProof } = useProofDelete();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(ExchangeProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
@@ -85,31 +85,31 @@ const QRCodeShareScreen: FunctionComponent = () => {
       });
   }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
 
-  // retract proof when app goes to background
+  // delete proof when app goes to background
   useEffect(() => {
     if (
       isAppActive === false &&
       proof &&
       proofState === ProofStateEnum.PENDING
     ) {
-      retractProof(proof.proofId).then(() => {
+      deleteProof(proof.proofId).then(() => {
         setProof(undefined);
       });
     }
-  }, [isAppActive, retractProof, proof, proofState]);
+  }, [isAppActive, deleteProof, proof, proofState]);
 
-  // retract proof when closing the screen
-  const shouldRetractOnLeaving = useRef(false);
+  // delete proof when closing the screen
+  const shouldDeleteOnLeaving = useRef(false);
   useEffect(() => {
-    shouldRetractOnLeaving.current = proofState === ProofStateEnum.PENDING;
+    shouldDeleteOnLeaving.current = proofState === ProofStateEnum.PENDING;
   }, [proofState]);
   useEffect(
     () => () => {
-      if (proof && shouldRetractOnLeaving.current) {
-        retractProof(proof.proofId);
+      if (proof && shouldDeleteOnLeaving.current) {
+        deleteProof(proof.proofId);
       }
     },
-    [retractProof, proof],
+    [deleteProof, proof],
   );
 
   const qrCodeContent = useMemo(() => {
