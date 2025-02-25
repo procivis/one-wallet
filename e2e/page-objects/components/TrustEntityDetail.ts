@@ -1,7 +1,7 @@
 import { expect } from 'detox';
 
 import { TrustEntityResponseDTO } from '../../utils/bff-api';
-import ElementUtil from './ElementUtil';
+import { isElementVisible } from './ElementUtil';
 import EntityDetailHeader from './TrustEntityHeader';
 
 export default function TrustEntityDetail(screenTestID: string) {
@@ -23,7 +23,7 @@ export default function TrustEntityDetail(screenTestID: string) {
       await expect(element(by.id('trustRegistry.attributeValue'))).toHaveText(
         'Dev Trust List',
       );
-      if (await ElementUtil().isElementVisible('issuerDID.expandValueButton')) {
+      if (await isElementVisible('issuerDID.expandValueButton')) {
         await element(by.id(`issuerDID.expandValueButton`)).tap();
       }
       await expect(element(by.id('issuerDID.attributeValue'))).toHaveText(

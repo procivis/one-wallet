@@ -1,5 +1,8 @@
 import { expect } from 'detox';
 
+import { waitForElementVisible } from '../page-objects/components/ElementUtil';
+import RemoteSecureElementPinSetupScreen from '../page-objects/credential/rse/RemoteSecureElementPinSetupScreen';
+import RemoteSecureElementSignScreen from '../page-objects/credential/rse/RemoteSecureElementSignScreen';
 import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScreen';
 import PinCodeScreen from '../page-objects/onboarding/PinCodeScreen';
 import SecurityScreen from '../page-objects/onboarding/SecurityScreen';
@@ -13,6 +16,10 @@ import { CredentialUpdateProps, statusScreenCheck } from './status-check';
  * correct app PIN is '111111' used among all test suites
  */
 export const CORRECT_PIN_DIGIT = 1;
+
+export const DEFAULT_WAIT_TIME = 5000;
+export const LONG_WAIT_TIME = 15000;
+export const SHORT_WAIT_TIME = 3000;
 
 export async function pinSetup() {
   await expect(PinCodeScreen.Initialization.screen).toBeVisible();
@@ -58,6 +65,29 @@ export async function userAgreement() {
 
 type LaunchAppConfig = {
   delete?: boolean;
+};
+
+export interface RSEConfig {
+  PINCode: string;
+  isRSEOnboarded: boolean;
+  signCertCount?: number;
+}
+
+export const fillRemotePINCode = async (PINCode: string) => {
+  for (const char of PINCode) {
+    const digit = Number(char);
+    await RemoteSecureElementPinSetupScreen.digit(digit).tap();
+  }
+};
+
+export const waitForRSEScreenDisplayedAndFillPINCode = async (
+  PINCode: string,
+) => {
+  await waitForElementVisible(
+    RemoteSecureElementSignScreen.screen,
+    LONG_WAIT_TIME,
+  );
+  await fillRemotePINCode(PINCode);
 };
 
 export async function launchApp(config?: LaunchAppConfig) {

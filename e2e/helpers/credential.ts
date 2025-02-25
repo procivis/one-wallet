@@ -1,5 +1,9 @@
 import { expect, waitFor } from 'detox';
 
+import {
+  delay,
+  waitForElementVisible,
+} from '../page-objects/components/ElementUtil';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import RemoteSecureElementInfoScreen from '../page-objects/credential/rse/RemoteSecureElementInfoScreen';
 import RemoteSecureElementPinSetupScreen from '../page-objects/credential/rse/RemoteSecureElementPinSetupScreen';
@@ -21,6 +25,12 @@ import {
   KeyType,
   WalletKeyStorageType,
 } from '../utils/enums';
+import {
+  fillRemotePINCode,
+  LONG_WAIT_TIME,
+  RSEConfig,
+  waitForRSEScreenDisplayedAndFillPINCode,
+} from '../utils/init';
 import { scanURL } from '../utils/scan';
 import { getIdentifier } from '../utils/utils';
 
@@ -42,6 +52,7 @@ interface CredentialIssuanceProps {
   didFilter?: DidFilter;
   exchange?: Exchange;
   redirectUri?: string;
+  rseConfig?: RSEConfig;
 }
 
 export enum CredentialAction {
@@ -49,23 +60,33 @@ export enum CredentialAction {
   REJECT = 'reject',
 }
 
-const acceptRSECredential = async () => {
-  await expect(RemoteSecureElementInfoScreen.screen).toBeVisible();
-  await RemoteSecureElementInfoScreen.continueButton.tap();
-  await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
-  await expect(CredentialAcceptProcessScreen.status.inProgress).toBeVisible();
-  await waitFor(RemoteSecureElementPinSetupScreen.screen)
-    .toBeVisible()
-    .withTimeout(15000);
-  await RemoteSecureElementPinSetupScreen.digit(1).multiTap(5);
-  await RemoteSecureElementPinSetupScreen.digit(1).multiTap(5);
-  await waitFor(CredentialAcceptProcessScreen.screen)
-    .toBeVisible()
-    .withTimeout(15000);
-  await waitFor(RemoteSecureElementSignScreen.screen)
-    .toBeVisible()
-    .withTimeout(15000);
-  await RemoteSecureElementSignScreen.digit(1).multiTap(5);
+const acceptRSECredential = async (
+  rseConfig: RSEConfig = { PINCode: '12345', isRSEOnboarded: false },
+) => {
+  if (!rseConfig.isRSEOnboarded) {
+    await expect(RemoteSecureElementInfoScreen.screen).toBeVisible();
+    await expect(RemoteSecureElementInfoScreen.continueButton).toBeVisible();
+    if (device.getPlatform() === 'ios') {
+      await delay(1000); // Need delay for ios
+    }
+    await RemoteSecureElementInfoScreen.continueButton.tap();
+    await waitForElementVisible(
+      RemoteSecureElementPinSetupScreen.screen,
+      LONG_WAIT_TIME,
+    );
+
+    await fillRemotePINCode(rseConfig.PINCode);
+    await fillRemotePINCode(rseConfig.PINCode);
+  }
+  await waitForElementVisible(
+    CredentialAcceptProcessScreen.screen,
+    LONG_WAIT_TIME,
+  );
+  await waitForElementVisible(
+    RemoteSecureElementSignScreen.screen,
+    LONG_WAIT_TIME,
+  );
+  await waitForRSEScreenDisplayedAndFillPINCode(rseConfig.PINCode);
 };
 
 export const acceptCredentialTestCase = async (
@@ -84,7 +105,7 @@ export const acceptCredentialTestCase = async (
     data.credentialSchema.walletStorageType ===
     WalletKeyStorageType.REMOTE_SECURE_ELEMENT
   ) {
-    await acceptRSECredential();
+    await acceptRSECredential(data.rseConfig);
   } else {
     await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
   }
