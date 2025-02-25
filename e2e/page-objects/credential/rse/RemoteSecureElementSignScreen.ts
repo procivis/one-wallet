@@ -3,6 +3,10 @@ export default class RemoteSecureElementSignScreen {
     return element(by.id('RemoteSecureElementSignScreen'));
   }
 
+  static get error() {
+    return element(by.id('RemoteSecureElementSignScreen.error'));
+  }
+
   static digit(n: number) {
     return element(by.text(n.toString()));
   }

@@ -1,7 +1,9 @@
 import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
+import { waitForElementIsNotPresent } from '../page-objects/components/ElementUtil';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
+import RemoteSecureElementSignScreen from '../page-objects/credential/rse/RemoteSecureElementSignScreen';
 import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/proof-request/ProofRequestAcceptProcessScreen';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
@@ -20,6 +22,12 @@ import {
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
 import { DidMethod, Exchange, KeyType } from '../utils/enums';
+import {
+  DEFAULT_WAIT_TIME,
+  LONG_WAIT_TIME,
+  RSEConfig,
+  waitForRSEScreenDisplayedAndFillPINCode,
+} from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 interface ProofSharingProops {
@@ -30,6 +38,7 @@ interface ProofSharingProops {
   keyAlgorithms?: KeyType | KeyType[];
   proofSchemaId: string;
   redirectUri?: string;
+  rseConfig?: RSEConfig;
   selectiveDisclosureCredentials?: string[];
 }
 
@@ -56,6 +65,23 @@ export const shareCredential = async (
   await device.disableSynchronization();
 
   await ProofRequestSharingScreen.shareButton.tap();
+
+  if (data.rseConfig?.isRSEOnboarded) {
+    if (data.rseConfig.signCertCount) {
+      let count = 0;
+      while (count < data.rseConfig.signCertCount) {
+        await waitForRSEScreenDisplayedAndFillPINCode(data.rseConfig.PINCode);
+        await waitForElementIsNotPresent(
+          RemoteSecureElementSignScreen.screen,
+          DEFAULT_WAIT_TIME,
+        );
+        count++;
+      }
+    } else {
+      await waitForRSEScreenDisplayedAndFillPINCode(data.rseConfig.PINCode);
+    }
+  }
+
   await waitFor(ProofRequestAcceptProcessScreen.screen)
     .toBeVisible()
     .withTimeout(2000);
@@ -63,7 +89,7 @@ export const shareCredential = async (
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(ProofRequestAcceptProcessScreen.status.success)
       .toBeVisible()
-      .withTimeout(7000);
+      .withTimeout(LONG_WAIT_TIME);
     if (data.redirectUri) {
       await waitFor(ProofRequestAcceptProcessScreen.button.redirect)
         .toBeVisible()
