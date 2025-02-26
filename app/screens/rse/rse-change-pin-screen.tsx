@@ -66,11 +66,7 @@ export const RSEChangePinScreen: FC = () => {
         case PinEventType.PIN_STAGE: {
           const newStep = pinFlowStageMap[event.stage];
           setStep(newStep);
-          if (
-            newStep === 'checkCurrentPin' &&
-            step === 'confirmPin' &&
-            !error
-          ) {
+          if (newStep === 'setPin' && step === 'confirmPin' && !error) {
             setError(translate('rse.changePin.confirmPin.error'));
           }
           break;
