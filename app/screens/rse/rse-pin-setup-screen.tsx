@@ -56,6 +56,9 @@ export const RSEPinSetupScreen: FC = () => {
           break;
         case PinEventType.DIGITS_ENTERED:
           setEnteredLenght(event.digitsEntered);
+          if (event.digitsEntered > 0) {
+            setError(undefined);
+          }
           break;
         case PinEventType.PIN_STAGE: {
           const newStep = pinFlowStageMap[event.stage];
