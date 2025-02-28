@@ -27,11 +27,11 @@ import {
 } from './enums';
 import { objectToQueryParams } from './utils';
 
-const BFF_BASE_URL = 'https://desk.dev.procivis-one.com';
+const BFF_BASE_URL = process.env.DESK_URL;
 const LOGIN = {
-  email: 'e2e_user@procivis.ch',
+  email: process.env.DESK_EMAIL,
   method: 'PASSWORD',
-  password: 'tester26',
+  password: process.env.DESK_PASSWORD,
 };
 
 /**

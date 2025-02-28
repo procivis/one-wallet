@@ -2,7 +2,7 @@
 module.exports = {
   testRunner: {
     args: {
-      $0: 'jest',
+      $0: 'export $(cat .env.detox | xargs) && jest',
       config: 'e2e/jest.config.js',
     },
     jest: {
