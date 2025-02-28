@@ -115,3 +115,7 @@ yalc.lock
 android-sbom.json
 react-native-sbom.json
 artifacts
+
+# Dotenv
+.env
+.env.*
