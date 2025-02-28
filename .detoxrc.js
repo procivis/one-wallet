@@ -2,7 +2,7 @@
 module.exports = {
   testRunner: {
     args: {
-      $0: 'export $(cat .env.detox | xargs) && jest',
+      $0: 'cross-env DOTENV_CONFIG_PATH=.env.detox jest',
       config: 'e2e/jest.config.js',
     },
     jest: {

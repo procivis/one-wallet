@@ -16,6 +16,7 @@ module.exports = {
     ],
   ],
   rootDir: '..',
+  setupFiles: ['dotenv/config'],
   testEnvironment: 'detox/runners/jest/testEnvironment',
   testMatch: ['<rootDir>/e2e/**/*.e2e.ts'],
   testTimeout: 120000,
