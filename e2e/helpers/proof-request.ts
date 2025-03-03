@@ -22,12 +22,7 @@ import {
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
 import { DidMethod, Exchange, KeyType } from '../utils/enums';
-import {
-  DEFAULT_WAIT_TIME,
-  LONG_WAIT_TIME,
-  RSEConfig,
-  waitForRSEScreenDisplayedAndFillPINCode,
-} from '../utils/init';
+import { DEFAULT_WAIT_TIME, LONG_WAIT_TIME, RSEConfig } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 interface ProofSharingProops {
@@ -70,7 +65,9 @@ export const shareCredential = async (
     if (data.rseConfig.signCertCount) {
       let count = 0;
       while (count < data.rseConfig.signCertCount) {
-        await waitForRSEScreenDisplayedAndFillPINCode(data.rseConfig.PINCode);
+        await RemoteSecureElementSignScreen.waitForScreenDisplayedAndFillPINCode(
+          data.rseConfig.PINCode,
+        );
         await waitForElementIsNotPresent(
           RemoteSecureElementSignScreen.screen,
           DEFAULT_WAIT_TIME,
@@ -78,7 +75,9 @@ export const shareCredential = async (
         count++;
       }
     } else {
-      await waitForRSEScreenDisplayedAndFillPINCode(data.rseConfig.PINCode);
+      await RemoteSecureElementSignScreen.waitForScreenDisplayedAndFillPINCode(
+        data.rseConfig.PINCode,
+      );
     }
   }
 

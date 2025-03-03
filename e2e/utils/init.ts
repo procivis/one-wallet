@@ -1,8 +1,5 @@
 import { expect } from 'detox';
 
-import { waitForElementVisible } from '../page-objects/components/ElementUtil';
-import RemoteSecureElementPinSetupScreen from '../page-objects/credential/rse/RemoteSecureElementPinSetupScreen';
-import RemoteSecureElementSignScreen from '../page-objects/credential/rse/RemoteSecureElementSignScreen';
 import OnboardingSetupScreen from '../page-objects/onboarding/OnboardingSetupScreen';
 import PinCodeScreen from '../page-objects/onboarding/PinCodeScreen';
 import SecurityScreen from '../page-objects/onboarding/SecurityScreen';
@@ -73,23 +70,6 @@ export interface RSEConfig {
   signCertCount?: number;
 }
 
-export const fillRemotePINCode = async (PINCode: string) => {
-  for (const char of PINCode) {
-    const digit = Number(char);
-    await RemoteSecureElementPinSetupScreen.digit(digit).tap();
-  }
-};
-
-export const waitForRSEScreenDisplayedAndFillPINCode = async (
-  PINCode: string,
-) => {
-  await waitForElementVisible(
-    RemoteSecureElementSignScreen.screen,
-    LONG_WAIT_TIME,
-  );
-  await fillRemotePINCode(PINCode);
-};
-
 export async function launchApp(config?: LaunchAppConfig) {
   await device.launchApp({
     delete: config?.delete,
@@ -99,6 +79,10 @@ export async function launchApp(config?: LaunchAppConfig) {
     },
     permissions: { camera: 'YES' },
   });
+  await moveToDashboardScreenFromOnboardingScreen();
+}
+
+export async function moveToDashboardScreenFromOnboardingScreen() {
   await expect(OnboardingSetupScreen.screen).toBeVisible();
   await OnboardingSetupScreen.setupButton.tap();
 

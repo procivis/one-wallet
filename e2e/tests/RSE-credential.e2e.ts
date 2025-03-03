@@ -29,7 +29,6 @@ import {
 } from '../utils/enums';
 import {
   DEFAULT_WAIT_TIME,
-  fillRemotePINCode,
   launchApp,
   LONG_WAIT_TIME,
   SHORT_WAIT_TIME,
@@ -197,7 +196,7 @@ describe('RSE Ubiqu', () => {
         let remainAttempts = 5;
         while (remainAttempts > 1) {
           const wrongPINCode = '11111';
-          await fillRemotePINCode(wrongPINCode);
+          await RemoteSecureElementSignScreen.fillRemotePINCode(wrongPINCode);
           remainAttempts--;
           await waitForElementToHaveText(
             RemoteSecureElementSignScreen.error,
@@ -205,7 +204,9 @@ describe('RSE Ubiqu', () => {
             SHORT_WAIT_TIME,
           );
         }
-        await fillRemotePINCode(data.rseConfig.PINCode);
+        await RemoteSecureElementSignScreen.fillRemotePINCode(
+          data.rseConfig.PINCode,
+        );
       }
 
       await waitForElementVisible(
