@@ -85,31 +85,26 @@ const QRCodeShareScreen: FunctionComponent = () => {
       });
   }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
 
+  const pendingProofId = useRef<string | undefined>(undefined);
+  pendingProofId.current =
+    proofState === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+
   // delete proof when app goes to background
   useEffect(() => {
-    if (
-      isAppActive === false &&
-      proof &&
-      proofState === ProofStateEnum.PENDING
-    ) {
-      deleteProof(proof.proofId).then(() => {
-        setProof(undefined);
-      });
+    if (isAppActive === false && pendingProofId.current) {
+      setProof(undefined);
+      deleteProof(pendingProofId.current);
     }
-  }, [isAppActive, deleteProof, proof, proofState]);
+  }, [isAppActive, deleteProof]);
 
   // delete proof when closing the screen
-  const shouldDeleteOnLeaving = useRef(false);
-  useEffect(() => {
-    shouldDeleteOnLeaving.current = proofState === ProofStateEnum.PENDING;
-  }, [proofState]);
   useEffect(
     () => () => {
-      if (proof && shouldDeleteOnLeaving.current) {
-        deleteProof(proof.proofId);
+      if (pendingProofId.current) {
+        deleteProof(pendingProofId.current);
       }
     },
-    [deleteProof, proof],
+    [deleteProof],
   );
 
   const qrCodeContent = useMemo(() => {
