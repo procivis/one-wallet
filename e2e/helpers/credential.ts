@@ -25,12 +25,7 @@ import {
   KeyType,
   WalletKeyStorageType,
 } from '../utils/enums';
-import {
-  fillRemotePINCode,
-  LONG_WAIT_TIME,
-  RSEConfig,
-  waitForRSEScreenDisplayedAndFillPINCode,
-} from '../utils/init';
+import { LONG_WAIT_TIME, RSEConfig } from '../utils/init';
 import { scanURL } from '../utils/scan';
 import { getIdentifier } from '../utils/utils';
 
@@ -74,19 +69,20 @@ const acceptRSECredential = async (
       RemoteSecureElementPinSetupScreen.screen,
       LONG_WAIT_TIME,
     );
-
-    await fillRemotePINCode(rseConfig.PINCode);
-    await fillRemotePINCode(rseConfig.PINCode);
+    await RemoteSecureElementPinSetupScreen.fillRemotePINCode(
+      rseConfig.PINCode,
+    );
+    await RemoteSecureElementPinSetupScreen.fillRemotePINCode(
+      rseConfig.PINCode,
+    );
   }
   await waitForElementVisible(
     CredentialAcceptProcessScreen.screen,
     LONG_WAIT_TIME,
   );
-  await waitForElementVisible(
-    RemoteSecureElementSignScreen.screen,
-    LONG_WAIT_TIME,
+  await RemoteSecureElementSignScreen.waitForScreenDisplayedAndFillPINCode(
+    rseConfig.PINCode,
   );
-  await waitForRSEScreenDisplayedAndFillPINCode(rseConfig.PINCode);
 };
 
 export const acceptCredentialTestCase = async (

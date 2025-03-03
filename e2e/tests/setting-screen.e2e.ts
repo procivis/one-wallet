@@ -90,4 +90,11 @@ describe('ONE-1798: Accessing Settings and all screens in the settings area', ()
     await expect(DeleteWalletScreen.screen).toBeVisible();
     await DeleteWalletScreen.back.tap();
   });
+
+  it('Settings view - without RSE onboarding', async () => {
+    await SettingsScreen.scrollTo(SettingsButton.CHANGE_PIN);
+    await expect(
+      SettingsScreen.button(SettingsButton.CHANGE_REMOTE_PIN),
+    ).not.toBeVisible();
+  });
 });
