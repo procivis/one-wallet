@@ -75,7 +75,9 @@ const QRCodeScannerScreen: FunctionComponent = () => {
             text: translate('common.cancel'),
           },
           {
-            onPress: () => openSettings(),
+            onPress: () => {
+              openSettings();
+            },
             text: translate('common.openSettings'),
           },
         ],

@@ -106,13 +106,16 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
     state: NavigationState | PartialState<NavigationState>,
   ) => {
     // Persist state to storage
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     storage.save(persistenceKey, state);
   };
 
   const restoreState = useCallback(async () => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const state = await storage.load(persistenceKey);
       if (state) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         setInitialNavigationState(state);
       }
     } finally {
@@ -141,7 +144,9 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
  */
 export function navigate(name: any, params?: any) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name as never, params as never);
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    navigationRef.navigate(name, params);
   }
 }
 

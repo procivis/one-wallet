@@ -110,7 +110,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
       await CredentialDetailScreen.action(Action.REFRESH_CREDENTIAL).tap();
       if (expected === Expected.NO_UPDATES) {
         await expect(CredentialUpdateProcessScreen.screen).toBeVisible();
-        await waitFor(
+        await expect(
           CredentialUpdateProcessScreen.status.success,
         ).toBeVisible();
         await CredentialUpdateProcessScreen.closeButton.tap();

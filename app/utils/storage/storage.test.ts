@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { clear, load, loadString, remove, save, saveString } from './storage';

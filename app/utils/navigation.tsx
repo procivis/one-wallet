@@ -26,6 +26,7 @@ const outsideTreeNavigation: NavigationProp<
   canGoBack: () => false,
   dispatch: () => undefined,
   getId: () => undefined,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   getParent: () => undefined as any,
   getState: () => undefined,
   goBack: () => undefined,

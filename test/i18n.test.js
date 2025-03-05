@@ -1,7 +1,12 @@
-import { describe, expect, test } from '@jest/globals';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-const en = require('../app/i18n/en/translation.json');
-const { exec } = require('child_process');
+import { describe, expect, test } from '@jest/globals';
+import { exec } from 'child_process';
+
+import en from '../app/i18n/en/translation.json';
 
 // Use this array for keys that for whatever reason aren't greppable so they
 // don't hold your test suite hostage by always failing.

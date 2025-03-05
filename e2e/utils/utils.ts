@@ -2,7 +2,7 @@ import { waitFor } from 'detox';
 import { NativeElementActions } from 'detox/detox';
 import { v4 as uuidv4 } from 'uuid';
 
-export const objectToQueryParams = (obj: Record<string, any>): string => {
+export const objectToQueryParams = (obj: Record<string, unknown>): string => {
   const params = new URLSearchParams();
 
   Object.keys(obj).forEach((key) => {
@@ -12,12 +12,12 @@ export const objectToQueryParams = (obj: Record<string, any>): string => {
         // If the value is an array, append each item separately
         value.forEach((item) => {
           if (item !== undefined) {
-            params.append(key, item);
+            params.append(key, item as string);
           }
         });
       } else {
         // If the value is not an array, append it directly
-        params.append(key, value);
+        params.append(key, value as string);
       }
     }
   });

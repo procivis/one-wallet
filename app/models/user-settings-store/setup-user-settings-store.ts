@@ -23,7 +23,7 @@ export async function setupUserSettingsStore(env: Environment) {
       ...(await storage.load(USER_SETTINGS_STATE_STORAGE_KEY)),
     };
     userSettingsStore = UserSettingsStoreModel.create(data, env);
-  } catch (e) {
+  } catch (_e) {
     userSettingsStore = UserSettingsStoreModel.create(defaultData, env);
   }
 

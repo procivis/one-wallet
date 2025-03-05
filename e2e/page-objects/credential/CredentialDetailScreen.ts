@@ -56,6 +56,7 @@ export default class CredentialDetailScreen {
   }
 
   static scrollTo(
+    this: void,
     element: Detox.IndexableNativeElement,
     direction: 'up' | 'down' = 'down',
   ) {
