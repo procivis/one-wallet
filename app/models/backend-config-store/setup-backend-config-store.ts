@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { onSnapshot } from 'mobx-state-tree';
 
 import { config } from '../../config';
@@ -22,7 +24,7 @@ export async function setupBackendConfigStore(env: Environment) {
       ...(await storage.load(BACKEND_CONFIG_STATE_STORAGE_KEY)),
     };
     backendConfigStore = BackendConfigStoreModel.create(data, env);
-  } catch (e) {
+  } catch (_e) {
     backendConfigStore = BackendConfigStoreModel.create(defaultData, env);
   }
 

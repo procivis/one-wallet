@@ -7,7 +7,7 @@ const rseLockedErrors = [
   '(UBQKit.UbqKitError error 5.)',
 ];
 
-export const isRSELockedError = (error: unknown | undefined): boolean => {
+export const isRSELockedError = (error: unknown): boolean => {
   if (!error || !(error instanceof OneError)) {
     return false;
   }

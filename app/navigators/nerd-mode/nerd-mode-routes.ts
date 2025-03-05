@@ -6,7 +6,7 @@ export type NerdModeNavigatorParamList = {
     credentialId: string;
   };
   ErrorNerdMode: {
-    error: Error | unknown;
+    error: unknown;
   };
   OfferNerdMode: {
     credentialId: string;

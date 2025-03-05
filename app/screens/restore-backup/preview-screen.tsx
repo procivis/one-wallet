@@ -37,13 +37,13 @@ const PreviewScreen: FC = () => {
   const { mutateAsync: rollbackImport } = useRollbackImport();
 
   const skipRollback = useRef(false);
-  const rollback = async () => {
+  const rollback = useCallback(() => {
     if (skipRollback.current) {
       return;
     }
     navigation.navigate('RestoreBackupDashboard');
-    await rollbackImport();
-  };
+    rollbackImport();
+  }, [navigation, rollbackImport]);
   useBeforeRemove(rollback);
 
   const onConfirm = useCallback(() => {

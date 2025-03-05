@@ -25,7 +25,7 @@ export async function setupLocaleStore(env: Environment) {
     };
     localeStore = LocaleStoreModel.create(data, env);
     i18n.locale = data.locale;
-  } catch (e) {
+  } catch (_e) {
     localeStore = LocaleStoreModel.create(defaultData, env);
   }
 

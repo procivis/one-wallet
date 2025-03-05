@@ -103,7 +103,7 @@ export const acceptCredentialTestCase = async (
   ) {
     await acceptRSECredential(data.rseConfig);
   } else {
-    await waitFor(CredentialAcceptProcessScreen.screen).toBeVisible();
+    await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
   }
 
   if (expectedResult === LoaderViewState.Success) {

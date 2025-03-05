@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable jest/no-disabled-tests */
 import 'lodash.product';
 
@@ -417,7 +418,7 @@ describe('ONE-614: Proof request', () => {
 
   // Pass
   describe('ONE-1233: Picture claim', () => {
-    let pictureProofSchema: Record<string, any>;
+    let pictureProofSchema: ProofSchemaResponseDTO;
     let credentialId: string;
 
     beforeAll(async () => {

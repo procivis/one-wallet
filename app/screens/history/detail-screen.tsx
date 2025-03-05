@@ -98,7 +98,7 @@ const claimValueFromProofInputClaim = ({
 
   if (Array.isArray(value)) {
     const values = value.map(claimFromProofInputClaim).filter(nonEmptyFilter);
-    return schema.dataType === DataTypeEnum.Object
+    return schema.dataType === (DataTypeEnum.Object as string)
       ? {
           array: schema.array,
           dataType: DataTypeEnum.Object,

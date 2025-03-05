@@ -34,7 +34,7 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
       }
 
       const results = await check(checkedCredentials.map(({ id }) => id)).catch(
-        (e) => {
+        (e: Error) => {
           reportTraceInfo('Wallet', 'Credential status check failed', e);
           return [];
         },
