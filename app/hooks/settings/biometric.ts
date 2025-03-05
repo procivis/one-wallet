@@ -95,7 +95,9 @@ export function useBiometricSetting() {
               text: translate('common.close'),
             },
             {
-              onPress: () => Linking.openSettings(),
+              onPress: () => {
+                Linking.openSettings();
+              },
               text: translate('common.ok'),
             },
           ],

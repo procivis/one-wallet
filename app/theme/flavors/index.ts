@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { ColorScheme } from '@procivis/one-react-native-components';
 import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const flavor: {
   colorScheme: ColorScheme;
   darkModeColorScheme?: ColorScheme;

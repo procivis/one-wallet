@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { onSnapshot } from 'mobx-state-tree';
 
 import * as storage from '../../utils/storage';
@@ -20,7 +22,7 @@ export async function setupWalletStore(env: Environment) {
       ...(await storage.load(WALLET_STATE_STORAGE_KEY)),
     };
     walletStore = WalletStoreModel.create(data, env);
-  } catch (e) {
+  } catch (_e) {
     walletStore = WalletStoreModel.create(defaultData, env);
   }
 

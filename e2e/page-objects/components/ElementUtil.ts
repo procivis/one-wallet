@@ -5,7 +5,7 @@ export async function isElementVisible(elementId: string) {
   try {
     await expect(element(by.id(elementId))).toBeVisible();
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 }
@@ -13,7 +13,7 @@ export async function isElementVisible(elementId: string) {
 export async function tapVisibleElement(locator: NativeMatcher) {
   try {
     await element(locator).atIndex(0).tap();
-  } catch (error) {
+  } catch (_error) {
     await expect(element(locator).atIndex(1)).toBeVisible();
     await element(locator).atIndex(1).tap();
   }

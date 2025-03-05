@@ -1,4 +1,5 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
+// eslint-disable-next-line no-undef
 module.exports = {
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',

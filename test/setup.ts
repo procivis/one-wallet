@@ -14,7 +14,9 @@ import './mock-react-native-community-netinfo';
 import './mock-react-native-bluetooth-state-manager';
 import './mock-procivis-react-native-one-core';
 
-require('react-native-reanimated').setUpTests();
+import { setUpTests as reanimatedSetupTests } from 'react-native-reanimated';
+
+reanimatedSetupTests();
 
 jest.useFakeTimers();
 declare global {

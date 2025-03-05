@@ -1,4 +1,4 @@
-/* eslint-disable no-bitwise */
+/* eslint-disable */
 const forge = {};
 const util = (forge.util = forge.util || {});
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ApiResponse, ApisauceInstance, create } from 'apisauce';
 
 import { config } from '../../config';

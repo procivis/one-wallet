@@ -32,6 +32,7 @@ export default class ProofRequestSharingScreen {
   }
 
   static async scrollTo(
+    this: void,
     element: Detox.IndexableNativeElement,
     direction: 'up' | 'down' = 'down',
   ) {

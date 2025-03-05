@@ -90,6 +90,7 @@ export const usePinCodeEntry = (onPinEntered: (userEntry: string) => void) => {
 
   useEffect(() => {
     if (finished) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       onPinEntered(Sha256(userEntry));
     }
   }, [onPinEntered, userEntry, finished]);

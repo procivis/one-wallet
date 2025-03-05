@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { I18n, TranslateOptions } from 'i18n-js/typings';
 import { isNil } from 'lodash';
 import React from 'react';
@@ -17,14 +23,14 @@ const reactInterpolate = (
   message: string,
   options: TranslateOptions,
 ) => {
-  options = Object.keys(options).reduce((buffer, key) => {
+  options = Object.keys(options).reduce<TranslateOptions>((buffer, key) => {
     buffer[i18nFn.transformKey(key)] = options[key];
     return buffer;
-  }, {} as TranslateOptions);
+  }, {});
 
   return reactStringReplace(message, i18nFn.placeholder, (match, i) => {
     let value: string | React.ReactElement<unknown> = '';
-    const placeholder = match as string;
+    const placeholder = match;
     const name = placeholder.replace(i18nFn.placeholder, '$1');
 
     if (!isNil(options[name])) {

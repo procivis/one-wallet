@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 // eslint-disable-next-line no-restricted-imports
 import * as ReactNative from 'react-native';
 
@@ -13,10 +15,10 @@ jest.doMock('react-native', () => {
           (
             uri: string,
             success: (width: number, height: number) => void,
-            failure?: (error: unknown) => void, // eslint-disable-line @typescript-eslint/no-unused-vars
+            _failure?: (error: unknown) => void,
           ) => success(100, 100),
         ),
-        resolveAssetSource: jest.fn((source) => mockFile), // eslint-disable-line @typescript-eslint/no-unused-vars
+        resolveAssetSource: jest.fn((_source) => mockFile),
       },
       StyleSheet: ReactNative.StyleSheet,
     },

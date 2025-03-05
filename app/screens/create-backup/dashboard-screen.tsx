@@ -51,7 +51,7 @@ const DashboardScreen: FC = () => {
     });
   }, [lastBackupEntry, settingsNavigation]);
 
-  const handleSaveFile = useCallback(async () => {
+  const handleSaveFile = useCallback(() => {
     if (!params) {
       return;
     }
@@ -73,6 +73,7 @@ const DashboardScreen: FC = () => {
           });
           success = shareResponse.success;
         } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           await NativeModules.FileExporter.export({
             filename,
             mimeType,

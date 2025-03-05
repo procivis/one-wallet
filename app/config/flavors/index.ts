@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import configuration from 'react-native-ultimate-config';
 
 import { AssetsConfiguration } from '../../models/config/assets';
 import { Configuration, LocaleOverride } from '../../models/config/config';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const configs: {
   assets: AssetsConfiguration;
   config: Configuration;

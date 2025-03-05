@@ -62,7 +62,9 @@ const ImportScreen: FC = () => {
     >
       <SettingsButton
         accessory={<ImportIcon color={colorScheme.text} />}
-        onPress={handleAddPress}
+        onPress={() => {
+          handleAddPress();
+        }}
         testID="RestoreBackupImportScreen.file"
         title={
           selectedFile?.name ??

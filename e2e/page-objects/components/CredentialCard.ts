@@ -320,7 +320,7 @@ export default function CredentialCard(testID: string) {
             await expect(image).not.toBeVisible();
             result.invisible.push(i);
           }
-        } catch (error) {
+        } catch (_error) {
           if (visible) {
             result.invisible.push(i);
           } else {
@@ -351,7 +351,7 @@ export default function CredentialCard(testID: string) {
       pct: number = 75,
     ) {
       if (visible) {
-        await waitFor(this.element).toBeVisible(pct);
+        await expect(this.element).toBeVisible(pct);
       } else {
         await expect(this.element).not.toBeVisible(pct);
       }

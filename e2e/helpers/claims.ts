@@ -51,72 +51,72 @@ export const mDocCredentialClaims = (
 ) => {
   return [
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![0].id,
       path: 'Data/Categories/0/Category',
       value: 'A',
     },
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![1].id,
       path: 'Data/Categories/0/Expired',
       value: '2026-09-29T00:00:00.000Z',
     },
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![0].id,
       path: 'Data/Categories/1/Category',
       value: 'B',
     },
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![1].id,
       path: 'Data/Categories/1/Expired',
       value: '2030-09-30T00:00:00.000Z',
     },
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![0].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![0].id,
       path: 'Data/Categories/2/Category',
       value: 'C',
     },
     {
-      claimId: mdocSchema.claims![2].claims![0].claims![1].id,
+      claimId: mdocSchema.claims[2].claims![0].claims![1].id,
       path: 'Data/Categories/2/Expired',
       value: '2027-09-28T00:00:00.000Z',
     },
     {
-      claimId: mdocSchema.claims![0].claims![0].id,
+      claimId: mdocSchema.claims[0].claims![0].id,
       path: 'Address/country',
       value: 'CH',
     },
     {
-      claimId: mdocSchema.claims![0].claims![1].id,
+      claimId: mdocSchema.claims[0].claims![1].id,
       path: 'Address/region',
       value: 'Zurich',
     },
     {
-      claimId: mdocSchema.claims![0].claims![2].id,
+      claimId: mdocSchema.claims[0].claims![2].id,
       path: 'Address/city',
       value: 'Zurich',
     },
     {
-      claimId: mdocSchema.claims![0].claims![3].id,
+      claimId: mdocSchema.claims[0].claims![3].id,
       path: 'Address/street',
       value: 'strasse',
     },
     {
-      claimId: mdocSchema.claims![1].claims![0].id,
+      claimId: mdocSchema.claims[1].claims![0].id,
       path: 'Credentials/first name',
       value: 'Wade',
     },
     {
-      claimId: mdocSchema.claims![1].claims![1].id,
+      claimId: mdocSchema.claims[1].claims![1].id,
       path: 'Credentials/last name',
       value: 'Wilson',
     },
     {
-      claimId: mdocSchema.claims![1].claims![2].id,
+      claimId: mdocSchema.claims[1].claims![2].id,
       path: 'Credentials/Birthday',
       value: '2018-01-17T00:00:00.000Z',
     },
     {
-      claimId: mdocSchema.claims![1].claims![3].id,
+      claimId: mdocSchema.claims[1].claims![3].id,
       path: 'Credentials/image',
       value:
         'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',

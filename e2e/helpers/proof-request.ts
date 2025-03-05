@@ -131,8 +131,10 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
   });
   const invitationUrl = await requestProof(proofRequestId, authToken);
   await scanURL(invitationUrl);
-  await waitFor(InvitationProcessScreen.screen).toBeVisible();
-  await waitFor(ProofRequestSharingScreen.screen).toBeVisible();
+  await expect(InvitationProcessScreen.screen).toBeVisible();
+  await waitFor(ProofRequestSharingScreen.screen)
+    .toBeVisible()
+    .withTimeout(6000);
 };
 
 export const proofSharing = async (

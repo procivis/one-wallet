@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   formatDate,
   formatDateTime,
@@ -110,7 +112,8 @@ export const formatDateOnlyFromUTCTimestamp = (
   );
 };
 
-const locale = (
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const locale: string = (
   Platform.OS === 'ios'
     ? NativeModules.SettingsManager.settings.AppleLocale
     : NativeModules.I18nManager.localeIdentifier

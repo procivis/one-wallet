@@ -92,7 +92,9 @@ export const SecurityScreen: FC = () => {
           </View>
         ) : null}
         <Button
-          onPress={onContinue}
+          onPress={() => {
+            onContinue();
+          }}
           style={styles.button}
           testID="SecurityScreen.continue"
           title={translate('onboarding.security.continue')}

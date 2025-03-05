@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Platform } from 'react-native';
 
 import { convertDateStrToLocalDate, convertDateToUTCTimestamp } from './date';

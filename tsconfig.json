@@ -1,4 +1,10 @@
 {
   "extends": "./node_modules/@react-native/typescript-config/tsconfig.json",
-  "include": ["index.js", "app/**/*", "test/**/*", "e2e/**/*"]
+  "include": [
+    "index.js",
+    "eslint.config.mjs",
+    "app/**/*",
+    "test/**/*",
+    "e2e/**/*"
+  ]
 }
