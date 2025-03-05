@@ -113,7 +113,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
         onCheckPassed();
         resetPinSecurity();
       })
-      .catch((e) => {
+      .catch((e: Error) => {
         reportTraceInfo('Wallet', 'Biometric login failed', e);
       });
   }, [isBlocked, onCheckPassed, resetPinSecurity]);

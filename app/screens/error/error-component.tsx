@@ -5,7 +5,7 @@ import { translate } from '../../i18n';
 
 export interface ErrorComponentProps {
   error: Error;
-  onReset(): void;
+  onReset(this: void): void;
 }
 
 export const ErrorComponent: React.FunctionComponent<ErrorComponentProps> = (

@@ -48,9 +48,10 @@ const ClearCacheScreen: FunctionComponent = () => {
     }
   }, [clearType]);
 
-  const handlePress = useCallback(async () => {
-    await clearCache(cacheEntriesToClear);
-    navigation.navigate('SettingsDashboard');
+  const handlePress = useCallback(() => {
+    clearCache(cacheEntriesToClear).then(() =>
+      navigation.navigate('SettingsDashboard'),
+    );
   }, [navigation, clearCache, cacheEntriesToClear]);
 
   const testID = 'ClearCacheScreen';

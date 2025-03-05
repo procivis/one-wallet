@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
   ButtonSetting,
   LinkIcon,
@@ -40,6 +41,7 @@ const LicencesScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const translate = useUpdatedTranslate();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const libraries: LibrariesLicences =
     Platform.OS === 'ios'
       ? require('../../../assets/licences/licences.ios.json')
