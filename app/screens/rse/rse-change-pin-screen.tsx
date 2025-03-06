@@ -2,13 +2,14 @@ import {
   concatTestID,
   ContrastingStatusBar,
   HeaderCloseButton,
+  LoaderView,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { Pins } from '@procivis/one-react-native-components/src/ui-components/pin/pins';
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -17,6 +18,7 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 
 const {
   addEventListener: addRSEEventListener,
+  changePin: changeRSEPin,
   PinEventType,
   PinFlowStage,
   PinPad: RSEPinPad,
@@ -48,14 +50,29 @@ export const RSEChangePinScreen: FC = () => {
     'checkCurrentPin',
   );
   const [error, setError] = useState<string>();
+  const incorrectPin = useRef(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const testID = 'RemoteSecureElementChangePinScreen';
 
   useEffect(() => {
+    changeRSEPin().catch(() => {});
+  }, []);
+
+  useEffect(() => {
     return addRSEEventListener((event) => {
       switch (event.type) {
+        case PinEventType.SHOW_PIN:
+          setIsLoading(false);
+          break;
         case PinEventType.HIDE_PIN:
-          navigation.goBack();
+          if (incorrectPin.current) {
+            incorrectPin.current = false;
+            setIsLoading(true);
+            changeRSEPin().catch(() => {});
+          } else {
+            navigation.goBack();
+          }
           break;
         case PinEventType.DIGITS_ENTERED:
           if (event.digitsEntered > 0) {
@@ -72,6 +89,9 @@ export const RSEChangePinScreen: FC = () => {
           break;
         }
         case PinEventType.INCORRECT_PIN:
+          if (event.attemptsLeft > 0) {
+            incorrectPin.current = true;
+          }
           setError(
             translate('rse.changePin.checkCurrentPin.error', {
               attemptsLeft: event.attemptsLeft,
@@ -144,7 +164,11 @@ export const RSEChangePinScreen: FC = () => {
             },
           ]}
         >
-          <RSEPinPad style={styles.pinPad} />
+          {isLoading ? (
+            <LoaderView animate={true} />
+          ) : (
+            <RSEPinPad style={styles.pinPad} />
+          )}
         </Animated.View>
       </View>
     </SafeAreaView>
