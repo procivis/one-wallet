@@ -2,13 +2,13 @@ import {
   Button,
   ButtonType,
   CredentialDetails,
-  NavigationHeader,
+  ScrollViewScreen,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
@@ -40,49 +40,54 @@ const StatusCheckResultScreen: FunctionComponent = () => {
   }, []);
 
   return (
-    <>
-      <NavigationHeader
-        leftItem={
-          <HeaderCloseModalButton testID="StatusCheckResultScreen.header.close" />
-        }
-        modalHandleVisible
-        title={translate('credentialUpdate.title')}
-      />
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        style={styles.scrollView}
-        testID="StatusCheckResultScreen"
-      >
-        <View style={styles.content}>
-          <Typography
-            align="center"
-            color={colorScheme.text}
-            style={styles.subtitle}
-          >
-            {translate('credentialUpdate.subtitle')}
-          </Typography>
-          {credentialIds.map((credentialId, index, { length }) => (
-            <CredentialDetails
-              credentialId={credentialId}
-              expanded={expandedCredentialId === credentialId}
-              key={credentialId}
-              labels={credentialCardLabels()}
-              lastItem={index === length - 1}
-              onHeaderPress={onToggle}
-              onImagePreview={onImagePreview}
-            />
-          ))}
-        </View>
-        <View style={[styles.bottom, { marginBottom: insets.bottom }]}>
-          <Button
+    <ScrollViewScreen
+      header={{
+        leftItem: (
+          <HeaderCloseModalButton
             onPress={navigation.goBack}
-            testID="StatusCheckResultScreen.close"
-            title={translate('common.close')}
-            type={ButtonType.Secondary}
+            testID="StatusCheckResultScreen.header.close"
           />
-        </View>
-      </ScrollView>
-    </>
+        ),
+        modalHandleVisible: Platform.OS === 'ios',
+        static: true,
+        title: translate('credentialUpdate.title'),
+      }}
+      modalPresentation
+      scrollView={{
+        alwaysBounceVertical: false,
+        testID: 'StatusCheckResultScreen.scroll',
+      }}
+      testID="StatusCheckResultScreen"
+    >
+      <View style={styles.content}>
+        <Typography
+          align="center"
+          color={colorScheme.text}
+          style={styles.subtitle}
+        >
+          {translate('credentialUpdate.subtitle')}
+        </Typography>
+        {credentialIds.map((credentialId, index, { length }) => (
+          <CredentialDetails
+            credentialId={credentialId}
+            expanded={expandedCredentialId === credentialId}
+            key={credentialId}
+            labels={credentialCardLabels()}
+            lastItem={index === length - 1}
+            onHeaderPress={onToggle}
+            onImagePreview={onImagePreview}
+          />
+        ))}
+      </View>
+      <View style={[styles.bottom, { marginBottom: insets.bottom }]}>
+        <Button
+          onPress={navigation.goBack}
+          testID="StatusCheckResultScreen.close"
+          title={translate('common.close')}
+          type={ButtonType.Secondary}
+        />
+      </View>
+    </ScrollViewScreen>
   );
 };
 
@@ -95,12 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 12,
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
-  scrollView: {
-    flex: 1,
   },
   subtitle: {
     marginBottom: 20,
