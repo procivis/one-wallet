@@ -14,7 +14,6 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { Platform } from 'react-native';
@@ -28,7 +27,6 @@ import {
   RootNavigationProp,
   RootRouteProp,
 } from '../../navigators/root/root-routes';
-import { resetNavigationAction } from '../../utils/navigation';
 
 const {
   addEventListener: addRSEEventListener,
@@ -37,15 +35,13 @@ const {
 } = Ubiqu;
 
 const CredentialUpdateProcessScreen: FunctionComponent = () => {
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+  const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const route = useRoute<RootRouteProp<'CredentialUpdateProcess'>>();
   const { credentialId } = route.params;
   const [error, setError] = useState<unknown>();
   const [state, setState] = useState<
     Exclude<LoaderViewState, LoaderViewState.Error>
   >(LoaderViewState.InProgress);
-  const closing = useRef(false);
 
   useBlockOSBackNavigation(state === LoaderViewState.InProgress);
 
@@ -56,106 +52,78 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
           event.type === PinEventType.SHOW_PIN &&
           event.flowType === PinFlowType.TRANSACTION
         ) {
-          rootNavigation.navigate('RSESign');
+          navigation.navigate('RSESign');
         }
       }),
-    [rootNavigation],
+    [navigation],
   );
 
   const { mutateAsync: checkCredentialStatus } =
     useCredentialRevocationCheck(true);
   const { data: credential } = useCredentialDetail(credentialId);
 
-  const [credentialStateUpdated, setCredentialStateUpdated] =
-    useState<boolean>(false);
-  const [hasCheckedStatus, setHasCheckedStatus] = useState(false);
-
-  const handleCheckCredentialStatus = useCallback(
+  const runStatusCheck = useCallback(
     async (credentialDetail: CredentialDetail) => {
       try {
-        const checkResult = (
-          await checkCredentialStatus([credentialDetail.id])
-        )[0];
+        setState(LoaderViewState.InProgress);
+
+        const credentialIds = [credentialDetail.id];
+        const checkResult = (await checkCredentialStatus(credentialIds))[0];
+
+        if (!navigation.isFocused()) {
+          return;
+        }
 
         if (!checkResult.success) {
           throw new Error(checkResult.reason);
         }
 
-        if (checkResult.status !== credentialDetail.state) {
-          setCredentialStateUpdated(true);
+        if (checkResult.status === credentialDetail.state) {
+          setState(LoaderViewState.Success);
+        } else {
+          navigation.replace('StatusCheckResult', { credentialIds });
         }
-
-        setState(LoaderViewState.Success);
       } catch (e) {
         setState(LoaderViewState.Warning);
         setError(e);
       }
     },
-    [setCredentialStateUpdated, setState, setError, checkCredentialStatus],
+    [checkCredentialStatus, navigation],
   );
 
   useEffect(() => {
-    if (credential && !hasCheckedStatus) {
-      setState(LoaderViewState.InProgress);
-      setHasCheckedStatus(true);
-      handleCheckCredentialStatus(credential);
+    if (credential) {
+      runStatusCheck(credential);
     }
-  }, [
-    credential,
-    handleCheckCredentialStatus,
-    hasCheckedStatus,
-    setHasCheckedStatus,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!credential, runStatusCheck]);
 
   const onRetry = useCallback(() => {
-    setState(LoaderViewState.InProgress);
-    setHasCheckedStatus(false);
-  }, []);
+    if (credential) {
+      runStatusCheck(credential);
+    }
+  }, [credential, runStatusCheck]);
 
   const onClose = useCallback(() => {
-    closing.current = true;
-
-    if (credentialStateUpdated) {
-      resetNavigationAction(rootNavigation, [
-        {
-          name: 'CredentialDetail',
-          params: { params: { credentialId }, screen: 'Detail' },
-        },
-        {
-          name: 'StatusCheckResult',
-          params: { credentialIds: [credentialId] },
-        },
-      ]);
-    } else {
-      rootNavigation.navigate('CredentialDetail', {
-        params: { credentialId },
-        screen: 'Detail',
-      });
-    }
-  }, [rootNavigation, credentialStateUpdated, credentialId]);
-
-  useEffect(() => {
-    if (credentialStateUpdated) {
-      onClose();
-    }
-  }, [credentialStateUpdated, onClose]);
+    navigation.goBack();
+  }, [navigation]);
 
   const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success && !credentialStateUpdated,
+    state === LoaderViewState.Success,
     onClose,
   );
   const testID = 'CredentialUpdateProcessScreen';
   return (
     <LoadingResultScreen
       button={
-        credentialStateUpdated || state === LoaderViewState.InProgress
+        state === LoaderViewState.InProgress
           ? undefined
-          : state === LoaderViewState.Success && !credentialStateUpdated
+          : state === LoaderViewState.Success
           ? {
               onPress: onClose,
               testID: concatTestID(testID, 'close'),
               title: translate('common.closeWithTimeout', {
-                timeout: credentialStateUpdated ? 0 : closeTimeout,
+                timeout: closeTimeout,
               }),
               type: ButtonType.Secondary,
             }
@@ -175,15 +143,13 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
         ),
         modalHandleVisible: Platform.OS === 'ios',
         rightItem:
-          state === LoaderViewState.Warning ? (
+          state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton
               onPress={() => {
-                if (error) {
-                  rootNavigation.navigate('NerdMode', {
-                    params: { error },
-                    screen: 'ErrorNerdMode',
-                  });
-                }
+                navigation.navigate('NerdMode', {
+                  params: { error },
+                  screen: 'ErrorNerdMode',
+                });
               }}
               testID={concatTestID(testID, 'header.info')}
             />
