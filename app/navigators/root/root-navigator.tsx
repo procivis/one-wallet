@@ -33,6 +33,13 @@ const RootNavigator: FunctionComponent = () => {
         headerShown: false,
       }}
     >
+      <RootStack.Screen component={SettingsNavigator} name="Settings" />
+      <RootStack.Screen
+        component={CredentialDetailNavigator}
+        name="CredentialDetail"
+      />
+
+      {/* screens with disabled OS navigation */}
       <RootStack.Group screenOptions={{ gestureEnabled: false }}>
         <RootStack.Screen
           component={PinCodeCheckScreen}
@@ -45,72 +52,46 @@ const RootNavigator: FunctionComponent = () => {
         <RootStack.Screen component={OnboardingNavigator} name="Onboarding" />
         <RootStack.Screen component={DashboardNavigator} name="Dashboard" />
       </RootStack.Group>
-      <RootStack.Screen
-        component={NerdModeNavigator}
-        name="NerdMode"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}
-      />
-      <RootStack.Screen
-        component={CredentialManagementNavigator}
-        name="CredentialManagement"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          gestureEnabled: false,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      />
-      <RootStack.Screen
-        component={CredentialUpdateProcessScreen}
-        name="CredentialUpdateProcess"
-        options={{
+
+      {/* screens displayed as action sheet overlay */}
+      <RootStack.Group
+        key="formSheet"
+        screenOptions={{
           animation:
             Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
           headerShown: false,
           presentation: 'formSheet',
         }}
-      />
-      <RootStack.Screen
-        component={StatusCheckResultScreen}
-        name="StatusCheckResult"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      />
-      <RootStack.Screen component={SettingsNavigator} name="Settings" />
-      <RootStack.Screen
-        component={CredentialDetailNavigator}
-        name="CredentialDetail"
-      />
-      <RootStack.Screen
-        component={ImagePreviewScreen}
-        name="ImagePreview"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}
-      />
-      <RootStack.Screen
-        component={RSESignScreen}
-        name="RSESign"
-        options={{
+      >
+        <RootStack.Screen
+          component={CredentialManagementNavigator}
+          name="CredentialManagement"
+          options={{ gestureEnabled: false }}
+        />
+        <RootStack.Screen
+          component={CredentialUpdateProcessScreen}
+          name="CredentialUpdateProcess"
+        />
+        <RootStack.Screen
+          component={StatusCheckResultScreen}
+          name="StatusCheckResult"
+        />
+      </RootStack.Group>
+
+      {/* screens displayed as full-screen modal */}
+      <RootStack.Group
+        key="fullScreenModal"
+        screenOptions={{
           animation:
             Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
           headerShown: false,
           presentation: 'fullScreenModal',
         }}
-      />
+      >
+        <RootStack.Screen component={NerdModeNavigator} name="NerdMode" />
+        <RootStack.Screen component={ImagePreviewScreen} name="ImagePreview" />
+        <RootStack.Screen component={RSESignScreen} name="RSESign" />
+      </RootStack.Group>
     </RootStack.Navigator>
   ) : null;
 };
