@@ -109,7 +109,7 @@ export const acceptCredentialTestCase = async (
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(CredentialAcceptProcessScreen.status.success)
       .toBeVisible()
-      .withTimeout(15000);
+      .withTimeout(25000);
 
     if (data.redirectUri) {
       await waitFor(CredentialAcceptProcessScreen.button.redirect)

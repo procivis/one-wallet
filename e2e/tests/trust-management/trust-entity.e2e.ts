@@ -29,6 +29,7 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { DidDetailDTO } from '../../types/did';
 import { ProofSchemaResponseDTO } from '../../types/proof';
+import { TrustEntityResponseDTO } from '../../types/trustEntity';
 import {
   bffLogin,
   createCredentialSchema,
@@ -36,7 +37,6 @@ import {
   createTrustEntity,
   getTrustAnchor,
   getTrustEntityDetail,
-  TrustEntityResponseDTO,
 } from '../../utils/bff-api';
 import { getTrustEntityRequestData } from '../../utils/data-utils';
 import {

@@ -14,6 +14,7 @@ import {
   proofSharing,
 } from '../helpers/proof-request';
 import { CredentialStatus } from '../page-objects/components/CredentialCard';
+import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import { Attributes } from '../page-objects/components/NerdModeScreen';
 import CredentialDetailScreen, {
   Action,
@@ -32,6 +33,7 @@ import {
   bffLogin,
   createCredentialSchema,
   createProofRequest,
+  deleteProofRequest,
   requestProof,
   revokeCredential,
 } from '../utils/bff-api';
@@ -882,6 +884,47 @@ describe('ONE-614: Proof request', () => {
           exchange: Exchange.OPENID4VC,
           proofSchemaId: proofPassword2.id,
         },
+      });
+    });
+  });
+
+  describe('ONE-4590: Delete proof request', () => {
+    beforeAll(async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchema,
+        exchange: Exchange.OPENID4VC,
+      });
+    });
+
+    it('Scan proof with deleted proof request before scanning QR code', async () => {
+      const beforeQRCodeScanning = async (proofRequestId: string) => {
+        await deleteProofRequest(authToken, proofRequestId);
+      };
+
+      await proofSharing(authToken, {
+        data: {
+          beforeQRCodeScanning,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofSchema.id,
+        },
+        expectConnectionError: true,
+        expectedResult: LoaderViewState.Warning,
+      });
+    });
+
+    it('Scan proof with deleted proof request on the review screen', async () => {
+      const customShareDataScreenTest = async (proofRequestId: string) => {
+        await deleteProofRequest(authToken, proofRequestId);
+      };
+
+      await proofSharing(authToken, {
+        data: {
+          customShareDataScreenTest,
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofSchema.id,
+        },
+        expectedResult: LoaderViewState.Warning,
       });
     });
   });

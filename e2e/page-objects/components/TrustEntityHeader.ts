@@ -1,6 +1,6 @@
 import { expect } from 'detox';
 
-import { TrustEntityResponseDTO } from '../../utils/bff-api';
+import { TrustEntityResponseDTO } from '../../types/trustEntity';
 
 export default function EntityDetailHeader(screenTestID: string) {
   return {
