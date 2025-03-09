@@ -18,6 +18,7 @@ import {
   ProofRequestData,
   ProofSchemaResponseDTO,
 } from '../types/proof';
+import { TrustEntityResponseDTO } from '../types/trustEntity';
 import { getDidRequestData, getKeyRequestData } from './data-utils';
 import {
   DataType,
@@ -279,20 +280,6 @@ export async function createTrustEntity(
   ).then((res) => res.id);
 }
 
-export interface TrustEntityResponseDTO {
-  createdDate: string;
-  did: DidDetailDTO;
-  id: string;
-  lastModified: string;
-  logo?: string | null;
-  name: string;
-  privacyUrl?: string | null;
-  role: TrustEntityRole;
-  state: string;
-  termsUrl?: string | null;
-  website?: string | null;
-}
-
 export async function getTrustEntityDetail(
   trustEntityId: string,
   authToken: string,
@@ -438,4 +425,15 @@ export async function createDidWithKey(
     getDidRequestData(data.didMethod, keyId),
   );
   return getDidDetail(authToken, didId);
+}
+
+export async function deleteProofRequest(
+  authToken: string,
+  proofRequestId: string,
+) {
+  return apiRequest(
+    `/api/proof-request/v1/${proofRequestId}`,
+    authToken,
+    'DELETE',
+  );
 }

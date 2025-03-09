@@ -26,7 +26,11 @@ import { DEFAULT_WAIT_TIME, LONG_WAIT_TIME, RSEConfig } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
 interface ProofSharingProops {
-  customShareDataScreenTest?: () => Promise<void>;
+  beforeQRCodeScanning?: (
+    proofRequestId: string,
+    invitationUrl: string,
+  ) => Promise<void>;
+  customShareDataScreenTest?: (proofRequestId: string) => Promise<void>;
   didId?: string;
   didMethod?: DidMethod;
   exchange?: Exchange;
@@ -40,6 +44,7 @@ interface ProofSharingProops {
 interface ProofRequestProps {
   action?: ProofAction;
   data: ProofSharingProops;
+  expectConnectionError?: boolean;
   expectedResult?: LoaderViewState;
 }
 
@@ -130,11 +135,13 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
     verifierDid: verifierDidId,
   });
   const invitationUrl = await requestProof(proofRequestId, authToken);
+  await data.beforeQRCodeScanning?.(proofRequestId, invitationUrl);
   await scanURL(invitationUrl);
   await expect(InvitationProcessScreen.screen).toBeVisible();
   await waitFor(ProofRequestSharingScreen.screen)
     .toBeVisible()
     .withTimeout(6000);
+  return proofRequestId;
 };
 
 export const proofSharing = async (
@@ -143,9 +150,13 @@ export const proofSharing = async (
     action = ProofAction.SHARE,
     data,
     expectedResult = LoaderViewState.Success,
+    expectConnectionError,
   }: ProofRequestProps,
 ) => {
-  await requestProofAndReviewProofRequestSharingScreen(authToken, data);
+  const proofRequestId = await requestProofAndReviewProofRequestSharingScreen(
+    authToken,
+    data,
+  );
 
   try {
     await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
@@ -158,6 +169,11 @@ export const proofSharing = async (
       .not.toBeVisible()
       .withTimeout(10000);
   }
+  if (expectConnectionError) {
+    await expect(InvitationProcessScreen.screen).toBeVisible();
+    await expect(element(by.text('Connection failed'))).toBeVisible();
+    return;
+  }
   const credential_0 = await ProofRequestSharingScreen.credentialAtIndex(0);
   await waitFor(credential_0.element).toBeVisible().withTimeout(2000);
   for (const [index] of data.selectiveDisclosureCredentials?.entries() || []) {
@@ -165,7 +181,7 @@ export const proofSharing = async (
     await credential.selectiveDisclosureMessageVisible();
   }
 
-  await data.customShareDataScreenTest?.();
+  await data.customShareDataScreenTest?.(proofRequestId);
 
   if (action === ProofAction.REJECT) {
     await ProofRequestSharingScreen.cancelButton.tap();
