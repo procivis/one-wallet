@@ -21,7 +21,7 @@ import {
   requestProof,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { DidMethod, Exchange, KeyType } from '../utils/enums';
+import { DidMethod, Exchange, KeyType, URLOption } from '../utils/enums';
 import { DEFAULT_WAIT_TIME, LONG_WAIT_TIME, RSEConfig } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -39,6 +39,7 @@ interface ProofSharingProops {
   redirectUri?: string;
   rseConfig?: RSEConfig;
   selectiveDisclosureCredentials?: string[];
+  proofSharingUrlType?: URLOption;
 }
 
 interface ProofRequestProps {
@@ -134,7 +135,11 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
     redirectUri: data.redirectUri,
     verifierDid: verifierDidId,
   });
-  const invitationUrl = await requestProof(proofRequestId, authToken);
+  const invitationUrls = await requestProof(proofRequestId, authToken);
+  const invitationUrl =
+    data.proofSharingUrlType === URLOption.UNIVERSAL_LINK
+      ? invitationUrls.appUrl
+      : invitationUrls.url;
   await data.beforeQRCodeScanning?.(proofRequestId, invitationUrl);
   await scanURL(invitationUrl);
   await expect(InvitationProcessScreen.screen).toBeVisible();

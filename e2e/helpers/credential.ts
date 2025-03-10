@@ -23,6 +23,7 @@ import {
   DidMethod,
   Exchange,
   KeyType,
+  URLOption,
   WalletKeyStorageType,
 } from '../utils/enums';
 import { LONG_WAIT_TIME, RSEConfig } from '../utils/init';
@@ -48,6 +49,7 @@ interface CredentialIssuanceProps {
   exchange?: Exchange;
   redirectUri?: string;
   rseConfig?: RSEConfig;
+  invitationUrlType?: URLOption;
 }
 
 export enum CredentialAction {
@@ -137,7 +139,11 @@ export const acceptCredentialTestCase = async (
   await device.enableSynchronization();
   await expect(WalletScreen.screen).toBeVisible();
 
-  await (await WalletScreen.credentialAtIndex(0)).verifyIsVisible();
+  await expect(
+    (
+      await WalletScreen.credentialAtIndex(0)
+    ).header.name,
+  ).toBeVisible();
 };
 
 const rejectCredentialTestCase = async () => {
@@ -176,7 +182,11 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
       redirectUri: data.redirectUri,
     },
   );
-  const invitationUrl = await offerCredential(credentialId, data.authToken);
+  const invitationUrls = await offerCredential(credentialId, data.authToken);
+  const invitationUrl =
+    data.invitationUrlType === URLOption.UNIVERSAL_LINK
+      ? invitationUrls.appUrl
+      : invitationUrls.url;
   await scanURL(invitationUrl);
   await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(25000);
   await CredentialOfferScreen.credentialCard.verifyIsVisible();
