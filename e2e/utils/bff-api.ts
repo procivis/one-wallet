@@ -327,12 +327,17 @@ export async function createProofRequest(
 export async function offerCredential(
   credentialId: string,
   authToken: string,
-): Promise<string> {
+): Promise<EntityShareResponseDTO> {
   return apiRequest(
     `/api/credential/v1/${credentialId}/share`,
     authToken,
     'POST',
-  ).then((res) => res.url);
+  );
+}
+
+export interface EntityShareResponseDTO {
+  url: string;
+  appUrl: string;
 }
 
 export async function revokeCredential(
@@ -349,12 +354,12 @@ export async function revokeCredential(
 export async function requestProof(
   proofRequestId: string,
   authToken: string,
-): Promise<string> {
+): Promise<EntityShareResponseDTO> {
   return apiRequest(
     `/api/proof-request/v1/${proofRequestId}/share`,
     authToken,
     'POST',
-  ).then((res) => res.url);
+  );
 }
 
 export async function suspendCredential(

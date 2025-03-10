@@ -123,8 +123,8 @@ describe('ONE-224: Wallet history', () => {
 
       for (let i = 0; i < times; i++) {
         credentialId = await createCredential(authToken, credentialSchemaJWT);
-        const invitationUrl = await offerCredential(credentialId, authToken);
-        await scanURL(invitationUrl);
+        const invitationUrls = await offerCredential(credentialId, authToken);
+        await scanURL(invitationUrls.url);
         await expect(CredentialOfferScreen.screen).toBeVisible();
         await CredentialOfferScreen.acceptButton.tap();
         await expect(CredentialAcceptProcessScreen.screen).toBeVisible();

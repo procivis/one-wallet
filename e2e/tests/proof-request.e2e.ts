@@ -45,6 +45,7 @@ import {
   Exchange,
   KeyType,
   RevocationMethod,
+  URLOption,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
@@ -87,6 +88,16 @@ describe('ONE-614: Proof request', () => {
         data: {
           exchange: Exchange.OPENID4VC,
           proofSchemaId: proofSchema.id,
+        },
+      });
+    });
+
+    it('Confirm proof request with universal link', async () => {
+      await proofSharing(authToken, {
+        data: {
+          exchange: Exchange.OPENID4VC,
+          proofSchemaId: proofSchema.id,
+          proofSharingUrlType: URLOption.UNIVERSAL_LINK,
         },
       });
     });
@@ -386,8 +397,8 @@ describe('ONE-614: Proof request', () => {
       const proofRequestId = await createProofRequest(authToken, {
         proofSchemaId: proofSchema.id,
       });
-      const invitationUrl = await requestProof(proofRequestId, authToken);
-      await scanURL(invitationUrl);
+      const invitationUrls = await requestProof(proofRequestId, authToken);
+      await scanURL(invitationUrls.url);
 
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
@@ -404,8 +415,8 @@ describe('ONE-614: Proof request', () => {
       const proofRequestId = await createProofRequest(authToken, {
         proofSchemaId: proofSchema.id,
       });
-      const invitationUrl = await requestProof(proofRequestId, authToken);
-      await scanURL(invitationUrl);
+      const invitationUrls = await requestProof(proofRequestId, authToken);
+      await scanURL(invitationUrls.url);
 
       await expect(ProofRequestSharingScreen.screen).toBeVisible();
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);

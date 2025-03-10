@@ -120,3 +120,8 @@ export enum TrustEntityRole {
   ISSUER = 'ISSUER',
   VERIFIER = 'VERIFIER',
 }
+
+export enum URLOption {
+  STANDARD_LINK = 'url',
+  UNIVERSAL_LINK = 'appUrl',
+}
