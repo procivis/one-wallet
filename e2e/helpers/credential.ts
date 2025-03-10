@@ -47,9 +47,9 @@ interface CredentialIssuanceProps {
   didData?: DidDetailDTO;
   didFilter?: DidFilter;
   exchange?: Exchange;
+  invitationUrlType?: URLOption;
   redirectUri?: string;
   rseConfig?: RSEConfig;
-  invitationUrlType?: URLOption;
 }
 
 export enum CredentialAction {

@@ -36,10 +36,10 @@ interface ProofSharingProops {
   exchange?: Exchange;
   keyAlgorithms?: KeyType | KeyType[];
   proofSchemaId: string;
+  proofSharingUrlType?: URLOption;
   redirectUri?: string;
   rseConfig?: RSEConfig;
   selectiveDisclosureCredentials?: string[];
-  proofSharingUrlType?: URLOption;
 }
 
 interface ProofRequestProps {

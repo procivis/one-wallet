@@ -49,6 +49,11 @@ interface NavigationProps
   extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 const coreConfig = {
+  exchange: {
+    ISO_MDL: {
+      disabled: !config.featureFlags.isoMdl,
+    },
+  },
   keyStorage: { UBIQU_RSE: { disabled: false } },
 };
 
