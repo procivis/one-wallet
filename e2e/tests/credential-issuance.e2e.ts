@@ -28,6 +28,7 @@ import {
   Exchange,
   KeyType,
   RevocationMethod,
+  URLOption,
   WalletKeyStorageType,
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
@@ -38,6 +39,7 @@ describe('ONE-601: Credential issuance', () => {
   let credentialSchemaJWT: CredentialSchemaResponseDTO;
   let credentialSchemaSD_JWT: CredentialSchemaResponseDTO;
   let credentialSchemaJWT_with_LVVC: CredentialSchemaResponseDTO;
+  let credentialSchemaJSONLD: CredentialSchemaResponseDTO;
 
   beforeAll(async () => {
     await launchApp();
@@ -63,6 +65,13 @@ describe('ONE-601: Credential issuance', () => {
         allowSuspension: true,
         format: CredentialFormat.JWT,
         revocationMethod: RevocationMethod.LVVC,
+      }),
+    );
+    credentialSchemaJSONLD = await createCredentialSchema(
+      authToken,
+      getCredentialSchemaData({
+        format: CredentialFormat.JSON_LD_CLASSIC,
+        revocationMethod: RevocationMethod.NONE,
       }),
     );
   });
@@ -298,6 +307,16 @@ describe('ONE-601: Credential issuance', () => {
 
   // Pass
   describe('ONE-796: OpenID4VC Credential transport', () => {
+    it('Issue credential: JSONLD schema universal link', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaJSONLD,
+        exchange: Exchange.OPENID4VC,
+        redirectUri: 'http://www.procivis.ch',
+        invitationUrlType: URLOption.UNIVERSAL_LINK,
+      });
+    });
+
     it('Issue credential: JWT schema', async () => {
       await credentialIssuance({
         authToken: authToken,
