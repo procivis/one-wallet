@@ -336,8 +336,8 @@ export async function offerCredential(
 }
 
 export interface EntityShareResponseDTO {
-  url: string;
   appUrl: string;
+  url: string;
 }
 
 export async function revokeCredential(

@@ -73,12 +73,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
   } = useOpenSettings();
 
   const isBleInteraction = useMemo(() => {
-    if (!invitationSupportedTransports.includes(Transport.Bluetooth)) {
-      return false;
-    }
-    if (invitationSupportedTransports.length === 1) {
-      return true;
-    }
     if (!availableTransport) {
       return false;
     }
@@ -87,7 +81,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         availableTransport[0] === Transport.Bluetooth) ||
       (availableTransport.length === 0 && permissionStatus === 'denied')
     );
-  }, [availableTransport, invitationSupportedTransports, permissionStatus]);
+  }, [availableTransport, permissionStatus]);
 
   const [state, setState] = useState<
     LoaderViewState.InProgress | LoaderViewState.Warning
@@ -115,6 +109,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     return permissionStatus && permissionStatus === 'granted';
   }, [isBleInteraction, permissionStatus]);
 
+  // Sets canHandleInvitation and loader state based on transport availability
   useEffect(() => {
     if (canHandleInvitation !== undefined) {
       return;
@@ -136,10 +131,8 @@ const InvitationProcessScreen: FunctionComponent = () => {
       }
       return;
     }
-    const transportAvailable = invitationSupportedTransports.some((t) =>
-      availableTransport.includes(t),
-    );
-    if (transportAvailable) {
+
+    if (availableTransport.length) {
       setCanHandleInvitation(true);
       setState(LoaderViewState.InProgress);
       return;
@@ -151,7 +144,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     adapterEnabled,
     allPermissionsGranted,
     availableTransport,
-    invitationSupportedTransports,
     permissionStatus,
     transportError,
     canHandleInvitation,
@@ -162,12 +154,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
       return;
     }
 
-    const transports = invitationSupportedTransports.filter((t) =>
-      availableTransport.includes(t),
-    );
-    const transport = transports.includes(Transport.MQTT)
+    const transport = availableTransport.includes(Transport.MQTT)
       ? Transport.MQTT
-      : transports[0];
+      : availableTransport[0];
     if (!transport) {
       return;
     }
@@ -205,7 +194,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     availableTransport,
     canHandleInvitation,
     handleInvitation,
-    invitationSupportedTransports,
     invitationUrl,
     managementNavigation,
   ]);
@@ -309,6 +297,20 @@ const InvitationProcessScreen: FunctionComponent = () => {
       return translate(internetErrorKeys[transportError.internet]);
     }
 
+    if (!availableTransport?.length) {
+      if (invitationSupportedTransports.length === 1) {
+        if (invitationSupportedTransports[0] === Transport.Bluetooth) {
+          return translate('invitation.process.bleTransportDisabled.title');
+        }
+      }
+      if (invitationSupportedTransports.includes(Transport.MQTT)) {
+        return translate('invitation.process.mqttTransportDisabled.title');
+      }
+      if (invitationSupportedTransports.includes(Transport.HTTP)) {
+        return translate('invitation.process.httpTransportDisabled.title');
+      }
+    }
+
     return translateError(
       error,
       translate(`invitation.process.${state}.title`),
@@ -316,6 +318,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [
     error,
     canHandleInvitation,
+    availableTransport,
     state,
     invitationSupportedTransports,
     transportError,
