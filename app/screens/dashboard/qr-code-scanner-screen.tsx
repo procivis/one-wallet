@@ -1,8 +1,11 @@
 import {
   Button,
   ButtonType,
+  ExchangeProtocol,
+  getEnabledExchangeProtocols,
   Typography,
   useAppColorScheme,
+  useCoreConfig,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
@@ -10,6 +13,7 @@ import React, {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Alert, LayoutChangeEvent, StyleSheet, View } from 'react-native';
@@ -17,7 +21,6 @@ import { openSettings, RESULTS } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
 import { ScannerScreen } from '../../components/vision-camera/vision-camera';
-import { config } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { useInvitationHandling } from '../../hooks/navigation/deep-link';
@@ -93,7 +96,16 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     setFooterHeight(event.nativeEvent.layout.height);
   }, []);
 
-  const footer = config.featureFlags.isoMdl ? (
+  const { data: config } = useCoreConfig();
+
+  const isIsoMdlEnabled = useMemo(
+    () =>
+      config &&
+      getEnabledExchangeProtocols(config).includes(ExchangeProtocol.ISO_MDL),
+    [config],
+  );
+
+  const footer = isIsoMdlEnabled ? (
     <View onLayout={onFooterLayoutChange} style={styles.footer}>
       <View style={styles.separatorWrapper}>
         <View

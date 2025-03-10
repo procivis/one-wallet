@@ -300,6 +300,7 @@
   "proofRequest.exchange.ISO_MDL": "ISO mDL",
   "proofRequest.exchange.OPENID4VC": "OpenID4VC",
   "proofRequest.exchange.PROCIVIS_TEMPORARY": "Procivis",
+  "proofRequest.exchange.SCAN_TO_VERIFY": "Scan to Verify",
   "proofRequest.invalidCredential.notice": "Die Gültigkeit des Nachweises konnte nicht bestätigt werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
   "proofRequest.invalidCredential.title": "Validierungsfehler",
   "proofRequest.missingAttribute": "Fehlendes Attribut",
