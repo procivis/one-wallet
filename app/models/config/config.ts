@@ -9,12 +9,20 @@ export interface BackendConfiguration {
 
 /** features enabled/disabled per flavor */
 export interface FeatureFlags {
+  /** BLE enabled */
+  bleEnabled: boolean;
+  /** HTTP transport enabled */
+  httpTransportEnabled: boolean;
   /** ISO mDL flows enabled */
   isoMdl: boolean;
   /** language selection enabled in settings */
   localization: boolean;
+  /** MQTT transport enabled */
+  mqttTransportEnabled: boolean;
   /** screen capture prevention enabled */
   screenCaptureBlocking: boolean;
+  /** ubiquRse enabled */
+  ubiquRse: boolean;
 }
 
 export interface Configuration {
