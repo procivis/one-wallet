@@ -10,9 +10,13 @@ export const commonConfig: Pick<
     ? rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
     : undefined,
   featureFlags: {
+    bleEnabled: true,
+    httpTransportEnabled: true,
     isoMdl: true,
     localization: true,
+    mqttTransportEnabled: true,
     screenCaptureBlocking: true,
+    ubiquRse: true,
   },
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,
 };
