@@ -54,7 +54,18 @@ const coreConfig = {
       disabled: !config.featureFlags.isoMdl,
     },
   },
-  keyStorage: { UBIQU_RSE: { disabled: false } },
+  keyStorage: { UBIQU_RSE: { disabled: !config.featureFlags.ubiquRse } },
+  transport: {
+    BLE: {
+      disabled: !config.featureFlags.bleEnabled,
+    },
+    HTTP: {
+      disabled: !config.featureFlags.httpTransportEnabled,
+    },
+    MQTT: {
+      disabled: !config.featureFlags.mqttTransportEnabled,
+    },
+  },
 };
 
 export const AppNavigator = (props: NavigationProps) => {
