@@ -3,6 +3,7 @@ import { OneError } from '@procivis/react-native-one-core';
 const rseLockedErrors = [
   'Ubiqu main asset in wrong state: LOCKED',
   'com.ubiqu.eid.sdk.exceptions.AssetLockedException',
+  'Asset is locked',
   'The asset is not in normal state',
   '(UBQKit.UbqKitError error 5.)',
 ];
