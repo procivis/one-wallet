@@ -9,9 +9,6 @@ export const config: Configuration = {
   },
   featureFlags: {
     ...procivisConfig.featureFlags,
-    bleEnabled: true,
-    httpTransportEnabled: true,
-    mqttTransportEnabled: true,
     screenCaptureBlocking: false,
   },
 };
