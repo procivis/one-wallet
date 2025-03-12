@@ -3,6 +3,8 @@ import {
   ButtonType,
   ExchangeProtocol,
   getEnabledExchangeProtocols,
+  getEnabledTransports,
+  Transport,
   Typography,
   useAppColorScheme,
   useCoreConfig,
@@ -98,6 +100,11 @@ const QRCodeScannerScreen: FunctionComponent = () => {
 
   const { data: config } = useCoreConfig();
 
+  const isBleEnabled = useMemo(
+    () => config && getEnabledTransports(config).includes(Transport.Bluetooth),
+    [config],
+  );
+
   const isIsoMdlEnabled = useMemo(
     () =>
       config &&
@@ -105,32 +112,36 @@ const QRCodeScannerScreen: FunctionComponent = () => {
     [config],
   );
 
-  const footer = isIsoMdlEnabled ? (
-    <View onLayout={onFooterLayoutChange} style={styles.footer}>
-      <View style={styles.separatorWrapper}>
-        <View
-          style={[
-            styles.separator,
-            { backgroundColor: colorScheme.accentText },
-          ]}
-        />
-        <Typography color={colorScheme.accentText} style={styles.separatorText}>
-          {translate('wallet.qrCodeScannerScreen.or')}
-        </Typography>
-        <View
-          style={[
-            styles.separator,
-            { backgroundColor: colorScheme.accentText },
-          ]}
+  const footer =
+    isIsoMdlEnabled && isBleEnabled ? (
+      <View onLayout={onFooterLayoutChange} style={styles.footer}>
+        <View style={styles.separatorWrapper}>
+          <View
+            style={[
+              styles.separator,
+              { backgroundColor: colorScheme.accentText },
+            ]}
+          />
+          <Typography
+            color={colorScheme.accentText}
+            style={styles.separatorText}
+          >
+            {translate('wallet.qrCodeScannerScreen.or')}
+          </Typography>
+          <View
+            style={[
+              styles.separator,
+              { backgroundColor: colorScheme.accentText },
+            ]}
+          />
+        </View>
+        <Button
+          onPress={shareQRCode}
+          title={translate('wallet.qrCodeScannerScreen.share')}
+          type={ButtonType.Secondary}
         />
       </View>
-      <Button
-        onPress={shareQRCode}
-        title={translate('wallet.qrCodeScannerScreen.share')}
-        type={ButtonType.Secondary}
-      />
-    </View>
-  ) : undefined;
+    ) : undefined;
 
   return (
     <View style={styles.screen} testID="QRCodeScannerScreen">
