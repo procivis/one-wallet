@@ -1,9 +1,3 @@
-/**
- * The app navigator (formerly "AppNavigator" and "MainNavigator") is used for the primary
- * navigation flows of your app.
- * Generally speaking, it will contain an auth flow (registration, login, forgot password)
- * and a "main" flow which the user will use once logged in.
- */
 import {
   AccessibilityLanguageProvider,
   ONECoreContextProvider,
@@ -54,7 +48,17 @@ const coreConfig = {
       disabled: !config.featureFlags.isoMdl,
     },
   },
-  keyStorage: { UBIQU_RSE: { disabled: !config.featureFlags.ubiquRse } },
+  keyStorage: {
+    INTERNAL: {
+      params: {
+        private: {
+          encryption:
+            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+        },
+      },
+    },
+    UBIQU_RSE: { disabled: !config.featureFlags.ubiquRse },
+  },
   transport: {
     BLE: {
       disabled: !config.featureFlags.bleEnabled,
