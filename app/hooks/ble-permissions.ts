@@ -1,5 +1,8 @@
 import {
   ExchangeProtocol,
+  getEnabledTransports,
+  Transport,
+  useCoreConfig,
   useMemoAsync,
 } from '@procivis/one-react-native-components';
 import { useCallback, useState } from 'react';
@@ -60,19 +63,30 @@ export const useBlePermissions = (exchange: BLEExchange) => {
   const [interactiveStatus, setInteractiveStatus] =
     useState<PermissionStatus>();
 
+  const { data: coreConfig } = useCoreConfig();
   const permissions =
     exchange === ExchangeProtocol.OPENID4VC
       ? centralPermissions
       : peripheralPermissions;
 
   const initialStatus = useMemoAsync(async () => {
+    if (
+      !coreConfig ||
+      !getEnabledTransports(coreConfig).includes(Transport.Bluetooth)
+    ) {
+      return;
+    }
     const statuses = await checkMultiple(permissions);
     return getStrictestResult(Object.values(statuses));
-  }, []);
+  }, [coreConfig, permissions]);
 
   const status = interactiveStatus ?? initialStatus;
 
   const checkPermissions = useCallback(async () => {
+    if (!status) {
+      return;
+    }
+
     const statuses = await checkMultiple(permissions);
     const result = getStrictestResult(Object.values(statuses));
 
@@ -82,7 +96,7 @@ export const useBlePermissions = (exchange: BLEExchange) => {
   }, [permissions, status]);
 
   const requestPermission = useCallback(async () => {
-    if (status !== RESULTS.DENIED) {
+    if (!status || status !== RESULTS.DENIED) {
       return;
     }
     const results = await requestMultiple(permissions);
