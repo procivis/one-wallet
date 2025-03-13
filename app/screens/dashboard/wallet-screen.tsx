@@ -1,19 +1,14 @@
 import {
   ActivityIndicator,
-  Button,
   FoldableHeader,
   Header,
-  NoCredentialsIcon,
   ScanButton,
-  Typography,
   useAppColorScheme,
-  useCredentialListExpandedCard,
-  useListContentInset,
   usePagedCredentials,
+  WalletEmptyList,
 } from '@procivis/one-react-native-components';
 import {
   CredentialListIncludeEntityType,
-  CredentialListItem,
   CredentialListQuery,
   CredentialStateEnum,
   SortableCredentialColumnEnum,
@@ -28,36 +23,21 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  Animated,
-  SectionListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Animated, StyleSheet, View } from 'react-native';
 
-import ListPageLoadingIndicator from '../../components/list/list-page-loading-indicator';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
-import WalletCredentialListItem from '../../components/wallet/credential-list-item';
+import WalletCredentialList from '../../components/wallet/credential-list';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
-  const safeAreaInsets = useSafeAreaInsets();
-  const contentInsetsStyle = useListContentInset({
-    headerHeight: 120 + 8,
-  });
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
 
-  const {
-    locale: { locale },
-  } = useStores();
   const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
     include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
@@ -74,8 +54,6 @@ const WalletScreen: FunctionComponent = observer(() => {
     hasNextPage,
   } = usePagedCredentials(queryParams);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
-  const { expandedCredential, onHeaderPress, foldCards } =
-    useCredentialListExpandedCard();
 
   useCredentialStatusCheck();
 
@@ -124,27 +102,6 @@ const WalletScreen: FunctionComponent = observer(() => {
     navigation.navigate('Dashboard', { screen: 'QRCodeScanner' });
   }, [navigation]);
 
-  const renderItem = useCallback(
-    ({
-      item,
-      index,
-      section,
-    }: SectionListRenderItemInfo<CredentialListItem>) => {
-      return (
-        <WalletCredentialListItem
-          expandedCredentialId={expandedCredential}
-          handleCredentialPress={handleCredentialPress}
-          index={index}
-          item={item}
-          onFoldCards={foldCards}
-          onHeaderPress={onHeaderPress}
-          section={section}
-        />
-      );
-    },
-    [expandedCredential, foldCards, handleCredentialPress, onHeaderPress],
-  );
-
   useEffect(() => {
     setIsEmpty((!credentials || credentials.length === 0) && !searchPhrase);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,87 +129,22 @@ const WalletScreen: FunctionComponent = observer(() => {
         </View>
       )}
       {credentials && isEmpty && (
-        <View style={styles.empty}>
-          <Typography
-            align="center"
-            color={colorScheme.text}
-            preset="l/line-height-large"
-            style={styles.emptyTitle}
-            testID="WalletScreen.empty.title"
-          >
-            {translate('wallet.credentialsList.empty.title')}
-          </Typography>
-          <Typography
-            align="center"
-            color={colorScheme.text}
-            style={styles.emptySubtitle}
-            testID="WalletScreen.empty.subtitle"
-          >
-            {translate('wallet.credentialsList.empty.subtitle')}
-          </Typography>
-          <NoCredentialsIcon style={styles.emptyIcon} />
-          <Button
-            onPress={handleScanPress}
-            style={[
-              styles.emptyButton,
-              { bottom: Math.max(24, safeAreaInsets.bottom) },
-            ]}
-            testID="WalletScreen.scanQrCode"
-            title={translate('wallet.credentialsList.empty.scanQrCode')}
-          />
-        </View>
+        <WalletEmptyList
+          onScanPress={handleScanPress}
+          scanButtonTitle={translate('wallet.credentialsList.empty.scanQrCode')}
+          subtitle={translate('wallet.credentialsList.empty.subtitle')}
+          testID="WalletScreen.empty"
+          title={translate('wallet.credentialsList.empty.title')}
+        />
       )}
       {credentials && !isEmpty && (
-        <Animated.SectionList
-          ListEmptyComponent={
-            <View style={styles.emptySearch}>
-              <Typography
-                align="center"
-                color={colorScheme.text}
-                preset="l/line-height-large"
-                style={styles.emptyTitle}
-              >
-                {translate('wallet.credentialsList.empty.search.title')}
-              </Typography>
-              <Typography align="center" color={colorScheme.text}>
-                {translate('wallet.credentialsList.empty.search.subtitle')}
-              </Typography>
-            </View>
-          }
-          ListFooterComponent={
-            credentials && credentials.length > 0 ? (
-              <View style={styles.footer}>
-                {hasNextPage && (
-                  <ListPageLoadingIndicator
-                    color={colorScheme.accent}
-                    style={styles.pageLoadingIndicator}
-                  />
-                )}
-              </View>
-            ) : undefined
-          }
-          contentContainerStyle={contentInsetsStyle}
-          extraData={expandedCredential}
-          key={locale}
-          keyExtractor={(item) => item.id}
+        <WalletCredentialList
+          credentials={credentials}
+          hasNextPage={Boolean(hasNextPage)}
+          onCredentialPress={handleCredentialPress}
           onEndReached={handleEndReached}
-          onEndReachedThreshold={0.1}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
-            {
-              useNativeDriver: true,
-            },
-          )}
-          onScrollBeginDrag={foldCards}
-          renderItem={renderItem}
-          scrollEnabled={credentials && credentials.length > 0}
-          sections={
-            credentials && credentials.length > 0 ? [{ data: credentials }] : []
-          }
-          showsVerticalScrollIndicator={false}
-          stickySectionHeadersEnabled={false}
-          style={[styles.list, { backgroundColor: colorScheme.background }]}
-          testID="WalletScreen.scroll"
+          scrollOffset={scrollOffset}
+          testID="WalletScreen"
         />
       )}
       {!isEmpty && <ScanButton onPress={handleScanPress} />}
@@ -288,54 +180,12 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  empty: {
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 16,
-    marginTop: 224,
-  },
-  emptyButton: {
-    marginBottom: 16,
-    position: 'absolute',
-    width: '100%',
-  },
-  emptyContainer: {
-    flex: 1,
-  },
-  emptyIcon: {
-    marginTop: -30,
-  },
-  emptySearch: {
-    alignItems: 'center',
-    flex: 1,
-    marginTop: 224,
-  },
-  emptySubtitle: {
-    opacity: 0.7,
-  },
-  emptyTitle: {
-    marginBottom: 8,
-    opacity: 0.7,
-  },
-  footer: {
-    minHeight: 20,
-  },
   headerWithSearchBar: {
     marginTop: 0,
     paddingBottom: 18,
   },
-  list: {
-    flex: 1,
-    marginHorizontal: 16,
-    overflow: 'visible',
-    paddingHorizontal: 0,
-  },
   loadingIndicator: {
     height: '100%',
-  },
-  pageLoadingIndicator: {
-    marginBottom: 20,
-    marginTop: 12,
   },
 });
 
