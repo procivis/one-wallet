@@ -10,22 +10,18 @@ import {
 import { CredentialListItem } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
 import React, { FC } from 'react';
-import {
-  SectionListRenderItemInfo,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { ListRenderItemInfo, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { credentialCardLabels } from '../../utils/credential';
 
 type WalletCredentialListItemProps = {
   expandedCredentialId: string | undefined;
   handleCredentialPress: (credentialId: string) => void;
-  index: SectionListRenderItemInfo<CredentialListItem>['index'];
-  item: SectionListRenderItemInfo<CredentialListItem>['item'];
+  index: ListRenderItemInfo<CredentialListItem>['index'];
+  item: ListRenderItemInfo<CredentialListItem>['item'];
+  lastItem: boolean;
   onFoldCards: (credentialId?: string) => void;
   onHeaderPress: (credentialId?: string) => void;
-  section: SectionListRenderItemInfo<CredentialListItem>['section'];
 };
 
 const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
@@ -33,9 +29,9 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
   handleCredentialPress,
   item,
   index,
+  lastItem,
   onFoldCards,
   onHeaderPress,
-  section,
 }) => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
@@ -65,7 +61,6 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
       <NextIcon color={colorScheme.text} />
     </TouchableOpacity>
   );
-  const lastItem = index === section.data.length - 1;
   const expanded = lastItem || expandedCredentialId === credential.id;
   return (
     <CredentialDetailsCardListItem
