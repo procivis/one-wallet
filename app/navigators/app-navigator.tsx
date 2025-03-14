@@ -47,6 +47,22 @@ const coreConfig = {
     ISO_MDL: {
       disabled: !config.featureFlags.isoMdl,
     },
+    MDOC_OPENID4VP: {
+      params: {
+        private: {
+          encryption:
+            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+        },
+      },
+    },
+    OPENID4VC: {
+      params: {
+        private: {
+          encryption:
+            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+        },
+      },
+    },
   },
   keyStorage: {
     INTERNAL: {
