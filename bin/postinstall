@@ -37,7 +37,7 @@ const TARGET_PLATFORM = process.env.CI_TARGET_RN_PLATFORM;
   },
 
   // Install husky git hooks
-  { command: 'yarn husky install' },
+  { command: 'pnpm husky install' },
 ]
   .filter(
     ({ onlyPlatforms }) =>
