@@ -26,7 +26,7 @@ variables:
   # ONE-wallet project on Bitrise
   BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
   DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
-  YARN_NPM_AUTH_TOKEN: ${CI_JOB_TOKEN}
+  PNPM_CACHE_FOLDER: "~/.pnpm-store"
   CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   GITHUB_PROJECT: "procivis/one-wallet"
@@ -67,30 +67,39 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - when: manual
 
+.pnpm_install: &pnpm_install
+  - npm config set -- @procivis:registry https://${CI_SERVER_HOST}/api/v4/packages/npm/
+  - npm config set -- //${CI_SERVER_HOST}/:_authToken ${CI_JOB_TOKEN}
+  - npm config set -- //${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken ${CI_JOB_TOKEN}
+  - npm install --global corepack@latest
+  - corepack enable
+  - corepack prepare pnpm@latest-10 --activate
+  - pnpm config set store-dir ${PNPM_CACHE_FOLDER}
 
 .install-node-modules: &install-node-modules
-  - yarn config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/packages/npm/
+  - pnpm config set npmScopes.procivis.npmRegistryServer https://${CI_SERVER_HOST}/api/v4/
   - >
     if [ -d ./node_modules ] && [ "$(ls -A ./node_modules)" ]; then
       echo "node_modules exists and seems valid, not re-installing deps."
     else
       echo "node_modules does not exist or is not valid, re-installing deps."
       apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
-      yarn dlx node-gyp @mapbox/node-pre-gyp
-      YARN_NETWORK_CONCURRENCY=1 yarn install --immutable
-      yarn rnuc:dev
+      pnpm dlx node-gyp @mapbox/node-pre-gyp
+      pnpm install --frozen-lockfile
+      pnpm rnuc:dev
     fi
 
 .modules_setup:
   cache:
     key:
       files:
-        - yarn.lock
+        - pnpm-lock.yaml
     paths:
       - node_modules/
-      - ${YARN_CACHE_FOLDER}
+      - ${PNPM_CACHE_FOLDER}
     policy: pull
   before_script:
+    - *pnpm_install
     - *install-node-modules
 
 # CODE CHECKS
@@ -111,7 +120,7 @@ lint:
     - .modules_setup
     - .rule:all_branches
   script:
-    - yarn lint
+    - pnpm lint
 
 compile:
   stage: test
@@ -120,7 +129,7 @@ compile:
     - .modules_setup
     - .rule:all_branches
   script:
-    - yarn compile
+    - pnpm compile
 
 test:
   stage: test
@@ -129,7 +138,7 @@ test:
     - .modules_setup
     - .rule:all_branches
   script:
-    - yarn test --coverage
+    - pnpm test --coverage
   artifacts:
     paths:
       - coverage/*
@@ -223,7 +232,7 @@ e2e:
   script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
     - npm install -g @cyclonedx/cdxgen
-    - yarn rnuc:dev
+    - pnpm rnuc:dev
     - >
       cdxgen --required-only -p -t ${PROJECT} -o ${SBOM_FILE_PATH}
       --server-url ${DEPENDENCY_TRACK_BASE_URL}
@@ -407,14 +416,14 @@ sdk:new_core_binding_mr:
     - .create_merge_request
   variables:
     YARN_ENABLE_IMMUTABLE_INSTALLS: false
-    FILES_TO_COMMIT: "package.json yarn.lock"
+    FILES_TO_COMMIT: "package.json pnpm-lock.yaml"
   before_script:
     - *install-node-modules
     - apk add --update git jq curl
     - new_version=$(echo "$NEW_VERSION" | sed 's/^v//')
     - jq --arg version "$new_version" '.dependencies["@procivis/react-native-one-core"] = $version' package.json > package-updated.json
     - mv package-updated.json package.json
-    - yarn install
+    - pnpm install
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: always
