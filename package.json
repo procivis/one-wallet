@@ -16,8 +16,8 @@
     "lint:prettier": "prettier --check \"app/**/*.{js,json,ts{,x},md}\"",
     "lint:prettier:fix": "prettier --write \"app/**/*.{js,json,ts{,x},md}\"",
     "lint:ts": "tsc --noEmit",
-    "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:ts",
-    "lint:fix": "yarn lint:prettier:fix && yarn lint:eslint:fix",
+    "lint": "pnpm lint:prettier && pnpm lint:eslint && pnpm lint:ts",
+    "lint:fix": "pnpm lint:prettier:fix && pnpm lint:eslint:fix",
     "patch": "patch-package",
     "test": "jest",
     "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081",
@@ -26,12 +26,13 @@
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
     "translations:sort": "node ./.scripts/sort-translations.js",
-    "rnuc:dev": "yarn rnuc ./app/config/flavors/procivis/dev/.env",
-    "rnuc:test": "yarn rnuc ./app/config/flavors/procivis/test/.env",
-    "rnuc:trial": "yarn rnuc ./app/config/flavors/procivis/trial/.env",
-    "rnuc:demo": "yarn rnuc ./app/config/flavors/procivis/demo/.env",
+    "rnuc:dev": "pnpm rnuc ./app/config/flavors/procivis/dev/.env",
+    "rnuc:test": "pnpm rnuc ./app/config/flavors/procivis/test/.env",
+    "rnuc:trial": "pnpm rnuc ./app/config/flavors/procivis/trial/.env",
+    "rnuc:demo": "pnpm rnuc ./app/config/flavors/procivis/demo/.env",
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
-    "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv"
+    "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv",
+    "postinstall": "node ./bin/postinstall"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.13.0",
@@ -166,5 +167,5 @@
       "\\.svg": "<rootDir>/test/mock-svg.ts"
     }
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "pnpm@10.5.2"
 }

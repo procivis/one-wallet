@@ -20,10 +20,10 @@ identities and credentials. The Wallet enables the secure storage, management, a
 sharing of identity data, credentials, and attributes as needed via a multitude of
 technologies and protocols.
 
-The *Procivis One Wallet* uses the [Procivis One Core][core] for all SSI functionality
+The _Procivis One Wallet_ uses the [Procivis One Core][core] for all SSI functionality
 via the [One Core React Native SDK][rncore].
 
-The *Procivis One Core* is a complete solution capable of powering every element
+The _Procivis One Core_ is a complete solution capable of powering every element
 of the digital identity credential lifecycle. See the [key features][key] and
 complete solution [architecture][archi].
 
@@ -60,21 +60,21 @@ Each flavor has a separate configuration script defined in `package.json` file, 
 To build the app using one of flavors, configuration script needs to be called before starting the bundler and compiling the app. For example, to build Dev Wallet flavor for iOS, run:
 
 ```shell
-yarn rnuc:dev
-yarn build-ios
+pnpm rnuc:dev
+pnpm build-ios
 ```
 
 or to debug same flavor:
 
 ```shell
-yarn rnuc:dev
-yarn start
-yarn ios
+pnpm rnuc:dev
+pnpm start
+pnpm ios
 ```
 
 ### Linking packages
 
-1. Install yalc: `yarn global add yalc`
+1. Install yalc: `pnpm global add yalc`
 2. Go to dep package and increase package version in package.json
 3. Run in dep package: `yalc publish --push`
 4. Go to one-wallet and run: `yalc add my-package-name`
@@ -156,11 +156,13 @@ Source:
 Installation:
 
 - Install `cdxgen`
+
 ```shell
 npm install -g @cyclonedx/cdxgen
 ```
 
 - Install `blint` (python) for generate `android` SBOM (optional)
+
 ```shell
 pip install blint
 ```
@@ -195,7 +197,7 @@ often referred to as Self-Sovereign Identity, or SSI.
 
 ## eIDAS 2.0
 
-If you want to provide an **EUDI Wallet**, *Procivis One* provides production grade open
+If you want to provide an **EUDI Wallet**, _Procivis One_ provides production grade open
 source components to get certified and connect your organization to the eIDAS 2.0 ecosystem.
 
 ![Procivis One in the eIDAS ARF](https://assets.procivis-one.com/static/diff/eIDAS_Architecture.png)
@@ -209,17 +211,17 @@ use the [Procivis One Core][core].
 
 ## Interoperability and conformance
 
-*Procivis One* is built using [open standards](#supported-standards) and tested to ensure
+_Procivis One_ is built using [open standards](#supported-standards) and tested to ensure
 interoperability with different software vendors and across different international
 regulatory ecosystems.
 
 - W3C standards
   - The W3C offers several test suites for standards conformance. See
-    the latest test results for *Procivis One* at [canivc.com][canivc].
+    the latest test results for _Procivis One_ at [canivc.com][canivc].
 - ISO/IEC 18013-5 mDL
-  - *Procivis One*'s implementation of the ISO mDL standard is compatible with the
-    OpenWallet Foundation's verifier: *Procivis One* can successfully issue mDL
-    credentials to a *Procivis One Wallet*, and these credentials can successfully
+  - _Procivis One_'s implementation of the ISO mDL standard is compatible with the
+    OpenWallet Foundation's verifier: _Procivis One_ can successfully issue mDL
+    credentials to a _Procivis One Wallet_, and these credentials can successfully
     be verified by the OpenWallet Foundation's verifier. See the [OpenWallet Foundation libraries][owf].
 - eIDAS 2.0; EUDI Wallet
   - The EU Digital Wallet is developing [issuer][eudiwi] and [verifier][eudiwv] testing for
@@ -237,10 +239,10 @@ and regulations mature and harden.
 
 - [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
 
-| Securing mechanism                           | Supported representations                           | Supported proof/signature types                                                          |
-| -------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------ |
-| [W3C Data Integrity Proofs][vcdi] (embedded) | [JSON-LD][jld] in Compacted Document Form | <ul><li>[W3C Data Integrity ECDSA Cryptosuites v1.0][ecd] / [ecdsa-rdfc-2019][ecd2019]</li><li>[W3C Data Integrity EdDSA Cryptosuites v1.0][edd] / [eddsa-rdfc-2022][edd2022]</li><li>[W3C Data Integrity BBS Cryptosuites v1.0][bbs] / [bbs-2023][bbs2023]</li></ul> |
-| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]* |
+| Securing mechanism                           | Supported representations                           | Supported proof/signature types                                                                                                                                                                                                                                       |
+| -------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [W3C Data Integrity Proofs][vcdi] (embedded) | [JSON-LD][jld] in Compacted Document Form           | <ul><li>[W3C Data Integrity ECDSA Cryptosuites v1.0][ecd] / [ecdsa-rdfc-2019][ecd2019]</li><li>[W3C Data Integrity EdDSA Cryptosuites v1.0][edd] / [eddsa-rdfc-2022][edd2022]</li><li>[W3C Data Integrity BBS Cryptosuites v1.0][bbs] / [bbs-2023][bbs2023]</li></ul> |
+| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]\*                                                                                                                                        |
 
 \* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
 Support for the recently published [FIPS-204][fips] is planned for the near future.
