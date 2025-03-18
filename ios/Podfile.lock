@@ -1085,7 +1085,7 @@ PODS:
     - React-perflogger (= 0.73.8)
   - RNBluetoothStateManager (1.3.5):
     - React-Core
-  - RNBootSplash (4.6.0):
+  - RNBootSplash (4.7.5):
     - React-Core
   - RNCAsyncStorage (1.23.1):
     - React-Core
@@ -1446,7 +1446,7 @@ SPEC CHECKSUMS:
   React-utils: 4cc2ba652f5df1c8f0461d4ae9e3ee474c1354ea
   ReactCommon: 1da3fc14d904883c46327b3322325eebf60a720a
   RNBluetoothStateManager: 724f2c76b04e0a2b840dfd7305b68f614bc01c81
-  RNBootSplash: 91e0c16bfc96703cb5b0562785b9a8cbfeb298fe
+  RNBootSplash: 85f6b879c080e958afdb4c62ee04497b05fd7552
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCClipboard: 090462274cc05b02628bd158baf6d73c3abe8441
   RNDeviceInfo: 475a4c447168d0ad4c807e48ef5e0963a0f4eb1b
@@ -1465,8 +1465,8 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   VisionCamera: 2cffcbac033cb5e2fa344214bd7ccbf7cf065663
-  Yoga: e5b887426cee15d2a326bdd34afc0282fc0486ad
+  Yoga: 2a16e58450c48e110211dae1159fb114bbcdcfc0
 
 PODFILE CHECKSUM: 4e7e6e648c809aaa7a167b76a2ee6a8cc3932e8f
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

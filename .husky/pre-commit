@@ -1,8 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint
-yarn compile
+pnpm lint
+pnpm compile
 
-yarn translations:sort
+pnpm translations:sort
 git add app/i18n/
