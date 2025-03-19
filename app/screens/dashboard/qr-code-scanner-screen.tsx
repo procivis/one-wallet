@@ -137,6 +137,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
         </View>
         <Button
           onPress={shareQRCode}
+          testID="QRCodeScannerScreen.share"
           title={translate('wallet.qrCodeScannerScreen.share')}
           type={ButtonType.Secondary}
         />
