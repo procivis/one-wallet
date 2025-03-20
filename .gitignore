@@ -20,7 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-ios/.xcode.env.local
+**/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -32,12 +32,12 @@ build/
 *.hprof
 *.keystore
 !debug.keystore
+.cxx
 
 # node.js
 #
 node_modules/
 npm-debug.log
-yarn-error.log
 # jest coverage
 coverage/
 
@@ -56,7 +56,7 @@ coverage/
 *.jsbundle
 
 # CocoaPods
-/ios/Pods/
+**/Pods/
 /vendor/bundle/
 /ios/Wallet/LaunchScreen.storyboard
 /ios/assets/
@@ -73,10 +73,6 @@ coverage/
 !/.vscode/extensions.json
 !/.vscode/launch.json
 !/.vscode/settings.json
-
-# yarn
-/.yarn/*
-!/.yarn/releases/
 
 npm-debug.*
 *.jks

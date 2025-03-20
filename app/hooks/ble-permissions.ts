@@ -25,8 +25,8 @@ const centralPermissionsAndroid = [
   PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
 ];
 const centralPermissionsAndroidOld = [
-  PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-  PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
+  'android.permission.BLUETOOTH',
+  'android.permission.BLUETOOTH_ADMIN',
   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
 ] as AndroidPermission[];
 const centralPermissionsIOS = [PERMISSIONS.IOS.BLUETOOTH];
@@ -45,9 +45,9 @@ const peripheralPermissionsAndroid = [
   PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
 ];
 const peripheralPermissionsAndroidOld = [
-  PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-  PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADMIN,
-] as AndroidPermission[];
+  'android.permission.BLUETOOTH',
+  'android.permission.BLUETOOTH_ADMIN',
+] as unknown as AndroidPermission[];
 const peripheralPermissionsIOS = [PERMISSIONS.IOS.BLUETOOTH];
 const peripheralPermissions = (() => {
   if (Platform.OS === 'android') {
