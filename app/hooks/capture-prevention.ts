@@ -1,7 +1,7 @@
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
-import RNScreenshotPrevent from 'react-native-screenshot-prevent';
+import RNScreenshotPrevent from 'rn-screenshot-prevent';
 
 import { config } from '../config';
 
