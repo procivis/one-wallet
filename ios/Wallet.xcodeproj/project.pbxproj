@@ -9,14 +9,13 @@
 /* Begin PBXBuildFile section */
 		0ED34EA2EBAB4DD8BE467220 /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 258702B773E64857AB05C15E /* OpenSans-Medium.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		155C79672BF4AF0B00ACA35E /* Procivis-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */; };
 		158D69EA2785F1AA00D5359B /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
 		1598E2272717219400E4B02E /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1598E2262717219400E4B02E /* Void.swift */; };
 		15A4F1C42718D04900E1384E /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15A4F1BE2718D04800E1384E /* OpenSans-Bold.ttf */; };
 		15A4F1C52718D04900E1384E /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15A4F1BF2718D04800E1384E /* OpenSans-Regular.ttf */; };
+		15C5330E2D54F4EF0004C10E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5330D2D54F4EF0004C10E /* AppDelegate.swift */; };
 		15F550092BDA828300064BED /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */; };
-		334F28072A04EDFD008E3C1E /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 334F28062A04EDFD008E3C1E /* AppDelegate.mm */; };
 		33A63B8727BC0A6000AC5C33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */; };
 		33A63B8927BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */; };
 		34E2CD48CB6E427DB96AE650 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56F7E5873D6E4D43AC5F0BF2 /* OpenSans-Bold.ttf */; };
@@ -28,19 +27,17 @@
 /* Begin PBXFileReference section */
 		0D423538F2044E07A3A42829 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Procivis Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Procivis Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Wallet/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Wallet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Wallet/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Wallet/main.m; sourceTree = "<group>"; };
 		155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Procivis-Book.ttf"; path = "../assets/fonts/Procivis-Book.ttf"; sourceTree = "<group>"; };
 		158D69E92785F1AA00D5359B /* rnuc.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = rnuc.xcconfig; sourceTree = "<group>"; };
 		1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Wallet-Bridging-Header.h"; sourceTree = "<group>"; };
 		1598E2262717219400E4B02E /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		15A4F1BE2718D04800E1384E /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		15A4F1BF2718D04800E1384E /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		15C5330D2D54F4EF0004C10E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		258702B773E64857AB05C15E /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../assets/fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
-		334F28062A04EDFD008E3C1E /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Wallet/AppDelegate.mm; sourceTree = "<group>"; };
 		33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Wallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.procivis.storyboard; path = Wallet/LaunchScreen.procivis.storyboard; sourceTree = "<group>"; };
 		33FF67BA2805A2070093779C /* Wallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.entitlements; path = Wallet/Wallet.entitlements; sourceTree = "<group>"; };
@@ -67,15 +64,13 @@
 		13B07FAE1A68108700A75B9A /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				15C5330D2D54F4EF0004C10E /* AppDelegate.swift */,
 				33FF67BA2805A2070093779C /* Wallet.entitlements */,
-				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				334F28062A04EDFD008E3C1E /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */,
 				33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */,
 				33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */,
-				13B07FB71A68108700A75B9A /* main.m */,
 				1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */,
 				1598E2262717219400E4B02E /* Void.swift */,
 				15A4F1B92718D04800E1384E /* fonts */,
@@ -294,19 +289,29 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNPermissions/RNPermissionsPrivacyInfo.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/RCTI18nStrings.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Sentry/Sentry.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/lottie-ios/LottiePrivacyInfo.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/lottie-react-native/Lottie_React_Native_Privacy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNPermissionsPrivacyInfo.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCTI18nStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Sentry.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/LottiePrivacyInfo.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Lottie_React_Native_Privacy.bundle",
 			);
@@ -342,9 +347,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				15C5330E2D54F4EF0004C10E /* AppDelegate.swift in Sources */,
 				1598E2272717219400E4B02E /* Void.swift in Sources */,
-				334F28072A04EDFD008E3C1E /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +498,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				USE_HERMES = true;
 			};
 			name = Debug;

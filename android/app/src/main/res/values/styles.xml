@@ -5,11 +5,14 @@
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
     </style>
 
-    <style name="BootTheme.procivis" parent="Theme.SplashScreen">
+    <style name="BootTheme.procivis" parent="Theme.BootSplash.EdgeToEdge">
         <item name="windowSplashScreenBackground">#000000</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_one</item>
         <item name="postSplashScreenTheme">@style/AppTheme.procivis</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="bootSplashBackground">#000000</item>
+        <item name="bootSplashLogo">@drawable/logo_one</item>
+        <item name="postBootSplashTheme">@style/AppTheme.procivis</item>
     </style>
 
     <style name="AppTheme.procivis" parent="BaseTheme">

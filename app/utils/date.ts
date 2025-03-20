@@ -4,7 +4,7 @@ import {
   formatDate,
   formatDateTime,
 } from '@procivis/one-react-native-components';
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, Settings } from 'react-native';
 import { format } from 'timeago.js';
 
 import { translate } from '../i18n';
@@ -115,7 +115,7 @@ export const formatDateOnlyFromUTCTimestamp = (
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const locale: string = (
   Platform.OS === 'ios'
-    ? NativeModules.SettingsManager.settings.AppleLocale
+    ? Settings.get('AppleLocale')
     : NativeModules.I18nManager.localeIdentifier
 )
   .split('@')[0]

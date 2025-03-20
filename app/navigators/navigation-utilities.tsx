@@ -6,7 +6,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 
-export const navigationRef = createNavigationContainerRef();
+export const navigationRef = createNavigationContainerRef<any>();
 
 /**
  * Gets the current screen from any navigation state.
@@ -82,11 +82,15 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     };
 
     // Subscribe when we come to life
-    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    const backHandlerSubscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    );
 
     // Unsubscribe when we're done
-    return () =>
-      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    return () => {
+      backHandlerSubscription.remove();
+    };
   }, []);
 }
 
@@ -144,9 +148,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
  */
 export function navigate(name: any, params?: any) {
   if (navigationRef.isReady()) {
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    navigationRef.navigate(name, params);
+    navigationRef.navigate<any>(name as never, params as never);
   }
 }
 

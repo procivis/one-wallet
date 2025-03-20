@@ -5,11 +5,13 @@ import {
   SettingsButton,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { useNavigation } from '@react-navigation/native';
-import React, { FC, useState } from 'react';
 import DocumentPicker, {
   DocumentPickerResponse,
-} from 'react-native-document-picker';
+  errorCodes,
+  isErrorWithCode,
+} from '@react-native-documents/picker';
+import { useNavigation } from '@react-navigation/native';
+import React, { FC, useState } from 'react';
 import {
   DocumentDirectoryPath,
   exists,
@@ -28,7 +30,7 @@ const ImportScreen: FC = () => {
 
   const handleAddPress = async () => {
     try {
-      const file = await DocumentPicker.pickSingle({
+      const [file] = await DocumentPicker.pick({
         type: DocumentPicker.types.zip,
       });
       const fileName = file.name?.replace(/\s/g, '_');
@@ -40,7 +42,7 @@ const ImportScreen: FC = () => {
       setSelectedFile(file);
       setSelectedFilePath(filePath);
     } catch (e) {
-      if (!DocumentPicker.isCancel(e)) {
+      if (!isErrorWithCode(e) || e.code !== errorCodes.OPERATION_CANCELED) {
         reportException(e, 'File selection failure');
       }
     }

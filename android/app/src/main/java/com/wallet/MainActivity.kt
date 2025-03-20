@@ -33,7 +33,7 @@ class MainActivity : ReactActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        RNBootSplash.init(this)
+        RNBootSplash.init(this, R.style.BootTheme_procivis)
         super.onCreate(null)
     }
 

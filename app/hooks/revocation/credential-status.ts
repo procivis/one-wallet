@@ -63,8 +63,8 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
 
   useEffect(() => {
     if (!checkDone.current && credentials && isFocused) {
-      RNBootSplash.getVisibilityStatus().then((status) => {
-        if (status === 'hidden') {
+      RNBootSplash.isVisible().then((visible) => {
+        if (!visible) {
           checkDone.current = true;
           runCheck(credentials);
         }

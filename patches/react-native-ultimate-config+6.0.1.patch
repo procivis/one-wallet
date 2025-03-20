@@ -1,0 +1,121 @@
+diff --git a/node_modules/react-native-ultimate-config/android/build.gradle b/node_modules/react-native-ultimate-config/android/build.gradle
+index 1c2da1a..6412a7d 100644
+--- a/node_modules/react-native-ultimate-config/android/build.gradle
++++ b/node_modules/react-native-ultimate-config/android/build.gradle
+@@ -35,17 +35,9 @@ def resolveReactNativeDirectory() {
+     )
+ }
+ 
+-def isNewArchitectureEnabled() {
+-  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+-}
+-
+ apply plugin: 'com.android.library'
+ apply plugin: 'maven-publish'
+ 
+-if (isNewArchitectureEnabled()) {
+-  apply plugin: "com.facebook.react"
+-}
+-
+ def getExtOrDefault(name) {
+   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["UltimateConfig_" + name]
+ }
+@@ -68,7 +60,6 @@ android {
+   defaultConfig {
+     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+   }
+   buildTypes {
+     release {
+@@ -104,14 +95,6 @@ dependencies {
+   }
+ }
+ 
+-if (isNewArchitectureEnabled()) {
+-  react {
+-    jsRootDir = file("../src/")
+-    libraryName = "UltimateConfig"
+-    codegenJavaPackageName = "com.reactnativeultimateconfig"
+-  }
+-}
+-
+ afterEvaluate { project ->
+   task androidSourcesJar(type: Jar) {
+     archiveClassifier = 'sources'
+diff --git a/node_modules/react-native-ultimate-config/index.js b/node_modules/react-native-ultimate-config/index.js
+index 13cbc93..b0b5a42 100644
+--- a/node_modules/react-native-ultimate-config/index.js
++++ b/node_modules/react-native-ultimate-config/index.js
+@@ -3,4 +3,4 @@ import override from "./override";
+ 
+ const { UltimateConfig } = NativeModules;
+ 
+-export default { ...UltimateConfig, ...override };
++export default { ...UltimateConfig, ...NativeModules.UltimateConfig.getConstants(), ...override };
+diff --git a/node_modules/react-native-ultimate-config/ios/UltimateConfig.h b/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
+index 41ad9ef..492c89f 100644
+--- a/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
++++ b/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
+@@ -1,12 +1,6 @@
+ 
+-#ifdef RCT_NEW_ARCH_ENABLED
+-#import "RNUltimateConfigSpec.h"
+-
+-@interface UltimateConfig : NSObject <NativeUltimateConfigSpec>
+-#else
+ #import <React/RCTBridgeModule.h>
+ 
+ @interface UltimateConfig : NSObject <RCTBridgeModule>
+-#endif
+ 
+ @end
+diff --git a/node_modules/react-native-ultimate-config/ios/UltimateConfig.m b/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
+index 7debfdf..c76bfdb 100644
+--- a/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
++++ b/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
+@@ -14,13 +14,4 @@ RCT_EXPORT_MODULE()
+     return getValues();
+ }
+ 
+-// Don't compile this code when we build for the old architecture.
+-#ifdef RCT_NEW_ARCH_ENABLED
+-- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+-    (const facebook::react::ObjCTurboModule::InitParams &)params
+-{
+-    return std::make_shared<facebook::react::NativeUltimateConfigSpecJSI>(params);
+-}
+-#endif
+-
+ @end
+diff --git a/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec b/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
+index 3421407..9d5d9be 100644
+--- a/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
++++ b/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
+@@ -1,7 +1,6 @@
+ require "json"
+ 
+ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+-folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
+ 
+ Pod::Spec.new do |s|
+   s.name         = "react-native-ultimate-config"
+@@ -21,18 +20,4 @@ Pod::Spec.new do |s|
+ 
+   s.dependency "React-Core"
+ 
+-  # Don't install the dependencies when we run `pod install` in the old architecture.
+-  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+-    s.pod_target_xcconfig    = {
+-        "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+-        "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+-        "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+-    }
+-    s.dependency "React-Codegen"
+-    s.dependency "RCT-Folly"
+-    s.dependency "RCTRequired"
+-    s.dependency "RCTTypeSafety"
+-    s.dependency "ReactCommon/turbomodule/core"
+-  end
+ end
