@@ -16,11 +16,11 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(react@18.3.1)
       '@procivis/one-react-native-components':
-        specifier: ^0.3.1
-        version: 0.3.1(be1bbfd8ff3c97ed6d0ccb0d8481f69e)
+        specifier: ^0.3.2
+        version: 0.3.2(69eea110366f798b487a1befc6855c21)
       '@procivis/react-native-one-core':
-        specifier: 1.37136.0
-        version: 1.37136.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
+        specifier: 1.37555.0
+        version: 1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker':
         specifier: 5.0.3
         version: 5.0.3
@@ -223,9 +223,6 @@ importers:
       '@types/react-native-keep-awake':
         specifier: ^2.0.3
         version: 2.0.3
-      '@types/react-native-touch-id':
-        specifier: ^4.4.0
-        version: 4.4.0
       '@types/react-test-renderer':
         specifier: ^18.0.0
         version: 18.0.0
@@ -1740,10 +1737,10 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.1':
-    resolution: {integrity: sha1-Eg9I0q4N+i/Og/SVpEAXnbrlPrk=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.1.tgz}
+  '@procivis/one-react-native-components@0.3.2':
+    resolution: {integrity: sha1-O6TkjJ1r5Xscq3iiaa57Y0grXc8=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.2.tgz}
     peerDependencies:
-      '@procivis/react-native-one-core': ^1.37136.0
+      '@procivis/react-native-one-core': ^1.37536.0
       '@procivis/react-native-picker': '*'
       '@react-native-community/blur': '*'
       '@react-native-community/netinfo': ^11.4.1
@@ -1767,8 +1764,8 @@ packages:
       react-query: ^3.39.3
       timeago.js: ^4.0.2
 
-  '@procivis/react-native-one-core@1.37136.0':
-    resolution: {integrity: sha1-D8NAPgZlzLhOQs+0vibwmvlH31M=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.37136.0.tgz}
+  '@procivis/react-native-one-core@1.37555.0':
+    resolution: {integrity: sha1-J79qAGqp12D9apLywGJpptliyN0=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.37555.0.tgz}
     peerDependencies:
       react-native: '*'
 
@@ -2384,10 +2381,6 @@ packages:
 
   '@types/react-native-keep-awake@2.0.3':
     resolution: {integrity: sha512-0C4bUlGPHRpplbn+YnX2UO0/2joa0dhCPumas2fielGNJkS1FTJOrw9jFo4B0+LOtmsepXiy/ANTF/on0b2Ddw==}
-
-  '@types/react-native-touch-id@4.4.0':
-    resolution: {integrity: sha512-jAvoHmFC8c8soeUT/s/p7afGlSaIpNrSaKwMYxMkoQu1p18q9CRbcNeYtjahric8IGqvqLi7MM5iS98K1Cc5jQ==}
-    deprecated: This is a stub types definition. react-native-touch-id provides its own type definitions, so you do not need this installed.
 
   '@types/react-test-renderer@18.0.0':
     resolution: {integrity: sha512-C7/5FBJ3g3sqUahguGi03O79b8afNeSD6T8/GU50oQrJCU0bVCCGQHaGKUbg2Ce8VQEEqTw8/HiS6lXHHdgkdQ==}
@@ -9771,9 +9764,9 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.1(be1bbfd8ff3c97ed6d0ccb0d8481f69e)':
+  '@procivis/one-react-native-components@0.3.2(69eea110366f798b487a1befc6855c21)':
     dependencies:
-      '@procivis/react-native-one-core': 1.37136.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
+      '@procivis/react-native-one-core': 1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker': 5.0.3
       '@react-native-community/blur': 4.4.1(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@react-native-community/netinfo': 11.4.1(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
@@ -9797,7 +9790,7 @@ snapshots:
       react-query: 3.39.3(react-dom@18.2.0(react@18.3.1))(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       timeago.js: 4.0.2
 
-  '@procivis/react-native-one-core@1.37136.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))':
+  '@procivis/react-native-one-core@1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))':
     dependencies:
       react-native: 0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1)
 
@@ -10867,10 +10860,6 @@ snapshots:
   '@types/react-native-keep-awake@2.0.3':
     dependencies:
       '@types/react': 18.3.3
-
-  '@types/react-native-touch-id@4.4.0':
-    dependencies:
-      react-native-touch-id: 4.4.1
 
   '@types/react-test-renderer@18.0.0':
     dependencies:
