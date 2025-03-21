@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
-    "@procivis/one-react-native-components": "^0.3.1",
-    "@procivis/react-native-one-core": "1.37136.0",
+    "@procivis/one-react-native-components": "^0.3.2",
+    "@procivis/react-native-one-core": "1.37555.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-clipboard/clipboard": "1.14.0",
@@ -107,7 +107,6 @@
     "@types/react": "^18.2.6",
     "@types/react-native-get-random-values": "^1.8.2",
     "@types/react-native-keep-awake": "^2.0.3",
-    "@types/react-native-touch-id": "^4.4.0",
     "@types/react-test-renderer": "^18.0.0",
     "@types/uuid": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
