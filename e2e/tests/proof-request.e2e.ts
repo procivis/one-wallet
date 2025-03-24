@@ -232,7 +232,7 @@ describe('ONE-614: Proof request', () => {
         exchange: Exchange.OPENID4VC,
       });
       const selectiveDisclosureTest = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credential = await ProofRequestSharingScreen.credentialAtIndex(1);
         await ProofRequestSharingScreen.scrollTo(credential.element);
         await credential.multipleCredentialsHeaderAvailable();
@@ -242,13 +242,13 @@ describe('ONE-614: Proof request', () => {
           credential.sceleton.notice.multiple.selectButton,
         );
         await credential.openMultipleCredentialsScreen();
-        await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
+        await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible(1);
 
         await ProofRequestSelectCredentialScreen.scrollTo(
           ProofRequestSelectCredentialScreen.confirmButton,
         );
         await ProofRequestSelectCredentialScreen.confirmButton.tap();
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       };
 
       await proofSharing(authToken, {
@@ -270,7 +270,7 @@ describe('ONE-614: Proof request', () => {
 
     it('Without credentials', async () => {
       const proofSharingWithoutCredentials = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard =
           await ProofRequestSharingScreen.credentialAtIndex(0);
         await credentialCard.verifyIsVisible();
@@ -323,7 +323,7 @@ describe('ONE-614: Proof request', () => {
         ],
       });
       const proofSharingRevokation = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard_1 =
           await ProofRequestSharingScreen.credentialAtIndex(0);
         await credentialCard_1.verifyIsVisible();
@@ -345,7 +345,7 @@ describe('ONE-614: Proof request', () => {
       await revokeCredential(credentialIds[1], authToken);
       await reloadApp();
       const proofSharingRevokation = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard_0 =
           await ProofRequestSharingScreen.credentialAtIndex(0);
         await credentialCard_0.verifyIsVisible();
@@ -367,7 +367,7 @@ describe('ONE-614: Proof request', () => {
         },
       });
 
-      await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible();
+      await expect(ProofRequestSelectCredentialScreen.screen).toBeVisible(1);
       await expect(
         ProofRequestSelectCredentialScreen.credential(credentialIds[0]).element,
       ).toExist();
@@ -389,7 +389,7 @@ describe('ONE-614: Proof request', () => {
       ).not.toExist();
       await ProofRequestSelectCredentialScreen.backButton.tap();
       await ProofRequestSharingScreen.cancelButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
     });
 
     it.skip('2 revoked one valid', async () => {
@@ -400,14 +400,14 @@ describe('ONE-614: Proof request', () => {
       const invitationUrls = await requestProof(proofRequestId, authToken);
       await scanURL(invitationUrls.url);
 
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, true);
 
       await expect(
         ProofRequestSharingScreen.credential(0).element,
       ).toBeVisible();
       await ProofRequestSharingScreen.cancelButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
     });
 
     it.skip('all revoked', async () => {
@@ -418,14 +418,14 @@ describe('ONE-614: Proof request', () => {
       const invitationUrls = await requestProof(proofRequestId, authToken);
       await scanURL(invitationUrls.url);
 
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);
 
       await expect(
         ProofRequestSharingScreen.credential(0).element,
       ).toBeVisible();
       await ProofRequestSharingScreen.cancelButton.tap();
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
     });
   });
 
@@ -466,11 +466,11 @@ describe('ONE-614: Proof request', () => {
 
     it('displays picture link on sharing screen', async () => {
       const proofSharingScreenTest = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credential = await ProofRequestSharingScreen.credentialAtIndex(0);
         await credential.verifyAttributeValue(0, 'picture', undefined, true);
         await credential.attribute(0).image.tap();
-        await expect(ImagePreviewScreen.screen).toBeVisible();
+        await expect(ImagePreviewScreen.screen).toBeVisible(1);
         await expect(ImagePreviewScreen.title).toHaveText('picture');
         await ImagePreviewScreen.closeButton.tap();
       };
@@ -577,10 +577,10 @@ describe('ONE-614: Proof request', () => {
       });
       const credential = await WalletScreen.credentialAtIndex(0);
       await credential.openDetail();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-      await expect(CredentialNerdScreen.screen).toBeVisible();
+      await expect(CredentialNerdScreen.screen).toBeVisible(1);
 
       const attributes: Attributes<AttributeTestID> = {
         [AttributeTestID.schemaName]: {
@@ -793,7 +793,7 @@ describe('ONE-614: Proof request', () => {
 
     it('Verifier asks for first name of driving license', async () => {
       const testOnlyOneCredentialForSharing = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credential_0 = await ProofRequestSharingScreen.credentialAtIndex(
           0,
         );
@@ -811,7 +811,7 @@ describe('ONE-614: Proof request', () => {
       });
 
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await expect(CredentialDetailScreen.history(0).label).toHaveText(
         'Request accepted',
       );
@@ -852,7 +852,7 @@ describe('ONE-614: Proof request', () => {
         exchange: Exchange.OPENID4VC,
       });
       const testCredentials = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const swissCredential =
           await ProofRequestSharingScreen.credentialAtIndex(0);
         await swissCredential.verifyIsVisible();

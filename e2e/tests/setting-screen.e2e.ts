@@ -18,12 +18,12 @@ import { launchApp } from '../utils/init';
 describe('ONE-1798: Accessing Settings and all screens in the settings area', () => {
   beforeAll(async () => {
     await launchApp();
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
     await WalletScreen.settingsButton.tap();
   });
 
   beforeEach(async () => {
-    await expect(SettingsScreen.screen).toBeVisible();
+    await expect(SettingsScreen.screen).toBeVisible(1);
   });
 
   it('Language option', async () => {
@@ -41,53 +41,53 @@ describe('ONE-1798: Accessing Settings and all screens in the settings area', ()
 
   it('History option', async () => {
     await SettingsScreen.button(SettingsButton.HISTORY).tap();
-    await expect(HistoryScreen.screen).toBeVisible();
+    await expect(HistoryScreen.screen).toBeVisible(1);
     await HistoryScreen.back.tap();
   });
 
   it('Create backup option', async () => {
     await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
-    await expect(CreateBackupDashboardScreen.screen).toBeVisible();
+    await expect(CreateBackupDashboardScreen.screen).toBeVisible(1);
     await CreateBackupDashboardScreen.back.tap();
   });
 
   it('Restore backup option', async () => {
     await SettingsScreen.button(SettingsButton.RESTORE_BACKUP).tap();
-    await expect(RestoreBackupDashboardScreen.screen).toBeVisible();
+    await expect(RestoreBackupDashboardScreen.screen).toBeVisible(1);
     await RestoreBackupDashboardScreen.back.tap();
   });
 
   it('Change PIN code option', async () => {
     await SettingsScreen.button(SettingsButton.CHANGE_PIN).tap();
-    await expect(PinCodeChangeScreen.screen).toBeVisible();
+    await expect(PinCodeChangeScreen.screen).toBeVisible(1);
     await PinCodeChangeScreen.back.tap();
   });
 
   it('Information option', async () => {
     await SettingsScreen.scrollTo(SettingsButton.INFO);
     await SettingsScreen.button(SettingsButton.INFO).tap();
-    await expect(AppInformationScreen.screen).toBeVisible();
+    await expect(AppInformationScreen.screen).toBeVisible(1);
     await AppInformationScreen.back.tap();
   });
 
   it('Licences option', async () => {
     await SettingsScreen.scrollTo(SettingsButton.LICENCES);
     await SettingsScreen.button(SettingsButton.LICENCES).tap();
-    await expect(LicencesScreen.screen).toBeVisible();
+    await expect(LicencesScreen.screen).toBeVisible(1);
     await LicencesScreen.back.tap();
   });
 
   it('Clear cache option', async () => {
     await SettingsScreen.scrollTo(SettingsButton.CLEAR_CACHE);
     await SettingsScreen.button(SettingsButton.CLEAR_CACHE).tap();
-    await expect(ClearCacheScreen.screen).toBeVisible();
+    await expect(ClearCacheScreen.screen).toBeVisible(1);
     await ClearCacheScreen.back.tap();
   });
 
   it('Delete wallet option', async () => {
     await SettingsScreen.scrollTo(SettingsButton.DELETE_WALLET);
     await SettingsScreen.button(SettingsButton.DELETE_WALLET).tap();
-    await expect(DeleteWalletScreen.screen).toBeVisible();
+    await expect(DeleteWalletScreen.screen).toBeVisible(1);
     await DeleteWalletScreen.back.tap();
   });
 

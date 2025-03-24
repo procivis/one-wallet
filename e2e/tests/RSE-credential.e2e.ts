@@ -180,7 +180,7 @@ describe('RSE Ubiqu', () => {
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       };
       await requestProofAndReviewProofRequestSharingScreen(authToken, data);
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       await ProofRequestSharingScreen.scrollTo(
         ProofRequestSharingScreen.shareButton,
       );
@@ -213,12 +213,12 @@ describe('RSE Ubiqu', () => {
         ProofRequestAcceptProcessScreen.status.success,
         DEFAULT_WAIT_TIME,
       );
-      await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+      await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible(1);
 
       await ProofRequestAcceptProcessScreen.closeButton.tap();
       await device.enableSynchronization();
 
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
     });
 
     it('Share multiple RSE credential', async () => {

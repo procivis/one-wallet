@@ -147,6 +147,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled proguardEnabled()
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
 

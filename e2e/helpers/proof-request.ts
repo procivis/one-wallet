@@ -59,7 +59,7 @@ export const shareCredential = async (
   expectedResult: LoaderViewState,
   data: ProofSharingProops,
 ) => {
-  await expect(ProofRequestSharingScreen.screen).toBeVisible();
+  await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
   await ProofRequestSharingScreen.scrollTo(
     ProofRequestSharingScreen.shareButton,
   );
@@ -88,7 +88,7 @@ export const shareCredential = async (
   }
 
   await waitFor(ProofRequestAcceptProcessScreen.screen)
-    .toBeVisible()
+    .toBeVisible(1)
     .withTimeout(2000);
 
   if (expectedResult === LoaderViewState.Success) {
@@ -107,12 +107,12 @@ export const shareCredential = async (
       .toBeVisible()
       .withTimeout(4000);
   }
-  await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible();
+  await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible(1);
 
   await ProofRequestAcceptProcessScreen.closeButton.tap();
   await device.enableSynchronization();
 
-  await expect(WalletScreen.screen).toBeVisible();
+  await expect(WalletScreen.screen).toBeVisible(1);
 };
 
 export const requestProofAndReviewProofRequestSharingScreen = async (
@@ -142,9 +142,9 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
       : invitationUrls.url;
   await data.beforeQRCodeScanning?.(proofRequestId, invitationUrl);
   await scanURL(invitationUrl);
-  await expect(InvitationProcessScreen.screen).toBeVisible();
+  await expect(InvitationProcessScreen.screen).toBeVisible(1);
   await waitFor(ProofRequestSharingScreen.screen)
-    .toBeVisible()
+    .toBeVisible(1)
     .withTimeout(6000);
   return proofRequestId;
 };
@@ -175,7 +175,7 @@ export const proofSharing = async (
       .withTimeout(10000);
   }
   if (expectConnectionError) {
-    await expect(InvitationProcessScreen.screen).toBeVisible();
+    await expect(InvitationProcessScreen.screen).toBeVisible(1);
     await expect(element(by.text('Connection failed'))).toBeVisible();
     return;
   }
@@ -190,7 +190,7 @@ export const proofSharing = async (
 
   if (action === ProofAction.REJECT) {
     await ProofRequestSharingScreen.cancelButton.tap();
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
   } else if (action === ProofAction.SHARE) {
     await shareCredential(expectedResult, data);
   } else if (action === ProofAction.SHARE_BLOCKED) {
@@ -199,7 +199,7 @@ export const proofSharing = async (
     );
     await verifyButtonEnabled(ProofRequestSharingScreen.shareButton, false);
     await ProofRequestSharingScreen.cancelButton.tap();
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
   }
 };
 

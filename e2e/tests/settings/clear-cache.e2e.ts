@@ -64,15 +64,15 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
 
   describe('Clear cache screen', () => {
     beforeAll(async () => {
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();
     });
 
     beforeEach(async () => {
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.scrollTo(SettingsButton.CLEAR_CACHE);
       await SettingsScreen.button(SettingsButton.CLEAR_CACHE).tap();
-      await expect(ClearCacheScreen.screen).toBeVisible();
+      await expect(ClearCacheScreen.screen).toBeVisible(1);
     });
 
     it('Clear all caches', async () => {
@@ -80,7 +80,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         ClearOptions.AllCaches,
       );
       await ClearCacheScreen.clearButton.tap(4000);
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
     });
 
     it('Clear revocation & trust data', async () => {
@@ -88,7 +88,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         ClearOptions.RevocationAndTrustData,
       );
       await ClearCacheScreen.clearButton.tap(4000);
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
     });
   });
 
@@ -105,18 +105,18 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         await suspendCredential(credentialId, authToken);
       }
 
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.REFRESH_CREDENTIAL).tap();
       if (expected === Expected.NO_UPDATES) {
-        await expect(CredentialUpdateProcessScreen.screen).toBeVisible();
+        await expect(CredentialUpdateProcessScreen.screen).toBeVisible(1);
         await expect(
           CredentialUpdateProcessScreen.status.success,
         ).toBeVisible();
         await CredentialUpdateProcessScreen.closeButton.tap();
       } else {
         await waitFor(StatusCheckResultScreen.screen)
-          .toBeVisible()
+          .toBeVisible(1)
           .withTimeout(5000);
         if (expected === Expected.REVORED) {
           await statusScreenCheck([
@@ -129,7 +129,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         }
         await StatusCheckResultScreen.closeButton.tap();
       }
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
     };
 
     beforeAll(async () => {});
@@ -179,15 +179,15 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
     it('Trusted DID after refresh credential', async () => {
       // Verify Unknown TrustEntity issuer
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-      await expect(CredentialNerdScreen.screen).toBeVisible();
+      await expect(CredentialNerdScreen.screen).toBeVisible(1);
       await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
         'Unknown issuer',
       );
       await CredentialNerdScreen.back.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.backButton.tap();
 
       // Make Issuer DID trusted
@@ -198,22 +198,22 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
 
       // Cache cleaning
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.scrollTo(SettingsButton.CLEAR_CACHE);
       await SettingsScreen.button(SettingsButton.CLEAR_CACHE).tap();
-      await expect(ClearCacheScreen.screen).toBeVisible();
+      await expect(ClearCacheScreen.screen).toBeVisible(1);
       await ClearCacheScreen.clearOptionsRadioButon.select(
         ClearOptions.RevocationAndTrustData,
       );
       await ClearCacheScreen.clearButton.tap(4000);
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.back.tap();
 
       // Check trust entity cache refreshed
       await WalletScreen.openDetailScreen(0);
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-      await expect(CredentialNerdScreen.screen).toBeVisible();
+      await expect(CredentialNerdScreen.screen).toBeVisible(1);
       await waitFor(CredentialNerdScreen.entityCluster.name)
         .toHaveText(trustEntityDetail.name)
         .withTimeout(10000);
