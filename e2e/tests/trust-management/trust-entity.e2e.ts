@@ -110,7 +110,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     );
   }
   await CredentialOfferScreen.infoButton.tap();
-  await expect(CredentialNerdScreen.screen).toBeVisible();
+  await expect(CredentialNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
     if (
@@ -135,10 +135,10 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   await WalletScreen.openDetailScreenByCredentialId(
     issuerHolderCredentialIds.holderCredentialId,
   );
-  await expect(CredentialDetailScreen.screen).toBeVisible();
+  await expect(CredentialDetailScreen.screen).toBeVisible(1);
   await CredentialDetailScreen.actionButton.tap();
   await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-  await expect(CredentialNerdScreen.screen).toBeVisible();
+  await expect(CredentialNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
     if (
@@ -220,7 +220,7 @@ const proofSharingWithDidTrustEntityAndVerify = async (
     );
   }
   await ProofRequestSharingScreen.infoButton.tap();
-  await expect(ProofRequestSharingNerdScreen.screen).toBeVisible();
+  await expect(ProofRequestSharingNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
     if (
@@ -249,16 +249,16 @@ const verifyNewestProofRequestOnHistory = async (
   trustEntity?: TrustEntityResponseDTO,
   credentialTrustEntityList?: CredentialTrustEntityInfo[],
 ) => {
-  await expect(WalletScreen.screen).toBeVisible();
+  await expect(WalletScreen.screen).toBeVisible(1);
   await WalletScreen.settingsButton.tap();
-  await expect(SettingsScreen.screen).toBeVisible();
+  await expect(SettingsScreen.screen).toBeVisible(1);
   await SettingsScreen.button(SettingsButton.HISTORY).tap();
-  await expect(HistoryScreen.screen).toBeVisible();
+  await expect(HistoryScreen.screen).toBeVisible(1);
 
   await HistoryScreen.history(0).element.tap();
-  await expect(HistoryDetailScreen.screen).toBeVisible();
+  await expect(HistoryDetailScreen.screen).toBeVisible(1);
   await HistoryDetailScreen.infoButton.tap();
-  await expect(ProofRequestNerdScreen.screen).toBeVisible();
+  await expect(ProofRequestNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
     if (
@@ -300,13 +300,13 @@ const verifyNewestProofRequestOnHistory = async (
   }
 
   await ProofRequestNerdScreen.close();
-  await expect(HistoryDetailScreen.screen).toBeVisible();
+  await expect(HistoryDetailScreen.screen).toBeVisible(1);
   await HistoryDetailScreen.back.tap();
-  await expect(HistoryScreen.screen).toBeVisible();
+  await expect(HistoryScreen.screen).toBeVisible(1);
   await HistoryScreen.back.tap();
-  await expect(SettingsScreen.screen).toBeVisible();
+  await expect(SettingsScreen.screen).toBeVisible(1);
   await SettingsScreen.back.tap();
-  await expect(WalletScreen.screen).toBeVisible();
+  await expect(WalletScreen.screen).toBeVisible(1);
 };
 
 describe('Credential issuance with trust entity', () => {

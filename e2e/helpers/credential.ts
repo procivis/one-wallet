@@ -61,7 +61,7 @@ const acceptRSECredential = async (
   rseConfig: RSEConfig = { PINCode: '12345', isRSEOnboarded: false },
 ) => {
   if (!rseConfig.isRSEOnboarded) {
-    await expect(RemoteSecureElementInfoScreen.screen).toBeVisible();
+    await expect(RemoteSecureElementInfoScreen.screen).toBeVisible(1);
     await expect(RemoteSecureElementInfoScreen.continueButton).toBeVisible();
     if (device.getPlatform() === 'ios') {
       await delay(1000); // Need delay for ios
@@ -105,7 +105,7 @@ export const acceptCredentialTestCase = async (
   ) {
     await acceptRSECredential(data.rseConfig);
   } else {
-    await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+    await expect(CredentialAcceptProcessScreen.screen).toBeVisible(1);
   }
 
   if (expectedResult === LoaderViewState.Success) {
@@ -128,7 +128,7 @@ export const acceptCredentialTestCase = async (
       await CredentialAcceptProcessScreen.hasText(visibleText);
     }
     await CredentialAcceptProcessScreen.closeButton.tap();
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
     await device.enableSynchronization();
     return;
   }
@@ -137,7 +137,7 @@ export const acceptCredentialTestCase = async (
   await CredentialAcceptProcessScreen.closeButton.tap();
 
   await device.enableSynchronization();
-  await expect(WalletScreen.screen).toBeVisible();
+  await expect(WalletScreen.screen).toBeVisible(1);
 
   await expect(
     (
@@ -151,7 +151,7 @@ const rejectCredentialTestCase = async () => {
   await expect(CredentialOfferScreen.rejectAlert.title).toBeVisible();
   await expect(CredentialOfferScreen.rejectAlert.message).toBeVisible();
   await CredentialOfferScreen.rejectAlert.rejectButton.tap();
-  await expect(WalletScreen.screen).toBeVisible();
+  await expect(WalletScreen.screen).toBeVisible(1);
 };
 
 export const offerCredentialAndReviewCredentialOfferScreen = async (

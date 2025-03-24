@@ -89,6 +89,6 @@ export default class WalletScreen {
   }
 
   static get scanQRCodeButton() {
-    return element(by.id('WalletScreen.scanQrCode'));
+    return element(by.id('WalletScreen.empty.scanQrCode'));
   }
 }

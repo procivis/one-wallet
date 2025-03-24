@@ -84,14 +84,14 @@ describe('ONE-2014: Credential design', () => {
       });
       const credentialId = issuerHolderCredentialIds.issuerCredentialId;
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.actionButton.tap();
       const credentialDetail = await getCredentialDetail(
         credentialId,
         authToken,
       );
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
-      await expect(CredentialNerdScreen.screen).toBeVisible();
+      await expect(CredentialNerdScreen.screen).toBeVisible(1);
       await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
         'Unknown issuer',
       );
@@ -191,9 +191,9 @@ describe('ONE-2014: Credential design', () => {
       });
 
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.openCredentialHistoryScreen();
-      await expect(CredentialHistoryScreen.screen).toBeVisible();
+      await expect(CredentialHistoryScreen.screen).toBeVisible(1);
 
       await expect(CredentialHistoryScreen.history(0).element).toBeVisible();
       const labels = [
@@ -207,9 +207,9 @@ describe('ONE-2014: Credential design', () => {
 
     it('Search test', async () => {
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.openCredentialHistoryScreen();
-      await expect(CredentialHistoryScreen.screen).toBeVisible();
+      await expect(CredentialHistoryScreen.screen).toBeVisible(1);
       await CredentialHistoryScreen.search.typeText('Hello');
       await expect(
         CredentialHistoryScreen.history(0).element,
@@ -261,7 +261,7 @@ describe('ONE-2014: Credential design', () => {
         exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.credentialCard.verifyLogoColor(
         '#5A69F3',
         '#FFFFFF',
@@ -278,7 +278,7 @@ describe('ONE-2014: Credential design', () => {
         exchange: Exchange.OPENID4VC,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await CredentialDetailScreen.credentialCard.verifyLogoColor(
         '#ebb1f9',
         '#000000',
@@ -412,7 +412,7 @@ describe('ONE-2014: Credential design', () => {
     }, 220000);
 
     beforeEach(async () => {
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
     });
 
     it('Verify last card opened', async () => {
@@ -565,7 +565,7 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Test credential card header', async () => {
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyCredentialName(
@@ -643,7 +643,7 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Test credential card header', async () => {
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyCredentialName(

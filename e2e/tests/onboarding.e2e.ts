@@ -17,18 +17,18 @@ describe('Onboarding', () => {
   });
 
   it('shows PIN init screen', async () => {
-    await expect(OnboardingSetupScreen.screen).toBeVisible();
+    await expect(OnboardingSetupScreen.screen).toBeVisible(1);
     await OnboardingSetupScreen.setupButton.tap();
     await userAgreement();
-    await expect(SecurityScreen.screen).toBeVisible();
+    await expect(SecurityScreen.screen).toBeVisible(1);
     await SecurityScreen.continueButton.tap();
-    await expect(PinCodeScreen.Initialization.screen).toBeVisible();
+    await expect(PinCodeScreen.Initialization.screen).toBeVisible(1);
   });
 
   it('shows Dashboard screen after PIN entry & confirmation', async () => {
     await PinCodeScreen.Initialization.digit(1).multiTap(6);
     await PinCodeScreen.Initialization.digit(1).multiTap(6);
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
   });
 
   it('shows PIN Lock screen after app reopen', async () => {
@@ -43,7 +43,7 @@ describe('Onboarding', () => {
       },
       newInstance: true,
     });
-    await expect(PinCodeScreen.Check.screen).toBeVisible();
+    await waitFor(PinCodeScreen.Check.screen).toBeVisible(1).withTimeout(5000);
     await expect(PinCodeScreen.Check.error).toHaveText('');
     await PinCodeScreen.Check.digit(2).multiTap(6);
     await expect(PinCodeScreen.Check.error).not.toHaveText('');

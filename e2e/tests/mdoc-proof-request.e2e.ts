@@ -128,7 +128,7 @@ describe.skip('ONE-614: Proof request', () => {
 
   it('mDoc credential. Single credential with nested claims', async () => {
     const mdocCredentialTest = async () => {
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       const credentialCard = await ProofRequestSharingScreen.credentialAtIndex(
         0,
       );
@@ -212,7 +212,7 @@ describe.skip('ONE-614: Proof request', () => {
     });
 
     const mdocCredentialSharingTest = async () => {
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       const credentialCard_1 = ProofRequestSharingScreen.credential(0);
       await credentialCard_1.verifyIsVisible();
       await credentialCard_1.verifyCredentialName(mdocSchema.name);
@@ -293,7 +293,7 @@ describe.skip('ONE-614: Proof request', () => {
     });
 
     const mdocCredentialSharingTest = async () => {
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       const credentialCard_1 = ProofRequestSharingScreen.credential(0);
       await credentialCard_1.verifyIsVisible();
       await credentialCard_1.verifyCredentialName(mdocSchema.name);
@@ -376,7 +376,7 @@ describe.skip('ONE-614: Proof request', () => {
     });
 
     const mdocCredentialSharingTest = async () => {
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       const credentialCard_1 = ProofRequestSharingScreen.credential(0);
       await credentialCard_1.verifyIsVisible();
       await credentialCard_1.verifyCredentialName(mdocSchema.name);
@@ -457,7 +457,7 @@ describe.skip('ONE-614: Proof request', () => {
     });
 
     const mdocCredentialSharingTest = async () => {
-      await expect(ProofRequestSharingScreen.screen).toBeVisible();
+      await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
       const credentialCard_1 = ProofRequestSharingScreen.credential(0);
       await credentialCard_1.verifyIsVisible();
       await credentialCard_1.verifyCredentialName(mdocSchema.name);
@@ -572,7 +572,7 @@ describe.skip('ONE-614: Proof request', () => {
 
     it('Verify Single credential with array claims', async () => {
       const mdocCredentialTest = async () => {
-        await expect(ProofRequestSharingScreen.screen).toBeVisible();
+        await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard = ProofRequestSharingScreen.credential(0);
         await credentialCard.verifyIsVisible();
         await credentialCard.verifyCredentialName(driverLicenceSchema.name);

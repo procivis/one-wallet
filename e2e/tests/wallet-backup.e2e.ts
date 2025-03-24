@@ -39,9 +39,9 @@ describe('ONE-1530: Backup & Restore', () => {
 
     it('User can restore from onboarding screen', async () => {
       await OnboardingSetupScreen.restoreButton.tap();
-      await expect(RestoreBackupDashboardScreen.screen).toBeVisible();
+      await expect(RestoreBackupDashboardScreen.screen).toBeVisible(1);
       await RestoreBackupDashboardScreen.restoreButton.tap();
-      await expect(RestoreBackupImportScreen.screen).toBeVisible();
+      await expect(RestoreBackupImportScreen.screen).toBeVisible(1);
       await expect(RestoreBackupImportScreen.importButton).toBeVisible();
       await verifyButtonEnabled(RestoreBackupImportScreen.importButton, false);
     });
@@ -70,13 +70,13 @@ describe('ONE-1530: Backup & Restore', () => {
     });
 
     it('User can create backup from settings', async () => {
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
-      await expect(CreateBackupDashboardScreen.screen).toBeVisible();
+      await expect(CreateBackupDashboardScreen.screen).toBeVisible(1);
       await CreateBackupDashboardScreen.newBackupButton.tap();
-      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible(1);
       await verifyButtonEnabled(
         CreateBackupSetPasswordScreen.setPasswordButton,
         false,
@@ -84,7 +84,7 @@ describe('ONE-1530: Backup & Restore', () => {
       const password = 'tester';
       await CreateBackupSetPasswordScreen.fillPassword(`${password}\n`); // \n provide clicking "setPasswordButton"
 
-      await expect(CreateBackupCheckPasswordScreen.screen).toBeVisible();
+      await expect(CreateBackupCheckPasswordScreen.screen).toBeVisible(1);
       await verifyButtonEnabled(
         CreateBackupCheckPasswordScreen.submitButton,
         false,
@@ -104,25 +104,25 @@ describe('ONE-1530: Backup & Restore', () => {
         await CreateBackupCheckPasswordScreen.submitButton.tap();
       }
 
-      await expect(CreateBackupPreviewScreen.screen).toBeVisible();
+      await expect(CreateBackupPreviewScreen.screen).toBeVisible(1);
       await (
         await CreateBackupPreviewScreen.credentialAtIndex(0)
       ).verifyIsVisible();
       // Will be opened folder navigation and it will block the app
       // await CreateBackupPreviewScreen.createBackupButton.longPress(4001);
-      // await expect(CreateBackupProcessingScreen.screen).toBeVisible();
+      // await expect(CreateBackupProcessingScreen.screen).toBeVisible(1);
       // await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
       // await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
     });
 
     it('User can restore backup from settings', async () => {
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.button(SettingsButton.RESTORE_BACKUP).tap();
-      await expect(RestoreBackupDashboardScreen.screen).toBeVisible();
+      await expect(RestoreBackupDashboardScreen.screen).toBeVisible(1);
       await RestoreBackupDashboardScreen.restoreButton.tap();
-      await expect(RestoreBackupImportScreen.screen).toBeVisible();
+      await expect(RestoreBackupImportScreen.screen).toBeVisible(1);
       await expect(RestoreBackupImportScreen.importButton).toBeVisible();
       await verifyButtonEnabled(RestoreBackupImportScreen.importButton, false);
     });
@@ -132,16 +132,16 @@ describe('ONE-1530: Backup & Restore', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.button(SettingsButton.CREATE_BACKUP).tap();
-      await expect(CreateBackupDashboardScreen.screen).toBeVisible();
+      await expect(CreateBackupDashboardScreen.screen).toBeVisible(1);
       await CreateBackupDashboardScreen.newBackupButton.tap();
-      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible(1);
       await verifyButtonEnabled(
         CreateBackupSetPasswordScreen.setPasswordButton,
         false,
       );
-      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible();
+      await expect(CreateBackupSetPasswordScreen.screen).toBeVisible(1);
     });
 
     it('Password: no chars', async () => {

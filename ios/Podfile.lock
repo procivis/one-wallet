@@ -2399,7 +2399,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-one-core: 4f4aef5e3f308683d2808e80b3d9d4c61c5cdbb5
+  react-native-one-core: 13d8e63b8562292165fc090f06235e6442ee05c8
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 9c33120e9eac7741a5364cc2d9f74665049b76b3
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c

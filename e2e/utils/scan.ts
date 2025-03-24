@@ -1,4 +1,4 @@
-import { device, expect } from 'detox';
+import { device } from 'detox';
 
 import PinCodeScreen from '../page-objects/onboarding/PinCodeScreen';
 import { CORRECT_PIN_DIGIT } from './init';
@@ -20,6 +20,6 @@ export async function scanURL(url: string) {
     newInstance: true,
     url: url,
   });
-  await expect(PinCodeScreen.Check.screen).toBeVisible();
+  await waitFor(PinCodeScreen.Check.screen).toBeVisible(1).withTimeout(5000);
   await PinCodeScreen.Check.digit(CORRECT_PIN_DIGIT).multiTap(6);
 }

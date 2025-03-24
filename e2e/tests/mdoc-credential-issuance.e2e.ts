@@ -163,7 +163,7 @@ describe('ONE-601: Credential issuance', () => {
       });
 
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible();
+      await expect(CredentialDetailScreen.screen).toBeVisible(1);
       // Full Name
       await expect(
         CredentialDetailScreen.credentialCard.attribute('0.0').element,

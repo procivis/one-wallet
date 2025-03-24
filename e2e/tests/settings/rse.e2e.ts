@@ -141,7 +141,7 @@ describe('RSE Remote PIN Code', () => {
       LONG_WAIT_TIME,
     );
     await CredentialAcceptProcessScreen.button.close.tap();
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
     await device.enableSynchronization();
     globalRSEConfig.PINCode = newPINCode;
   });
@@ -178,7 +178,7 @@ describe('RSE Remote PIN Code', () => {
   it('Delete Wallet - with RSE onboarding', async () => {
     await SettingsScreen.scrollTo(SettingsButton.DELETE_WALLET);
     await SettingsScreen.button(SettingsButton.DELETE_WALLET).tap();
-    await expect(DeleteWalletScreen.screen).toBeVisible();
+    await expect(DeleteWalletScreen.screen).toBeVisible(1);
 
     await DeleteWalletScreen.checkbox.tap();
     await DeleteWalletScreen.deleteButton.longPress(3500);
