@@ -37,11 +37,11 @@ describe('ONE-224: Wallet history', () => {
   });
 
   it('Empty history list', async () => {
-    await expect(WalletScreen.screen).toBeVisible();
+    await expect(WalletScreen.screen).toBeVisible(1);
     await WalletScreen.settingsButton.tap();
-    await expect(SettingsScreen.screen).toBeVisible();
+    await expect(SettingsScreen.screen).toBeVisible(1);
     await SettingsScreen.button(SettingsButton.HISTORY).tap();
-    await expect(HistoryScreen.screen).toBeVisible();
+    await expect(HistoryScreen.screen).toBeVisible(1);
     await HistoryScreen.verifyContainsText('No entries');
     await HistoryScreen.verifyContainsText(
       'You have not interacted with your wallet yet.',
@@ -56,11 +56,11 @@ describe('ONE-224: Wallet history', () => {
         credentialSchema: credentialSchemaJWT,
         exchange: Exchange.OPENID4VC,
       });
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.button(SettingsButton.HISTORY).tap();
-      await expect(HistoryScreen.screen).toBeVisible();
+      await expect(HistoryScreen.screen).toBeVisible(1);
     });
 
     it('Contain 2 records after issued credential', async () => {
@@ -80,12 +80,12 @@ describe('ONE-224: Wallet history', () => {
     it('Contain records. Open detail screen', async () => {
       await expect(HistoryScreen.history(1).element).toBeVisible();
       await HistoryScreen.history(1).element.tap();
-      await expect(HistoryDetailScreen.screen).toBeVisible();
+      await expect(HistoryDetailScreen.screen).toBeVisible(1);
       await HistoryDetailScreen.back.tap();
     });
 
     it('Search field. No results', async () => {
-      await expect(HistoryScreen.screen).toBeVisible();
+      await expect(HistoryScreen.screen).toBeVisible(1);
       await expect(HistoryScreen.history(1).element).toBeVisible();
       await HistoryScreen.searchField.typeText('text\n');
       await HistoryScreen.verifyContainsText('No entries');
@@ -95,7 +95,7 @@ describe('ONE-224: Wallet history', () => {
     });
 
     it('Search field. Found result', async () => {
-      await expect(HistoryScreen.screen).toBeVisible();
+      await expect(HistoryScreen.screen).toBeVisible(1);
       await HistoryScreen.searchField.clearText();
       await waitFor(HistoryScreen.history(0).element)
         .toBeVisible()
@@ -108,7 +108,7 @@ describe('ONE-224: Wallet history', () => {
     });
 
     it('Filter select', async () => {
-      await expect(HistoryScreen.screen).toBeVisible();
+      await expect(HistoryScreen.screen).toBeVisible(1);
       await HistoryScreen.filter.open();
       await HistoryScreen.filter.scrollTo(credentialSchemaJWT.name);
       await HistoryScreen.filter.close();
@@ -125,15 +125,15 @@ describe('ONE-224: Wallet history', () => {
         credentialId = await createCredential(authToken, credentialSchemaJWT);
         const invitationUrls = await offerCredential(credentialId, authToken);
         await scanURL(invitationUrls.url);
-        await expect(CredentialOfferScreen.screen).toBeVisible();
+        await expect(CredentialOfferScreen.screen).toBeVisible(1);
         await CredentialOfferScreen.acceptButton.tap();
-        await expect(CredentialAcceptProcessScreen.screen).toBeVisible();
+        await expect(CredentialAcceptProcessScreen.screen).toBeVisible(1);
         await expect(
           CredentialAcceptProcessScreen.status.success,
         ).toBeVisible();
 
         await CredentialAcceptProcessScreen.closeButton.tap();
-        await expect(WalletScreen.screen).toBeVisible();
+        await expect(WalletScreen.screen).toBeVisible(1);
         await expect(
           (
             await WalletScreen.credentialAtIndex(i)
@@ -143,11 +143,11 @@ describe('ONE-224: Wallet history', () => {
     });
 
     it('Scroll 25 elements', async () => {
-      await expect(WalletScreen.screen).toBeVisible();
+      await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();
-      await expect(SettingsScreen.screen).toBeVisible();
+      await expect(SettingsScreen.screen).toBeVisible(1);
       await SettingsScreen.button(SettingsButton.HISTORY).tap();
-      await expect(HistoryScreen.screen).toBeVisible();
+      await expect(HistoryScreen.screen).toBeVisible(1);
 
       await expect(HistoryScreen.history(4).element).toBeVisible();
 
