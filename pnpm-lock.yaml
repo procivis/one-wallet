@@ -17,10 +17,10 @@ importers:
         version: 4.1.1(react@18.3.1)
       '@procivis/one-react-native-components':
         specifier: ^0.3.2
-        version: 0.3.2(69eea110366f798b487a1befc6855c21)
+        version: 0.3.2(21ed7e48338354af09187e08f3cd1ca7)
       '@procivis/react-native-one-core':
-        specifier: 1.37555.0
-        version: 1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
+        specifier: 1.37637.0
+        version: 1.37637.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker':
         specifier: 5.0.3
         version: 5.0.3
@@ -1764,8 +1764,8 @@ packages:
       react-query: ^3.39.3
       timeago.js: ^4.0.2
 
-  '@procivis/react-native-one-core@1.37555.0':
-    resolution: {integrity: sha1-J79qAGqp12D9apLywGJpptliyN0=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.37555.0.tgz}
+  '@procivis/react-native-one-core@1.37637.0':
+    resolution: {integrity: sha1-225kPp9FkAbSC7j1zbxMZC8h97M=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.37637.0.tgz}
     peerDependencies:
       react-native: '*'
 
@@ -9764,9 +9764,9 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.2(69eea110366f798b487a1befc6855c21)':
+  '@procivis/one-react-native-components@0.3.2(21ed7e48338354af09187e08f3cd1ca7)':
     dependencies:
-      '@procivis/react-native-one-core': 1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
+      '@procivis/react-native-one-core': 1.37637.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker': 5.0.3
       '@react-native-community/blur': 4.4.1(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@react-native-community/netinfo': 11.4.1(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
@@ -9790,7 +9790,7 @@ snapshots:
       react-query: 3.39.3(react-dom@18.2.0(react@18.3.1))(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       timeago.js: 4.0.2
 
-  '@procivis/react-native-one-core@1.37555.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))':
+  '@procivis/react-native-one-core@1.37637.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))':
     dependencies:
       react-native: 0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1)
 
