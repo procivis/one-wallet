@@ -1959,7 +1959,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (5.36.0):
+  - RNSentry (6.10.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1980,7 +1980,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Sentry/HybridSDK (= 8.41.0)
+    - Sentry/HybridSDK (= 8.48.0)
     - Yoga
   - RNShare (12.0.9):
     - DoubleConversion
@@ -2048,7 +2048,7 @@ PODS:
     - Yoga
   - RNSystemtime (1.0.4):
     - React
-  - Sentry/HybridSDK (8.41.0)
+  - Sentry/HybridSDK (8.48.0)
   - SocketRocket (0.7.1)
   - TouchID (4.4.1):
     - React
