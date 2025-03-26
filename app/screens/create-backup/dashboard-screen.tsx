@@ -1,6 +1,7 @@
 import {
   BackupScreen,
   colorWithAlphaComponent,
+  formatDateTimeLocalized,
   LoaderView,
   LoaderViewState,
   reportException,
@@ -29,7 +30,7 @@ import {
 } from '../../navigators/create-backup/create-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-import { formatDateTimeLocalized, formatTimestamp } from '../../utils/date';
+import { formatTimestamp } from '../../utils/date';
 import { getEntryTitle } from '../../utils/history';
 
 const DashboardScreen: FC = () => {

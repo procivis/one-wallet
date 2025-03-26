@@ -3,6 +3,7 @@ import {
   CredentialDetails,
   DataItem,
   EntityDetails,
+  formatDateTimeLocalized,
   HistoryStatusIcon,
   HistoryStatusIconType,
   ScrollViewScreen,
@@ -37,7 +38,6 @@ import {
 } from '../../navigators/history/history-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
-import { formatDateTimeLocalized } from '../../utils/date';
 import { nonEmptyFilter } from '../../utils/filtering';
 import { getEntryTitle } from '../../utils/history';
 import { capitalizeFirstLetter } from '../../utils/string';
