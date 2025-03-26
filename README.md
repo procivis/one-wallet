@@ -336,9 +336,9 @@ Version 2.0](./LICENSE).
 [rncore]: https://github.com/procivis/react-native-one-core
 [sdjwt]: https://www.ietf.org/archive/id/draft-ietf-oauth-selective-disclosure-jwt-12.html
 [sdjwtvc]: https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-05.html
-[sdkref]: https://docs.procivis.ch/sdk/overview
+[sdkref]: https://docs.procivis.ch/sdk
 [sl]: https://www.w3.org/TR/vc-bitstring-status-list/
-[trial]: https://docs.procivis.ch/trial/intro
+[trial]: https://docs.procivis.ch/trial
 [tsl]: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list-03
 [vcdi]: https://www.w3.org/TR/vc-data-integrity/
 [vcdm]: https://www.w3.org/TR/vc-data-model-2.0/
