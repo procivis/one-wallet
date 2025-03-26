@@ -2399,7 +2399,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-one-core: 13d8e63b8562292165fc090f06235e6442ee05c8
+  react-native-one-core: fbafb84d2cb80387fde0233a69e8ec178cd4710a
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 9c33120e9eac7741a5364cc2d9f74665049b76b3
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
@@ -2444,11 +2444,11 @@ SPEC CHECKSUMS:
   RNPermissions: ae3166a0b0ba7601c715047b1ae91529a35cc0f6
   RNReanimated: 67d8eda35002543abb656f25fa1a457ceeab6807
   RNScreens: 9a887b38fbb9c207f0d4e9694037c91e4fd6b248
-  RNSentry: d6bac0dacbc301eb8dddc111912d452f180d3363
+  RNSentry: c9a67675e0c4d04be1335a18e6d1ff5bccee2444
   RNShare: 6b1ee93f4fce1346c7c299c3107af20af05120b4
   RNSVG: cb725f4400af94396beaeab55098e0a57f2ee020
   RNSystemtime: 00c2bd6b2c1e380d76ecff01e57c89dfd1a558cd
-  Sentry: 54d0fe6c0df448497c8ed4cce66ccf7027e1823e
+  Sentry: 1ca8405451040482877dcd344dfa3ef80b646631
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   VisionCamera: 168f46071274ce58c50adef4c82ae3367b2ba2a6

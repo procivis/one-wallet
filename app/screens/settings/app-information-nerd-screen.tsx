@@ -1,4 +1,5 @@
 import {
+  formatDateTimeLocalized,
   NerdModeItemProps,
   NerdModeScreen,
   useMemoAsync,
@@ -12,7 +13,6 @@ import Config from 'react-native-ultimate-config';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-import { formatDateTimeLocalized } from '../../utils/date';
 import { attributesLabels } from '../nerd-mode/utils';
 
 const AppInformationNerdScreen: FC = () => {
