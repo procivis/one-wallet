@@ -127,4 +127,6 @@ function App() {
   );
 }
 
-export default gestureHandlerRootHOC(App);
+export default Sentry.wrap(
+  gestureHandlerRootHOC(App) as unknown as React.ComponentType,
+);
