@@ -5,10 +5,12 @@ import {
   SettingsButton,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import DocumentPicker, {
+import {
   DocumentPickerResponse,
   errorCodes,
   isErrorWithCode,
+  pick,
+  types,
 } from '@react-native-documents/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
@@ -30,8 +32,8 @@ const ImportScreen: FC = () => {
 
   const handleAddPress = async () => {
     try {
-      const [file] = await DocumentPicker.pick({
-        type: DocumentPicker.types.zip,
+      const [file] = await pick({
+        type: types.zip,
       });
       const fileName = file.name?.replace(/\s/g, '_');
       const filePath = `${DocumentDirectoryPath}/${fileName}`;
