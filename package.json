@@ -47,7 +47,7 @@
     "@react-native/normalize-color": "^2.0.0",
     "@react-navigation/native": "~6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
-    "@sentry/react-native": "^5.24.1",
+    "@sentry/react-native": "^6.10.0",
     "apisauce": "2.0.0",
     "check-password-strength": "^2.0.10",
     "i18n-js": "^4.5.0",
