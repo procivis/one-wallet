@@ -15,6 +15,7 @@ export default class RemoteSecureElementSignScreen extends RemoteSecureElementPi
     await waitForElementVisible(
       RemoteSecureElementSignScreen.screen,
       LONG_WAIT_TIME,
+      1,
     );
     await this.fillRemotePINCode(PINCode);
   };

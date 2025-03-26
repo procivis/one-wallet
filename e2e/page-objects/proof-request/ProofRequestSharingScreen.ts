@@ -31,6 +31,12 @@ export default class ProofRequestSharingScreen {
     return element(by.id('ProofRequestSharingScreen.indicator.credentials'));
   }
 
+  static get credentialCards() {
+    return element(
+      by.id('/^ProofRequestSharingScreen.credential.[w-]+.card$/'),
+    );
+  }
+
   static async scrollTo(
     this: void,
     element: Detox.IndexableNativeElement,
@@ -42,17 +48,8 @@ export default class ProofRequestSharingScreen {
       .scroll(400, direction);
   }
 
-  static async credentialAtIndex(index: number) {
-    const cardAttributes = await element(
-      by.id(/^ProofRequestSharingScreen.credential.[\w-]+.card$/),
-    )
-      .atIndex(index)
-      .getAttributes();
-    const id = (
-      'elements' in cardAttributes
-        ? cardAttributes.elements[0].identifier
-        : cardAttributes.identifier
-    ).replace('.card', '');
+  static credentialAtIndex(index: number) {
+    const id = `ProofRequestSharingScreen.credential.input_${index}`;
     return CredentialCard(id);
   }
 
