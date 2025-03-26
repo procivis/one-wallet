@@ -1,5 +1,7 @@
 import { expect } from 'detox';
 
+import { waitForElementToHaveText } from './ElementUtil';
+
 export enum CarouselImageType {
   Barcode = 'Barcode',
   MRZ = 'MRZ',
@@ -149,7 +151,7 @@ export default function CredentialCard(testID: string) {
       };
     },
     collapseOrExpand: async function () {
-      await this.header.element.tap();
+      await this.header.name.tap();
     },
     get element() {
       return element(by.id(cardId));
@@ -209,15 +211,15 @@ export default function CredentialCard(testID: string) {
       await this.header.openDetailArrow.tap();
     },
     openMultipleCredentialsScreen: async function () {
-      await expect(sceleton.notice.multiple.element).toBeVisible();
+      await expect(sceleton.notice.multiple.selectButton).toBeVisible();
       await sceleton.notice.multiple.selectButton.tap();
     },
     get sceleton() {
       return sceleton;
     },
     selectiveDisclosureMessageVisible: async function () {
-      await expect(sceleton.notice.element).toBeVisible();
-      await expect(sceleton.notice.text).toHaveText(
+      await waitForElementToHaveText(
+        sceleton.notice.text,
         'This credential requires you to share all attributes to work.',
       );
     },
