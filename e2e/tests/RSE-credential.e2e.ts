@@ -191,6 +191,7 @@ describe('RSE Ubiqu', () => {
       await waitForElementVisible(
         RemoteSecureElementSignScreen.screen,
         LONG_WAIT_TIME,
+        1,
       );
       if (data.rseConfig?.isRSEOnboarded) {
         let remainAttempts = 5;

@@ -74,6 +74,7 @@ describe('RSE Remote PIN Code', () => {
     await waitForElementVisible(
       RemoteSecureElementChangePinScreen.screen,
       SHORT_WAIT_TIME,
+      1,
     );
 
     await RemoteSecureElementChangePinScreen.fillRemotePINCode(
@@ -122,6 +123,7 @@ describe('RSE Remote PIN Code', () => {
     await waitForElementVisible(
       RemoteSecureElementSignScreen.screen,
       LONG_WAIT_TIME,
+      1,
     );
     await RemoteSecureElementSignScreen.waitForScreenDisplayedAndFillPINCode(
       globalRSEConfig.PINCode,
@@ -153,6 +155,7 @@ describe('RSE Remote PIN Code', () => {
     await waitForElementVisible(
       RemoteSecureElementChangePinScreen.screen,
       SHORT_WAIT_TIME,
+      1,
     );
 
     await RemoteSecureElementChangePinScreen.fillRemotePINCode(

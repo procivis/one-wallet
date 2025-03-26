@@ -70,6 +70,7 @@ const acceptRSECredential = async (
     await waitForElementVisible(
       RemoteSecureElementPinSetupScreen.screen,
       LONG_WAIT_TIME,
+      1,
     );
     await RemoteSecureElementPinSetupScreen.fillRemotePINCode(
       rseConfig.PINCode,
@@ -81,6 +82,7 @@ const acceptRSECredential = async (
   await waitForElementVisible(
     CredentialAcceptProcessScreen.screen,
     LONG_WAIT_TIME,
+    1,
   );
   await RemoteSecureElementSignScreen.waitForScreenDisplayedAndFillPINCode(
     rseConfig.PINCode,
@@ -104,13 +106,11 @@ export const acceptCredentialTestCase = async (
     WalletKeyStorageType.REMOTE_SECURE_ELEMENT
   ) {
     await acceptRSECredential(data.rseConfig);
-  } else {
-    await expect(CredentialAcceptProcessScreen.screen).toBeVisible(1);
   }
 
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(CredentialAcceptProcessScreen.status.success)
-      .toBeVisible()
+      .toBeVisible(1)
       .withTimeout(25000);
 
     if (data.redirectUri) {
@@ -118,7 +118,7 @@ export const acceptCredentialTestCase = async (
         .toBeVisible()
         .withTimeout(2000);
     } else {
-      await expect(CredentialAcceptProcessScreen.button.close).toBeVisible();
+      await expect(CredentialAcceptProcessScreen.closeButton).toBeVisible();
     }
   } else if (expectedResult === LoaderViewState.Warning) {
     await waitFor(CredentialAcceptProcessScreen.status.warning)
@@ -188,7 +188,7 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
       ? invitationUrls.appUrl
       : invitationUrls.url;
   await scanURL(invitationUrl);
-  await waitFor(CredentialOfferScreen.screen).toBeVisible().withTimeout(25000);
+  await waitFor(CredentialOfferScreen.screen).toBeVisible(1).withTimeout(25000);
   await CredentialOfferScreen.credentialCard.verifyIsVisible();
   const holderCredentialId =
     (

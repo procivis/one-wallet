@@ -1,10 +1,13 @@
 import { expect } from 'detox';
 import { v4 as uuidv4 } from 'uuid';
 
-import { waitForElementIsNotPresent } from '../page-objects/components/ElementUtil';
+import {
+  waitForElementIsNotPresent,
+  waitForElementPresent,
+  waitForElementVisible,
+} from '../page-objects/components/ElementUtil';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import RemoteSecureElementSignScreen from '../page-objects/credential/rse/RemoteSecureElementSignScreen';
-import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
 import ProofRequestAcceptProcessScreen from '../page-objects/proof-request/ProofRequestAcceptProcessScreen';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
 import WalletScreen from '../page-objects/WalletScreen';
@@ -99,6 +102,7 @@ export const shareCredential = async (
       await waitFor(ProofRequestAcceptProcessScreen.button.redirect)
         .toBeVisible()
         .withTimeout(500);
+      return;
     } else {
       await expect(ProofRequestAcceptProcessScreen.button.close).toBeVisible();
     }
@@ -109,10 +113,10 @@ export const shareCredential = async (
   }
   await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible(1);
 
-  await ProofRequestAcceptProcessScreen.closeButton.tap();
+  await ProofRequestAcceptProcessScreen.button.close.tap();
   await device.enableSynchronization();
 
-  await expect(WalletScreen.screen).toBeVisible(1);
+  await waitForElementVisible(WalletScreen.screen, DEFAULT_WAIT_TIME, 1);
 };
 
 export const requestProofAndReviewProofRequestSharingScreen = async (
@@ -142,10 +146,8 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
       : invitationUrls.url;
   await data.beforeQRCodeScanning?.(proofRequestId, invitationUrl);
   await scanURL(invitationUrl);
-  await expect(InvitationProcessScreen.screen).toBeVisible(1);
-  await waitFor(ProofRequestSharingScreen.screen)
-    .toBeVisible(1)
-    .withTimeout(6000);
+  //await expect(InvitationProcessScreen.screen).toBeVisible(); // if the process is fast enough, there will be no invitation process screen, so this code is commented
+  await waitForElementVisible(ProofRequestSharingScreen.screen, 6000, 1);
   return proofRequestId;
 };
 
@@ -163,26 +165,18 @@ export const proofSharing = async (
     data,
   );
 
-  try {
-    await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
-      .toBeVisible()
-      .withTimeout(10000);
-  } catch {
-    console.debug('No loading');
-  } finally {
-    await waitFor(ProofRequestSharingScreen.credentialLoadingIndicator)
-      .not.toBeVisible()
-      .withTimeout(10000);
-  }
   if (expectConnectionError) {
-    await expect(InvitationProcessScreen.screen).toBeVisible(1);
-    await expect(element(by.text('Connection failed'))).toBeVisible();
+    await waitForElementVisible(
+      element(by.text('Connection failed')),
+      DEFAULT_WAIT_TIME,
+      1,
+    );
     return;
   }
-  const credential_0 = await ProofRequestSharingScreen.credentialAtIndex(0);
-  await waitFor(credential_0.element).toBeVisible().withTimeout(2000);
+  const credential_0 = ProofRequestSharingScreen.credentialAtIndex(0);
+  await waitForElementPresent(credential_0.element, LONG_WAIT_TIME);
   for (const [index] of data.selectiveDisclosureCredentials?.entries() || []) {
-    const credential = await ProofRequestSharingScreen.credentialAtIndex(index);
+    const credential = ProofRequestSharingScreen.credentialAtIndex(index);
     await credential.selectiveDisclosureMessageVisible();
   }
 

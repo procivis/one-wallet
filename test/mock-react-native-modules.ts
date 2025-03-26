@@ -10,7 +10,7 @@ jest.mock('react-native', () => {
   return Object.defineProperty(rn, 'Settings', {
     get: jest.fn(() => {
       return {
-        get: jest.fn(() => 'en_US') 
+        get: jest.fn(() => 'en_US'),
       };
     }),
   });

@@ -20,7 +20,9 @@ export default abstract class UserAgreementScreen {
       },
       verifyChecked(checked: boolean = true) {
         if (device.getPlatform() === 'ios') {
-          return expect(field).toHaveValue(`checkbox, ${checked ? 'checked' : 'not checked'}`);
+          return expect(field).toHaveValue(
+            `checkbox, ${checked ? 'checked' : 'not checked'}`,
+          );
         } else {
           return expect(field).toHaveLabel(checked ? 'checked' : 'not checked');
         }

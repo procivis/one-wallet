@@ -129,9 +129,7 @@ describe.skip('ONE-614: Proof request', () => {
   it('mDoc credential. Single credential with nested claims', async () => {
     const mdocCredentialTest = async () => {
       await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
-      const credentialCard = await ProofRequestSharingScreen.credentialAtIndex(
-        0,
-      );
+      const credentialCard = ProofRequestSharingScreen.credentialAtIndex(0);
       await credentialCard.verifyIsVisible();
       await credentialCard.verifyCredentialName(mdocSchema.name);
       const attributes = [
