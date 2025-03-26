@@ -4,6 +4,7 @@ import {
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
   CredentialValidIcon,
+  formatDateTimeLocalized,
   getCredentialSchemaWithoutImages,
   NerdModeItemProps,
   NerdModeScreen,
@@ -28,7 +29,6 @@ import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { addElementIf } from '../../utils/array';
-import { formatDateTimeLocalized } from '../../utils/date';
 import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (
