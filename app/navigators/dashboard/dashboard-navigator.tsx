@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Platform } from 'react-native';
 
 import QrCodeScannerScreen from '../../screens/dashboard/qr-code-scanner-screen';
 import QRCodeShareScreen from '../../screens/dashboard/qr-code-share-screen';
 import WalletScreen from '../../screens/dashboard/wallet-screen';
+import { FORM_SHEET_OPTIONS } from '../navigation-utilities';
 import { DashboardNavigatorParamList } from './dashboard-routes';
 
 const Stack = createNativeStackNavigator<DashboardNavigatorParamList>();
@@ -18,11 +18,8 @@ const DashboardNavigator = () => {
         component={QRCodeShareScreen}
         name="QRCodeShare"
         options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+          ...FORM_SHEET_OPTIONS,
           gestureEnabled: false,
-          headerShown: false,
-          presentation: 'formSheet',
         }}
       />
     </Stack.Navigator>
