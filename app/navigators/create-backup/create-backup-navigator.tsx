@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Platform } from 'react-native';
 
 import CheckPasswordScreen from '../../screens/create-backup/check-password-screen';
 import DashboardScreen from '../../screens/create-backup/dashboard-screen';
 import SetPasswordScreen from '../../screens/create-backup/set-password-screen';
+import { FORM_SHEET_OPTIONS } from '../navigation-utilities';
 import CreateBackupProcessingNavigator from './create-backup-processing-navigator';
 import { CreateBackupNavigatorParamList } from './create-backup-routes';
 
@@ -19,12 +19,7 @@ const CreateBackupNavigator = () => {
       <Stack.Screen
         component={CreateBackupProcessingNavigator}
         name="Processing"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
+        options={FORM_SHEET_OPTIONS}
       />
     </Stack.Navigator>
   );

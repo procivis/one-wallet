@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Platform } from 'react-native';
 
 import { RSEAddBiometricsScreen } from '../../screens/rse/rse-add-biometrics-screen';
 import { RSEChangePinScreen } from '../../screens/rse/rse-change-pin-screen';
@@ -17,6 +16,10 @@ import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
 import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
 import CreateBackupNavigator from '../create-backup/create-backup-navigator';
 import HistoryNavigator from '../history/history-navigator';
+import {
+  FORM_SHEET_OPTIONS,
+  FULL_SCREEN_MODAL_OPTIONS,
+} from '../navigation-utilities';
 import RestoreBackupNavigator from '../restore-backup/restore-backup-navigator';
 import { SettingsNavigatorParamList } from './settings-routes';
 
@@ -32,59 +35,30 @@ const SettingsNavigator = () => {
       <Stack.Screen
         component={AppInformationNerdScreen}
         name="AppInformationNerd"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}
+        options={FULL_SCREEN_MODAL_OPTIONS}
       />
-      <Stack.Screen
-        component={BiometricsSetScreen}
-        name="BiometricsSet"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      />
+      <Stack.Group screenOptions={FORM_SHEET_OPTIONS}>
+        <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
+        <Stack.Screen
+          component={DeleteWalletProcessScreen}
+          name="DeleteWalletProcess"
+        />
+        <Stack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
+      </Stack.Group>
+
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
       <Stack.Screen component={RestoreBackupNavigator} name="RestoreBackup" />
       <Stack.Screen component={DashboardScreen} name="SettingsDashboard" />
       <Stack.Screen component={DeleteWalletScreen} name="DeleteWallet" />
-      <Stack.Screen
-        component={DeleteWalletProcessScreen}
-        name="DeleteWalletProcess"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      />
+
       <Stack.Screen component={ClearCacheScreen} name="ClearCache" />
       <Stack.Screen component={HistoryNavigator} name="History" />
       <Stack.Screen component={PinCodeChangeScreen} name="PinCodeChange" />
-      <Stack.Screen
-        component={PinCodeSetScreen}
-        name="PinCodeSet"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      />
+
       <Stack.Screen
         component={RSEAddBiometricsScreen}
         name="RSEAddBiometrics"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}
+        options={FULL_SCREEN_MODAL_OPTIONS}
       />
       <Stack.Screen component={RSEChangePinScreen} name="RSEPinCodeChange" />
       <Stack.Screen component={LicencesScreen} name="Licences" />

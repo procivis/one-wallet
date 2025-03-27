@@ -3,6 +3,7 @@ import {
   Button,
   ButtonType,
   concatTestID,
+  ContrastingStatusBar,
   ExchangeProtocol,
   QrCode,
   ScrollViewScreen,
@@ -158,6 +159,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
       }}
       testID={testID}
     >
+      <ContrastingStatusBar backgroundColor={colorScheme.background} />
       <View style={styles.content} testID="QRCodeShareScreen.content">
         <Typography
           align="center"
