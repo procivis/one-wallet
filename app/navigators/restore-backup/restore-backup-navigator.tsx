@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Platform } from 'react-native';
 
 import DashboardScreen from '../../screens/restore-backup/dashboard-screen';
 import ImportScreen from '../../screens/restore-backup/import-screen';
 import RecoveryPasswordScreen from '../../screens/restore-backup/recovery-password-screen';
+import { FORM_SHEET_OPTIONS } from '../navigation-utilities';
 import RestoreBackupProcessingNavigator from './restore-backup-processing-navigator';
 import { RestoreBackupNavigatorParamList } from './restore-backup-routes';
 
@@ -22,12 +22,7 @@ const RestoreBackupNavigator = () => {
       <Stack.Screen
         component={RestoreBackupProcessingNavigator}
         name="Processing"
-        options={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
+        options={FORM_SHEET_OPTIONS}
       />
     </Stack.Navigator>
   );

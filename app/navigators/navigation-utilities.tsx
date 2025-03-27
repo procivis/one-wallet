@@ -3,8 +3,9 @@ import {
   NavigationState,
   PartialState,
 } from '@react-navigation/native';
+import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, Platform } from 'react-native';
 
 export const navigationRef = createNavigationContainerRef<any>();
 
@@ -168,3 +169,17 @@ export function resetRoot(
     navigationRef.resetRoot(params);
   }
 }
+
+/** screens displayed as full-screen modal */
+export const FULL_SCREEN_MODAL_OPTIONS: NativeStackNavigationOptions = {
+  animation: Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+  headerShown: false,
+  presentation: 'fullScreenModal',
+};
+
+/** screens displayed as action sheet overlay */
+export const FORM_SHEET_OPTIONS: NativeStackNavigationOptions = {
+  animation: Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+  headerShown: false,
+  presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
+};

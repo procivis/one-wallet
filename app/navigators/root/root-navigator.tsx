@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
-import { Platform } from 'react-native';
 
 import { useRuntimeDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
@@ -12,6 +11,10 @@ import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
 import CredentialManagementNavigator from '../credential-management/credential-management-navigator';
 import DashboardNavigator from '../dashboard/dashboard-navigator';
+import {
+  FORM_SHEET_OPTIONS,
+  FULL_SCREEN_MODAL_OPTIONS,
+} from '../navigation-utilities';
 import NerdModeNavigator from '../nerd-mode/nerd-mode-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
@@ -53,16 +56,7 @@ const RootNavigator: FunctionComponent = () => {
         <RootStack.Screen component={DashboardNavigator} name="Dashboard" />
       </RootStack.Group>
 
-      {/* screens displayed as action sheet overlay */}
-      <RootStack.Group
-        key="formSheet"
-        screenOptions={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'formSheet',
-        }}
-      >
+      <RootStack.Group screenOptions={FORM_SHEET_OPTIONS}>
         <RootStack.Screen
           component={CredentialManagementNavigator}
           name="CredentialManagement"
@@ -78,16 +72,7 @@ const RootNavigator: FunctionComponent = () => {
         />
       </RootStack.Group>
 
-      {/* screens displayed as full-screen modal */}
-      <RootStack.Group
-        key="fullScreenModal"
-        screenOptions={{
-          animation:
-            Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}
-      >
+      <RootStack.Group screenOptions={FULL_SCREEN_MODAL_OPTIONS}>
         <RootStack.Screen component={NerdModeNavigator} name="NerdMode" />
         <RootStack.Screen component={ImagePreviewScreen} name="ImagePreview" />
         <RootStack.Screen component={RSESignScreen} name="RSESign" />
