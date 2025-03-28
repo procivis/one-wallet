@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Button,
   ButtonType,
+  RadioGroupItem,
   useAppColorScheme,
   useCredentialSchemas,
 } from '@procivis/one-react-native-components';
@@ -13,7 +14,7 @@ import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
-import RadioGroup, { RadioGroupItem } from '../common/radio-group';
+import RadioGroup from '../common/radio-group';
 import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 
 export interface CredentialSchemaPickerProps {

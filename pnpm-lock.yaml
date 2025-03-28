@@ -17,8 +17,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(react@18.3.1)
       '@procivis/one-react-native-components':
-        specifier: ^0.3.4
-        version: 0.3.4(2dc45663a142d93ab7803cd6c4bad678)
+        specifier: ^0.3.5
+        version: 0.3.5(2dc45663a142d93ab7803cd6c4bad678)
       '@procivis/react-native-one-core':
         specifier: 1.38147.0
         version: 1.38147.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
@@ -1745,8 +1745,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.4':
-    resolution: {integrity: sha1-PjYHiW5FwoIuvLV1y1nsZy7o020=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.4.tgz}
+  '@procivis/one-react-native-components@0.3.5':
+    resolution: {integrity: sha1-T6HE6s9yohj25FEzH0dyn6X6upg=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.5.tgz}
     peerDependencies:
       '@procivis/react-native-one-core': ^1.37536.0
       '@procivis/react-native-picker': '*'
@@ -9798,7 +9798,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.4(2dc45663a142d93ab7803cd6c4bad678)':
+  '@procivis/one-react-native-components@0.3.5(2dc45663a142d93ab7803cd6c4bad678)':
     dependencies:
       '@procivis/react-native-one-core': 1.38147.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker': 5.0.3
