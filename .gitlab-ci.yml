@@ -410,7 +410,6 @@ set_jira_version:
     - .ci-tool:set_jira_version
 
 sdk:new_core_binding_mr:
-  image: node:18.16.0-alpine
   stage: sdk
   extends:
     - .modules_setup
@@ -419,6 +418,7 @@ sdk:new_core_binding_mr:
     YARN_ENABLE_IMMUTABLE_INSTALLS: false
     FILES_TO_COMMIT: "package.json pnpm-lock.yaml"
   before_script:
+    - *pnpm_install
     - *install-node-modules
     - apk add --update git jq curl
     - new_version=$(echo "$NEW_VERSION" | sed 's/^v//')
