@@ -31,7 +31,6 @@ variables:
   GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   GITHUB_PROJECT: "procivis/one-wallet"
 
-
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH
@@ -227,12 +226,15 @@ e2e:
     PROJECT: "js"
     PROJECT_PATH: "."
     AUTHOR: "Procivis"
+    INSTALL_DEPENDENCIES: "true"
   extends:
-    - .modules_setup
     - .only_main_or_tag
+  before_script:
+    - *pnpm_install
   script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
     - npm install -g @cyclonedx/cdxgen
+    - if [ "$INSTALL_DEPENDENCIES" = "true" ]; then pnpm install; fi
     - pnpm rnuc:dev
     - >
       cdxgen --required-only -p -t ${PROJECT} -o ${SBOM_FILE_PATH}
@@ -252,11 +254,12 @@ e2e:
 
 
 dtrack:android:upload-bom:
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.1
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.84.1-0.2
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
     SBOM_FILE_PATH: "android-sbom.json"
     PROJECT: "java"
+    PROJECT_PATH: "android/"
   extends:
       - .upload_bom
 
