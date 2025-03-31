@@ -102,6 +102,13 @@ Icons are in asstes folder under `AppIcon.{CONFIG_NAME}` image set.
 
 ### Detox E2E
 
+### Requirements
+
+Detox dependency `node-canvas` requires native dependencies installed to build and run properly. Use the link for details: https://github.com/Automattic/node-canvas?tab=readme-ov-file#compiling
+After installing canvas dependencies, reinstall node dependencies by removing `node_modules` and then `pnpm install` or using `pnpm rebuild`
+
+### Building
+
 In order to run the E2E tests, one needs to set up `.env.detox` file (in the root of this project) with desk url, username and password:
 
 ```
