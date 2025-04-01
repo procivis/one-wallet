@@ -124,7 +124,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   // Sets canHandleInvitation and loader state based on transport availability
   useEffect(() => {
-    if (canHandleInvitation !== undefined) {
+    if (canHandleInvitation) {
       return;
     }
     if (!availableTransport) {
