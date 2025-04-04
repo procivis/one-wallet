@@ -1,0 +1,501 @@
+{
+  "id": "2af126ff-6067-4c95-ab6e-9522692942f4",
+  "createdDate": "2025-02-25T10:47:15.525Z",
+  "lastModified": "2025-02-25T10:47:15.525Z",
+  "name": "ISO mDL",
+  "format": "MDOC",
+  "revocationMethod": "MDOC_MSO_UPDATE_SUSPENSION",
+  "organisationId": "a33519ee-48be-473b-9d14-4bcec0802c6b",
+  "claims": [
+    {
+      "id": "529ef45d-8bbb-43da-a2a5-3046b0b3a82f",
+      "createdDate": "2025-02-25T10:47:15.525Z",
+      "lastModified": "2025-02-25T10:47:15.525Z",
+      "key": "org.iso.18013.5.1",
+      "datatype": "OBJECT",
+      "required": true,
+      "array": false,
+      "claims": [
+        {
+          "id": "4b901aab-8764-48e1-b447-0a85afd7e2fe",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "family_name",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "310fd301-0f0c-453a-9991-c686e0f30152",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "given_name",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "71a3d86e-16b5-408c-8203-f059e035e6e7",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "birth_date",
+          "datatype": "BIRTH_DATE",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "cbf91fbe-40a3-4622-9044-e799fc10262d",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "issue_date",
+          "datatype": "DATE",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "8f304d57-8f84-4f5c-85e3-4c862b506e63",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "expiry_date",
+          "datatype": "DATE",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "dcff7341-2769-489e-ac04-2c166919749f",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "issuing_country",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "6ab68c57-cf55-4639-a6a8-ead615237d31",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "issuing_authority",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "665d23c6-d434-4d51-ab25-51b61dd94dd1",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "document_number",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "66a7132b-5b46-4782-8609-76a9d91798b3",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "portrait",
+          "datatype": "MDL_PICTURE",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "52b01ec1-16fd-4d58-86a5-38a6b70afa04",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "portrait_capture_date",
+          "datatype": "DATE",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "f9bd74b9-1b52-424b-a65a-a982fb162a53",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "driving_privileges",
+          "datatype": "OBJECT",
+          "required": true,
+          "array": true,
+          "claims": [
+            {
+              "id": "c77efeca-78e5-4f9d-a620-f567d5ec1173",
+              "createdDate": "2025-02-25T10:47:15.525Z",
+              "lastModified": "2025-02-25T10:47:15.525Z",
+              "key": "vehicle_category_code",
+              "datatype": "STRING",
+              "required": true,
+              "array": false,
+              "claims": []
+            },
+            {
+              "id": "14160186-23ec-4767-91e5-ced1612f6a52",
+              "createdDate": "2025-02-25T10:47:15.525Z",
+              "lastModified": "2025-02-25T10:47:15.525Z",
+              "key": "issue_date",
+              "datatype": "DATE",
+              "required": false,
+              "array": false,
+              "claims": []
+            },
+            {
+              "id": "7ab35123-00a4-466d-a79f-2f2c91639497",
+              "createdDate": "2025-02-25T10:47:15.525Z",
+              "lastModified": "2025-02-25T10:47:15.525Z",
+              "key": "expiry_date",
+              "datatype": "DATE",
+              "required": false,
+              "array": false,
+              "claims": []
+            },
+            {
+              "id": "8ee54e05-b6dc-417a-b779-2fdda894e72e",
+              "createdDate": "2025-02-25T10:47:15.525Z",
+              "lastModified": "2025-02-25T10:47:15.525Z",
+              "key": "codes",
+              "datatype": "OBJECT",
+              "required": false,
+              "array": true,
+              "claims": [
+                {
+                  "id": "8829d550-b575-4196-8ec8-83636a187f56",
+                  "createdDate": "2025-02-25T10:47:15.525Z",
+                  "lastModified": "2025-02-25T10:47:15.525Z",
+                  "key": "code",
+                  "datatype": "STRING",
+                  "required": true,
+                  "array": false,
+                  "claims": []
+                },
+                {
+                  "id": "0a1eed36-4086-4a90-adac-36be7d65238f",
+                  "createdDate": "2025-02-25T10:47:15.525Z",
+                  "lastModified": "2025-02-25T10:47:15.525Z",
+                  "key": "sign",
+                  "datatype": "STRING",
+                  "required": false,
+                  "array": false,
+                  "claims": []
+                },
+                {
+                  "id": "b8a9cb8f-3248-4b0f-990b-8d60e638af1f",
+                  "createdDate": "2025-02-25T10:47:15.525Z",
+                  "lastModified": "2025-02-25T10:47:15.525Z",
+                  "key": "value",
+                  "datatype": "STRING",
+                  "required": false,
+                  "array": false,
+                  "claims": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ed1a69b7-f8f9-4b9b-903f-1390e9c3788e",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "un_distinguishing_sign",
+          "datatype": "STRING",
+          "required": true,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "43fa4cfc-415b-4572-98ad-412b81cd6cae",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "administrative_number",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "2655c6eb-80d8-47d1-ae04-e7ed39ef1ee2",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "sex",
+          "datatype": "NUMBER",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "96e72ffd-d679-4538-b2ca-a5b1101396a9",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "height",
+          "datatype": "NUMBER",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "7c256500-8eb5-412f-bdfc-39364094b723",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "weight",
+          "datatype": "NUMBER",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "652b6b8b-017b-47a8-9293-e710aab1c642",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "eye_colour",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "f93bbe2d-4abb-4e4e-bd99-45b59337d941",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "eye_color",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "c44d92d5-8954-46e8-8d42-767e243e8574",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "hair_color",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "180dc232-b99a-4c12-a505-be17842c5d8c",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "hair_colour",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "275dc76a-87da-46bf-806c-09288df559bf",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "birth_place",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "d43b3d86-974e-4bc7-8d68-ca50e9141b8a",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "resident_address",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "1f970f8c-a483-49fe-8bc9-314c141622ee",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "resident_city",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "415e09ba-36f0-4875-afa0-17ea3c9684c2",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "resident_state",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "8416d373-bc4a-4430-913f-a1c56f65ce4c",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "resident_postal_code",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "3bcb4d6a-f805-44d2-a18f-51a0798e7d39",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "name_national_character",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "31ac5250-ce7e-4993-a0a1-654b757ef75b",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_in_years",
+          "datatype": "NUMBER",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "9227ede3-8df2-49f5-af98-d0a0ca072ba8",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_birth_year",
+          "datatype": "NUMBER",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "0fbd7a1b-0185-46fd-8f50-01751f923d8f",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "issuing_jurisdiction",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "431a4062-d892-4971-a9c7-f65c9338cb6a",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "nationality",
+          "datatype": "STRING",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "b280850a-516a-41fa-8884-95176924a443",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "signature_usual_mark",
+          "datatype": "MDL_PICTURE",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "68199a47-4403-42ad-b7bc-c545b104f2bf",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_18",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "111fc0d4-d262-476f-b074-cc560b8f8efb",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_21",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "8d359dbe-1b20-4832-876c-ea31d9afc040",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_13",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "d465d9b5-0310-428a-8c12-203508bea138",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_16",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "2ae82053-dab7-4703-abe9-78620bc3b1b2",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_25",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "da04cb23-acfe-4a38-b46f-85eb9ef135c7",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_60",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "a6a0ccb7-0d5d-47c1-a8ee-0ff9d213c54e",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_62",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "1a335c80-073e-43e3-b62c-6dfd02795b4d",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_65",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        },
+        {
+          "id": "c01829f1-7be5-458f-b163-e095f73faabe",
+          "createdDate": "2025-02-25T10:47:15.525Z",
+          "lastModified": "2025-02-25T10:47:15.525Z",
+          "key": "age_over_68",
+          "datatype": "BOOLEAN",
+          "required": false,
+          "array": false,
+          "claims": []
+        }
+      ]
+    }
+  ],
+  "walletStorageType": "HARDWARE",
+  "schemaId": "org.iso.18013.5.1.mDL",
+  "schemaType": "mdoc",
+  "importedSourceUrl": "https://core.demo.procivis-one.com/ssi/schema/v1/2af126ff-6067-4c95-ab6e-9522692942f4",
+  "layoutType": "CARD",
+  "allowSuspension": true,
+  "externalSchema": true
+}
