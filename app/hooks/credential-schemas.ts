@@ -15,10 +15,7 @@ export const useImportPredefinedCredentialSchemas = () => {
       await core
         .importCredentialSchema({
           organisationId,
-          schema: {
-            ...schema,
-            organisationId,
-          },
+          schema,
         })
         .catch((err) => {
           reportException(err, 'Error importing predefined credential schema');
