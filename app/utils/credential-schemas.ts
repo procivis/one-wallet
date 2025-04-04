@@ -2,7 +2,7 @@ import { ImportCredentialSchemaRequestSchema } from '@procivis/react-native-one-
 
 export const getCredentialSchemasFromAssets = () => {
   const schemas = require.context(
-    '../../assets/credential_schemas',
+    '../../assets/credential-schemas',
     true,
     /\.json$/,
   );
