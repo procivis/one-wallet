@@ -43,19 +43,8 @@ interface NavigationProps
   extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 const coreConfig = {
-  exchange: {
-    ISO_MDL: {
-      disabled: !config.featureFlags.isoMdl,
-    },
-    MDOC_OPENID4VP: {
-      params: {
-        private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
-        },
-      },
-    },
-    OPENID4VC: {
+  issuanceProtocol: {
+    OPENID4VCI_DRAFT13: {
       params: {
         private: {
           encryption:
@@ -73,17 +62,22 @@ const coreConfig = {
         },
       },
     },
-    UBIQU_RSE: { disabled: !config.featureFlags.ubiquRse },
+    UBIQU_RSE: { enabled: config.featureFlags.ubiquRse },
   },
   transport: {
     BLE: {
-      disabled: !config.featureFlags.bleEnabled,
+      enabled: config.featureFlags.bleEnabled,
     },
     HTTP: {
-      disabled: !config.featureFlags.httpTransportEnabled,
+      enabled: config.featureFlags.httpTransportEnabled,
     },
     MQTT: {
-      disabled: !config.featureFlags.mqttTransportEnabled,
+      enabled: config.featureFlags.mqttTransportEnabled,
+    },
+  },
+  verificationProtocol: {
+    ISO_MDL: {
+      enabled: config.featureFlags.isoMdl,
     },
   },
 };

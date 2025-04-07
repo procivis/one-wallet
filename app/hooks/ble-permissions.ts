@@ -1,9 +1,9 @@
 import {
-  ExchangeProtocol,
   getEnabledTransports,
   Transport,
   useCoreConfig,
   useMemoAsync,
+  VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import { useCallback, useState } from 'react';
 // eslint-disable-next-line react-native/split-platform-components
@@ -17,7 +17,9 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 
-type BLEExchange = ExchangeProtocol.OPENID4VC | ExchangeProtocol.ISO_MDL;
+type BLEExchange =
+  | VerificationProtocol.OPENID4VP_DRAFT20
+  | VerificationProtocol.ISO_MDL;
 
 const centralPermissionsAndroid = [
   PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
@@ -65,7 +67,7 @@ export const useBlePermissions = (exchange: BLEExchange) => {
 
   const { data: coreConfig } = useCoreConfig();
   const permissions =
-    exchange === ExchangeProtocol.OPENID4VC
+    exchange === VerificationProtocol.OPENID4VP_DRAFT20
       ? centralPermissions
       : peripheralPermissions;
 

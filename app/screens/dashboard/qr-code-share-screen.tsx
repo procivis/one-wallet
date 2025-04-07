@@ -4,7 +4,6 @@ import {
   ButtonType,
   concatTestID,
   ContrastingStatusBar,
-  ExchangeProtocol,
   QrCode,
   ScrollViewScreen,
   Typography,
@@ -12,6 +11,7 @@ import {
   useProofDelete,
   useProofState,
   useProposeProof,
+  VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
   OneError,
@@ -49,7 +49,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
   const { mutateAsync: proposeProof } = useProposeProof();
   const { mutateAsync: deleteProof } = useProofDelete();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions(ExchangeProtocol.ISO_MDL);
+    useBlePermissions(VerificationProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
   const [proof, setProof] = useState<ProposeProofResponse>();
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
@@ -72,7 +72,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
       return;
     }
 
-    proposeProof(ExchangeProtocol.ISO_MDL)
+    proposeProof(VerificationProtocol.ISO_MDL)
       .then((result) => {
         setProof(result);
       })

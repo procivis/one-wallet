@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  ExchangeProtocol,
   getCredentialSchemaWithoutImages,
   NerdModeItemProps,
   NerdModeScreen,
@@ -22,12 +21,6 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { addElementIf } from '../../utils/array';
 import { attributesLabels, entityLabels } from './utils';
 
-const parseExchangeProtocol = (
-  protocol: string,
-): ExchangeProtocol | undefined => {
-  return ExchangeProtocol[protocol as keyof typeof ExchangeProtocol];
-};
-
 const ProofDetailNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const nav = useNavigation<RootNavigationProp>();
@@ -40,8 +33,6 @@ const ProofDetailNerdView: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const procivisExchangeProtocol = parseExchangeProtocol(proofDetail.exchange);
-
   const proofRequestFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
@@ -51,10 +42,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.exchange'),
-      attributeText:
-        (procivisExchangeProtocol &&
-          translate(`proofRequest.exchange.${procivisExchangeProtocol}`)) ||
-        proofDetail.exchange,
+      attributeText: proofDetail.exchange,
     },
     {
       attributeKey: translate('proofRequest.createDate'),

@@ -1,7 +1,6 @@
 import {
   BluetoothError,
   BluetoothState,
-  ExchangeProtocol,
   getInvitationUrlTransports,
   InternetError,
   InternetState,
@@ -12,6 +11,7 @@ import {
   useBlockOSBackNavigation,
   useInvitationHandler,
   useOpenSettings,
+  VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import { OneError } from '@procivis/react-native-one-core';
 import {
@@ -62,7 +62,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions(ExchangeProtocol.OPENID4VC);
+    useBlePermissions(VerificationProtocol.OPENID4VP_DRAFT20);
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
   const {
