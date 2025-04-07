@@ -1,13 +1,13 @@
 import {
   Button,
   ButtonType,
-  ExchangeProtocol,
   getEnabledExchangeProtocols,
   getEnabledTransports,
   Transport,
   Typography,
   useAppColorScheme,
   useCoreConfig,
+  VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, {
@@ -108,7 +108,9 @@ const QRCodeScannerScreen: FunctionComponent = () => {
   const isIsoMdlEnabled = useMemo(
     () =>
       config &&
-      getEnabledExchangeProtocols(config).includes(ExchangeProtocol.ISO_MDL),
+      getEnabledExchangeProtocols(config.verificationProtocol).includes(
+        VerificationProtocol.ISO_MDL,
+      ),
     [config],
   );
 
