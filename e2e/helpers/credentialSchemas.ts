@@ -189,11 +189,7 @@ export const getCredentialSchemaData = ({
     claims: schemaClaims,
     format: format,
     layoutType: LayoutType.CARD,
-    name: `schema-${getCredentialSchemaName(
-      format,
-      revocationMethod,
-      walletStorageType,
-    )}-${shortUUID()}`,
+    name: schemaName,
     organisationId: organisationId ?? process.env.IssuerOrganisationId ?? '',
     revocationMethod: revocationMethod,
     walletStorageType: walletStorageType,

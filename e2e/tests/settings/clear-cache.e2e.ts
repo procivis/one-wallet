@@ -29,7 +29,7 @@ import {
 import {
   CredentialFormat,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   WalletKeyStorageType,
@@ -138,7 +138,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
       const credentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       credentialId = credentialIds.issuerCredentialId;
     });
@@ -172,7 +172,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         didData: didDetail,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 

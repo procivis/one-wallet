@@ -24,11 +24,12 @@ import {
   DataType,
   DidMethod,
   DidType,
-  Exchange,
+  IssuanceProtocol,
   KeyRole,
   KeyType,
   StorageType,
   TrustEntityRole,
+  VerificationProtocol,
 } from './enums';
 import { objectToQueryParams } from './utils';
 
@@ -167,7 +168,7 @@ export async function getTrustAnchor(
 
 export interface CredentialData {
   claimValues?: Array<{ claimId: string; path: string; value: string }>;
-  exchange?: Exchange;
+  exchange?: IssuanceProtocol;
   issuerDid: string;
   issuerKey?: string;
   redirectUri?: string;
@@ -183,10 +184,10 @@ const claimValue = (claim: CredentialClaimSchemaResponseDTO) => {
       value = '42';
       break;
     case DataType.DATE:
-      value = '2023-08-21T07:29:27.850Z';
+      value = '2023-08-21';
       break;
     case DataType.BIRTH_DATE:
-      value = '1996-02-21T21:00:00.000Z';
+      value = '1996-02-21';
       break;
     case DataType.PICTURE:
       value =
@@ -247,7 +248,7 @@ export async function createCredential(
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: schema.id,
-    exchange: credentialData?.exchange ?? Exchange.OPENID4VC,
+    exchange: credentialData?.exchange ?? IssuanceProtocol.OPENID4VCI_DRAFT13,
     issuerDid: credentialData?.issuerDid,
     issuerKey: credentialData?.issuerKey,
     redirectUri: credentialData?.redirectUri,
@@ -304,7 +305,7 @@ export async function createProofRequest(
   proofRequestData: Partial<ProofRequestData>,
 ): Promise<string> {
   const data = {
-    exchange: proofRequestData?.exchange ?? Exchange.OPENID4VC,
+    exchange: proofRequestData?.exchange ?? VerificationProtocol.OPENID4VP_DRAFT20,
     proofSchemaId: proofRequestData?.proofSchemaId,
     redirectUri: proofRequestData?.redirectUri,
     verifierDid: proofRequestData?.verifierDid,

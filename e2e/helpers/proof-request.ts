@@ -24,7 +24,7 @@ import {
   requestProof,
 } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { DidMethod, Exchange, KeyType, URLOption } from '../utils/enums';
+import { DidMethod, KeyType, URLOption, VerificationProtocol } from '../utils/enums';
 import { DEFAULT_WAIT_TIME, LONG_WAIT_TIME, RSEConfig } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -36,7 +36,7 @@ interface ProofSharingProops {
   customShareDataScreenTest?: (proofRequestId: string) => Promise<void>;
   didId?: string;
   didMethod?: DidMethod;
-  exchange?: Exchange;
+  exchange?: VerificationProtocol;
   keyAlgorithms?: KeyType | KeyType[];
   proofSchemaId: string;
   proofSharingUrlType?: URLOption;

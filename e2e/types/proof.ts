@@ -1,4 +1,4 @@
-import { DataType, Exchange } from '../utils/enums';
+import { DataType, VerificationProtocol } from '../utils/enums';
 import { CredentialClaimSchemaResponseDTO } from './credential';
 import { CredentialDetailCredSchemaDTO } from './credentialSchema';
 
@@ -18,6 +18,7 @@ export interface ProofSchemaListResponseDTO {
   lastModified: string;
   name: string;
 }
+
 export interface ProofCredSchemasListDTO {
   claimSchemas: ProofSchemaResponseClaimDTO[];
   credentialSchema: CredentialClaimSchemaResponseDTO;
@@ -47,7 +48,7 @@ export interface CreateProofSchemaRequestDTO {
 }
 
 export interface ProofRequestData {
-  exchange: Exchange;
+  exchange: VerificationProtocol;
   proofSchemaId: string;
   redirectUri?: string;
   verifierDid: string;

@@ -21,7 +21,7 @@ import {
 } from '../utils/bff-api';
 import {
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   URLOption,
   WalletKeyStorageType,
@@ -46,7 +46,7 @@ interface CredentialIssuanceProps {
   credentialSchema: CredentialSchemaResponseDTO;
   didData?: DidDetailDTO;
   didFilter?: DidFilter;
-  exchange?: Exchange;
+  exchange?: IssuanceProtocol;
   invitationUrlType?: URLOption;
   redirectUri?: string;
   rseConfig?: RSEConfig;
@@ -61,7 +61,7 @@ const acceptRSECredential = async (
   rseConfig: RSEConfig = { PINCode: '12345', isRSEOnboarded: false },
 ) => {
   if (!rseConfig.isRSEOnboarded) {
-    await expect(RemoteSecureElementInfoScreen.screen).toBeVisible(1);
+    await waitForElementVisible(RemoteSecureElementInfoScreen.screen);
     await expect(RemoteSecureElementInfoScreen.continueButton).toBeVisible();
     if (device.getPlatform() === 'ios') {
       await delay(1000); // Need delay for ios
@@ -177,7 +177,7 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
     data.credentialSchema,
     {
       claimValues: data.claimValues,
-      exchange: data.exchange ?? Exchange.OPENID4VC,
+      exchange: data.exchange ?? IssuanceProtocol.OPENID4VCI_DRAFT13,
       issuerDid: issuerDidId,
       redirectUri: data.redirectUri,
     },

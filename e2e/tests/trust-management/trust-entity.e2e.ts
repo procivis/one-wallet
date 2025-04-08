@@ -42,10 +42,11 @@ import { getTrustEntityRequestData } from '../../utils/data-utils';
 import {
   CredentialFormat,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   TrustEntityRole,
+  VerificationProtocol,
 } from '../../utils/enums';
 import { launchApp } from '../../utils/init';
 
@@ -66,7 +67,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     authToken: authToken,
     credentialSchema: credentialSchema,
     didData: issuerDid,
-    exchange: Exchange.OPENID4VC,
+    exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
   };
   const issuerHolderCredentialIds =
     await offerCredentialAndReviewCredentialOfferScreen(data);
@@ -85,13 +86,13 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     }
     await CredentialOfferScreen.scrollTo(CredentialOfferScreen.disclaimer);
     if (trustEntity.termsUrl && trustEntity.privacyUrl) {
-      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+      await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
         'By tapping on “accept” you agree to the Terms of services and Privacy policy provided by this entity.',
-      );
+      ).withTimeout(4000);
     } else if (trustEntity.termsUrl) {
-      await expect(CredentialOfferScreen.disclaimer).toHaveText(
+      await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
         'By tapping on “accept” you agree to the Terms of services provided by this entity.',
-      );
+      ).withTimeout(4000);
     } else if (trustEntity.privacyUrl) {
       await expect(CredentialOfferScreen.disclaimer).toHaveText(
         'By tapping on “accept” you agree to the Privacy policy provided by this entity.',
@@ -111,7 +112,6 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   }
   await CredentialOfferScreen.infoButton.tap();
   await expect(CredentialNerdScreen.screen).toBeVisible(1);
-
   if (trustEntity) {
     if (
       trustEntity.role === TrustEntityRole.BOTH ||
@@ -171,7 +171,7 @@ const proofSharingWithDidTrustEntityAndVerify = async (
 ) => {
   const proofRequestData = {
     didId: verifierDid.id,
-    exchange: Exchange.OPENID4VC,
+    exchange: VerificationProtocol.OPENID4VP_DRAFT20,
     proofSchemaId: proofSchemaId,
   };
 
@@ -327,6 +327,7 @@ describe('Credential issuance with trust entity', () => {
     let verifierTrustEntity: TrustEntityResponseDTO;
     let bothRoleTrustEntity: TrustEntityResponseDTO;
     let didNotInTrustAnchor: DidDetailDTO;
+
     beforeAll(async () => {
       credentialSchemaSD_JWT = await createCredentialSchema(
         authToken,
@@ -357,7 +358,7 @@ describe('Credential issuance with trust entity', () => {
       });
       const issuerDid = await createDidWithKey(authToken, {
         didMethod: DidMethod.KEY,
-        keyType: KeyType.ES256,
+        keyType: KeyType.ECDSA,
       });
       const trustAnchor = await getTrustAnchor(authToken);
       const issuerTrustEntityId = await createTrustEntity(
@@ -418,7 +419,7 @@ describe('Credential issuance with trust entity', () => {
 
       didNotInTrustAnchor = await createDidWithKey(authToken, {
         didMethod: DidMethod.WEB,
-        keyType: KeyType.ES256,
+        keyType: KeyType.ECDSA,
       });
     });
 
@@ -451,7 +452,7 @@ describe('Credential issuance with trust entity', () => {
         authToken: authToken,
         credentialSchema: credentialSchemaSD_JWT,
         didData: didNotInTrustAnchor,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
 
       await proofSharingWithDidTrustEntityAndVerify(
@@ -487,7 +488,7 @@ describe('Credential issuance with trust entity', () => {
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         didData: issuerTrustEntity.did,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const credentialWithoutTrustEntityId =
         await issueCredentialWithDidTrustEntityAndVerify(

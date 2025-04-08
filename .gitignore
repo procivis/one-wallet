@@ -119,3 +119,4 @@ artifacts
 
 # pnpm
 .pnpm-store
+.yarn

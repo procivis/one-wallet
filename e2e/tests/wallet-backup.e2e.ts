@@ -16,7 +16,7 @@ import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { bffLogin, createCredentialSchema } from '../utils/bff-api';
 import { verifyButtonEnabled } from '../utils/button';
-import { CredentialFormat, Exchange } from '../utils/enums';
+import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 
 describe('ONE-1530: Backup & Restore', () => {
@@ -61,7 +61,7 @@ describe('ONE-1530: Backup & Restore', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 

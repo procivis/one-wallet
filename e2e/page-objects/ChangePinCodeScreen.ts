@@ -1,4 +1,4 @@
-export default abstract class PinCodeChangeScreen {
+export default class PinCodeChangeScreen {
   static get screen() {
     return element(by.id('PinCodeChangeScreen'));
   }

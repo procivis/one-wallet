@@ -15,7 +15,7 @@ import {
   createCredentialSchema,
   offerCredential,
 } from '../utils/bff-api';
-import { CredentialFormat, Exchange } from '../utils/enums';
+import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
 import { launchApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
 
@@ -54,7 +54,7 @@ describe('ONE-224: Wallet history', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.settingsButton.tap();

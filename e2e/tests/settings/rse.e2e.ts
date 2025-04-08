@@ -24,7 +24,7 @@ import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { bffLogin, createCredentialSchema } from '../../utils/bff-api';
 import {
   CredentialFormat,
-  Exchange,
+  IssuanceProtocol,
   RevocationMethod,
   WalletKeyStorageType,
 } from '../../utils/enums';
@@ -59,7 +59,7 @@ describe('RSE Remote PIN Code', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_JWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: globalRSEConfig,
       });
       globalRSEConfig.isRSEOnboarded = true;
@@ -105,7 +105,7 @@ describe('RSE Remote PIN Code', () => {
     await offerCredentialAndReviewCredentialOfferScreen({
       authToken: authToken,
       credentialSchema: credentialSchemaRSE_JWT,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       rseConfig: { PINCode: globalRSEConfig.PINCode, isRSEOnboarded: false },
     });
 
@@ -173,7 +173,7 @@ describe('RSE Remote PIN Code', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: credentialSchemaRSE_JWT,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       rseConfig: globalRSEConfig,
     });
   });

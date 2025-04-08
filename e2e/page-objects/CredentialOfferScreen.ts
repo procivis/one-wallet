@@ -57,7 +57,7 @@ export default class CredentialOfferScreen {
         );
       },
       get rejectButton() {
-        return element(by.text('REJECT'));
+        return element(by.text('Reject'));
       },
       get title() {
         return element(by.text('Reject offering'));

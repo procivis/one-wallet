@@ -1,8 +1,8 @@
 export enum KeyType {
   BBS_PLUS = 'BBS_PLUS',
   DILITHIUM = 'DILITHIUM',
-  EDDSA = 'EDDSA',
-  ES256 = 'ES256',
+  ECDSA = 'ECDSA',
+  EDDSA = 'EDDSA'
 }
 
 export enum KeyRole {
@@ -33,10 +33,15 @@ export enum DidMethod {
   X509 = 'X509',
 }
 
-export enum Exchange {
-  MDL = 'MDL',
-  OPENID4VC = 'OPENID4VC',
-  PROCIVIS = 'PROCIVIS_TEMPORARY',
+
+export enum VerificationProtocol {
+  MDL = 'ISO_MDL',
+  MDOC_OPENID4VP = 'MDOC_OPENID4VP',
+  OPENID4VP_DRAFT20 = 'OPENID4VP_DRAFT20'
+}
+
+export enum IssuanceProtocol {
+  OPENID4VCI_DRAFT13 = 'OPENID4VCI_DRAFT13',
 }
 
 export enum RevocationMethod {

@@ -12,9 +12,10 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
+  VerificationProtocol,
 } from '../utils/enums';
 import { launchApp } from '../utils/init';
 
@@ -120,9 +121,9 @@ describe.skip('ONE-614: Proof request', () => {
       credentialSchema: mdocSchema,
       didFilter: {
         didMethods: DidMethod.MDL,
-        keyAlgorithms: KeyType.ES256,
+        keyAlgorithms: KeyType.ECDSA,
       },
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
     });
   });
 
@@ -147,7 +148,7 @@ describe.skip('ONE-614: Proof request', () => {
     await proofSharing(authToken, {
       data: {
         customShareDataScreenTest: mdocCredentialTest,
-        exchange: Exchange.OPENID4VC,
+        exchange: VerificationProtocol.OPENID4VP_DRAFT20,
         proofSchemaId: singleClaimMdocProofSchema.id,
       },
     });
@@ -184,7 +185,7 @@ describe.skip('ONE-614: Proof request', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaJwtSchema,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
     });
     const jwtProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema, diplomaJwtSchema],
@@ -228,7 +229,7 @@ describe.skip('ONE-614: Proof request', () => {
     await proofSharing(authToken, {
       data: {
         customShareDataScreenTest: mdocCredentialSharingTest,
-        exchange: Exchange.OPENID4VC,
+        exchange: VerificationProtocol.OPENID4VP_DRAFT20,
         proofSchemaId: jwtProofSchemaWithMdoc.id,
       },
     });
@@ -265,7 +266,7 @@ describe.skip('ONE-614: Proof request', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomaSdjwtSchema,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
     });
     const sdjwtProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema, diplomaSdjwtSchema],
@@ -308,7 +309,7 @@ describe.skip('ONE-614: Proof request', () => {
     await proofSharing(authToken, {
       data: {
         customShareDataScreenTest: mdocCredentialSharingTest,
-        exchange: Exchange.OPENID4VC,
+        exchange: VerificationProtocol.OPENID4VP_DRAFT20,
         proofSchemaId: sdjwtProofSchemaWithMdoc.id,
       },
     });
@@ -348,7 +349,7 @@ describe.skip('ONE-614: Proof request', () => {
       didFilter: {
         keyAlgorithms: KeyType.BBS_PLUS,
       },
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
     });
     const bbsProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema, diplomaBBSSchema],
@@ -391,7 +392,7 @@ describe.skip('ONE-614: Proof request', () => {
     await proofSharing(authToken, {
       data: {
         customShareDataScreenTest: mdocCredentialSharingTest,
-        exchange: Exchange.OPENID4VC,
+        exchange: VerificationProtocol.OPENID4VP_DRAFT20,
         proofSchemaId: bbsProofSchemaWithMdoc.id,
       },
     });
@@ -429,7 +430,7 @@ describe.skip('ONE-614: Proof request', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: diplomajsonLDSchema,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
     });
     const jsonLDProofSchemaWithMdoc = await proofSchemaCreate(authToken, {
       credentialSchemas: [mdocSchema, diplomajsonLDSchema],
@@ -473,7 +474,7 @@ describe.skip('ONE-614: Proof request', () => {
     await proofSharing(authToken, {
       data: {
         customShareDataScreenTest: mdocCredentialSharingTest,
-        exchange: Exchange.OPENID4VC,
+        exchange: VerificationProtocol.OPENID4VP_DRAFT20,
         proofSchemaId: jsonLDProofSchemaWithMdoc.id,
       },
     });
@@ -562,9 +563,9 @@ describe.skip('ONE-614: Proof request', () => {
         credentialSchema: driverLicenceSchema,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -604,7 +605,7 @@ describe.skip('ONE-614: Proof request', () => {
       await proofSharing(authToken, {
         data: {
           customShareDataScreenTest: mdocCredentialTest,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: driverLicenceProofSchema.id,
         },
       });
