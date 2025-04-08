@@ -120,3 +120,6 @@ artifacts
 # pnpm
 .pnpm-store
 .yarn
+
+# postinstall script artefacts
+/assets/credential-schemas
