@@ -12,7 +12,7 @@ import {
 import {
   CredentialFormat,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   WalletKeyStorageType,
@@ -20,8 +20,8 @@ import {
 import { launchApp, reloadApp } from '../../utils/init';
 
 const credentialFormatIssuance = (format: CredentialFormat) => {
-  const exchange = Exchange.OPENID4VC;
-  let keyType = KeyType.ES256;
+  const exchange = IssuanceProtocol.OPENID4VCI_DRAFT13;
+  let keyType = KeyType.ECDSA;
   let didMethod = DidMethod.KEY;
 
   switch (format) {

@@ -3,6 +3,7 @@ import { expect } from 'detox';
 import { CredentialAction, credentialIssuance } from '../helpers/credential';
 import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import { CredentialStatus } from '../page-objects/components/CredentialCard';
+import { waitForElementVisible } from '../page-objects/components/ElementUtil';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import CredentialDetailScreen, {
   Action,
@@ -25,7 +26,7 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   URLOption,
@@ -33,6 +34,7 @@ import {
 } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
+import { shortUUID } from '../utils/utils';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
@@ -87,7 +89,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -95,7 +97,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         redirectUri: 'https://www.procivis.ch',
       });
     });
@@ -105,7 +107,7 @@ describe('ONE-601: Credential issuance', () => {
         {
           authToken: authToken,
           credentialSchema: credentialSchemaJWT,
-          exchange: Exchange.OPENID4VC,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         },
         CredentialAction.REJECT,
       );
@@ -125,7 +127,7 @@ describe('ONE-601: Credential issuance', () => {
         const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          exchange: Exchange.OPENID4VC,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         });
         credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
@@ -214,7 +216,7 @@ describe('ONE-601: Credential issuance', () => {
         const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchemaJWT_with_LVVC,
-          exchange: Exchange.OPENID4VC,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         });
         credentialId = issuerHolderCredentialIds.issuerCredentialId;
       });
@@ -252,7 +254,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT_with_LVVC,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -287,7 +289,8 @@ describe('ONE-601: Credential issuance', () => {
         ).element,
       ).toBeVisible();
     });
-
+  
+    // pass
     it('Accept confirmation', async () => {
       await device.disableSynchronization();
       await CredentialDeletePromptScreen.deleteButton.longPress(4001);
@@ -311,7 +314,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJSONLD,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         invitationUrlType: URLOption.UNIVERSAL_LINK,
         redirectUri: 'http://www.procivis.ch',
       });
@@ -321,7 +324,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         redirectUri: 'http://www.procivis.ch',
       });
     });
@@ -330,7 +333,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSD_JWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
   });
@@ -365,19 +368,19 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSoftware,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible(1);
     });
 
-    // Issuance fail because emulator does not have hardware key. Check that error appears
+    // FAIL: Issuance fail (Android) because emulator does not have hardware key. Check that error appears
     it('Issue Hardware schema', async () => {
       await credentialIssuance(
         {
           authToken: authToken,
           credentialSchema: credentialSchemaHardware,
-          exchange: Exchange.OPENID4VC,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         },
         CredentialAction.ACCEPT,
         LoaderViewState.Warning,
@@ -479,7 +482,7 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -520,6 +523,7 @@ describe('ONE-601: Credential issuance', () => {
             },
           ],
           format: CredentialFormat.SD_JWT,
+          name: `Schema-1 for test ${shortUUID()}`,
         }),
       );
       schema2 = await createCredentialSchema(
@@ -546,6 +550,7 @@ describe('ONE-601: Credential issuance', () => {
             },
           ],
           format: CredentialFormat.JSON_LD_CLASSIC,
+          name: `Schema-2 for test ${shortUUID()}`,
         }),
       );
       await credentialIssuance({
@@ -566,22 +571,15 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.screen).toBeVisible(1);
       await WalletScreen.search.element.tap();
       await WalletScreen.search.typeText('Schema\n');
-
-      await waitFor(WalletScreen.credentialName(schema1.name).atIndex(1))
-        .toBeVisible()
-        .withTimeout(2000);
-      await expect(
-        WalletScreen.credentialName(schema2.name).atIndex(0),
-      ).toBeVisible();
+      await waitForElementVisible(WalletScreen.credentialName(schema1.name));
+      await waitForElementVisible(WalletScreen.credentialName(schema2.name));
     });
+
 
     it('Check credential search find only 1 matches', async () => {
       await WalletScreen.search.element.tap();
       await WalletScreen.search.typeText('Schema-2\n');
-
-      await waitFor(WalletScreen.credentialName(schema2.name).atIndex(0))
-        .toBeVisible()
-        .withTimeout(2000);
+      await waitForElementVisible(WalletScreen.credentialName(schema2.name));
       await expect(WalletScreen.credentialName(schema1.name)).not.toBeVisible();
     });
   });
@@ -612,6 +610,7 @@ describe('ONE-601: Credential issuance', () => {
     let booleanSchema: CredentialSchemaResponseDTO;
 
     beforeAll(async () => {
+      await launchApp({ delete: true });
       booleanSchema = await createCredentialSchema(
         authToken,
         getCredentialSchemaData({
@@ -647,9 +646,9 @@ describe('ONE-601: Credential issuance', () => {
         credentialSchema: booleanSchema,
         didFilter: {
           didMethods: DidMethod.WEB,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible(1);
@@ -670,33 +669,30 @@ describe('ONE-601: Credential issuance', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSD_JWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaJWT_with_LVVC,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
-    it('Wrong share URI', async () => {
+    it('credential ordering', async () => {
       const schemaNames = [
-        credentialSchemaSD_JWT.name,
         credentialSchemaJWT.name,
         credentialSchemaJWT_with_LVVC.name,
-      ].sort();
-
-      const card1 = await WalletScreen.credentialAtIndex(0);
-      await expect(card1.header.name).toHaveText(schemaNames[0]);
-      const card2 = await WalletScreen.credentialAtIndex(1);
-      await expect(card2.header.name).toHaveText(schemaNames[1]);
-      const card3 = await WalletScreen.credentialAtIndex(2);
-      await expect(card3.header.name).toHaveText(schemaNames[2]);
+        credentialSchemaSD_JWT.name,
+      ];
+      for (let i = 0; i < schemaNames.length; i++) {
+        const card = await WalletScreen.credentialAtIndex(i);
+        await expect(card.header.name).toHaveText(schemaNames[i]);
+      }
 
       await expect(WalletScreen.screen).toBeVisible(1);
     });

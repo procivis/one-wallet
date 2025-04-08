@@ -1,4 +1,4 @@
-export default abstract class CredentialDeletePromptScreen {
+export default class CredentialDeletePromptScreen {
   static get deleteButton() {
     return element(by.id('CredentialDeletePromptScreen.mainButton'));
   }

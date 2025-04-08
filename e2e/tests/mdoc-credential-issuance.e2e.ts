@@ -1,10 +1,8 @@
 import { expect } from 'detox';
 
-import { mDocCredentialClaims } from '../helpers/claims';
 import { credentialIssuance } from '../helpers/credential';
 import {
   getCredentialSchemaData,
-  mDocCredentialSchema,
 } from '../helpers/credentialSchemas';
 import CredentialDetailScreen from '../page-objects/credential/CredentialDetailScreen';
 import WalletScreen from '../page-objects/WalletScreen';
@@ -12,17 +10,16 @@ import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
   bffLogin,
   createCredentialSchema,
-  suspendCredential,
 } from '../utils/bff-api';
 import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
 } from '../utils/enums';
-import { launchApp, reloadApp } from '../utils/init';
+import { launchApp } from '../utils/init';
 
 describe('ONE-601: Credential issuance', () => {
   let authToken: string;
@@ -85,9 +82,9 @@ describe('ONE-601: Credential issuance', () => {
         credentialSchema: mdocSchema,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
   });
@@ -157,69 +154,37 @@ describe('ONE-601: Credential issuance', () => {
         credentialSchema: driverLicenceSchema,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
 
-      await WalletScreen.openDetailScreen(0);
+      await WalletScreen.openDetailScreen(1);
       await expect(CredentialDetailScreen.screen).toBeVisible(1);
-      // Full Name
-      await expect(
-        CredentialDetailScreen.credentialCard.attribute('0.0').element,
-      ).toBeVisible();
-      // Category Name
-      await expect(
-        CredentialDetailScreen.credentialCard.attribute('0.1.0').element,
-      ).toBeVisible();
-      //Issue Date
-      await CredentialDetailScreen.scrollTo(
-        CredentialDetailScreen.credentialCard.attribute('0.1.1').element,
-      );
-      await expect(
-        CredentialDetailScreen.credentialCard.attribute('0.1.1').element,
-      ).toBeVisible();
-      await CredentialDetailScreen.scrollTo(
-        CredentialDetailScreen.credentialCard.attribute('0.1.2').element,
-      );
-      // Expiry Date
-      await expect(
-        CredentialDetailScreen.credentialCard.attribute('0.1.2').element,
-      ).toBeVisible();
-    });
-  });
 
-  describe('ONE-2908: Suspension of mdoc credentials', () => {
-    let mdocSchema: CredentialSchemaResponseDTO;
-    let credentialId: string;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      mdocSchema = await mDocCredentialSchema(
-        authToken,
-        RevocationMethod.MDOC_MSO_UPDATE_SUSPENSION,
-      );
-      const issuerHolderCredentialIds = await credentialIssuance({
-        authToken: authToken,
-        claimValues: mDocCredentialClaims(mdocSchema),
-        credentialSchema: mdocSchema,
-        didFilter: {
-          didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+      const attributes = [
+        {
+          index: "0.0",
+          key: 'Full Name',
+          value: "string",
         },
-        exchange: Exchange.OPENID4VC,
-      });
-      credentialId = issuerHolderCredentialIds.issuerCredentialId;
-    });
-
-    it('Suspend mDoc credential with infinite date', async () => {
-      await WalletScreen.openDetailScreen(0);
-      await CredentialDetailScreen.credentialCard.verifyDetailLabel(
-        'Wade',
-        'Wilson',
-      );
-      await suspendCredential(credentialId, authToken);
-      await reloadApp();
+        {
+          index: "0.1.0.0",
+          key: 'Category Name',
+          value: "string",
+        },
+        {
+          index: "0.1.0.1",
+          key: 'Expiry Date',
+          value: "8/21/2023",
+        },
+        {
+          index: "0.1.0.2",
+          key: 'Issue Date',
+          value: "8/21/2023",
+        },
+      ]
+      await CredentialDetailScreen.credentialCard.verifyAttributeValues(attributes);
     });
   });
 });

@@ -22,7 +22,7 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   WalletKeyStorageType,
@@ -44,6 +44,7 @@ describe('RSE Ubiqu', () => {
   let credentialSchemaRSE_MDOC: CredentialSchemaResponseDTO;
   let proofSchema: ProofSchemaResponseDTO;
   let combinedProofSchema: ProofSchemaResponseDTO;
+
   beforeAll(async () => {
     await launchApp();
     authToken = await bffLogin();
@@ -135,7 +136,7 @@ describe('RSE Ubiqu', () => {
     await credentialIssuance({
       authToken: authToken,
       credentialSchema: credentialSchemaRSE_JWT,
-      exchange: Exchange.OPENID4VC,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       redirectUri: 'https://procivis.ch',
     });
   });
@@ -148,7 +149,7 @@ describe('RSE Ubiqu', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_SDJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: false },
       });
     });
@@ -157,7 +158,7 @@ describe('RSE Ubiqu', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_SDJWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         redirectUri: 'https://procivis.ch',
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       });
@@ -226,13 +227,13 @@ describe('RSE Ubiqu', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_JSONLD,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       });
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_JWT,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       });
       await credentialIssuance({
@@ -241,7 +242,7 @@ describe('RSE Ubiqu', () => {
         didFilter: {
           keyAlgorithms: KeyType.BBS_PLUS,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       });
       await credentialIssuance({
@@ -249,16 +250,16 @@ describe('RSE Ubiqu', () => {
         credentialSchema: credentialSchemaRSE_MDOC,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         rseConfig: { PINCode: remotePINCode, isRSEOnboarded: true },
       });
       // Credential sharing page is keep loading if sdjwt vc is includeded
       // await credentialIssuance({
       //   authToken: authToken,
       //   credentialSchema: credentialSchemaRSE_SDJWTVC,
-      //   exchange: Exchange.OPENID4VC,
+      //   exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       //   rseConfig: { isRSEOnboarded: true, PINCode: remotePINCode },
       // });
 

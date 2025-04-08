@@ -1,4 +1,4 @@
-export default abstract class HistoryDetailScreen {
+export default class HistoryDetailScreen {
   static get screen() {
     return element(by.id('HistoryDetailScreen'));
   }
