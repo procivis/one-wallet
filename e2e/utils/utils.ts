@@ -1,4 +1,3 @@
-import { waitFor } from 'detox';
 import { NativeElementActions } from 'detox/detox';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -30,7 +29,6 @@ export const shortUUID = () => {
 };
 
 export async function getIdentifier(element: NativeElementActions) {
-  await waitFor(element).toBeVisible().withTimeout(3000);
   const attributes = await element.getAttributes();
   if ('identifier' in attributes) {
     return attributes.identifier;

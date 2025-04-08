@@ -32,7 +32,7 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
 } from '../utils/enums';
@@ -80,7 +80,7 @@ describe('ONE-2014: Credential design', () => {
         didFilter: {
           didMethods: DidMethod.JWK,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const credentialId = issuerHolderCredentialIds.issuerCredentialId;
       await WalletScreen.openDetailScreen(0);
@@ -162,7 +162,7 @@ describe('ONE-2014: Credential design', () => {
       const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: schema1,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const credentialId = issuerHolderCredentialIds.issuerCredentialId;
 
@@ -258,7 +258,7 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schemaWithoutLayout,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible(1);
@@ -275,7 +275,7 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schemaWithLayout,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13
       });
       await WalletScreen.openDetailScreen(0);
       await expect(CredentialDetailScreen.screen).toBeVisible(1);
@@ -289,7 +289,7 @@ describe('ONE-2014: Credential design', () => {
     });
   });
 
-  // Pass
+  // FAIL
   describe('ONE-2300: Card Stack View: highlight individual Credential', () => {
     beforeAll(async () => {
       await launchApp({ delete: true });
@@ -397,17 +397,17 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken,
         credentialSchema: schema_1,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await credentialIssuance({
         authToken,
         credentialSchema: schema_2,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await credentialIssuance({
         authToken,
         credentialSchema: schema_3,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     }, 220000);
 
@@ -559,7 +559,7 @@ describe('ONE-2014: Credential design', () => {
           },
         ],
         credentialSchema: schema1,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
     });
@@ -600,7 +600,7 @@ describe('ONE-2014: Credential design', () => {
 
       await CredentialDetailScreen.credentialCard.collapseOrExpand();
     });
-
+    // FAIL
     it('Test credential carousel', async () => {
       await CredentialDetailScreen.credentialCard.verifyImageIsVisible(
         CarouselImageType.Photo,
@@ -635,9 +635,9 @@ describe('ONE-2014: Credential design', () => {
         credentialSchema: mdocSchema,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: KeyType.ES256,
+          keyAlgorithms: KeyType.ECDSA,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
     });

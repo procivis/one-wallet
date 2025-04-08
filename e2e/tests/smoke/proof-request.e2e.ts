@@ -32,10 +32,11 @@ import {
   CredentialFormat,
   DataType,
   DidMethod,
-  Exchange,
+  IssuanceProtocol,
   KeyType,
   RevocationMethod,
   URLOption,
+  VerificationProtocol,
 } from '../../utils/enums';
 import { launchApp } from '../../utils/init';
 import { shortUUID } from '../../utils/utils';
@@ -68,14 +69,14 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
     it('Confirm proof request', async () => {
       await proofSharing(authToken, {
         data: {
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
       });
@@ -84,7 +85,7 @@ describe('ONE-614: Proof request', () => {
     it('Confirm proof request with universal link', async () => {
       await proofSharing(authToken, {
         data: {
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
           proofSharingUrlType: URLOption.UNIVERSAL_LINK,
         },
@@ -170,7 +171,7 @@ describe('ONE-614: Proof request', () => {
           },
         ],
         credentialSchema: jwtCredentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       jwtCredentialId = jwtCredentialIds.issuerCredentialId;
       await credentialIssuance({
@@ -188,14 +189,14 @@ describe('ONE-614: Proof request', () => {
           },
         ],
         credentialSchema: sdjwtCredentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     }, 200000);
 
     it('displays selective disclosure notice and all claims', async () => {
       await proofSharing(authToken, {
         data: {
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
           selectiveDisclosureCredentials: [jwtCredentialId],
         },
@@ -218,7 +219,7 @@ describe('ONE-614: Proof request', () => {
           },
         ],
         credentialSchema: sdjwtCredentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const selectiveDisclosureTest = async () => {
         await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
@@ -243,7 +244,7 @@ describe('ONE-614: Proof request', () => {
       await proofSharing(authToken, {
         data: {
           customShareDataScreenTest: selectiveDisclosureTest,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
           selectiveDisclosureCredentials: [jwtCredentialId],
         },
@@ -281,7 +282,7 @@ describe('ONE-614: Proof request', () => {
       const issuerHolderCredentialIds = await credentialIssuance({
         authToken: authToken,
         credentialSchema: pictureCredentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       credentialId = issuerHolderCredentialIds.issuerCredentialId;
     });
@@ -300,7 +301,7 @@ describe('ONE-614: Proof request', () => {
       await proofSharing(authToken, {
         data: {
           customShareDataScreenTest: proofSharingScreenTest,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: pictureProofSchema.id,
           selectiveDisclosureCredentials: [credentialId],
         },
@@ -316,14 +317,14 @@ describe('ONE-614: Proof request', () => {
 
     interface TestCombination {
       credentialFormat: CredentialFormat;
-      issuanceExchange: Exchange;
-      proofExchange: Exchange;
+      issuanceExchange: IssuanceProtocol;
+      proofExchange: VerificationProtocol;
     }
 
     const SUPPORTED = {
       credentialFormat: [CredentialFormat.JWT, CredentialFormat.SD_JWT],
-      issuanceExchange: [Exchange.OPENID4VC],
-      proofExchange: [Exchange.OPENID4VC],
+      issuanceExchange: [IssuanceProtocol.OPENID4VCI_DRAFT13],
+      proofExchange: [VerificationProtocol.OPENID4VP_DRAFT20],
     };
 
     const COMBINATIONS: TestCombination[] = lodash
@@ -386,14 +387,14 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
     it('Proof request checks LVVC', async () => {
       await proofSharing(authToken, {
         data: {
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchemaLVVC.id,
         },
       });
@@ -431,7 +432,7 @@ describe('ONE-614: Proof request', () => {
     });
   });
 
-  // Pass
+  // FAIL
   describe('ONE-1579: Introduce credential schema type', () => {
     let swissPassport: CredentialSchemaResponseDTO;
     let driverLicenceSchema: CredentialSchemaResponseDTO;
@@ -577,9 +578,9 @@ describe('ONE-614: Proof request', () => {
         credentialSchema: driverLicenceSchema,
         didFilter: {
           didMethods: DidMethod.MDL,
-          keyAlgorithms: [KeyType.ES256],
+          keyAlgorithms: [KeyType.ECDSA],
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await credentialIssuance({
         authToken: authToken,
@@ -609,7 +610,7 @@ describe('ONE-614: Proof request', () => {
         didFilter: {
           didMethods: DidMethod.KEY,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -624,8 +625,8 @@ describe('ONE-614: Proof request', () => {
         data: {
           customShareDataScreenTest: testOnlyOneCredentialForSharing,
           didMethod: DidMethod.MDL,
-          exchange: Exchange.OPENID4VC,
-          keyAlgorithms: KeyType.ES256,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
+          keyAlgorithms: KeyType.ECDSA,
           proofSchemaId: proofSchemaMDL.id,
         },
       });
@@ -669,7 +670,7 @@ describe('ONE-614: Proof request', () => {
         didFilter: {
           didMethods: DidMethod.KEY,
         },
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const testCredentials = async () => {
         await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
@@ -709,7 +710,7 @@ describe('ONE-614: Proof request', () => {
         data: {
           customShareDataScreenTest: testCredentials,
           didMethod: DidMethod.KEY,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofPassword2.id,
         },
       });

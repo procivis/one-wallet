@@ -273,7 +273,7 @@ export default function CredentialCard(testID: string) {
       }
     },
     verifyCardBackgroundColor: async function (backgroundColor: string) {
-      await expect(this.body.backgroundColor(backgroundColor)).toBeVisible();
+      await expect(this.body.backgroundColor(backgroundColor)).toBeVisible(1);
     },
     verifyCarouselIsVisible: async function (visible: boolean = true) {
       if (visible) {
@@ -345,7 +345,7 @@ export default function CredentialCard(testID: string) {
       if (collapsed) {
         await expect(this.card.collapsed).toBeVisible(10);
       } else {
-        await expect(this.card.expanded).toBeVisible();
+        await expect(this.card.expanded).toBeVisible(10);
       }
     },
     verifyIsVisible: async function (

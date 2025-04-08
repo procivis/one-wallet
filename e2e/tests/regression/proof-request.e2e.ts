@@ -29,8 +29,9 @@ import {
 import { verifyButtonEnabled } from '../../utils/button';
 import {
   CredentialFormat,
-  Exchange,
+  IssuanceProtocol,
   RevocationMethod,
+  VerificationProtocol,
 } from '../../utils/enums';
 import { launchApp, reloadApp } from '../../utils/init';
 import { scanURL } from '../../utils/scan';
@@ -82,7 +83,7 @@ describe('ONE-614: Proof request', () => {
         action: ProofAction.SHARE_BLOCKED,
         data: {
           customShareDataScreenTest: proofSharingWithoutCredentials,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
       });
@@ -99,7 +100,7 @@ describe('ONE-614: Proof request', () => {
         const issuerHolderCredentialIds = await credentialIssuance({
           authToken: authToken,
           credentialSchema: credentialSchema,
-          exchange: Exchange.OPENID4VC,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         });
         credentialIds.push(issuerHolderCredentialIds.issuerCredentialId);
       }
@@ -128,7 +129,7 @@ describe('ONE-614: Proof request', () => {
         action: ProofAction.SHARE_BLOCKED,
         data: {
           customShareDataScreenTest: proofSharingRevokation,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
       });
@@ -153,7 +154,7 @@ describe('ONE-614: Proof request', () => {
         action: ProofAction.SHARE_BLOCKED,
         data: {
           customShareDataScreenTest: proofSharingRevokation,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
       });
@@ -225,7 +226,7 @@ describe('ONE-614: Proof request', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchema,
-        exchange: Exchange.OPENID4VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
     });
 
@@ -237,7 +238,7 @@ describe('ONE-614: Proof request', () => {
       await proofSharing(authToken, {
         data: {
           beforeQRCodeScanning,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
         expectConnectionError: true,
@@ -253,7 +254,7 @@ describe('ONE-614: Proof request', () => {
       await proofSharing(authToken, {
         data: {
           customShareDataScreenTest,
-          exchange: Exchange.OPENID4VC,
+          exchange: VerificationProtocol.OPENID4VP_DRAFT20,
           proofSchemaId: proofSchema.id,
         },
         expectedResult: LoaderViewState.Warning,
