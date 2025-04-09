@@ -33,4 +33,12 @@ class AppDelegate: RCTAppDelegate {
     super.customize(rootView)
     RNBootSplash.initWithStoryboard("LaunchScreen", rootView: rootView) // ⬅️ initialize the splash screen
   }
+  
+  override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    return RCTLinkingManager.application(app, open: url, options: options)
+  }
+  
+  override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([any UIUserActivityRestoring]?) -> Void) -> Bool {
+    RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
+  }
 }
