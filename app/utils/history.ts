@@ -1,86 +1,132 @@
 import {
+  concatTestID,
+  CredentialDetailsCardProps,
+  CredentialHeaderProps,
+  detailsCardFromCredential,
+  HistoryListItemLabels,
+  HistoryStatusDeleteIcon,
+} from '@procivis/one-react-native-components';
+import {
+  Claim,
+  Config,
+  CredentialDetail,
+  CredentialRoleEnum,
+  CredentialSchema,
+  CredentialStateEnum,
+  HistoryActionEnum,
+  HistoryEntityTypeEnum,
   HistoryListItem,
-  HistoryListQuery,
 } from '@procivis/react-native-one-core';
-import moment, { Moment } from 'moment';
+import { View } from 'react-native';
 
 import { translate } from '../i18n';
-import { HistoryListItemWithDid } from '../models/core/history';
+import { credentialCardLabels } from './credential';
+import { hashString } from './string';
 
-export interface HistoryListItemGroup {
-  date: string;
-  entries: HistoryListItemWithDid[];
-}
+const LOGO_COLORS = [
+  '#b4c1f4',
+  '#dac2ae',
+  '#feada5',
+  '#e2bb8c',
+  '#f9a867',
+  '#ebb1f9',
+  '#becfe8',
+  '#e9c2ea',
+  '#7ecdcc',
+];
 
-export const getQueryKeyFromListQueryParams = (
-  queryParams?: Partial<HistoryListQuery>,
-) => {
-  if (!queryParams) {
-    return [];
-  }
-
-  const {
-    entityId,
-    action,
-    entityTypes,
-    createdDateFrom,
-    createdDateTo,
-    didId,
-    credentialId,
-    credentialSchemaId,
-    searchText,
-    searchType,
-  } = queryParams;
-  return [
-    entityId,
-    action,
-    entityTypes,
-    createdDateFrom,
-    createdDateTo,
-    didId,
-    credentialId,
-    credentialSchemaId,
-    searchText,
-    searchType,
-  ];
-};
-
-export interface HistoryGroupByDaySection {
-  data: HistoryListItemWithDid[];
-  date: Moment;
-  firstYearEntry: boolean;
-}
-
-export const groupEntriesByDay = (entries: HistoryListItemWithDid[]) => {
-  const groupedEntries = entries.reduce(
-    (result: HistoryGroupByDaySection[], entry: HistoryListItemWithDid) => {
-      const entryDate = moment(entry.createdDate);
-
-      const matchingEntry = result.find(({ date }) =>
-        date.isSame(entryDate, 'day'),
-      );
-      if (matchingEntry) {
-        matchingEntry.data.push(entry);
-      } else {
-        result.push({ data: [entry], date: entryDate, firstYearEntry: false });
-      }
-
-      return result;
-    },
-    [],
-  );
-
-  return groupedEntries
-    .sort(({ date: a }, { date: b }) => b.valueOf() - a.valueOf())
-    .map((item, index, list) => {
-      item.firstYearEntry =
-        !index || !list[index - 1].date.isSame(item.date, 'year');
-      return item;
-    });
+export const schemaColorForName = (proofSchemaName: string) => {
+  const colorIndex = hashString(proofSchemaName) % LOGO_COLORS.length;
+  const color = LOGO_COLORS[colorIndex];
+  return color;
 };
 
 export const getEntryTitle = (entry: HistoryListItem) => {
   const entityType = translate(`history.entityType.${entry.entityType}`);
   const action = translate(`history.action.${entry.action}`);
   return `${entityType} ${action}`;
+};
+
+export const historyListItemLabels: () => HistoryListItemLabels = () => ({
+  actions: Object.assign(
+    {},
+    ...Object.keys(HistoryActionEnum).map((key) => ({
+      [key]: translate(`history.action.${key as HistoryActionEnum}`),
+    })),
+  ) as { [key in keyof typeof HistoryActionEnum]: string },
+  entityTypes: Object.assign(
+    {},
+    ...Object.keys(HistoryEntityTypeEnum).map((key) => ({
+      [key]: translate(`history.entityType.${key as HistoryEntityTypeEnum}`),
+    })),
+  ) as { [key in keyof typeof HistoryEntityTypeEnum]: string },
+});
+
+export const historyCardHeaderFromName = (
+  name: string,
+  testID?: string,
+): CredentialHeaderProps & {
+  onPressed?: () => void;
+} => {
+  const color = schemaColorForName(name);
+  return {
+    color,
+    credentialName: name,
+    testID,
+  };
+};
+
+export const historyDeletedCredentialCardWithName = (
+  credentialSchemaName: string,
+  credentialId: string,
+): Omit<CredentialDetailsCardProps, 'expanded'> => {
+  return {
+    attributes: false,
+    card: {
+      credentialId: credentialId,
+      header: {
+        accessory: View,
+        credentialDetailErrorColor: true,
+        credentialDetailPrimary: translate('historyDetail.entityDeleted'),
+        credentialName: credentialSchemaName,
+        statusIcon: HistoryStatusDeleteIcon,
+      },
+    },
+  };
+};
+
+export const historyDeletedCredentialCardFromCredentialSchema = (
+  credentialSchema: CredentialSchema,
+  claims: Claim[],
+  config: Config,
+): Omit<CredentialDetailsCardProps, 'expanded'> => {
+  const credential: CredentialDetail = {
+    claims,
+    createdDate: '',
+    exchange: '',
+    id: '',
+    issuanceDate: '',
+    lastModified: '',
+    role: CredentialRoleEnum.HOLDER,
+    schema: credentialSchema,
+    state: CredentialStateEnum.ACCEPTED,
+  };
+  const props = detailsCardFromCredential(
+    credential,
+    config,
+    concatTestID('DeletedCredential', credentialSchema.id),
+    credentialCardLabels(),
+  );
+  return {
+    ...props,
+    card: {
+      ...props.card,
+      header: {
+        ...props.card.header,
+        credentialDetailErrorColor: true,
+        credentialDetailPrimary: translate('historyDetail.entityDeleted'),
+        statusIcon: HistoryStatusDeleteIcon,
+      },
+    },
+  };
 };
