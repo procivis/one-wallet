@@ -7,6 +7,7 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
+  HistoryListItemView,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -27,7 +28,6 @@ import {
 import React, { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { HistoryItem } from '../../components/history/history-item';
 import {
   HeaderBackButton,
   HeaderOptionsButton,
@@ -42,6 +42,7 @@ import {
 } from '../../navigators/credential-detail/credential-detail-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
+import { historyListItemLabels } from '../../utils/history';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
@@ -224,14 +225,13 @@ const HistorySection: FC<{
       >
         {translate('history.title')}
       </Typography>
-      <View
-        style={[styles.historyLog, { backgroundColor: colorScheme.white }]}
-        testID="CredentialDetailScreen.history"
-      >
+      <View style={styles.historyLog} testID="CredentialDetailScreen.history">
         {previewHistoryItems.map((item, idx, { length }) => (
-          <HistoryItem
+          <HistoryListItemView
+            first={idx === 0}
             item={item}
             key={item.id}
+            labels={historyListItemLabels()}
             last={!expandable && idx === length - 1}
             onPress={handleProofPress}
             testID={concatTestID(
@@ -263,10 +263,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   historyLog: {
-    borderRadius: 20,
     marginBottom: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
   },
   historySectionTitle: {
     marginHorizontal: 4,

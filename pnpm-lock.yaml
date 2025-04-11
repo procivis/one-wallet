@@ -17,8 +17,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(react@18.3.1)
       '@procivis/one-react-native-components':
-        specifier: 0.3.9
-        version: 0.3.9(e6341613b15f68de573325b1a228d586)
+        specifier: 0.3.14
+        version: 0.3.14(fac308b326816f350307507bbfa6b547)
       '@procivis/react-native-one-core':
         specifier: 1.39679.0
         version: 1.39679.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
@@ -1745,10 +1745,10 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.9':
-    resolution: {integrity: sha1-4Z2zjFEduqJcghIPCVl274PAyc4=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.9.tgz}
+  '@procivis/one-react-native-components@0.3.14':
+    resolution: {integrity: sha1-Zoyrpxw3iFlwcAVdhDkXbEhtKLI=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.14.tgz}
     peerDependencies:
-      '@procivis/react-native-one-core': ^1.38946.0
+      '@procivis/react-native-one-core': ^1.38946.1
       '@procivis/react-native-picker': '*'
       '@react-native-community/blur': '*'
       '@react-native-community/netinfo': ^11.4.1
@@ -1756,7 +1756,9 @@ packages:
       '@react-navigation/native': '*'
       '@sentry/react-native': ^5.24.1
       apisauce: 2.0.0
+      lodash: ^4.17.21
       lottie-react-native: ^7.2.2
+      moment: ^2.29.4
       parse-url: ^9.2.0
       pure-svg-code: '*'
       qrcode-svg: '*'
@@ -9798,7 +9800,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.9(e6341613b15f68de573325b1a228d586)':
+  '@procivis/one-react-native-components@0.3.14(fac308b326816f350307507bbfa6b547)':
     dependencies:
       '@procivis/react-native-one-core': 1.39679.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker': 5.0.3
@@ -9808,7 +9810,9 @@ snapshots:
       '@react-navigation/native': 6.1.6(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@sentry/react-native': 6.10.0(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       apisauce: 2.0.0
+      lodash: 4.17.21
       lottie-react-native: 7.2.2(react-native-windows@0.73.22(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.77.1(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.0.1)(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+      moment: 2.29.4
       parse-url: 9.2.0
       pure-svg-code: 1.0.6
       qrcode-svg: 1.1.0
@@ -15291,8 +15295,7 @@ snapshots:
 
   module-details-from-path@1.0.3: {}
 
-  moment@2.29.4:
-    optional: true
+  moment@2.29.4: {}
 
   ms@2.0.0: {}
 

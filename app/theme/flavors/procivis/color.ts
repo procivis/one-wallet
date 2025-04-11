@@ -10,6 +10,7 @@ export const colorScheme: ColorScheme = {
   credentialHeaderBackground: 'rgba(255, 255, 255, 0.87)',
   darkMode: false,
   error: '#D90D0D',
+  errorText: '#A73535',
   grayDark: '#CDD4DA',
   linkText: '#3F7BA6',
   nerdView: {
