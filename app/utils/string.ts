@@ -15,3 +15,13 @@ export const replaceBreakingHyphens = (str: string): string =>
 export const isASCII = (str: string) => {
   return /^[\x20-\xFF]*$/.test(str);
 };
+
+export function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}

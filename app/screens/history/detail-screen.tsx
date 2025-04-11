@@ -1,16 +1,9 @@
 import {
-  BackButton,
-  CredentialDetails,
-  DataItem,
-  EntityDetails,
-  formatDateTimeLocalized,
-  HistoryStatusIcon,
-  HistoryStatusIconType,
-  ScrollViewScreen,
-  Typography,
-  useAppColorScheme,
+  HistoryDetailsScreen,
+  HistoryDetailsViewProps,
+  useCoreConfig,
   useCredentialDetail,
-  useCredentialListExpandedCard,
+  useCredentials,
   useProofDetail,
 } from '@procivis/one-react-native-components';
 import {
@@ -21,15 +14,10 @@ import {
   HistoryEntityTypeEnum,
   ProofInputClaim,
   TrustEntityRoleEnum,
-  UnexportableEntities,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { omit } from 'lodash';
-import React, { FC, useEffect, useMemo, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { FC, useMemo } from 'react';
 
-import { PreviewCredentials } from '../../components/backup/preview-credentials';
-import { HeaderInfoButton } from '../../components/navigation/header-buttons';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
@@ -39,40 +27,13 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { nonEmptyFilter } from '../../utils/filtering';
-import { getEntryTitle } from '../../utils/history';
-import { capitalizeFirstLetter } from '../../utils/string';
+import {
+  historyCardHeaderFromName,
+  historyDeletedCredentialCardFromCredentialSchema,
+  historyDeletedCredentialCardWithName,
+  historyListItemLabels,
+} from '../../utils/history';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
-
-const getActionStatus = (action: HistoryActionEnum) => {
-  switch (action) {
-    case HistoryActionEnum.DEACTIVATED:
-    case HistoryActionEnum.DELETED:
-    case HistoryActionEnum.REJECTED:
-    case HistoryActionEnum.REVOKED:
-      return HistoryStatusIconType.Error;
-    case HistoryActionEnum.ERRORED:
-      return HistoryStatusIconType.Error;
-    case HistoryActionEnum.SUSPENDED:
-      return HistoryStatusIconType.Suspend;
-    case HistoryActionEnum.OFFERED:
-    case HistoryActionEnum.PENDING:
-    case HistoryActionEnum.REQUESTED:
-      return HistoryStatusIconType.Indicator;
-    default:
-      return HistoryStatusIconType.Success;
-  }
-};
-
-const getStatusTextColor = (status: HistoryStatusIconType) => {
-  switch (status) {
-    case HistoryStatusIconType.Success:
-      return '#006B34';
-    case HistoryStatusIconType.Error:
-      return '#A73535';
-    default:
-      return undefined;
-  }
-};
 
 const claimFromProofInputClaim = (
   input: ProofInputClaim,
@@ -119,16 +80,13 @@ const claimValueFromProofInputClaim = ({
 };
 
 export const HistoryDetailScreen: FC = () => {
-  const colorScheme = useAppColorScheme();
   const navigation = useNavigation<HistoryNavigationProp<'Detail'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
-  const onImagePreview = useCredentialImagePreview();
-
   const route = useRoute<HistoryRouteProp<'Detail'>>();
+  const onImagePreview = useCredentialImagePreview();
   const { entry } = route.params;
-  const { metadata } = entry;
-  const backupInfo: UnexportableEntities | undefined =
-    metadata && 'credentials' in metadata ? metadata : undefined;
+
+  const { data: config } = useCoreConfig();
   const { data: issuedCredential } = useCredentialDetail(
     entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
       ? entry.entityId
@@ -139,38 +97,14 @@ export const HistoryDetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
-  const proofCredentials = (proof?.proofInputs ?? [])
-    .map(({ claims, credential }) => {
-      if (!credential) {
-        return undefined;
-      }
-      return {
-        ...credential,
-        claims: claims.map(claimFromProofInputClaim).filter(nonEmptyFilter),
-      };
-    })
-    .filter(nonEmptyFilter);
+  const { data: credentials } = useCredentials({
+    ids:
+      proof?.proofInputs
+        .map(({ credential }) => credential?.id)
+        ?.filter(nonEmptyFilter) ?? [],
+  });
 
-  const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
-
-  // by default the first credential is expanded
-  const initialExpansionPerformed = useRef(false);
-  useEffect(() => {
-    const credential = issuedCredential ?? proofCredentials?.[0];
-    if (
-      !expandedCredential &&
-      credential &&
-      !initialExpansionPerformed.current
-    ) {
-      initialExpansionPerformed.current = true;
-      onHeaderPress(credential.id);
-    }
-  }, [expandedCredential, issuedCredential, proofCredentials, onHeaderPress]);
-
-  const actionStatus = getActionStatus(entry.action);
-  const actionValueColor = getStatusTextColor(actionStatus);
-
-  const moreInfoIcon = useMemo(() => {
+  const onInfoPressed = useMemo(() => {
     if (entry.entityType === HistoryEntityTypeEnum.BACKUP) {
       return undefined;
     }
@@ -207,156 +141,131 @@ export const HistoryDetailScreen: FC = () => {
       }
     };
 
-    return (
-      <HeaderInfoButton
-        onPress={infoPressHandler}
-        testID="HistoryDetailScreen.header.info"
-      />
-    );
+    return infoPressHandler;
   }, [entry, rootNavigation]);
 
-  return (
-    <ScrollViewScreen
-      header={{
-        leftItem: (
-          <BackButton
-            onPress={navigation.goBack}
-            testID="HistoryDetailScreen.header.back"
-          />
-        ),
-        rightItem: moreInfoIcon,
-        static: true,
-        title: getEntryTitle(entry),
-      }}
-      scrollView={{
-        style: styles.content,
-      }}
-      testID="HistoryDetailScreen"
-    >
-      <View style={[styles.section, { backgroundColor: colorScheme.white }]}>
-        {issuedCredential?.issuerDid && (
-          <EntityDetails
-            did={issuedCredential.issuerDid}
-            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
-            role={TrustEntityRoleEnum.ISSUER}
-            style={[styles.entity, { borderColor: colorScheme.grayDark }]}
-          />
-        )}
-        {proof?.verifierDid && (
-          <EntityDetails
-            did={proof.verifierDid}
-            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
-            role={TrustEntityRoleEnum.VERIFIER}
-            style={[styles.entity, { borderColor: colorScheme.grayDark }]}
-            testID="EntityDetail"
-          />
-        )}
-        <DataItem
-          attribute={translate('historyDetail.date')}
-          value={formatDateTimeLocalized(new Date(entry.createdDate)) ?? ''}
-        />
-        <DataItem
-          attribute={translate('historyDetail.type')}
-          value={translate(`history.entityType.${entry.entityType}`)}
-        />
-        <DataItem
-          attribute={translate('historyDetail.action')}
-          last
-          value={capitalizeFirstLetter(
-            translate(`history.action.${entry.action}`),
-          )}
-          valueColor={actionValueColor}
-          valueIcon={<HistoryStatusIcon type={actionStatus} />}
-        />
-      </View>
+  const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
+    if (
+      entry.entityType === HistoryEntityTypeEnum.CREDENTIAL &&
+      issuedCredential?.issuerDid
+    ) {
+      return {
+        entity: {
+          did: issuedCredential?.issuerDid ?? entry.target,
+          labels: trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER),
+          role: TrustEntityRoleEnum.ISSUER,
+          testID: 'EntityDetail',
+        },
+      };
+    } else if (
+      entry.entityType === HistoryEntityTypeEnum.PROOF &&
+      proof?.verifierDid
+    ) {
+      return {
+        entity: {
+          did: proof?.verifierDid ?? entry.target,
+          labels: trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER),
+          role: TrustEntityRoleEnum.VERIFIER,
+          testID: 'EntityDetail',
+        },
+      };
+    } else if (entry.name) {
+      return {
+        credentialHeader: historyCardHeaderFromName(entry.name, 'SchemaHeader'),
+      };
+    }
+  }, [
+    entry.entityType,
+    entry.name,
+    entry.target,
+    issuedCredential?.issuerDid,
+    proof?.verifierDid,
+  ]);
 
-      {backupInfo?.credentials.length ? (
-        <>
-          <Typography
-            color={colorScheme.text}
-            preset="m"
-            style={styles.sectionHeader}
-          >
-            {translate('createBackup.preview.notBackedUp')}
-          </Typography>
-          <PreviewCredentials
-            credentials={backupInfo.credentials.map((credential) => {
+  const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {
+    if (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL) {
+      if (!issuedCredential) {
+        return {
+          cards: [
+            {
+              credentialCard: historyDeletedCredentialCardWithName(
+                entry.name,
+                entry.entityId ?? '0',
+              ),
+            },
+          ],
+        };
+      }
+      return {
+        cards: [
+          {
+            credentialDetails: {
+              credentialId: issuedCredential.id,
+            },
+          },
+        ],
+      };
+    } else if (entry.entityType === HistoryEntityTypeEnum.PROOF) {
+      if (!proof || !proof.proofInputs?.length) {
+        return undefined;
+      }
+      return {
+        cards: proof.proofInputs.map(
+          ({ claims, credential, credentialSchema }) => {
+            if (
+              !credential ||
+              !credentials?.find((c) => c.id === credential.id)
+            ) {
               return {
-                issuerDid: credential.issuerDid?.did,
-                ...omit(credential, 'issuerDid'),
+                credentialCard:
+                  historyDeletedCredentialCardFromCredentialSchema(
+                    credentialSchema,
+                    claims.map(claimFromProofInputClaim).filter(nonEmptyFilter),
+                    config!,
+                  ),
               };
-            })}
-          />
-        </>
-      ) : null}
+            }
+            return {
+              credentialDetails: {
+                claims: claims
+                  .map(claimFromProofInputClaim)
+                  .filter(nonEmptyFilter),
+                credentialId: credential.id,
+              },
+            };
+          },
+        ),
+      };
+    }
+  }, [
+    config,
+    credentials,
+    entry.entityId,
+    entry.entityType,
+    entry.name,
+    issuedCredential,
+    proof,
+  ]);
 
-      {issuedCredential && (
-        <>
-          <Typography
-            color={colorScheme.text}
-            preset="m"
-            style={styles.sectionHeader}
-          >
-            {translate('historyDetail.credential')}
-          </Typography>
-          <CredentialDetails
-            credentialId={issuedCredential.id}
-            expanded={expandedCredential === issuedCredential.id}
-            labels={credentialCardLabels()}
-            lastItem
-            onHeaderPress={onHeaderPress}
-            onImagePreview={onImagePreview}
-          />
-        </>
-      )}
-
-      {proof && (
-        <>
-          <Typography
-            color={colorScheme.text}
-            preset="m"
-            style={styles.sectionHeader}
-          >
-            {translate('historyDetail.response')}
-          </Typography>
-          {proofCredentials.map((proofCredential, index, { length }) => (
-            <View key={proofCredential.id} style={styles.credential}>
-              <CredentialDetails
-                claims={proofCredential.claims}
-                credentialId={proofCredential.id}
-                expanded={expandedCredential === proofCredential.id}
-                labels={credentialCardLabels()}
-                lastItem={index === length - 1}
-                onHeaderPress={onHeaderPress}
-                onImagePreview={onImagePreview}
-              />
-            </View>
-          ))}
-        </>
-      )}
-    </ScrollViewScreen>
+  return (
+    <HistoryDetailsScreen
+      assets={assets}
+      dataHeader={dataHeader}
+      item={entry}
+      labels={{
+        credentialCard: credentialCardLabels(),
+        data: {
+          action: translate('historyDetail.action'),
+          date: translate('historyDetail.date'),
+        },
+        infoButtonAccessibility: translate('accessibility.nav.info'),
+        item: historyListItemLabels(),
+        relatedAssets: translate('historyDetail.relatedAssets'),
+        title: translate(`history.entityType.${entry.entityType}`),
+      }}
+      onBackPressed={navigation.goBack}
+      onImagePreview={onImagePreview}
+      onInfoPressed={onInfoPressed}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  content: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-  },
-  credential: {
-    marginBottom: 4,
-  },
-  entity: {
-    borderBottomWidth: 1,
-    paddingBottom: 8,
-  },
-  section: {
-    borderRadius: 8,
-    marginBottom: 12,
-    padding: 12,
-  },
-  sectionHeader: {
-    marginHorizontal: 4,
-    marginVertical: 16,
-  },
-});
