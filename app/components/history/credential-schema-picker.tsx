@@ -3,6 +3,8 @@ import {
   ActivityIndicator,
   Button,
   ButtonType,
+  concatTestID,
+  RadioGroup,
   RadioGroupItem,
   useAppColorScheme,
   useCredentialSchemas,
@@ -14,19 +16,20 @@ import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
-import RadioGroup from '../common/radio-group';
 import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 
 export interface CredentialSchemaPickerProps {
   onClose: () => void;
   onSelection: (credentialSchemaId: CredentialSchema['id'] | undefined) => void;
   selected?: CredentialSchema['id'];
+  testID?: string;
   visible: boolean;
 }
 
 export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
-  visible,
   selected,
+  testID = 'CredentialSchemaPicker',
+  visible,
   onSelection,
   onClose,
 }) => {
@@ -43,7 +46,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
 
   const handleSchemasEndReached = useCallback(() => {
     if (hasNextSchemasPage) {
-      fetchNextSchemasPage();
+      fetchNextSchemasPage().catch(() => {});
     }
   }, [fetchNextSchemasPage, hasNextSchemasPage]);
 
@@ -58,6 +61,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
   return (
     <ActionModal
       contentStyle={[styles.filterModalContent, { paddingBottom: bottomInset }]}
+      testID={testID}
       visible={visible}
     >
       {credentialSchemas ? (
@@ -92,7 +96,7 @@ export const CredentialSchemaPicker: FC<CredentialSchemaPickerProps> = ({
       <Button
         onPress={onClose}
         style={[styles.closeButton, { borderColor: colorScheme.background }]}
-        testID="CredentialSchemaPicker.close"
+        testID={concatTestID(testID, 'close')}
         title={translate('common.close')}
         type={ButtonType.Secondary}
       />
