@@ -20,6 +20,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { Ubiqu } from '@procivis/react-native-one-core';
+import { configure as configureNetInfo } from '@react-native-community/netinfo';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
@@ -31,6 +32,7 @@ import {
 import Config from 'react-native-ultimate-config';
 import { QueryClientProvider } from 'react-query';
 
+import { config } from './config';
 import { registerTimeAgoLocales } from './i18n';
 import { RootStore, RootStoreProvider, setupRootStore } from './models';
 import { AppNavigator } from './navigators';
@@ -85,6 +87,21 @@ function App() {
       .catch((e) => {
         reportException(e, 'setup mobx store failure');
       });
+  }, []);
+
+  useEffect(() => {
+    if (!config.trustAnchorPublisherReference) {
+      return;
+    }
+    configureNetInfo({
+      reachabilityHeaders: {
+        accept: 'application/json',
+      },
+      reachabilityTest: async (response) => {
+        return Promise.resolve(response.status >= 200 && response.status < 300);
+      },
+      reachabilityUrl: config.trustAnchorPublisherReference,
+    });
   }, []);
 
   const colorScheme = useFlavorColorScheme();
