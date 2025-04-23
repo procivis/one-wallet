@@ -62,7 +62,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
   const { permissionStatus, checkPermissions, requestPermission } =
-    useBlePermissions(VerificationProtocol.OPENID4VP_DRAFT20);
+    useBlePermissions(VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00);
 
   const [adapterEnabled, setAdapterEnabled] = useState<boolean>(true);
   const {
