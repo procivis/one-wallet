@@ -18,7 +18,7 @@ import {
 } from 'react-native-permissions';
 
 type BLEExchange =
-  | VerificationProtocol.OPENID4VP_DRAFT20
+  | VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00
   | VerificationProtocol.ISO_MDL;
 
 const centralPermissionsAndroid = [
@@ -67,7 +67,7 @@ export const useBlePermissions = (exchange: BLEExchange) => {
 
   const { data: coreConfig } = useCoreConfig();
   const permissions =
-    exchange === VerificationProtocol.OPENID4VP_DRAFT20
+    exchange === VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00
       ? centralPermissions
       : peripheralPermissions;
 
