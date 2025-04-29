@@ -38,6 +38,19 @@ import { CredentialManagementNavigationProp } from '../../navigators/credential-
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
+const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
+  [BluetoothState.Unauthorized]:
+    'invitation.process.blePermissionMissing.title',
+  [BluetoothState.Unavailable]:
+    'invitation.process.bleAdapterUnavailable.title',
+  [BluetoothState.Disabled]: 'invitation.process.bleAdapterDisabled.title',
+};
+
+const internetErrorKeys: Record<InternetError, TxKeyPath> = {
+  [InternetState.Unreachable]: 'invitation.process.internetUnreachable.title',
+  [InternetState.Disabled]: 'invitation.process.internetDisabled.title',
+};
+
 const InvitationProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
@@ -246,20 +259,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   const label = useMemo(() => {
-    const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
-      [BluetoothState.Unauthorized]:
-        'invitation.process.blePermissionMissing.title',
-      [BluetoothState.Unavailable]:
-        'invitation.process.bleAdapterUnavailable.title',
-      [BluetoothState.Disabled]: 'invitation.process.bleAdapterDisabled.title',
-    };
-
-    const internetErrorKeys: Record<InternetError, TxKeyPath> = {
-      [InternetState.Unreachable]:
-        'invitation.process.internetUnreachable.title',
-      [InternetState.Disabled]: 'invitation.process.internetDisabled.title',
-    };
-
     if (canHandleInvitation) {
       if (
         state === LoaderViewState.Warning &&
@@ -277,6 +276,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     if (state !== LoaderViewState.Warning) {
       return translate(`invitation.process.${state}.title`);
     }
+
     if (
       invitationSupportedTransports.includes(Transport.Bluetooth) &&
       invitationSupportedTransports.includes(Transport.MQTT) &&
@@ -313,7 +313,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
     return translateError(
       error,
-      translate(`invitation.process.${state}.title`),
+      translate('invitation.process.unsupportedInvitation.title'),
     );
   }, [
     error,
