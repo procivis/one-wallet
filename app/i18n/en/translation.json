@@ -258,6 +258,7 @@
   "invitation.process.internetDisabled.title": "No internet available. Please check your Wi-Fi or cellular settings.",
   "invitation.process.internetUnreachable.title": "No internet available. Please check your Wi-Fi or cellular settings.",
   "invitation.process.mqttTransportDisabled.title": "The MQTT transport is disabled in the Core configuration",
+  "invitation.process.unsupportedInvitation.title": "Invalid QR code.\nPlease scan a supported code.",
   "invitation.process.warning.title": "Connection failed",
   "keyStorageType.HARDWARE": "Hardware",
   "keyStorageType.SOFTWARE": "Software",
