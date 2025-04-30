@@ -17,7 +17,7 @@ import ProofRequestSharingScreen from '../page-objects/proof-request/ProofReques
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { ProofSchemaResponseDTO } from '../types/proof';
-import { bffLogin, createCredentialSchema } from '../utils/bff-api';
+import { keycloakAuth, createCredentialSchema } from '../utils/api';
 import {
   CredentialFormat,
   DataType,
@@ -47,7 +47,7 @@ describe('RSE Ubiqu', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     credentialSchemaRSE_JWT = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({
@@ -145,7 +145,7 @@ describe('RSE Ubiqu', () => {
     const remotePINCode = '54321';
     beforeAll(async () => {
       await launchApp({ delete: true });
-      authToken = await bffLogin();
+      authToken = await keycloakAuth();
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaRSE_SDJWT,

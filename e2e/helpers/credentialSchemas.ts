@@ -3,7 +3,7 @@ import {
   CredentialSchemaData,
   LayoutProperties,
 } from '../types/credentialSchema';
-import { createCredentialSchema } from '../utils/bff-api';
+import { createCredentialSchema } from '../utils/api';
 import {
   CodeType,
   CredentialFormat,

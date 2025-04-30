@@ -21,12 +21,12 @@ import CredentialNerdScreen, {
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   getCredentialDetail,
   revokeCredential,
   suspendCredential,
-} from '../utils/bff-api';
+} from '../utils/api';
 import {
   CodeType,
   CredentialFormat,
@@ -44,7 +44,7 @@ describe('ONE-2014: Credential design', () => {
   beforeAll(async () => {
     await launchApp();
 
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
   });
 
   // Pass
