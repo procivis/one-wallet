@@ -14,7 +14,7 @@ import RestoreBackupImportScreen from '../page-objects/restore/RestoreBackupImpo
 import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
-import { bffLogin, createCredentialSchema } from '../utils/bff-api';
+import { keycloakAuth, createCredentialSchema } from '../utils/api';
 import { verifyButtonEnabled } from '../utils/button';
 import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
@@ -23,7 +23,7 @@ describe('ONE-1530: Backup & Restore', () => {
   let authToken: string;
 
   beforeAll(async () => {
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
   });
 
   describe('Onboarding', () => {

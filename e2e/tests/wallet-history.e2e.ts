@@ -10,11 +10,11 @@ import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredential,
   createCredentialSchema,
   offerCredential,
-} from '../utils/bff-api';
+} from '../utils/api';
 import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
 import { launchApp } from '../utils/init';
 import { scanURL } from '../utils/scan';
@@ -27,7 +27,7 @@ describe('ONE-224: Wallet history', () => {
   beforeAll(async () => {
     await launchApp();
 
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     credentialSchemaJWT = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({

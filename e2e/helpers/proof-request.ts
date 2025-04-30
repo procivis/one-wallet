@@ -22,7 +22,7 @@ import {
   createProofSchema,
   getLocalDid,
   requestProof,
-} from '../utils/bff-api';
+} from '../utils/api';
 import { verifyButtonEnabled } from '../utils/button';
 import { DidMethod, KeyType, URLOption, VerificationProtocol } from '../utils/enums';
 import { DEFAULT_WAIT_TIME, LONG_WAIT_TIME, RSEConfig } from '../utils/init';
