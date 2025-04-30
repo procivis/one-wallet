@@ -3,12 +3,12 @@ import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
 import { CredentialStatus } from '../../page-objects/components/CredentialCard';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
   revokeCredential,
   suspendCredential,
-} from '../../utils/bff-api';
+} from '../../utils/api';
 import {
   CredentialFormat,
   DidMethod,
@@ -78,7 +78,7 @@ describe('ONE-620: Credential revocation', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
   });
 
   for (const { revocationMethod, credentialFormat } of COMBINATIONS_BASE) {

@@ -20,12 +20,12 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { DidDetailDTO } from '../../types/did';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
   revokeCredential,
   suspendCredential,
-} from '../../utils/bff-api';
+} from '../../utils/api';
 import {
   CredentialFormat,
   DidMethod,
@@ -49,7 +49,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     console.log('authToken', authToken);
     credentialSchemaJWT = await createCredentialSchema(
       authToken,

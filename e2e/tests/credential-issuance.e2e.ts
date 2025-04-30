@@ -16,11 +16,11 @@ import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   revokeCredential,
   suspendCredential,
-} from '../utils/bff-api';
+} from '../utils/api';
 import { formatDateTime } from '../utils/date';
 import {
   CredentialFormat,
@@ -46,7 +46,7 @@ describe('ONE-601: Credential issuance', () => {
   beforeAll(async () => {
     await launchApp();
 
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     credentialSchemaJWT = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({

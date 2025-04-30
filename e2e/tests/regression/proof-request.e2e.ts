@@ -19,13 +19,13 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { ProofSchemaResponseDTO } from '../../types/proof';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   createProofRequest,
   deleteProofRequest,
   requestProof,
   revokeCredential,
-} from '../../utils/bff-api';
+} from '../../utils/api';
 import { verifyButtonEnabled } from '../../utils/button';
 import {
   CredentialFormat,
@@ -43,7 +43,7 @@ describe('ONE-614: Proof request', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     credentialSchema = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({

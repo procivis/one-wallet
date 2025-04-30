@@ -21,7 +21,7 @@ import SettingsScreen, {
 } from '../../page-objects/SettingsScreen';
 import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
-import { bffLogin, createCredentialSchema } from '../../utils/bff-api';
+import { keycloakAuth, createCredentialSchema } from '../../utils/api';
 import {
   CredentialFormat,
   IssuanceProtocol,
@@ -41,7 +41,7 @@ describe('RSE Remote PIN Code', () => {
   let credentialSchemaRSE_JWT: CredentialSchemaResponseDTO;
   let globalRSEConfig: RSEConfig;
   beforeAll(async () => {
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     await launchApp();
     credentialSchemaRSE_JWT = await createCredentialSchema(
       authToken,

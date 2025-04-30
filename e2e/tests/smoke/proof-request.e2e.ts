@@ -27,7 +27,7 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { CredentialSchemaData } from '../../types/credentialSchema';
 import { ProofSchemaResponseDTO } from '../../types/proof';
-import { bffLogin, createCredentialSchema } from '../../utils/bff-api';
+import { keycloakAuth, createCredentialSchema } from '../../utils/api';
 import {
   CredentialFormat,
   DataType,
@@ -48,7 +48,7 @@ describe('ONE-614: Proof request', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
     credentialSchema = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({

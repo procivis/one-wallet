@@ -31,13 +31,13 @@ import { DidDetailDTO } from '../../types/did';
 import { ProofSchemaResponseDTO } from '../../types/proof';
 import { TrustEntityResponseDTO } from '../../types/trustEntity';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
   createTrustEntity,
   getTrustAnchor,
   getTrustEntityDetail,
-} from '../../utils/bff-api';
+} from '../../utils/api';
 import { getTrustEntityRequestData } from '../../utils/data-utils';
 import {
   CredentialFormat,
@@ -314,7 +314,7 @@ describe('Credential issuance with trust entity', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
   });
 
   describe('Issue credentials with trust entity', () => {

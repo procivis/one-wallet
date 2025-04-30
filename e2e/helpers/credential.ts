@@ -14,11 +14,11 @@ import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { DidDetailDTO } from '../types/did';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredential,
   getLocalDid,
   offerCredential,
-} from '../utils/bff-api';
+} from '../utils/api';
 import {
   DidMethod,
   IssuanceProtocol,
@@ -158,7 +158,7 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
   data: CredentialIssuanceProps,
 ) => {
   if (!data.authToken) {
-    data.authToken = await bffLogin();
+    data.authToken = await keycloakAuth();
   }
 
   let issuerDidId: string;

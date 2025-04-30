@@ -2,7 +2,7 @@ import {
   createTrustEntity,
   getTrustAnchor,
   getTrustEntityDetail,
-} from '../utils/bff-api';
+} from '../utils/api';
 import { getTrustEntityRequestData } from '../utils/data-utils';
 import { TrustEntityRole } from '../utils/enums';
 

@@ -33,25 +33,38 @@ import {
 } from './enums';
 import { objectToQueryParams } from './utils';
 
-const BFF_BASE_URL = process.env.DESK_URL;
+const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL;
+const API_BASE_URL = process.env.API_BASE_URL;
 const LOGIN = {
-  email: process.env.DESK_EMAIL,
-  method: 'PASSWORD',
-  password: process.env.DESK_PASSWORD,
+  grant_type: 'password',
+  username: process.env.KEYCLOAK_USER_NAME,
+  password: process.env.KEYCLOAK_PASSWORD,
+  client_id: 'login-client',
+  client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
 };
 
 /**
- * Login to BFF
+ * Authenticate with Keycloak
  * @returns {string} authToken
  */
-export async function bffLogin(): Promise<string> {
-  return fetch(BFF_BASE_URL + '/api/auth/v1/login', {
-    body: JSON.stringify(LOGIN),
-    headers: { ['Content-Type']: 'application/json' },
+export async function keycloakAuth(): Promise<string> {
+  const params = new URLSearchParams();
+  Object.entries(LOGIN).forEach(([key, value]) => {
+    params.append(key, String(value));
+  });
+  
+  return fetch(`${KEYCLOAK_BASE_URL}/realms/dev/protocol/openid-connect/token`, {
+    body: params.toString(),
+    headers: { ['Content-Type']: 'application/x-www-form-urlencoded' },
     method: 'POST',
   })
-    .then((res) => res.json())
-    .then((res: any) => res.token);
+    .then(async (res) => {
+      if (!res.ok) {
+        console.error(`Keycloak auth failed. Status: ${res.status}`, await res.json());
+        throw Error('HTTP error: ' + res.status);
+      }
+      return res.json()})
+    .then((res: any) => res.access_token);
 }
 
 async function apiRequest(
@@ -66,7 +79,7 @@ async function apiRequest(
   if (body) {
     headers['Content-Type'] = 'application/json';
   }
-  return fetch(BFF_BASE_URL + path, {
+  return fetch(API_BASE_URL + path, {
     body: body ? JSON.stringify(body) : undefined,
     headers,
     method,

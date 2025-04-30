@@ -8,9 +8,9 @@ import CredentialDetailScreen from '../page-objects/credential/CredentialDetailS
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  bffLogin,
+  keycloakAuth,
   createCredentialSchema,
-} from '../utils/bff-api';
+} from '../utils/api';
 import {
   CredentialFormat,
   DataType,
@@ -26,7 +26,7 @@ describe('ONE-601: Credential issuance', () => {
 
   beforeAll(async () => {
     await launchApp();
-    authToken = await bffLogin();
+    authToken = await keycloakAuth();
   });
 
   describe('ONE-2054: Issue mdoc credentials', () => {

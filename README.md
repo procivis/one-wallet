@@ -112,9 +112,11 @@ After installing canvas dependencies, reinstall node dependencies by removing `n
 In order to run the E2E tests, one needs to set up `.env.detox` file (in the root of this project) with desk url, username and password:
 
 ```
-DESK_URL='https://example.com'
-DESK_EMAIL=example@user.email
-DESK_PASSWORD=example.password
+API_BASE_URL='https://example.com'
+KEYCLOAK_URL= 'https://example.com'
+KEYCLOAK_USER_NAME=example@user.email
+KEYCLOAK_PASSWORD=example.password
+KEYCLOAK_CLIENT_SECRET=example.secret
 ```
 
 After setting up, to run tests it's necessary to build a proper detox app build first:
