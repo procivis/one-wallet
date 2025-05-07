@@ -62,17 +62,17 @@ export const historyListItemLabels: () => HistoryListItemLabels = () => ({
   ) as { [key in keyof typeof HistoryEntityTypeEnum]: string },
 });
 
-export const historyCardHeaderFromName = (
-  name: string,
-  testID?: string,
+export const historyProofSchemaHeader = (
+  proofSchemaId: string | undefined,
+  proofSchemaName: string,
 ): CredentialHeaderProps & {
   onPressed?: () => void;
 } => {
-  const color = schemaColorForName(name);
+  const color = schemaColorForName(proofSchemaName);
   return {
     color,
-    credentialName: name,
-    testID,
+    credentialName: proofSchemaName,
+    testID: concatTestID('ProofSchemaHeader', proofSchemaId),
   };
 };
 
@@ -90,7 +90,9 @@ export const historyDeletedCredentialCardWithName = (
         credentialDetailPrimary: translate('historyDetail.entityDeleted'),
         credentialName: credentialSchemaName,
         statusIcon: HistoryStatusDeleteIcon,
+        testID: concatTestID('DeletedCredential', credentialId),
       },
+      testID: concatTestID('DeletedCredentialCard', credentialId),
     },
   };
 };
@@ -114,7 +116,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
   const props = detailsCardFromCredential(
     credential,
     config,
-    concatTestID('DeletedCredential', credentialSchema.id),
+    concatTestID('CredentialSchemaCard', credentialSchema.id),
     credentialCardLabels(),
   );
   return {
@@ -125,6 +127,10 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
         ...props.card.header,
         credentialDetailErrorColor: true,
         credentialDetailPrimary: translate('historyDetail.entityDeleted'),
+        credentialDetailTestID: concatTestID(
+          'DeletedCredential',
+          credentialSchema.id,
+        ),
         statusIcon: HistoryStatusDeleteIcon,
       },
     },
