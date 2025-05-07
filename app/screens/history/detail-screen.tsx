@@ -28,10 +28,10 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { nonEmptyFilter } from '../../utils/filtering';
 import {
-  historyCardHeaderFromName,
   historyDeletedCredentialCardFromCredentialSchema,
   historyDeletedCredentialCardWithName,
   historyListItemLabels,
+  historyProofSchemaHeader,
 } from '../../utils/history';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
@@ -171,10 +171,11 @@ export const HistoryDetailScreen: FC = () => {
       };
     } else if (entry.name) {
       return {
-        credentialHeader: historyCardHeaderFromName(entry.name, 'SchemaHeader'),
+        credentialHeader: historyProofSchemaHeader(entry.entityId, entry.name),
       };
     }
   }, [
+    entry.entityId,
     entry.entityType,
     entry.name,
     entry.target,
