@@ -105,7 +105,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         await suspendCredential(credentialId, authToken);
       }
 
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.REFRESH_CREDENTIAL).tap();
       if (expected === Expected.NO_UPDATES) {
@@ -120,7 +120,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
           .withTimeout(5000);
         if (expected === Expected.REVORED) {
           await statusScreenCheck([
-            { index: 0, status: CredentialStatus.REVORED },
+            { index: 0, status: CredentialStatus.REVOKED },
           ]);
         } else if (expected === Expected.SUSPENDED) {
           await statusScreenCheck([
@@ -129,7 +129,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         }
         await StatusCheckResultScreen.closeButton.tap();
       }
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
     };
 
     beforeAll(async () => {});
@@ -179,7 +179,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
     it('Trusted DID after refresh credential', async () => {
       // Verify Unknown TrustEntity issuer
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
       await expect(CredentialNerdScreen.screen).toBeVisible(1);
@@ -187,7 +187,7 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         'Unknown issuer',
       );
       await CredentialNerdScreen.back.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.backButton.tap();
 
       // Make Issuer DID trusted

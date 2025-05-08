@@ -26,14 +26,14 @@ export async function waitForElementVisible(
   timeout: number = DEFAULT_WAIT_TIME,
   visiblePercent?: number,
 ) {
-  await waitFor(element).toBeVisible(visiblePercent).withTimeout(timeout);
+  return waitFor(element).toBeVisible(visiblePercent).withTimeout(timeout);
 }
 
 export async function waitForElementPresent(
   element: NativeElement,
   timeout: number = DEFAULT_WAIT_TIME,
 ) {
-  await waitFor(element).toExist().withTimeout(timeout);
+  return waitFor(element).toExist().withTimeout(timeout);
 }
 
 export async function waitForElementToHaveText(
@@ -41,14 +41,14 @@ export async function waitForElementToHaveText(
   text: string,
   timeout: number = DEFAULT_WAIT_TIME,
 ) {
-  await waitFor(element).toHaveText(text).withTimeout(timeout);
+  return waitFor(element).toHaveText(text).withTimeout(timeout);
 }
 
 export async function waitForElementIsNotPresent(
   element: NativeElement,
   timeout: number = DEFAULT_WAIT_TIME,
 ) {
-  await waitFor(element).not.toExist().withTimeout(timeout);
+  return waitFor(element).not.toExist().withTimeout(timeout);
 }
 
 export const delay = (ms: number) => {

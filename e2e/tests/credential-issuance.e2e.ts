@@ -16,8 +16,8 @@ import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  keycloakAuth,
   createCredentialSchema,
+  keycloakAuth,
   revokeCredential,
   suspendCredential,
 } from '../utils/api';
@@ -164,16 +164,18 @@ describe('ONE-601: Credential issuance', () => {
         );
         await WalletScreen.openDetailScreen(0);
 
-        await expect(CredentialDetailScreen.screen).toBeVisible(1);
+        await CredentialDetailScreen.screen.waitForScreenVisible();
         await CredentialDetailScreen.credentialCard.verifyStatus(
           CredentialStatus.SUSPENDED,
           `Suspended until ${formattedDate}`,
         );
 
-        await expect(CredentialDetailScreen.history(0).element).toExist();
-        await expect(CredentialDetailScreen.history(0).label).toHaveText(
-          'Credential suspended',
-        );
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).element,
+        ).toExist();
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).label,
+        ).toHaveText('Credential suspended');
       });
 
       it('Suspended credential without date limits', async () => {
@@ -198,16 +200,18 @@ describe('ONE-601: Credential issuance', () => {
         await card.verifyStatus(CredentialStatus.SUSPENDED);
         await WalletScreen.openDetailScreen(0);
 
-        await expect(CredentialDetailScreen.screen).toBeVisible(1);
+        await CredentialDetailScreen.screen.waitForScreenVisible();
         await CredentialDetailScreen.credentialCard.verifyStatus(
           CredentialStatus.SUSPENDED,
           'Suspended',
         );
 
-        await expect(CredentialDetailScreen.history(0).element).toExist();
-        await expect(CredentialDetailScreen.history(0).label).toHaveText(
-          'Credential suspended',
-        );
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).element,
+        ).toExist();
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).label,
+        ).toHaveText('Credential suspended');
       });
     });
 
@@ -227,20 +231,22 @@ describe('ONE-601: Credential issuance', () => {
             {
               expectedLabel: 'Revoked',
               index: 0,
-              status: CredentialStatus.REVORED,
+              status: CredentialStatus.REVOKED,
             },
           ],
         });
         const card = await WalletScreen.credentialAtIndex(0);
-        await card.verifyStatus(CredentialStatus.REVORED, 'Revoked');
+        await card.verifyStatus(CredentialStatus.REVOKED, 'Revoked');
         await WalletScreen.openDetailScreen(0);
 
-        await expect(CredentialDetailScreen.history(0).element).toExist();
-        await expect(CredentialDetailScreen.history(0).label).toHaveText(
-          'Credential revoked',
-        );
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).element,
+        ).toExist();
+        await expect(
+          CredentialDetailScreen.historyEntryList.historyRow(0).label,
+        ).toHaveText('Credential revoked');
         await CredentialDetailScreen.credentialCard.verifyStatus(
-          CredentialStatus.REVORED,
+          CredentialStatus.REVOKED,
           'Revoked',
         );
       });
@@ -262,17 +268,17 @@ describe('ONE-601: Credential issuance', () => {
       const credentialCard = await WalletScreen.credentialAtIndex(0);
       await expect(credentialCard.element).toBeVisible();
       await credentialCard.openDetail();
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.DELETE_CREDENTIAL).tap();
     });
 
     it('Cancel confirmation', async () => {
       await CredentialDeletePromptScreen.cancelButton.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await expect(
         CredentialDetailScreen.credentialCard.header.label(
-          CredentialStatus.REVORED,
+          CredentialStatus.REVOKED,
         ),
       ).not.toExist();
       await expect(
@@ -289,7 +295,7 @@ describe('ONE-601: Credential issuance', () => {
         ).element,
       ).toBeVisible();
     });
-  
+
     // pass
     it('Accept confirmation', async () => {
       await device.disableSynchronization();
@@ -371,7 +377,7 @@ describe('ONE-601: Credential issuance', () => {
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
     });
 
     // FAIL: Issuance fail (Android) because emulator does not have hardware key. Check that error appears
@@ -419,7 +425,7 @@ describe('ONE-601: Credential issuance', () => {
 
     it('display picture link in credential detail', async () => {
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await expect(
         CredentialDetailScreen.credentialCard.attribute('0').element,
       ).toBeVisible();
@@ -430,7 +436,7 @@ describe('ONE-601: Credential issuance', () => {
       await expect(ImagePreviewScreen.screen).toBeVisible(1);
       await expect(ImagePreviewScreen.title).toHaveText(pictureKey);
       await ImagePreviewScreen.closeButton.tap();
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
     });
   });
 
@@ -488,7 +494,7 @@ describe('ONE-601: Credential issuance', () => {
 
     it('Issue credential with object claims', async () => {
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
     });
   });
 
@@ -575,7 +581,6 @@ describe('ONE-601: Credential issuance', () => {
       await waitForElementVisible(WalletScreen.credentialName(schema2.name));
     });
 
-
     it('Check credential search find only 1 matches', async () => {
       await WalletScreen.search.element.tap();
       await WalletScreen.search.typeText('Schema-2\n');
@@ -651,7 +656,7 @@ describe('ONE-601: Credential issuance', () => {
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       const card = CredentialDetailScreen.credentialCard;
       //Vip?
       await expect(card.attribute('0').value).toHaveText('true');
