@@ -1,4 +1,5 @@
 import { device, expect } from 'detox';
+import HistoryEntryList from './components/HistoryEntryList';
 
 export default class HistoryScreen {
   static get screen() {
@@ -9,26 +10,8 @@ export default class HistoryScreen {
     return element(by.id('HistoryScreen.back'));
   }
 
-  private static historyEntry(index: number) {
-    const id = `HistoryScreen.list.item.${index}`;
-    return {
-      get element() {
-        return element(by.id(id));
-      },
-      get info() {
-        return element(by.id(`${id}.info`));
-      },
-      get label() {
-        return element(by.id(`${id}.label`));
-      },
-      get timeLabel() {
-        return element(by.id(`${id}.timeLabel`));
-      },
-    };
-  }
-
-  static history(index: number) {
-    return this.historyEntry(index);
+  static get historyEntryList() {
+    return new HistoryEntryList('HistoryScreen.list.item', 'HistoryScreen.list');
   }
 
   static verifyContainsText(text: string) {
@@ -74,7 +57,7 @@ export default class HistoryScreen {
   }
 
   static scrollTo(index: number) {
-    const element = this.historyEntry(index).element;
+    const element = this.historyEntryList.historyRow(index).element;
     return waitFor(element)
       .toBeVisible()
       .whileElement(by.id('HistoryScreen.list'))

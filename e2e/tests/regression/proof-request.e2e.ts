@@ -113,7 +113,7 @@ describe('ONE-614: Proof request', () => {
           {
             expectedLabel: 'Revoked',
             index: 0,
-            status: CredentialStatus.REVORED,
+            status: CredentialStatus.REVOKED,
           },
         ],
       });
@@ -121,7 +121,7 @@ describe('ONE-614: Proof request', () => {
         await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard_1 = ProofRequestSharingScreen.credentialAtIndex(0);
         await credentialCard_1.verifyIsVisible();
-        await credentialCard_1.verifyStatus(CredentialStatus.REVORED);
+        await credentialCard_1.verifyStatus(CredentialStatus.REVOKED);
         await expect(credentialCard_1.sceleton.notice.revoked).toBeVisible();
       };
 
@@ -142,12 +142,12 @@ describe('ONE-614: Proof request', () => {
         await expect(ProofRequestSharingScreen.screen).toBeVisible(1);
         const credentialCard_0 = ProofRequestSharingScreen.credentialAtIndex(0);
         await credentialCard_0.verifyIsVisible();
-        await credentialCard_0.verifyStatus(CredentialStatus.REVORED);
+        await credentialCard_0.verifyStatus(CredentialStatus.REVOKED);
         await expect(credentialCard_0.sceleton.notice.revoked).toBeVisible();
 
         const credentialCard_1 = ProofRequestSharingScreen.credentialAtIndex(1);
         await credentialCard_1.verifyIsVisible();
-        await credentialCard_1.verifyStatus(CredentialStatus.REVORED);
+        await credentialCard_1.verifyStatus(CredentialStatus.REVOKED);
       };
 
       await proofSharing(authToken, {

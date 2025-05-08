@@ -135,7 +135,7 @@ describe('ONE-620: Credential revocation', () => {
             {
               expectedLabel: 'Revoked',
               index: 0,
-              status: CredentialStatus.REVORED,
+              status: CredentialStatus.REVOKED,
             },
           ],
         });
@@ -197,7 +197,7 @@ describe('ONE-620: Credential revocation', () => {
             {
               expectedLabel: 'Revoked',
               index: 0,
-              status: CredentialStatus.REVORED,
+              status: CredentialStatus.REVOKED,
             },
           ],
         });

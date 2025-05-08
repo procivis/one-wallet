@@ -135,7 +135,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   await WalletScreen.openDetailScreenByCredentialId(
     issuerHolderCredentialIds.holderCredentialId,
   );
-  await expect(CredentialDetailScreen.screen).toBeVisible(1);
+  await CredentialDetailScreen.screen.waitForScreenVisible();
   await CredentialDetailScreen.actionButton.tap();
   await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
   await expect(CredentialNerdScreen.screen).toBeVisible(1);
@@ -255,7 +255,7 @@ const verifyNewestProofRequestOnHistory = async (
   await SettingsScreen.button(SettingsButton.HISTORY).tap();
   await expect(HistoryScreen.screen).toBeVisible(1);
 
-  await HistoryScreen.history(0).element.tap();
+  await HistoryScreen.historyEntryList.historyRow(0).element.tap();
   await expect(HistoryDetailScreen.screen).toBeVisible(1);
   await HistoryDetailScreen.infoButton.tap();
   await expect(ProofRequestNerdScreen.screen).toBeVisible(1);

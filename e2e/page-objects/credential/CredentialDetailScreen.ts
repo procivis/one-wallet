@@ -1,4 +1,6 @@
+import BaseScreen from '../BaseScreen';
 import CredentialCard from '../components/CredentialCard';
+import HistoryEntryList from '../components/HistoryEntryList';
 
 export enum Action {
   CLOSE = 'Close',
@@ -9,7 +11,7 @@ export enum Action {
 
 export default class CredentialDetailScreen {
   static get screen() {
-    return element(by.id('CredentialDetailScreen'));
+    return new BaseScreen('CredentialDetailScreen');
   }
 
   static get backButton() {
@@ -24,26 +26,8 @@ export default class CredentialDetailScreen {
     return element(by.id('CredentialDetailScreen.header.action'));
   }
 
-  private static historyEntry(itemId: number) {
-    const id = `CredentialDetailScreen.history.${itemId}`;
-    return {
-      get did() {
-        return element(by.id(`${id}.did`));
-      },
-      get element() {
-        return element(by.id(id));
-      },
-      get label() {
-        return element(by.id(`${id}.label`));
-      },
-      get time() {
-        return element(by.id(`${id}.timeLabel`));
-      },
-    };
-  }
-
-  static history(itemId: number) {
-    return this.historyEntry(itemId);
+  static get historyEntryList() {
+    return new HistoryEntryList('CredentialDetailScreen.history', 'CredentialDetailScreen.history');
   }
 
   static get historySeeAllButton() {
