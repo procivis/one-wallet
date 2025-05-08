@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
- 
+
 import 'lodash.product';
 
 import { expect } from 'detox';
@@ -27,7 +27,7 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { CredentialSchemaData } from '../../types/credentialSchema';
 import { ProofSchemaResponseDTO } from '../../types/proof';
-import { keycloakAuth, createCredentialSchema } from '../../utils/api';
+import { createCredentialSchema,keycloakAuth } from '../../utils/api';
 import {
   CredentialFormat,
   DataType,
@@ -400,7 +400,7 @@ describe('ONE-614: Proof request', () => {
       });
       const credential = await WalletScreen.credentialAtIndex(0);
       await credential.openDetail();
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
       await expect(CredentialNerdScreen.screen).toBeVisible(1);
@@ -421,12 +421,12 @@ describe('ONE-614: Proof request', () => {
       };
       await CredentialNerdScreen.verifyAttributes(attributes);
       await CredentialNerdScreen.back.tap();
-      await expect(CredentialDetailScreen.history(0).element).toBeVisible();
-      await expect(CredentialDetailScreen.history(0).label).toHaveText(
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(0).element).toBeVisible();
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(0).label).toHaveText(
         'Request accepted',
       );
-      await expect(CredentialDetailScreen.history(1).element).toBeVisible();
-      await expect(CredentialDetailScreen.history(1).label).toHaveText(
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(1).element).toBeVisible();
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(1).label).toHaveText(
         'Shared credential',
       );
     });
@@ -632,11 +632,11 @@ describe('ONE-614: Proof request', () => {
       });
 
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
-      await expect(CredentialDetailScreen.history(0).label).toHaveText(
+      await CredentialDetailScreen.screen.waitForScreenVisible();
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(0).label).toHaveText(
         'Request accepted',
       );
-      await expect(CredentialDetailScreen.history(1).label).toHaveText(
+      await expect(CredentialDetailScreen.historyEntryList.historyRow(1).label).toHaveText(
         'Shared credential',
       );
     });

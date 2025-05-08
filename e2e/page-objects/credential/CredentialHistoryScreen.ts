@@ -1,4 +1,5 @@
-import { expect } from 'detox';
+
+import HistoryEntryList from '../components/HistoryEntryList';
 
 export default class CredentialHistoryScreen {
   static get screen() {
@@ -6,7 +7,7 @@ export default class CredentialHistoryScreen {
   }
 
   static get backButton() {
-    return element(by.id('CredentialHistoryScreen.header.back'));
+    return element(by.id('CredentialHistoryScreen.back'));
   }
 
   static get search() {
@@ -30,32 +31,7 @@ export default class CredentialHistoryScreen {
       .scroll(300, 'down');
   }
 
-  private static historyEntry(itemId: number) {
-    const id = `CredentialHistoryScreen.list.item.${itemId}`;
-    return {
-      get did() {
-        return element(by.id(`${id}.did`));
-      },
-      get element() {
-        return element(by.id(id));
-      },
-      get label() {
-        return element(by.id(`${id}.label`));
-      },
-      get time() {
-        return element(by.id(`${id}.timeLabel`));
-      },
-    };
-  }
-
-  static history(itemId: number) {
-    return this.historyEntry(itemId);
-  }
-  static async verifyHistoryLabels(labels: string[]) {
-    let index = 0;
-    for (const label of labels) {
-      await expect(this.history(index).label).toHaveText(label);
-      index++;
-    }
+  static get historyEntryList() {
+    return new HistoryEntryList('CredentialHistoryScreen.list.item', 'CredentialHistoryScreen.list');
   }
 }

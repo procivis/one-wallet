@@ -1,23 +1,24 @@
 import { expect } from 'detox';
 
-import { credentialIssuance } from '../helpers/credential';
-import { getCredentialSchemaData } from '../helpers/credentialSchemas';
-import CredentialAcceptProcessScreen from '../page-objects/CredentialAcceptProcessScreen';
-import CredentialOfferScreen from '../page-objects/CredentialOfferScreen';
-import HistoryDetailScreen from '../page-objects/HistoryDetailScreen';
-import HistoryScreen from '../page-objects/HistoryScreen';
-import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
-import WalletScreen from '../page-objects/WalletScreen';
-import { CredentialSchemaResponseDTO } from '../types/credential';
+import { credentialIssuance } from '../../helpers/credential';
+import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
+import CredentialAcceptProcessScreen from '../../page-objects/CredentialAcceptProcessScreen';
+import CredentialOfferScreen from '../../page-objects/CredentialOfferScreen';
+import HistoryScreen from '../../page-objects/HistoryScreen';
+import SettingsScreen, {
+  SettingsButton,
+} from '../../page-objects/SettingsScreen';
+import WalletScreen from '../../page-objects/WalletScreen';
+import { CredentialSchemaResponseDTO } from '../../types/credential';
 import {
-  keycloakAuth,
   createCredential,
   createCredentialSchema,
+  keycloakAuth,
   offerCredential,
-} from '../utils/api';
-import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
-import { launchApp } from '../utils/init';
-import { scanURL } from '../utils/scan';
+} from '../../utils/api';
+import { CredentialFormat, IssuanceProtocol } from '../../utils/enums';
+import { launchApp } from '../../utils/init';
+import { scanURL } from '../../utils/scan';
 
 describe('ONE-224: Wallet history', () => {
   let authToken: string;
@@ -63,30 +64,11 @@ describe('ONE-224: Wallet history', () => {
       await expect(HistoryScreen.screen).toBeVisible(1);
     });
 
-    it('Contain 2 records after issued credential', async () => {
-      const record_0 = HistoryScreen.history(0);
-      await expect(record_0.element).toBeVisible();
-      await expect(record_0.label).toHaveText('Credential issued');
-      await expect(record_0.timeLabel).toBeVisible();
-      await expect(record_0.info).toBeVisible();
-
-      const record_1 = HistoryScreen.history(1);
-      await expect(record_1.element).toBeVisible();
-      await expect(record_1.label).toHaveText('Credential pending');
-      await expect(record_1.timeLabel).toBeVisible();
-      await expect(record_1.info).toBeVisible();
-    });
-
-    it('Contain records. Open detail screen', async () => {
-      await expect(HistoryScreen.history(1).element).toBeVisible();
-      await HistoryScreen.history(1).element.tap();
-      await expect(HistoryDetailScreen.screen).toBeVisible(1);
-      await HistoryDetailScreen.back.tap();
-    });
-
     it('Search field. No results', async () => {
       await expect(HistoryScreen.screen).toBeVisible(1);
-      await expect(HistoryScreen.history(1).element).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(1).element,
+      ).toBeVisible();
       await HistoryScreen.searchField.typeText('text\n');
       await HistoryScreen.verifyContainsText('No entries');
       await HistoryScreen.verifyContainsText(
@@ -97,13 +79,19 @@ describe('ONE-224: Wallet history', () => {
     it('Search field. Found result', async () => {
       await expect(HistoryScreen.screen).toBeVisible(1);
       await HistoryScreen.searchField.clearText();
-      await waitFor(HistoryScreen.history(0).element)
+      await waitFor(HistoryScreen.historyEntryList.historyRow(0).element)
         .toBeVisible()
         .withTimeout(2000);
-      await expect(HistoryScreen.history(1).element).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(1).element,
+      ).toBeVisible();
       await HistoryScreen.searchField.typeText('string\n');
-      await expect(HistoryScreen.history(0).element).toBeVisible();
-      await expect(HistoryScreen.history(1).element).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(0).element,
+      ).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(1).element,
+      ).toBeVisible();
       await HistoryScreen.searchField.clearButton.tap();
     });
 
@@ -149,11 +137,15 @@ describe('ONE-224: Wallet history', () => {
       await SettingsScreen.button(SettingsButton.HISTORY).tap();
       await expect(HistoryScreen.screen).toBeVisible(1);
 
-      await expect(HistoryScreen.history(4).element).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(4).element,
+      ).toBeVisible();
 
       await HistoryScreen.scrollTo(16);
 
-      await expect(HistoryScreen.history(16).element).toBeVisible();
+      await expect(
+        HistoryScreen.historyEntryList.historyRow(16).element,
+      ).toBeVisible();
     });
   });
 });

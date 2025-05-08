@@ -1,4 +1,3 @@
-import { expect } from 'detox';
 
 import { credentialIssuance } from '../helpers/credential';
 import {
@@ -160,7 +159,7 @@ describe('ONE-601: Credential issuance', () => {
       });
 
       await WalletScreen.openDetailScreen(1);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
 
       const attributes = [
         {

@@ -23,7 +23,7 @@ export enum CredentialStatus {
   MISSING = 'missing',
   MULTIPLE = 'multiple',
   REVALIDATED = 'revalidated',
-  REVORED = 'revoked',
+  REVOKED = 'revoked',
   SUSPENDED = 'suspended',
 }
 

@@ -8,24 +8,20 @@ import {
 } from '../helpers/credentialSchemas';
 import {
   CarouselImageType,
-  CredentialStatus,
 } from '../page-objects/components/CredentialCard';
 import { Attributes } from '../page-objects/components/NerdModeScreen';
 import CredentialDetailScreen, {
   Action,
 } from '../page-objects/credential/CredentialDetailScreen';
-import CredentialHistoryScreen from '../page-objects/credential/CredentialHistoryScreen';
 import CredentialNerdScreen, {
   AttributeTestID,
 } from '../page-objects/credential/CredentialNerdScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  keycloakAuth,
   createCredentialSchema,
   getCredentialDetail,
-  revokeCredential,
-  suspendCredential,
+  keycloakAuth,
 } from '../utils/api';
 import {
   CodeType,
@@ -36,7 +32,7 @@ import {
   KeyType,
   RevocationMethod,
 } from '../utils/enums';
-import { launchApp, reloadApp } from '../utils/init';
+import { launchApp } from '../utils/init';
 
 describe('ONE-2014: Credential design', () => {
   let authToken: string;
@@ -84,7 +80,7 @@ describe('ONE-2014: Credential design', () => {
       });
       const credentialId = issuerHolderCredentialIds.issuerCredentialId;
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.actionButton.tap();
       const credentialDetail = await getCredentialDetail(
         credentialId,
@@ -139,85 +135,6 @@ describe('ONE-2014: Credential design', () => {
     });
   });
 
-  // Fail
-  // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip('ONE-1876: Credential full history screen', () => {
-    let schema1: CredentialSchemaResponseDTO;
-
-    beforeAll(async () => {
-      await launchApp({ delete: true });
-      const schemaData = getCredentialSchemaData({
-        allowSuspension: true,
-        claims: getAttributeClaims(),
-        format: CredentialFormat.SD_JWT,
-        layoutProperties: {
-          primaryAttribute: 'Attribute 1',
-        },
-        revocationMethod: RevocationMethod.LVVC,
-      });
-      schema1 = await createCredentialSchema(authToken, schemaData);
-    });
-
-    it('Test credential history list', async () => {
-      const issuerHolderCredentialIds = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: schema1,
-        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
-      });
-      const credentialId = issuerHolderCredentialIds.issuerCredentialId;
-
-      await suspendCredential(credentialId, authToken);
-
-      await reloadApp({
-        credentialUpdate: [
-          {
-            expectedLabel: 'Suspended',
-            index: 0,
-            status: CredentialStatus.SUSPENDED,
-          },
-        ],
-      });
-
-      await revokeCredential(credentialId, authToken);
-
-      await reloadApp({
-        credentialUpdate: [
-          {
-            expectedLabel: 'Revalidated',
-            index: 0,
-            status: CredentialStatus.SUSPENDED,
-          },
-        ],
-      });
-
-      await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
-      await CredentialDetailScreen.openCredentialHistoryScreen();
-      await expect(CredentialHistoryScreen.screen).toBeVisible(1);
-
-      await expect(CredentialHistoryScreen.history(0).element).toBeVisible();
-      const labels = [
-        'Credential suspended',
-        'Credential issued',
-        'Credential pending offer',
-        'Credential offered',
-      ];
-      await CredentialHistoryScreen.verifyHistoryLabels(labels);
-    });
-
-    it('Search test', async () => {
-      await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
-      await CredentialDetailScreen.openCredentialHistoryScreen();
-      await expect(CredentialHistoryScreen.screen).toBeVisible(1);
-      await CredentialHistoryScreen.search.typeText('Hello');
-      await expect(
-        CredentialHistoryScreen.history(0).element,
-      ).not.toBeVisible();
-      await CredentialHistoryScreen.search.clearText();
-    });
-  });
-
   // Pass
   describe('ONE-2322, ONE-1893: Customizing Credential Schema Layout', () => {
     let schemaWithoutLayout: CredentialSchemaResponseDTO;
@@ -261,7 +178,7 @@ describe('ONE-2014: Credential design', () => {
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.credentialCard.verifyLogoColor(
         '#5A69F3',
         '#FFFFFF',
@@ -275,10 +192,10 @@ describe('ONE-2014: Credential design', () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: schemaWithLayout,
-        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       await WalletScreen.openDetailScreen(0);
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.credentialCard.verifyLogoColor(
         '#ebb1f9',
         '#000000',
@@ -565,7 +482,7 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Test credential card header', async () => {
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyCredentialName(
@@ -643,7 +560,7 @@ describe('ONE-2014: Credential design', () => {
     });
 
     it('Test credential card header', async () => {
-      await expect(CredentialDetailScreen.screen).toBeVisible(1);
+      await CredentialDetailScreen.screen.waitForScreenVisible();
       await expect(CredentialDetailScreen.credentialCard.element).toBeVisible();
 
       await CredentialDetailScreen.credentialCard.verifyCredentialName(

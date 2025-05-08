@@ -14,7 +14,7 @@ import RestoreBackupImportScreen from '../page-objects/restore/RestoreBackupImpo
 import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
-import { keycloakAuth, createCredentialSchema } from '../utils/api';
+import { createCredentialSchema,keycloakAuth } from '../utils/api';
 import { verifyButtonEnabled } from '../utils/button';
 import { CredentialFormat, IssuanceProtocol } from '../utils/enums';
 import { launchApp, reloadApp } from '../utils/init';
@@ -111,8 +111,12 @@ describe('ONE-1530: Backup & Restore', () => {
       // Will be opened folder navigation and it will block the app
       // await CreateBackupPreviewScreen.createBackupButton.longPress(4001);
       // await expect(CreateBackupProcessingScreen.screen).toBeVisible(1);
-      // await expect(CreateBackupProcessingScreen.status.success).toBeVisible();
-      // await expect(CreateBackupProcessingScreen.ctaButton).toBeVisible();
+      // await waitForElementVisible(CreateBackupProcessingScreen.closeButton, DEFAULT_WAIT_TIME);
+      // await CreateBackupProcessingScreen.closeButton.tap();
+      // await waitForElementVisible(element(by.text('SAVE')), DEFAULT_WAIT_TIME);
+      // await delay(5000);
+      // Cannot interact with android system for not to skip backup creation history - Error: Wait for [com.wix.detox.reactnative.idlingresources.uimodule.fabric.FabricUIManagerIdlingResources] to become idle timed out
+      // await element(by.text('SAVE')).tap();
     });
 
     it('User can restore backup from settings', async () => {
