@@ -93,7 +93,7 @@ const PreviewScreen: FC = () => {
             credentials={nonExportableCredentials?.map((credential) => {
               return {
                 issuerDid: credential.issuerDid?.did,
-                ...omit(credential, 'issuerDid'),
+                ...omit(credential, ['issuerDid', 'issuer']),
               };
             })}
           />
