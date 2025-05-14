@@ -26,18 +26,20 @@ export const useCreateRSE = () => {
       })
       .then((rseKeyId) => {
         return core
-          .createDid({
-            didMethod: 'KEY',
-            keys: {
-              assertionMethod: [rseKeyId],
-              authentication: [rseKeyId],
-              capabilityDelegation: [rseKeyId],
-              capabilityInvocation: [rseKeyId],
-              keyAgreement: [rseKeyId],
+          .createIdentifier({
+            did: {
+              keys: {
+                assertionMethod: [rseKeyId],
+                authentication: [rseKeyId],
+                capabilityDelegation: [rseKeyId],
+                capabilityInvocation: [rseKeyId],
+                keyAgreement: [rseKeyId],
+              },
+              method: 'KEY',
+              params: {},
             },
             name: 'holder-did-rse-key',
             organisationId,
-            params: {},
           })
           .then((rseDidId) => {
             walletStore.rseSetup(rseDidId);
