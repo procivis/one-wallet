@@ -71,7 +71,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   const [createdRseDidId, setCreatedRseDidId] = useState<string>();
 
   const requiredStorageType = credential?.schema.walletStorageType;
-  const didId = useMemo(() => {
+  const identifierId = useMemo(() => {
     switch (requiredStorageType) {
       case WalletStorageType.SOFTWARE:
         return walletStore.holderDidSwId;
@@ -102,7 +102,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   const loaderLabel = useMemo(() => {
     if (
       !error &&
-      !didId &&
+      !identifierId &&
       requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT
     ) {
       return translate('credentialOffer.process.creatingRSE.title');
@@ -110,11 +110,11 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       return translate('credentialOffer.process.error.rseLocked.title');
     }
     const txKeyPath: TxKeyPath =
-      state === LoaderViewState.Warning && !didId
+      state === LoaderViewState.Warning && !identifierId
         ? 'credentialOffer.process.warning.incompatible.title'
         : `credentialOffer.process.${state}.title`;
     return translateError(error, translate(txKeyPath));
-  }, [error, didId, requiredStorageType, state]);
+  }, [error, identifierId, requiredStorageType, state]);
 
   const initializeRSE = useCallback(() => {
     if (rseInitialized) {
@@ -136,7 +136,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     setAcceptanceInitialized(true);
     try {
       await acceptCredential({
-        didId,
+        identifierId,
         interactionId,
         txCode: txCodeValue,
       });
@@ -160,7 +160,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     }
   }, [
     acceptanceInitialized,
-    didId,
+    identifierId,
     acceptCredential,
     interactionId,
     txCodeValue,
@@ -173,7 +173,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     if (!credential) {
       return;
     }
-    if (!didId) {
+    if (!identifierId) {
       if (requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT) {
         initializeRSE();
       } else {
@@ -184,7 +184,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     handleCredentialAccept();
   }, [
     credential,
-    didId,
+    identifierId,
     handleCredentialAccept,
     initializeRSE,
     requiredStorageType,
