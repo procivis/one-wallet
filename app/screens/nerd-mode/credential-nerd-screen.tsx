@@ -124,7 +124,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       testID: 'validity',
     }),
     ...addElementIf(Boolean(didMethod), {
-      attributeKey: translate('credentialDetail.credential.issuerDid'),
+      attributeKey: translate('credentialDetail.credential.identifier'),
       attributeText: identifier,
       canBeCopied: true,
       highlightedText: didMethod,

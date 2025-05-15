@@ -12,9 +12,9 @@ export const entityLabels = {
 
 export const attributesLabels = {
   collapse: translate('nerdView.action.collapseAttribute'),
-  entityDid: translate('common.entityDid'),
+  entityIdentifier: translate('credentialDetail.credential.identifier'),
   expand: translate('nerdView.action.expandAttribute'),
-  issuerDid: translate('common.issuerDid'),
+  issuerIdentifier: translate('credentialDetail.credential.identifier'),
   role: translate('common.role'),
   trustRegistry: translate('common.trustRegistry'),
 };
