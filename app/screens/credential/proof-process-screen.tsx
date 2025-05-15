@@ -56,7 +56,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const { data: credentialDetail } = useCredentialDetail(
     Object.values(credentials)[0]?.credentialId,
   );
-  const usedDidId = useMemo(() => {
+  const usedIdentifierId = useMemo(() => {
     if (!credentialDetail) {
       return undefined;
     }
@@ -93,11 +93,11 @@ const ProofProcessScreen: FunctionComponent = () => {
   }, [error, state]);
 
   const handleProofSubmit = useCallback(
-    async (didId: string) => {
+    async (identifierId: string) => {
       try {
         await acceptProof({
           credentials,
-          didId,
+          identifierId,
           interactionId,
         });
         setState(LoaderViewState.Success);
@@ -114,11 +114,11 @@ const ProofProcessScreen: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    if (usedDidId) {
-      handleProofSubmit(usedDidId);
+    if (usedIdentifierId) {
+      handleProofSubmit(usedIdentifierId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!usedDidId]);
+  }, [!usedIdentifierId]);
 
   const redirectUri = proof?.redirectUri;
   const closeButtonHandler = useCallback(() => {
