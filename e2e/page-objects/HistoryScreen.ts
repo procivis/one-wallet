@@ -1,4 +1,5 @@
 import { device, expect } from 'detox';
+
 import HistoryEntryList from './components/HistoryEntryList';
 
 export default class HistoryScreen {

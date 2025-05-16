@@ -31,12 +31,12 @@ import { DidDetailDTO } from '../../types/did';
 import { ProofSchemaResponseDTO } from '../../types/proof';
 import { TrustEntityResponseDTO } from '../../types/trustEntity';
 import {
-  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
   createTrustEntity,
   getTrustAnchor,
   getTrustEntityDetail,
+  keycloakAuth,
 } from '../../utils/api';
 import { getTrustEntityRequestData } from '../../utils/data-utils';
 import {

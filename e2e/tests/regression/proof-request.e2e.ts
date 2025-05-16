@@ -19,10 +19,10 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { ProofSchemaResponseDTO } from '../../types/proof';
 import {
-  keycloakAuth,
   createCredentialSchema,
   createProofRequest,
   deleteProofRequest,
+  keycloakAuth,
   requestProof,
   revokeCredential,
 } from '../../utils/api';
