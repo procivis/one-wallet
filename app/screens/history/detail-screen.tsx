@@ -147,11 +147,11 @@ export const HistoryDetailScreen: FC = () => {
   const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
     if (
       entry.entityType === HistoryEntityTypeEnum.CREDENTIAL &&
-      issuedCredential?.issuerDid
+      issuedCredential?.issuer
     ) {
       return {
         entity: {
-          did: issuedCredential?.issuerDid ?? entry.target,
+          identifier: issuedCredential?.issuer ?? entry.target,
           labels: trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER),
           role: TrustEntityRoleEnum.ISSUER,
           testID: 'EntityDetail',
@@ -159,11 +159,11 @@ export const HistoryDetailScreen: FC = () => {
       };
     } else if (
       entry.entityType === HistoryEntityTypeEnum.PROOF &&
-      proof?.verifierDid
+      proof?.verifier
     ) {
       return {
         entity: {
-          did: proof?.verifierDid ?? entry.target,
+          identifier: proof?.verifier ?? entry.target,
           labels: trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER),
           role: TrustEntityRoleEnum.VERIFIER,
           testID: 'EntityDetail',
@@ -179,8 +179,8 @@ export const HistoryDetailScreen: FC = () => {
     entry.entityType,
     entry.name,
     entry.target,
-    issuedCredential?.issuerDid,
-    proof?.verifierDid,
+    issuedCredential?.issuer,
+    proof?.verifier,
   ]);
 
   const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {

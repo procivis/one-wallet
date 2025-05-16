@@ -299,7 +299,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
         <EntityDetails
-          did={proof?.verifierDid}
+          identifier={proof?.verifier}
           labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
           role={TrustEntityRoleEnum.VERIFIER}
           style={styles.verifier}
