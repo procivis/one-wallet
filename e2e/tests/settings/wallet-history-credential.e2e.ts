@@ -5,10 +5,14 @@ import { credentialIssuance } from '../../helpers/credential';
 import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
 import { CredentialStatus } from '../../page-objects/components/CredentialCard';
 import { waitForElementVisible } from '../../page-objects/components/ElementUtil';
+import { HistoryEntryEnum } from '../../page-objects/components/HistoryEntryList';
 import CredentialDetailScreen, {
   Action,
 } from '../../page-objects/credential/CredentialDetailScreen';
 import CredentialHistoryScreen from '../../page-objects/credential/CredentialHistoryScreen';
+import CredentialDeleteProcessScreen from '../../page-objects/CredentialDeleteProcessScreen';
+import CredentialDeletePromptScreen from '../../page-objects/CredentialDeletePromptScreen';
+import HistoryDetailScreen, { CredentialCardStatus } from '../../page-objects/HistoryDetailScreen';
 import HistoryScreen from '../../page-objects/HistoryScreen';
 import SettingsScreen, {
   SettingsButton,
@@ -39,10 +43,6 @@ import {
   SHORT_WAIT_TIME,
 } from '../../utils/init';
 import { statusScreenCheck } from '../../utils/status-check';
-import HistoryDetailScreen, { CredentialCardStatus } from '../../page-objects/HistoryDetailScreen';
-import { HistoryEntryEnum } from '../../page-objects/components/HistoryEntryList';
-import CredentialDeletePromptScreen from '../../page-objects/CredentialDeletePromptScreen';
-import CredentialDeleteProcessScreen from '../../page-objects/CredentialDeleteProcessScreen';
 
 const refreshCredentialAndUpdateCredentialStatus = async (
   credentialStatus: CredentialStatus,
@@ -255,8 +255,8 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
     await expect(HistoryScreen.screen).toBeVisible(1);
     await HistoryScreen.historyEntryList.verifyHistory([
       {
-        label: HistoryEntryEnum.CREDENTIAL_DELETED,
         info: issuerHolderCredentialIds.issuerCredentialId,
+        label: HistoryEntryEnum.CREDENTIAL_DELETED,
       },
     ]);
     await HistoryScreen.historyEntryList.viewHistoryDetail(0);

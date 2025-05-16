@@ -3,9 +3,9 @@ import { getCredentialSchemaData } from '../../helpers/credentialSchemas';
 import { CredentialStatus } from '../../page-objects/components/CredentialCard';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import {
-  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
+  keycloakAuth,
   revokeCredential,
   suspendCredential,
 } from '../../utils/api';

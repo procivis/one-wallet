@@ -36,11 +36,11 @@ import { objectToQueryParams } from './utils';
 const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL;
 const API_BASE_URL = process.env.API_BASE_URL;
 const LOGIN = {
-  grant_type: 'password',
-  username: process.env.KEYCLOAK_USER_NAME,
-  password: process.env.KEYCLOAK_PASSWORD,
   client_id: 'login-client',
   client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
+  grant_type: 'password',
+  password: process.env.KEYCLOAK_PASSWORD,
+  username: process.env.KEYCLOAK_USER_NAME,
 };
 
 /**
