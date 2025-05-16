@@ -168,8 +168,8 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        did: credentialDetail.issuerDid!,
         entityLabels: entityLabels,
+        identifier: credentialDetail.issuer!,
         role: TrustEntityRoleEnum.ISSUER,
       }}
       labels={attributesLabels}

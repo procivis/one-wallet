@@ -1281,7 +1281,7 @@ PODS:
     - React
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-one-core (1.42576.1):
+  - react-native-one-core (1.42873.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -2399,7 +2399,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: ce0b8796c99e2b85e3202bd500b1ef286a17a02e
   react-native-keep-awake: 21ff40767cde4bd81021ffee12480aee4b5b91bb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
-  react-native-one-core: a7474e0f799e44aa10bbb86166c33d10073830e1
+  react-native-one-core: e73df1d5992ba2f8b57e7db54fe3b4919e7a541d
   react-native-picker: 0ca464c49154538aef350db861bb73e3245f9578
   react-native-safe-area-context: 7e513d737b0b5c1d10bbe0e5fcc9f925a7be144c
   react-native-ultimate-config: b1053842af485aa988af35c97592ad3a282d8795
@@ -2442,7 +2442,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 0ea07666b2252aa48b192764eb21a25c60e6b6db
   RNLocalize: d39379b1f431d0b54eeae6d9593f64d66d220d7c
   RNPermissions: d4507ea4c543a0ec584f51251e05bab164793fc1
-  RNReanimated: 9a1d086344e3cc8827d5a42fefafc2acc431c6d7
+  RNReanimated: 86aaf0407803b713a7aa47ac086730f409672b91
   RNScreens: b32d0d59b53acb574fa795a9343591ef4e7ab7c2
   RNSentry: fbc2d790344a68b95840ae7183e00a61a0acecc1
   RNShare: 56b5431c60e1e9ee167191f4f327471af1c2941a

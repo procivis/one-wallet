@@ -53,7 +53,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { credentialId, interactionId, txCode } = route.params;
 
   const { data: credential } = useCredentialDetail(credentialId);
-  const { data: trustEntity } = useTrustEntity(credential?.issuerDid?.id);
+  const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
   const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -178,7 +178,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     >
       <View style={styles.content} testID="CredentialOfferScreen.content">
         <EntityDetails
-          did={credential?.issuerDid}
+          identifier={credential?.issuer}
           labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
           role={TrustEntityRoleEnum.ISSUER}
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
