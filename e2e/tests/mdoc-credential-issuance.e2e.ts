@@ -7,8 +7,8 @@ import CredentialDetailScreen from '../page-objects/credential/CredentialDetailS
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import {
-  keycloakAuth,
   createCredentialSchema,
+  keycloakAuth,
 } from '../utils/api';
 import {
   CredentialFormat,

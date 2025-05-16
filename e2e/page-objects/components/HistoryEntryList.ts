@@ -6,13 +6,14 @@ export interface HistoryEntryRow {
 }
 
 export enum HistoryEntryEnum {
-  CREDENTIAL_REVOKED = 'Credential revoked',
-  CREDENTIAL_REACTIVATED = 'Credential reactivated',
   CREDENTIAL_ACCEPTED = 'Credential accepted',
-  CREDENTIAL_SUSPENDED = 'Credential suspended',
-  CREDENTIAL_ISSUED = 'Credential issued', // There is a bug ticket for this history entry https://procivis.atlassian.net/browse/ONE-5463
-  CREDENTIAL_PENDING = 'Credential pending',
   CREDENTIAL_DELETED = 'Credential deleted',
+  CREDENTIAL_ISSUED = 'Credential issued',
+  // There is a bug ticket for this history entry https://procivis.atlassian.net/browse/ONE-5463
+  CREDENTIAL_PENDING = 'Credential pending',
+  CREDENTIAL_REACTIVATED = 'Credential reactivated', 
+  CREDENTIAL_REVOKED = 'Credential revoked',
+  CREDENTIAL_SUSPENDED = 'Credential suspended'
 }
 
 export default class HistoryEntryList {

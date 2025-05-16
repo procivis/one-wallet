@@ -20,9 +20,9 @@ import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { DidDetailDTO } from '../../types/did';
 import {
-  keycloakAuth,
   createCredentialSchema,
   createDidWithKey,
+  keycloakAuth,
   revokeCredential,
   suspendCredential,
 } from '../../utils/api';

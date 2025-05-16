@@ -7,7 +7,7 @@ import { proofSchemaCreate, proofSharing } from '../helpers/proof-request';
 import ProofRequestSharingScreen from '../page-objects/proof-request/ProofRequestSharingScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { ProofSchemaResponseDTO } from '../types/proof';
-import { keycloakAuth, createCredentialSchema } from '../utils/api';
+import { createCredentialSchema,keycloakAuth } from '../utils/api';
 import {
   CredentialFormat,
   DataType,

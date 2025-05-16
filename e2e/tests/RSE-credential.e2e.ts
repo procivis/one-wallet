@@ -17,7 +17,7 @@ import ProofRequestSharingScreen from '../page-objects/proof-request/ProofReques
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
 import { ProofSchemaResponseDTO } from '../types/proof';
-import { keycloakAuth, createCredentialSchema } from '../utils/api';
+import { createCredentialSchema,keycloakAuth } from '../utils/api';
 import {
   CredentialFormat,
   DataType,

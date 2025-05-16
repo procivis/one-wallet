@@ -1,4 +1,5 @@
 import { expect } from 'detox';
+
 import { HistoryEntryEnum } from "./components/HistoryEntryList";
 
 export enum CredentialCardStatus{

@@ -21,7 +21,7 @@ import SettingsScreen, {
 } from '../../page-objects/SettingsScreen';
 import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
-import { keycloakAuth, createCredentialSchema } from '../../utils/api';
+import { createCredentialSchema,keycloakAuth } from '../../utils/api';
 import {
   CredentialFormat,
   IssuanceProtocol,
