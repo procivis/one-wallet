@@ -1281,7 +1281,7 @@ PODS:
     - React
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-one-core (1.42994.0):
+  - react-native-one-core (1.43299.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
