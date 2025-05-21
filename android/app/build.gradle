@@ -104,7 +104,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.51"
+        versionName "1.53"
 
         manifestPlaceholders = [
             customOpenIDURLScheme: project.config.get("CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME") ?: "",
