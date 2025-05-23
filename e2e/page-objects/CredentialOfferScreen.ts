@@ -1,5 +1,5 @@
 import CredentialCard from './components/CredentialCard';
-import EntityDetailHeader from './components/TrustEntityHeader';
+import { TrustEntityHeader } from './trust-entity';
 
 export default class CredentialOfferScreen {
   static get screen() {
@@ -31,7 +31,7 @@ export default class CredentialOfferScreen {
   }
 
   static get trustEntity() {
-    return EntityDetailHeader('EntityDetail');
+    return TrustEntityHeader('CredentialOfferScreen.entityCluster');
   }
 
   static async scrollTo(

@@ -1,7 +1,7 @@
-import EntityDetailHeader from '../components/TrustEntityHeader';
+import { TrustEntityHeader } from '../trust-entity';
 import ProofRequestSharingNerdScreen from './ProofRequestSharingNerdScreen';
 
-export default abstract class ProofRequestNerdScreen extends ProofRequestSharingNerdScreen {
+export default class ProofRequestNerdScreen extends ProofRequestSharingNerdScreen {
   static async scrollToCredentialView(credentialId: string) {
     await this.scrollTo(
       element(by.id(`ProofRequestNerdView.issuerTrustEntity.${credentialId}`)),
@@ -9,12 +9,12 @@ export default abstract class ProofRequestNerdScreen extends ProofRequestSharing
   }
 
   static trustEntityByCredentialID(credentialId: string) {
-    return EntityDetailHeader(
+    return TrustEntityHeader(
       `ProofRequestNerdView.issuerTrustEntity.${credentialId}`,
     );
   }
 
   static get entityDetailHeader() {
-    return EntityDetailHeader('ProofRequestNerdView.verifierTrustEntity');
+    return TrustEntityHeader('ProofRequestNerdView.verifierTrustEntity');
   }
 }

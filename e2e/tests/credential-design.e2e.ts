@@ -88,9 +88,10 @@ describe('ONE-2014: Credential design', () => {
       );
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
       await expect(CredentialNerdScreen.screen).toBeVisible(1);
-      await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
-        'Unknown issuer',
-      );
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: credentialDetail.issuerDid.did, 
+        iconStatus: 'notTrusted',
+      });
 
       const attributes: Attributes<AttributeTestID> = {
         [AttributeTestID.schemaName]: {
@@ -102,7 +103,7 @@ describe('ONE-2014: Credential design', () => {
           value: 'Valid',
         },
         [AttributeTestID.issuerDID]: {
-          label: 'Issuer DID',
+          label: 'Identifier',
           value: credentialDetail.issuerDid.did,
         },
         [AttributeTestID.dateAdded]: {

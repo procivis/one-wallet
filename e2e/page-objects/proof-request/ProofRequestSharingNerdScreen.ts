@@ -1,6 +1,7 @@
-import TrustEntityDetail from '../components/TrustEntityDetail';
+import { TrustEntityHeader } from '../trust-entity';
+import TrustEntityDetail from '../trust-entity/TrustEntityDetail';
 
-export default abstract class ProofRequestSharingNerdScreen {
+export default class ProofRequestSharingNerdScreen {
   static get screen() {
     return element(by.id('ProofRequestNerdView'));
   }
@@ -9,8 +10,16 @@ export default abstract class ProofRequestSharingNerdScreen {
     await element(by.id('ProofRequestNerdView.closeIcon')).tap();
   }
 
-  static get TrustEntityInfo() {
-    return TrustEntityDetail('ProofRequestNerdView.verifierTrustEntity');
+  static get entityCluster() {
+    const id = 'ProofRequestNerdView.verifierTrustEntity';
+    return {
+      get detail() {
+        return TrustEntityDetail(id);
+      },
+      get header() {
+        return TrustEntityHeader(id);
+      },
+    }
   }
 
   protected static async scrollTo(element: Detox.IndexableNativeElement) {
