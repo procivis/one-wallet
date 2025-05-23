@@ -1,6 +1,7 @@
 import { expect } from 'detox';
 
-import TrustEntityDetail from './TrustEntityDetail';
+import { TrustEntityDetail, TrustEntityHeader } from '../trust-entity';
+
 
 export type Attributes<T extends string | number> = {
   [key in T]?: {
@@ -16,16 +17,13 @@ export default function BaseNerdView<T extends string>(testID: string) {
   function entityClusterEntry() {
     const id = `${testID}.entityCluster`;
     return {
-      get element() {
-        return element(by.id(id));
+      get detail() {
+        return TrustEntityDetail(id);
       },
-      get name() {
-        return element(by.id(`${id}.entityName`));
+      get header() {
+        return TrustEntityHeader(id);
       },
-      get subline() {
-        return element(by.id(`${id}.subline`));
-      },
-    };
+    }
   }
 
   function attributeEntry(attribute: T) {
@@ -50,9 +48,6 @@ export default function BaseNerdView<T extends string>(testID: string) {
   }
 
   return {
-    get TrustEntityInfo() {
-      return TrustEntityDetail(`${testID}.entityCluster`);
-    },
     attribute: function (attribute: T) {
       return attributeEntry(attribute);
     },

@@ -76,19 +76,22 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.ISSUER
     ) {
-      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader(
-        trustEntity,
-      );
+      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
+        entityName: trustEntity.name,
+        iconStatus: 'trusted',
+        logo: true,
+      });
     } else {
-      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeaderDefault(
-        trustEntity.did.did,
-      );
+      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
+        entityName: trustEntity.did.did,
+        iconStatus: 'notTrusted',
+      });
     }
     await CredentialOfferScreen.scrollTo(CredentialOfferScreen.disclaimer);
     if (trustEntity.termsUrl && trustEntity.privacyUrl) {
       await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
         'By tapping on “accept” you agree to the Terms of services and Privacy policy provided by this entity.',
-      ).withTimeout(4000);
+      ).withTimeout(6000);
     } else if (trustEntity.termsUrl) {
       await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
         'By tapping on “accept” you agree to the Terms of services provided by this entity.',
@@ -103,9 +106,10 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
       );
     }
   } else {
-    await CredentialOfferScreen.trustEntity.verifyEntityDetailHeaderDefault(
-      issuerDid.did,
-    );
+    await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
+      entityName: issuerDid.did,
+      iconStatus: 'notTrusted',
+    });
     await expect(CredentialOfferScreen.disclaimer).toHaveText(
       'No terms of service or privacy policy provided.',
     );
@@ -117,18 +121,25 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.ISSUER
     ) {
-      await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: trustEntity.name,
+        logo: true,
+        subline: 'Trusted • Dev Trust List',
+      })
+      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(
         trustEntity,
       );
     } else {
-      await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-        trustEntity.did.did,
-      );
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+          entityName: issuerDid.did,
+          iconStatus: 'notTrusted',
+      });
     }
   } else {
-    await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-      issuerDid.did,
-    );
+    await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+      entityName: issuerDid.did, 
+      iconStatus: 'notTrusted'
+    });
   }
   await CredentialNerdScreen.back.tap();
   await acceptCredentialTestCase(data, LoaderViewState.Success);
@@ -145,18 +156,24 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.ISSUER
     ) {
-      await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: trustEntity.name,
+        iconStatus: 'trusted',
+      });
+      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(
         trustEntity,
       );
     } else {
-      await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-        trustEntity.did.did,
-      );
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: issuerDid.did,
+        iconStatus: 'notTrusted',
+      });
     }
   } else {
-    await CredentialNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-      issuerDid.did,
-    );
+    await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+      entityName: issuerDid.did,
+      iconStatus: 'notTrusted',
+    });
   }
   await CredentialNerdScreen.back.tap();
 
@@ -185,39 +202,42 @@ const proofSharingWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.VERIFIER
     ) {
-      await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader(
-        trustEntity,
-      );
+    await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
+      entityName: trustEntity.name,
+      iconStatus: 'trusted',
+      logo: true,
+    });
     } else {
-      await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeaderDefault(
-        trustEntity.did.did,
-      );
+      await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
+        entityName: trustEntity.did.did,
+        iconStatus: 'notTrusted'
+      });
     }
 
-    await ProofRequestSharingScreen.scrollTo(
-      ProofRequestSharingScreen.disclaimer,
-    );
+    await ProofRequestSharingScreen.scrollTo(ProofRequestSharingScreen.disclaimer);
+
     if (trustEntity.termsUrl && trustEntity.privacyUrl) {
-      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
         'By tapping on “share” you agree to the Terms of services and Privacy policy provided by this entity.',
-      );
+      ).withTimeout(6000);
     } else if (trustEntity.termsUrl) {
-      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
         'By tapping on “share” you agree to the Terms of services provided by this entity.',
-      );
+      ).withTimeout(6000);
     } else if (trustEntity.privacyUrl) {
-      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
+      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
         'By tapping on “share” you agree to the Privacy policy provided by this entity.',
-      );
+      ).withTimeout(6000);
     } else {
       await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
         'No terms of service or privacy policy provided.',
       );
     }
   } else {
-    await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeaderDefault(
-      verifierDid.did,
-    );
+    await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
+      entityName: verifierDid.did,
+      iconStatus: 'notTrusted'
+    });
   }
   await ProofRequestSharingScreen.infoButton.tap();
   await expect(ProofRequestSharingNerdScreen.screen).toBeVisible(1);
@@ -227,18 +247,23 @@ const proofSharingWithDidTrustEntityAndVerify = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.VERIFIER
     ) {
-      await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetail(
-        trustEntity,
-      );
+      await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+         entityName: trustEntity.name,
+         logo: true,
+         subline: 'Trusted • Dev Trust List',
+      });
+      await ProofRequestSharingNerdScreen.entityCluster.detail.verifyTrustEntityDetail(trustEntity)
     } else {
-      await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-        trustEntity.did.did,
-      );
+      await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: trustEntity.did.did,
+        iconStatus: 'notTrusted'
+      });
     }
   } else {
-    await ProofRequestSharingNerdScreen.TrustEntityInfo.verifyTrustEntityDetailDefault(
-      verifierDid.did,
-    );
+    await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+      entityName: verifierDid.did,
+      iconStatus: 'notTrusted'
+    });
   }
   await ProofRequestSharingNerdScreen.close();
   await shareCredential(LoaderViewState.Success, proofRequestData);
@@ -265,18 +290,22 @@ const verifyNewestProofRequestOnHistory = async (
       trustEntity.role === TrustEntityRole.BOTH ||
       trustEntity.role === TrustEntityRole.VERIFIER
     ) {
-      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader(
-        trustEntity,
-      );
+      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
+        entityName: trustEntity.name,
+        logo: true,
+        subline: 'Trusted • Dev Trust List',
+      });
     } else {
-      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeaderDefault(
-        trustEntity.did.did,
-      );
+      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
+        entityName: trustEntity.did.did,
+        iconStatus: 'notTrusted',
+      });
     }
   } else {
-    await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeaderDefault(
-      verifierDid.did,
-    );
+    await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
+      entityName: verifierDid.did,
+      iconStatus: 'notTrusted',
+    });
   }
 
   if (credentialTrustEntityList) {
@@ -290,11 +319,11 @@ const verifyNewestProofRequestOnHistory = async (
       ) {
         await ProofRequestNerdScreen.trustEntityByCredentialID(
           credentialTrustEntity.credentialId,
-        ).verifyEntityDetailHeader(credentialTrustEntity.trustEntity);
+        ).verifyEntityDetailHeader({entityName: credentialTrustEntity.trustEntity.name});
       } else if (credentialTrustEntity.didDetail) {
         await ProofRequestNerdScreen.trustEntityByCredentialID(
           credentialTrustEntity.credentialId,
-        ).verifyEntityDetailHeaderDefault(credentialTrustEntity.didDetail.did);
+        ).verifyEntityDetailHeader({entityName: credentialTrustEntity.didDetail.did});
       }
     }
   }

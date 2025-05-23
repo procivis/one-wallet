@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Button,
+  concatTestID,
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
@@ -111,13 +112,14 @@ const CredentialOfferScreen: FunctionComponent = () => {
   ]);
 
   const onImagePreview = useCredentialImagePreview();
+  const testID = 'CredentialOfferScreen';
 
   const { card, attributes } =
     credential && config
       ? detailsCardFromCredential(
           credential,
           config,
-          'CredentialOfferScreen.detail',
+          `${testID}.detail`,
           credentialCardLabels(),
         )
       : { attributes: [], card: undefined };
@@ -151,7 +153,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     () => (
       <HeaderCloseModalButton
         onPress={onCloseButtonPress}
-        testID="CredentialOfferScreen.header.close"
+        testID={concatTestID(testID, 'header.close')}
       />
     ),
     [onCloseButtonPress],
@@ -164,7 +166,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         rightItem: (
           <HeaderInfoButton
             onPress={infoPressHandler}
-            testID="CredentialOfferScreen.header.info"
+            testID={concatTestID(testID, 'header.info')}
           />
         ),
         static: true,
@@ -172,17 +174,17 @@ const CredentialOfferScreen: FunctionComponent = () => {
       }}
       modalPresentation
       scrollView={{
-        testID: 'CredentialOfferScreen.scroll',
+        testID: concatTestID(testID, 'scroll'),
       }}
-      testID="CredentialOfferScreen"
+      testID={testID}
     >
-      <View style={styles.content} testID="CredentialOfferScreen.content">
+      <View style={styles.content} testID={concatTestID(testID, 'content')}>
         <EntityDetails
           identifier={credential?.issuer}
           labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
           role={TrustEntityRoleEnum.ISSUER}
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
-          testID="EntityDetail"
+          testID={concatTestID(testID, 'entityCluster')}
         />
         {!credential || !config || !card ? (
           <ActivityIndicator animate={isFocused} />
@@ -206,14 +208,14 @@ const CredentialOfferScreen: FunctionComponent = () => {
             <View style={styles.bottom}>
               <Button
                 onPress={onAccept}
-                testID="CredentialOfferScreen.accept"
+                testID={concatTestID(testID, 'accept')}
                 title={translate('credentialOffer.accept')}
               />
             </View>
             <ShareDisclaimer
               action={translate('common.accept')}
               ppUrl={trustEntity?.privacyUrl}
-              testID="CredentialOfferScreen.disclaimer"
+              testID={concatTestID(testID, 'disclaimer')}
               tosUrl={trustEntity?.termsUrl}
             />
           </>

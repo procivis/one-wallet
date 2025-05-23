@@ -50,7 +50,6 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
   beforeAll(async () => {
     await launchApp();
     authToken = await keycloakAuth();
-    console.log('authToken', authToken);
     credentialSchemaJWT = await createCredentialSchema(
       authToken,
       getCredentialSchemaData({
@@ -183,9 +182,10 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
       await expect(CredentialNerdScreen.screen).toBeVisible(1);
-      await expect(CredentialNerdScreen.entityCluster.name).toHaveText(
-        'Unknown issuer',
-      );
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: didDetail.did,
+        iconStatus: 'notTrusted',
+      });
       await CredentialNerdScreen.back.tap();
       await CredentialDetailScreen.screen.waitForScreenVisible();
       await CredentialDetailScreen.backButton.tap();
@@ -195,7 +195,6 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
         authToken,
         didDetail.id,
       );
-
       // Cache cleaning
       await WalletScreen.settingsButton.tap();
       await expect(SettingsScreen.screen).toBeVisible(1);
@@ -214,9 +213,12 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
       await CredentialDetailScreen.actionButton.tap();
       await CredentialDetailScreen.action(Action.MORE_INFORMATION).tap();
       await expect(CredentialNerdScreen.screen).toBeVisible(1);
-      await waitFor(CredentialNerdScreen.entityCluster.name)
-        .toHaveText(trustEntityDetail.name)
-        .withTimeout(10000);
+      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
+        entityName: trustEntityDetail.name,
+        logo: true,
+        subline: 'Trusted • Dev Trust List',
+      });
+      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(trustEntityDetail);
     });
   });
 });

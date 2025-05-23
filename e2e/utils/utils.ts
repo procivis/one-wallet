@@ -36,3 +36,5 @@ export async function getIdentifier(element: NativeElementActions) {
     throw new Error('Mutliple elements');
   }
 }
+
+export const replaceBreakingHyphens = (str: string): string => str.replace(/-/g, '\u2011');

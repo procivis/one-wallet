@@ -1,6 +1,6 @@
 import CredentialCard from '../components/CredentialCard';
 import ProofCredentialCard from '../components/ProofCredentialCard';
-import EntityDetailHeader from '../components/TrustEntityHeader';
+import { TrustEntityHeader } from '../trust-entity';
 
 export default class ProofRequestSharingScreen {
   static get screen() {
@@ -8,7 +8,7 @@ export default class ProofRequestSharingScreen {
   }
 
   static get trustEntity() {
-    return EntityDetailHeader('EntityDetail');
+    return TrustEntityHeader('ProofRequestSharingScreen.entityCluster');
   }
 
   static get infoButton() {
