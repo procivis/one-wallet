@@ -1281,11 +1281,11 @@ PODS:
     - React
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-one-core (1.43299.0):
+  - react-native-one-core (1.44349.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
-  - react-native-safe-area-context (5.2.0):
+  - react-native-safe-area-context (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1298,8 +1298,8 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-safe-area-context/common (= 5.2.0)
-    - react-native-safe-area-context/fabric (= 5.2.0)
+    - react-native-safe-area-context/common (= 5.4.1)
+    - react-native-safe-area-context/fabric (= 5.4.1)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1308,7 +1308,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/common (5.2.0):
+  - react-native-safe-area-context/common (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1329,7 +1329,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/fabric (5.2.0):
+  - react-native-safe-area-context/fabric (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2399,9 +2399,9 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-one-core: 9b168ff98bccc5e884f27ddf779aed14d95f0317
+  react-native-one-core: dad2bf767d1e24369ada8f5ddc5b38616968d862
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
-  react-native-safe-area-context: 9c33120e9eac7741a5364cc2d9f74665049b76b3
+  react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
   React-nativeconfig: cb207ebba7cafce30657c7ad9f1587a8f32e4564
   React-NativeModulesApple: 82a8bee52df9f5b378195a500f22be3a6ef0f890
