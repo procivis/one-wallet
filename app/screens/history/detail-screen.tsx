@@ -105,7 +105,12 @@ export const HistoryDetailScreen: FC = () => {
   });
 
   const onInfoPressed = useMemo(() => {
-    if (entry.entityType === HistoryEntityTypeEnum.BACKUP) {
+    if (
+      entry.entityType === HistoryEntityTypeEnum.BACKUP ||
+      (entry.entityType === HistoryEntityTypeEnum.PROOF && !proof) ||
+      (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL &&
+        !issuedCredential)
+    ) {
       return undefined;
     }
 
@@ -142,7 +147,7 @@ export const HistoryDetailScreen: FC = () => {
     };
 
     return infoPressHandler;
-  }, [entry, rootNavigation]);
+  }, [entry, issuedCredential, proof, rootNavigation]);
 
   const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
     if (
