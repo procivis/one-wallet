@@ -105,7 +105,6 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
     const card_0 = await WalletScreen.credentialAtIndex(0);
     await card_0.openDetail();
     let historyLabelsUnderCredentialDetail = [
-      HistoryEntryEnum.CREDENTIAL_ISSUED,
       HistoryEntryEnum.CREDENTIAL_ACCEPTED,
       HistoryEntryEnum.CREDENTIAL_PENDING,
     ];
@@ -121,7 +120,6 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
 
     historyLabelsUnderCredentialDetail = [
       HistoryEntryEnum.CREDENTIAL_SUSPENDED,
-      HistoryEntryEnum.CREDENTIAL_ISSUED,
       HistoryEntryEnum.CREDENTIAL_ACCEPTED,
     ];
     await CredentialDetailScreen.historyEntryList.verifyHistoryLabels(
@@ -164,7 +162,6 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
       HistoryEntryEnum.CREDENTIAL_REACTIVATED,
       HistoryEntryEnum.CREDENTIAL_ACCEPTED,
       HistoryEntryEnum.CREDENTIAL_SUSPENDED,
-      HistoryEntryEnum.CREDENTIAL_ISSUED, // There is a bug ticket for this history entry https://procivis.atlassian.net/browse/ONE-5463
       HistoryEntryEnum.CREDENTIAL_ACCEPTED,
       HistoryEntryEnum.CREDENTIAL_PENDING,
     ];
@@ -197,10 +194,6 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
       {
         info: issuerDid.did,
         label: HistoryEntryEnum.CREDENTIAL_SUSPENDED,
-      },
-      {
-        info: issuerDid.did,
-        label: HistoryEntryEnum.CREDENTIAL_ISSUED, // There is a bug ticket for this history entry https://procivis.atlassian.net/browse/ONE-5463
       },
       {
         info: issuerDid.did,
@@ -267,7 +260,7 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
     await HistoryDetailScreen.back.tap();
     await HistoryScreen.historyEntryList.viewHistoryDetail(2);
     await HistoryDetailScreen.verifyAction(
-      HistoryEntryEnum.CREDENTIAL_ACCEPTED,
+      HistoryEntryEnum.CREDENTIAL_PENDING,
     );
     await HistoryDetailScreen.veifyCredentialCardStatus(
       issuerHolderCredentialIds.holderCredentialId,
@@ -280,6 +273,12 @@ describe('ONE-4692: Wallet: Adjusted display of history (Credentials)', () => {
   });
 
   it('Search test', async () => {
+    await credentialIssuance({
+      authToken: authToken,
+      credentialSchema: schema,
+      didData: issuerDid,
+      exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+    });
     await WalletScreen.openDetailScreen(0);
     await CredentialDetailScreen.screen.waitForScreenVisible();
     await CredentialDetailScreen.openCredentialHistoryScreen();

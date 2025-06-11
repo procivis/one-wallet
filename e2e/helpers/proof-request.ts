@@ -113,7 +113,7 @@ export const shareCredential = async (
   }
   await expect(ProofRequestAcceptProcessScreen.screen).toBeVisible(1);
 
-  await ProofRequestAcceptProcessScreen.button.close.tap();
+  await ProofRequestAcceptProcessScreen.closeButton.tap();
   await device.enableSynchronization();
 
   await waitForElementVisible(WalletScreen.screen, DEFAULT_WAIT_TIME, 1);
