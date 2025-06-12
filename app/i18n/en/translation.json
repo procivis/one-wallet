@@ -16,6 +16,7 @@
   "appInformationNerd.rev": "Git source",
   "appInformationNerd.title": "More information",
   "appInformationNerd.version": "Version",
+  "cacheClearedScreen.label": "Cache cleared",
   "claim.image.action": "View picture",
   "clearCacheScreen.description": "Clear your app cache to force the latest credential updates to be visible.",
   "clearCacheScreen.title": "Clear cache",

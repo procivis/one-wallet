@@ -71,7 +71,7 @@ export const RSEChangePinScreen: FC = () => {
             setIsLoading(true);
             changeRSEPin().catch(() => {});
           } else {
-            navigation.goBack();
+            navigation.replace('PinCodeSet', { rse: true });
           }
           break;
         case PinEventType.DIGITS_ENTERED:

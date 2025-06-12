@@ -6,6 +6,7 @@ import { RSEChangePinScreen } from '../../screens/rse/rse-change-pin-screen';
 import AppInformationNerdScreen from '../../screens/settings/app-information-nerd-screen';
 import AppInformationScreen from '../../screens/settings/app-information-screen';
 import BiometricsSetScreen from '../../screens/settings/biometrics-set-screen';
+import CacheClearedScreen from '../../screens/settings/cache-cleared-screen';
 import ClearCacheScreen from '../../screens/settings/clear-cache-screen';
 import DashboardScreen from '../../screens/settings/dashboard-screen';
 import DeleteWalletProcessScreen from '../../screens/settings/delete-wallet-process-screen';
@@ -44,6 +45,7 @@ const SettingsNavigator = () => {
           name="DeleteWalletProcess"
         />
         <Stack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
+        <Stack.Screen component={CacheClearedScreen} name="CacheCleared" />
       </Stack.Group>
 
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />

@@ -4,16 +4,22 @@ import {
   LoadingResultScreen,
   useCloseButtonTimeout,
 } from '@procivis/one-react-native-components';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { Platform } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { translate } from '../../i18n';
-import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+import {
+  SettingsNavigationProp,
+  SettingsRouteProp,
+} from '../../navigators/settings/settings-routes';
 
 const PinCodeSetScreen: FC = () => {
-  const navigation = useNavigation<SettingsNavigationProp<'PinCodeChange'>>();
+  const navigation = useNavigation<SettingsNavigationProp<'PinCodeSet'>>();
+  const route = useRoute<SettingsRouteProp<'PinCodeSet'>>();
+
+  const rse = route.params?.rse === true;
 
   const closeButtonHandler = useCallback(() => {
     navigation.goBack();
@@ -38,7 +44,11 @@ const PinCodeSetScreen: FC = () => {
       }}
       loader={{
         animate: false,
-        label: translate(`settings.security.pinCodeSet.title`),
+        label: translate(
+          rse
+            ? 'settings.security.rse.pinCodeSet.title'
+            : 'settings.security.pinCodeSet.title',
+        ),
         state: LoaderViewState.Success,
         testID: 'PinCodeSetScreen.animation',
       }}

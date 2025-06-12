@@ -1,7 +1,10 @@
 import {
   ButtonType,
+  colorWithAlphaComponent,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
+  useAppColorScheme,
   useBeforeRemove,
   useBlockOSBackNavigation,
   useCloseButtonTimeout,
@@ -16,8 +19,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Platform } from 'react-native';
-import { DocumentDirectoryPath } from 'react-native-fs';
+import {
+  InteractionManager,
+  NativeModules,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { DocumentDirectoryPath, unlink } from 'react-native-fs';
+import Share from 'react-native-share';
 
 import {
   HeaderCloseModalButton,
@@ -30,6 +40,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { getBackupFileName } from '../../utils/backup';
 
 const CreatingScreen: FC = () => {
+  const colorScheme = useAppColorScheme();
   const navigation = useNavigation<CreateBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
   const {
@@ -39,6 +50,7 @@ const CreatingScreen: FC = () => {
     Exclude<LoaderViewState, LoaderViewState.Error>
   >(LoaderViewState.InProgress);
   const { mutateAsync: createBackup } = useCreateBackup();
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<unknown>();
 
   useBlockOSBackNavigation();
@@ -49,18 +61,68 @@ const CreatingScreen: FC = () => {
     [backupFileName],
   );
 
+  const handleSaveFile = useCallback(() => {
+    const saveBackup = async () => {
+      try {
+        const url = `file://${backupFilePath}`;
+        const filename = backupFileName;
+        const mimeType = 'application/zip';
+        let success;
+        if (Platform.OS === 'ios') {
+          const shareResponse = await Share.open({
+            failOnCancel: false,
+            filename,
+            type: mimeType,
+            url,
+          });
+          success = shareResponse.success;
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+          await NativeModules.FileExporter.export({
+            filename,
+            mimeType,
+            url,
+          });
+          success = true;
+        }
+        if (success) {
+          await unlink(backupFilePath);
+          setState(LoaderViewState.Success);
+        } else {
+          setState(LoaderViewState.Warning);
+        }
+        setIsSaving(false);
+      } catch (e) {
+        setIsSaving(false);
+        setState(LoaderViewState.Warning);
+        setError(e);
+        reportException(e, 'Backup move failure');
+      }
+    };
+    setIsSaving(true);
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'ios') {
+        setTimeout(() => {
+          saveBackup();
+        }, 500);
+      } else {
+        saveBackup();
+      }
+    });
+  }, [backupFileName, backupFilePath]);
+
   const handleBackupCreate = useCallback(async () => {
     try {
       await createBackup({
         outputPath: backupFilePath,
         password,
       });
-      setState(LoaderViewState.Success);
+      handleSaveFile();
     } catch (e) {
       setState(LoaderViewState.Warning);
       setError(e);
     }
-  }, [createBackup, password, backupFilePath]);
+  }, [createBackup, backupFilePath, password, handleSaveFile]);
 
   useEffect(() => {
     handleBackupCreate();
@@ -81,13 +143,10 @@ const CreatingScreen: FC = () => {
         navigation.navigate('CreateBackupDashboard');
         return;
       case LoaderViewState.Success:
-        navigation.navigate('CreateBackupDashboard', {
-          backupFileName,
-          backupFilePath,
-        });
+        rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
         return;
     }
-  }, [backupFileName, backupFilePath, navigation, state]);
+  }, [navigation, rootNavigation, state]);
 
   useBeforeRemove(handleClose);
 
@@ -106,47 +165,56 @@ const CreatingScreen: FC = () => {
     });
   }, [error, rootNavigation]);
 
+  const loaderBackgroundStyle = {
+    backgroundColor: colorWithAlphaComponent(colorScheme.black, 0.5),
+  };
+
   return (
-    <LoadingResultScreen
-      button={
-        state === LoaderViewState.Success
-          ? {
-              onPress: handleClose,
-              testID: 'CreateBackupProcessingScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : undefined
-      }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={handleClose}
-            testID="CreateBackupProcessingScreen.header.close"
-          />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-        rightItem:
-          state === LoaderViewState.Warning ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="CreateBackupProcessingScreen.header.info"
+    <>
+      <LoadingResultScreen
+        button={
+          state === LoaderViewState.Success
+            ? {
+                onPress: handleClose,
+                testID: 'CreateBackupProcessingScreen.close',
+                title: translate('common.closeWithTimeout', {
+                  timeout: closeTimeout,
+                }),
+                type: ButtonType.Secondary,
+              }
+            : undefined
+        }
+        header={{
+          leftItem: (
+            <HeaderCloseModalButton
+              onPress={handleClose}
+              testID="CreateBackupProcessingScreen.header.close"
             />
-          ) : undefined,
-        title: translate('createBackup.processing.title'),
-      }}
-      loader={{
-        animate: true,
-        label: translateError(
-          error,
-          translate(`createBackup.processing.${state}`),
-        ),
-        state,
-      }}
-      testID="CreateBackupProcessingScreen"
-    />
+          ),
+          modalHandleVisible: Platform.OS === 'ios',
+          rightItem:
+            state === LoaderViewState.Warning ? (
+              <HeaderInfoButton
+                onPress={infoPressHandler}
+                testID="CreateBackupProcessingScreen.header.info"
+              />
+            ) : undefined,
+          title: translate('createBackup.processing.title'),
+        }}
+        loader={{
+          animate: true,
+          label: translateError(
+            error,
+            translate(`createBackup.processing.${state}`),
+          ),
+          state,
+        }}
+        testID="CreateBackupProcessingScreen"
+      />
+      {isSaving && (
+        <View style={[StyleSheet.absoluteFill, loaderBackgroundStyle]} />
+      )}
+    </>
   );
 };
 

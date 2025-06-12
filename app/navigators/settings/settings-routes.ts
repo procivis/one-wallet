@@ -12,6 +12,7 @@ export type SettingsNavigatorParamList = {
   BiometricsSet: {
     enabled: boolean;
   };
+  CacheCleared: undefined;
   ClearCache: undefined;
   CreateBackup: NavigatorScreenParams<CreateBackupNavigatorParamList>;
   DeleteWallet: undefined;
@@ -23,7 +24,9 @@ export type SettingsNavigatorParamList = {
   };
   Licences: undefined;
   PinCodeChange: undefined;
-  PinCodeSet: undefined;
+  PinCodeSet?: {
+    rse?: boolean;
+  };
   RSEAddBiometrics: undefined;
   RSEPinCodeChange: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
