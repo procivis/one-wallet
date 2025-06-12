@@ -50,7 +50,7 @@ const ClearCacheScreen: FunctionComponent = () => {
 
   const handlePress = useCallback(() => {
     clearCache(cacheEntriesToClear).then(() =>
-      navigation.navigate('SettingsDashboard'),
+      navigation.replace('CacheCleared'),
     );
   }, [navigation, clearCache, cacheEntriesToClear]);
 

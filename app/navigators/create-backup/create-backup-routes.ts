@@ -7,12 +7,7 @@ export type CreateBackupNavigatorParamList = {
   CheckPassword: {
     password: string;
   };
-  CreateBackupDashboard:
-    | {
-        backupFileName: string;
-        backupFilePath: string;
-      }
-    | undefined;
+  CreateBackupDashboard: undefined;
   Processing: NavigatorScreenParams<CreateBackupProcessingNavigatorParamList>;
   SetPassword: undefined;
 };
