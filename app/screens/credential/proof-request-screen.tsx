@@ -88,7 +88,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     selectedCredentialId,
   } = route.params;
   const { data: proof } = useProofDetail(proofId);
-  const { data: trustEntity } = useTrustEntity(proof?.verifierDid?.id);
+  const { data: trustEntity } = useTrustEntity(proof?.verifier?.id);
   const { expandedCredential, onHeaderPress } = useCredentialListExpandedCard();
 
   // If this is true, we should not attempt to reject in useBeforeRemove
