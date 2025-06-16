@@ -212,7 +212,7 @@ export const HistoryDetailScreen: FC = () => {
         ],
       };
     } else if (entry.entityType === HistoryEntityTypeEnum.PROOF) {
-      if (!proof || !proof.proofInputs?.length) {
+      if (!proof?.proofInputs?.length) {
         return undefined;
       }
       return {

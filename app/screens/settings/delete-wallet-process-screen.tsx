@@ -1,14 +1,11 @@
 import {
-  ButtonType,
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   reportTraceInfo,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
   useONECore,
 } from '@procivis/one-react-native-components';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
@@ -17,10 +14,7 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { removePin } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
@@ -29,7 +23,6 @@ import { resetNavigationAction } from '../../utils/navigation';
 
 const DeleteWalletProcessScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
-  const isFocused = useIsFocused();
   const [state, setState] = useState<
     Exclude<LoaderViewState, LoaderViewState.Error>
   >(LoaderViewState.InProgress);
@@ -75,61 +68,18 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
   const closeButtonHandler = useCallback(() => {
     resetNavigationAction(rootNavigation, [{ name: 'Onboarding' }]);
   }, [rootNavigation]);
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
-    closeButtonHandler,
-  );
-
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
 
   return (
-    <LoadingResultScreen
-      button={
-        state === LoaderViewState.Success
-          ? {
-              onPress: closeButtonHandler,
-              testID: 'DeleteWalletProcessScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : undefined
-      }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={closeButtonHandler}
-            testID="DeleteWalletProcessScreen.header.close"
-          />
-        ),
-        rightItem:
-          state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="DeleteWalletProcessScreen.header.info"
-            />
-          ) : undefined,
-        title: translate('deleteWalletProcess.title'),
-      }}
-      loader={{
-        animate: isFocused,
-        label: translateError(
-          error,
-          translate(`deleteWalletProcess.${state}.title`),
-        ),
-        state,
-        testID: 'DeleteWalletProcessScreen.animation',
-      }}
+    <ProcessingView
+      error={error}
+      loaderLabel={translateError(
+        error,
+        translate(`deleteWalletProcess.${state}.title`),
+      )}
+      onClose={closeButtonHandler}
+      state={state}
       testID="DeleteWalletProcessScreen"
+      title={translate('deleteWalletProcess.title')}
     />
   );
 };

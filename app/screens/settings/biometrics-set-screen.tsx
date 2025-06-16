@@ -1,14 +1,8 @@
-import {
-  ButtonType,
-  LoaderViewState,
-  LoadingResultScreen,
-  useCloseButtonTimeout,
-} from '@procivis/one-react-native-components';
+import { LoaderViewState } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
-import { Platform } from 'react-native';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate } from '../../i18n';
 import {
   SettingsNavigationProp,
@@ -23,32 +17,14 @@ const BiometricsSetScreen: FC = () => {
   const closeButtonHandler = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
-  const { closeTimeout } = useCloseButtonTimeout(true, closeButtonHandler);
 
   return (
-    <LoadingResultScreen
-      button={{
-        onPress: closeButtonHandler,
-        testID: 'BiometricsSetScreen.close',
-        title: translate('common.closeWithTimeout', {
-          timeout: closeTimeout,
-        }),
-        type: ButtonType.Secondary,
-      }}
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton testID="BiometricsSetScreen.header.close" />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-      }}
-      loader={{
-        animate: false,
-        label: translate(
-          `settings.security.biometricsSet.${biometricsStateKey}.title`,
-        ),
-        state: LoaderViewState.Success,
-        testID: 'BiometricsSetScreen.animation',
-      }}
+    <ProcessingView
+      loaderLabel={translate(
+        `settings.security.biometricsSet.${biometricsStateKey}.title`,
+      )}
+      onClose={closeButtonHandler}
+      state={LoaderViewState.Success}
       testID="BiometricsSetScreen"
     />
   );

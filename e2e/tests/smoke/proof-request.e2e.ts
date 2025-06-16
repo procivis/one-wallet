@@ -106,7 +106,7 @@ describe('ONE-614: Proof request', () => {
         action: ProofAction.REJECT,
         data: {
           proofSchemaId: proofSchema.id,
-          redirectUri: 'http://procivis.ch',
+          redirectUri: 'https://procivis.ch',
         },
       });
     });

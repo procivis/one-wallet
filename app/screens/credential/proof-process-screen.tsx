@@ -1,20 +1,14 @@
 import {
   ButtonType,
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
   useCredentialDetail,
   useProofAccept,
   useProofDetail,
 } from '@procivis/one-react-native-components';
 import { Ubiqu, WalletStorageType } from '@procivis/react-native-one-core';
-import {
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
   useCallback,
@@ -24,10 +18,7 @@ import React, {
 } from 'react';
 import { Linking } from 'react-native';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -40,7 +31,6 @@ const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
-  const isFocused = useIsFocused();
   const { credentials, interactionId, proofId } = route.params;
   const [state, setState] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
@@ -74,10 +64,8 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   useEffect(() => {
     return addRSEEventListener((event) => {
-      switch (event.type) {
-        case PinEventType.SHOW_PIN:
-          rootNavigation.navigate('RSESign');
-          break;
+      if (event.type === PinEventType.SHOW_PIN) {
+        rootNavigation.navigate('RSESign');
       }
     });
   }, [rootNavigation]);
@@ -134,59 +122,25 @@ const ProofProcessScreen: FunctionComponent = () => {
       close();
     }
   }, [redirectUri, rootNavigation]);
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success && !redirectUri,
-    closeButtonHandler,
-  );
-
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
 
   return (
-    <LoadingResultScreen
+    <ProcessingView
       button={
-        state === LoaderViewState.Success
+        state === LoaderViewState.Success && redirectUri
           ? {
               onPress: closeButtonHandler,
-              testID: `ProofRequestAcceptProcessScreen.${
-                redirectUri ? 'redirect' : 'close'
-              }`,
-              title: redirectUri
-                ? translate('proofRequest.redirect')
-                : translate('common.closeWithTimeout', {
-                    timeout: closeTimeout,
-                  }),
+              testID: 'ProofRequestAcceptProcessScreen.redirect',
+              title: translate('proofRequest.redirect'),
               type: ButtonType.Secondary,
             }
           : undefined
       }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton testID="ProofRequestAcceptProcessScreen.header.close" />
-        ),
-        rightItem:
-          state === LoaderViewState.Warning ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="ProofRequestAcceptProcessScreen.header.info"
-            />
-          ) : undefined,
-        title: translate('proofRequest.title'),
-      }}
-      loader={{
-        animate: isFocused,
-        label: loaderLabel,
-        state,
-        testID: 'ProofRequestAcceptProcessScreen.animation',
-      }}
+      error={error}
+      loaderLabel={loaderLabel}
+      onClose={closeButtonHandler}
+      state={state}
       testID="ProofRequestAcceptProcessScreen"
+      title={translate('proofRequest.title')}
     />
   );
 };

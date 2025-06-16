@@ -1,21 +1,14 @@
 import {
-  ButtonType,
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   useBackupFinalizeImportProcedure,
   useBeforeRemove,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
 } from '@procivis/one-react-native-components';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
@@ -23,7 +16,6 @@ import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/res
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const ProcessingScreen: FC = () => {
-  const isFocused = useIsFocused();
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
   const { walletStore } = useStores();
@@ -73,62 +65,17 @@ const ProcessingScreen: FC = () => {
   }, [pinInitialized, navigation, rootNavigation, state]);
   useBeforeRemove(closeButtonHandler);
 
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
-    closeButtonHandler,
-  );
-
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
-
   return (
-    <LoadingResultScreen
-      button={
-        state === LoaderViewState.Success
-          ? {
-              onPress: closeButtonHandler,
-              testID: 'CredentialAcceptProcessScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : undefined
-      }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={closeButtonHandler}
-            testID="RestoreBackupProcessingScreen.header.close"
-          />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-        rightItem:
-          state === LoaderViewState.Warning ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="RestoreBackupProcessingScreen.header.info"
-            />
-          ) : undefined,
-        title: translate('restoreBackup.processing.title'),
-      }}
-      loader={{
-        animate: isFocused,
-        label: translateError(
-          error,
-          translate(`restoreBackup.processing.${state}`),
-        ),
-        state,
-        testID: 'RestoreBackupProcessingScreen.animation',
-      }}
+    <ProcessingView
+      error={error}
+      loaderLabel={translateError(
+        error,
+        translate(`restoreBackup.processing.${state}`),
+      )}
+      onClose={closeButtonHandler}
+      state={state}
       testID="RestoreBackupProcessingScreen"
+      title={translate('restoreBackup.processing.title')}
     />
   );
 };

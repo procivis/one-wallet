@@ -1,20 +1,14 @@
 import {
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   useBlockOSBackNavigation,
   useUnpackBackup,
 } from '@procivis/one-react-native-components';
-import {
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect } from 'react';
-import { Platform } from 'react-native';
 import { unlink } from 'react-native-fs';
 
-import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate } from '../../i18n';
 import {
   RestoreBackupProcessingNavigationProp,
@@ -23,7 +17,6 @@ import {
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 
 const UnlockScreen: FC = () => {
-  const isFocused = useIsFocused();
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const processingNavigation =
     useNavigation<RestoreBackupProcessingNavigationProp<'Unlock'>>();
@@ -60,24 +53,13 @@ const UnlockScreen: FC = () => {
   }, [navigation]);
 
   return (
-    <LoadingResultScreen
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={onClose}
-            testID="RestoreBackupUnlockScreen.header.close"
-          />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-        title: translate('restoreBackup.unlock.title'),
-      }}
-      loader={{
-        animate: isFocused,
-        label: translate(`restoreBackup.unlock.unlocking`),
-        state: LoaderViewState.InProgress,
-        testID: 'RestoreBackupUnlockScreen.animation',
-      }}
-      testID="RestoreBackupUnlockScreen"
+    <ProcessingView
+      button={false}
+      loaderLabel={translate(`restoreBackup.unlock.unlocking`)}
+      onClose={onClose}
+      state={LoaderViewState.InProgress}
+      testID="CredentialDeleRestoreBackupUnlockScreenteProcessScreen"
+      title={translate('restoreBackup.unlock.title')}
     />
   );
 };

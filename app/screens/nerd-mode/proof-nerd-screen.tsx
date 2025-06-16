@@ -54,7 +54,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
       attributeKey: translate('common.proofschema'),
       attributeText: JSON.stringify(proofDetail.proofSchema),
     },
-  ].filter((el) => Boolean(el?.highlightedText || el?.attributeText));
+  ].filter((el) => Boolean(el?.highlightedText ?? el?.attributeText));
 
   const credentialsFields = proofDetail.proofInputs
     .map((proofInput) => [

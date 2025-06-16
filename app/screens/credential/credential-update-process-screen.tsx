@@ -2,7 +2,6 @@ import {
   ButtonType,
   concatTestID,
   LoaderViewState,
-  LoadingResultScreen,
   useBlockOSBackNavigation,
   useCloseButtonTimeout,
   useCredentialDetail,
@@ -14,14 +13,11 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
-import { Platform } from 'react-native';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import {
   RootNavigationProp,
@@ -112,60 +108,44 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
     state === LoaderViewState.Success,
     onClose,
   );
+
   const testID = 'CredentialUpdateProcessScreen';
+
+  const button = useMemo(() => {
+    switch (state) {
+      case LoaderViewState.InProgress:
+        return false;
+      case LoaderViewState.Success:
+        return {
+          onPress: onClose,
+          testID: concatTestID(testID, 'close'),
+          title: translate('common.closeWithTimeout', {
+            timeout: closeTimeout,
+          }),
+          type: ButtonType.Secondary,
+        };
+      default:
+        return {
+          onPress: onRetry,
+          testID: concatTestID(testID, 'retry'),
+          title: translate('common.retry'),
+          type: ButtonType.Primary,
+        };
+    }
+  }, [closeTimeout, onClose, onRetry, state]);
+
   return (
-    <LoadingResultScreen
-      button={
-        state === LoaderViewState.InProgress
-          ? undefined
-          : state === LoaderViewState.Success
-          ? {
-              onPress: onClose,
-              testID: concatTestID(testID, 'close'),
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : {
-              onPress: onRetry,
-              testID: concatTestID(testID, 'retry'),
-              title: translate('common.retry'),
-              type: ButtonType.Primary,
-            }
-      }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={onClose}
-            testID={concatTestID(testID, 'header.close')}
-          />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-        rightItem:
-          state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton
-              onPress={() => {
-                navigation.navigate('NerdMode', {
-                  params: { error },
-                  screen: 'ErrorNerdMode',
-                });
-              }}
-              testID={concatTestID(testID, 'header.info')}
-            />
-          ) : undefined,
-        title: translate('credentialUpdate.title'),
-      }}
-      loader={{
-        animate: true,
-        label: translateError(
-          error,
-          translate(`credentialUpdate.process.${state}.title`),
-        ),
-        state,
-        testID: concatTestID(testID, 'animation'),
-      }}
+    <ProcessingView
+      button={button}
+      error={error}
+      loaderLabel={translateError(
+        error,
+        translate(`credentialUpdate.process.${state}.title`),
+      )}
+      onClose={undefined}
+      state={state}
       testID={testID}
+      title={translate('credentialUpdate.title')}
     />
   );
 };

@@ -50,7 +50,7 @@ export const getDidRequestData = (
   keyId: string,
   prefixName?: string,
 ): CreateDidRequestDTO => {
-  const prefix = prefixName || `did-${didMethod}`;
+  const prefix = prefixName ?? `did-${didMethod}`;
   const name = `${prefix}-${shortUUID()}`;
   const request = {
     keys: {

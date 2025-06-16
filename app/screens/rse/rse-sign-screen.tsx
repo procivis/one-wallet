@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import RSEPinView from './rse-pin-view';
 
 const {
   addEventListener: addRSEEventListener,
@@ -35,7 +36,7 @@ export const RSESignScreen: FC = () => {
   const pinLength = 5;
   const colorScheme = useAppColorScheme();
   const [shakePosition] = useState(() => new Animated.Value(0));
-  const [enteredLength, setEnteredLenght] = useState(0);
+  const [enteredLength, setEnteredLength] = useState(0);
   const [error, setError] = useState<string>();
   const dismissed = useRef(false);
 
@@ -52,7 +53,7 @@ export const RSESignScreen: FC = () => {
           break;
         }
         case PinEventType.DIGITS_ENTERED:
-          setEnteredLenght(event.digitsEntered);
+          setEnteredLength(event.digitsEntered);
           if (event.digitsEntered > 0) {
             setError(undefined);
           }
@@ -73,6 +74,17 @@ export const RSESignScreen: FC = () => {
     resetRSEPinFlow();
     rootNavigation.goBack();
   }, [rootNavigation]);
+
+  return (
+    <RSEPinView
+      enteredLength={enteredLength}
+      errorMessage={error}
+      instruction={translate('rse.sign.instruction', { pinLength })}
+      isLoading={false}
+      testID={testID}
+      title={translate('rse.sign.title')}
+    />
+  );
 
   return (
     <SafeAreaView

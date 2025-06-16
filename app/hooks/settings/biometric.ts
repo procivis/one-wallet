@@ -47,62 +47,87 @@ export function useBiometricSetting() {
     });
   }, [navigation]);
 
-  const onPress = useCallback(() => {
-    const setWithPinCheck = (enabled: boolean) =>
+  const setupRSEBiometrics = useCallback(
+    (enabled: boolean, success: () => void) => {
+      areRSEBiometricsSupported().then((supported) => {
+        if (!supported) {
+          success();
+          return;
+        }
+        setRSEBiometrics(enabled)
+          .then(() => {
+            success();
+          })
+          .catch((e) => {
+            const state = enabled ? 'enabled' : 'disabled';
+            reportException(e, `Error setting RSE biometrics ${state}`);
+          });
+      });
+    },
+    [],
+  );
+
+  const setWithPinCheck = useCallback(
+    (enabled: boolean) => {
       runAfterPinCheck(
         () => {
           const success = () => {
             userSettings.switchBiometrics(enabled);
             navigation.navigate('BiometricsSet', { enabled });
           };
-          if (walletStore.holderDidRseId) {
-            areRSEBiometricsSupported().then((supported) => {
-              if (supported) {
-                setRSEBiometrics(enabled)
-                  .then(() => {
-                    success();
-                  })
-                  .catch((e) => {
-                    const state = enabled ? 'enabled' : 'disabled';
-                    reportException(e, `Error setting RSE biometrics ${state}`);
-                  });
-              } else {
-                success();
-              }
-            });
-          } else {
+          if (!walletStore.holderDidRseId) {
             success();
+            return;
           }
+          setupRSEBiometrics(enabled, success);
         },
         { disableBiometry: true },
       );
+    },
+    [
+      navigation,
+      runAfterPinCheck,
+      setupRSEBiometrics,
+      userSettings,
+      walletStore.holderDidRseId,
+    ],
+  );
 
+  const requestFaceId = useCallback(() => {
+    requestFaceIdPermission().then((enabled) => {
+      if (enabled) {
+        setWithPinCheck(enabled);
+      }
+    });
+  }, [requestFaceIdPermission, setWithPinCheck]);
+
+  const showBlockedAlert = useCallback(() => {
+    Alert.alert(
+      translate('settings.security.biometrics.permissionBlocked.title'),
+      translate('settings.security.biometrics.permissionBlocked.message'),
+      [
+        {
+          text: translate('common.close'),
+        },
+        {
+          onPress: () => {
+            Linking.openSettings();
+          },
+          text: translate('common.ok'),
+        },
+      ],
+      { userInterfaceStyle: colorScheme.darkMode ? 'dark' : 'light' },
+    );
+  }, [colorScheme.darkMode]);
+
+  const onPress = useCallback(() => {
     switch (faceIdStatus) {
       case RESULTS.DENIED:
-        requestFaceIdPermission().then((enabled) => {
-          if (enabled) {
-            setWithPinCheck(enabled);
-          }
-        });
+        requestFaceId();
         break;
 
       case RESULTS.BLOCKED:
-        Alert.alert(
-          translate('settings.security.biometrics.permissionBlocked.title'),
-          translate('settings.security.biometrics.permissionBlocked.message'),
-          [
-            {
-              text: translate('common.close'),
-            },
-            {
-              onPress: () => {
-                Linking.openSettings();
-              },
-              text: translate('common.ok'),
-            },
-          ],
-          { userInterfaceStyle: colorScheme.darkMode ? 'dark' : 'light' },
-        );
+        showBlockedAlert();
         break;
 
       default:
@@ -111,12 +136,10 @@ export function useBiometricSetting() {
     }
   }, [
     faceIdStatus,
-    runAfterPinCheck,
-    userSettings,
-    walletStore.holderDidRseId,
-    navigation,
-    requestFaceIdPermission,
-    colorScheme.darkMode,
+    requestFaceId,
+    showBlockedAlert,
+    setWithPinCheck,
+    userSettings.biometrics,
   ]);
 
   return useMemo(

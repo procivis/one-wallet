@@ -28,7 +28,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didId = credentialDetail.issuerDid?.did || '';
+  const didId = credentialDetail.issuerDid?.did ?? '';
   const didSections = didId.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.join(':') + ':';
