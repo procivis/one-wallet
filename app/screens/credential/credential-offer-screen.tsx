@@ -17,6 +17,7 @@ import {
   useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
+  IssuanceProtocolFeatureEnum,
   TrustEntityRoleEnum,
   WalletStorageType,
 } from '@procivis/react-native-one-core';
@@ -71,10 +72,21 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
-    if (!skipRejection.current) {
+    const exchangeConfig = config?.issuanceProtocol[credential?.exchange ?? ''];
+    const exchangeCapabilities = exchangeConfig?.capabilities;
+    const exchangeFeatures = exchangeCapabilities?.features;
+    const supportsRejection = exchangeFeatures?.includes(
+      IssuanceProtocolFeatureEnum.SupportsRejection,
+    );
+    if (!skipRejection.current && supportsRejection) {
       rejectCredential(interactionId);
     }
-  }, [interactionId, rejectCredential]);
+  }, [
+    config?.issuanceProtocol,
+    credential?.exchange,
+    interactionId,
+    rejectCredential,
+  ]);
   useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
