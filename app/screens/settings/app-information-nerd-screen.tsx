@@ -40,7 +40,7 @@ const AppInformationNerdScreen: FC = () => {
   const { core } = useONECore();
   const coreInfo = useMemoAsync(() => core.getVersion(), [core]);
   const coreVersion = coreInfo ? `v${coreInfo.pipelineId}` : undefined;
-  const coreRev = coreInfo?.tag || coreInfo?.commit;
+  const coreRev = coreInfo?.tag ?? coreInfo?.commit;
   const coreBuildDate = coreInfo
     ? formatDateTimeLocalized(new Date(coreInfo.buildTime))
     : undefined;

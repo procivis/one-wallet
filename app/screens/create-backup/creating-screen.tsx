@@ -1,13 +1,10 @@
 import {
-  ButtonType,
   colorWithAlphaComponent,
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   useAppColorScheme,
   useBeforeRemove,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
   useCreateBackup,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -29,10 +26,7 @@ import {
 import { DocumentDirectoryPath, unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import { CreateBackupProcessingRouteProp } from '../../navigators/create-backup/create-backup-processing-routes';
 import { CreateBackupNavigationProp } from '../../navigators/create-backup/create-backup-routes';
@@ -150,66 +144,22 @@ const CreatingScreen: FC = () => {
 
   useBeforeRemove(handleClose);
 
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
-    handleClose,
-  );
-
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
-
   const loaderBackgroundStyle = {
     backgroundColor: colorWithAlphaComponent(colorScheme.black, 0.5),
   };
 
   return (
     <>
-      <LoadingResultScreen
-        button={
-          state === LoaderViewState.Success
-            ? {
-                onPress: handleClose,
-                testID: 'CreateBackupProcessingScreen.close',
-                title: translate('common.closeWithTimeout', {
-                  timeout: closeTimeout,
-                }),
-                type: ButtonType.Secondary,
-              }
-            : undefined
-        }
-        header={{
-          leftItem: (
-            <HeaderCloseModalButton
-              onPress={handleClose}
-              testID="CreateBackupProcessingScreen.header.close"
-            />
-          ),
-          modalHandleVisible: Platform.OS === 'ios',
-          rightItem:
-            state === LoaderViewState.Warning ? (
-              <HeaderInfoButton
-                onPress={infoPressHandler}
-                testID="CreateBackupProcessingScreen.header.info"
-              />
-            ) : undefined,
-          title: translate('createBackup.processing.title'),
-        }}
-        loader={{
-          animate: true,
-          label: translateError(
-            error,
-            translate(`createBackup.processing.${state}`),
-          ),
-          state,
-        }}
+      <ProcessingView
+        error={error}
+        loaderLabel={translateError(
+          error,
+          translate(`createBackup.processing.${state}`),
+        )}
+        onClose={handleClose}
+        state={state}
         testID="CreateBackupProcessingScreen"
+        title={translate('createBackup.processing.title')}
       />
       {isSaving && (
         <View style={[StyleSheet.absoluteFill, loaderBackgroundStyle]} />

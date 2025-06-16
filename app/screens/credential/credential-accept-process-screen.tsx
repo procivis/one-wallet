@@ -1,10 +1,8 @@
 import {
   ButtonType,
   LoaderViewState,
-  LoadingResultScreen,
   reportException,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
   useCredentialAccept,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
@@ -13,11 +11,7 @@ import {
   Ubiqu,
   WalletStorageType,
 } from '@procivis/react-native-one-core';
-import {
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
@@ -28,10 +22,7 @@ import React, {
 } from 'react';
 import { Linking, Platform } from 'react-native';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { useCreateRSE } from '../../hooks/rse';
 import { translate, translateError, TxKeyPath } from '../../i18n';
 import { useStores } from '../../models';
@@ -56,7 +47,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'Processing'>>();
-  const isFocused = useIsFocused();
   const [state, setState] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
@@ -204,10 +194,6 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       close();
     }
   }, [redirectUri, rootNavigation]);
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success && !redirectUri,
-    closeButtonHandler,
-  );
 
   const androidBackHandler = useCallback(() => {
     closeButtonHandler();
@@ -215,54 +201,24 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   }, [closeButtonHandler]);
   useBlockOSBackNavigation(Platform.OS === 'ios', androidBackHandler);
 
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
-
   return (
-    <LoadingResultScreen
+    <ProcessingView
       button={
-        state === LoaderViewState.Success && !isLoading
+        state === LoaderViewState.Success && !isLoading && redirectUri
           ? {
               onPress: closeButtonHandler,
-              testID: `CredentialAcceptProcessScreen.${
-                redirectUri ? 'redirect' : 'close'
-              }`,
-              title: redirectUri
-                ? translate('credentialOffer.redirect')
-                : translate('common.closeWithTimeout', {
-                    timeout: closeTimeout,
-                  }),
+              testID: 'CredentialAcceptProcessScreen.redirect',
+              title: translate('credentialOffer.redirect'),
               type: ButtonType.Secondary,
             }
           : undefined
       }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton testID="CredentialAcceptProcessScreen.header.close" />
-        ),
-        rightItem:
-          state === LoaderViewState.Warning && error ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="CredentialAcceptProcessScreen.header.info"
-            />
-          ) : undefined,
-        title: translate('credentialOffer.title'),
-      }}
-      loader={{
-        animate: isFocused,
-        label: loaderLabel,
-        state,
-        testID: 'CredentialAcceptProcessScreen.animation',
-      }}
-      testID="CredentialAcceptProcessScreen"
+      error={error}
+      loaderLabel={loaderLabel}
+      onClose={closeButtonHandler}
+      state={state}
+      testID="CredentialDeleteProcessScreen"
+      title={translate('credentialDelete.title')}
     />
   );
 });

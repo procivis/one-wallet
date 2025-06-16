@@ -1,10 +1,7 @@
 import {
-  ButtonType,
   LoaderViewState,
-  LoadingResultScreen,
   useBeforeRemove,
   useBlockOSBackNavigation,
-  useCloseButtonTimeout,
   useCredentialDelete,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -15,12 +12,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Platform } from 'react-native';
 
-import {
-  HeaderCloseModalButton,
-  HeaderInfoButton,
-} from '../../components/navigation/header-buttons';
+import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import { DeleteCredentialRouteProp } from '../../navigators/delete-credential/delete-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -65,62 +58,18 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
       onClose();
     }
   });
-  const { closeTimeout } = useCloseButtonTimeout(
-    state === LoaderViewState.Success,
-    onClose,
-  );
-
-  const infoPressHandler = useCallback(() => {
-    if (!error) {
-      return;
-    }
-    rootNavigation.navigate('NerdMode', {
-      params: { error },
-      screen: 'ErrorNerdMode',
-    });
-  }, [error, rootNavigation]);
 
   return (
-    <LoadingResultScreen
-      button={
-        state === LoaderViewState.Success
-          ? {
-              onPress: onClose,
-              testID: 'CredentialDeleteProcessScreen.close',
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : undefined
-      }
-      header={{
-        leftItem: (
-          <HeaderCloseModalButton
-            onPress={onClose}
-            testID="CredentialDeleteProcessScreen.header.close"
-          />
-        ),
-        modalHandleVisible: Platform.OS === 'ios',
-        rightItem:
-          state === LoaderViewState.Warning ? (
-            <HeaderInfoButton
-              onPress={infoPressHandler}
-              testID="CredentialDeleteProcessScreen.header.info"
-            />
-          ) : undefined,
-        title: translate('credentialDelete.title'),
-      }}
-      loader={{
-        animate: true,
-        label: translateError(
-          error,
-          translate(`credentialDelete.${state}.title`),
-        ),
-        state,
-        testID: 'CredentialDeleteProcessScreen.animation',
-      }}
+    <ProcessingView
+      error={error}
+      loaderLabel={translateError(
+        error,
+        translate(`credentialDelete.${state}.title`),
+      )}
+      onClose={onClose}
+      state={state}
       testID="CredentialDeleteProcessScreen"
+      title={translate('credentialDelete.title')}
     />
   );
 };
