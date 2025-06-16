@@ -322,7 +322,7 @@ describe('ONE-601: Credential issuance', () => {
         credentialSchema: credentialSchemaJSONLD,
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
         invitationUrlType: URLOption.UNIVERSAL_LINK,
-        redirectUri: 'http://www.procivis.ch',
+        redirectUri: 'https://www.procivis.ch',
       });
     });
 
@@ -331,7 +331,7 @@ describe('ONE-601: Credential issuance', () => {
         authToken: authToken,
         credentialSchema: credentialSchemaJWT,
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
-        redirectUri: 'http://www.procivis.ch',
+        redirectUri: 'https://www.procivis.ch',
       });
     });
 

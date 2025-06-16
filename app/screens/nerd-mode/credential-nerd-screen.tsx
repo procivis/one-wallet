@@ -84,7 +84,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didId = credentialDetail.issuerDid?.did || '';
+  const didId = credentialDetail.issuerDid?.did ?? '';
   const didSections = didId.split(':') ?? [];
   const identifier = didSections.pop();
   const didMethod = didSections.length ? didSections.join(':') + ':' : '';
@@ -112,7 +112,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
         <View style={styles.validityEntryContainer}>
           {validityData?.icon}
           <Typography
-            color={validityData?.textColor || ''}
+            color={validityData?.textColor ?? ''}
             preset="s/code"
             style={styles.validityEntryText}
             testID="CredentialNerdView.validity.attributeValue"

@@ -2,89 +2,83 @@ import {
   concatTestID,
   ContrastingStatusBar,
   HeaderCloseButton,
+  LoaderView,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { Pins } from '@procivis/one-react-native-components/src/ui-components/pin/pins';
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { translate } from '../../i18n';
-import { RootNavigationProp } from '../../navigators/root/root-routes';
-import RSEPinView from './rse-pin-view';
+const { PinPad: RSEPinPad, resetPinFlow: resetRSEPinFlow } = Ubiqu;
 
-const {
-  addEventListener: addRSEEventListener,
-  PinEventType,
-  PinPad: RSEPinPad,
-  resetPinFlow: resetRSEPinFlow,
-} = Ubiqu;
+type RSEPinViewProps = {
+  enteredLength: number;
+  errorMessage?: string;
+  instruction: string;
+  isLoading: boolean;
+  testID: string;
+  title: string;
+};
 
-export interface PinCodeScreenActions {
-  shakeKeypad: (params?: {
-    amount?: number;
-    duration?: number;
-  }) => Promise<{ finished: boolean }>;
-}
-
-export const RSESignScreen: FC = () => {
-  const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialManagement'>>();
-  const pinLength = 5;
+const RSEPinView: FC<RSEPinViewProps> = ({
+  enteredLength,
+  errorMessage,
+  instruction,
+  isLoading,
+  testID,
+  title,
+}) => {
   const colorScheme = useAppColorScheme();
+  const navigation = useNavigation();
   const [shakePosition] = useState(() => new Animated.Value(0));
-  const [enteredLength, setEnteredLength] = useState(0);
-  const [error, setError] = useState<string>();
-  const dismissed = useRef(false);
 
-  const testID = 'RemoteSecureElementSignScreen';
+  const shakeKeypad = useCallback(() => {
+    const amount = 10;
+    const duration = 300;
+    const iterations = 4;
+    const animationConfig = {
+      easing: Easing.linear,
+      useNativeDriver: true,
+    };
+    const partialDuration = duration / iterations / 4;
+    return new Promise((resolve) =>
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(shakePosition, {
+            ...animationConfig,
+            duration: partialDuration,
+            toValue: -amount,
+          }),
+          Animated.timing(shakePosition, {
+            ...animationConfig,
+            duration: 2 * partialDuration,
+            toValue: amount,
+          }),
+          Animated.timing(shakePosition, {
+            ...animationConfig,
+            duration: partialDuration,
+            toValue: 0,
+          }),
+        ]),
+        { iterations },
+      ).start(resolve),
+    );
+  }, [shakePosition]);
 
   useEffect(() => {
-    return addRSEEventListener((event) => {
-      switch (event.type) {
-        case PinEventType.HIDE_PIN: {
-          if (!dismissed.current) {
-            dismissed.current = true;
-            rootNavigation.goBack();
-          }
-          break;
-        }
-        case PinEventType.DIGITS_ENTERED:
-          setEnteredLength(event.digitsEntered);
-          if (event.digitsEntered > 0) {
-            setError(undefined);
-          }
-          break;
-        case PinEventType.INCORRECT_PIN: {
-          setError(
-            translate('rse.sign.error.wrongPin', {
-              attemptsLeft: event.attemptsLeft,
-            }),
-          );
-          break;
-        }
-      }
-    });
-  }, [dismissed, rootNavigation]);
+    if (errorMessage) {
+      shakeKeypad();
+    }
+  }, [errorMessage, shakeKeypad]);
 
   const handleClose = useCallback(() => {
     resetRSEPinFlow();
-    rootNavigation.goBack();
-  }, [rootNavigation]);
-
-  return (
-    <RSEPinView
-      enteredLength={enteredLength}
-      errorMessage={error}
-      instruction={translate('rse.sign.instruction', { pinLength })}
-      isLoading={false}
-      testID={testID}
-      title={translate('rse.sign.title')}
-    />
-  );
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <SafeAreaView
@@ -108,7 +102,7 @@ export const RSESignScreen: FC = () => {
             style={styles.title}
             testID={concatTestID(testID, 'title')}
           >
-            {translate('rse.sign.title')}
+            {title}
           </Typography>
           <Pins
             enteredLength={enteredLength}
@@ -122,15 +116,15 @@ export const RSESignScreen: FC = () => {
             style={styles.instruction}
             testID={concatTestID(testID, 'instruction')}
           >
-            {translate('rse.sign.instruction', { pinLength })}
+            {instruction}
           </Typography>
           <Typography
-            accessible={Boolean(error)}
+            accessible={Boolean(errorMessage)}
             announcementActive={true}
             color={colorScheme.error}
             testID={concatTestID(testID, 'error')}
           >
-            {error ?? '' /* always displayed to keep the same layout */}
+            {errorMessage ?? '' /* always displayed to keep the same layout */}
           </Typography>
         </View>
         <Animated.View
@@ -141,7 +135,11 @@ export const RSESignScreen: FC = () => {
             },
           ]}
         >
-          <RSEPinPad style={styles.pinPad} />
+          {isLoading ? (
+            <LoaderView animate={true} />
+          ) : (
+            <RSEPinPad style={styles.pinPad} />
+          )}
         </Animated.View>
       </View>
     </SafeAreaView>
@@ -189,3 +187,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+export default RSEPinView;

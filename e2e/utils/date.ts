@@ -12,7 +12,7 @@ export const formatDate = (
   options?: Intl.DateTimeFormatOptions,
 ) => {
   try {
-    return date.toLocaleDateString(locale || defaultLocale, options);
+    return date.toLocaleDateString(locale ?? defaultLocale, options);
   } catch {
     return undefined;
   }
@@ -24,7 +24,7 @@ export const formatDate = (
 export const formatTime = (date: Date, locale?: string) => {
   try {
     return date
-      .toLocaleDateString(locale || defaultLocale, {
+      .toLocaleDateString(locale ?? defaultLocale, {
         hour: '2-digit',
         minute: '2-digit',
       })
@@ -44,7 +44,7 @@ export const formatDateTime = (
   timeZone: string = 'UTC',
 ) => {
   try {
-    return date.toLocaleString(locale || defaultLocale, {
+    return date.toLocaleString(locale ?? defaultLocale, {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
