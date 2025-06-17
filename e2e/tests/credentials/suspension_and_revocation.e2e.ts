@@ -81,7 +81,7 @@ describe('ONE-620: Credential revocation', () => {
     authToken = await keycloakAuth();
   });
 
-  for (const { revocationMethod, credentialFormat } of COMBINATIONS_BASE) {
+  const testFormatRevocationMethod = (revocationMethod: RevocationMethod, credentialFormat: CredentialFormat) => {
     describe(`Revocation: ${revocationMethod}; Format: ${credentialFormat}`, () => {
       let credentialSchema: CredentialSchemaResponseDTO;
       let credentialId: string;
@@ -143,65 +143,11 @@ describe('ONE-620: Credential revocation', () => {
     });
   }
 
+  for (const { revocationMethod, credentialFormat } of COMBINATIONS_BASE) {
+    testFormatRevocationMethod(revocationMethod, credentialFormat);
+  }
+
   for (const { revocationMethod, credentialFormat } of COMBINATIONS_VC) {
-    describe(`Revocation: ${revocationMethod}; Format: ${credentialFormat}`, () => {
-      let credentialSchema: CredentialSchemaResponseDTO;
-      let credentialId: string;
-
-      beforeAll(async () => {
-        await launchApp({ delete: true });
-        credentialSchema = await createCredentialSchema(
-          authToken,
-          getCredentialSchemaData({
-            allowSuspension: true,
-            format: credentialFormat,
-            revocationMethod,
-            walletStorageType: WalletKeyStorageType.SOFTWARE,
-          }),
-        );
-      });
-
-      beforeEach(async () => {
-        const { exchange, keyType, didMethod } =
-          credentialFormatIssuance(credentialFormat);
-        const didData = await createDidWithKey(authToken, {
-          didMethod,
-          keyType,
-        });
-        const issuerHolderCredentialIds = await credentialIssuance({
-          authToken,
-          credentialSchema,
-          didData,
-          exchange,
-        });
-        credentialId = issuerHolderCredentialIds.issuerCredentialId;
-      });
-
-      it('Suspend credential', async () => {
-        await suspendCredential(credentialId, authToken);
-        await reloadApp({
-          credentialUpdate: [
-            {
-              expectedLabel: 'Suspended',
-              index: 0,
-              status: CredentialStatus.SUSPENDED,
-            },
-          ],
-        });
-      });
-
-      it('Revoke credential', async () => {
-        await revokeCredential(credentialId, authToken);
-        await reloadApp({
-          credentialUpdate: [
-            {
-              expectedLabel: 'Revoked',
-              index: 0,
-              status: CredentialStatus.REVOKED,
-            },
-          ],
-        });
-      });
-    });
+    testFormatRevocationMethod(revocationMethod, credentialFormat);
   }
 });

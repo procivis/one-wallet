@@ -10,7 +10,13 @@ import {
   useCloseButtonTimeout,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Platform } from 'react-native';
 
 import { translate, translateError } from '../../i18n';
@@ -67,22 +73,25 @@ export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
   }, [closeHandler, state]);
   useBlockOSBackNavigation(true, androidBackHandler);
 
+  const bottomButton = useMemo(() => {
+    if (button) {
+      return button;
+    }
+    if (state === LoaderViewState.Success && button !== false && onClose) {
+      return {
+        onPress: closeHandler,
+        testID: concatTestID(testID, 'close'),
+        title: translate('common.closeWithTimeout', {
+          timeout: closeTimeout,
+        }),
+        type: ButtonType.Secondary,
+      };
+    }
+  }, [button, closeHandler, closeTimeout, onClose, state, testID]);
+
   return (
     <LoadingResultScreen
-      button={
-        button
-          ? button
-          : state === LoaderViewState.Success && button !== false && onClose
-          ? {
-              onPress: closeHandler,
-              testID: concatTestID(testID, 'close'),
-              title: translate('common.closeWithTimeout', {
-                timeout: closeTimeout,
-              }),
-              type: ButtonType.Secondary,
-            }
-          : undefined
-      }
+      button={bottomButton}
       header={{
         leftItem: (
           <HeaderCloseButton
