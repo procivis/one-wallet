@@ -38,71 +38,65 @@ const DashboardScreen: FC = () => {
   }, [lastBackupEntry, settingsNavigation]);
 
   return (
-    <>
-      <BackupScreen
-        cta={translate('createBackup.dashboard.cta')}
-        description={translate('createBackup.dashboard.description')}
-        onBack={navigation.goBack}
-        onCta={() => navigation.navigate('SetPassword')}
-        testID="CreateBackupDashboardScreen"
-        title={translate('createBackup.dashboard.title')}
+    <BackupScreen
+      cta={translate('createBackup.dashboard.cta')}
+      description={translate('createBackup.dashboard.description')}
+      onBack={navigation.goBack}
+      onCta={() => navigation.navigate('SetPassword')}
+      testID="CreateBackupDashboardScreen"
+      title={translate('createBackup.dashboard.title')}
+    >
+      <Typography
+        accessibilityRole="header"
+        color={colorScheme.text}
+        preset="m"
+        style={styles.sectionHeader}
       >
-        <Typography
-          accessibilityRole="header"
-          color={colorScheme.text}
-          preset="m"
-          style={styles.sectionHeader}
-        >
-          {translate('createBackup.dashboard.lastBackup')}
-        </Typography>
-        <View
-          style={[styles.item, { backgroundColor: colorScheme.background }]}
-        >
-          {lastBackupEntry ? (
-            <TouchableOpacity
-              onPress={handleItemPress}
-              style={styles.historyItem}
-            >
-              <View style={styles.left}>
-                <Typography color={colorScheme.text} preset="s">
-                  {getEntryTitle(lastBackupEntry)}
-                </Typography>
-                <Typography
-                  color={colorScheme.text}
-                  preset="s/line-height-small"
-                  style={styles.shaded}
-                >
-                  {formatDateTimeLocalized(
-                    new Date(lastBackupEntry.createdDate),
-                  )}
-                </Typography>
-              </View>
-              <Typography
-                color={colorScheme.text}
-                preset="s/line-height-small"
-                style={[styles.shaded, styles.time]}
-              >
-                {formatTimestamp(new Date(lastBackupEntry.createdDate))}
-              </Typography>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.emtpy}>
-              <Typography align="center" color={colorScheme.text} preset="s">
-                {translate('createBackup.dashboard.empty.title')}
+        {translate('createBackup.dashboard.lastBackup')}
+      </Typography>
+      <View style={[styles.item, { backgroundColor: colorScheme.background }]}>
+        {lastBackupEntry ? (
+          <TouchableOpacity
+            onPress={handleItemPress}
+            style={styles.historyItem}
+          >
+            <View style={styles.left}>
+              <Typography color={colorScheme.text} preset="s">
+                {getEntryTitle(lastBackupEntry)}
               </Typography>
               <Typography
-                align="center"
                 color={colorScheme.text}
                 preset="s/line-height-small"
                 style={styles.shaded}
               >
-                {translate('createBackup.dashboard.empty.subtitle')}
+                {formatDateTimeLocalized(new Date(lastBackupEntry.createdDate))}
               </Typography>
             </View>
-          )}
-        </View>
-      </BackupScreen>
-    </>
+            <Typography
+              color={colorScheme.text}
+              preset="s/line-height-small"
+              style={[styles.shaded, styles.time]}
+            >
+              {formatTimestamp(new Date(lastBackupEntry.createdDate))}
+            </Typography>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.emtpy}>
+            <Typography align="center" color={colorScheme.text} preset="s">
+              {translate('createBackup.dashboard.empty.title')}
+            </Typography>
+            <Typography
+              align="center"
+              color={colorScheme.text}
+              preset="s/line-height-small"
+              style={styles.shaded}
+            >
+              {translate('createBackup.dashboard.empty.subtitle')}
+            </Typography>
+          </View>
+        )}
+      </View>
+    </BackupScreen>
   );
 };
 

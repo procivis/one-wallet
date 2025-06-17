@@ -1,5 +1,7 @@
 import { expect } from 'detox';
 
+import { CredentialCardSkeleton } from './CredentialCard';
+
 type CardClaimData = {
   array?: boolean;
   image?: boolean;
@@ -10,7 +12,9 @@ type CardClaimData = {
 
 export const CardSkeleton = (testID: string) => {
   const cardId = `${testID}.card`;
+  const credentialCard = CredentialCardSkeleton(cardId);
   return {
+    ...credentialCard,
     get card() {
       return {
         get collapsed() {
@@ -40,63 +44,6 @@ export const CardSkeleton = (testID: string) => {
     },
     get element() {
       return element(by.id(testID));
-    },
-    get header() {
-      const headerId = `${cardId}.header`;
-      return {
-        get element() {
-          return element(by.id(headerId));
-        },
-        get invalid() {
-          return element(by.id(`${headerId}.invalid`));
-        },
-        get missing() {
-          return element(by.id(`${headerId}.missing`));
-        },
-        get multiple() {
-          return element(by.id(`${headerId}.multiple`));
-        },
-        get name() {
-          return element(by.id(`${headerId}.name`));
-        },
-        get revoked() {
-          return element(by.id(`${headerId}.revoked`));
-        },
-        get suspended() {
-          return element(by.id(`${headerId}.suspended`));
-        },
-      };
-    },
-    get notice() {
-      const noticeId = `${testID}.notice`;
-      return {
-        get element() {
-          return element(by.id(`${cardId}.notice`));
-        },
-        get invalid() {
-          return element(by.id(`${noticeId}.invalid`));
-        },
-        get multiple() {
-          const multipleId = `${noticeId}.multiple`;
-          return {
-            get element() {
-              return element(by.id(multipleId));
-            },
-            get selectButton() {
-              return element(by.id(`${multipleId}.button`));
-            },
-          };
-        },
-        get revoked() {
-          return element(by.id(`${noticeId}.revoked`));
-        },
-        get suspended() {
-          return element(by.id(`${noticeId}.suspended`));
-        },
-        get text() {
-          return element(by.id(`${cardId}.notice.text`));
-        },
-      };
     },
   };
 };
