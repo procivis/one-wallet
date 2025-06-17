@@ -445,6 +445,7 @@
   "wallet.qrCodeScannerScreen.share": "Share QR code",
   "wallet.qrCodeScannerScreen.title": "Scan the QR code to connect",
   "wallet.qrCodeShareScreen.description": "Share the QR code to connect",
+  "wallet.qrCodeShareScreen.qrError": "QR code cannot be generated because the data is too long.",
   "wallet.qrCodeShareScreen.title": "Share",
   "wallet.search": "Search",
   "wallet.settings": "Settings",

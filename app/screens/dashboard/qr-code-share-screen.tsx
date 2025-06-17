@@ -4,6 +4,7 @@ import {
   ButtonType,
   concatTestID,
   ContrastingStatusBar,
+  CredentialWarningIcon,
   QrCode,
   ScrollViewScreen,
   Typography,
@@ -44,6 +45,8 @@ const QRCodeShareScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const isFocused = useIsFocused();
   const isAppActive = useIsAppActive();
+  const [qrError, setQrError] = useState<string>();
+
   useCapturePrevention();
 
   const { mutateAsync: proposeProof } = useProposeProof();
@@ -116,7 +119,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
     }
 
     return proof?.url ? (
-      <QrCode content={proof.url} />
+      <QrCode content={proof.url} onError={setQrError} />
     ) : (
       <ActivityIndicator animate={isFocused} />
     );
@@ -172,7 +175,23 @@ const QRCodeShareScreen: FunctionComponent = () => {
           style={[styles.qrCode, { backgroundColor: colorScheme.white }]}
           testID={concatTestID(testID, 'qrCode')}
         >
-          {qrCodeContent}
+          {!qrError ? (
+            qrCodeContent
+          ) : (
+            <View
+              style={styles.errorMessageWrapper}
+              testID={concatTestID('qrError')}
+            >
+              <CredentialWarningIcon height={42} width={42} />
+              <Typography
+                align="center"
+                color={colorScheme.text}
+                testID={concatTestID('qrError.message')}
+              >
+                {translate('wallet.qrCodeShareScreen.qrError')}
+              </Typography>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.bottom}>
@@ -202,6 +221,16 @@ const styles = StyleSheet.create({
   description: {
     paddingBottom: 20,
     paddingTop: 12,
+  },
+  errorMessageWrapper: {
+    alignItems: 'center',
+    borderRadius: 4,
+    flex: 1,
+    gap: 12,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    width: '100%',
   },
   qrCode: {
     alignItems: 'center',
