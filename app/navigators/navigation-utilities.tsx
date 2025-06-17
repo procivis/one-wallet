@@ -182,4 +182,5 @@ export const FORM_SHEET_OPTIONS: NativeStackNavigationOptions = {
   animation: Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
   headerShown: false,
   presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
+  sheetAllowedDetents: 'fitToContents',
 };
