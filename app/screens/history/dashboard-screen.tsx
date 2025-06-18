@@ -9,6 +9,7 @@ import React, { FC, useCallback, useState } from 'react';
 
 import { CredentialSchemaPicker } from '../../components/history/credential-schema-picker';
 import { translate } from '../../i18n';
+import { historyListActionsFilter } from '../../models/core/history';
 import { HistoryNavigationProp } from '../../navigators/history/history-routes';
 import { historyListItemLabels } from '../../utils/history';
 
@@ -17,6 +18,7 @@ const HistoryDashboardScreen: FC = () => {
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
   const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
+    actions: historyListActionsFilter,
     entityTypes: [
       HistoryEntityTypeEnum.BACKUP,
       HistoryEntityTypeEnum.CREDENTIAL,

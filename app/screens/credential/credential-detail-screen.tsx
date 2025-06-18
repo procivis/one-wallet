@@ -35,7 +35,7 @@ import {
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
-import { HistoryListItemWithDid } from '../../models/core/history';
+import { historyListActionsFilter } from '../../models/core/history';
 import {
   CredentialDetailNavigationProp,
   CredentialDetailRouteProp,
@@ -55,6 +55,7 @@ const CredentialDetailScreen: FC = () => {
   const { data: credential } = useCredentialDetail(credentialId, isFocused);
 
   const { data: historyPages } = useHistory({
+    actions: historyListActionsFilter,
     credentialId,
     entityTypes: [
       HistoryEntityTypeEnum.CREDENTIAL,
@@ -194,7 +195,7 @@ const CredentialDetailScreen: FC = () => {
 
 const DISPLAYED_HISTORY_ITEMS = 3;
 const HistorySection: FC<{
-  historyEntries?: HistoryListItemWithDid[];
+  historyEntries?: HistoryListItem[];
   onSeeAllHistory?: () => void;
 }> = ({ historyEntries = [], onSeeAllHistory }) => {
   const colorScheme = useAppColorScheme();
