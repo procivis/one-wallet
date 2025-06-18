@@ -224,7 +224,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             title: translate('settings.security.pinCode'),
           },
         },
-        walletStore.holderDidRseId
+        walletStore.holderRseIdentifierId
           ? {
               buttonSetting: {
                 icon: PINIcon,

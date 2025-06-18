@@ -58,21 +58,22 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
   const { generateRSE } = useCreateRSE();
   const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
   const [rseInitialized, setRseInitialized] = useState(false);
-  const [createdRseDidId, setCreatedRseDidId] = useState<string>();
+  const [createdRseIdentifierId, setCreatedRseIdentifierId] =
+    useState<string>();
 
   const requiredStorageType = credential?.schema.walletStorageType;
   const identifierId = useMemo(() => {
     switch (requiredStorageType) {
       case WalletStorageType.SOFTWARE:
-        return walletStore.holderDidSwId;
+        return walletStore.holderSwIdentifierId;
       case WalletStorageType.HARDWARE:
-        return walletStore.holderDidHwId;
+        return walletStore.holderHwIdentifierId;
       case WalletStorageType.REMOTE_SECURE_ELEMENT:
-        return createdRseDidId ?? walletStore.holderDidRseId;
+        return createdRseIdentifierId ?? walletStore.holderRseIdentifierId;
       default:
-        return walletStore.holderDidId;
+        return walletStore.holderIdentifierId;
     }
-  }, [walletStore, requiredStorageType, createdRseDidId]);
+  }, [walletStore, requiredStorageType, createdRseIdentifierId]);
 
   useEffect(() => {
     return addRSEEventListener((event) => {
@@ -87,7 +88,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
         navigation.navigate('RSEAddBiometrics');
       }
     });
-  }, [navigation, rootNavigation, walletStore.holderDidRseId]);
+  }, [navigation, rootNavigation, walletStore.holderRseIdentifierId]);
 
   const loaderLabel = useMemo(() => {
     if (
@@ -112,7 +113,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     }
     setRseInitialized(true);
     generateRSE()
-      .then(setCreatedRseDidId)
+      .then(setCreatedRseIdentifierId)
       .catch((e) => {
         setState(LoaderViewState.Warning);
         setError(e);

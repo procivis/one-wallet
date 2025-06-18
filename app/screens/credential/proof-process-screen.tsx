@@ -52,13 +52,13 @@ const ProofProcessScreen: FunctionComponent = () => {
     }
     switch (credentialDetail.schema.walletStorageType) {
       case WalletStorageType.SOFTWARE:
-        return walletStore.holderDidSwId;
+        return walletStore.holderSwIdentifierId;
       case WalletStorageType.HARDWARE:
-        return walletStore.holderDidHwId;
+        return walletStore.holderHwIdentifierId;
       case WalletStorageType.REMOTE_SECURE_ELEMENT:
-        return walletStore.holderDidRseId;
+        return walletStore.holderRseIdentifierId;
       default:
-        return walletStore.holderDidId;
+        return walletStore.holderIdentifierId;
     }
   }, [walletStore, credentialDetail]);
 
