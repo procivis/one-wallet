@@ -15,20 +15,20 @@ export const useCreateRSE = () => {
   const { core, organisationId } = useONECore();
 
   const setupRSE = useCallback(
-    (rseDidId: string) => {
-      walletStore.rseSetup(rseDidId);
+    (rseIdentifierId: string) => {
+      walletStore.rseSetup(rseIdentifierId);
       if (userSettings.biometrics) {
         return areRSEBiometricsSupported()
           .then(async (supported) => {
             if (!supported) {
-              return rseDidId;
+              return rseIdentifierId;
             }
             await setRSEBiometrics(true);
-            return rseDidId;
+            return rseIdentifierId;
           })
-          .catch(() => rseDidId);
+          .catch(() => rseIdentifierId);
       } else {
-        return rseDidId;
+        return rseIdentifierId;
       }
     },
     [userSettings.biometrics, walletStore],

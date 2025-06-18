@@ -75,7 +75,7 @@ export function useBiometricSetting() {
             userSettings.switchBiometrics(enabled);
             navigation.navigate('BiometricsSet', { enabled });
           };
-          if (!walletStore.holderDidRseId) {
+          if (!walletStore.holderRseIdentifierId) {
             success();
             return;
           }
@@ -89,7 +89,7 @@ export function useBiometricSetting() {
       runAfterPinCheck,
       setupRSEBiometrics,
       userSettings,
-      walletStore.holderDidRseId,
+      walletStore.holderRseIdentifierId,
     ],
   );
 

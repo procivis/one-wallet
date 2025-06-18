@@ -96,7 +96,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
     if (
       requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT &&
-      !walletStore.holderDidRseId
+      !walletStore.holderRseIdentifierId
     ) {
       navigation.navigate('RSEInfo', {
         credentialId,
@@ -120,7 +120,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     interactionId,
     navigation,
     txCode,
-    walletStore.holderDidRseId,
+    walletStore.holderRseIdentifierId,
   ]);
 
   const onImagePreview = useCredentialImagePreview();

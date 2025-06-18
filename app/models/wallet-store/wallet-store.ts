@@ -5,28 +5,33 @@ import { Instance, types } from 'mobx-state-tree';
  */
 export const WalletStoreModel = types
   .model('WalletStore', {
-    holderDidHwId: types.string,
-    holderDidRseId: types.string,
-    holderDidSwId: types.string,
+    holderHwIdentifierId: types.string,
+    holderRseIdentifierId: types.string,
+    holderSwIdentifierId: types.string,
   })
   .views((self) => ({
-    /** returns the did with most secure available key backing */
-    get holderDidId() {
-      return self.holderDidHwId ? self.holderDidHwId : self.holderDidSwId;
+    /** returns the did identifier with higher secure available key backing */
+    get holderIdentifierId() {
+      return self.holderHwIdentifierId
+        ? self.holderHwIdentifierId
+        : self.holderSwIdentifierId;
     },
   }))
   .actions((self) => ({
-    rseSetup: (holderDidRseId: string | null) => {
-      self.holderDidRseId = holderDidRseId ?? '';
+    rseSetup: (holderRseIdentifierId: string | null) => {
+      self.holderRseIdentifierId = holderRseIdentifierId ?? '';
     },
     walletDeleted: () => {
-      self.holderDidHwId = '';
-      self.holderDidSwId = '';
-      self.holderDidRseId = '';
+      self.holderHwIdentifierId = '';
+      self.holderSwIdentifierId = '';
+      self.holderRseIdentifierId = '';
     },
-    walletSetup: (holderDidHwId: string | null, holderDidSwId: string) => {
-      self.holderDidHwId = holderDidHwId ?? '';
-      self.holderDidSwId = holderDidSwId;
+    walletSetup: (
+      holderHwIdentifierId: string | null,
+      holderSwIdentifierId: string,
+    ) => {
+      self.holderHwIdentifierId = holderHwIdentifierId ?? '';
+      self.holderSwIdentifierId = holderSwIdentifierId;
     },
   }));
 

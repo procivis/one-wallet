@@ -26,7 +26,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
 
   const importSchemasFromAssets = useImportPredefinedCredentialSchemas();
   const finishSetup = useCallback(() => {
-    if (walletStore.holderDidId) {
+    if (walletStore.holderIdentifierId) {
       return;
     }
     initializeONECoreIdentifiers().then(([hwDidId, swDidId]) => {
