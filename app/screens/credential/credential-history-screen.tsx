@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import { translate } from '../../i18n';
+import { historyListActionsFilter } from '../../models/core/history';
 import {
   CredentialDetailNavigationProp,
   CredentialDetailRouteProp,
@@ -25,6 +26,7 @@ export const CredentialHistoryScreen: FC = () => {
   const [searchPhrase, setSearchPhrase] = useState('');
   const query = useMemo(
     () => ({
+      actions: historyListActionsFilter,
       credentialId,
       entityTypes: [
         HistoryEntityTypeEnum.CREDENTIAL,
