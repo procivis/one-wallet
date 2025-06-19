@@ -84,11 +84,6 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didId = credentialDetail.issuerDid?.did ?? '';
-  const didSections = didId.split(':') ?? [];
-  const identifier = didSections.pop();
-  const didMethod = didSections.length ? didSections.join(':') + ':' : '';
-
   const validityData = getCredentialValidityValue(
     credentialDetail,
     colorScheme,
@@ -122,13 +117,6 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
         </View>
       ),
       testID: 'validity',
-    }),
-    ...addElementIf(Boolean(didMethod), {
-      attributeKey: translate('credentialDetail.credential.identifier'),
-      attributeText: identifier,
-      canBeCopied: true,
-      highlightedText: didMethod,
-      testID: 'issuerDID',
     }),
     {
       attributeKey: translate('credentialDetail.credential.dateAdded'),

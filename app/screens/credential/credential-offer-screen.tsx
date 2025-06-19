@@ -66,7 +66,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
       params: {
         credentialId,
       },
-      screen: 'CredentialNerdMode',
+      screen: 'OfferNerdMode',
     });
   }, [credentialId, rootNavigation]);
 
