@@ -4,6 +4,7 @@ import {
   NerdModeScreen,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
+import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -14,7 +15,7 @@ import React, { FunctionComponent } from 'react';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
-import { attributesLabels } from './utils';
+import { attributesLabels, entityLabels } from './utils';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -28,23 +29,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     return <ActivityIndicator animate={isFocused} />;
   }
 
-  const didId = credentialDetail.issuerDid?.did ?? '';
-  const didSections = didId.split(':') ?? [];
-  const identifier = didSections.pop();
-  const didMethod = didSections.join(':') + ':';
-
-  const didField = identifier
-    ? [
-        {
-          attributeKey: translate('credentialDetail.credential.identifier'),
-          attributeText: identifier,
-          canBeCopied: true,
-          highlightedText: didMethod,
-        },
-      ]
-    : [];
-
-  const [schemaField, ...nerdModeFields]: Array<
+  const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
@@ -63,12 +48,17 @@ const CredentialOfferNerdView: FunctionComponent = () => {
 
   return (
     <NerdModeScreen
+      entityCluster={{
+        entityLabels,
+        identifier: credentialDetail.issuer,
+        role: TrustEntityRoleEnum.ISSUER,
+      }}
       labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[
         {
-          data: [schemaField, ...didField, ...nerdModeFields],
+          data: nerdModeFields,
           title: translate('credentialOffer.nerdView.section.title'),
         },
       ]}
