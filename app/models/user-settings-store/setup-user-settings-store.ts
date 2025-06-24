@@ -15,6 +15,7 @@ export async function setupUserSettingsStore(env: Environment) {
   const defaultData: UserSettingsStoreSnapshot = {
     biometrics: true,
     pinCodeSecurity: { failedAttempts: 0, lastAttemptTimestamp: undefined },
+    screenCaptureProtection: true,
   };
 
   try {

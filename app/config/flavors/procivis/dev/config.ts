@@ -7,8 +7,4 @@ export const config: Configuration = {
     endpoints: procivisConfig.backendConfig.endpoints,
     host: 'TODO',
   },
-  featureFlags: {
-    ...procivisConfig.featureFlags,
-    screenCaptureBlocking: false,
-  },
 };

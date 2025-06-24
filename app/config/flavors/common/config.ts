@@ -15,7 +15,6 @@ export const commonConfig: Pick<
     isoMdl: true,
     localization: true,
     mqttTransportEnabled: true,
-    screenCaptureBlocking: true,
     ubiquRse: true,
   },
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,

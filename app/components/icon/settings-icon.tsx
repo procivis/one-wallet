@@ -1,6 +1,13 @@
 import { useAppColorScheme } from '@procivis/one-react-native-components';
 import React, { FC } from 'react';
-import Svg, { Circle, G, Path, SvgProps } from 'react-native-svg';
+import Svg, {
+  Circle,
+  G,
+  Mask,
+  MaskType,
+  Path,
+  SvgProps,
+} from 'react-native-svg';
 
 // Icons used on the settings screen: https://www.figma.com/file/Mj9Nm9CUtauth6jt49UL7t/OTS-Developments-2023?type=design&node-id=13-15689&t=GXsNdBzYheEWxZvG-4
 
@@ -64,6 +71,44 @@ export const RestoreBackupIcon: FC<SvgProps> = (props) => {
         <Path d="M12 5a7 7 0 104.2 1.4M16 9V6h3" />
         <Path d="M12 8v4l3 2" />
       </G>
+    </Svg>
+  );
+};
+
+// https://www.figma.com/design/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library--Design-?node-id=1281-143&t=j0mPnI5hfXT5SKzL-0
+export const ScreenCaptureProtectionIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+  const style = {
+    maskType: 'alpha' as MaskType,
+  };
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <Mask
+        height={14}
+        id="a"
+        maskUnits="userSpaceOnUse"
+        style={style}
+        width={15}
+        x={4}
+        y={5}
+      >
+        <Path
+          clipRule="evenodd"
+          d="M4.967 5h13.066v13.03H4.967V5z"
+          fill={colorScheme.white}
+          fillRule="evenodd"
+        />
+      </Mask>
+      <G mask="url(#a)">
+        <Path
+          d="M18.034 18.03h-4.005v-1.188h2.816v-2.815h1.189v4.003zM8.97 5v1.187H6.155v2.817H4.967V5H8.97zm9.064 4.004h-1.189V6.187H14.03V5h4.005v4.004z"
+          fill="#141414"
+        />
+      </G>
+      <Path
+        d="M8.296 12a1 1 0 01.885.535l.173.331c.151.287.449.467.773.467.482 0 .873.391.873.873V17a1 1 0 01-1 1H5a1 1 0 01-1-1v-2.794c0-.482.391-.873.873-.873.324 0 .622-.18.773-.467l.173-.33A1 1 0 016.704 12h1.592zM7.5 14a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
+        fill={colorScheme.black}
+      />
     </Svg>
   );
 };

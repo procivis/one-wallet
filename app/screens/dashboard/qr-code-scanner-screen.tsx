@@ -10,6 +10,7 @@ import {
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
   memo,
@@ -29,7 +30,7 @@ import { useInvitationHandling } from '../../hooks/navigation/deep-link';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 
-const QRCodeScannerScreen: FunctionComponent = () => {
+const QRCodeScannerScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeScanner'>>();
   const colorScheme = useAppColorScheme();
@@ -163,7 +164,7 @@ const QRCodeScannerScreen: FunctionComponent = () => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   footer: {

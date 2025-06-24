@@ -9,6 +9,7 @@ export const UserSettingsStoreModel = types
   .model('UserSettingsStore', {
     biometrics: types.boolean,
     pinCodeSecurity: PinCodeSecurityModel,
+    screenCaptureProtection: types.boolean,
   })
   .actions((self) => ({
     setPinCodeSecurity: (
@@ -20,6 +21,9 @@ export const UserSettingsStoreModel = types
     },
     switchBiometrics: (enabled: boolean) => {
       self.biometrics = enabled;
+    },
+    switchScreenCaptureProtection: (enabled: boolean) => {
+      self.screenCaptureProtection = enabled;
     },
   }));
 
