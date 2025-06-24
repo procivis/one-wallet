@@ -425,6 +425,7 @@
   "settings.security.rse.pinCode": "Change Remote PIN Code",
   "settings.security.rse.pinCodeSet.description": "Your remote PIN code has been successfully changed.",
   "settings.security.rse.pinCodeSet.title": "Remote PIN code set",
+  "settings.security.screenCaptureProtection": "Screen capture protection",
   "settings.security.title": "Security",
   "settings.title": "Settings",
   "shareDisclaimer.noUrls": "No terms of service or privacy policy provided.",

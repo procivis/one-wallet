@@ -19,8 +19,6 @@ export interface FeatureFlags {
   localization: boolean;
   /** MQTT transport enabled */
   mqttTransportEnabled: boolean;
-  /** screen capture prevention enabled */
-  screenCaptureBlocking: boolean;
   /** ubiquRse enabled */
   ubiquRse: boolean;
 }

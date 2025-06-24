@@ -32,6 +32,7 @@ import {
   LicencesIcon,
   PINIcon,
   RestoreBackupIcon,
+  ScreenCaptureProtectionIcon,
   TouchIDIcon,
 } from '../../components/icon/settings-icon';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
@@ -106,6 +107,12 @@ const DashboardScreen: FunctionComponent = observer(() => {
   }, [navigation]);
 
   const biometricSetting = useBiometricSetting();
+
+  const handleScreenCaptureProtectionChange = useCallback(() => {
+    userSettings.switchScreenCaptureProtection(
+      !userSettings.screenCaptureProtection,
+    );
+  }, [userSettings]);
 
   const handleAppInformation = useCallback(() => {
     navigation.navigate('AppInformation');
@@ -248,6 +255,15 @@ const DashboardScreen: FunctionComponent = observer(() => {
               },
             }
           : null,
+        {
+          switchSetting: {
+            icon: ScreenCaptureProtectionIcon,
+            onChange: handleScreenCaptureProtectionChange,
+            testID: 'SettingsScreen.screenCaptureProtection',
+            title: translate('settings.security.screenCaptureProtection'),
+            value: userSettings.screenCaptureProtection,
+          },
+        },
       ].filter(nonEmptyFilter),
       title: translate('settings.security.title'),
     },

@@ -1,9 +1,10 @@
 import { useIsFocused } from '@react-navigation/native';
+import { autorun } from 'mobx';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import RNScreenshotPrevent from 'rn-screenshot-prevent';
 
-import { config } from '../config';
+import { useStores } from '../models';
 
 let enabledCounter = 0;
 const enable = () => {
@@ -29,16 +30,24 @@ const disable = () => {
  * Prevents screenshot and video capture of the current screen
  * @param enabled Flag for temporary disable
  */
-export function useCapturePrevention(enabled = true) {
+export const useCapturePrevention = (enabled = true) => {
   const isFocused = useIsFocused();
+  const { userSettings } = useStores();
 
   useEffect(() => {
-    if (config.featureFlags.screenCaptureBlocking && enabled && isFocused) {
-      enable();
+    let disabler: (() => void) | undefined;
+    const reactionDisposer = autorun(() => {
+      if (userSettings.screenCaptureProtection && enabled && isFocused) {
+        enable();
 
-      return () => {
-        disable();
-      };
-    }
-  }, [enabled, isFocused]);
-}
+        disabler = () => {
+          disable();
+        };
+      }
+    });
+    return () => {
+      disabler?.();
+      reactionDisposer();
+    };
+  }, [enabled, isFocused, userSettings.screenCaptureProtection]);
+};
