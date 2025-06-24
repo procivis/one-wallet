@@ -6,6 +6,7 @@ import {
   useAccessibilityAnnouncement,
   useAccessibilityFocus,
 } from '@procivis/one-react-native-components';
+import { observer } from 'mobx-react-lite';
 import React, {
   forwardRef,
   useCallback,
@@ -144,4 +145,4 @@ const PinCodeScreenContent = forwardRef<
 
 PinCodeScreenContent.displayName = 'PinCodeScreenContent';
 
-export default PinCodeScreenContent;
+export default observer(PinCodeScreenContent);

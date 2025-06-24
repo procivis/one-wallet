@@ -20,6 +20,7 @@ import {
   ProposeProofResponse,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 import React, {
   FunctionComponent,
   useEffect,
@@ -39,7 +40,7 @@ import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-ro
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { useIsAppActive } from '../../utils/appState';
 
-const QRCodeShareScreen: FunctionComponent = () => {
+const QRCodeShareScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
@@ -204,7 +205,7 @@ const QRCodeShareScreen: FunctionComponent = () => {
       </View>
     </ScrollViewScreen>
   );
-};
+});
 
 const styles = StyleSheet.create({
   bottom: {
