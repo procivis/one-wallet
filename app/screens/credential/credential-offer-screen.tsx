@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Button,
   concatTestID,
+  CredentialAttribute,
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
@@ -14,9 +15,11 @@ import {
   useCredentialCardExpanded,
   useCredentialDetail,
   useCredentialReject,
+  useCredentialSchemaDetail,
   useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
+  ClaimSchema,
   IssuanceProtocolFeatureEnum,
   TrustEntityRoleEnum,
   WalletStorageType,
@@ -45,6 +48,17 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
+// fallback empty attributes for credential offer without claim values
+const getDummyAttributes = (
+  claimSchemas: ClaimSchema[],
+): CredentialAttribute[] =>
+  claimSchemas.map((schema) => ({
+    attributes: [],
+    id: schema.id,
+    name: schema.key,
+    path: schema.key,
+  }));
+
 const CredentialOfferScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
@@ -55,6 +69,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { credentialId, interactionId, txCode } = route.params;
 
   const { data: credential } = useCredentialDetail(credentialId);
+  const { data: credentialSchema } = useCredentialSchemaDetail(
+    credential?.schema.id,
+  );
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
   const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
@@ -136,6 +153,13 @@ const CredentialOfferScreen: FunctionComponent = () => {
         )
       : { attributes: [], card: undefined };
 
+  const displayedAttributes = useMemo(() => {
+    if (attributes && attributes.length) {
+      return attributes;
+    }
+    return credentialSchema ? getDummyAttributes(credentialSchema.claims) : [];
+  }, [attributes, credentialSchema]);
+
   const onCloseButtonPress = useCallback(() => {
     Alert.alert(
       translate('credentialOffer.closeAlert.title'),
@@ -207,7 +231,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
               testID={`HolderCredentialID.value.${credential.id}`}
             >
               <CredentialDetailsCard
-                attributes={attributes}
+                attributes={displayedAttributes}
                 card={{
                   ...card,
                   onHeaderPress,
