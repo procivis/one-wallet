@@ -42,7 +42,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
     },
     {
       attributeKey: translate('credentialDetail.credential.exchange'),
-      attributeText: proofDetail.exchange,
+      attributeText: proofDetail.protocol,
     },
     {
       attributeKey: translate('proofRequest.createDate'),

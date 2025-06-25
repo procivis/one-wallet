@@ -105,10 +105,10 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
   const credential: CredentialDetail = {
     claims,
     createdDate: '',
-    exchange: '',
     id: '',
     issuanceDate: '',
     lastModified: '',
+    protocol: '',
     role: CredentialRoleEnum.HOLDER,
     schema: credentialSchema,
     state: CredentialStateEnum.ACCEPTED,
