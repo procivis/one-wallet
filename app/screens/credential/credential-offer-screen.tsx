@@ -89,7 +89,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
-    const exchangeConfig = config?.issuanceProtocol[credential?.exchange ?? ''];
+    const exchangeConfig = config?.issuanceProtocol[credential?.protocol ?? ''];
     const exchangeCapabilities = exchangeConfig?.capabilities;
     const exchangeFeatures = exchangeCapabilities?.features;
     const supportsRejection = exchangeFeatures?.includes(
@@ -100,7 +100,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     }
   }, [
     config?.issuanceProtocol,
-    credential?.exchange,
+    credential?.protocol,
     interactionId,
     rejectCredential,
   ]);
