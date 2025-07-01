@@ -1281,7 +1281,7 @@ PODS:
     - React
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-one-core (1.48707.1):
+  - react-native-one-core (1.49160.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -2399,7 +2399,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-one-core: 8b13971c19fe487880db2b1fcb22e60cdb78f77c
+  react-native-one-core: a63d03fca45f49ac4e4f037433c586bf055207b4
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
