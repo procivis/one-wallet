@@ -218,8 +218,8 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       loaderLabel={loaderLabel}
       onClose={closeButtonHandler}
       state={state}
-      testID="CredentialDeleteProcessScreen"
-      title={translate('credentialDelete.title')}
+      testID="CredentialAcceptProcessScreen"
+      title={translate('credentialOffer.title')}
     />
   );
 });
