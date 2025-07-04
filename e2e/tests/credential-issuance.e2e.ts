@@ -4,19 +4,26 @@ import { CredentialAction, credentialIssuance } from '../helpers/credential';
 import { getCredentialSchemaData } from '../helpers/credentialSchemas';
 import { CredentialStatus } from '../page-objects/components/CredentialCard';
 import { waitForElementVisible } from '../page-objects/components/ElementUtil';
+import { HistoryEntryEnum } from '../page-objects/components/HistoryEntryList';
 import { LoaderViewState } from '../page-objects/components/LoadingResult';
 import CredentialDetailScreen, {
   Action,
 } from '../page-objects/credential/CredentialDetailScreen';
 import CredentialDeleteProcessScreen from '../page-objects/CredentialDeleteProcessScreen';
 import CredentialDeletePromptScreen from '../page-objects/CredentialDeletePromptScreen';
+import HistoryScreen from '../page-objects/HistoryScreen';
 import ImagePreviewScreen from '../page-objects/ImagePreviewScreen';
 import InvitationErrorDetailsScreen from '../page-objects/invitation/InvitationErrorDetailsScreen';
 import InvitationProcessScreen from '../page-objects/InvitationProcessScreen';
+import SettingsScreen, { SettingsButton } from '../page-objects/SettingsScreen';
 import WalletScreen from '../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../types/credential';
+import { DidDetailDTO } from '../types/did';
 import {
   createCredentialSchema,
+  createDidWithKey,
+  deactivateDid,
+  getCredentialDetail,
   keycloakAuth,
   revokeCredential,
   suspendCredential,
@@ -24,6 +31,7 @@ import {
 import { formatDateTime } from '../utils/date';
 import {
   CredentialFormat,
+  CredentialState,
   DataType,
   DidMethod,
   IssuanceProtocol,
@@ -103,7 +111,7 @@ describe('ONE-601: Credential issuance', () => {
     });
 
     it('Reject credential issuance', async () => {
-      await credentialIssuance(
+      const credentialIds = await credentialIssuance(
         {
           authToken: authToken,
           credentialSchema: credentialSchemaJWT,
@@ -111,6 +119,13 @@ describe('ONE-601: Credential issuance', () => {
         },
         CredentialAction.REJECT,
       );
+      const credentialDetail = await getCredentialDetail(credentialIds.issuerCredentialId, authToken);
+      if (credentialDetail.state !== CredentialState.REJECTED) {
+        throw Error(`Wrong credential state during rejection: ${credentialDetail.state}`)
+      }
+      await WalletScreen.settingsButton.tap();
+      await SettingsScreen.button(SettingsButton.HISTORY).tap();
+      await HistoryScreen.historyEntryList.verifyHistoryLabels([HistoryEntryEnum.CREDENTIAL_REJECTED]);
     });
   });
 
@@ -702,4 +717,35 @@ describe('ONE-601: Credential issuance', () => {
       await expect(WalletScreen.screen).toBeVisible(1);
     });
   });
+
+  describe('ONE-3802: Support notification feature', () => {
+    let didData: DidDetailDTO;
+
+    beforeAll(async () => {
+      didData = await createDidWithKey(authToken, {didMethod: DidMethod.WEB, keyType: KeyType.ECDSA});
+    });
+  
+    it('Credential issuance failure. Issuer identifier deactivated', async () => {
+      const credentialOfferScreenTestCase = async () => {
+        await deactivateDid(authToken, didData.id);
+      };
+
+      await credentialIssuance(
+        {
+          authToken,
+          credentialOfferScreenTestCase,
+          credentialSchema: credentialSchemaSD_JWT,
+          didData,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+        },
+        CredentialAction.ACCEPT, 
+        LoaderViewState.Warning,
+      );
+
+      await WalletScreen.settingsButton.tap();
+      await SettingsScreen.button(SettingsButton.HISTORY).tap();
+      await HistoryScreen.historyEntryList.verifyHistoryLabels([HistoryEntryEnum.CREDENTIAL_ERRORED]);
+
+    });
+  })
 });

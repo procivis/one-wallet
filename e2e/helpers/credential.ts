@@ -43,6 +43,7 @@ interface CredentialIssuanceProps {
     path: string;
     value: string;
   }>;
+  credentialOfferScreenTestCase?: () => Promise<void>,
   credentialSchema: CredentialSchemaResponseDTO;
   didData?: DidDetailDTO;
   didFilter?: DidFilter;
@@ -93,10 +94,11 @@ export const acceptCredentialTestCase = async (
   data: CredentialIssuanceProps,
   expectedResult: LoaderViewState,
   visibleText?: string,
+  credentialOfferScreenTestCase?: () => Promise<void>,
 ) => {
   await device.disableSynchronization();
   await CredentialOfferScreen.credentialCard.verifyIsVisible();
-
+  await credentialOfferScreenTestCase?.();
   await CredentialOfferScreen.scrollTo(CredentialOfferScreen.acceptButton);
 
   await CredentialOfferScreen.acceptButton.tap();
@@ -107,7 +109,7 @@ export const acceptCredentialTestCase = async (
   ) {
     await acceptRSECredential(data.rseConfig);
   }
-
+  
   if (expectedResult === LoaderViewState.Success) {
     await waitFor(CredentialAcceptProcessScreen.status.success)
       .toBeVisible(1)
@@ -123,7 +125,7 @@ export const acceptCredentialTestCase = async (
   } else if (expectedResult === LoaderViewState.Warning) {
     await waitFor(CredentialAcceptProcessScreen.status.warning)
       .toBeVisible()
-      .withTimeout(2000);
+      .withTimeout(5000);
     if (visibleText) {
       await CredentialAcceptProcessScreen.hasText(visibleText);
     }
@@ -211,7 +213,7 @@ export const credentialIssuance = async (
   );
 
   if (action === CredentialAction.ACCEPT) {
-    await acceptCredentialTestCase(data, expectedResult, visibleText);
+    await acceptCredentialTestCase(data, expectedResult, visibleText, data.credentialOfferScreenTestCase);
   } else {
     await rejectCredentialTestCase();
   }

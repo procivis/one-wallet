@@ -456,3 +456,18 @@ export async function deleteProofRequest(
     'DELETE',
   );
 }
+
+export async function deactivateDid(  
+  authToken: string,
+  didId: string,
+) {
+  const data = {
+    deactivated: true,
+  }
+  return apiRequest(
+    `/api/did/v1/${didId}`,
+    authToken,
+    'PATCH',
+    data,
+  );
+}
