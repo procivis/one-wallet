@@ -8,8 +8,10 @@ export interface HistoryEntryRow {
 export enum HistoryEntryEnum {
   CREDENTIAL_ACCEPTED = 'Credential accepted',
   CREDENTIAL_DELETED = 'Credential deleted',
-  CREDENTIAL_PENDING = 'Credential pending',
-  CREDENTIAL_REACTIVATED = 'Credential reactivated', 
+  CREDENTIAL_ERRORED = 'Credential errored',
+  CREDENTIAL_PENDING = 'Credential pending', 
+  CREDENTIAL_REACTIVATED = 'Credential reactivated',
+  CREDENTIAL_REJECTED = 'Credential rejected',
   CREDENTIAL_REVOKED = 'Credential revoked',
   CREDENTIAL_SUSPENDED = 'Credential suspended',
 
@@ -32,7 +34,7 @@ export default class HistoryEntryList {
     return historyEntryItem(this.id, index);
   }
 
-  async verifyHistoryLabels(labels: string[]) {
+  async verifyHistoryLabels(labels: HistoryEntryEnum[]) {
     let index = 0;
     for (const label of labels) {
       await expect(historyEntryItem(this.id, index).label).toHaveText(label);
