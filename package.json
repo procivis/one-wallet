@@ -32,6 +32,7 @@
     "rnuc:demo": "pnpm rnuc ./app/config/flavors/procivis/demo/.env",
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
     "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv",
+    "check:translations": "node ./scripts/get-unused-translations.js",
     "postinstall": "node ./bin/postinstall"
   },
   "dependencies": {
