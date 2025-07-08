@@ -1,3 +1,5 @@
+import { expect } from 'detox';
+
 export enum SettingsButton {
   BACK = 'SettingsScreen.header.back',
   CHANGE_PIN = 'SettingsScreen.changePIN',
@@ -10,6 +12,7 @@ export enum SettingsButton {
   LANGUAGE_CHANGE = 'SettingsScreen.languageChange',
   LICENCES = 'SettingsScreen.licences',
   RESTORE_BACKUP = 'SettingsScreen.restoreBackup',
+  SCREEN_CAPTURE_PROTECTION = 'SettingsScreen.screenCaptureProtection',
 }
 export enum LanguageMenu {
   CANCEL = 'Cancel',
@@ -20,6 +23,10 @@ export enum LanguageMenu {
 export default abstract class SettingsScreen {
   static get screen() {
     return element(by.id('SettingsScreen'));
+  }
+
+  static get screenCaptureProtection() {
+    return element(by.id('SettingsScreen.screenCaptureProtection'));
   }
 
   static scrollTo(testID: SettingsButton) {
@@ -43,5 +50,11 @@ export default abstract class SettingsScreen {
 
   static async selectLanguage(language: LanguageMenu) {
     await element(by.text(language)).tap();
+  }
+
+  static async toggleScreenCaptureProtection(enabled: boolean) {
+    await this.scrollTo(SettingsButton.SCREEN_CAPTURE_PROTECTION);
+    await this.screenCaptureProtection.tap();
+    await expect(this.screenCaptureProtection).toHaveToggleValue(enabled);
   }
 }
