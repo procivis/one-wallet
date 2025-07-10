@@ -8,7 +8,7 @@ export default class ProofRequestSharingScreen {
   }
 
   static get trustEntity() {
-    return TrustEntityHeader('ProofRequestSharingScreen.entityCluster');
+    return new TrustEntityHeader('ProofRequestSharingScreen.entityCluster');
   }
 
   static get infoButton() {

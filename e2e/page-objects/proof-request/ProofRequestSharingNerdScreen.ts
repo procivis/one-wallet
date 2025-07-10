@@ -14,12 +14,12 @@ export default class ProofRequestSharingNerdScreen {
     const id = 'ProofRequestNerdView.verifierTrustEntity';
     return {
       get detail() {
-        return TrustEntityDetail(id);
+        return new TrustEntityDetail(id);
       },
       get header() {
-        return TrustEntityHeader(id);
+        return new TrustEntityHeader(id);
       },
-    }
+    };
   }
 
   protected static async scrollTo(element: Detox.IndexableNativeElement) {

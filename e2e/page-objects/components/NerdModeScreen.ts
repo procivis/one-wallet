@@ -2,7 +2,6 @@ import { expect } from 'detox';
 
 import { TrustEntityDetail, TrustEntityHeader } from '../trust-entity';
 
-
 export type Attributes<T extends string | number> = {
   [key in T]?: {
     label: string;
@@ -18,12 +17,12 @@ export default function BaseNerdView<T extends string>(testID: string) {
     const id = `${testID}.entityCluster`;
     return {
       get detail() {
-        return TrustEntityDetail(id);
+        return new TrustEntityDetail(id);
       },
       get header() {
-        return TrustEntityHeader(id);
+        return new TrustEntityHeader(id);
       },
-    }
+    };
   }
 
   function attributeEntry(attribute: T) {
