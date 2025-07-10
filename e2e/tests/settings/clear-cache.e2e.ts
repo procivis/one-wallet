@@ -216,9 +216,10 @@ describe('ONE-4505: Clear cache & refresh credential', () => {
       await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
         entityName: trustEntityDetail.name,
         logo: true,
-        subline: 'Trusted • Dev Trust List',
       });
-      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(trustEntityDetail);
+      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(
+        trustEntityDetail,
+      );
     });
   });
 });

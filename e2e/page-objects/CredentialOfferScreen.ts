@@ -31,7 +31,7 @@ export default class CredentialOfferScreen {
   }
 
   static get trustEntity() {
-    return TrustEntityHeader('CredentialOfferScreen.entityCluster');
+    return new TrustEntityHeader('CredentialOfferScreen.entityCluster');
   }
 
   static async scrollTo(

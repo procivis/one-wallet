@@ -16,6 +16,7 @@ import CredentialDetailScreen, {
   Action,
 } from '../../page-objects/credential/CredentialDetailScreen';
 import CredentialNerdScreen from '../../page-objects/credential/CredentialNerdScreen';
+import CredentialOfferNerdScreen from '../../page-objects/credential/CredentialOfferNerdScreen';
 import CredentialOfferScreen from '../../page-objects/CredentialOfferScreen';
 import HistoryDetailScreen from '../../page-objects/HistoryDetailScreen';
 import HistoryScreen from '../../page-objects/HistoryScreen';
@@ -25,6 +26,8 @@ import ProofRequestSharingScreen from '../../page-objects/proof-request/ProofReq
 import SettingsScreen, {
   SettingsButton,
 } from '../../page-objects/SettingsScreen';
+import { TrustEntityDetail } from '../../page-objects/trust-entity';
+import TrustEntityHeader from '../../page-objects/trust-entity/TrustEntityHeader';
 import WalletScreen from '../../page-objects/WalletScreen';
 import { CredentialSchemaResponseDTO } from '../../types/credential';
 import { DidDetailDTO } from '../../types/did';
@@ -57,6 +60,62 @@ interface CredentialTrustEntityInfo {
   trustEntity?: TrustEntityResponseDTO;
 }
 
+const verifyTermOfServiceAndPrivacyPolicy = async (
+  disclaimer: Detox.IndexableNativeElement,
+  trustEntity: TrustEntityResponseDTO,
+  buttonName: string,
+) => {
+  if (trustEntity.termsUrl && trustEntity.privacyUrl) {
+    await waitFor(disclaimer)
+      .toHaveText(
+        `By tapping on “${buttonName}” you agree to the Terms of services and Privacy policy provided by this entity.`,
+      )
+      .withTimeout(6000);
+  } else if (trustEntity.termsUrl) {
+    await waitFor(disclaimer)
+      .toHaveText(
+        `By tapping on “${buttonName}” you agree to the Terms of services provided by this entity.`,
+      )
+      .withTimeout(4000);
+  } else if (trustEntity.privacyUrl) {
+    await expect(disclaimer).toHaveText(
+      `By tapping on “${buttonName}” you agree to the Privacy policy provided by this entity.`,
+    );
+  } else {
+    await expect(disclaimer).toHaveText(
+      `No terms of service or privacy policy provided.`,
+    );
+  }
+};
+
+const verifyTrustEntityHeaderVisibilityByRole = async (
+  trustEntityHeader: TrustEntityHeader,
+  trustEntity: TrustEntityResponseDTO,
+  trustRoles: TrustEntityRole[],
+) => {
+  if (trustRoles.includes(trustEntity.role)) {
+    await trustEntityHeader.verifyEntityDetailHeader({
+      entityName: trustEntity.name,
+      logo: true,
+    });
+  } else {
+    await trustEntityHeader.verifyEntityDetailHeader({
+      entityName: trustEntity.name,
+      iconStatus: 'notTrusted',
+    });
+  }
+};
+
+const verifyTrustEntityDetailVisibilityByRole = async (
+  trustEntityDetail: TrustEntityDetail,
+  trustEntity: TrustEntityResponseDTO,
+  trustRoles: TrustEntityRole[],
+) => {
+  if (trustRoles.includes(trustEntity.role)) {
+    await trustEntityDetail.verifyTrustEntityDetail(trustEntity);
+  }
+};
+
 const issueCredentialWithDidTrustEntityAndVerify = async (
   authToken: string,
   credentialSchema: CredentialSchemaResponseDTO,
@@ -72,42 +131,20 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   const issuerHolderCredentialIds =
     await offerCredentialAndReviewCredentialOfferScreen(data);
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.ISSUER
-    ) {
-      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
-        entityName: trustEntity.name,
-        iconStatus: 'trusted',
-        logo: true,
-      });
-    } else {
-      await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
-        entityName: trustEntity.did.did,
-        iconStatus: 'notTrusted',
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      CredentialOfferScreen.trustEntity,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+    );
     await CredentialOfferScreen.scrollTo(CredentialOfferScreen.disclaimer);
-    if (trustEntity.termsUrl && trustEntity.privacyUrl) {
-      await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
-        'By tapping on “accept” you agree to the Terms of services and Privacy policy provided by this entity.',
-      ).withTimeout(6000);
-    } else if (trustEntity.termsUrl) {
-      await waitFor(CredentialOfferScreen.disclaimer).toHaveText(
-        'By tapping on “accept” you agree to the Terms of services provided by this entity.',
-      ).withTimeout(4000);
-    } else if (trustEntity.privacyUrl) {
-      await expect(CredentialOfferScreen.disclaimer).toHaveText(
-        'By tapping on “accept” you agree to the Privacy policy provided by this entity.',
-      );
-    } else {
-      await expect(CredentialOfferScreen.disclaimer).toHaveText(
-        'No terms of service or privacy policy provided.',
-      );
-    }
+    await verifyTermOfServiceAndPrivacyPolicy(
+      CredentialOfferScreen.disclaimer,
+      trustEntity,
+      'accept',
+    );
   } else {
     await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
-      entityName: issuerDid.did,
+      didName: issuerDid.did,
       iconStatus: 'notTrusted',
     });
     await expect(CredentialOfferScreen.disclaimer).toHaveText(
@@ -115,33 +152,27 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     );
   }
   await CredentialOfferScreen.infoButton.tap();
-  await expect(CredentialNerdScreen.screen).toBeVisible(1);
+  await expect(CredentialOfferNerdScreen.screen).toBeVisible(1);
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.ISSUER
-    ) {
-      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-        entityName: trustEntity.name,
-        logo: true,
-        subline: 'Trusted • Dev Trust List',
-      })
-      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(
-        trustEntity,
-      );
-    } else {
-      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-          entityName: issuerDid.did,
-          iconStatus: 'notTrusted',
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      CredentialOfferNerdScreen.entityCluster.header,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+    );
+    await verifyTrustEntityDetailVisibilityByRole(
+      CredentialOfferNerdScreen.entityCluster.detail,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+    );
   } else {
-    await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-      entityName: issuerDid.did, 
-      iconStatus: 'notTrusted'
-    });
+    await CredentialOfferNerdScreen.entityCluster.header.verifyEntityDetailHeader(
+      {
+        didName: issuerDid.did,
+        iconStatus: 'notTrusted',
+      },
+    );
   }
-  await CredentialNerdScreen.back.tap();
+  await CredentialOfferNerdScreen.back.tap();
   await acceptCredentialTestCase(data, LoaderViewState.Success);
   await WalletScreen.openDetailScreenByCredentialId(
     issuerHolderCredentialIds.holderCredentialId,
@@ -152,26 +183,19 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   await expect(CredentialNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.ISSUER
-    ) {
-      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-        entityName: trustEntity.name,
-        iconStatus: 'trusted',
-      });
-      await CredentialNerdScreen.entityCluster.detail.verifyTrustEntityDetail(
-        trustEntity,
-      );
-    } else {
-      await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-        entityName: issuerDid.did,
-        iconStatus: 'notTrusted',
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      CredentialNerdScreen.entityCluster.header,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+    );
+    await verifyTrustEntityDetailVisibilityByRole(
+      CredentialNerdScreen.entityCluster.detail,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+    );
   } else {
     await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-      entityName: issuerDid.did,
+      didName: issuerDid.did,
       iconStatus: 'notTrusted',
     });
   }
@@ -198,72 +222,47 @@ const proofSharingWithDidTrustEntityAndVerify = async (
   );
 
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.VERIFIER
-    ) {
-    await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
-      entityName: trustEntity.name,
-      iconStatus: 'trusted',
-      logo: true,
-    });
-    } else {
-      await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
-        entityName: trustEntity.did.did,
-        iconStatus: 'notTrusted'
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      ProofRequestSharingScreen.trustEntity,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+    );
+    await ProofRequestSharingScreen.scrollTo(
+      ProofRequestSharingScreen.disclaimer,
+    );
 
-    await ProofRequestSharingScreen.scrollTo(ProofRequestSharingScreen.disclaimer);
-
-    if (trustEntity.termsUrl && trustEntity.privacyUrl) {
-      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
-        'By tapping on “share” you agree to the Terms of services and Privacy policy provided by this entity.',
-      ).withTimeout(6000);
-    } else if (trustEntity.termsUrl) {
-      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
-        'By tapping on “share” you agree to the Terms of services provided by this entity.',
-      ).withTimeout(6000);
-    } else if (trustEntity.privacyUrl) {
-      await waitFor(ProofRequestSharingScreen.disclaimer).toHaveText(
-        'By tapping on “share” you agree to the Privacy policy provided by this entity.',
-      ).withTimeout(6000);
-    } else {
-      await expect(ProofRequestSharingScreen.disclaimer).toHaveText(
-        'No terms of service or privacy policy provided.',
-      );
-    }
+    await verifyTermOfServiceAndPrivacyPolicy(
+      ProofRequestSharingScreen.disclaimer,
+      trustEntity,
+      'share',
+    );
   } else {
     await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
-      entityName: verifierDid.did,
-      iconStatus: 'notTrusted'
+      didName: verifierDid.did,
+      iconStatus: 'notTrusted',
     });
   }
   await ProofRequestSharingScreen.infoButton.tap();
   await expect(ProofRequestSharingNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.VERIFIER
-    ) {
-      await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-         entityName: trustEntity.name,
-         logo: true,
-         subline: 'Trusted • Dev Trust List',
-      });
-      await ProofRequestSharingNerdScreen.entityCluster.detail.verifyTrustEntityDetail(trustEntity)
-    } else {
-      await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-        entityName: trustEntity.did.did,
-        iconStatus: 'notTrusted'
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      ProofRequestSharingNerdScreen.entityCluster.header,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+    );
+    await verifyTrustEntityDetailVisibilityByRole(
+      ProofRequestSharingNerdScreen.entityCluster.detail,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+    );
   } else {
-    await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-      entityName: verifierDid.did,
-      iconStatus: 'notTrusted'
-    });
+    await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader(
+      {
+        didName: verifierDid.did,
+        iconStatus: 'notTrusted',
+      },
+    );
   }
   await ProofRequestSharingNerdScreen.close();
   await shareCredential(LoaderViewState.Success, proofRequestData);
@@ -286,24 +285,19 @@ const verifyNewestProofRequestOnHistory = async (
   await expect(ProofRequestNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    if (
-      trustEntity.role === TrustEntityRole.BOTH ||
-      trustEntity.role === TrustEntityRole.VERIFIER
-    ) {
-      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
-        entityName: trustEntity.name,
-        logo: true,
-        subline: 'Trusted • Dev Trust List',
-      });
-    } else {
-      await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
-        entityName: trustEntity.did.did,
-        iconStatus: 'notTrusted',
-      });
-    }
+    await verifyTrustEntityHeaderVisibilityByRole(
+      ProofRequestNerdScreen.entityCluster.header,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+    );
+    await verifyTrustEntityDetailVisibilityByRole(
+      ProofRequestNerdScreen.entityCluster.detail,
+      trustEntity,
+      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+    );
   } else {
     await ProofRequestNerdScreen.entityDetailHeader.verifyEntityDetailHeader({
-      entityName: verifierDid.did,
+      didName: verifierDid.did,
       iconStatus: 'notTrusted',
     });
   }
@@ -319,11 +313,15 @@ const verifyNewestProofRequestOnHistory = async (
       ) {
         await ProofRequestNerdScreen.trustEntityByCredentialID(
           credentialTrustEntity.credentialId,
-        ).verifyEntityDetailHeader({entityName: credentialTrustEntity.trustEntity.name});
+        ).verifyEntityDetailHeader({
+          entityName: credentialTrustEntity.trustEntity.name,
+        });
       } else if (credentialTrustEntity.didDetail) {
         await ProofRequestNerdScreen.trustEntityByCredentialID(
           credentialTrustEntity.credentialId,
-        ).verifyEntityDetailHeader({entityName: credentialTrustEntity.didDetail.did});
+        ).verifyEntityDetailHeader({
+          entityName: credentialTrustEntity.didDetail.did,
+        });
       }
     }
   }

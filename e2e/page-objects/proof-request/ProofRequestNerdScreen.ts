@@ -9,12 +9,12 @@ export default class ProofRequestNerdScreen extends ProofRequestSharingNerdScree
   }
 
   static trustEntityByCredentialID(credentialId: string) {
-    return TrustEntityHeader(
+    return new TrustEntityHeader(
       `ProofRequestNerdView.issuerTrustEntity.${credentialId}`,
     );
   }
 
   static get entityDetailHeader() {
-    return TrustEntityHeader('ProofRequestNerdView.verifierTrustEntity');
+    return new TrustEntityHeader('ProofRequestNerdView.verifierTrustEntity');
   }
 }
