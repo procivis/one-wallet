@@ -43,6 +43,7 @@ interface ProofSharingProops {
   redirectUri?: string;
   rseConfig?: RSEConfig;
   selectiveDisclosureCredentials?: string[];
+  verifier?: string;
 }
 
 interface ProofRequestProps {
@@ -123,22 +124,25 @@ export const requestProofAndReviewProofRequestSharingScreen = async (
   authToken: string,
   data: ProofSharingProops,
 ) => {
-  let verifierDidId: string;
-  if (data.didId) {
-    verifierDidId = data.didId;
-  } else {
+  const proofRequestData = {
+    exchange: data.exchange,
+    proofSchemaId: data.proofSchemaId,
+    redirectUri: data.redirectUri,
+  };
+  if(data?.verifier){
+    Object.assign(proofRequestData, { verifier: data.verifier });  
+  }
+  if(data?.didId){
+    Object.assign(proofRequestData, { verifierDid: data?.didId, }); 
+  }
+  if(data?.didMethod && data?.keyAlgorithms){
     const did = await getLocalDid(authToken, {
       didMethods: data.didMethod,
       keyAlgorithms: data.keyAlgorithms,
     });
-    verifierDidId = did.id;
+    Object.assign(proofRequestData, { verifierDid: did.id, });
   }
-  const proofRequestId = await createProofRequest(authToken, {
-    exchange: data.exchange,
-    proofSchemaId: data.proofSchemaId,
-    redirectUri: data.redirectUri,
-    verifierDid: verifierDidId,
-  });
+  const proofRequestId = await createProofRequest(authToken, proofRequestData);
   const invitationUrls = await requestProof(proofRequestId, authToken);
   const invitationUrl =
     data.proofSharingUrlType === URLOption.UNIVERSAL_LINK

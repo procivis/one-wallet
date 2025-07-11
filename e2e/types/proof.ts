@@ -51,6 +51,7 @@ export interface ProofRequestData {
   exchange: VerificationProtocol;
   proofSchemaId: string;
   redirectUri?: string;
-  verifierDid: string;
+  verifier?: string;
+  verifierDid?: string;
   verifierKey?: string;
 }

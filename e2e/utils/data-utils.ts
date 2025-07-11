@@ -1,22 +1,36 @@
 import { CreateDidRequestDTO } from '../types/credential';
+import { TrustEntityType } from './api';
 import { DidMethod, KeyType, StorageType, TrustEntityRole } from './enums';
 import { shortUUID } from './utils';
 
 export const getTrustEntityRequestData = (
-  didId: string,
-  trustAnchorId: string,
-  role: TrustEntityRole,
-  logo?: string,
-  privacyUrl?: string,
-  termsUrl?: string,
-  website?: string,
+{ didId, trustAnchorId, role, logo, privacyUrl, termsUrl, website, type = TrustEntityType.DID,  content}: {
+  content?: string;
+  didId?: string;
+  identifierId?: string;
+  logo?: string;
+  privacyUrl?: string;
+  role: TrustEntityRole;
+  termsUrl?: string;
+  trustAnchorId: string;
+  type?: TrustEntityType;
+  website?: string;
+}
 ) => {
   const trustEntityRequestData = {
-    didId: didId,
     name: `trust-entity-${shortUUID()}`,
     role: role,
     trustAnchorId: trustAnchorId,
   };
+  if(didId){
+    Object.assign(trustEntityRequestData, { didId: didId });
+  }
+  if(content){
+    Object.assign(trustEntityRequestData, { content: content });
+  }
+  if(type){
+    Object.assign(trustEntityRequestData, { type: type });
+  }
   if (logo) {
     Object.assign(trustEntityRequestData, { logo: logo });
   }
