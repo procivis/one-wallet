@@ -1,3 +1,4 @@
+import { IdentifierDetailResponseDTO } from '@procivis/one-tests-lib';
 import { expect, waitFor } from 'detox';
 
 import {
@@ -49,6 +50,7 @@ interface CredentialIssuanceProps {
   didFilter?: DidFilter;
   exchange?: IssuanceProtocol;
   invitationUrlType?: URLOption;
+  issuer?: IdentifierDetailResponseDTO;
   redirectUri?: string;
   rseConfig?: RSEConfig;
 }
@@ -162,27 +164,27 @@ export const offerCredentialAndReviewCredentialOfferScreen = async (
   if (!data.authToken) {
     data.authToken = await keycloakAuth();
   }
-
-  let issuerDidId: string;
-  if (data.didData) {
-    issuerDidId = data.didData.id;
+  const credentialData = {
+    claimValues: data.claimValues,
+    exchange: data.exchange ?? IssuanceProtocol.OPENID4VCI_DRAFT13,
+    redirectUri: data.redirectUri,
+  };
+  if (data?.didData) {
+    Object.assign(credentialData, { issuerDid: data.didData.id, });
+  } else if(data?.issuer){
+    Object.assign(credentialData, { issuer: data.issuer.id, });
   } else {
     const did = await getLocalDid(data.authToken, {
       didMethods: data.didFilter?.didMethods,
       keyAlgorithms: data.didFilter?.keyAlgorithms,
     });
-    issuerDidId = did.id;
+    Object.assign(credentialData, { issuerDid: did.id, });
   }
-
+  
   const credentialId = await createCredential(
     data.authToken,
     data.credentialSchema,
-    {
-      claimValues: data.claimValues,
-      exchange: data.exchange ?? IssuanceProtocol.OPENID4VCI_DRAFT13,
-      issuerDid: issuerDidId,
-      redirectUri: data.redirectUri,
-    },
+    credentialData,
   );
   const invitationUrls = await offerCredential(credentialId, data.authToken);
   const invitationUrl =

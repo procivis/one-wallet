@@ -1,6 +1,7 @@
 import { expect } from 'detox';
 
 import { replaceBreakingHyphens } from '../../utils/utils';
+import { waitForElementToHaveText, waitForElementVisible } from '../components/ElementUtil';
 
 interface EntityDetailHeaderProps {
   didName?: string;
@@ -19,20 +20,13 @@ export default class TrustEntityHeader {
     didName,
   }: EntityDetailHeaderProps) {
     if (didName) {
-      await waitFor(element(by.id(`${this.testID}.entityName`)))
-        .toHaveText(replaceBreakingHyphens(didName))
-        .withTimeout(10000);
+      await waitForElementToHaveText(element(by.id(`${this.testID}.entityName`)), replaceBreakingHyphens(didName), 10000);
     } else if (entityName) {
-      await waitFor(element(by.id(`${this.testID}.entityName`)))
-        .toHaveText(entityName)
-        .withTimeout(10000);
+      await waitForElementToHaveText(element(by.id(`${this.testID}.entityName`)), entityName, 10000);
     }
     if (logo) {
       await expect(element(by.id(`${this.testID}.avatar.logo`))).toBeVisible();
     }
-    console.log(`${this.testID}.statusIcon.${iconStatus}`);
-    await expect(
-      element(by.id(`${this.testID}.statusIcon.${iconStatus}`)),
-    ).toBeVisible();
+    await waitForElementVisible(element(by.id(`${this.testID}.statusIcon.${iconStatus}`)), 10000);
   }
 }

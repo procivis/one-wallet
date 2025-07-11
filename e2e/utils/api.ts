@@ -2,6 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import {
+  CSRProfile,
+  IdentifierDetailResponseDTO,
+  signCertificate,
+} from '@procivis/one-tests-lib';
 import fetch from 'node-fetch';
 
 import {
@@ -31,7 +36,7 @@ import {
   TrustEntityRole,
   VerificationProtocol,
 } from './enums';
-import { objectToQueryParams } from './utils';
+import { objectToQueryParams, shortUUID } from './utils';
 
 const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL;
 const API_BASE_URL = process.env.API_BASE_URL;
@@ -85,7 +90,7 @@ async function apiRequest(
     method,
   }).then(async (res) => {
     if (!res.ok) {
-      console.error(`HTTP Error. Status: ${res.status}`, await res.json());
+      console.error(`HTTP Error. URL: ${path} Status: ${res.status}: body: ${JSON.stringify(body)}`, await res.json());
       throw Error('HTTP error: ' + res.status);
     }
     if (res.status === 204) {
@@ -182,7 +187,8 @@ export async function getTrustAnchor(
 export interface CredentialData {
   claimValues?: Array<{ claimId: string; path: string; value: string }>;
   exchange?: IssuanceProtocol;
-  issuerDid: string;
+  issuer?: string;
+  issuerDid?: string;
   issuerKey?: string;
   redirectUri?: string;
 }
@@ -258,28 +264,43 @@ export async function createCredential(
   credentialData?: CredentialData,
 ): Promise<string> {
   const claimValues = claimsFilling(schema.claims);
+  
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: schema.id,
     exchange: credentialData?.exchange ?? IssuanceProtocol.OPENID4VCI_DRAFT13,
-    issuerDid: credentialData?.issuerDid,
-    issuerKey: credentialData?.issuerKey,
     redirectUri: credentialData?.redirectUri,
   };
+  if (credentialData?.issuerDid) {
+    Object.assign(data, { 
+      issuerDid: credentialData?.issuerDid,
+      issuerKey: credentialData?.issuerKey, 
+    });
+  } else if(credentialData?.issuer){
+    Object.assign(data, { issuer: credentialData?.issuer, });
+  }
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
   );
 }
 
+export enum TrustEntityType {
+  CA = 'CA',
+  DID = 'DID'
+}
+
 export interface CreateTrustEntityRequestDTO {
-  didId: string;
-  logo?: string | null;
+  content?: string;
+  didId?: string;
+  identifierId?: string;
+  logo?: string;
   name: string;
-  privacyUrl?: string | null;
+  privacyUrl?: string;
   role: TrustEntityRole;
-  termsUrl?: string | null;
+  termsUrl?: string;
   trustAnchorId: string;
-  website?: string | null;
+  type?: TrustEntityType;
+  website?: string;
 }
 
 export async function createTrustEntity(
@@ -321,9 +342,16 @@ export async function createProofRequest(
     exchange: proofRequestData?.exchange ?? VerificationProtocol.OPENID4VP_DRAFT20,
     proofSchemaId: proofRequestData?.proofSchemaId,
     redirectUri: proofRequestData?.redirectUri,
-    verifierDid: proofRequestData?.verifierDid,
-    verifierKey: proofRequestData?.verifierKey,
   };
+  if(proofRequestData?.verifier){
+    Object.assign(data, { verifier: proofRequestData.verifier });  
+  }
+  if(proofRequestData?.verifierDid){
+    Object.assign(data, { 
+      verifierDid: proofRequestData?.verifierDid,
+      verifierKey: proofRequestData?.verifierKey,
+    }); 
+  }
   return await apiRequest(
     '/api/proof-request/v1',
     authToken,
@@ -446,6 +474,63 @@ export async function createDidWithKey(
   return getDidDetail(authToken, didId);
 }
 
+const generateCertificate = async (authToken: string, keyId: string, profile: CSRProfile) => {
+  const response = await await apiRequest(
+    `/api/key/v1/${keyId}/generate-csr`,
+    authToken,
+    'POST',
+    {
+      profile,
+      subject: {
+        commonName: 'core.dev.procivis-one.com',
+        countryName: 'VN',
+        localityName: 'test',
+        organisationName: 'Procivis',
+        serialNumber: 'Test1234',
+      },
+    },
+  );
+  // return await signCertificate({
+  //   csr: response.content,
+  //   caSerial: '0F483FD3C612F848B2C4DCCBF889A6EA980F5340', // trusted CA
+  //   commonName: process.env.CORE__MDL_CERT_DNS,
+  //   subjectAlternativeName: process.env.CORE__MDL_CERT_DNS,
+  // });
+  return await signCertificate({
+    caSerial: '2CE9D3F49B528F0CD29395D40B2E25CC05E0CEC3', // trusted CA
+    commonName: process.env.CORE__MDL_CERT_DNS,
+    csr: response.content,
+    subjectAlternativeName: process.env.CORE__MDL_CERT_DNS,
+  });
+};
+
+export async function createCertificateIdentifier(
+  authToken: string,
+  keyType: KeyType,
+) : Promise<IdentifierDetailResponseDTO> {
+  const keyId = await createKey(
+    authToken,
+    getKeyRequestData(keyType, StorageType.INTERNAL),
+  );
+  const certificateChain = await generateCertificate(authToken, keyId, CSRProfile.MDL);
+  const data = {
+    certificates: [
+      {
+        chain: certificateChain,
+        keyId: keyId,
+      }
+    ],
+    name: `Certificate-${shortUUID()}`
+  };
+  const certificateIdentifierId =  await apiRequest(
+    '/api/identifier/v1',
+    authToken,
+    'POST',
+    data,
+  ).then((res) => res.id);
+  return apiRequest(`/api/identifier/v1/${certificateIdentifierId}`, authToken);
+}
+
 export async function deleteProofRequest(
   authToken: string,
   proofRequestId: string,
@@ -471,3 +556,4 @@ export async function deactivateDid(
     data,
   );
 }
+

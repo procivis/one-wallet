@@ -1,3 +1,4 @@
+import { IdentifierDetailResponseDTO } from '@procivis/one-tests-lib';
 import { expect } from 'detox';
 
 import {
@@ -34,6 +35,7 @@ import { DidDetailDTO } from '../../types/did';
 import { ProofSchemaResponseDTO } from '../../types/proof';
 import { TrustEntityResponseDTO } from '../../types/trustEntity';
 import {
+  createCertificateIdentifier,
   createCredentialSchema,
   createDidWithKey,
   createTrustEntity,
@@ -116,17 +118,16 @@ const verifyTrustEntityDetailVisibilityByRole = async (
   }
 };
 
-const issueCredentialWithDidTrustEntityAndVerify = async (
-  authToken: string,
-  credentialSchema: CredentialSchemaResponseDTO,
-  issuerDid: DidDetailDTO,
-  trustEntity?: TrustEntityResponseDTO,
+const issueCredentialWithIdentififierTrustEntityAndVerify = async (
+{ authToken, credentialSchema, issuerDid, issuer, trustEntity }: 
+{ authToken: string; credentialSchema: CredentialSchemaResponseDTO; issuer?: IdentifierDetailResponseDTO; issuerDid?: DidDetailDTO; trustEntity?: TrustEntityResponseDTO; },
 ): Promise<string> => {
   const data = {
     authToken: authToken,
     credentialSchema: credentialSchema,
     didData: issuerDid,
     exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+    issuer: issuer,
   };
   const issuerHolderCredentialIds =
     await offerCredentialAndReviewCredentialOfferScreen(data);
@@ -144,7 +145,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     );
   } else {
     await CredentialOfferScreen.trustEntity.verifyEntityDetailHeader({
-      didName: issuerDid.did,
+      didName: issuerDid?.did,
       iconStatus: 'notTrusted',
     });
     await expect(CredentialOfferScreen.disclaimer).toHaveText(
@@ -167,7 +168,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   } else {
     await CredentialOfferNerdScreen.entityCluster.header.verifyEntityDetailHeader(
       {
-        didName: issuerDid.did,
+        didName: issuerDid?.did,
         iconStatus: 'notTrusted',
       },
     );
@@ -195,7 +196,7 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
     );
   } else {
     await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
-      didName: issuerDid.did,
+      didName: issuerDid?.did,
       iconStatus: 'notTrusted',
     });
   }
@@ -204,16 +205,15 @@ const issueCredentialWithDidTrustEntityAndVerify = async (
   return issuerHolderCredentialIds.holderCredentialId;
 };
 
-const proofSharingWithDidTrustEntityAndVerify = async (
-  authToken: string,
-  proofSchemaId: string,
-  verifierDid: DidDetailDTO,
-  trustEntity?: TrustEntityResponseDTO,
+const proofSharingWithIdentifierTrustEntityAndVerify = async (
+{ authToken, proofSchemaId, verifierDid, verifier, trustEntity }: 
+{ authToken: string; proofSchemaId: string; trustEntity?: TrustEntityResponseDTO; verifier?: IdentifierDetailResponseDTO, verifierDid?: DidDetailDTO; },
 ) => {
   const proofRequestData = {
-    didId: verifierDid.id,
+    didId: verifierDid?.id,
     exchange: VerificationProtocol.OPENID4VP_DRAFT20,
     proofSchemaId: proofSchemaId,
+    verifier: verifier?.id,
   };
 
   await requestProofAndReviewProofRequestSharingScreen(
@@ -238,7 +238,7 @@ const proofSharingWithDidTrustEntityAndVerify = async (
     );
   } else {
     await ProofRequestSharingScreen.trustEntity.verifyEntityDetailHeader({
-      didName: verifierDid.did,
+      didName: verifierDid?.did,
       iconStatus: 'notTrusted',
     });
   }
@@ -259,7 +259,7 @@ const proofSharingWithDidTrustEntityAndVerify = async (
   } else {
     await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader(
       {
-        didName: verifierDid.did,
+        didName: verifierDid?.did,
         iconStatus: 'notTrusted',
       },
     );
@@ -336,7 +336,7 @@ const verifyNewestProofRequestOnHistory = async (
   await expect(WalletScreen.screen).toBeVisible(1);
 };
 
-describe('Credential issuance with trust entity', () => {
+describe('Trust entity', () => {
   let authToken: string;
 
   beforeAll(async () => {
@@ -344,7 +344,7 @@ describe('Credential issuance with trust entity', () => {
     authToken = await keycloakAuth();
   });
 
-  describe('Issue credentials with trust entity', () => {
+  describe('Did identifier trust entity', () => {
     let credentialSchemaSD_JWT: CredentialSchemaResponseDTO;
     let credentialSchemaJWT: CredentialSchemaResponseDTO;
     let credentialSchemaJSONLD: CredentialSchemaResponseDTO;
@@ -391,13 +391,15 @@ describe('Credential issuance with trust entity', () => {
       const issuerTrustEntityId = await createTrustEntity(
         authToken,
         getTrustEntityRequestData(
-          issuerDid.id,
-          trustAnchor.id,
-          TrustEntityRole.ISSUER,
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-          'https://www.procivis.ch/en/privacy-policy',
-          'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment',
-          'https://www.procivis.ch/en',
+          { 
+            didId: issuerDid.id, 
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', 
+            privacyUrl: 'https://www.procivis.ch/en/privacy-policy', 
+            role: TrustEntityRole.ISSUER, 
+            termsUrl: 'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment', 
+            trustAnchorId: trustAnchor.id, 
+            website: 'https://www.procivis.ch/en' 
+          },
         ),
       );
       issuerTrustEntity = await getTrustEntityDetail(
@@ -412,13 +414,15 @@ describe('Credential issuance with trust entity', () => {
       const verifierTrustEntityId = await createTrustEntity(
         authToken,
         getTrustEntityRequestData(
-          verifierDid.id,
-          trustAnchor.id,
-          TrustEntityRole.VERIFIER,
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-          'https://www.procivis.ch/en/privacy-policy',
-          'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment',
-          'https://www.procivis.ch/en',
+          { 
+            didId: verifierDid.id, 
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', 
+            privacyUrl: 'https://www.procivis.ch/en/privacy-policy', 
+            role: TrustEntityRole.VERIFIER, 
+            termsUrl: 'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment', 
+            trustAnchorId: trustAnchor.id, 
+            website: 'https://www.procivis.ch/en' 
+          },
         ),
       );
       verifierTrustEntity = await getTrustEntityDetail(
@@ -434,9 +438,7 @@ describe('Credential issuance with trust entity', () => {
       const bothRoleTrustEntityId = await createTrustEntity(
         authToken,
         getTrustEntityRequestData(
-          bothRoleDid.id,
-          trustAnchor.id,
-          TrustEntityRole.BOTH,
+          { didId: bothRoleDid.id, role: TrustEntityRole.BOTH, trustAnchorId: trustAnchor.id },
         ),
       );
       bothRoleTrustEntity = await getTrustEntityDetail(
@@ -451,26 +453,17 @@ describe('Credential issuance with trust entity', () => {
     });
 
     it('Issue credential with trusted issuer did', async () => {
-      await issueCredentialWithDidTrustEntityAndVerify(
-        authToken,
-        credentialSchemaSD_JWT,
-        issuerTrustEntity.did,
-        issuerTrustEntity,
+      await issueCredentialWithIdentififierTrustEntityAndVerify(
+        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: issuerTrustEntity.did, trustEntity: issuerTrustEntity },
       );
-      await issueCredentialWithDidTrustEntityAndVerify(
-        authToken,
-        credentialSchemaSD_JWT,
-        bothRoleTrustEntity.did,
-        bothRoleTrustEntity,
+      await issueCredentialWithIdentififierTrustEntityAndVerify(
+        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: bothRoleTrustEntity.did, trustEntity: bothRoleTrustEntity },
       );
     });
 
     it('Issue credential with untrusted issuer did', async () => {
-      await issueCredentialWithDidTrustEntityAndVerify(
-        authToken,
-        credentialSchemaSD_JWT,
-        verifierTrustEntity.did,
-        verifierTrustEntity,
+      await issueCredentialWithIdentififierTrustEntityAndVerify(
+        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: verifierTrustEntity.did, trustEntity: verifierTrustEntity },
       );
     });
 
@@ -482,31 +475,20 @@ describe('Credential issuance with trust entity', () => {
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
 
-      await proofSharingWithDidTrustEntityAndVerify(
-        authToken,
-        proofSchema.id,
-        verifierTrustEntity.did,
-        verifierTrustEntity,
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: proofSchema.id, trustEntity: verifierTrustEntity, verifierDid: verifierTrustEntity.did },
       );
 
-      await proofSharingWithDidTrustEntityAndVerify(
-        authToken,
-        proofSchema.id,
-        bothRoleTrustEntity.did,
-        bothRoleTrustEntity,
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: proofSchema.id, trustEntity: bothRoleTrustEntity, verifierDid: bothRoleTrustEntity.did },
       );
 
-      await proofSharingWithDidTrustEntityAndVerify(
-        authToken,
-        proofSchema.id,
-        issuerTrustEntity.did,
-        issuerTrustEntity,
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: proofSchema.id, trustEntity: issuerTrustEntity, verifierDid: issuerTrustEntity.did },
       );
 
-      await proofSharingWithDidTrustEntityAndVerify(
-        authToken,
-        proofSchema.id,
-        didNotInTrustAnchor,
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: proofSchema.id, verifierDid: didNotInTrustAnchor },
       );
     });
 
@@ -518,17 +500,12 @@ describe('Credential issuance with trust entity', () => {
         exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
       });
       const credentialWithoutTrustEntityId =
-        await issueCredentialWithDidTrustEntityAndVerify(
-          authToken,
-          credentialSchemaJSONLD,
-          didNotInTrustAnchor,
+        await issueCredentialWithIdentififierTrustEntityAndVerify(
+          { authToken, credentialSchema: credentialSchemaJSONLD, issuerDid: didNotInTrustAnchor },
         );
 
-      await proofSharingWithDidTrustEntityAndVerify(
-        authToken,
-        combinedProofSchema.id,
-        bothRoleTrustEntity.did,
-        bothRoleTrustEntity,
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: combinedProofSchema.id, trustEntity: bothRoleTrustEntity, verifierDid: bothRoleTrustEntity.did },
       );
 
       await verifyNewestProofRequestOnHistory(
@@ -546,6 +523,50 @@ describe('Credential issuance with trust entity', () => {
             isTrustedEntity: false,
           },
         ],
+      );
+    });
+  });
+
+  describe('Certificate identifier trust entity', () => {
+    let credentialSchemaSDJWT_VC: CredentialSchemaResponseDTO;
+    let proofSchema: ProofSchemaResponseDTO;
+    let certificateIdentifierIssuer: IdentifierDetailResponseDTO;
+
+    beforeAll(async () => {
+      credentialSchemaSDJWT_VC = await createCredentialSchema(
+        authToken,
+        getCredentialSchemaData({
+          format: CredentialFormat.SD_JWT_VC,
+          revocationMethod: RevocationMethod.TOKENSTATUSLIST,
+        }),
+      );
+      proofSchema = await proofSchemaCreate(authToken, {
+        credentialSchemas: [credentialSchemaSDJWT_VC],
+      });
+
+      certificateIdentifierIssuer = await createCertificateIdentifier(authToken, KeyType.EDDSA);
+      proofSchema = await proofSchemaCreate(authToken, {
+        credentialSchemas: [credentialSchemaSDJWT_VC],
+      });
+      
+    });
+
+    it('Issue credential with trusted certificate identifier', async () => {
+      await issueCredentialWithIdentififierTrustEntityAndVerify(
+        { authToken, credentialSchema: credentialSchemaSDJWT_VC, issuer: certificateIdentifierIssuer },
+      );
+    });
+
+    it('proof request', async () => {
+      await credentialIssuance({
+        authToken: authToken,
+        credentialSchema: credentialSchemaSDJWT_VC,
+        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+        issuer: certificateIdentifierIssuer,
+      });
+
+      await proofSharingWithIdentifierTrustEntityAndVerify(
+        { authToken, proofSchemaId: proofSchema.id, verifier: certificateIdentifierIssuer },
       );
     });
   });
