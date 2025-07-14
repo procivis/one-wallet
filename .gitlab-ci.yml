@@ -122,6 +122,15 @@ lint:
   script:
     - pnpm lint
 
+check:translations:
+  stage: test
+  needs: [build_deps]
+  extends:
+    - .modules_setup
+    - .rule:all_branches
+  script:
+    - pnpm check:translations
+
 compile:
   stage: test
   needs: [build_deps]
