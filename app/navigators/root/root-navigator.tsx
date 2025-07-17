@@ -13,6 +13,7 @@ import CredentialManagementNavigator from '../credential-management/credential-m
 import DashboardNavigator from '../dashboard/dashboard-navigator';
 import {
   FORM_SHEET_OPTIONS,
+  formSheetWrapper,
   FULL_SCREEN_MODAL_OPTIONS,
 } from '../navigation-utilities';
 import NerdModeNavigator from '../nerd-mode/nerd-mode-navigator';
@@ -63,11 +64,11 @@ const RootNavigator: FunctionComponent = () => {
           options={{ gestureEnabled: false }}
         />
         <RootStack.Screen
-          component={CredentialUpdateProcessScreen}
+          component={formSheetWrapper(CredentialUpdateProcessScreen)}
           name="CredentialUpdateProcess"
         />
         <RootStack.Screen
-          component={StatusCheckResultScreen}
+          component={formSheetWrapper(StatusCheckResultScreen)}
           name="StatusCheckResult"
         />
       </RootStack.Group>

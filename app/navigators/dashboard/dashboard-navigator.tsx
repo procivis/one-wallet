@@ -4,7 +4,7 @@ import React from 'react';
 import QrCodeScannerScreen from '../../screens/dashboard/qr-code-scanner-screen';
 import QRCodeShareScreen from '../../screens/dashboard/qr-code-share-screen';
 import WalletScreen from '../../screens/dashboard/wallet-screen';
-import { FORM_SHEET_OPTIONS } from '../navigation-utilities';
+import { FORM_SHEET_OPTIONS, formSheetWrapper } from '../navigation-utilities';
 import { DashboardNavigatorParamList } from './dashboard-routes';
 
 const Stack = createNativeStackNavigator<DashboardNavigatorParamList>();
@@ -15,7 +15,7 @@ const DashboardNavigator = () => {
       <Stack.Screen component={WalletScreen} name="Wallet" />
       <Stack.Screen component={QrCodeScannerScreen} name="QRCodeScanner" />
       <Stack.Screen
-        component={QRCodeShareScreen}
+        component={formSheetWrapper(QRCodeShareScreen)}
         name="QRCodeShare"
         options={{
           ...FORM_SHEET_OPTIONS,

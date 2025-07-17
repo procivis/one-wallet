@@ -3,6 +3,7 @@ import React from 'react';
 
 import CreatingScreen from '../../screens/create-backup/creating-screen';
 import PreviewScreen from '../../screens/create-backup/preview-screen';
+import { formSheetWrapper } from '../navigation-utilities';
 import { CreateBackupProcessingNavigatorParamList } from './create-backup-processing-routes';
 
 const Stack =
@@ -11,8 +12,14 @@ const Stack =
 const CreateBackupProcessingNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen component={PreviewScreen} name="Preview" />
-      <Stack.Screen component={CreatingScreen} name="Creating" />
+      <Stack.Screen
+        component={formSheetWrapper(PreviewScreen)}
+        name="Preview"
+      />
+      <Stack.Screen
+        component={formSheetWrapper(CreatingScreen)}
+        name="Creating"
+      />
     </Stack.Navigator>
   );
 };
