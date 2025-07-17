@@ -4,8 +4,15 @@ import {
   PartialState,
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  ComponentType,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { BackHandler, Platform } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export const navigationRef = createNavigationContainerRef<any>();
 
@@ -184,3 +191,16 @@ export const FORM_SHEET_OPTIONS: NativeStackNavigationOptions = {
   presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
   sheetAllowedDetents: 'fitToContents',
 };
+
+/**
+ * SafeAreaProvider must wrap screens displayed in a formSheet presentation
+ * @see https://appandflow.github.io/react-native-safe-area-context/api/safe-area-provider
+ * */
+export const formSheetWrapper = (Screen: ComponentType): ComponentType =>
+  Platform.OS === 'ios'
+    ? () => (
+        <SafeAreaProvider>
+          <Screen />
+        </SafeAreaProvider>
+      )
+    : Screen;
