@@ -3,8 +3,17 @@ import { TrustEntityType } from './api';
 import { DidMethod, KeyType, StorageType, TrustEntityRole } from './enums';
 import { shortUUID } from './utils';
 
-export const getTrustEntityRequestData = (
-{ didId, trustAnchorId, role, logo, privacyUrl, termsUrl, website, type = TrustEntityType.DID,  content}: {
+export const getTrustEntityRequestData = ({
+  didId,
+  trustAnchorId,
+  role,
+  logo,
+  privacyUrl,
+  termsUrl,
+  website,
+  type = TrustEntityType.DID,
+  content,
+}: {
   content?: string;
   didId?: string;
   identifierId?: string;
@@ -15,20 +24,19 @@ export const getTrustEntityRequestData = (
   trustAnchorId: string;
   type?: TrustEntityType;
   website?: string;
-}
-) => {
+}) => {
   const trustEntityRequestData = {
     name: `trust-entity-${shortUUID()}`,
     role: role,
     trustAnchorId: trustAnchorId,
   };
-  if(didId){
+  if (didId) {
     Object.assign(trustEntityRequestData, { didId: didId });
   }
-  if(content){
+  if (content) {
     Object.assign(trustEntityRequestData, { content: content });
   }
-  if(type){
+  if (type) {
     Object.assign(trustEntityRequestData, { type: type });
   }
   if (logo) {

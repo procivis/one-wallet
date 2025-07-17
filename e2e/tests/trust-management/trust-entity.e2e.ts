@@ -1,4 +1,7 @@
-import { IdentifierDetailResponseDTO } from '@procivis/one-tests-lib';
+import {
+  IdentifierDetailResponseDTO,
+  TrustEntityType,
+} from '@procivis/one-tests-lib';
 import { expect } from 'detox';
 
 import {
@@ -42,6 +45,7 @@ import {
   getTrustAnchor,
   getTrustEntityDetail,
   keycloakAuth,
+  resolveTrustEntity,
 } from '../../utils/api';
 import { getTrustEntityRequestData } from '../../utils/data-utils';
 import {
@@ -94,12 +98,20 @@ const verifyTrustEntityHeaderVisibilityByRole = async (
   trustEntityHeader: TrustEntityHeader,
   trustEntity: TrustEntityResponseDTO,
   trustRoles: TrustEntityRole[],
+  certificateCommonName?: string,
 ) => {
   if (trustRoles.includes(trustEntity.role)) {
-    await trustEntityHeader.verifyEntityDetailHeader({
-      entityName: trustEntity.name,
-      logo: true,
-    });
+    if (trustEntity.type === TrustEntityType.CA) {
+      await trustEntityHeader.verifyEntityDetailHeader({
+        entityName: certificateCommonName,
+        logo: true,
+      });
+    } else {
+      await trustEntityHeader.verifyEntityDetailHeader({
+        entityName: trustEntity.name,
+        logo: true,
+      });
+    }
   } else {
     await trustEntityHeader.verifyEntityDetailHeader({
       entityName: trustEntity.name,
@@ -109,19 +121,36 @@ const verifyTrustEntityHeaderVisibilityByRole = async (
 };
 
 const verifyTrustEntityDetailVisibilityByRole = async (
+  trustEntityHeader: TrustEntityHeader,
   trustEntityDetail: TrustEntityDetail,
   trustEntity: TrustEntityResponseDTO,
   trustRoles: TrustEntityRole[],
+  certificateCommonName?: string,
 ) => {
+  await verifyTrustEntityHeaderVisibilityByRole(
+    trustEntityHeader,
+    trustEntity,
+    trustRoles,
+    certificateCommonName,
+  );
   if (trustRoles.includes(trustEntity.role)) {
     await trustEntityDetail.verifyTrustEntityDetail(trustEntity);
   }
 };
 
-const issueCredentialWithIdentififierTrustEntityAndVerify = async (
-{ authToken, credentialSchema, issuerDid, issuer, trustEntity }: 
-{ authToken: string; credentialSchema: CredentialSchemaResponseDTO; issuer?: IdentifierDetailResponseDTO; issuerDid?: DidDetailDTO; trustEntity?: TrustEntityResponseDTO; },
-): Promise<string> => {
+const issueCredentialWithIdentififierTrustEntityAndVerify = async ({
+  authToken,
+  credentialSchema,
+  issuerDid,
+  issuer,
+  trustEntity,
+}: {
+  authToken: string;
+  credentialSchema: CredentialSchemaResponseDTO;
+  issuer?: IdentifierDetailResponseDTO;
+  issuerDid?: DidDetailDTO;
+  trustEntity?: TrustEntityResponseDTO;
+}): Promise<string> => {
   const data = {
     authToken: authToken,
     credentialSchema: credentialSchema,
@@ -136,6 +165,7 @@ const issueCredentialWithIdentififierTrustEntityAndVerify = async (
       CredentialOfferScreen.trustEntity,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+      issuer?.certificates?.at(0)?.name,
     );
     await CredentialOfferScreen.scrollTo(CredentialOfferScreen.disclaimer);
     await verifyTermOfServiceAndPrivacyPolicy(
@@ -155,15 +185,12 @@ const issueCredentialWithIdentififierTrustEntityAndVerify = async (
   await CredentialOfferScreen.infoButton.tap();
   await expect(CredentialOfferNerdScreen.screen).toBeVisible(1);
   if (trustEntity) {
-    await verifyTrustEntityHeaderVisibilityByRole(
-      CredentialOfferNerdScreen.entityCluster.header,
-      trustEntity,
-      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
-    );
     await verifyTrustEntityDetailVisibilityByRole(
+      CredentialOfferNerdScreen.entityCluster.header,
       CredentialOfferNerdScreen.entityCluster.detail,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+      issuer?.certificates?.at(0)?.name,
     );
   } else {
     await CredentialOfferNerdScreen.entityCluster.header.verifyEntityDetailHeader(
@@ -184,15 +211,12 @@ const issueCredentialWithIdentififierTrustEntityAndVerify = async (
   await expect(CredentialNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    await verifyTrustEntityHeaderVisibilityByRole(
-      CredentialNerdScreen.entityCluster.header,
-      trustEntity,
-      [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
-    );
     await verifyTrustEntityDetailVisibilityByRole(
+      CredentialNerdScreen.entityCluster.header,
       CredentialNerdScreen.entityCluster.detail,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.ISSUER],
+      issuer?.certificates?.at(0)?.name,
     );
   } else {
     await CredentialNerdScreen.entityCluster.header.verifyEntityDetailHeader({
@@ -205,10 +229,19 @@ const issueCredentialWithIdentififierTrustEntityAndVerify = async (
   return issuerHolderCredentialIds.holderCredentialId;
 };
 
-const proofSharingWithIdentifierTrustEntityAndVerify = async (
-{ authToken, proofSchemaId, verifierDid, verifier, trustEntity }: 
-{ authToken: string; proofSchemaId: string; trustEntity?: TrustEntityResponseDTO; verifier?: IdentifierDetailResponseDTO, verifierDid?: DidDetailDTO; },
-) => {
+const proofSharingWithIdentifierTrustEntityAndVerify = async ({
+  authToken,
+  proofSchemaId,
+  verifierDid,
+  verifier,
+  trustEntity,
+}: {
+  authToken: string;
+  proofSchemaId: string;
+  trustEntity?: TrustEntityResponseDTO;
+  verifier?: IdentifierDetailResponseDTO;
+  verifierDid?: DidDetailDTO;
+}) => {
   const proofRequestData = {
     didId: verifierDid?.id,
     exchange: VerificationProtocol.OPENID4VP_DRAFT20,
@@ -226,6 +259,7 @@ const proofSharingWithIdentifierTrustEntityAndVerify = async (
       ProofRequestSharingScreen.trustEntity,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+      verifier?.certificates?.at(0)?.name,
     );
     await ProofRequestSharingScreen.scrollTo(
       ProofRequestSharingScreen.disclaimer,
@@ -246,15 +280,12 @@ const proofSharingWithIdentifierTrustEntityAndVerify = async (
   await expect(ProofRequestSharingNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    await verifyTrustEntityHeaderVisibilityByRole(
-      ProofRequestSharingNerdScreen.entityCluster.header,
-      trustEntity,
-      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
-    );
     await verifyTrustEntityDetailVisibilityByRole(
+      ProofRequestSharingNerdScreen.entityCluster.header,
       ProofRequestSharingNerdScreen.entityCluster.detail,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
+      verifier?.certificates?.at(0)?.name,
     );
   } else {
     await ProofRequestSharingNerdScreen.entityCluster.header.verifyEntityDetailHeader(
@@ -285,12 +316,8 @@ const verifyNewestProofRequestOnHistory = async (
   await expect(ProofRequestNerdScreen.screen).toBeVisible(1);
 
   if (trustEntity) {
-    await verifyTrustEntityHeaderVisibilityByRole(
-      ProofRequestNerdScreen.entityCluster.header,
-      trustEntity,
-      [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
-    );
     await verifyTrustEntityDetailVisibilityByRole(
+      ProofRequestNerdScreen.entityCluster.header,
       ProofRequestNerdScreen.entityCluster.detail,
       trustEntity,
       [TrustEntityRole.BOTH, TrustEntityRole.VERIFIER],
@@ -356,33 +383,39 @@ describe('Trust entity', () => {
     let didNotInTrustAnchor: DidDetailDTO;
 
     beforeAll(async () => {
-      credentialSchemaSD_JWT = await createCredentialSchema(
-        authToken,
-        getCredentialSchemaData({
-          format: CredentialFormat.SD_JWT,
-          revocationMethod: RevocationMethod.STATUSLIST2021,
+      [credentialSchemaSD_JWT, credentialSchemaJWT, credentialSchemaJSONLD] =
+        await Promise.all([
+          createCredentialSchema(
+            authToken,
+            getCredentialSchemaData({
+              format: CredentialFormat.SD_JWT,
+              revocationMethod: RevocationMethod.STATUSLIST2021,
+            }),
+          ),
+          createCredentialSchema(
+            authToken,
+            getCredentialSchemaData({
+              format: CredentialFormat.JWT,
+              revocationMethod: RevocationMethod.STATUSLIST2021,
+            }),
+          ),
+          createCredentialSchema(
+            authToken,
+            getCredentialSchemaData({
+              format: CredentialFormat.JSON_LD_CLASSIC,
+              revocationMethod: RevocationMethod.NONE,
+            }),
+          ),
+        ]);
+      [proofSchema, combinedProofSchema] = await Promise.all([
+        proofSchemaCreate(authToken, {
+          credentialSchemas: [credentialSchemaSD_JWT],
         }),
-      );
-      credentialSchemaJWT = await createCredentialSchema(
-        authToken,
-        getCredentialSchemaData({
-          format: CredentialFormat.JWT,
-          revocationMethod: RevocationMethod.STATUSLIST2021,
+        proofSchemaCreate(authToken, {
+          credentialSchemas: [credentialSchemaJWT, credentialSchemaJSONLD],
         }),
-      );
-      credentialSchemaJSONLD = await createCredentialSchema(
-        authToken,
-        getCredentialSchemaData({
-          format: CredentialFormat.JSON_LD_CLASSIC,
-          revocationMethod: RevocationMethod.NONE,
-        }),
-      );
-      proofSchema = await proofSchemaCreate(authToken, {
-        credentialSchemas: [credentialSchemaSD_JWT],
-      });
-      combinedProofSchema = await proofSchemaCreate(authToken, {
-        credentialSchemas: [credentialSchemaJWT, credentialSchemaJSONLD],
-      });
+      ]);
+
       const issuerDid = await createDidWithKey(authToken, {
         didMethod: DidMethod.KEY,
         keyType: KeyType.ECDSA,
@@ -390,17 +423,16 @@ describe('Trust entity', () => {
       const trustAnchor = await getTrustAnchor(authToken);
       const issuerTrustEntityId = await createTrustEntity(
         authToken,
-        getTrustEntityRequestData(
-          { 
-            didId: issuerDid.id, 
-            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', 
-            privacyUrl: 'https://www.procivis.ch/en/privacy-policy', 
-            role: TrustEntityRole.ISSUER, 
-            termsUrl: 'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment', 
-            trustAnchorId: trustAnchor.id, 
-            website: 'https://www.procivis.ch/en' 
-          },
-        ),
+        getTrustEntityRequestData({
+          didId: issuerDid.id,
+          logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+          privacyUrl: 'https://www.procivis.ch/en/privacy-policy',
+          role: TrustEntityRole.ISSUER,
+          termsUrl:
+            'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment',
+          trustAnchorId: trustAnchor.id,
+          website: 'https://www.procivis.ch/en',
+        }),
       );
       issuerTrustEntity = await getTrustEntityDetail(
         issuerTrustEntityId,
@@ -413,17 +445,16 @@ describe('Trust entity', () => {
 
       const verifierTrustEntityId = await createTrustEntity(
         authToken,
-        getTrustEntityRequestData(
-          { 
-            didId: verifierDid.id, 
-            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', 
-            privacyUrl: 'https://www.procivis.ch/en/privacy-policy', 
-            role: TrustEntityRole.VERIFIER, 
-            termsUrl: 'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment', 
-            trustAnchorId: trustAnchor.id, 
-            website: 'https://www.procivis.ch/en' 
-          },
-        ),
+        getTrustEntityRequestData({
+          didId: verifierDid.id,
+          logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+          privacyUrl: 'https://www.procivis.ch/en/privacy-policy',
+          role: TrustEntityRole.VERIFIER,
+          termsUrl:
+            'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment',
+          trustAnchorId: trustAnchor.id,
+          website: 'https://www.procivis.ch/en',
+        }),
       );
       verifierTrustEntity = await getTrustEntityDetail(
         verifierTrustEntityId,
@@ -437,9 +468,11 @@ describe('Trust entity', () => {
 
       const bothRoleTrustEntityId = await createTrustEntity(
         authToken,
-        getTrustEntityRequestData(
-          { didId: bothRoleDid.id, role: TrustEntityRole.BOTH, trustAnchorId: trustAnchor.id },
-        ),
+        getTrustEntityRequestData({
+          didId: bothRoleDid.id,
+          role: TrustEntityRole.BOTH,
+          trustAnchorId: trustAnchor.id,
+        }),
       );
       bothRoleTrustEntity = await getTrustEntityDetail(
         bothRoleTrustEntityId,
@@ -452,78 +485,115 @@ describe('Trust entity', () => {
       });
     });
 
-    it('Issue credential with trusted issuer did', async () => {
-      await issueCredentialWithIdentififierTrustEntityAndVerify(
-        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: issuerTrustEntity.did, trustEntity: issuerTrustEntity },
-      );
-      await issueCredentialWithIdentififierTrustEntityAndVerify(
-        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: bothRoleTrustEntity.did, trustEntity: bothRoleTrustEntity },
-      );
+    it('Issue credential with trusted issuer did role=issuer', async () => {
+      await issueCredentialWithIdentififierTrustEntityAndVerify({
+        authToken,
+        credentialSchema: credentialSchemaSD_JWT,
+        issuerDid: issuerTrustEntity.did,
+        trustEntity: issuerTrustEntity,
+      });
+    });
+
+    it('Issue credential with trusted issuer did role=both', async () => {
+      await issueCredentialWithIdentififierTrustEntityAndVerify({
+        authToken,
+        credentialSchema: credentialSchemaSD_JWT,
+        issuerDid: bothRoleTrustEntity.did,
+        trustEntity: bothRoleTrustEntity,
+      });
     });
 
     it('Issue credential with untrusted issuer did', async () => {
-      await issueCredentialWithIdentififierTrustEntityAndVerify(
-        { authToken, credentialSchema: credentialSchemaSD_JWT, issuerDid: verifierTrustEntity.did, trustEntity: verifierTrustEntity },
-      );
-    });
-
-    it('proof request', async () => {
-      await credentialIssuance({
-        authToken: authToken,
+      await issueCredentialWithIdentififierTrustEntityAndVerify({
+        authToken,
         credentialSchema: credentialSchemaSD_JWT,
-        didData: didNotInTrustAnchor,
-        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+        issuerDid: verifierTrustEntity.did,
+        trustEntity: verifierTrustEntity,
       });
-
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: proofSchema.id, trustEntity: verifierTrustEntity, verifierDid: verifierTrustEntity.did },
-      );
-
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: proofSchema.id, trustEntity: bothRoleTrustEntity, verifierDid: bothRoleTrustEntity.did },
-      );
-
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: proofSchema.id, trustEntity: issuerTrustEntity, verifierDid: issuerTrustEntity.did },
-      );
-
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: proofSchema.id, verifierDid: didNotInTrustAnchor },
-      );
     });
 
-    it('Combined proof request', async () => {
-      const credentialWithTrustEntityIds = await credentialIssuance({
-        authToken: authToken,
-        credentialSchema: credentialSchemaJWT,
-        didData: issuerTrustEntity.did,
-        exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+    describe('request a proof with trust entity', () => {
+      beforeAll(async () => {
+        await credentialIssuance({
+          authToken: authToken,
+          credentialSchema: credentialSchemaSD_JWT,
+          didData: didNotInTrustAnchor,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+        });
       });
-      const credentialWithoutTrustEntityId =
-        await issueCredentialWithIdentififierTrustEntityAndVerify(
-          { authToken, credentialSchema: credentialSchemaJSONLD, issuerDid: didNotInTrustAnchor },
+      it('Request a proof using trusted verifier did role=verifier', async () => {
+        await proofSharingWithIdentifierTrustEntityAndVerify({
+          authToken,
+          proofSchemaId: proofSchema.id,
+          trustEntity: verifierTrustEntity,
+          verifierDid: verifierTrustEntity.did,
+        });
+      });
+
+      it('Request a proof using trusted verifier did role=both', async () => {
+        await proofSharingWithIdentifierTrustEntityAndVerify({
+          authToken,
+          proofSchemaId: proofSchema.id,
+          trustEntity: bothRoleTrustEntity,
+          verifierDid: bothRoleTrustEntity.did,
+        });
+      });
+
+      it('Request a proof using trusted verifier did role=issuer', async () => {
+        await proofSharingWithIdentifierTrustEntityAndVerify({
+          authToken,
+          proofSchemaId: proofSchema.id,
+          trustEntity: issuerTrustEntity,
+          verifierDid: issuerTrustEntity.did,
+        });
+      });
+
+      it('Request a proof using untrusted verifier', async () => {
+        await proofSharingWithIdentifierTrustEntityAndVerify({
+          authToken,
+          proofSchemaId: proofSchema.id,
+          verifierDid: didNotInTrustAnchor,
+        });
+      });
+
+      it('Combined proof request', async () => {
+        const credentialWithTrustEntityIds = await credentialIssuance({
+          authToken: authToken,
+          credentialSchema: credentialSchemaJWT,
+          didData: issuerTrustEntity.did,
+          exchange: IssuanceProtocol.OPENID4VCI_DRAFT13,
+        });
+        const credentialWithoutTrustEntityId =
+          await issueCredentialWithIdentififierTrustEntityAndVerify({
+            authToken,
+            credentialSchema: credentialSchemaJSONLD,
+            issuerDid: didNotInTrustAnchor,
+          });
+
+        await proofSharingWithIdentifierTrustEntityAndVerify({
+          authToken,
+          proofSchemaId: combinedProofSchema.id,
+          trustEntity: bothRoleTrustEntity,
+          verifierDid: bothRoleTrustEntity.did,
+        });
+
+        await verifyNewestProofRequestOnHistory(
+          bothRoleTrustEntity.did,
+          bothRoleTrustEntity,
+          [
+            {
+              credentialId: credentialWithTrustEntityIds.holderCredentialId,
+              isTrustedEntity: true,
+              trustEntity: issuerTrustEntity,
+            },
+            {
+              credentialId: credentialWithoutTrustEntityId,
+              didDetail: didNotInTrustAnchor,
+              isTrustedEntity: false,
+            },
+          ],
         );
-
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: combinedProofSchema.id, trustEntity: bothRoleTrustEntity, verifierDid: bothRoleTrustEntity.did },
-      );
-
-      await verifyNewestProofRequestOnHistory(
-        bothRoleTrustEntity.did,
-        bothRoleTrustEntity,
-        [
-          {
-            credentialId: credentialWithTrustEntityIds.holderCredentialId,
-            isTrustedEntity: true,
-            trustEntity: issuerTrustEntity,
-          },
-          {
-            credentialId: credentialWithoutTrustEntityId,
-            didDetail: didNotInTrustAnchor,
-            isTrustedEntity: false,
-          },
-        ],
-      );
+      });
     });
   });
 
@@ -531,6 +601,7 @@ describe('Trust entity', () => {
     let credentialSchemaSDJWT_VC: CredentialSchemaResponseDTO;
     let proofSchema: ProofSchemaResponseDTO;
     let certificateIdentifierIssuer: IdentifierDetailResponseDTO;
+    let caTrustEntity: TrustEntityResponseDTO;
 
     beforeAll(async () => {
       credentialSchemaSDJWT_VC = await createCredentialSchema(
@@ -544,20 +615,32 @@ describe('Trust entity', () => {
         credentialSchemas: [credentialSchemaSDJWT_VC],
       });
 
-      certificateIdentifierIssuer = await createCertificateIdentifier(authToken, KeyType.EDDSA);
+      certificateIdentifierIssuer = await createCertificateIdentifier(
+        authToken,
+        KeyType.EDDSA,
+      );
+      caTrustEntity = await resolveTrustEntity(
+        {
+          certificateId: certificateIdentifierIssuer.certificates?.at(0)?.id,
+          id: certificateIdentifierIssuer.id,
+        },
+        authToken,
+      );
       proofSchema = await proofSchemaCreate(authToken, {
         credentialSchemas: [credentialSchemaSDJWT_VC],
       });
-      
     });
 
     it('Issue credential with trusted certificate identifier', async () => {
-      await issueCredentialWithIdentififierTrustEntityAndVerify(
-        { authToken, credentialSchema: credentialSchemaSDJWT_VC, issuer: certificateIdentifierIssuer },
-      );
+      await issueCredentialWithIdentififierTrustEntityAndVerify({
+        authToken,
+        credentialSchema: credentialSchemaSDJWT_VC,
+        issuer: certificateIdentifierIssuer,
+        trustEntity: caTrustEntity,
+      });
     });
 
-    it('proof request', async () => {
+    it('Request a proof using trusted certificate identifier', async () => {
       await credentialIssuance({
         authToken: authToken,
         credentialSchema: credentialSchemaSDJWT_VC,
@@ -565,9 +648,12 @@ describe('Trust entity', () => {
         issuer: certificateIdentifierIssuer,
       });
 
-      await proofSharingWithIdentifierTrustEntityAndVerify(
-        { authToken, proofSchemaId: proofSchema.id, verifier: certificateIdentifierIssuer },
-      );
+      await proofSharingWithIdentifierTrustEntityAndVerify({
+        authToken,
+        proofSchemaId: proofSchema.id,
+        trustEntity: caTrustEntity,
+        verifier: certificateIdentifierIssuer,
+      });
     });
   });
 });

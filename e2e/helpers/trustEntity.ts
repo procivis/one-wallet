@@ -14,9 +14,16 @@ export const createTrustEntityWithDefaultAnchor = async (
   const trustAnchor = await getTrustAnchor(authToken);
   const issuerTrustEntityId = await createTrustEntity(
     authToken,
-    getTrustEntityRequestData(
-      { didId: didID, logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', privacyUrl: 'https://www.procivis.ch/en/privacy-policy', role: entityRole, termsUrl: 'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment', trustAnchorId: trustAnchor.id, website: 'https://www.procivis.ch/en' },
-    ),
+    getTrustEntityRequestData({
+      didId: didID,
+      logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+      privacyUrl: 'https://www.procivis.ch/en/privacy-policy',
+      role: entityRole,
+      termsUrl:
+        'https://www.procivis.ch/en/legal/terms-of-service-procivis-one-trial-environment',
+      trustAnchorId: trustAnchor.id,
+      website: 'https://www.procivis.ch/en',
+    }),
   );
   return getTrustEntityDetail(issuerTrustEntityId, authToken);
 };

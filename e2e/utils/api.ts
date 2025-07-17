@@ -57,18 +57,25 @@ export async function keycloakAuth(): Promise<string> {
   Object.entries(LOGIN).forEach(([key, value]) => {
     params.append(key, String(value));
   });
-  
-  return fetch(`${KEYCLOAK_BASE_URL}/realms/dev/protocol/openid-connect/token`, {
-    body: params.toString(),
-    headers: { ['Content-Type']: 'application/x-www-form-urlencoded' },
-    method: 'POST',
-  })
+
+  return fetch(
+    `${KEYCLOAK_BASE_URL}/realms/dev/protocol/openid-connect/token`,
+    {
+      body: params.toString(),
+      headers: { ['Content-Type']: 'application/x-www-form-urlencoded' },
+      method: 'POST',
+    },
+  )
     .then(async (res) => {
       if (!res.ok) {
-        console.error(`Keycloak auth failed. Status: ${res.status}`, await res.json());
+        console.error(
+          `Keycloak auth failed. Status: ${res.status}`,
+          await res.json(),
+        );
         throw Error('HTTP error: ' + res.status);
       }
-      return res.json()})
+      return res.json();
+    })
     .then((res: any) => res.access_token);
 }
 
@@ -90,7 +97,12 @@ async function apiRequest(
     method,
   }).then(async (res) => {
     if (!res.ok) {
-      console.error(`HTTP Error. URL: ${path} Status: ${res.status}: body: ${JSON.stringify(body)}`, await res.json());
+      console.error(
+        `HTTP Error. URL: ${path} Status: ${res.status}: body: ${JSON.stringify(
+          body,
+        )}`,
+        await res.json(),
+      );
       throw Error('HTTP error: ' + res.status);
     }
     if (res.status === 204) {
@@ -264,7 +276,7 @@ export async function createCredential(
   credentialData?: CredentialData,
 ): Promise<string> {
   const claimValues = claimsFilling(schema.claims);
-  
+
   const data = {
     claimValues: credentialData?.claimValues ?? claimValues,
     credentialSchemaId: schema.id,
@@ -272,12 +284,12 @@ export async function createCredential(
     redirectUri: credentialData?.redirectUri,
   };
   if (credentialData?.issuerDid) {
-    Object.assign(data, { 
+    Object.assign(data, {
       issuerDid: credentialData?.issuerDid,
-      issuerKey: credentialData?.issuerKey, 
+      issuerKey: credentialData?.issuerKey,
     });
-  } else if(credentialData?.issuer){
-    Object.assign(data, { issuer: credentialData?.issuer, });
+  } else if (credentialData?.issuer) {
+    Object.assign(data, { issuer: credentialData?.issuer });
   }
   return await apiRequest('/api/credential/v1', authToken, 'POST', data).then(
     (res) => res.id,
@@ -286,7 +298,7 @@ export async function createCredential(
 
 export enum TrustEntityType {
   CA = 'CA',
-  DID = 'DID'
+  DID = 'DID',
 }
 
 export interface CreateTrustEntityRequestDTO {
@@ -322,6 +334,27 @@ export async function getTrustEntityDetail(
   return apiRequest(`/api/trust-entity/v1/${trustEntityId}`, authToken);
 }
 
+export interface ResolveTrustEntityRequestDTO {
+  certificateId?: string;
+  id: string;
+}
+
+export async function resolveTrustEntity(
+  resolveTrustEntityRequestData: ResolveTrustEntityRequestDTO,
+  authToken: string,
+): Promise<TrustEntityResponseDTO> {
+  const response = await apiRequest(
+    `/api/identifier/v1/resolve-trust-entity`,
+    authToken,
+    'POST',
+    {
+      identifiers: [resolveTrustEntityRequestData],
+    },
+  );
+  const key = resolveTrustEntityRequestData.id;
+  return response[key];
+}
+
 export async function createProofSchema(
   authToken: string,
   proofSchemaData: CreateProofSchemaRequestDTO,
@@ -339,18 +372,19 @@ export async function createProofRequest(
   proofRequestData: Partial<ProofRequestData>,
 ): Promise<string> {
   const data = {
-    exchange: proofRequestData?.exchange ?? VerificationProtocol.OPENID4VP_DRAFT20,
+    exchange:
+      proofRequestData?.exchange ?? VerificationProtocol.OPENID4VP_DRAFT20,
     proofSchemaId: proofRequestData?.proofSchemaId,
     redirectUri: proofRequestData?.redirectUri,
   };
-  if(proofRequestData?.verifier){
-    Object.assign(data, { verifier: proofRequestData.verifier });  
+  if (proofRequestData?.verifier) {
+    Object.assign(data, { verifier: proofRequestData.verifier });
   }
-  if(proofRequestData?.verifierDid){
-    Object.assign(data, { 
+  if (proofRequestData?.verifierDid) {
+    Object.assign(data, {
       verifierDid: proofRequestData?.verifierDid,
       verifierKey: proofRequestData?.verifierKey,
-    }); 
+    });
   }
   return await apiRequest(
     '/api/proof-request/v1',
@@ -474,7 +508,11 @@ export async function createDidWithKey(
   return getDidDetail(authToken, didId);
 }
 
-const generateCertificate = async (authToken: string, keyId: string, profile: CSRProfile) => {
+const generateCertificate = async (
+  authToken: string,
+  keyId: string,
+  profile: CSRProfile,
+) => {
   const response = await await apiRequest(
     `/api/key/v1/${keyId}/generate-csr`,
     authToken,
@@ -490,14 +528,8 @@ const generateCertificate = async (authToken: string, keyId: string, profile: CS
       },
     },
   );
-  // return await signCertificate({
-  //   csr: response.content,
-  //   caSerial: '0F483FD3C612F848B2C4DCCBF889A6EA980F5340', // trusted CA
-  //   commonName: process.env.CORE__MDL_CERT_DNS,
-  //   subjectAlternativeName: process.env.CORE__MDL_CERT_DNS,
-  // });
   return await signCertificate({
-    caSerial: '2CE9D3F49B528F0CD29395D40B2E25CC05E0CEC3', // trusted CA
+    caSerial: 'F483FD3C612F848B2C4DCCBF889A6EA980F5340', // trusted CA
     commonName: process.env.CORE__MDL_CERT_DNS,
     csr: response.content,
     subjectAlternativeName: process.env.CORE__MDL_CERT_DNS,
@@ -507,22 +539,26 @@ const generateCertificate = async (authToken: string, keyId: string, profile: CS
 export async function createCertificateIdentifier(
   authToken: string,
   keyType: KeyType,
-) : Promise<IdentifierDetailResponseDTO> {
+): Promise<IdentifierDetailResponseDTO> {
   const keyId = await createKey(
     authToken,
     getKeyRequestData(keyType, StorageType.INTERNAL),
   );
-  const certificateChain = await generateCertificate(authToken, keyId, CSRProfile.MDL);
+  const certificateChain = await generateCertificate(
+    authToken,
+    keyId,
+    CSRProfile.MDL,
+  );
   const data = {
     certificates: [
       {
         chain: certificateChain,
         keyId: keyId,
-      }
+      },
     ],
-    name: `Certificate-${shortUUID()}`
+    name: `Certificate-${shortUUID()}`,
   };
-  const certificateIdentifierId =  await apiRequest(
+  const certificateIdentifierId = await apiRequest(
     '/api/identifier/v1',
     authToken,
     'POST',
@@ -542,18 +578,9 @@ export async function deleteProofRequest(
   );
 }
 
-export async function deactivateDid(  
-  authToken: string,
-  didId: string,
-) {
+export async function deactivateDid(authToken: string, didId: string) {
   const data = {
     deactivated: true,
-  }
-  return apiRequest(
-    `/api/did/v1/${didId}`,
-    authToken,
-    'PATCH',
-    data,
-  );
+  };
+  return apiRequest(`/api/did/v1/${didId}`, authToken, 'PATCH', data);
 }
-
