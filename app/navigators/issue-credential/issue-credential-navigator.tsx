@@ -7,7 +7,10 @@ import CredentialOfferScreen from '../../screens/credential/credential-offer-scr
 import { RSEAddBiometricsScreen } from '../../screens/rse/rse-add-biometrics-screen';
 import { RSEInfoScreen } from '../../screens/rse/rse-information-screen';
 import { RSEPinSetupScreen } from '../../screens/rse/rse-pin-setup-screen';
-import { FULL_SCREEN_MODAL_OPTIONS } from '../navigation-utilities';
+import {
+  formSheetWrapper,
+  FULL_SCREEN_MODAL_OPTIONS,
+} from '../navigation-utilities';
 import { IssueCredentialNavigatorParamList } from './issue-credential-routes';
 
 const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
@@ -15,14 +18,16 @@ const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
 const IssueCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen component={CredentialOfferScreen} name="CredentialOffer" />
       <Stack.Screen
-        component={CredentialConfirmationCodeScreen}
+        component={formSheetWrapper(CredentialOfferScreen)}
+        name="CredentialOffer"
+      />
+      <Stack.Screen
+        component={formSheetWrapper(CredentialConfirmationCodeScreen)}
         name="CredentialConfirmationCode"
       />
-
       <Stack.Screen
-        component={CredentialAcceptProcessScreen}
+        component={formSheetWrapper(CredentialAcceptProcessScreen)}
         name="Processing"
       />
       <Stack.Screen

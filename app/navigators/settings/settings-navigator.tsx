@@ -19,6 +19,7 @@ import CreateBackupNavigator from '../create-backup/create-backup-navigator';
 import HistoryNavigator from '../history/history-navigator';
 import {
   FORM_SHEET_OPTIONS,
+  formSheetWrapper,
   FULL_SCREEN_MODAL_OPTIONS,
 } from '../navigation-utilities';
 import RestoreBackupNavigator from '../restore-backup/restore-backup-navigator';
@@ -39,13 +40,22 @@ const SettingsNavigator = () => {
         options={FULL_SCREEN_MODAL_OPTIONS}
       />
       <Stack.Group screenOptions={FORM_SHEET_OPTIONS}>
-        <Stack.Screen component={BiometricsSetScreen} name="BiometricsSet" />
         <Stack.Screen
-          component={DeleteWalletProcessScreen}
+          component={formSheetWrapper(BiometricsSetScreen)}
+          name="BiometricsSet"
+        />
+        <Stack.Screen
+          component={formSheetWrapper(DeleteWalletProcessScreen)}
           name="DeleteWalletProcess"
         />
-        <Stack.Screen component={PinCodeSetScreen} name="PinCodeSet" />
-        <Stack.Screen component={CacheClearedScreen} name="CacheCleared" />
+        <Stack.Screen
+          component={formSheetWrapper(PinCodeSetScreen)}
+          name="PinCodeSet"
+        />
+        <Stack.Screen
+          component={formSheetWrapper(CacheClearedScreen)}
+          name="CacheCleared"
+        />
       </Stack.Group>
 
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />
