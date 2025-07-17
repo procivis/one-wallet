@@ -18,8 +18,7 @@ export default class WalletScreen {
   static async credentialAtIndex(index: number) {
     const cardAttributes = await element(
       by.id(/^WalletScreen.credential.[\w-]+.card$/),
-    )
-      .getAttributes();
+    ).getAttributes();
     const id = (
       'elements' in cardAttributes
         ? cardAttributes.elements[index].identifier
