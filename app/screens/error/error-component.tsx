@@ -20,9 +20,9 @@ export const ErrorComponent: React.FunctionComponent<ErrorComponentProps> = (
       subtitle={
         __DEV__
           ? String(props.error)
-          : translate('errorScreen.friendlySubtitle')
+          : translate('info.errorScreen.friendlySubtitle')
       }
-      title={translate('errorScreen.title')}
+      title={translate('info.errorScreen.title')}
     />
   );
 };

@@ -4,5 +4,5 @@
 pnpm lint
 pnpm compile
 
-pnpm translations:sort
+pnpm sort:translations
 git add app/i18n/

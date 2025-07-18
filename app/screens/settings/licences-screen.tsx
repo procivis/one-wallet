@@ -114,14 +114,14 @@ const LicencesScreen: FC = () => {
       data: [
         {
           link: {
-            title: translate('onboarding.userAgreement.termsOfService.label'),
-            url: translate('onboarding.userAgreement.termsOfService.link'),
+            title: translate('common.termsOfService'),
+            url: translate('common.termsOfServiceLink'),
           },
         },
         {
           link: {
-            title: translate('onboarding.userAgreement.privacyPolicy.label'),
-            url: translate('onboarding.userAgreement.privacyPolicy.link'),
+            title: translate('common.privacyPolicy'),
+            url: translate('common.privacyPolicyLink'),
           },
         },
       ],
@@ -131,7 +131,7 @@ const LicencesScreen: FC = () => {
       data: libraries.components.map((library) => ({
         library: library.name,
       })),
-      title: translate('licencesScreen.libraries'),
+      title: translate('common.libraries'),
     },
   ];
 
@@ -140,7 +140,7 @@ const LicencesScreen: FC = () => {
       header={{
         backgroundColor: colorScheme.white,
         leftItem: <HeaderBackButton testID="LicencesScreen.header.back" />,
-        title: translate('licencesScreen.title'),
+        title: translate('common.licenses&Agreements'),
       }}
       list={{
         contentContainerStyle: styles.content,

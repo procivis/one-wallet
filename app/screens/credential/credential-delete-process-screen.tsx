@@ -64,12 +64,12 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
       error={error}
       loaderLabel={translateError(
         error,
-        translate(`credentialDelete.${state}.title`),
+        translate(`credentialDeleteTitle.${state}`),
       )}
       onClose={onClose}
       state={state}
       testID="CredentialDeleteProcessScreen"
-      title={translate('credentialDelete.title')}
+      title={translate('common.credentialDeletion')}
     />
   );
 };

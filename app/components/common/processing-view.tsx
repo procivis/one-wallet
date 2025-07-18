@@ -103,7 +103,7 @@ export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
         rightItem:
           state === LoaderViewState.Warning && error ? (
             <HeaderInfoButton
-              accessibilityLabel={translate('accessibility.nav.info')}
+              accessibilityLabel={translate('common.info')}
               onPress={infoPressHandler}
               testID={concatTestID(testID, 'header.info')}
             />

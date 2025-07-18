@@ -54,7 +54,7 @@ export const RSEPinSetupScreen: FC = () => {
           }
           setStep(newStep);
           if (newStep === 'setPin') {
-            setError(translate('rse.pinSetup.confirmPin.error'));
+            setError(translate('info.rse.pinSetup.confirmPin.error'));
           }
           break;
         }
@@ -66,12 +66,12 @@ export const RSEPinSetupScreen: FC = () => {
     <RSEPinView
       enteredLength={enteredLength}
       errorMessage={error}
-      instruction={translate(`rse.pinSetup.${step}.instruction`, {
+      instruction={translate(`rsePinSetup.${step}.instruction`, {
         pinLength,
       })}
       isLoading={false}
       testID={testID}
-      title={translate(`rse.pinSetup.${step}.title`)}
+      title={translate(`rsePinSetup.${step}.title`)}
     />
   );
 };

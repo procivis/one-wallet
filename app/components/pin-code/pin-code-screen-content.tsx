@@ -83,7 +83,7 @@ const PinCodeScreenContent = forwardRef<
         entry.onPressDigit?.(digit);
         if (entry.enteredLength < PIN_CODE_LENGTH - 1) {
           setProgressAnnouncement(
-            translate('onboarding.pinCodeScreen.entry.digit', {
+            translate('info.onboarding.pinCodeScreen.entry.digit', {
               digit,
               left: PIN_CODE_LENGTH - entry.enteredLength - 1,
             }),
@@ -97,7 +97,7 @@ const PinCodeScreenContent = forwardRef<
       entry.onPressDelete?.();
       if (entry.enteredLength) {
         setProgressAnnouncement(
-          translate('onboarding.pinCodeScreen.entry.delete', {
+          translate('info.onboarding.pinCodeScreen.entry.delete', {
             left: PIN_CODE_LENGTH - entry.enteredLength + 1,
           }),
         );
@@ -108,7 +108,7 @@ const PinCodeScreenContent = forwardRef<
       entry.onPressDeleteAll?.();
       if (entry.enteredLength) {
         setProgressAnnouncement(
-          translate('onboarding.pinCodeScreen.entry.delete', {
+          translate('info.onboarding.pinCodeScreen.entry.delete', {
             left: PIN_CODE_LENGTH,
           }),
         );

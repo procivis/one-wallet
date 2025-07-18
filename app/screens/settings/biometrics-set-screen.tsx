@@ -21,7 +21,7 @@ const BiometricsSetScreen: FC = () => {
   return (
     <ProcessingView
       loaderLabel={translate(
-        `settings.security.biometricsSet.${biometricsStateKey}.title`,
+        `securityBiometricsSetTitle.${biometricsStateKey}`,
       )}
       onClose={closeButtonHandler}
       state={LoaderViewState.Success}

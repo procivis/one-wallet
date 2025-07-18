@@ -44,7 +44,7 @@ const CredentialDeletePromptScreen: FC = () => {
         ),
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
-        title: translate('credentialDelete.title'),
+        title: translate('common.credentialDeletion'),
       }}
       modalPresentation
       scrollView={{
@@ -61,7 +61,7 @@ const CredentialDeletePromptScreen: FC = () => {
           color={colorScheme.text}
           style={styles.subtitle}
         >
-          {translate('credentialDeletePrompt.subtitle')}
+          {translate('info.credentialDeletePrompt.subtitle')}
         </Typography>
 
         <View
@@ -84,10 +84,10 @@ const CredentialDeletePromptScreen: FC = () => {
           <HoldButton
             onFinished={onConfirm}
             style={[styles.mainButton, { backgroundColor: colorScheme.white }]}
-            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
-            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
+            subtitlePrefix={translate('info.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('info.holdButton.subtitleSuffix')}
             testID="CredentialDeletePromptScreen.mainButton"
-            title={translate('credentialDeletePrompt.confirm.title')}
+            title={translate('info.credentialDeletePrompt.confirm.title')}
           />
           <Button
             onPress={navigation.goBack}

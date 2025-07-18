@@ -42,8 +42,8 @@ export const schemaColorForName = (proofSchemaName: string) => {
 };
 
 export const getEntryTitle = (entry: HistoryListItem) => {
-  const entityType = translate(`history.entityType.${entry.entityType}`);
-  const action = translate(`history.action.${entry.action}`);
+  const entityType = translate(`historyEntityType.${entry.entityType}`);
+  const action = translate(`historyAction.${entry.action}`);
   return `${entityType} ${action}`;
 };
 
@@ -51,13 +51,13 @@ export const historyListItemLabels: () => HistoryListItemLabels = () => ({
   actions: Object.assign(
     {},
     ...Object.keys(HistoryActionEnum).map((key) => ({
-      [key]: translate(`history.action.${key as HistoryActionEnum}`),
+      [key]: translate(`historyAction.${key as HistoryActionEnum}`),
     })),
   ) as { [key in keyof typeof HistoryActionEnum]: string },
   entityTypes: Object.assign(
     {},
     ...Object.keys(HistoryEntityTypeEnum).map((key) => ({
-      [key]: translate(`history.entityType.${key as HistoryEntityTypeEnum}`),
+      [key]: translate(`historyEntityType.${key as HistoryEntityTypeEnum}`),
     })),
   ) as { [key in keyof typeof HistoryEntityTypeEnum]: string },
 });
@@ -87,7 +87,7 @@ export const historyDeletedCredentialCardWithName = (
       header: {
         accessory: View,
         credentialDetailErrorColor: true,
-        credentialDetailPrimary: translate('historyDetail.entityDeleted'),
+        credentialDetailPrimary: translate('common.deleted'),
         credentialName: credentialSchemaName,
         statusIcon: HistoryStatusDeleteIcon,
         testID: concatTestID('DeletedCredential', credentialId),
@@ -126,7 +126,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
       header: {
         ...props.card.header,
         credentialDetailErrorColor: true,
-        credentialDetailPrimary: translate('historyDetail.entityDeleted'),
+        credentialDetailPrimary: translate('common.deleted'),
         credentialDetailTestID: concatTestID(
           'DeletedCredential',
           credentialSchema.id,

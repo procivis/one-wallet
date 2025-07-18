@@ -56,7 +56,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
         } else {
           screen.current?.clearEntry();
           screen.current?.shakeKeypad();
-          setError(translate('onboarding.pinCodeScreen.confirm.error'));
+          setError(translate('info.onboarding.pinCodeScreen.confirm.error'));
         }
       } else {
         screen.current?.clearEntry();
@@ -70,12 +70,12 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   return (
     <PinCodeScreenContent
       error={error}
-      instruction={translate(`onboarding.pinCodeScreen.${stage}.subtitle`)}
+      instruction={translate(`onboardingPinCodeScreen.${stage}.subtitle`)}
       onBack={navigation.goBack}
       onPinEntered={onPinEntered}
       ref={screen}
       testID="PinCodeInitializationScreen"
-      title={translate(`onboarding.pinCodeScreen.${stage}.title`)}
+      title={translate(`onboardingPinCodeScreen.${stage}.title`)}
     />
   );
 };

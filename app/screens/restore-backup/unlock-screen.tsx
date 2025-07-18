@@ -55,11 +55,11 @@ const UnlockScreen: FC = () => {
   return (
     <ProcessingView
       button={false}
-      loaderLabel={translate(`restoreBackup.unlock.unlocking`)}
+      loaderLabel={translate('info.restoreBackup.unlock.unlocking')}
       onClose={onClose}
       state={LoaderViewState.InProgress}
       testID="CredentialDeleRestoreBackupUnlockScreenteProcessScreen"
-      title={translate('restoreBackup.unlock.title')}
+      title={translate('common.restoreWalletBackup')}
     />
   );
 };

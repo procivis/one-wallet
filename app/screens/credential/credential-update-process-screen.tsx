@@ -140,12 +140,12 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
       error={error}
       loaderLabel={translateError(
         error,
-        translate(`credentialUpdate.process.${state}.title`),
+        translate(`credentialUpdateTitle.${state}`),
       )}
       onClose={undefined}
       state={state}
       testID={testID}
-      title={translate('credentialUpdate.title')}
+      title={translate('common.credentialUpdate')}
     />
   );
 };

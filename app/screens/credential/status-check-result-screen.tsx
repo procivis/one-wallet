@@ -50,7 +50,7 @@ const StatusCheckResultScreen: FunctionComponent = () => {
         ),
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
-        title: translate('credentialUpdate.title'),
+        title: translate('common.credentialUpdate'),
       }}
       modalPresentation
       scrollView={{
@@ -65,7 +65,7 @@ const StatusCheckResultScreen: FunctionComponent = () => {
           color={colorScheme.text}
           style={styles.subtitle}
         >
-          {translate('credentialUpdate.subtitle')}
+          {translate('info.credentialUpdate.subtitle')}
         </Typography>
         {credentialIds.map((credentialId, index, { length }) => (
           <CredentialDetails

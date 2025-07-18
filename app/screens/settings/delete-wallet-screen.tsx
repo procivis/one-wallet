@@ -27,14 +27,14 @@ const DeleteWalletScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: <HeaderBackButton testID="DeleteWalletScreen.header.back" />,
-        title: translate('deleteWalletScreen.title'),
+        title: translate('info.deleteWalletScreen.title'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID="DeleteWalletScreen"
     >
       <View style={styles.contentWrapper}>
         <Typography color={colorScheme.text} style={styles.description}>
-          {translate('deleteWalletScreen.explainer')}
+          {translate('info.deleteWalletScreen.explainer')}
         </Typography>
 
         <View style={styles.bottom}>
@@ -45,14 +45,14 @@ const DeleteWalletScreen: FunctionComponent = () => {
               { backgroundColor: colorScheme.background },
             ]}
             testID="DeleteWalletScreen.checkbox"
-            text={translate('deleteWalletScreen.confirm')}
+            text={translate('info.deleteWalletScreen.confirm')}
             value={confirmation}
           />
           <HoldButton
             disabled={!confirmation}
             onFinished={deleteAction}
-            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
-            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
+            subtitlePrefix={translate('info.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('info.holdButton.subtitleSuffix')}
             testID="DeleteWalletScreen.mainButton"
             title={translate('common.delete')}
           />

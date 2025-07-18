@@ -109,7 +109,7 @@ const LicenceDetailsScreen: FC = () => {
       .map(({ type, url }) => ({
         link: {
           title: translate(
-            `licenceDetailsScreen.library.link.${
+            `licenceDetailsScreenLibraryLink.${
               type as 'documentation' | 'website' | 'vcs'
             }`,
           ),

@@ -155,7 +155,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
           />
         ),
         static: true,
-        title: translate('wallet.qrCodeShareScreen.title'),
+        title: translate('common.share'),
       }}
       modalPresentation
       scrollView={{
@@ -170,7 +170,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
           color={colorScheme.text}
           style={styles.description}
         >
-          {translate('wallet.qrCodeShareScreen.description')}
+          {translate('info.wallet.qrCodeShareScreen.description')}
         </Typography>
         <View
           style={[styles.qrCode, { backgroundColor: colorScheme.white }]}
@@ -189,7 +189,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
                 color={colorScheme.text}
                 testID={concatTestID('qrError.message')}
               >
-                {translate('wallet.qrCodeShareScreen.qrError')}
+                {translate('info.wallet.qrCodeShareScreen.qrError')}
               </Typography>
             </View>
           )}

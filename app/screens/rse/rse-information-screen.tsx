@@ -36,7 +36,7 @@ export const RSEInfoScreen: FC = () => {
         leftItem: (
           <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
         ),
-        title: translate('rse.info.title'),
+        title: translate('info.rse.info.title'),
       }}
       modalPresentation={true}
       scrollView={{
@@ -47,7 +47,7 @@ export const RSEInfoScreen: FC = () => {
     >
       <View style={styles.top}>
         <Typography color={colorScheme.text} style={styles.subtitle}>
-          {translate('rse.info.description', { pinLength: 5 })}
+          {translate('info.rse.info.description', { pinLength: 5 })}
         </Typography>
       </View>
 
