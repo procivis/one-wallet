@@ -7,13 +7,13 @@ import { translate } from '../i18n';
 
 export const credentialCardHeaderLabels = (): CardHeaderLabels => {
   return {
-    revoked: translate('credentialDetail.validity.revoked'),
-    suspended: translate('credentialDetail.validity.suspended'),
+    revoked: translate('common.revoked'),
+    suspended: translate('common.suspended'),
     suspendedUntil: (date: string) =>
-      translate('credentialDetail.validity.suspendedUntil', {
+      translate('info.credentialDetail.validity.suspendedUntil', {
         date,
       }),
-    validityIssues: translate('credentialDetail.validity.msoValidityIssue'),
+    validityIssues: translate('common.validityUpdateIssue'),
   };
 };
 
@@ -21,7 +21,7 @@ export const credentialCardLabels = (): CardLabels => {
   return {
     ...credentialCardHeaderLabels(),
     validityIssuesNotice: translate(
-      'credentialDetail.validity.msoValidityIssue.notice',
+      'info.credentialDetail.validity.msoValidityIssue.notice',
     ),
   };
 };

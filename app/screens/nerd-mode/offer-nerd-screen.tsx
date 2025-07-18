@@ -33,15 +33,15 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
-      attributeKey: translate('credentialDetail.credential.schema'),
+      attributeKey: translate('common.credentialSchema'),
       highlightedText: credentialDetail.schema.name,
     },
     {
-      attributeKey: translate('credentialDetail.credential.format'),
+      attributeKey: translate('common.credentialFormat'),
       attributeText: credentialDetail.schema.format,
     },
     {
-      attributeKey: translate('credentialDetail.credential.revocationMethod'),
+      attributeKey: translate('common.revocationMethod'),
       attributeText: credentialDetail.schema.revocationMethod,
     },
   ];
@@ -59,11 +59,11 @@ const CredentialOfferNerdView: FunctionComponent = () => {
       sections={[
         {
           data: nerdModeFields,
-          title: translate('credentialOffer.nerdView.section.title'),
+          title: translate('common.credentialOfferData'),
         },
       ]}
       testID="CredentialOffer.nerdView"
-      title={translate('credentialDetail.action.moreInfo')}
+      title={translate('common.moreInformation')}
     />
   );
 };

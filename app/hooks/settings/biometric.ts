@@ -103,8 +103,8 @@ export function useBiometricSetting() {
 
   const showBlockedAlert = useCallback(() => {
     Alert.alert(
-      translate('settings.security.biometrics.permissionBlocked.title'),
-      translate('settings.security.biometrics.permissionBlocked.message'),
+      translate('common.biometricsPermission'),
+      translate('info.settings.security.biometrics.permissionBlocked.message'),
       [
         {
           text: translate('common.close'),

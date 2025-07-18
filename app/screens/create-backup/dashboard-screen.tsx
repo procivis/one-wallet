@@ -39,12 +39,12 @@ const DashboardScreen: FC = () => {
 
   return (
     <BackupScreen
-      cta={translate('createBackup.dashboard.cta')}
-      description={translate('createBackup.dashboard.description')}
+      cta={translate('common.createNewBackup')}
+      description={translate('info.createBackup.dashboard.description')}
       onBack={navigation.goBack}
       onCta={() => navigation.navigate('SetPassword')}
       testID="CreateBackupDashboardScreen"
-      title={translate('createBackup.dashboard.title')}
+      title={translate('info.createBackup.dashboard.title')}
     >
       <Typography
         accessibilityRole="header"
@@ -52,7 +52,7 @@ const DashboardScreen: FC = () => {
         preset="m"
         style={styles.sectionHeader}
       >
-        {translate('createBackup.dashboard.lastBackup')}
+        {translate('common.lastBackup')}
       </Typography>
       <View style={[styles.item, { backgroundColor: colorScheme.background }]}>
         {lastBackupEntry ? (
@@ -83,7 +83,7 @@ const DashboardScreen: FC = () => {
         ) : (
           <View style={styles.emtpy}>
             <Typography align="center" color={colorScheme.text} preset="s">
-              {translate('createBackup.dashboard.empty.title')}
+              {translate('common.noBackups')}
             </Typography>
             <Typography
               align="center"
@@ -91,7 +91,7 @@ const DashboardScreen: FC = () => {
               preset="s/line-height-small"
               style={styles.shaded}
             >
-              {translate('createBackup.dashboard.empty.subtitle')}
+              {translate('info.createBackup.dashboard.empty.subtitle')}
             </Typography>
           </View>
         )}

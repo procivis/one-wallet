@@ -154,12 +154,12 @@ const CreatingScreen: FC = () => {
         error={error}
         loaderLabel={translateError(
           error,
-          translate(`createBackup.processing.${state}`),
+          translate(`createBackupProcessing.${state}`),
         )}
         onClose={handleClose}
         state={state}
         testID="CreateBackupProcessingScreen"
-        title={translate('createBackup.processing.title')}
+        title={translate('common.createBackup')}
       />
       {isSaving && (
         <View style={[StyleSheet.absoluteFill, loaderBackgroundStyle]} />

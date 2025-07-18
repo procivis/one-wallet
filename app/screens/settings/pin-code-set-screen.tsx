@@ -23,8 +23,8 @@ const PinCodeSetScreen: FC = () => {
     <ProcessingView
       loaderLabel={translate(
         rse
-          ? 'settings.security.rse.pinCodeSet.title'
-          : 'settings.security.pinCodeSet.title',
+          ? 'info.settings.security.rse.pinCodeSet.title'
+          : 'common.pinCodeSet',
       )}
       onClose={closeButtonHandler}
       state={LoaderViewState.Success}

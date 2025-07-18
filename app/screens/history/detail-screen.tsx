@@ -261,13 +261,13 @@ export const HistoryDetailScreen: FC = () => {
       labels={{
         credentialCard: credentialCardLabels(),
         data: {
-          action: translate('historyDetail.action'),
-          date: translate('historyDetail.date'),
+          action: translate('common.action'),
+          date: translate('common.date'),
         },
-        infoButtonAccessibility: translate('accessibility.nav.info'),
+        infoButtonAccessibility: translate('common.info'),
         item: historyListItemLabels(),
-        relatedAssets: translate('historyDetail.relatedAssets'),
-        title: translate(`history.entityType.${entry.entityType}`),
+        relatedAssets: translate('common.deleted'),
+        title: translate(`historyEntityType.${entry.entityType}`),
       }}
       onBackPressed={navigation.goBack}
       onImagePreview={onImagePreview}

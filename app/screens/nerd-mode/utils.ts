@@ -1,20 +1,20 @@
 import { translate } from '../../i18n';
 
 export const entityLabels = {
-  notTrusted: translate('trustEntity.notTrusted'),
+  notTrusted: translate('common.notTrusted'),
   privacyPolicy: translate('common.privacyPolicy'),
   termsAndServices: translate('common.termsAndServices'),
   trusted: translate('common.trusted'),
-  unknownIssuer: translate('credentialOffer.unknownIssuer'),
-  unknownVerifier: translate('proofRequest.unknownVerifier'),
+  unknownIssuer: translate('common.unknownIssuer'),
+  unknownVerifier: translate('common.unknownVerifier'),
   visitWebsite: translate('common.visitWebsite'),
 };
 
 export const attributesLabels = {
-  collapse: translate('nerdView.action.collapseAttribute'),
-  entityIdentifier: translate('credentialDetail.credential.identifier'),
-  expand: translate('nerdView.action.expandAttribute'),
-  issuerIdentifier: translate('credentialDetail.credential.identifier'),
+  collapse: translate('common.collapse'),
+  entityIdentifier: translate('common.identifier'),
+  expand: translate('common.showMore'),
+  issuerIdentifier: translate('common.identifier'),
   role: translate('common.role'),
   trustRegistry: translate('common.trustRegistry'),
 };

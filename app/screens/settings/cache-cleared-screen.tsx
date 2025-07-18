@@ -38,7 +38,7 @@ const CacheClearedScreen: FC = () => {
       }}
       loader={{
         animate: false,
-        label: translate(`cacheClearedScreen.label`),
+        label: translate('common.cacheCleared'),
         state: LoaderViewState.Success,
         testID: 'CacheClearedScreen.animation',
       }}

@@ -110,7 +110,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const optionsButton = useMemo(
     () => (
       <HeaderOptionsButton
-        accessibilityLabel="wallet.settings"
+        accessibilityLabel="common.settings"
         onPress={handleWalletSettingsClick}
         testID="WalletScreen.header.action-settings"
       />
@@ -131,10 +131,10 @@ const WalletScreen: FunctionComponent = observer(() => {
       {credentials && isEmpty && (
         <WalletEmptyList
           onScanPress={handleScanPress}
-          scanButtonTitle={translate('wallet.credentialsList.empty.scanQrCode')}
-          subtitle={translate('wallet.credentialsList.empty.subtitle')}
+          scanButtonTitle={translate('common.scanQrCode')}
+          subtitle={translate('info.wallet.credentialsList.empty.subtitle')}
           testID="WalletScreen.empty"
-          title={translate('wallet.credentialsList.empty.title')}
+          title={translate('common.noCredentialsYet')}
         />
       )}
       {credentials && !isEmpty && (
@@ -155,7 +155,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           <Header
             rightButton={optionsButton}
             testID={'WalletScreen.header'}
-            title={translate('wallet.title')}
+            title={translate('common.wallet')}
             titleRowStyle={!isEmpty && styles.headerWithSearchBar}
           />
         }
@@ -167,7 +167,7 @@ const WalletScreen: FunctionComponent = observer(() => {
                 rightButton: optionsButton,
                 searchBarProps: {
                   onSearchPhraseChange: setSearchPhrase,
-                  placeholder: translate('wallet.search'),
+                  placeholder: translate('common.search'),
                   searchPhrase,
                   testID: 'WalletScreen.header.search',
                 },

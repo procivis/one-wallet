@@ -52,8 +52,8 @@ const ImportScreen: FC = () => {
 
   return (
     <BackupScreen
-      cta={translate('restoreBackup.import.cta')}
-      description={translate('restoreBackup.import.description')}
+      cta={translate('common.import')}
+      description={translate('info.restoreBackup.import.description')}
       isCtaDisabled={!selectedFilePath}
       onBack={navigation.goBack}
       onCta={() =>
@@ -62,7 +62,7 @@ const ImportScreen: FC = () => {
         })
       }
       testID="RestoreBackupImportScreen"
-      title={translate('restoreBackup.import.title')}
+      title={translate('common.restoreWalletBackup')}
     >
       <SettingsButton
         accessory={<ImportIcon color={colorScheme.text} />}
@@ -70,10 +70,7 @@ const ImportScreen: FC = () => {
           handleAddPress();
         }}
         testID="RestoreBackupImportScreen.file"
-        title={
-          selectedFile?.name ??
-          translate('restoreBackup.import.selectBackupFile')
-        }
+        title={selectedFile?.name ?? translate('common.selectBackupFile')}
       />
     </BackupScreen>
   );

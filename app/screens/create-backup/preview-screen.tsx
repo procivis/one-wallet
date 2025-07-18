@@ -55,14 +55,14 @@ const PreviewScreen: FC = () => {
         ),
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
-        title: translate('createBackup.preview.title'),
+        title: translate('common.createBackup'),
       }}
       modalPresentation
       testID="CreateBackupPreviewScreen"
     >
       <View style={styles.content} testID="CreateBackupPreviewScreen.content">
         <Typography color={colorScheme.text} style={styles.description}>
-          {translate('createBackup.preview.description')}
+          {translate('info.createBackup.preview.description')}
         </Typography>
 
         {showExportable && (
@@ -71,7 +71,7 @@ const PreviewScreen: FC = () => {
             preset="m"
             style={styles.sectionHeader}
           >
-            {translate('createBackup.preview.backedUp')}
+            {translate('common.backedUp')}
           </Typography>
         )}
         {showExportable && (
@@ -84,7 +84,7 @@ const PreviewScreen: FC = () => {
             preset="m"
             style={styles.sectionHeader}
           >
-            {translate('createBackup.preview.notBackedUp')}
+            {translate('common.notBackedUp')}
           </Typography>
         )}
         {showNonExportable && (
@@ -102,10 +102,10 @@ const PreviewScreen: FC = () => {
         <HoldButton
           onFinished={onConfirm}
           style={{ backgroundColor: colorScheme.white }}
-          subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
-          subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
+          subtitlePrefix={translate('info.holdButton.subtitlePrefix')}
+          subtitleSuffix={translate('info.holdButton.subtitleSuffix')}
           testID="CreateBackupPreviewScreen.mainButton"
-          title={translate('createBackup.preview.cta')}
+          title={translate('common.createBackup')}
         />
       </View>
     </ScrollViewScreen>

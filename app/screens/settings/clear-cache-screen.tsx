@@ -62,7 +62,7 @@ const ClearCacheScreen: FunctionComponent = () => {
         leftItem: (
           <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
         ),
-        title: translate('clearCacheScreen.title'),
+        title: translate('common.clearCache'),
       }}
       scrollView={{
         testID: concatTestID(testID, 'scroll'),
@@ -72,7 +72,7 @@ const ClearCacheScreen: FunctionComponent = () => {
     >
       <View style={styles.contentWrapper}>
         <Typography color={colorScheme.text} style={styles.description}>
-          {translate('clearCacheScreen.description')}
+          {translate('info.clearCacheScreen.description')}
         </Typography>
 
         <RadioGroup
@@ -80,12 +80,14 @@ const ClearCacheScreen: FunctionComponent = () => {
           items={[
             {
               key: ClearOptions.RevocationAndTrustData,
-              label: translate('settings.profile.clearRevocationAndTrustData'),
+              label: translate(
+                'info.settings.profile.clearRevocationAndTrustData',
+              ),
               testID: 'ClearRevocationAndTrustData',
             },
             {
               key: ClearOptions.AllCaches,
-              label: translate('settings.profile.clearAllCaches'),
+              label: translate('common.clearAllCaches'),
               testID: `ClearAllCaches`,
             },
           ]}
@@ -96,8 +98,8 @@ const ClearCacheScreen: FunctionComponent = () => {
 
         <HoldButton
           onFinished={handlePress}
-          subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
-          subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
+          subtitlePrefix={translate('info.holdButton.subtitlePrefix')}
+          subtitleSuffix={translate('info.holdButton.subtitleSuffix')}
           testID={concatTestID(testID, 'mainButton')}
           title={translate('common.clear')}
         />

@@ -70,7 +70,7 @@ export const RSEChangePinScreen: FC = () => {
           const newStep = pinFlowStageMap[event.stage];
           setStep(newStep);
           if (newStep === 'setPin' && step === 'confirmPin' && !error) {
-            setError(translate('rse.changePin.confirmPin.error'));
+            setError(translate('info.rse.changePin.confirmPin.error'));
           }
           break;
         }
@@ -79,7 +79,7 @@ export const RSEChangePinScreen: FC = () => {
             incorrectPin.current = true;
           }
           setError(
-            translate('rse.changePin.checkCurrentPin.error', {
+            translate('info.rse.changePin.checkCurrentPin.error', {
               attemptsLeft: event.attemptsLeft,
             }),
           );
@@ -92,12 +92,12 @@ export const RSEChangePinScreen: FC = () => {
     <RSEPinView
       enteredLength={enteredLength}
       errorMessage={error}
-      instruction={translate(`rse.changePin.${step}.instruction`, {
+      instruction={translate(`rseChangePin.${step}.instruction`, {
         pinLength,
       })}
       isLoading={isLoading}
       testID={testID}
-      title={translate(`rse.changePin.${step}.title`)}
+      title={translate(`rseChangePin.${step}.title`)}
     />
   );
 };

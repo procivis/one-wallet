@@ -83,7 +83,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
         onCheckPassed();
         resetPinSecurity();
       } else {
-        setError(translate('onboarding.pinCodeScreen.check.error'));
+        setError(translate('info.onboarding.pinCodeScreen.check.error'));
         screen.current?.clearEntry();
         screen.current?.shakeKeypad();
         addFailedAttempt();
@@ -106,8 +106,8 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       return;
     }
     biometricAuthenticate({
-      cancelLabel: translate('onboarding.pinCodeScreen.biometric.cancel'),
-      promptMessage: translate('onboarding.pinCodeScreen.biometric.prompt'),
+      cancelLabel: translate('common.usePinCode'),
+      promptMessage: translate('common.verifyYourIdentity'),
     })
       .then(() => {
         onCheckPassed();
@@ -147,12 +147,12 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       <PinCodeScreenContent
         biometry={biometricCheckEnabled ? biometry : undefined}
         error={error}
-        instruction={translate('onboarding.pinCodeScreen.check.subtitle')}
+        instruction={translate('onboardingPinCodeScreen.check.subtitle')}
         onBiometricPress={runBiometricCheck}
         onPinEntered={onPinEntered}
         ref={screen}
         testID="PinCodeCheckScreen"
-        title={translate('onboarding.pinCodeScreen.check.title')}
+        title={translate('onboardingPinCodeScreen.check.title')}
       />
       <PinLockModal
         attempts={failedAttempts}

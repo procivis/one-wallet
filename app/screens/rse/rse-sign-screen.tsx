@@ -43,7 +43,7 @@ export const RSESignScreen: FC = () => {
           break;
         case PinEventType.INCORRECT_PIN: {
           setError(
-            translate('rse.sign.error.wrongPin', {
+            translate('info.rse.sign.error.wrongPin', {
               attemptsLeft: event.attemptsLeft,
             }),
           );
@@ -57,10 +57,10 @@ export const RSESignScreen: FC = () => {
     <RSEPinView
       enteredLength={enteredLength}
       errorMessage={error}
-      instruction={translate('rse.sign.instruction', { pinLength })}
+      instruction={translate('info.rse.sign.instruction', { pinLength })}
       isLoading={false}
       testID={testID}
-      title={translate('rse.sign.title')}
+      title={translate('info.rse.sign.title')}
     />
   );
 };
