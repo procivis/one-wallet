@@ -56,26 +56,26 @@ const AppInformationScreen: FC = () => {
             testID="AppInformationScreen.header.info"
           />
         ),
-        title: translate('appInformation.title'),
+        title: translate('common.aboutProcivis'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID="AppInformationScreen"
     >
       <View style={styles.contentContainer}>
         <Typography color={colorScheme.text} style={styles.contentDescription}>
-          {translate('appInformation.description')}
+          {translate('info.appInformation.description')}
         </Typography>
         <Link
-          label={translate('appInformation.company.label')}
-          url={translate('appInformation.company.link')}
+          label={translate('common.procivisAgWebsite')}
+          url={translate('common.procivisWebsiteLink')}
         />
         <Link
-          label={translate('appInformation.documentation.label')}
-          url={translate('appInformation.documentation.link')}
+          label={translate('common.documentation')}
+          url={translate('common.procivisDocsLink')}
         />
         <Link
-          label={translate('appInformation.github.label')}
-          url={translate('appInformation.github.link')}
+          label={translate('common.github')}
+          url={translate('common.procivisgithubLink')}
         />
       </View>
     </ScrollViewScreen>

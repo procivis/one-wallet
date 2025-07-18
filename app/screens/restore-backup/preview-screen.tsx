@@ -76,7 +76,7 @@ const PreviewScreen: FC = () => {
           />
         }
         modalHandleVisible={Platform.OS === 'ios'}
-        title={translate('restoreBackup.preview.title')}
+        title={translate('common.restoreWalletBackup')}
       />
 
       <View style={styles.content} testID="RestoreBackupPreviewScreen.content">
@@ -85,17 +85,17 @@ const PreviewScreen: FC = () => {
           color={colorScheme.text}
           style={styles.description}
         >
-          {translate('restoreBackup.preview.description')}
+          {translate('info.restoreBackup.preview.description')}
         </Typography>
         <PreviewCredentials credentials={credentials} />
         <SafeAreaView edges={['bottom']} style={styles.bottom}>
           <HoldButton
             onFinished={onConfirm}
             style={{ backgroundColor: colorScheme.white }}
-            subtitlePrefix={translate('common.holdButton.subtitlePrefix')}
-            subtitleSuffix={translate('common.holdButton.subtitleSuffix')}
+            subtitlePrefix={translate('info.holdButton.subtitlePrefix')}
+            subtitleSuffix={translate('info.holdButton.subtitleSuffix')}
             testID="RestoreBackupPreviewScreen.mainButton"
-            title={translate('restoreBackup.preview.cta')}
+            title={translate('common.restoreWalletBackup')}
           />
         </SafeAreaView>
       </View>

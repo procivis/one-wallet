@@ -72,11 +72,11 @@ const ProofProcessScreen: FunctionComponent = () => {
 
   const loaderLabel = useMemo(() => {
     if (error && isRSELockedError(error)) {
-      return translate('proofRequest.process.error.rseLocked.title');
+      return translate('info.proofRequest.process.error.rseLocked.title');
     }
     return translateError(
       error,
-      translate(`proofRequest.process.${state}.title`),
+      translate(`proofRequestProcessTitle.${state}`),
     );
   }, [error, state]);
 
@@ -130,7 +130,7 @@ const ProofProcessScreen: FunctionComponent = () => {
           ? {
               onPress: closeButtonHandler,
               testID: 'ProofRequestAcceptProcessScreen.redirect',
-              title: translate('proofRequest.redirect'),
+              title: translate('common.backToService'),
               type: ButtonType.Secondary,
             }
           : undefined
@@ -140,7 +140,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       onClose={closeButtonHandler}
       state={state}
       testID="ProofRequestAcceptProcessScreen"
-      title={translate('proofRequest.title')}
+      title={translate('common.shareCredential')}
     />
   );
 };

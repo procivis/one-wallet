@@ -38,7 +38,7 @@ export const RSEAddBiometricsScreen: FC = () => {
           break;
         case PinEventType.INCORRECT_PIN: {
           setError(
-            translate('rse.addBiometrics.error.wrongPin', {
+            translate('info.rse.addBiometrics.error.wrongPin', {
               attemptsLeft: event.attemptsLeft,
             }),
           );
@@ -52,10 +52,12 @@ export const RSEAddBiometricsScreen: FC = () => {
     <RSEPinView
       enteredLength={enteredLength}
       errorMessage={error}
-      instruction={translate('rse.addBiometrics.instruction', { pinLength })}
+      instruction={translate('info.rse.addBiometrics.instruction', {
+        pinLength,
+      })}
       isLoading={false}
       testID={testID}
-      title={translate('rse.addBiometrics.title')}
+      title={translate('info.rse.addBiometrics.title')}
     />
   );
 };

@@ -46,7 +46,7 @@ const PinCodeChangeScreen: FunctionComponent = () => {
             setError(undefined);
             setValidated(true);
           } else {
-            setError(translate('onboarding.pinCodeScreen.check.error'));
+            setError(translate('info.onboarding.pinCodeScreen.check.error'));
           }
           break;
         case Stage.Set:
@@ -59,7 +59,7 @@ const PinCodeChangeScreen: FunctionComponent = () => {
             navigation.replace('PinCodeSet');
           } else {
             screen.current?.clearEntry();
-            setError(translate('onboarding.pinCodeScreen.confirm.error'));
+            setError(translate('info.onboarding.pinCodeScreen.confirm.error'));
           }
           break;
       }
@@ -70,14 +70,12 @@ const PinCodeChangeScreen: FunctionComponent = () => {
   return (
     <PinCodeScreenContent
       error={error}
-      instruction={translate(
-        `onboarding.pinCodeScreen.change.${stage}.subtitle`,
-      )}
+      instruction={translate(`onboardingPinCodeScreenChange.${stage}.subtitle`)}
       onBack={navigation.goBack}
       onPinEntered={onPinEntered}
       ref={screen}
       testID="PinCodeChangeScreen"
-      title={translate(`onboarding.pinCodeScreen.change.${stage}.title`)}
+      title={translate(`onboardingPinCodeScreenChange.${stage}.title`)}
     />
   );
 };

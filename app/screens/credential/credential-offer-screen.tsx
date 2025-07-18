@@ -162,8 +162,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const onCloseButtonPress = useCallback(() => {
     Alert.alert(
-      translate('credentialOffer.closeAlert.title'),
-      translate('credentialOffer.closeAlert.message'),
+      translate('common.rejectOffering'),
+      translate('info.credentialOffer.closeAlert.message'),
       [
         { text: translate('common.cancel') },
         {
@@ -206,7 +206,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
           />
         ),
         static: true,
-        title: translate('credentialOffer.title'),
+        title: translate('common.credentialOffering'),
       }}
       modalPresentation
       scrollView={{
@@ -245,7 +245,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
               <Button
                 onPress={onAccept}
                 testID={concatTestID(testID, 'accept')}
-                title={translate('credentialOffer.accept')}
+                title={translate('common.accept')}
               />
             </View>
             <ShareDisclaimer

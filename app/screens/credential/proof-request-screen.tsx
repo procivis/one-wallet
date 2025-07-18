@@ -289,7 +289,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           />
         ),
         static: true,
-        title: translate('proofRequest.title'),
+        title: translate('common.shareCredential'),
       }}
       modalPresentation
       scrollView={{
@@ -357,7 +357,7 @@ const ProofRequestScreen: FunctionComponent = () => {
                 disabled={!allSelectionsValid}
                 onPress={onSubmit}
                 testID="ProofRequestSharingScreen.shareButton"
-                title={translate('proofRequest.confirm')}
+                title={translate('common.share')}
                 type={
                   allSelectionsValid ? ButtonType.Primary : ButtonType.Secondary
                 }

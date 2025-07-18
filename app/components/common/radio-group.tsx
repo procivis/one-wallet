@@ -14,7 +14,7 @@ export type RadioGroupProps = Omit<
 const RadioGroup: FunctionComponent<RadioGroupProps> = (props) => {
   const getItemAccessibilityLabel = useCallback(
     (current: number, length: number) => {
-      return translate('accessibility.control.order', {
+      return translate('info.accessibility.control.order', {
         current,
         length,
       });

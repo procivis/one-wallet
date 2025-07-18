@@ -6,18 +6,29 @@ const TRANSLATION_FILE = path.join(
   __dirname,
   '../app/i18n/en/translation.json',
 );
-const TRANSLATION_REGEX = /translate\(\s*'([^']*)'\s*(?:,\s*\{[^)]*\})?\)/g;
-const WHITELIST_KEY_PATTERNS = [/^.*$/];
-const BLACKLIST_KEY_PATTERNS = [];
+const TRANSLATION_REGEX = /translate\(\s*(['"])(.*?)\1/g;
+const WHITELIST_KEY_PATTERNS = [/^common\./, /^info\./];
+const BLACKLIST_KEY_PATTERNS = [
+  /^common.pinCodeSet$/,
+  /^common.settings$/,
+  /^common.unknownIssuer$/,
+  /^info.credentialOffer.process.warning.incompatible.title$/,
+  /^info.settings.security.rse.pinCodeSet.title$/,
+  /^info.invitation.process.bleAdapterUnavailable.title$/,
+  /^info.invitation.process.blePermissionMissing.title$/,
+  /^info.invitation.process.bleAdapterDisabled.title$/,
+  /^info.invitation.process.internetDisabled.title$/,
+  /^info.invitation.process.internetUnreachable.title$/,
+];
 
 let usedKeys = new Set();
 let allTranslationKeys = new Set();
 
 function extractTranslationsFromFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8');
-  let match;
-  while ((match = TRANSLATION_REGEX.exec(content)) !== null) {
-    usedKeys.add(match[1] || match[2]);
+  const matches = content.matchAll(TRANSLATION_REGEX);
+  for (const match of matches) {
+    usedKeys.add(match[2]);
   }
 }
 
@@ -58,6 +69,7 @@ function isWhitelisted(key) {
 walkDir(SRC_DIR);
 
 const translationJson = JSON.parse(fs.readFileSync(TRANSLATION_FILE, 'utf-8'));
+
 flattenJson(translationJson);
 
 const unusedKeys = [...allTranslationKeys]
@@ -65,6 +77,12 @@ const unusedKeys = [...allTranslationKeys]
   .filter((key) => !isBlackListed(key))
   .filter((key) => !usedKeys.has(key));
 
-console.log('--- Unused translation keys ---');
-unusedKeys.forEach((key) => console.log(key));
-console.log(`\nTotal unused: ${unusedKeys.length}`);
+if (unusedKeys.length) {
+  console.log('⚠️ Unused translation keys');
+  unusedKeys.forEach((key) => console.log(key));
+  console.log(`\nTotal unused: ${unusedKeys.length}`);
+  process.exit(1);
+} else {
+  console.log('✅ No unused translation keys\n');
+  process.exit(0);
+}

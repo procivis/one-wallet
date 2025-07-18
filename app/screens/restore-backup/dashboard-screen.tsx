@@ -11,12 +11,12 @@ const DashboardScreen: FC = () => {
 
   return (
     <BackupScreen
-      cta={translate('restoreBackup.dashboard.cta')}
-      description={translate('restoreBackup.dashboard.description')}
+      cta={translate('common.continue')}
+      description={translate('info.restoreBackup.dashboard.description')}
       onBack={navigation.goBack}
       onCta={() => navigation.navigate('Import')}
       testID="RestoreBackupDashboardScreen"
-      title={translate('restoreBackup.dashboard.title')}
+      title={translate('common.restoreWalletBackup')}
     />
   );
 };

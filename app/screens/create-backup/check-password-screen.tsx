@@ -28,23 +28,23 @@ const CheckPasswordScreen: FC = () => {
         screen: 'Preview',
       });
     } else {
-      setError(translate('createBackup.checkPassword.errorNoMatch'));
+      setError(translate('info.createBackup.checkPassword.errorNoMatch'));
     }
   }, [entry, navigation, password]);
 
   return (
     <BackupScreen
-      cta={translate('createBackup.checkPassword.cta')}
-      description={translate('createBackup.checkPassword.description')}
+      cta={translate('common.submit')}
+      description={translate('info.createBackup.checkPassword.description')}
       isCtaDisabled={!entry}
       onBack={navigation.goBack}
       onCta={onConfirm}
       testID="CreateBackupCheckPasswordScreen"
-      title={translate('createBackup.checkPassword.title')}
+      title={translate('common.reEnterPassword')}
     >
       <TextInput
         error={error}
-        label={translate('createBackup.checkPassword.password')}
+        label={translate('common.password')}
         onAccessoryPress={() => setEntry('')}
         onChangeText={setEntry}
         onSubmit={onConfirm}

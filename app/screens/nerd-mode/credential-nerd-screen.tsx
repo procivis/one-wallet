@@ -39,7 +39,7 @@ const getCredentialValidityValue = (
     if (credential.suspendEndDate) {
       return {
         icon: CredentialSuspendedTempIcon,
-        text: translate('credentialDetail.validity.suspendedUntil', {
+        text: translate('info.credentialDetail.validity.suspendedUntil', {
           date: credential.suspendEndDate,
         }),
         textColor: colorScheme.warning,
@@ -47,7 +47,7 @@ const getCredentialValidityValue = (
     } else {
       return {
         icon: CredentialSuspendedIcon,
-        text: translate('credentialDetail.validity.suspended'),
+        text: translate('common.suspended'),
         textColor: colorScheme.warning,
       };
     }
@@ -56,7 +56,7 @@ const getCredentialValidityValue = (
   if (credential.state === CredentialStateEnum.REVOKED) {
     return {
       icon: CredentialSuspendedIcon,
-      text: translate('credentialDetail.validity.revoked'),
+      text: translate('common.revoked'),
       textColor: colorScheme.error,
     };
   }
@@ -64,7 +64,7 @@ const getCredentialValidityValue = (
   if (credential.state === CredentialStateEnum.ACCEPTED) {
     return {
       icon: CredentialValidIcon,
-      text: translate('credentialDetail.validity.valid'),
+      text: translate('common.valid'),
       textColor: colorScheme.success,
     };
   }
@@ -97,12 +97,12 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
-      attributeKey: translate('credentialDetail.credential.schema'),
+      attributeKey: translate('common.credentialSchema'),
       highlightedText: credentialDetail.schema.name,
       testID: 'schemaName',
     },
     ...addElementIf(!!validityData, {
-      attributeKey: translate('credentialDetail.credential.validity'),
+      attributeKey: translate('common.validity'),
       element: (
         <View style={styles.validityEntryContainer}>
           {validityData?.icon}
@@ -119,34 +119,34 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       testID: 'validity',
     }),
     {
-      attributeKey: translate('credentialDetail.credential.dateAdded'),
+      attributeKey: translate('common.dateAdded'),
       attributeText: formatDateTimeLocalized(
         new Date(credentialDetail?.createdDate),
       ),
       testID: 'dateAdded',
     },
     {
-      attributeKey: translate('credentialDetail.credential.format'),
+      attributeKey: translate('common.credentialFormat'),
       attributeText: credentialDetail.schema.format,
       testID: 'credentialFormat',
     },
     {
-      attributeKey: translate('credentialDetail.credential.documentType'),
+      attributeKey: translate('common.documentType'),
       attributeText: credentialDetail.schema.schemaId,
       testID: 'documentType',
     },
     {
-      attributeKey: translate('credentialDetail.credential.revocationMethod'),
+      attributeKey: translate('common.revocationMethod'),
       attributeText: credentialDetail.schema.revocationMethod,
       testID: 'revocationMethod',
     },
     {
-      attributeKey: translate('credentialDetail.credential.storageType'),
+      attributeKey: translate('common.storageType'),
       attributeText: credentialDetail.schema.walletStorageType,
       testID: 'storageType',
     },
     {
-      attributeKey: translate('credentialDetail.credential.schema'),
+      attributeKey: translate('common.credentialSchema'),
       attributeText: JSON.stringify(credentialSchemaWithoutImages, null, 1),
       canBeCopied: true,
       testID: 'schema',
@@ -166,11 +166,11 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       sections={[
         {
           data: nerdModeFields,
-          title: translate('credentialDetail.nerdView.attributes.title'),
+          title: translate('common.credential'),
         },
       ]}
       testID="CredentialNerdView"
-      title={translate('credentialDetail.action.moreInfo')}
+      title={translate('common.moreInformation')}
     />
   );
 };

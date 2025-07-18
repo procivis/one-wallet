@@ -74,12 +74,12 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
       error={error}
       loaderLabel={translateError(
         error,
-        translate(`deleteWalletProcess.${state}.title`),
+        translate(`deleteWalletProcessTitle.${state}`),
       )}
       onClose={closeButtonHandler}
       state={state}
       testID="DeleteWalletProcessScreen"
-      title={translate('deleteWalletProcess.title')}
+      title={translate('common.walletDeletion')}
     />
   );
 };

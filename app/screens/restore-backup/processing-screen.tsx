@@ -70,12 +70,12 @@ const ProcessingScreen: FC = () => {
       error={error}
       loaderLabel={translateError(
         error,
-        translate(`restoreBackup.processing.${state}`),
+        translate(`restoreBackupProcessing.${state}`),
       )}
       onClose={closeButtonHandler}
       state={state}
       testID="RestoreBackupProcessingScreen"
-      title={translate('restoreBackup.processing.title')}
+      title={translate('common.restoreWalletBackup')}
     />
   );
 };

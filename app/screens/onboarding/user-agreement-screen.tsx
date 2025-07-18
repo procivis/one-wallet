@@ -62,21 +62,21 @@ export const UserAgreementScreen: FC = () => {
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <Header
         onBack={navigation.goBack}
-        title={translate('onboarding.userAgreement.title')}
+        title={translate('common.userAgreement')}
       />
       <View style={styles.top}>
         <Typography color={colorScheme.text} style={styles.subtitle}>
-          {translate('onboarding.userAgreement.subtitle')}
+          {translate('info.onboarding.userAgreement.subtitle')}
         </Typography>
         <Link
-          label={translate('onboarding.userAgreement.termsOfService.label')}
+          label={translate('common.termsOfService')}
           testID="UserAgreementScreen.termsOfService"
-          url={translate('onboarding.userAgreement.termsOfService.link')}
+          url={translate('common.termsOfServiceLink')}
         />
         <Link
-          label={translate('onboarding.userAgreement.privacyPolicy.label')}
+          label={translate('common.privacyPolicy')}
           testID="UserAgreementScreen.privacyPolicy"
-          url={translate('onboarding.userAgreement.privacyPolicy.link')}
+          url={translate('common.privacyPolicyLink')}
         />
       </View>
 
@@ -84,7 +84,7 @@ export const UserAgreementScreen: FC = () => {
         <Checkbox
           onValueChanged={setChecked}
           testID="UserAgreementScreen.checkbox"
-          text={translate('onboarding.userAgreement.checkbox')}
+          text={translate('info.onboarding.userAgreement.checkbox')}
           value={checked}
         />
         <Button
@@ -95,7 +95,7 @@ export const UserAgreementScreen: FC = () => {
             !checked && { borderColor: colorScheme.background },
           ]}
           testID="UserAgreementScreen.accept"
-          title={translate('onboarding.userAgreement.accept')}
+          title={translate('common.accept')}
           type={checked ? ButtonType.Primary : ButtonType.Secondary}
         />
       </View>

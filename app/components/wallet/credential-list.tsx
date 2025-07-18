@@ -68,8 +68,10 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
     <Animated.FlatList<CredentialListItem>
       ListEmptyComponent={
         <WalletEmptySearchResult
-          subtitle={translate('wallet.credentialsList.empty.search.subtitle')}
-          title={translate('wallet.credentialsList.empty.search.title')}
+          subtitle={translate(
+            'info.wallet.credentialsList.empty.search.subtitle',
+          )}
+          title={translate('common.noCredentialsFound')}
         />
       }
       ListFooterComponent={

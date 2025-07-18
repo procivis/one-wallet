@@ -32,21 +32,17 @@ const RecoveryPasswordScreen: FC = () => {
 
   return (
     <BackupScreen
-      cta={translate('restoreBackup.recoveryPassword.cta')}
-      description={translate('restoreBackup.recoveryPassword.description')}
+      cta={translate('common.unlockBackup')}
+      description={translate('info.restoreBackup.recoveryPassword.description')}
       isCtaDisabled={!password || route.params.error}
       onBack={navigation.goBack}
       onCta={handleCta}
       testID="RestoreBackupRecoveryPasswordScreen"
-      title={translate('restoreBackup.recoveryPassword.title')}
+      title={translate('common.enterBackupPassword')}
     >
       <TextInput
-        error={
-          route.params.error
-            ? translate('restoreBackup.recoveryPassword.wrongPassword')
-            : ''
-        }
-        label={translate('restoreBackup.recoveryPassword.password')}
+        error={route.params.error ? translate('common.wrongPassword') : ''}
+        label={translate('common.password')}
         onAccessoryPress={() => setPassword('')}
         onChangeText={handlePasswordTextChange}
         secureTextEntry

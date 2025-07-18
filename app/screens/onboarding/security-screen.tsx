@@ -61,13 +61,10 @@ export const SecurityScreen: FC = () => {
       testID="SecurityScreen"
     >
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
-      <Header
-        onBack={navigation.goBack}
-        title={translate('onboarding.security.title')}
-      />
+      <Header onBack={navigation.goBack} title={translate('common.security')} />
       <View style={styles.top}>
         <Typography color={colorScheme.text} style={styles.shaded}>
-          {translate('onboarding.security.subtitle')}
+          {translate('info.onboarding.security.subtitle')}
         </Typography>
       </View>
 
@@ -81,7 +78,7 @@ export const SecurityScreen: FC = () => {
               preset="xs/line-height-small"
               style={styles.toggleLabel}
             >
-              {translate('onboarding.security.biometry')}
+              {translate('info.onboarding.security.biometry')}
             </Typography>
             <Switch
               onChange={setBiometryEnabled}
@@ -97,7 +94,7 @@ export const SecurityScreen: FC = () => {
           }}
           style={styles.button}
           testID="SecurityScreen.continue"
-          title={translate('onboarding.security.continue')}
+          title={translate('common.continue')}
         />
       </View>
     </SafeAreaView>

@@ -118,23 +118,23 @@ export const SetupScreen: FC = () => {
       >
         <View style={styles.text}>
           <Typography color={colorScheme.black} preset="l/line-height-large">
-            {translate('onboarding.setup.title')}
+            {translate('info.onboarding.setup.title')}
           </Typography>
           <Typography color={colorScheme.text} style={styles.description}>
-            {translate('onboarding.setup.description')}
+            {translate('info.onboarding.setup.description')}
           </Typography>
         </View>
         <View style={styles.buttons}>
           <Button
             onPress={onSetup}
             testID="OnboardingSetupScreen.setup"
-            title={translate('onboarding.setup.getStarted')}
+            title={translate('common.createNewWallet')}
           />
           <Button
             onPress={onRestore}
             style={styles.secondaryButton}
             testID="OnboardingSetupScreen.restore"
-            title={translate('onboarding.setup.restoreFromBackup')}
+            title={translate('common.restoreWalletBackup')}
             type={ButtonType.Secondary}
           />
         </View>

@@ -96,14 +96,14 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       !identifierId &&
       requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT
     ) {
-      return translate('credentialOffer.process.creatingRSE.title');
+      return translate('info.credentialOffer.process.creatingRSE.title');
     } else if (error && isRSELockedError(error)) {
-      return translate('credentialOffer.process.error.rseLocked.title');
+      return translate('info.credentialOffer.process.error.rseLocked.title');
     }
     const txKeyPath: TxKeyPath =
       state === LoaderViewState.Warning && !identifierId
-        ? 'credentialOffer.process.warning.incompatible.title'
-        : `credentialOffer.process.${state}.title`;
+        ? 'info.credentialOffer.process.warning.incompatible.title'
+        : `credentialOfferTitle.${state}`;
     return translateError(error, translate(txKeyPath));
   }, [error, identifierId, requiredStorageType, state]);
 
@@ -209,7 +209,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
           ? {
               onPress: closeButtonHandler,
               testID: 'CredentialAcceptProcessScreen.redirect',
-              title: translate('credentialOffer.redirect'),
+              title: translate('common.backToService'),
               type: ButtonType.Secondary,
             }
           : undefined
@@ -219,7 +219,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       onClose={closeButtonHandler}
       state={state}
       testID="CredentialAcceptProcessScreen"
-      title={translate('credentialOffer.title')}
+      title={translate('common.credentialOffering')}
     />
   );
 });

@@ -16,12 +16,12 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
   if (error instanceof OneError) {
     const result = [
       {
-        attributeKey: translate('errorDetail.code'),
+        attributeKey: translate('common.code'),
         canBeCopied: true,
         highlightedText: error.code,
       },
       {
-        attributeKey: translate('errorDetail.message'),
+        attributeKey: translate('common.message'),
         attributeText: error.message,
         canBeCopied: true,
       },
@@ -29,7 +29,7 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
 
     if (error.cause) {
       result.push({
-        attributeKey: translate('errorDetail.cause'),
+        attributeKey: translate('common.cause'),
         attributeText: error.cause,
         canBeCopied: true,
       });
@@ -41,12 +41,12 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
   if (error instanceof Error) {
     return [
       {
-        attributeKey: translate('errorDetail.name'),
+        attributeKey: translate('common.name'),
         canBeCopied: true,
         highlightedText: error.name,
       },
       {
-        attributeKey: translate('errorDetail.message'),
+        attributeKey: translate('common.message'),
         attributeText: error.message,
         canBeCopied: true,
       },
@@ -62,7 +62,7 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
 
   return [
     {
-      attributeKey: translate('errorDetail.message'),
+      attributeKey: translate('common.message'),
       attributeText: message,
       canBeCopied: true,
     },
@@ -80,7 +80,7 @@ const ErrorNerdScreen: FC = () => {
     () => [
       {
         data: getDataFields(error),
-        title: translate('errorDetail.error'),
+        title: translate('common.error'),
       },
     ],
     [error],
@@ -93,7 +93,7 @@ const ErrorNerdScreen: FC = () => {
       onCopyToClipboard={copyToClipboard}
       sections={sections}
       testID="InvitationErrorDetailsScreen"
-      title={translate('errorDetail.title')}
+      title={translate('common.moreInformation')}
     />
   );
 };

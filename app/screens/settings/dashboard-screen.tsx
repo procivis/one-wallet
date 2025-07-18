@@ -185,7 +185,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
                 icon: LanguageIcon,
                 onPress: handleChangeLanguage,
                 testID: 'SettingsScreen.languageChange',
-                title: translate('settings.general.language'),
+                title: translate('common.changeLanguage'),
               },
             }
           : undefined,
@@ -194,11 +194,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: HistoryIcon,
             onPress: handleHistory,
             testID: 'SettingsScreen.history',
-            title: translate('settings.general.history'),
+            title: translate('common.history'),
           },
         },
       ].filter(nonEmptyFilter),
-      title: translate('settings.general.title'),
+      title: translate('common.general'),
     },
     {
       data: [
@@ -207,7 +207,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: CreateBackupIcon,
             onPress: handleCreateBackup,
             testID: 'SettingsScreen.createBackup',
-            title: translate('settings.backup.createBackup'),
+            title: translate('common.createBackup'),
           },
         },
         {
@@ -215,11 +215,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: RestoreBackupIcon,
             onPress: handleRestoreBackup,
             testID: 'SettingsScreen.restoreBackup',
-            title: translate('settings.backup.restoreBackup'),
+            title: translate('common.restoreBackup'),
           },
         },
       ],
-      title: translate('settings.backup.title'),
+      title: translate('common.backup&Recovery'),
     },
     {
       data: [
@@ -228,7 +228,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: PINIcon,
             onPress: handleChangePinCode,
             testID: 'SettingsScreen.changePIN',
-            title: translate('settings.security.pinCode'),
+            title: translate('common.changePinCode'),
           },
         },
         walletStore.holderRseIdentifierId
@@ -237,7 +237,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
                 icon: PINIcon,
                 onPress: handleChangeRSEPinCode,
                 testID: 'SettingsScreen.changeRSEPIN',
-                title: translate('settings.security.rse.pinCode'),
+                title: translate('info.settings.security.rse.pinCode'),
               },
             }
           : null,
@@ -248,7 +248,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
                 icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
                 onChange: biometricSetting.onPress,
                 testID: 'SettingsScreen.biometry',
-                title: translate('settings.security.biometrics'),
+                title: translate('common.useBiometrics'),
                 value: biometricSetting.toggleUnavailable
                   ? false
                   : userSettings.biometrics,
@@ -260,12 +260,12 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: ScreenCaptureProtectionIcon,
             onChange: handleScreenCaptureProtectionChange,
             testID: 'SettingsScreen.screenCaptureProtection',
-            title: translate('settings.security.screenCaptureProtection'),
+            title: translate('info.settings.security.screenCaptureProtection'),
             value: userSettings.screenCaptureProtection,
           },
         },
       ].filter(nonEmptyFilter),
-      title: translate('settings.security.title'),
+      title: translate('common.security'),
     },
     {
       data: [
@@ -274,7 +274,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: InformationIcon,
             onPress: handleAppInformation,
             testID: 'SettingsScreen.help',
-            title: translate('settings.help.information'),
+            title: translate('common.information'),
           },
         },
         {
@@ -282,11 +282,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: LicencesIcon,
             onPress: handleLicences,
             testID: 'SettingsScreen.licences',
-            title: translate('settings.help.licences'),
+            title: translate('common.licences&Agreements'),
           },
         },
       ],
-      title: translate('settings.help.title'),
+      title: translate('common.help&Information'),
     },
     {
       data: [
@@ -295,7 +295,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: ClearCacheIcon,
             onPress: handleClearCache,
             testID: 'SettingsScreen.clearCache',
-            title: translate('settings.profile.clearCache'),
+            title: translate('common.clearCache'),
           },
         },
         {
@@ -303,11 +303,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
             icon: DeleteIcon,
             onPress: handleDeleteWallet,
             testID: 'SettingsScreen.deleteWallet',
-            title: translate('settings.profile.deleteWallet'),
+            title: translate('common.deleteWallet'),
           },
         },
       ],
-      title: translate('settings.app.title'),
+      title: translate('common.app'),
     },
   ];
 
@@ -315,7 +315,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
     <SectionListScreen<SettingsListItem, ListSectionHeaderProps>
       header={{
         leftItem: <HeaderBackButton testID="SettingsScreen.header.back" />,
-        title: translate('settings.title'),
+        title: translate('common.settings'),
       }}
       list={{
         ItemSeparatorComponent: SettingItemSeparator,

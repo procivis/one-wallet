@@ -41,11 +41,11 @@ const ProofDetailNerdView: FunctionComponent = () => {
       highlightedText: proofDetail.proofSchema?.name,
     },
     {
-      attributeKey: translate('credentialDetail.credential.exchange'),
+      attributeKey: translate('common.exchangeProtocol'),
       attributeText: proofDetail.protocol,
     },
     {
-      attributeKey: translate('proofRequest.createDate'),
+      attributeKey: translate('common.createDate'),
       attributeText: moment(proofDetail?.createdDate).format(
         'DD.MM.YYYY, HH:mm',
       ),
@@ -59,7 +59,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const credentialsFields = proofDetail.proofInputs
     .map((proofInput) => [
       {
-        attributeKey: translate('credentialDetail.credential.schemaName'),
+        attributeKey: translate('common.credentialSchemaName'),
         highlightedText: proofInput.credentialSchema.name,
       },
       {
@@ -70,7 +70,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         testID: `ProofRequestNerdView.issuerTrustEntity.${proofInput.credential?.id}`,
       },
       {
-        attributeKey: translate('proofRequest.createDate'),
+        attributeKey: translate('common.createDate'),
         attributeText: moment(proofInput.credential?.createdDate).format(
           'DD.MM.YYYY, HH:mm',
         ),
@@ -130,7 +130,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         }),
       ]}
       testID="ProofRequestNerdView"
-      title={translate('credentialDetail.action.moreInfo')}
+      title={translate('common.moreInformation')}
     />
   );
 };

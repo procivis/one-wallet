@@ -40,15 +40,16 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
   [BluetoothState.Unauthorized]:
-    'invitation.process.blePermissionMissing.title',
+    'info.invitation.process.blePermissionMissing.title',
   [BluetoothState.Unavailable]:
-    'invitation.process.bleAdapterUnavailable.title',
-  [BluetoothState.Disabled]: 'invitation.process.bleAdapterDisabled.title',
+    'info.invitation.process.bleAdapterUnavailable.title',
+  [BluetoothState.Disabled]: 'info.invitation.process.bleAdapterDisabled.title',
 };
 
 const internetErrorKeys: Record<InternetError, TxKeyPath> = {
-  [InternetState.Unreachable]: 'invitation.process.internetUnreachable.title',
-  [InternetState.Disabled]: 'invitation.process.internetDisabled.title',
+  [InternetState.Unreachable]:
+    'info.invitation.process.internetUnreachable.title',
+  [InternetState.Disabled]: 'info.invitation.process.internetDisabled.title',
 };
 
 const InvitationProcessScreen: FunctionComponent = () => {
@@ -265,16 +266,16 @@ const InvitationProcessScreen: FunctionComponent = () => {
         isBleInteraction &&
         !adapterEnabled
       ) {
-        return translate('invitation.process.bleAdapterDisabled.title');
+        return translate('info.invitation.process.bleAdapterDisabled.title');
       }
       return translateError(
         error,
-        translate(`invitation.process.${state}.title`),
+        translate(`invitationProcessTitle.${state}`),
       );
     }
 
     if (state !== LoaderViewState.Warning) {
-      return translate(`invitation.process.${state}.title`);
+      return translate(`invitationProcessTitle.${state}`);
     }
 
     if (
@@ -283,7 +284,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       transportError.internet &&
       transportError.ble
     ) {
-      return translate('invitation.process.connectivityUnavailable.title');
+      return translate('info.invitation.process.connectivityUnavailable.title');
     } else if (
       invitationSupportedTransports.includes(Transport.Bluetooth) &&
       transportError.ble
@@ -300,20 +301,22 @@ const InvitationProcessScreen: FunctionComponent = () => {
     if (!availableTransport?.length) {
       if (invitationSupportedTransports.length === 1) {
         if (invitationSupportedTransports[0] === Transport.Bluetooth) {
-          return translate('invitation.process.bleTransportDisabled.title');
+          return translate(
+            'info.invitation.process.bleTransportDisabled.title',
+          );
         }
       }
       if (invitationSupportedTransports.includes(Transport.MQTT)) {
-        return translate('invitation.process.mqttTransportDisabled.title');
+        return translate('info.invitation.process.mqttTransportDisabled.title');
       }
       if (invitationSupportedTransports.includes(Transport.HTTP)) {
-        return translate('invitation.process.httpTransportDisabled.title');
+        return translate('info.invitation.process.httpTransportDisabled.title');
       }
     }
 
     return translateError(
       error,
-      translate('invitation.process.unsupportedInvitation.title'),
+      translate('info.invitation.process.unsupportedInvitation.title'),
     );
   }, [
     error,

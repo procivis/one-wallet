@@ -18,16 +18,16 @@ const SetPasswordScreen: FC = () => {
 
   return (
     <BackupScreen
-      cta={translate('createBackup.setPassword.cta')}
-      description={translate('createBackup.setPassword.description')}
+      cta={translate('common.setPassword')}
+      description={translate('info.createBackup.setPassword.description')}
       isCtaDisabled={!password}
       onBack={navigation.goBack}
       onCta={onConfirm}
       testID="CreateBackupSetPasswordScreen"
-      title={translate('createBackup.setPassword.title')}
+      title={translate('common.addBackupPassword')}
     >
       <TextInput
-        label={translate('createBackup.setPassword.password')}
+        label={translate('common.password')}
         onAccessoryPress={() => setPassword('')}
         onChangeText={setPassword}
         onSubmit={onConfirm}

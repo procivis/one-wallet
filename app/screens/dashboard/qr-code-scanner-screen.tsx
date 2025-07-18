@@ -73,8 +73,10 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
   useEffect(() => {
     if (cameraPermissionStatus === RESULTS.BLOCKED && isFocused) {
       Alert.alert(
-        translate('wallet.qrCodeScannerScreen.permissions.camera.title'),
-        translate('wallet.qrCodeScannerScreen.permissions.camera.description'),
+        translate('common.permissionRequired'),
+        translate(
+          'info.wallet.qrCodeScannerScreen.permissions.camera.description',
+        ),
         [
           {
             onPress: () => navigation.goBack(),
@@ -129,7 +131,7 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
             color={colorScheme.accentText}
             style={styles.separatorText}
           >
-            {translate('wallet.qrCodeScannerScreen.or')}
+            {translate('common.or').toUpperCase()}
           </Typography>
           <View
             style={[
@@ -141,7 +143,7 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
         <Button
           onPress={shareQRCode}
           testID="QRCodeScannerScreen.share"
-          title={translate('wallet.qrCodeScannerScreen.share')}
+          title={translate('common.shareQrCode')}
           type={ButtonType.Secondary}
         />
       </View>
@@ -159,7 +161,7 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
               ? { paddingBottom: Math.max(footerHeight - 32, 0) }
               : undefined
           }
-          title={translate('wallet.qrCodeScannerScreen.title')}
+          title={translate('info.wallet.qrCodeScannerScreen.title')}
         />
       )}
     </View>

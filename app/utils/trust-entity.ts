@@ -9,7 +9,7 @@ export const trustEntityDetailsLabels = (
   return {
     unknown:
       role === TrustEntityRoleEnum.ISSUER
-        ? translate('credentialOffer.unknownIssuer')
-        : translate('proofRequest.unknownVerifier'),
+        ? translate('common.unknownIssuer')
+        : translate('common.unknownVerifier'),
   };
 };

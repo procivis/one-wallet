@@ -53,8 +53,8 @@ export const CredentialHistoryScreen: FC = () => {
   return (
     <HistoryListScreen
       labels={{
-        emptySubtitle: translate('history.empty.subtitle'),
-        emptyTitle: translate('history.empty.title'),
+        emptySubtitle: translate('info.history.empty.subtitle'),
+        emptyTitle: translate('common.noEntries'),
         list: {
           item: historyListItemLabels(),
           sectionHeader: {
@@ -63,7 +63,7 @@ export const CredentialHistoryScreen: FC = () => {
           },
         },
         search: translate('common.search'),
-        title: translate('history.title'),
+        title: translate('common.history'),
       }}
       onBackPressed={navigation.goBack}
       onHistoryItemPressed={handleProofPress}

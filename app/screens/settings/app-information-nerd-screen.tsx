@@ -26,12 +26,12 @@ const AppInformationNerdScreen: FC = () => {
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
-      attributeKey: translate('appInformationNerd.version'),
+      attributeKey: translate('common.version'),
       canBeCopied: true,
       highlightedText: appVersion,
     },
     {
-      attributeKey: translate('appInformationNerd.flavor'),
+      attributeKey: translate('common.flavor'),
       attributeText: appFlavor,
       canBeCopied: true,
     },
@@ -48,17 +48,17 @@ const AppInformationNerdScreen: FC = () => {
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
     {
-      attributeKey: translate('appInformationNerd.version'),
+      attributeKey: translate('common.version'),
       canBeCopied: true,
       highlightedText: coreVersion,
     },
     {
-      attributeKey: translate('appInformationNerd.rev'),
+      attributeKey: translate('common.gitSource'),
       attributeText: coreRev,
       canBeCopied: true,
     },
     {
-      attributeKey: translate('appInformationNerd.date'),
+      attributeKey: translate('common.date'),
       attributeText: coreBuildDate,
       canBeCopied: true,
     },
@@ -72,15 +72,15 @@ const AppInformationNerdScreen: FC = () => {
       sections={[
         {
           data: appFields,
-          title: translate('appInformationNerd.app'),
+          title: translate('common.application'),
         },
         {
           data: coreFields,
-          title: translate('appInformationNerd.core'),
+          title: translate('common.procivisOneCore'),
         },
       ]}
       testID="AppInformationNerdScreen"
-      title={translate('appInformationNerd.title')}
+      title={translate('common.moreInformation')}
     />
   );
 };

@@ -9,11 +9,13 @@ import { credentialCardLabels } from './credential';
 export const shareCredentialCardLabels = (): ShareCredentialCardLabels => {
   return {
     ...credentialCardLabels(),
-    missingAttribute: translate('proofRequest.missingAttribute'),
-    missingCredential: translate('proofRequest.missingCredential.title'),
-    multipleCredentials: translate('proofRequest.multipleCredentials.detail'),
+    missingAttribute: translate('common.missingAttribute'),
+    missingCredential: translate('common.credentialMissing'),
+    multipleCredentials: translate(
+      'info.proofRequest.multipleCredentials.detail',
+    ),
     selectiveDisclosureNotice: translate(
-      'proofRequest.selectiveDisclosure.notice',
+      'info.proofRequest.selectiveDisclosure.notice',
     ),
   };
 };
@@ -21,16 +23,18 @@ export const shareCredentialCardLabels = (): ShareCredentialCardLabels => {
 export const shareCredentialLabels = (): ShareCredentialLabels => {
   return {
     ...shareCredentialCardLabels(),
-    invalidCredentialNotice: translate('proofRequest.invalidCredential.notice'),
+    invalidCredentialNotice: translate(
+      'info.proofRequest.invalidCredential.notice',
+    ),
     multipleCredentialsNotice: translate(
-      'proofRequest.multipleCredentials.notice',
+      'info.proofRequest.multipleCredentials.notice',
     ),
-    multipleCredentialsSelect: translate(
-      'proofRequest.multipleCredentials.select',
+    multipleCredentialsSelect: translate('common.selectVersion'),
+    revokedCredentialNotice: translate(
+      'info.proofRequest.revokedCredential.notice',
     ),
-    revokedCredentialNotice: translate('proofRequest.revokedCredential.notice'),
     suspendedCredentialNotice: translate(
-      'proofRequest.suspendedCredential.notice',
+      'info.proofRequest.suspendedCredential.notice',
     ),
   };
 };

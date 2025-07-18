@@ -10,5 +10,5 @@ export const formatTimestamp = (
   date: Date,
   locale: string = i18n.locale,
 ): string => {
-  return formatTimestampCommon(date, locale, translate('common.time.now'));
+  return formatTimestampCommon(date, locale, translate('common.now'));
 };

@@ -49,8 +49,8 @@ const HistoryDashboardScreen: FC = () => {
   return (
     <HistoryListScreen
       labels={{
-        emptySubtitle: translate('history.empty.subtitle'),
-        emptyTitle: translate('history.empty.title'),
+        emptySubtitle: translate('info.history.empty.subtitle'),
+        emptyTitle: translate('common.noEntries'),
         list: {
           item: historyListItemLabels(),
           sectionHeader: {
@@ -59,7 +59,7 @@ const HistoryDashboardScreen: FC = () => {
           },
         },
         search: translate('common.search'),
-        title: translate('history.title'),
+        title: translate('common.history'),
       }}
       onBackPressed={navigation.goBack}
       onHistoryItemPressed={handleItemPress}

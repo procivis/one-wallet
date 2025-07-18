@@ -71,7 +71,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
           <HeaderBackButton testID="ProofRequestSelectCredentialScreen.header.back" />
         ),
         static: true,
-        title: translate('proofRequest.selectCredential.title'),
+        title: translate('common.selectCredential'),
       }}
       modalPresentation
       scrollView={{
@@ -113,7 +113,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
           disabled={!canSubmitCredential}
           onPress={onConfirm}
           testID="ProofRequestSelectCredentialScreen.confirm"
-          title={translate('proofRequest.selectCredential.select')}
+          title={translate('common.select')}
           type={canSubmitCredential ? ButtonType.Primary : ButtonType.Secondary}
         />
       </View>

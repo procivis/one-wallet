@@ -67,7 +67,7 @@ export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({
 }) => {
   return (
     <GhostButton
-      accessibilityLabel={translate('accessibility.nav.info')}
+      accessibilityLabel={translate('common.info')}
       icon={InfoIcon}
       onPress={onPress}
       testID={testID}

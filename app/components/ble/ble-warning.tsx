@@ -16,10 +16,10 @@ type BleWarningProps = {
 };
 
 const warningMessages = {
-  [RESULTS.DENIED]: translate('common.ble.missingPermissions'),
-  [RESULTS.BLOCKED]: translate('common.ble.missingPermissions'),
-  [RESULTS.UNAVAILABLE]: translate('common.ble.noSupport'),
-  disabled: translate('common.ble.adapterDisabled'),
+  [RESULTS.DENIED]: translate('info.ble.missingPermissions'),
+  [RESULTS.BLOCKED]: translate('info.ble.missingPermissions'),
+  [RESULTS.UNAVAILABLE]: translate('info.ble.noSupport'),
+  disabled: translate('info.ble.adapterDisabled'),
 } as {
   [K in PermissionOrDisabled]: string;
 };

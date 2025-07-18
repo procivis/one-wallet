@@ -33,16 +33,21 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
   const { credentialId, interactionId, txCode, invalidCode } = route.params;
   const [code, setCode] = useState<string | undefined>(invalidCode);
   const isInputLengthValid = code && code.length === txCode.length;
-  const inputError = translate('credentialOffer.confirmationCode.input.error');
+  const inputError = translate(
+    'info.credentialOffer.confirmationCode.input.error',
+  );
   const isInvalid = invalidCode && code === invalidCode;
   const isNumericInput = txCode.inputMode === OpenID4VCITxCodeInputMode.NUMERIC;
   const keyboardType = isNumericInput ? 'number-pad' : 'default';
   const submitBtnDisabled = Boolean(!code || !isInputLengthValid);
   const inputPlaceholder = isNumericInput
-    ? translate('credentialOffer.confirmationCode.input.numberPlaceholder', {
-        codeLength: txCode.length,
-      })
-    : translate('credentialOffer.confirmationCode.input.textPlaceholder', {
+    ? translate(
+        'info.credentialOffer.confirmationCode.input.numberPlaceholder',
+        {
+          codeLength: txCode.length,
+        },
+      )
+    : translate('info.credentialOffer.confirmationCode.input.textPlaceholder', {
         codeLength: txCode.length,
       });
 
@@ -75,7 +80,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
             <HeaderCloseModalButton testID="CredentialConfirmationCodeScreen.header.close" />
           ),
           static: true,
-          title: translate('credentialOffer.title'),
+          title: translate('common.credentialOffering'),
         }}
         modalPresentation
         scrollView={{
@@ -93,7 +98,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
               color={colorScheme.text}
               preset="l"
             >
-              {translate('credentialOffer.confirmationCode.title')}
+              {translate('common.confirmationCode')}
             </Typography>
             <Typography
               accessibilityRole="header"
@@ -106,7 +111,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
               autoComplete="one-time-code"
               error={isInvalid ? inputError : ''}
               keyboardType={keyboardType}
-              label={translate('credentialOffer.confirmationCode.input.label')}
+              label={translate('common.code')}
               onAccessoryPress={clearValue}
               onChangeText={handleValueChange}
               placeholder={inputPlaceholder}

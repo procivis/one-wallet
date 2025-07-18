@@ -75,9 +75,9 @@ const CredentialDetailScreen: FC = () => {
       cancelButtonIndex: 3,
       destructiveButtonIndex: 2,
       options: [
-        translate('credentialDetail.action.moreInfo'),
-        translate('credentialDetail.action.refreshCredential'),
-        translate('credentialDetail.action.delete'),
+        translate('common.moreInformation'),
+        translate('common.refreshCredential'),
+        translate('common.deleteCredential'),
         translate('common.close'),
       ],
     }),
@@ -159,7 +159,7 @@ const CredentialDetailScreen: FC = () => {
         ),
         rightItem: (
           <HeaderOptionsButton
-            accessibilityLabel={'wallet.settings'}
+            accessibilityLabel={'common.settings'}
             onPress={onActions}
             testID="CredentialDetailScreen.header.action"
           />
@@ -224,7 +224,7 @@ const HistorySection: FC<{
         preset="m"
         style={styles.historySectionTitle}
       >
-        {translate('history.title')}
+        {translate('common.history')}
       </Typography>
       <View style={styles.historyLog} testID="CredentialDetailScreen.history">
         {previewHistoryItems.map((item, idx, { length }) => (
