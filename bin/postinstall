@@ -38,7 +38,7 @@ const TARGET_PLATFORM = process.env.CI_TARGET_RN_PLATFORM;
   {
     cwd: 'assets',
     command:
-      "rm -rf credential-schemas && git clone --quiet git@gitlab.procivis.ch:procivis/one/one-credential-schemas.git credential-schemas 2>/dev/null || echo 'Failed to clone one-credential-schemas'",
+      "rm -rf ecosystem-assets && git clone --quiet git@gitlab.procivis.ch:procivis/one/one-ecosystem-assets.git ecosystem-assets 2>/dev/null || echo 'Failed to clone one-ecosystem-assets'",
   },
   // Install husky git hooks
   { command: 'pnpm husky install' },
