@@ -96,7 +96,6 @@
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@eslint/compat": "^1.2.7",
-    "@procivis/one-tests-lib": "^0.2.0",
     "@react-native-community/cli": "15.0.1",
     "@react-native-community/cli-platform-android": "15.0.1",
     "@react-native-community/cli-platform-ios": "15.0.1",

@@ -29,7 +29,7 @@ variables:
   PNPM_CACHE_FOLDER: "~/.pnpm-store"
   CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
   GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
-  GITHUB_PROJECT: "procivis/one-wallet"
+
 
 workflow:
   rules:
@@ -121,6 +121,15 @@ lint:
     - .rule:all_branches
   script:
     - pnpm lint
+
+check:translations:
+  stage: test
+  needs: [build_deps]
+  extends:
+    - .modules_setup
+    - .rule:all_branches
+  script:
+    - pnpm check:translations
 
 compile:
   stage: test
@@ -272,7 +281,7 @@ dtrack:ios:generate-bom:
 dtrack:ios:upload-bom:
   stage: scan
   image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
-  needs: 
+  needs:
     - job: dtrack:ios:generate-bom
       artifacts: true
   extends:
@@ -393,7 +402,8 @@ github:push:
   extends:
     - .ci-tool:open_source_release
   variables:
-    CMD_ARGS: --modify-pnpm-lock
+    GITHUB_PROJECT: "procivis/one-wallet"
+    PROJECT: $CI_PROJECT_NAME
     YARN_ENABLE_IMMUTABLE_INSTALLS: false
     FILES_TO_ATTACH: >-
       react-native-sbom.json
