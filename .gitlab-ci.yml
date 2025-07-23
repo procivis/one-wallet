@@ -402,7 +402,7 @@ github:push:
   extends:
     - .ci-tool:open_source_release
   variables:
-    GITHUB_PROJECT: "procivis/one-wallet-test"
+    GITHUB_PROJECT: "procivis/one-wallet"
     PROJECT: $CI_PROJECT_NAME
     YARN_ENABLE_IMMUTABLE_INSTALLS: false
     FILES_TO_ATTACH: >-
