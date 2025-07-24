@@ -180,7 +180,7 @@
     "ERRORED": "errored",
     "EXPIRED": "expired",
     "IMPORTED": "imported",
-    "ISSUED": "issued",
+    "ISSUED": "accepted",
     "OFFERED": "offered",
     "PENDING": "pending",
     "REACTIVATED": "reactivated",
