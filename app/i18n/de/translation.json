@@ -1,443 +1,593 @@
 {
-  "accessibility.control.order": "{current} von {length}",
-  "accessibility.nav.info": "Info",
-  "appInformation.company.label": "Procivis AG Webseite",
-  "appInformation.company.link": "https://www.procivis.ch",
-  "appInformation.description": "Als führender Schweizer Anbieter von digitalen Identitäts- und Zertifikatslösungen unterstützt die Procivis AG Behörden und Unternehmen bei der Bereitstellung und Nutzung von vertrauenswürdigen Online-Diensten für die digitale Gesellschaft.\n\nDie 2017 gegründete Procivis ist eine Tochtergesellschaft von Orell Füssli und profitiert von deren langjähriger Erfahrung im Bereich des Sicherheitsdrucks von physischen Ausweisdokumenten.",
-  "appInformation.documentation.label": "Dokumentation",
-  "appInformation.documentation.link": "https://docs.procivis.ch",
-  "appInformation.github.label": "GitHub",
-  "appInformation.github.link": "https://github.com/procivis",
-  "appInformation.title": "Informationen über Procivis",
-  "appInformationNerd.app": "Applikation",
-  "appInformationNerd.core": "Procivis One Core",
-  "appInformationNerd.date": "Datum",
-  "appInformationNerd.flavor": "Ausführung",
-  "appInformationNerd.rev": "Git-Quelle",
-  "appInformationNerd.title": "Mehr Informationen",
-  "appInformationNerd.version": "Version",
-  "claim.image.action": "Foto ansehen",
-  "clearCacheScreen.description": "Leeren Sie den Zwischenspeicher, um Aktualisierungen des Nachweises zu erzwingen",
-  "clearCacheScreen.title": "Zwischenspeicher löschen",
-  "common.accept": "Akzeptieren",
-  "common.all": "Alle",
-  "common.back": "Zurück",
-  "common.ble.adapterDisabled": "Bitte aktivieren Sie Bluetooth, um den QR-Code zu erzeugen.",
-  "common.ble.missingPermissions": "Bitte aktivieren Sie die Bluetooth-Berechtigung, um den QR-Code zu erzeugen.",
-  "common.ble.noSupport": "Bluetooth ist auf diesem Gerät nicht verfügbar",
-  "common.cancel": "Abbrechen",
-  "common.clear": "Löschen",
-  "common.close": "Schliessen",
-  "common.closeWithTimeout": "Schließen (%{timeout}s)",
-  "common.confirm": "Bestätigen",
-  "common.continue": "Fortsetzen",
-  "common.copiedToClipboard": "In Zwischenablage kopiert",
-  "common.credentialFormat": "Nachweis-Format",
-  "common.credentialSchema": "Nachweisschema",
-  "common.credentials": "Nachweisschema",
-  "common.delete": "Löschen",
-  "common.documentType": "Dokumententyp",
-  "common.holdButton.subtitlePrefix": "Gedrückt halten für ",
-  "common.holdButton.subtitleSuffix": " Sekunden",
-  "common.info": "Info",
-  "common.next": "Weiter",
-  "common.no": "Nein",
-  "common.ok": "OK!",
-  "common.openSettings": "Einstellungen öffnen",
-  "common.previous": "Zurück",
-  "common.privacyPolicy": "Datenschutzrichtlinien",
-  "common.proofRequest": "Daten der Nachweisüberprüfung",
-  "common.proofSchemaName": "Name des Überprüfungsschemas",
-  "common.proofschema": "Überprüfungsschema",
-  "common.reject": "Ablehnen",
-  "common.retry": "Wiederholen",
-  "common.revocationMethod": "Methode des Widerrufes",
-  "common.role": "Rolle",
-  "common.rollcall": "%{current} von %{total}",
-  "common.save": "Speichern",
-  "common.search": "Suche",
-  "common.seeAll": "Alle ansehen",
-  "common.share": "Teilen",
-  "common.skip": "Überspringen",
-  "common.storageType": "Speichertyp",
-  "common.submit": "Übermitteln",
-  "common.termsAndServices": "Nutzungsbedingungen",
-  "common.termsOfServices": "Nutzungsbedingungen",
-  "common.time.now": "vor kurzem",
-  "common.today": "Heute",
-  "common.trustRegistry": "Vertrauensregister",
-  "common.trusted": "Vertrauenswürdig",
-  "common.visitWebsite": "Besuchen Sie die offizielle Website",
-  "common.yes": "Ja",
-  "common.yesterday": "Gestern",
-  "createBackup.checkPassword.cta": "Übermitteln",
-  "createBackup.checkPassword.description": "Bitte Backup-Passwort nochmals eingeben.",
-  "createBackup.checkPassword.errorNoMatch": "Passwort stimmt nicht überein!",
-  "createBackup.checkPassword.password": "Passwort",
-  "createBackup.checkPassword.title": "Passwort erneut eingeben",
-  "createBackup.dashboard.backupCreated": "Backup erstellt",
-  "createBackup.dashboard.cta": "Neues Backup erstellen",
-  "createBackup.dashboard.description": "Sichern Sie Ihre Nachweise und Ihr Wallet mit nur wenigen Klicks. Ihre Daten werden verschlüsselt und durch Ihr gewähltes Passwort geschützt.",
-  "createBackup.dashboard.empty.subtitle": "Noch kein Backup vorhanden.",
-  "createBackup.dashboard.empty.title": "Kein Backup",
-  "createBackup.dashboard.lastBackup": "Letztes Backup",
-  "createBackup.dashboard.title": "Müheloses Sichern ihrer Daten",
-  "createBackup.preview.backedUp": "Im Backup enthalten",
-  "createBackup.preview.cta": "Backup erstellen",
-  "createBackup.preview.description": "Die folgenden Nachweise werden im Backup gespeichert. Es gibt einige Nachweise, die nicht gesichert werden können und bei der Wiederherstellung ungültig sein werden.",
-  "createBackup.preview.notBackedUp": "Nicht im Backup enthalten",
-  "createBackup.preview.title": "Backup erstellen",
-  "createBackup.processing.inProgress": "Backup wird erstellt...",
-  "createBackup.processing.success": "Backup erstellt",
-  "createBackup.processing.title": "Backup erstellen",
-  "createBackup.processing.warning": "Erstellen des Backups fehlgeschlagen",
-  "createBackup.setPassword.cta": "Passwort festlegen",
-  "createBackup.setPassword.description": "Ihr Backup-Passwort ermöglicht es Ihnen, alle Ihre Backups zu verschlüsseln und zu entschlüsseln und Ihre persönlichen Daten sicher wiederherzustellen.",
-  "createBackup.setPassword.password": "Passwort",
-  "createBackup.setPassword.title": "Backup-Passwort hinzufügen",
-  "credentialAccept.success.subtitle": "Ihr Nachweis wurde erfolgreich ausgestellt.",
-  "credentialAccept.success.title": "Nachweis ausgestellt",
-  "credentialDelete.inProgress.title": "Nachweis löschen",
-  "credentialDelete.success.title": "Nachweis gelöscht",
-  "credentialDelete.title": "Löschung des Nachweises",
-  "credentialDelete.warning.title": "Löschung fehlgeschlagen",
-  "credentialDeletePrompt.confirm.title": "Ja, Nachweis löschen",
-  "credentialDeletePrompt.subtitle": "Sind Sie sicher, dass Sie diesen Nachweis löschen wollen?",
-  "credentialDetail.action.delete": "Nachweis löschen",
-  "credentialDetail.action.moreInfo": "Mehr Informationen",
-  "credentialDetail.action.refreshCredential": "Nachweis aktualisieren",
-  "credentialDetail.actions": "Aktionen",
-  "credentialDetail.attributes.title": "Attribute",
-  "credentialDetail.credential.dateAdded": "Datum hinzugefügt",
-  "credentialDetail.credential.documentType": "Dokumenttyp",
-  "credentialDetail.credential.exchange": "Austauschprotokoll",
-  "credentialDetail.credential.format": "Nachweis-Format",
-  "credentialDetail.credential.identifier": "Identifier",
-  "credentialDetail.credential.issuer": "Aussteller",
-  "credentialDetail.credential.issuerDid": "Aussteller DID",
-  "credentialDetail.credential.keyStorageType": "Schlüsselspeichertyp",
-  "credentialDetail.credential.revocationMethod": "Methode des Widerrufes",
-  "credentialDetail.credential.schema": "Nachweisschema",
-  "credentialDetail.credential.schemaName": "Name des Nachweisschemas",
-  "credentialDetail.credential.status": "Status",
-  "credentialDetail.credential.storageType": "Speichertyp",
-  "credentialDetail.credential.title": "Nachweis",
-  "credentialDetail.credential.transport": "Transport",
-  "credentialDetail.credential.validity": "Gültigkeit",
-  "credentialDetail.log.issued": "Ausgestellt",
-  "credentialDetail.log.revoked": "Zurückgezogen",
-  "credentialDetail.log.shared": "Geteilt",
-  "credentialDetail.log.suspended": "Ausgesetzt",
-  "credentialDetail.log.title": "Logbuch",
-  "credentialDetail.log.validityUpdated": "Gültigkeit aktualisiert",
-  "credentialDetail.nerdView.attributes.title": "Nachweis",
-  "credentialDetail.status.ACCEPTED": "Akzeptiert",
-  "credentialDetail.status.CREATED": "Erstellt",
-  "credentialDetail.status.ERROR": "Fehler",
-  "credentialDetail.status.OFFERED": "Angeboten",
-  "credentialDetail.status.PENDING": "Ausstehend",
-  "credentialDetail.status.REJECTED": "Abgelehnt",
-  "credentialDetail.status.REVOKED": "Zurückgezogen",
-  "credentialDetail.status.SUSPENDED": "Ausgesetzt",
-  "credentialDetail.validity.msoValidityIssue": "Problem bei der Gültigkeitsaktualisierung",
-  "credentialDetail.validity.msoValidityIssue.notice": "Die Gültigkeit Ihres Nachweises wird nicht aktualisiert. Bitte wenden Sie sich zur Klärung an die ausstellende Stelle.",
-  "credentialDetail.validity.revoked": "Zurückgezogen",
-  "credentialDetail.validity.suspended": "Ausgesetzt",
-  "credentialDetail.validity.suspendedUntil": "Ausgesetzt bis %{date}",
-  "credentialDetail.validity.valid": "Gültig",
-  "credentialHistory.accepted": "Nachweis ausgestellt",
-  "credentialHistory.offerError": "Nachweisausstellung fehlgeschlagen",
-  "credentialHistory.offerRejected": "Nachweisangebot zurückgewiesen",
-  "credentialHistory.offered": "Nachweis angeboten",
-  "credentialHistory.pending": "Nachweis ausstehend",
-  "credentialHistory.revoked": "Nachweis zurückgezogen",
-  "credentialHistory.shareAccepted": "Anfrage akzeptiert",
-  "credentialHistory.shareError": "Nachweisüberprüfung fehlgeschlagen",
-  "credentialHistory.shareRejected": "Datenaustausch zurückgewiesen",
-  "credentialHistory.shared": "Geteilter Nachweis",
-  "credentialHistory.suspended": "Nachweis ausgesetzt",
-  "credentialOffer.accept": "Akzeptieren",
-  "credentialOffer.closeAlert.message": "Mit dem Schliessen lehnen Sie dieses Angebot ab. Dies kann nicht rückgängig gemacht werden.",
-  "credentialOffer.closeAlert.title": "Angebot ablehnen",
-  "credentialOffer.confirmationCode.input.error": "Ungültiger Code. Bitte versuchen Sie es erneut!",
-  "credentialOffer.confirmationCode.input.label": "Code",
-  "credentialOffer.confirmationCode.input.numberPlaceholder": "%{codeLength}-Ziffern Code",
-  "credentialOffer.confirmationCode.input.textPlaceholder": "%{codeLength} Zeichencode",
-  "credentialOffer.confirmationCode.title": "Bestätigungscode",
-  "credentialOffer.credential": "Ausgestellter Nachweis",
-  "credentialOffer.nerdView.section.title": "Nachweisangebotsdaten",
-  "credentialOffer.process.creatingRSE.title": "Remote Secure Element einrichten",
-  "credentialOffer.process.error.rseLocked.title": "Ihr Remote Secure Element ist gesperrt.\nNachweisausstellung fehlgeschlagen.",
-  "credentialOffer.process.error.title": "Nachweisausstellung fehlgeschlagen",
-  "credentialOffer.process.inProgress.subtitle": "Nachweis(e) werden übertragen...",
-  "credentialOffer.process.inProgress.title": "Nachweis ausstellen",
-  "credentialOffer.process.success.subtitle": "Ihr Nachweis wurde erfolgreich ausgestellt.",
-  "credentialOffer.process.success.title": "Nachweis ausgestellt",
-  "credentialOffer.process.warning.incompatible.title": "Ihre Wallet ist nicht kompatibel mit dem definierten Schlüsselspeichertyp.",
-  "credentialOffer.process.warning.subtitle": "Es ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Herausgeber und versuchen Sie es erneut.",
-  "credentialOffer.process.warning.title": "Ausstellung fehlgeschlagen",
-  "credentialOffer.redirect": "Zurück zum Service",
-  "credentialOffer.reject": "Ablehnen",
-  "credentialOffer.title": "Nachweisangebot",
-  "credentialOffer.unknownIssuer": "Unbekannter Aussteller",
-  "credentialUpdate.process.inProgress.title": "Aktualisierung...",
-  "credentialUpdate.process.success.title": "Aktualisierung erfolgreich, keine Änderung",
-  "credentialUpdate.process.warning.title": "Etwas ist schiefgelaufen",
-  "credentialUpdate.subtitle": "Die folgenden Bescheinigungen wurden aktualisiert:",
-  "credentialUpdate.title": "Statusänderung",
-  "deleteWalletProcess.inProgress.title": "Alle Nachweise werden gelöscht...",
-  "deleteWalletProcess.success.title": "Wallet gelöscht",
-  "deleteWalletProcess.title": "Löschung des Wallets",
-  "deleteWalletProcess.warning.title": "Löschung der Wallet fehlgeschlagen",
-  "deleteWalletScreen.confirm": "Ich verstehe, dass alle Nachweise unwiderruflich gelöscht werden.",
-  "deleteWalletScreen.explainer": "Die Löschung kann nicht rückgängig gemacht werden. Alle Nachweise, die in Ihrer Wallet gespeichert sind, werden unwiderruflich gelöscht. Die erneute Ausstellung kann kostenpflichtig sein.",
-  "deleteWalletScreen.title": "%{appName} löschen",
-  "errorDetail.cause": "Ursache",
-  "errorDetail.code": "Code",
-  "errorDetail.error": "Fehler",
-  "errorDetail.message": "Nachricht",
-  "errorDetail.name": "Name",
-  "errorDetail.title": "Mehr Informationen",
-  "errorScreen.friendlySubtitle": "Es ist ein unerwarteter Fehler aufgetreten. Bitte starten Sie die App erneut.",
-  "errorScreen.title": "Es ist ein Fehler aufgetreten!",
-  "history.action.ACCEPTED": "akzeptiert",
-  "history.action.CLAIMS_REMOVED": "Nachweisdaten entfernt",
-  "history.action.CREATED": "erstellt",
-  "history.action.DEACTIVATED": "deaktiviert",
-  "history.action.DELETED": "gelöscht",
-  "history.action.ERRORED": "fehlerhaft",
-  "history.action.EXPIRED": "abgelaufen",
-  "history.action.IMPORTED": "importiert",
-  "history.action.ISSUED": "ausgestellt",
-  "history.action.OFFERED": "angeboten",
-  "history.action.PENDING": "ausstehend",
-  "history.action.REACTIVATED": "reaktiviert",
-  "history.action.REJECTED": "abgelehnt",
-  "history.action.REQUESTED": "angefragt",
-  "history.action.RESTORED": "wiederhergestellt",
-  "history.action.RETRACTED": "zurückgezogen",
-  "history.action.REVOKED": "zurückgezogen",
-  "history.action.SHARED": "geteilt",
-  "history.action.SUSPENDED": "ausgesetzt",
-  "history.empty.subtitle": "Sie haben Ihr Wallet noch nicht verwendet.",
-  "history.empty.title": "Keine Einträge",
-  "history.entityType.BACKUP": "Backup",
-  "history.entityType.CERTIFICATE": "Bescheinigung",
-  "history.entityType.CREDENTIAL": "Nachweis",
-  "history.entityType.CREDENTIAL_SCHEMA": "Nachweisschema",
-  "history.entityType.DID": "DID",
-  "history.entityType.IDENTIFIER": "Bezeichnung",
-  "history.entityType.KEY": "Key",
-  "history.entityType.ORGANISATION": "Organisation",
-  "history.entityType.PROOF": "Überprüfung",
-  "history.entityType.PROOF_SCHEMA": "Überprüfungsschema",
-  "history.filter.title": "Nach Nachweis filtern",
-  "history.title": "Verlauf",
-  "historyDetail.action": "Aktion",
-  "historyDetail.backedUp": "Im Backup enthalten",
-  "historyDetail.credential": "Nachweis",
-  "historyDetail.date": "Datum",
-  "historyDetail.entity": "Entität",
-  "historyDetail.from": "Von",
-  "historyDetail.response": "Antwort",
-  "historyDetail.type": "Typ",
-  "invitation.process.bleAdapterDisabled.title": "Bitte aktivieren Sie Bluetooth, um eine Verbindung herzustellen.",
-  "invitation.process.bleAdapterUnavailable.title": "Bluetooth ist auf diesem Gerät nicht verfügbar.",
-  "invitation.process.blePermissionMissing.title": "Bitte erlauben Sie Bluetooth-Erlaubnis, um eine Verbindung herzustellen.",
-  "invitation.process.bleTransportDisabled.title": "Das Bluetooth-Transportprotokoll ist in der Core-Konfiguration deaktiviert",
-  "invitation.process.connectivityUnavailable.title": "Keine Verbindung verfügbar. Bitte stellen Sie sicher, dass entweder Bluetooth oder Internet verfügbar ist.",
-  "invitation.process.httpTransportDisabled.title": "Das HTTP-Transportprotokoll ist in der Core-Konfiguration deaktiviert",
-  "invitation.process.inProgress.title": "Verbinden...",
-  "invitation.process.internetDisabled.title": "Kein Internet verfügbar. Bitte überprüfen Sie Ihre Wi-Fi- oder Handyeinstellungen.",
-  "invitation.process.internetUnreachable.title": "Kein Internet verfügbar. Bitte überprüfen Sie Ihre Wi-Fi- oder Handyeinstellungen.",
-  "invitation.process.mqttTransportDisabled.title": "Das MQTT-Transportprotokoll ist in der Core-Konfiguration deaktiviert",
-  "invitation.process.warning.title": "Verbindung fehlgeschlagen",
-  "keyStorageType.HARDWARE": "Hardware",
-  "keyStorageType.SOFTWARE": "Software",
-  "licenceDetailsScreen.library.link.documentation": "Dokumentation",
-  "licenceDetailsScreen.library.link.vcs": "Repository",
-  "licenceDetailsScreen.library.link.website": "Webseite",
-  "licenceDetailsScreen.licence": "Lizenz",
-  "licenceDetailsScreen.licences": "Lizenzen",
-  "licencesScreen.libraries": "Bibliotheken",
-  "licencesScreen.title": "Lizenzen & Vereinbarungen",
-  "nerdView.action.collapseAttribute": "Zusammenklappen",
-  "nerdView.action.expandAttribute": "Mehr anzeigen",
-  "onboarding.pinCodeScreen.biometric.cancel": "PIN-Code verwenden",
-  "onboarding.pinCodeScreen.biometric.prompt": "Bestätigen Sie Ihre Identität",
-  "onboarding.pinCodeScreen.change.check.subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code ein, um %{appName} zu entsperren.",
-  "onboarding.pinCodeScreen.change.check.title": "Aktuellen PIN-Code eingeben",
-  "onboarding.pinCodeScreen.change.confirm.subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code erneut ein, um %{appName} zu schützen.",
-  "onboarding.pinCodeScreen.change.confirm.title": "Bestätigen Sie den neuen PIN-Code",
-  "onboarding.pinCodeScreen.change.initial.subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code ein, um %{appName} zu schützen.",
-  "onboarding.pinCodeScreen.change.initial.title": "Einen neuen PIN-Code festlegen",
-  "onboarding.pinCodeScreen.check.error": "Falscher PIN-Code eingegeben",
-  "onboarding.pinCodeScreen.check.subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code ein, um Ihr %{appName} zu entsperren.",
-  "onboarding.pinCodeScreen.check.title": "PIN-Code eingeben",
-  "onboarding.pinCodeScreen.confirm.error": "PIN-Codes stimmen nicht überein",
-  "onboarding.pinCodeScreen.confirm.subtitle": "Bitte geben Sie den 6-stelligen PIN-Code erneut ein, um Ihr %{appName} zu schützen.",
-  "onboarding.pinCodeScreen.confirm.title": "Bestätigen Sie den PIN-Code",
-  "onboarding.pinCodeScreen.entry.delete": "löschen, %{left} verbleibend",
-  "onboarding.pinCodeScreen.entry.digit": "%{digit}, %{left} verbleibend",
-  "onboarding.pinCodeScreen.initial.subtitle": "Bitte geben Sie einen 6-stelligen PIN-Code ein, um Ihr %{appName} zu schützen.",
-  "onboarding.pinCodeScreen.initial.title": "Legen Sie einen PIN-Code fest",
-  "onboarding.pinCodeScreen.key.delete": "löschen",
-  "onboarding.pinCodeScreen.key.faceID": "Face ID",
-  "onboarding.pinCodeScreen.key.fingerprint": "Fingerabdruck",
-  "onboarding.security.biometry": "Sie verwenden einen biometrischen Schutz auf Ihrem Gerät? Ziehen Sie in Erwägung, ihn für diese App zu aktivieren und die Eingabe des PIN-Codes zu vermeiden.",
-  "onboarding.security.continue": "Fortsetzen",
-  "onboarding.security.subtitle": "Wir verwenden einen sechsstelligen PIN-Code, um den Inhalt Ihrer Wallet zu schützen und sicherzustellen, dass nur Sie sie benutzen können.",
-  "onboarding.security.title": "Sicherheit",
-  "onboarding.setup.description": "Sammeln, verwalten und nutzen Sie alle Ihre digitalen Identitätsnachweise an einem Ort, unabhängig von Standard, Format oder Protokoll.",
-  "onboarding.setup.getStarted": "Neue Wallet erstellen",
-  "onboarding.setup.restoreFromBackup": "Wallet-Backup wiederherstellen",
-  "onboarding.setup.title": "Deine Wallet für digitale Identitäten",
-  "onboarding.userAgreement.accept": "Akzeptieren",
-  "onboarding.userAgreement.checkbox": "Ich bin mit den Nutzungsbedingungen einverstanden und erkenne die Datenschutzbestimmungen der Procivis One Wallet App der Procivis AG an.",
-  "onboarding.userAgreement.privacyPolicy.label": "Datenschutzbestimmungen",
-  "onboarding.userAgreement.privacyPolicy.link": "https://www.procivis.ch/privacy-policy",
-  "onboarding.userAgreement.subtitle": "Bitte lesen und akzeptieren Sie unsere Nutzungsbedingungen und Datenschutzrichtlinien, um die Procivis One Wallet zu nutzen.",
-  "onboarding.userAgreement.termsOfService.label": "Nutzungsbedingungen",
-  "onboarding.userAgreement.termsOfService.link": "https://www.procivis.ch/legal/procivis-one-wallet",
-  "onboarding.userAgreement.title": "Nutzungsvereinbarung",
-  "passwordStrength.level.0": "Kein Passwort",
-  "passwordStrength.level.1": "Sehr schwaches Passwort",
-  "passwordStrength.level.2": "Schwaches Passwort",
-  "passwordStrength.level.3": "Sicheres Passwort",
-  "passwordStrength.level.4": "Sehr sicheres Passwort",
-  "passwordStrength.tip.length": "Mindestens 8 Zeichen",
-  "passwordStrength.tip.number": "Enthält eine Nummer",
-  "passwordStrength.tip.symbol": "Enthält ein Symbol",
-  "passwordStrength.tip.title": "Passwort-Tipps und Best Practices:",
-  "passwordStrength.tip.upper": "Enthält ein Grossbuchstabe",
-  "pinLockModal.subtitle": "Bitte warten Sie {{min}} min {{sec}} s und versuchen Sie es erneut.",
-  "pinLockModal.title": "{{attempts}} Fehlversuche bei der PIN-Eingabe",
-  "proofRequest.attributes": "Angeforderte Attribute",
-  "proofRequest.confirm": "Teilen",
-  "proofRequest.createDate": "Erstellt am",
-  "proofRequest.invalidCredential.notice": "Die Gültigkeit des Nachweises konnte nicht bestätigt werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
-  "proofRequest.invalidCredential.title": "Validierungsfehler",
-  "proofRequest.missingAttribute": "Fehlendes Attribut",
-  "proofRequest.missingCredential.title": "Fehlender Nachweis",
-  "proofRequest.multipleCredentials.detail": "Mehrere Nachweise verfügbar",
-  "proofRequest.multipleCredentials.notice": "Es ist mehr als eine Version dieses Nachweises verfügbar.",
-  "proofRequest.multipleCredentials.select": "Version auswählen",
-  "proofRequest.process.error.rseLocked.title": "Ihr Remote Secure Element ist gesperrt.\nDer Nachweis kann nicht geteilt werden.",
-  "proofRequest.process.error.title": "Teilen fehlgeschlagen",
-  "proofRequest.process.inProgress.title": "Teilen...",
-  "proofRequest.process.success.title": "Teilen erfolgreich",
-  "proofRequest.process.warning.title": "Teilen fehlgeschlagen",
-  "proofRequest.proofschema": "Überprüfungsschema",
-  "proofRequest.redirect": "Zurück zum Service",
-  "proofRequest.revokedCredential.notice": "Ihr(e) Nachweis(e) wurde(n) von der ausstellenden Behörde zurückgezogen. Bitte wenden Sie sich an die ausstellende Behörde, um mehr zu erfahren.",
-  "proofRequest.revokedCredential.title": "Zurückgezogen",
-  "proofRequest.selectCredential.issued": "Ausgestellt am %{date}",
-  "proofRequest.selectCredential.select": "Nachweis ändern",
-  "proofRequest.selectCredential.title": "Nachweis auswählen",
-  "proofRequest.selectiveDisclosure.notice": "Dieser Nachweis erfordert, dass Sie alle Attribute teilen.",
-  "proofRequest.suspendedCredential.notice": "Ihre Nachweise wurden von der ausstellenden Behörde ausgesetzt. Bitte wenden Sie sich an die ausstellende Behörde, um mehr zu erfahren.",
-  "proofRequest.suspendedCredential.title": "Ausgesetzt",
-  "proofRequest.title": "Nachweis teilen",
-  "proofRequest.unknownVerifier": "Unbekannter Überprüfer",
-  "proofRequest.verifierDid": "Überprüfer DID",
-  "restoreBackup.dashboard.cta": "Fortsetzen",
-  "restoreBackup.dashboard.description": "Willkommen zur Anleitung zur Wiederherstellung Ihres digitalen Wallets! Wenn Sie Ihr Wallet auf einen früheren Zustand zurücksetzen müssen, führt Sie diese Anleitung durch den Prozess der Wiederherstellung aus einem Backup.\n\nBitte befolgen Sie diese Schritte sorgfältig, um eine erfolgreiche Wiederherstellung sicherzustellen. Denken Sie daran, dass eine Wiederherstellung aus einem Backup Ihre aktuellen Daten ersetzen kann, was möglicherweise zum Verlust von Nachweisen oder Änderungen führt, die nach dem Erstellen des Backups vorgenommen wurden.\nGehen Sie mit Vorsicht vor.",
-  "restoreBackup.dashboard.title": "Wallet-Backup wiederherstellen",
-  "restoreBackup.import.cta": "Importieren",
-  "restoreBackup.import.description": "Bitte wählen Sie Ihre Backup-Datei aus, um fortzufahren.",
-  "restoreBackup.import.selectBackupFile": "Wählen Sie die Backup-Datei aus",
-  "restoreBackup.import.title": "Wallet-Backup wiederherstellen",
-  "restoreBackup.preview.backedUp": "Im Backup enthalten",
-  "restoreBackup.preview.consent": "Durch das Wiederherstellen dieses Backups gehen alle aktuellen Daten und Login-Informationen verloren und können nicht wiederhergestellt werden.",
-  "restoreBackup.preview.containsFollowingCredentials": "Das Backup enthält folgende Nachweise:",
-  "restoreBackup.preview.cta": "Wallet-Backup wiederherstellen",
-  "restoreBackup.preview.description": "Das Backup enthält die folgenden Nachweise:",
-  "restoreBackup.preview.title": "Wallet-Backup wiederherstellen",
-  "restoreBackup.processing.inProgress": "Backup wiederherstellen",
-  "restoreBackup.processing.success": "Wallet erfolgreich wiederhergestellt",
-  "restoreBackup.processing.title": "Wallet-Backup wiederherstellen",
-  "restoreBackup.processing.warning": "Backup Wiederherstellung fehlgeschlagen",
-  "restoreBackup.recoveryPassword.cta": "Backup entsperren",
-  "restoreBackup.recoveryPassword.description": "Bitte geben Sie das Backup-Passwort ein, um Ihr Backup zu entschlüsseln und Ihr Wallet wiederherzustellen.",
-  "restoreBackup.recoveryPassword.password": "Passwort",
-  "restoreBackup.recoveryPassword.title": "Geben Sie das Backup-Passwort ein",
-  "restoreBackup.recoveryPassword.wrongPassword": "Falsches Passwort",
-  "restoreBackup.unlock.title": "Wallet-Backup wiederherstellen",
-  "restoreBackup.unlock.unlocking": "Entsperren...",
-  "rse.addBiometrics.error.wrongPin": "Falscher PIN-Code eingegeben ({{attemptsLeft}} Versuche übrig)",
-  "rse.addBiometrics.instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren",
-  "rse.addBiometrics.title": "Remote PIN-Code eingeben",
-  "rse.changePin.checkCurrentPin.error": "Falscher PIN-Code eingegeben ({{attemptsLeft}} Versuche übrig)",
-  "rse.changePin.checkCurrentPin.instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren",
-  "rse.changePin.checkCurrentPin.title": "Remote PIN-Code eingeben",
-  "rse.changePin.confirmPin.error": "PIN-Code stimmt nicht überein",
-  "rse.changePin.confirmPin.instruction": "Bitte bestätigen Sie den PIN-Code durch Wiederholung der Eingabe.",
-  "rse.changePin.confirmPin.title": "Bestätigen Sie den Remote PIN-Code",
-  "rse.changePin.setPin.instruction": "Bitte wählen Sie einen {{pinLength}}-stelligen PIN-Code für die Einrichtung des Remote Secure Elements",
-  "rse.changePin.setPin.title": "Neuer Remote PIN-Code",
-  "rse.info.description": "Im nächsten Schritt werden Sie Ihr Remote Secure Element einrichten, indem Sie einen {{pinLength}}-stelligen PIN-Code wählen.",
-  "rse.info.title": "Remote Secure Element erforderlich.",
-  "rse.pinSetup.confirmPin.error": "PIN-Code stimmt nicht überein",
-  "rse.pinSetup.confirmPin.instruction": "Bitte bestätigen Sie den PIN-Code durch Wiederholung der Eingabe.",
-  "rse.pinSetup.confirmPin.title": "Remote PIN-Code bestätigen",
-  "rse.pinSetup.setPin.instruction": "Bitte wählen Sie einen {{pinLength}}-stelligen PIN-Code für die Einrichtung des Remote Secure Elements",
-  "rse.pinSetup.setPin.title": "Remote PIN-Code einrichten",
-  "rse.sign.error.wrongPin": "Falscher PIN-Code eingegeben ({{attemptsLeft}} Versuche übrig)",
-  "rse.sign.instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren",
-  "rse.sign.title": "Remote PIN-Code eingeben",
-  "settings.app.title": "App",
-  "settings.backup.createBackup": "Backup erstellen",
-  "settings.backup.restoreBackup": "Backup wiederherstellen",
-  "settings.backup.title": "Backup & Wiederherstellung",
-  "settings.changeLanguage": "Sprache ändern",
-  "settings.deleteWallet": "Wallet löschen",
-  "settings.general.history": "Verlauf",
-  "settings.general.language": "Sprache ändern",
-  "settings.general.title": "Allgemein",
-  "settings.help.information": "Informationen",
-  "settings.help.licences": "Lizenzen & Vereinbarungen",
-  "settings.help.title": "Hilfe & Informationen",
-  "settings.profile.clearAllCaches": "Alle Zwischenspeicher löschen",
-  "settings.profile.clearCache": "Zwischenspeicher löschen",
-  "settings.profile.clearRevocationAndTrustData": "Widerrufsdaten & Vertrauensregisterdaten löschen",
-  "settings.profile.deleteWallet": "Wallet löschen",
-  "settings.profile.title": "Profil",
-  "settings.security.biometrics": "Biometrische Authentifizierung aktivieren",
-  "settings.security.biometrics.permissionBlocked.message": "Um biometrische Daten zu verwenden, aktivieren Sie die Berechtigung",
-  "settings.security.biometrics.permissionBlocked.title": "Biometrie Berechtigung",
-  "settings.security.biometricsSet.disabled.title": "Biometrie deaktiviert",
-  "settings.security.biometricsSet.enabled.title": "Biometrie aktiviert",
-  "settings.security.pinCode": "PIN-Code ändern",
-  "settings.security.pinCodeSet.description": "Ihr PIN-Code wurde erfolgreich geändert.",
-  "settings.security.pinCodeSet.title": "PIN-Code gesetzt",
-  "settings.security.pincode": "PIN-Code ändern",
-  "settings.security.rse.pinCode": "Remote PIN-Code ändern",
-  "settings.security.rse.pinCodeSet.description": "Ihr Remote PIN-Code wurde erfolgreich geändert.",
-  "settings.security.rse.pinCodeSet.title": "Definieren Sie den Remote PIN-Code",
-  "settings.security.title": "Sicherheit",
-  "settings.title": "Einstellungen",
-  "shareDisclaimer.noUrls": "Nutzungsbedingungen und Datenschutzrichtlinien",
-  "shareDisclaimer.ppOnly": "Indem Sie auf “%{action}” klicken, erklären Sie sich mit den von diesem Unternehmen bereitgestellten %{pp} einverstanden.",
-  "shareDisclaimer.tosAndPp": "Indem Sie auf “%{action}” klicken, erklären Sie sich mit den %{tos} und %{pp} einverstanden, die von diesem Unternehmen bereitgestellt werden.",
-  "shareDisclaimer.tosOnly": "Indem Sie auf “%{action}” klicken, erklären Sie sich mit den von diesem Unternehmen bereitgestellten %{tos} einverstanden.",
-  "trustEntity.notTrusted": "Nicht vertrauenswürdig",
-  "wallet.credentialsList.empty.scanQrCode": "Scannen Sie den QR-Code",
-  "wallet.credentialsList.empty.search.subtitle": "Es sind keine Nachweise verfügbar, die Ihren Suchkriterien entsprechen.",
-  "wallet.credentialsList.empty.search.title": "Keine Nachweise gefunden",
-  "wallet.credentialsList.empty.subtitle": "Verbinden Sie sich mit einem Aussteller, um Ihren ersten Nachweis hinzuzufügen.",
-  "wallet.credentialsList.empty.title": "Noch keine Nachweise vorhanden.",
-  "wallet.credentialsList.title": "Alle Nachweise (%{credentialsCount})",
-  "wallet.credentialsList.title.empty": "Alle Nachweise",
-  "wallet.qrCodeScannerScreen.or": "ODER",
-  "wallet.qrCodeScannerScreen.permissions.camera.description": "Um den QR-Code-Scanner verwenden zu können, aktivieren Sie bitte die Kamerazulassung in den Einstellungen",
-  "wallet.qrCodeScannerScreen.permissions.camera.title": "Erlaubnis benötigt",
-  "wallet.qrCodeScannerScreen.share": "QR-Code teilen",
-  "wallet.qrCodeScannerScreen.title": "Scannen Sie den QR-Code zum Verbinden",
-  "wallet.qrCodeShareScreen.description": "Teilen Sie den QR-Code zum Verbinden",
-  "wallet.qrCodeShareScreen.title": "Teilen",
-  "wallet.search": "Suche",
-  "wallet.settings": "Einstellungen",
-  "wallet.tabBar.qrCodeScanner": "QR-Code Leser",
-  "wallet.tabBar.wallet": "Wallet",
-  "wallet.title": "Wallet"
+  "common": {
+    "aboutProcivis": "Über Procivis",
+    "accept": "Akzeptieren",
+    "action": "Aktion",
+    "addBackupPassword": "Backup-Passwort hinzufügen",
+    "all": "Alle",
+    "app": "App",
+    "application": "Anwendung",
+    "backToService": "Zurück zum Dienst",
+    "backedUp": "Gesichert",
+    "backup&Recovery": "Backup & Wiederherstellung",
+    "biometricsPermission": "Biometrische Berechtigung",
+    "cacheCleared": "Cache geleert",
+    "cancel": "Abbrechen",
+    "cause": "Ursache",
+    "changeLanguage": "Sprache ändern",
+    "changePinCode": "PIN-Code ändern",
+    "clear": "Löschen",
+    "clearAllCaches": "Alle Caches leeren",
+    "clearCache": "Cache leeren",
+    "close": "Schließen",
+    "closeWithTimeout": "Schließen (%{timeout}s)",
+    "code": "Code",
+    "collapse": "Einklappen",
+    "confirmationCode": "Bestätigungscode",
+    "continue": "Weiter",
+    "copiedToClipboard": "In Zwischenablage kopiert",
+    "createBackup": "Backup erstellen",
+    "createDate": "Erstellt am",
+    "createNewBackup": "Neues Backup erstellen",
+    "createNewWallet": "Neue Wallet erstellen",
+    "credential": "Anmeldeinformation",
+    "credentialDeletion": "Löschen der Anmeldeinformation",
+    "credentialFormat": "Anmeldeinformationsformat",
+    "credentialMissing": "Anmeldeinformation fehlt",
+    "credentialOfferData": "Anmeldeinformations-Angebotsdaten",
+    "credentialOffering": "Anmeldeinformationsangebot",
+    "credentialSchema": "Anmeldeinformationsschema",
+    "credentialSchemaName": "Name des Anmeldeinformationsschemas",
+    "credentialUpdate": "Anmeldeinformations-Update",
+    "credentials": "Anmeldeinformation(en)",
+    "date": "Datum",
+    "dateAdded": "Datum hinzugefügt",
+    "delete": "Löschen",
+    "deleteCredential": "Anmeldeinformation löschen",
+    "deleteWallet": "Wallet löschen",
+    "deleted": "Gelöscht",
+    "documentType": "Dokumenttyp",
+    "documentation": "Dokumentation",
+    "enterBackupPassword": "Backup-Passwort eingeben",
+    "error": "Fehler",
+    "exchangeProtocol": "Austauschprotokoll",
+    "flavor": "Version",
+    "general": "Allgemein",
+    "gitSource": "Git-Quelle",
+    "github": "GitHub",
+    "help&Information": "Hilfe & Information",
+    "history": "Verlauf",
+    "identifier": "Bezeichner",
+    "import": "Importieren",
+    "info": "Info",
+    "information": "Informationen",
+    "lastBackup": "Letztes Backup",
+    "libraries": "Bibliotheken",
+    "licences&Agreements": "Lizenzen & Vereinbarungen",
+    "licenses&Agreements": "Lizenzen & Vereinbarungen",
+    "message": "Nachricht",
+    "missingAttribute": "Attribut fehlt",
+    "moreInformation": "Weitere Informationen",
+    "name": "Name",
+    "noBackups": "Keine Backups",
+    "noCredentialsFound": "Keine Anmeldeinformationen gefunden",
+    "noCredentialsYet": "Noch keine Anmeldeinformationen",
+    "noEntries": "Keine Einträge",
+    "notBackedUp": "Nicht gesichert",
+    "notTrusted": "Nicht vertrauenswürdig",
+    "now": "jetzt",
+    "ok": "OK!",
+    "openSettings": "Einstellungen öffnen",
+    "or": "Oder",
+    "password": "Passwort",
+    "permissionRequired": "Berechtigung erforderlich",
+    "pinCodeSet": "PIN-Code gesetzt",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "privacyPolicyLink": "https://www.procivis.ch/privacy-policy",
+    "procivisAgWebsite": "Procivis AG Webseite",
+    "procivisDocsLink": "https://docs.procivis.ch",
+    "procivisOneCore": "Procivis One Core",
+    "procivisWebsiteLink": "https://www.procivis.ch",
+    "procivisgithubLink": "https://github.com/procivis",
+    "proofRequest": "Nachweisanforderung",
+    "proofSchemaName": "Name des Nachweisschemas",
+    "proofschema": "Nachweisschema",
+    "reEnterPassword": "Passwort erneut eingeben",
+    "refreshCredential": "Anmeldeinformation aktualisieren",
+    "reject": "Ablehnen",
+    "rejectOffering": "Angebot ablehnen",
+    "restoreBackup": "Backup wiederherstellen",
+    "restoreWalletBackup": "Wallet-Backup wiederherstellen",
+    "retry": "Wiederholen",
+    "revocationMethod": "Widerrufsmethode",
+    "revoked": "Widerrufen",
+    "role": "Rolle",
+    "scanQrCode": "QR-Code scannen",
+    "search": "Suchen",
+    "security": "Sicherheit",
+    "seeAll": "Alle ansehen",
+    "select": "Auswählen",
+    "selectBackupFile": "Backup-Datei auswählen",
+    "selectCredential": "Anmeldeinformation auswählen",
+    "selectVersion": "Version auswählen",
+    "setPassword": "Passwort festlegen",
+    "settings": "Einstellungen",
+    "share": "Teilen",
+    "shareCredential": "Anmeldeinformation teilen",
+    "shareQrCode": "QR-Code teilen",
+    "showMore": "Mehr anzeigen",
+    "storageType": "Speichertyp",
+    "submit": "Senden",
+    "suspended": "Ausgesetzt",
+    "termsAndServices": "Nutzungsbedingungen",
+    "termsOfService": "Nutzungsbedingungen",
+    "termsOfServiceLink": "https://www.procivis.ch/legal/procivis-one-wallet",
+    "termsOfServices": "Nutzungsbedingungen",
+    "today": "Heute",
+    "trustRegistry": "Vertrauensregister",
+    "trusted": "Vertrauenswürdig",
+    "unknownIssuer": "Unbekannter Aussteller",
+    "unknownVerifier": "Unbekannter Prüfer",
+    "unlockBackup": "Backup entsperren",
+    "useBiometrics": "Biometrie verwenden",
+    "usePinCode": "PIN-Code verwenden",
+    "userAgreement": "Benutzervereinbarung",
+    "valid": "Gültig",
+    "validity": "Gültigkeit",
+    "validityUpdateIssue": "Problem mit Gültigkeitsaktualisierung",
+    "verifyYourIdentity": "Identität verifizieren",
+    "version": "Version",
+    "visitWebsite": "Offizielle Webseite besuchen",
+    "wallet": "Wallet",
+    "walletDeletion": "Wallet-Löschung",
+    "wrongPassword": "Falsches Passwort",
+    "yesterday": "Gestern"
+  },
+  "createBackupProcessing": {
+    "inProgress": "Backup wird erstellt...",
+    "success": "Backup erstellt",
+    "warning": "Backup-Erstellung fehlgeschlagen"
+  },
+  "credentialDeleteTitle": {
+    "inProgress": "Anmeldeinformation wird gelöscht",
+    "success": "Anmeldeinformation gelöscht",
+    "warning": "Löschung fehlgeschlagen"
+  },
+  "credentialOfferTitle": {
+    "error": "Ausstellung der Anmeldeinformation fehlgeschlagen",
+    "inProgress": "Anmeldeinformation wird ausgestellt",
+    "success": "Anmeldeinformation ausgestellt",
+    "warning": "Ausstellung fehlgeschlagen"
+  },
+  "credentialUpdateTitle": {
+    "inProgress": "Wird aktualisiert...",
+    "success": "Aktualisierung erfolgreich, keine Updates",
+    "warning": "Etwas ist schiefgelaufen"
+  },
+  "deleteWalletProcessTitle": {
+    "inProgress": "Alle Anmeldeinformationen werden gelöscht...",
+    "success": "Wallet gelöscht",
+    "warning": "Wallet-Löschung fehlgeschlagen"
+  },
+  "historyAction": {
+    "ACCEPTED": "akzeptiert",
+    "ACTIVATED": "aktiviert",
+    "CLAIMS_REMOVED": "Ansprüche entfernt",
+    "CREATED": "erstellt",
+    "CSR_GENERATED": "CSR generiert",
+    "DEACTIVATED": "deaktiviert",
+    "DELETED": "gelöscht",
+    "ERRORED": "fehlerhaft",
+    "EXPIRED": "abgelaufen",
+    "IMPORTED": "importiert",
+    "ISSUED": "akzeptiert",
+    "OFFERED": "angeboten",
+    "PENDING": "ausstehend",
+    "REACTIVATED": "reaktiviert",
+    "REJECTED": "abgelehnt",
+    "REMOVED": "entfernt",
+    "REQUESTED": "angefordert",
+    "RESTORED": "wiederhergestellt",
+    "RETRACTED": "zurückgenommen",
+    "REVOKED": "widerrufen",
+    "SHARED": "geteilt",
+    "SUSPENDED": "ausgesetzt",
+    "UPDATED": "aktualisiert",
+    "WITHDRAWN": "zurückgezogen"
+  },
+  "historyEntityType": {
+    "BACKUP": "Backup",
+    "CERTIFICATE": "Zertifikat",
+    "CREDENTIAL": "Anmeldeinformation",
+    "CREDENTIAL_SCHEMA": "Anmeldeinformationsschema",
+    "DID": "DID",
+    "IDENTIFIER": "Bezeichner",
+    "KEY": "Schlüssel",
+    "ORGANISATION": "Organisation",
+    "PROOF": "Nachweis",
+    "PROOF_SCHEMA": "Nachweisschema",
+    "TRUST_ANCHOR": "Vertrauensanker",
+    "TRUST_ENTITY": "Vertrauenswürdige Entität"
+  },
+  "info": {
+    "accessibility": {
+      "control": {
+        "order": "{current} von {length}"
+      }
+    },
+    "appInformation": {
+      "description": "Als führender Schweizer Anbieter von Lösungen für digitale Identitäten und Zertifikate unterstützt die Procivis AG Behörden und Unternehmen bei der Bereitstellung und Nutzung vertrauenswürdiger Online-Dienste für digitale Gesellschaften.\n\nProcivis wurde 2017 gegründet und ist eine Tochtergesellschaft von Orell Füssli. Sie profitiert von deren langjähriger Erfahrung im Bereich des Sicherheitsdrucks physischer Identifikationsdokumente."
+    },
+    "ble": {
+      "adapterDisabled": "Bitte schalten Sie Bluetooth ein, um den QR-Code zu generieren.",
+      "missingPermissions": "Bitte aktivieren Sie die Bluetooth-Berechtigungen, um den QR-Code zu generieren.",
+      "noSupport": "Bluetooth ist auf diesem Gerät nicht verfügbar."
+    },
+    "clearCacheScreen": {
+      "description": "Leeren Sie den App-Cache, um die neuesten Anmeldeinformations-Updates sichtbar zu machen."
+    },
+    "createBackup": {
+      "checkPassword": {
+        "description": "Bitte geben Sie Ihr Backup-Passwort erneut ein.",
+        "errorNoMatch": "Passwort stimmt nicht überein!"
+      },
+      "dashboard": {
+        "description": "Sichern Sie Ihre Anmeldeinformationen und Wallet mit nur wenigen Fingertipps. Ihre Daten sind verschlüsselt und durch Ihr gewähltes Passwort geschützt.",
+        "empty": {
+          "subtitle": "Sie haben noch kein Backup erstellt."
+        },
+        "title": "Sichern Sie Ihre Daten mühelos."
+      },
+      "preview": {
+        "description": "Die folgenden Anmeldeinformationen werden gesichert. Einige Anmeldeinformationen können nicht gesichert werden und werden bei der Wiederherstellung ungültig."
+      },
+      "setPassword": {
+        "description": "Ihr Backup-Passwort ermöglicht Ihnen die Verschlüsselung und Entschlüsselung all Ihrer Backups und die sichere Wiederherstellung Ihrer persönlichen Daten."
+      }
+    },
+    "credentialDeletePrompt": {
+      "confirm": {
+        "title": "Ja, Anmeldeinformation löschen"
+      },
+      "subtitle": "Sind Sie sicher, dass Sie diese Anmeldeinformation löschen möchten?"
+    },
+    "credentialDetail": {
+      "validity": {
+        "msoValidityIssue": {
+          "notice": "Die Gültigkeit Ihrer Anmeldeinformationen wird nicht aktualisiert. Bitte kontaktieren Sie die ausstellende Behörde zur Klärung."
+        },
+        "suspendedUntil": "Ausgesetzt bis %{date}"
+      }
+    },
+    "credentialOffer": {
+      "closeAlert": {
+        "message": "Durch das Schließen lehnen Sie dieses Angebot ab. Dies kann nicht rückgängig gemacht werden."
+      },
+      "confirmationCode": {
+        "input": {
+          "error": "Ungültiger Code. Bitte versuchen Sie es erneut!",
+          "numberPlaceholder": "%{codeLength}-stelliger Code",
+          "textPlaceholder": "%{codeLength} Zeichen langer Code"
+        }
+      },
+      "process": {
+        "creatingRSE": {
+          "title": "Remote Secure Element wird eingerichtet"
+        },
+        "error": {
+          "rseLocked": {
+            "title": "Ihr Remote Secure Element ist gesperrt.\nDie Ausstellung der Anmeldeinformationen ist fehlgeschlagen."
+          }
+        },
+        "warning": {
+          "incompatible": {
+            "title": "Ihre Wallet ist für den definierten Schlüsseltyp inkompatibel."
+          }
+        }
+      }
+    },
+    "credentialUpdate": {
+      "subtitle": "Die folgenden Anmeldeinformation(en) wurden aktualisiert:"
+    },
+    "deleteWalletScreen": {
+      "confirm": "Ich verstehe, dass alle Anmeldeinformationen in %{appName} gelöscht werden, wenn ich fortfahre.",
+      "explainer": "Die Löschung kann nicht rückgängig gemacht werden. Alle in der Wallet gespeicherten Anmeldeinformationen gehen für immer verloren. Eine erneute Ausstellung kann gebührenpflichtig sein.",
+      "title": "Löschen %{appName}"
+    },
+    "errorScreen": {
+      "friendlySubtitle": "Ein unerwarteter Fehler ist aufgetreten. Bitte starten Sie die App neu.",
+      "title": "Etwas ist schiefgelaufen!"
+    },
+    "history": {
+      "empty": {
+        "subtitle": "Sie haben noch nicht mit Ihrer Wallet interagiert."
+      }
+    },
+    "holdButton": {
+      "subtitlePrefix": "Halten für ",
+      "subtitleSuffix": " Sekunden"
+    },
+    "invitation": {
+      "process": {
+        "bleAdapterDisabled": {
+          "title": "Bitte schalten Sie Bluetooth ein, um eine Verbindung herzustellen."
+        },
+        "bleAdapterUnavailable": {
+          "title": "Bluetooth ist auf diesem Gerät nicht verfügbar."
+        },
+        "blePermissionMissing": {
+          "title": "Bitte aktivieren Sie die Bluetooth-Berechtigung, um eine Verbindung herzustellen."
+        },
+        "bleTransportDisabled": {
+          "title": "Der Bluetooth-Transport ist in der Core-Konfiguration deaktiviert."
+        },
+        "connectivityUnavailable": {
+          "title": "Keine Konnektivität verfügbar. Bitte stellen Sie sicher, dass entweder Bluetooth oder Internet verfügbar ist."
+        },
+        "httpTransportDisabled": {
+          "title": "Der HTTP-Transport ist in der Core-Konfiguration deaktiviert."
+        },
+        "internetDisabled": {
+          "title": "Kein Internet verfügbar. Bitte überprüfen Sie Ihre WLAN- oder Mobilfunk-Einstellungen."
+        },
+        "internetUnreachable": {
+          "title": "Kein Internet verfügbar. Bitte überprüfen Sie Ihre WLAN- oder Mobilfunk-Einstellungen."
+        },
+        "mqttTransportDisabled": {
+          "title": "Der MQTT-Transport ist in der Core-Konfiguration deaktiviert."
+        },
+        "unsupportedInvitation": {
+          "title": "Ungültiger QR-Code.\nBitte scannen Sie einen unterstützten Code."
+        }
+      }
+    },
+    "onboarding": {
+      "pinCodeScreen": {
+        "check": {
+          "error": "Falsche PIN eingegeben"
+        },
+        "confirm": {
+          "error": "PIN-Codes stimmen nicht überein"
+        },
+        "entry": {
+          "delete": "löschen, %{left} verbleibend",
+          "digit": "%{digit}, %{left} verbleibend"
+        }
+      },
+      "security": {
+        "biometry": "Sie verwenden biometrischen Schutz auf Ihrem Gerät? Erwägen Sie die Aktivierung für diese App und vermeiden Sie die Eingabe des PIN-Codes.",
+        "subtitle": "Wir verwenden einen sechsstelligen PIN-Code, um den Inhalt Ihrer Wallet zu schützen und sicherzustellen, dass nur Sie sie verwenden können."
+      },
+      "setup": {
+        "description": "Sammeln, verwalten und nutzen Sie alle Ihre digitalen Identitätsnachweise an einem Ort, unabhängig von Standard, Format oder Protokoll.",
+        "title": "Ihre digitale Identitäts-Wallet"
+      },
+      "userAgreement": {
+        "checkbox": "Ich stimme den Nutzungsbedingungen zu und bestätige die Datenschutzrichtlinie der Procivis One Wallet App von Procivis AG.",
+        "subtitle": "Bitte lesen und akzeptieren Sie unsere Nutzungsbedingungen und Datenschutzrichtlinie, um die Procivis One Wallet zu verwenden."
+      }
+    },
+    "pinLockModal": {
+      "subtitle": "Warten Sie {{min}} Min. {{sec}} Sek. und versuchen Sie es erneut.",
+      "title": "{{attempts}} fehlgeschlagene PIN-Versuche"
+    },
+    "proofRequest": {
+      "invalidCredential": {
+        "notice": "Die Gültigkeit dieser Anmeldeinformation konnte nicht bestätigt werden. Bitte versuchen Sie es in wenigen Minuten erneut."
+      },
+      "multipleCredentials": {
+        "detail": "Mehrere Anmeldeinformationen verfügbar",
+        "notice": "Es ist mehr als eine Version dieser Anmeldeinformation verfügbar."
+      },
+      "process": {
+        "error": {
+          "rseLocked": {
+            "title": "Ihr Remote Secure Element ist gesperrt.\nDie Anmeldeinformation kann nicht geteilt werden."
+          }
+        }
+      },
+      "revokedCredential": {
+        "notice": "Ihre Anmeldeinformation(en) wurden von der ausstellenden Behörde widerrufen. Bitte kontaktieren Sie die ausstellende Behörde, um mehr zu erfahren."
+      },
+      "selectiveDisclosure": {
+        "notice": "Diese Anmeldeinformationen erfordern, dass Sie alle Attribute teilen, um zu funktionieren."
+      },
+      "suspendedCredential": {
+        "notice": "Ihre Anmeldeinformation(en) wurden von der ausstellenden Behörde ausgesetzt. Bitte kontaktieren Sie die ausstellende Behörde, um mehr zu erfahren."
+      }
+    },
+    "restoreBackup": {
+      "dashboard": {
+        "description": "Willkommen zum Wiederherstellungsleitfaden für Ihre digitale Wallet! Wenn Sie Ihre Wallet auf einen früheren Zustand zurücksetzen müssen, führt Sie dieser Leitfaden durch den Prozess der Wiederherstellung aus einem Backup.\n\nBitte befolgen Sie diese Schritte sorgfältig, um eine erfolgreiche Wiederherstellung sicherzustellen. Denken Sie daran, dass das Wiederherstellen aus einem Backup Ihre aktuellen Daten ersetzen kann, was möglicherweise zum Verlust von Anmeldeinformationen oder Änderungen führt, die nach dem Erstellen des Backups vorgenommen wurden.\nGehen Sie mit Vorsicht vor."
+      },
+      "import": {
+        "description": "Bitte wählen Sie Ihre Backup-Datei aus, um fortzufahren."
+      },
+      "preview": {
+        "description": "Sie haben Ihr Backup erfolgreich entsperrt und können Ihre App auf diese Version zurücksetzen. Sie können Ihre Wallet nun auf diese Backup-Version zurücksetzen."
+      },
+      "recoveryPassword": {
+        "description": "Bitte geben Sie das Passwort ein, um Ihr Backup zu entsperren."
+      },
+      "unlock": {
+        "unlocking": "Wird entsperrt..."
+      }
+    },
+    "rse": {
+      "addBiometrics": {
+        "error": {
+          "wrongPin": "Falsche PIN eingegeben ({{attemptsLeft}} Versuche verbleibend)"
+        },
+        "instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren.",
+        "title": "Remote PIN-Code eingeben"
+      },
+      "changePin": {
+        "checkCurrentPin": {
+          "error": "Falsche PIN eingegeben ({{attemptsLeft}} Versuche verbleibend)"
+        },
+        "confirmPin": {
+          "error": "PIN-Code stimmt nicht überein"
+        }
+      },
+      "info": {
+        "description": "Im nächsten Schritt richten Sie Ihr Remote Secure Element ein, indem Sie einen {{pinLength}}-stelligen PIN-Code wählen.",
+        "title": "Remote Secure Element erforderlich."
+      },
+      "pinSetup": {
+        "confirmPin": {
+          "error": "PIN-Code stimmt nicht überein"
+        }
+      },
+      "sign": {
+        "error": {
+          "wrongPin": "Falsche PIN eingegeben ({{attemptsLeft}} Versuche verbleibend)"
+        },
+        "instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren.",
+        "title": "Remote PIN-Code eingeben"
+      }
+    },
+    "settings": {
+      "profile": {
+        "clearRevocationAndTrustData": "Widerrufs- und Vertrauensdaten löschen"
+      },
+      "security": {
+        "biometrics": {
+          "permissionBlocked": {
+            "message": "Um Biometrie zu verwenden, aktivieren Sie die Berechtigung"
+          }
+        },
+        "rse": {
+          "pinCode": "Remote PIN-Code ändern",
+          "pinCodeSet": {
+            "title": "Remote PIN-Code gesetzt"
+          }
+        },
+        "screenCaptureProtection": "Bildschirmschutz"
+      }
+    },
+    "wallet": {
+      "credentialsList": {
+        "empty": {
+          "search": {
+            "subtitle": "Es sind keine Anmeldeinformationen verfügbar, die Ihren Suchkriterien entsprechen."
+          },
+          "subtitle": "Verbinden Sie sich mit einem Aussteller, um Ihre erste Anmeldeinformation hinzuzufügen."
+        }
+      },
+      "qrCodeScannerScreen": {
+        "permissions": {
+          "camera": {
+            "description": "Um den QR-Code-Scanner zu verwenden, aktivieren Sie bitte die Kameraberechtigungen in den Einstellungen."
+          }
+        },
+        "title": "Scannen Sie den QR-Code zum Verbinden"
+      },
+      "qrCodeShareScreen": {
+        "description": "Teilen Sie den QR-Code zum Verbinden",
+        "qrError": "QR-Code kann nicht generiert werden, da die Daten zu lang sind."
+      }
+    }
+  },
+  "invitationProcessTitle": {
+    "inProgress": "Verbinden...",
+    "warning": "Verbindung fehlgeschlagen"
+  },
+  "licenceDetailsScreen": {
+    "licence": "Lizenz",
+    "licences": "Lizenzen"
+  },
+  "licenceDetailsScreenLibraryLink": {
+    "documentation": "Dokumentation",
+    "vcs": "Repository",
+    "website": "Webseite"
+  },
+  "onboardingPinCodeScreen": {
+    "check": {
+      "subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code ein, um Ihr %{appName} zu entsperren.",
+      "title": "PIN-Code eingeben"
+    },
+    "confirm": {
+      "subtitle": "Bitte geben Sie den 6-stelligen PIN-Code erneut ein, um Ihr %{appName} zu schützen.",
+      "title": "PIN-Code bestätigen"
+    },
+    "initial": {
+      "subtitle": "Bitte legen Sie einen 6-stelligen PIN-Code fest, um Ihr %{appName} zu schützen.",
+      "title": "PIN-Code festlegen"
+    }
+  },
+  "onboardingPinCodeScreenChange": {
+    "check": {
+      "subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code ein, um Ihr %{appName} zu entsperren.",
+      "title": "Aktuellen PIN-Code eingeben"
+    },
+    "confirm": {
+      "subtitle": "Bitte geben Sie Ihren 6-stelligen PIN-Code erneut ein, um Ihr %{appName} zu schützen.",
+      "title": "Neuen PIN-Code bestätigen"
+    },
+    "initial": {
+      "subtitle": "Bitte legen Sie Ihren 6-stelligen PIN-Code fest, um Ihr %{appName} zu schützen.",
+      "title": "Neuen PIN-Code festlegen"
+    }
+  },
+  "passwordStrength": {
+    "level": {
+      "0": "Kein Passwort",
+      "1": "Sehr schwaches Passwort",
+      "2": "Schwaches Passwort",
+      "3": "Starkes Passwort",
+      "4": "Sehr starkes Passwort"
+    },
+    "tip": {
+      "length": "Mindestens 8 Zeichen",
+      "number": "Eine Zahl enthalten",
+      "symbol": "Ein Symbol enthalten",
+      "title": "Passwort-Tipps und Best Practices:",
+      "upper": "Einen Großbuchstaben enthalten"
+    }
+  },
+  "proofRequestProcessTitle": {
+    "error": "Teilen fehlgeschlagen",
+    "inProgress": "Wird geteilt...",
+    "success": "Teilen erfolgreich",
+    "warning": "Teilen fehlgeschlagen"
+  },
+  "restoreBackupProcessing": {
+    "inProgress": "Backup wird wiederhergestellt",
+    "success": "Wallet erfolgreich wiederhergestellt",
+    "warning": "Wiederherstellung des Backups fehlgeschlagen"
+  },
+  "rseChangePin": {
+    "checkCurrentPin": {
+      "instruction": "Bitte geben Sie Ihren {{pinLength}}-stelligen PIN-Code ein, um Ihr Remote Secure Element zu entsperren.",
+      "title": "Remote PIN-Code eingeben"
+    },
+    "confirmPin": {
+      "instruction": "Bitte bestätigen Sie den PIN-Code durch Wiederholung der Eingabe.",
+      "title": "Remote PIN-Code bestätigen"
+    },
+    "setPin": {
+      "instruction": "Bitte wählen Sie einen {{pinLength}}-stelligen PIN-Code, um das Remote Secure Element einzurichten.",
+      "title": "Neuer Remote PIN-Code"
+    }
+  },
+  "rsePinSetup": {
+    "confirmPin": {
+      "instruction": "Bitte bestätigen Sie den PIN-Code durch Wiederholung der Eingabe.",
+      "title": "Remote PIN-Code bestätigen"
+    },
+    "setPin": {
+      "instruction": "Bitte wählen Sie einen {{pinLength}}-stelligen PIN-Code, um das Remote Secure Element einzurichten.",
+      "title": "Remote PIN-Code einrichten"
+    }
+  },
+  "securityBiometricsSetTitle": {
+    "disabled": "Biometrie aus",
+    "enabled": "Biometrie an"
+  },
+  "shareDisclaimer": {
+    "noUrls": "Keine Nutzungsbedingungen oder Datenschutzrichtlinie bereitgestellt.",
+    "ppOnly": "Mit dem Tippen auf „%{action}“ stimmen Sie der %{pp} dieser Entität zu.",
+    "tosAndPp": "Mit dem Tippen auf „%{action}“ stimmen Sie den %{tos} und der %{pp} dieser Entität zu.",
+    "tosOnly": "Mit dem Tippen auf „%{action}“ stimmen Sie den %{tos} dieser Entität zu."
+  }
 }
