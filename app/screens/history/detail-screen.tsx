@@ -266,7 +266,7 @@ export const HistoryDetailScreen: FC = () => {
         },
         infoButtonAccessibility: translate('common.info'),
         item: historyListItemLabels(),
-        relatedAssets: translate('common.deleted'),
+        relatedAssets: translate('common.relatedAssets'),
         title: translate(`historyEntityType.${entry.entityType}`),
       }}
       onBackPressed={navigation.goBack}
