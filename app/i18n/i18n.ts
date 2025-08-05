@@ -51,7 +51,7 @@ export type TxKeyPath = RecursiveKeyOf<DefaultLocale>;
 type RecursiveKeyOf<TObj extends Record<string, unknown>> = {
   [TKey in keyof TObj & string]: TObj[TKey] extends Record<string, unknown>
     ? // @ts-ignore: excessively deep
-      `${TKey}` | `${TKey}.${RecursiveKeyOf<TObj[TKey]>}`
+      `${TKey}.${RecursiveKeyOf<TObj[TKey]>}`
     : `${TKey}`;
 }[keyof TObj & string];
 
