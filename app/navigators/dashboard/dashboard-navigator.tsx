@@ -7,6 +7,8 @@ import WalletScreen from '../../screens/dashboard/wallet-screen';
 import { FORM_SHEET_OPTIONS, formSheetWrapper } from '../navigation-utilities';
 import { DashboardNavigatorParamList } from './dashboard-routes';
 
+const QRCodeShare = React.memo(formSheetWrapper(QRCodeShareScreen));
+
 const Stack = createNativeStackNavigator<DashboardNavigatorParamList>();
 
 const DashboardNavigator = () => {
@@ -15,7 +17,7 @@ const DashboardNavigator = () => {
       <Stack.Screen component={WalletScreen} name="Wallet" />
       <Stack.Screen component={QrCodeScannerScreen} name="QRCodeScanner" />
       <Stack.Screen
-        component={formSheetWrapper(QRCodeShareScreen)}
+        component={QRCodeShare}
         name="QRCodeShare"
         options={{
           ...FORM_SHEET_OPTIONS,

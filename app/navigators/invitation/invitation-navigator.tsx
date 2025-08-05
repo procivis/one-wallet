@@ -5,15 +5,14 @@ import InvitationProcessScreen from '../../screens/credential/invitation-process
 import { formSheetWrapper } from '../navigation-utilities';
 import { InvitationNavigatorParamList } from './invitation-routes';
 
+const Processing = React.memo(formSheetWrapper(InvitationProcessScreen));
+
 const Stack = createNativeStackNavigator<InvitationNavigatorParamList>();
 
 const InvitationNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        component={formSheetWrapper(InvitationProcessScreen)}
-        name="Processing"
-      />
+      <Stack.Screen component={Processing} name="Processing" />
     </Stack.Navigator>
   );
 };
