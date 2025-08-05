@@ -13,23 +13,23 @@ import {
 } from '../navigation-utilities';
 import { IssueCredentialNavigatorParamList } from './issue-credential-routes';
 
+const CredentialOffer = React.memo(formSheetWrapper(CredentialOfferScreen));
+const CredentialConfirmationCode = React.memo(
+  formSheetWrapper(CredentialConfirmationCodeScreen),
+);
+const Processing = React.memo(formSheetWrapper(CredentialAcceptProcessScreen));
+
 const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
 
 const IssueCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen component={CredentialOffer} name="CredentialOffer" />
       <Stack.Screen
-        component={formSheetWrapper(CredentialOfferScreen)}
-        name="CredentialOffer"
-      />
-      <Stack.Screen
-        component={formSheetWrapper(CredentialConfirmationCodeScreen)}
+        component={CredentialConfirmationCode}
         name="CredentialConfirmationCode"
       />
-      <Stack.Screen
-        component={formSheetWrapper(CredentialAcceptProcessScreen)}
-        name="Processing"
-      />
+      <Stack.Screen component={Processing} name="Processing" />
       <Stack.Screen
         component={RSEAddBiometricsScreen}
         name="RSEAddBiometrics"
