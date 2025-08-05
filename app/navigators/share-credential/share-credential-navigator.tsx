@@ -7,23 +7,18 @@ import SelectCredentialScreen from '../../screens/credential/proof-request-selec
 import { formSheetWrapper } from '../navigation-utilities';
 import { ShareCredentialNavigatorParamList } from './share-credential-routes';
 
+const ProofRequest = React.memo(formSheetWrapper(ProofRequestScreen));
+const SelectCredential = React.memo(formSheetWrapper(SelectCredentialScreen));
+const Processing = React.memo(formSheetWrapper(ProofProcessScreen));
+
 const Stack = createNativeStackNavigator<ShareCredentialNavigatorParamList>();
 
 const ShareCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        component={formSheetWrapper(ProofRequestScreen)}
-        name="ProofRequest"
-      />
-      <Stack.Screen
-        component={formSheetWrapper(SelectCredentialScreen)}
-        name="SelectCredential"
-      />
-      <Stack.Screen
-        component={formSheetWrapper(ProofProcessScreen)}
-        name="Processing"
-      />
+      <Stack.Screen component={ProofRequest} name="ProofRequest" />
+      <Stack.Screen component={SelectCredential} name="SelectCredential" />
+      <Stack.Screen component={Processing} name="Processing" />
     </Stack.Navigator>
   );
 };

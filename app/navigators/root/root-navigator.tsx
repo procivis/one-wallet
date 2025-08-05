@@ -22,6 +22,11 @@ import SettingsNavigator from '../settings/settings-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
 import { RootNavigatorParamList } from './root-routes';
 
+const CredentialUpdateProcess = React.memo(
+  formSheetWrapper(CredentialUpdateProcessScreen),
+);
+const StatusCheckResult = React.memo(formSheetWrapper(StatusCheckResultScreen));
+
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const RootNavigator: FunctionComponent = () => {
@@ -64,11 +69,11 @@ const RootNavigator: FunctionComponent = () => {
           options={{ gestureEnabled: false }}
         />
         <RootStack.Screen
-          component={formSheetWrapper(CredentialUpdateProcessScreen)}
+          component={CredentialUpdateProcess}
           name="CredentialUpdateProcess"
         />
         <RootStack.Screen
-          component={formSheetWrapper(StatusCheckResultScreen)}
+          component={StatusCheckResult}
           name="StatusCheckResult"
         />
       </RootStack.Group>

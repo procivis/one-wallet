@@ -25,6 +25,13 @@ import {
 import RestoreBackupNavigator from '../restore-backup/restore-backup-navigator';
 import { SettingsNavigatorParamList } from './settings-routes';
 
+const BiometricsSet = React.memo(formSheetWrapper(BiometricsSetScreen));
+const DeleteWalletProcess = React.memo(
+  formSheetWrapper(DeleteWalletProcessScreen),
+);
+const PinCodeSet = React.memo(formSheetWrapper(PinCodeSetScreen));
+const CacheCleared = React.memo(formSheetWrapper(CacheClearedScreen));
+
 const Stack = createNativeStackNavigator<SettingsNavigatorParamList>();
 
 const SettingsNavigator = () => {
@@ -40,22 +47,13 @@ const SettingsNavigator = () => {
         options={FULL_SCREEN_MODAL_OPTIONS}
       />
       <Stack.Group screenOptions={FORM_SHEET_OPTIONS}>
+        <Stack.Screen component={BiometricsSet} name="BiometricsSet" />
         <Stack.Screen
-          component={formSheetWrapper(BiometricsSetScreen)}
-          name="BiometricsSet"
-        />
-        <Stack.Screen
-          component={formSheetWrapper(DeleteWalletProcessScreen)}
+          component={DeleteWalletProcess}
           name="DeleteWalletProcess"
         />
-        <Stack.Screen
-          component={formSheetWrapper(PinCodeSetScreen)}
-          name="PinCodeSet"
-        />
-        <Stack.Screen
-          component={formSheetWrapper(CacheClearedScreen)}
-          name="CacheCleared"
-        />
+        <Stack.Screen component={PinCodeSet} name="PinCodeSet" />
+        <Stack.Screen component={CacheCleared} name="CacheCleared" />
       </Stack.Group>
 
       <Stack.Screen component={CreateBackupNavigator} name="CreateBackup" />

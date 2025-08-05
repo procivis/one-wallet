@@ -6,19 +6,16 @@ import CredentialDeletePromptScreen from '../../screens/credential/credential-de
 import { formSheetWrapper } from '../navigation-utilities';
 import { DeleteCredentialNavigatorParamList } from './delete-credential-routes';
 
+const Prompt = React.memo(formSheetWrapper(CredentialDeletePromptScreen));
+const Processing = React.memo(formSheetWrapper(CredentialDeleteProcessScreen));
+
 const Stack = createNativeStackNavigator<DeleteCredentialNavigatorParamList>();
 
 const DeleteCredentialNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        component={formSheetWrapper(CredentialDeletePromptScreen)}
-        name="Prompt"
-      />
-      <Stack.Screen
-        component={formSheetWrapper(CredentialDeleteProcessScreen)}
-        name="Processing"
-      />
+      <Stack.Screen component={Prompt} name="Prompt" />
+      <Stack.Screen component={Processing} name="Processing" />
     </Stack.Navigator>
   );
 };
