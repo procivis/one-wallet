@@ -228,6 +228,7 @@ e2e:
 
 .upload_bom:
   stage: scan
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.88.0-0.2
   needs: [build_deps]
   variables:
     SBOM_FILE_PATH: "bom.json"
@@ -242,7 +243,6 @@ e2e:
     - *pnpm_install
   script:
     - D_TRACK_PROJECT_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}
-    - npm install -g @cyclonedx/cdxgen
     - if [ "$INSTALL_DEPENDENCIES" = "true" ]; then pnpm install; fi
     - pnpm rnuc:dev
     - >
@@ -263,7 +263,6 @@ e2e:
 
 
 dtrack:android:upload-bom:
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.84.1-0.2
   variables:
     DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet-Android"
     SBOM_FILE_PATH: "android-sbom.json"
@@ -280,7 +279,7 @@ dtrack:ios:generate-bom:
 
 dtrack:ios:upload-bom:
   stage: scan
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.81.0-0.2
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.88.0-0.2
   needs:
     - job: dtrack:ios:generate-bom
       artifacts: true
