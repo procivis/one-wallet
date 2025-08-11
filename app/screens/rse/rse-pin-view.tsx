@@ -11,7 +11,10 @@ import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 const { PinPad: RSEPinPad, resetPinFlow: resetRSEPinFlow } = Ubiqu;
 
@@ -32,6 +35,8 @@ const RSEPinView: FC<RSEPinViewProps> = ({
   testID,
   title,
 }) => {
+  const frame = useSafeAreaFrame();
+  const insets = useSafeAreaInsets();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation();
   const [shakePosition] = useState(() => new Animated.Value(0));
@@ -81,8 +86,16 @@ const RSEPinView: FC<RSEPinViewProps> = ({
   }, [navigation]);
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colorScheme.white }]}
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colorScheme.white,
+          height: frame.height,
+          paddingBottom: insets.bottom,
+          paddingTop: insets.top + 8,
+        },
+      ]}
       testID={testID}
     >
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
@@ -142,7 +155,7 @@ const RSEPinView: FC<RSEPinViewProps> = ({
           )}
         </Animated.View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -152,8 +165,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    flex: 1,
-    paddingTop: 8,
+    width: '100%',
   },
   content: {
     flex: 1,
