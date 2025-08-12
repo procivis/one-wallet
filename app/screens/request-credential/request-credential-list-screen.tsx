@@ -14,7 +14,6 @@ import { Linking, StyleSheet, View } from 'react-native';
 
 import { assets, config } from '../../config';
 import { translate } from '../../i18n';
-import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import RequestCredentialListItem from './request-credential-list-item';
 
@@ -37,8 +36,6 @@ const RequestCredentialListScreen = () => {
   const colorScheme = useAppColorScheme();
   const { mutateAsync: initiateIssuance } = useInitiateIssuance();
   const { mutateAsync: continueIssuance } = useContinueIssuance();
-  const navigation =
-    useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
 
   const handleInitiateIssuance = useCallback(
     async (credential: RequestCredentialItem) => {
@@ -67,16 +64,19 @@ const RequestCredentialListScreen = () => {
       ) {
         closeBrowser();
         const result = await continueIssuance(url);
-        navigation.replace('IssueCredential', {
+        rootNavigation.navigate('CredentialManagement', {
           params: {
-            credentialId: result.credentialIds[0],
-            interactionId: result.interactionId,
+            params: {
+              credentialId: result.credentialIds[0],
+              interactionId: result.interactionId,
+            },
+            screen: 'CredentialOffer',
           },
-          screen: 'CredentialOffer',
+          screen: 'IssueCredential',
         });
       }
     },
-    [continueIssuance, navigation],
+    [continueIssuance, rootNavigation],
   );
 
   useEffect(() => {
