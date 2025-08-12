@@ -1281,7 +1281,7 @@ PODS:
     - React
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-one-core (1.55153.0):
+  - react-native-one-core (1.56306.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -2046,6 +2046,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSwanBrowser (1.0.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNSystemtime (1.0.4):
     - React
   - Sentry/HybridSDK (8.48.0)
@@ -2153,6 +2174,7 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - "RNSwanBrowser (from `../node_modules/@swan-io/react-native-browser`)"
   - RNSystemtime (from `../node_modules/react-native-system-time`)
   - TouchID (from `../node_modules/react-native-touch-id`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
@@ -2346,6 +2368,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-share"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNSwanBrowser:
+    :path: "../node_modules/@swan-io/react-native-browser"
   RNSystemtime:
     :path: "../node_modules/react-native-system-time"
   TouchID:
@@ -2399,7 +2423,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-one-core: 7c38e28f218efb287f78800db6fa6221f369d43e
+  react-native-one-core: 80c4bc38ef78a6bcf2feab68f12f30b14c36b5cf
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
@@ -2447,6 +2471,7 @@ SPEC CHECKSUMS:
   RNSentry: c9a67675e0c4d04be1335a18e6d1ff5bccee2444
   RNShare: 6b1ee93f4fce1346c7c299c3107af20af05120b4
   RNSVG: cb725f4400af94396beaeab55098e0a57f2ee020
+  RNSwanBrowser: ca9063788c9d38bcf4f1b802b7853dd5da38a2e6
   RNSystemtime: 00c2bd6b2c1e380d76ecff01e57c89dfd1a558cd
   Sentry: 1ca8405451040482877dcd344dfa3ef80b646631
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

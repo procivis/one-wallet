@@ -49,6 +49,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="openid-credential-offer" />
+                <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}" />
                 <data android:scheme="openid4vp" />
                 <data android:scheme="${customOpenIDURLScheme}" />
                 <data android:scheme="${customOpenIDCredentialOfferURLScheme}" />
