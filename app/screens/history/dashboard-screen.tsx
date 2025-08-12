@@ -42,7 +42,10 @@ const HistoryDashboardScreen: FC = () => {
 
   const handleSearchPhraseChange = useCallback(
     (newSearchPhrase: string | undefined) =>
-      setQueryParams((prev) => ({ ...prev, searchText: newSearchPhrase })),
+      setQueryParams((prev) => ({
+        ...prev,
+        search: newSearchPhrase ? { text: newSearchPhrase } : undefined,
+      })),
     [],
   );
 
