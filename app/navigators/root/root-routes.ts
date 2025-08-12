@@ -27,6 +27,7 @@ export type RootNavigatorParamList = {
     disableBiometry: boolean;
   };
   RSESign: undefined;
+  RequestCredentialList: undefined;
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;

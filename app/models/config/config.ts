@@ -19,6 +19,8 @@ export interface FeatureFlags {
   localization: boolean;
   /** MQTT transport enabled */
   mqttTransportEnabled: boolean;
+  /** create request credential enabled */
+  requestCredentialEnabled: boolean;
   /** ubiquRse enabled */
   ubiquRse: boolean;
 }
@@ -28,6 +30,7 @@ export interface Configuration {
   backendConfig: BackendConfiguration;
   customOpenIdUrlScheme?: string;
   featureFlags: FeatureFlags;
+  requestCredentialRedirectUri?: string;
   trustAnchorPublisherReference: string;
 }
 

@@ -4,7 +4,10 @@ import { Configuration } from '../../../models/config/config';
 
 export const commonConfig: Pick<
   Configuration,
-  'featureFlags' | 'trustAnchorPublisherReference' | 'customOpenIdUrlScheme'
+  | 'featureFlags'
+  | 'trustAnchorPublisherReference'
+  | 'customOpenIdUrlScheme'
+  | 'requestCredentialRedirectUri'
 > = {
   customOpenIdUrlScheme: rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
     ? rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
@@ -15,7 +18,9 @@ export const commonConfig: Pick<
     isoMdl: true,
     localization: true,
     mqttTransportEnabled: true,
+    requestCredentialEnabled: true,
     ubiquRse: true,
   },
+  requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://request-credential-redirect`,
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,
 };

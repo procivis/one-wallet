@@ -25,8 +25,12 @@ import React, {
 } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderOptionsButton,
+  HeaderPlusButton,
+} from '../../components/navigation/header-buttons';
 import WalletCredentialList from '../../components/wallet/credential-list';
+import { assets, config } from '../../config';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -35,6 +39,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
+  const { credentialsIssuers = [] } = assets;
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
 
@@ -54,6 +59,9 @@ const WalletScreen: FunctionComponent = observer(() => {
     hasNextPage,
   } = usePagedCredentials(queryParams);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
+  const showRequestCredentialBtn =
+    config.featureFlags.requestCredentialEnabled &&
+    credentialsIssuers.length > 0;
 
   useCredentialStatusCheck();
 
@@ -72,6 +80,10 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const handleWalletSettingsClick = useCallback(() => {
     navigation.navigate('Settings');
+  }, [navigation]);
+
+  const handleRequestCredentialClick = useCallback(() => {
+    navigation.navigate('RequestCredentialList');
   }, [navigation]);
 
   const handleSearchPhraseChange = useMemo(
@@ -107,15 +119,27 @@ const WalletScreen: FunctionComponent = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
-  const optionsButton = useMemo(
+  const rightButtonsGroup = useMemo(
     () => (
-      <HeaderOptionsButton
-        accessibilityLabel="common.settings"
-        onPress={handleWalletSettingsClick}
-        testID="WalletScreen.header.action-settings"
-      />
+      <View style={styles.rightButtonsGroup}>
+        {showRequestCredentialBtn && (
+          <HeaderPlusButton
+            onPress={handleRequestCredentialClick}
+            testID="WalletScreen.header.action-issue-document"
+          />
+        )}
+        <HeaderOptionsButton
+          accessibilityLabel="common.settings"
+          onPress={handleWalletSettingsClick}
+          testID="WalletScreen.header.action-settings"
+        />
+      </View>
     ),
-    [handleWalletSettingsClick],
+    [
+      handleRequestCredentialClick,
+      handleWalletSettingsClick,
+      showRequestCredentialBtn,
+    ],
   );
 
   return (
@@ -153,7 +177,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       <FoldableHeader
         header={
           <Header
-            rightButton={optionsButton}
+            rightButton={rightButtonsGroup}
             testID={'WalletScreen.header'}
             title={translate('common.wallet')}
             titleRowStyle={!isEmpty && styles.headerWithSearchBar}
@@ -164,7 +188,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           isEmpty
             ? undefined
             : {
-                rightButton: optionsButton,
+                rightButton: rightButtonsGroup,
                 searchBarProps: {
                   onSearchPhraseChange: setSearchPhrase,
                   placeholder: translate('common.search'),
@@ -188,6 +212,10 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     height: '100%',
+  },
+  rightButtonsGroup: {
+    flexDirection: 'row',
+    gap: 16,
   },
 });
 

@@ -6,6 +6,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
 
+import { config } from '../../config';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   getCurrentRoute,
@@ -22,6 +23,15 @@ export const useRuntimeDeepLinkHandling = () => {
   const handleRuntimeInvitationLink = useCallback(
     (url: string) => {
       const currentRoute = getCurrentRoute(navigation.getState?.() || {});
+
+      if (
+        currentRoute === 'RequestCredentialList' &&
+        config.requestCredentialRedirectUri &&
+        url.startsWith(config.requestCredentialRedirectUri)
+      ) {
+        // We return here in order to continue the Request credential flow in request-credential-list-screen.tsx
+        return;
+      }
 
       if (currentRoute !== 'PinCodeCheck') {
         handleInvitationUrl(url);
