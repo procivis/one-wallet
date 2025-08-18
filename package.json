@@ -130,6 +130,7 @@
     "eslint-plugin-sort-keys": "^2.3.5",
     "eslint-plugin-typescript-sort-keys": "^3.3.0",
     "fbjs-scripts": "3.0.0",
+    "flat": "6.0.1",
     "husky": "^7.0.4",
     "jest": "^29.7.0",
     "jest-junit": "^16.0.0",
