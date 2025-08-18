@@ -119,22 +119,25 @@ const WalletScreen: FunctionComponent = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
-  const rightButtonsGroup = useMemo(
-    () => (
-      <View style={styles.rightButtonsGroup}>
-        {showRequestCredentialBtn && (
-          <HeaderPlusButton
-            onPress={handleRequestCredentialClick}
-            testID="WalletScreen.header.action-issue-document"
-          />
-        )}
-        <HeaderOptionsButton
-          accessibilityLabel="common.settings"
-          onPress={handleWalletSettingsClick}
-          testID="WalletScreen.header.action-settings"
-        />
-      </View>
-    ),
+  const rightButtons = useMemo(
+    () => [
+      ...(showRequestCredentialBtn
+        ? [
+            <HeaderPlusButton
+              key="plus"
+              onPress={handleRequestCredentialClick}
+              testID="WalletScreen.header.action-issue-document"
+            />,
+          ]
+        : []),
+
+      <HeaderOptionsButton
+        accessibilityLabel="common.settings"
+        key="options"
+        onPress={handleWalletSettingsClick}
+        testID="WalletScreen.header.action-settings"
+      />,
+    ],
     [
       handleRequestCredentialClick,
       handleWalletSettingsClick,
@@ -177,7 +180,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       <FoldableHeader
         header={
           <Header
-            rightButton={rightButtonsGroup}
+            rightButtons={rightButtons}
             testID={'WalletScreen.header'}
             title={translate('common.wallet')}
             titleRowStyle={!isEmpty && styles.headerWithSearchBar}
@@ -188,7 +191,7 @@ const WalletScreen: FunctionComponent = observer(() => {
           isEmpty
             ? undefined
             : {
-                rightButton: rightButtonsGroup,
+                rightButtons,
                 searchBarProps: {
                   onSearchPhraseChange: setSearchPhrase,
                   placeholder: translate('common.search'),
@@ -212,10 +215,6 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     height: '100%',
-  },
-  rightButtonsGroup: {
-    flexDirection: 'row',
-    gap: 16,
   },
 });
 
