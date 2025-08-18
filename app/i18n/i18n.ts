@@ -15,7 +15,7 @@ const translations = {
 
 const i18n = new I18n();
 
-i18n.defaultSeparator = '.';
+i18n.defaultSeparator = '/';
 i18n.translations = translations;
 i18n.defaultLocale = 'en';
 i18n.enableFallback = true;
