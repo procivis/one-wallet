@@ -64,8 +64,8 @@ const ProofDetailNerdView: FunctionComponent = () => {
       },
       {
         attributeKey: 'entityCluster',
-        did: proofInput.credential?.issuer,
         entityLabels: entityLabels,
+        identifier: proofInput.credential?.issuer,
         role: TrustEntityRoleEnum.ISSUER,
         testID: `ProofRequestNerdView.issuerTrustEntity.${proofInput.credential?.id}`,
       },
