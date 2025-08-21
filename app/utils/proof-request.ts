@@ -1,5 +1,5 @@
 import {
-  CredentialListItem,
+  CredentialDetail,
   CredentialStateEnum,
   PresentationDefinitionRequestedCredential,
   PresentationDefinitionRequestGroup,
@@ -8,53 +8,108 @@ import {
 
 export const preselectCredentialsForRequestGroups = (
   requestGroups: PresentationDefinitionRequestGroup[],
-  allCredentials: CredentialListItem[],
+  allCredentials: CredentialDetail[],
 ) => {
   const preselected: Record<
     PresentationDefinitionRequestedCredential['id'],
     PresentationSubmitCredentialRequest | undefined
   > = {};
+
   requestGroups.forEach((group) =>
-    group.requestedCredentials.forEach((credential) => {
-      let selectedCredential = allCredentials.find(
-        ({ id, state }) =>
-          state === CredentialStateEnum.ACCEPTED &&
-          credential.applicableCredentials.includes(id),
+    group.requestedCredentials.forEach((credentialRequest) => {
+      preselected[credentialRequest.id] = preselectClaimsForRequestedCredential(
+        credentialRequest,
+        allCredentials,
       );
-      if (!selectedCredential) {
-        selectedCredential = allCredentials.find(
-          ({ id, state }) =>
-            state === CredentialStateEnum.ACCEPTED &&
-            credential.inapplicableCredentials.includes(id),
-        );
-      }
-      const credentialId =
-        selectedCredential?.id ??
-        credential.applicableCredentials[0] ??
-        credential.inapplicableCredentials[0];
-      if (!credentialId) {
-        preselected[credential.id] = undefined;
-        return;
-      }
-
-      const requiredFields = credential.fields.filter(
-        (field) => field.required,
-      );
-
-      let preselectedFields = requiredFields;
-      // if no required fields, preselect all present claims
-      if (!preselectedFields.length) {
-        preselectedFields = credential.fields.filter(
-          (field) => credentialId in field.keyMap,
-        );
-      }
-
-      preselected[credential.id] = {
-        credentialId,
-        submitClaims: preselectedFields.map((field) => field.id),
-      };
     }),
   );
 
   return preselected;
+};
+
+const preselectClaimsForRequestedCredential = (
+  credentialRequest: PresentationDefinitionRequestedCredential,
+  allCredentials: CredentialDetail[],
+): PresentationSubmitCredentialRequest | undefined => {
+  const credentialId = pickPreselectedCredential(
+    credentialRequest,
+    allCredentials,
+  );
+  if (!credentialId) {
+    return undefined;
+  }
+
+  const requiredFields = credentialRequest.fields.filter(
+    (field) => field.required,
+  );
+  const requiredFieldsWithNoKeyMapping = requiredFields.filter(
+    (field) => !(credentialId in field.keyMap),
+  );
+
+  const fullyNestedFields = getFullyNestedFields(
+    credentialRequest.fields,
+    credentialId,
+  );
+
+  const fullyNestedRequiredFields = fullyNestedFields.filter(
+    (field) => field.required,
+  );
+
+  let preselectedFields = [
+    ...requiredFieldsWithNoKeyMapping,
+    ...fullyNestedRequiredFields,
+  ];
+
+  // if no required fields, preselect all present claims
+  if (!preselectedFields.length) {
+    preselectedFields = fullyNestedFields;
+  }
+
+  return {
+    credentialId,
+    submitClaims: preselectedFields.map((field) => field.id),
+  };
+};
+
+const getFullyNestedFields = (
+  fields: PresentationDefinitionRequestedCredential['fields'],
+  credentialId: CredentialDetail['id'],
+) => {
+  const allKeys = fields
+    .filter((field) => credentialId in field.keyMap)
+    .map((field) => field.keyMap[credentialId]);
+
+  return fields
+    .map((field) => ({ field, key: field.keyMap[credentialId] }))
+    .filter(({ key }) => key && allKeys.every((k) => !k.startsWith(`${key}/`)))
+    .map(({ field }) => field);
+};
+
+const pickPreselectedCredential = (
+  credentialRequest: PresentationDefinitionRequestedCredential,
+  allCredentials: CredentialDetail[],
+): CredentialDetail['id'] | undefined => {
+  const applicableValidCredential = allCredentials.find(
+    ({ id, state }) =>
+      state === CredentialStateEnum.ACCEPTED &&
+      credentialRequest.applicableCredentials.includes(id),
+  );
+  if (applicableValidCredential) {
+    return applicableValidCredential.id;
+  }
+
+  const inapplicableValidCredential = allCredentials.find(
+    ({ id, state }) =>
+      state === CredentialStateEnum.ACCEPTED &&
+      credentialRequest.inapplicableCredentials.includes(id),
+  );
+  if (inapplicableValidCredential) {
+    return inapplicableValidCredential.id;
+  }
+
+  return (
+    // applicable credentials should only contain valid credentials, so this is only for safety fallback
+    credentialRequest.applicableCredentials[0] ??
+    credentialRequest.inapplicableCredentials[0]
+  );
 };
