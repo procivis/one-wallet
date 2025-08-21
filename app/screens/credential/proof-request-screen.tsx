@@ -10,7 +10,6 @@ import {
   useBeforeRemove,
   useCredentialListExpandedCard,
   useCredentialRevocationCheck,
-  useCredentials,
   useMemoAsync,
   useONECore,
   useProofDetail,
@@ -82,7 +81,6 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck(false);
-  const { data: allCredentials } = useCredentials();
   const {
     request: { interactionId, proofId },
     selectedCredentialId,
@@ -128,17 +126,17 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   // initial selection of credentials/claims
   useEffect(() => {
-    if (!presentationDefinition || !allCredentials) {
+    if (!presentationDefinition) {
       return;
     }
 
     setSelectedCredentials(
       preselectCredentialsForRequestGroups(
         presentationDefinition.requestGroups,
-        allCredentials,
+        presentationDefinition.credentials,
       ),
     );
-  }, [presentationDefinition, allCredentials]);
+  }, [presentationDefinition]);
 
   // by default the first credential is expanded
   const initialExpansionPerformed = useRef(false);
@@ -155,35 +153,34 @@ const ProofRequestScreen: FunctionComponent = () => {
     }
   }, [expandedCredential, presentationDefinition, onHeaderPress]);
 
-  const [activeSelection, setActiveSelection] =
+  const [activeCredentialSelection, setActiveCredentialSelection] =
     useState<PresentationDefinitionRequestedCredential['id']>();
-  const onSelectCredential = useCallback(
+  const onSelectCredential =
     (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
-      () => {
-        const requestedCredential =
-          presentationDefinition?.requestGroups[0].requestedCredentials.find(
-            (credential) => credential.id === requestCredentialId,
-          ) as PresentationDefinitionRequestedCredential;
+    () => {
+      const requestedCredential =
+        presentationDefinition?.requestGroups[0].requestedCredentials.find(
+          (credential) => credential.id === requestCredentialId,
+        ) as PresentationDefinitionRequestedCredential;
 
-        setActiveSelection(requestCredentialId);
-        sharingNavigation.navigate('SelectCredential', {
-          preselectedCredentialId: selectedCredentials[requestCredentialId]
-            ?.credentialId as string,
-          request: requestedCredential,
-        });
-      },
-    [sharingNavigation, presentationDefinition, selectedCredentials],
-  );
+      setActiveCredentialSelection(requestCredentialId);
+      sharingNavigation.navigate('SelectCredential', {
+        preselectedCredentialId: selectedCredentials[requestCredentialId]
+          ?.credentialId as string,
+        request: requestedCredential,
+      });
+    };
+
   // result of selection is propagated using the navigation param `selectedCredentialId`
   useEffect(() => {
-    if (selectedCredentialId && activeSelection) {
+    if (selectedCredentialId && activeCredentialSelection) {
       setSelectedCredentials((prev) => {
         const prevSelection = prev[
-          activeSelection
+          activeCredentialSelection
         ] as PresentationSubmitCredentialRequest;
         return {
           ...prev,
-          [activeSelection]: {
+          [activeCredentialSelection]: {
             ...prevSelection,
             credentialId: selectedCredentialId,
           },
@@ -220,20 +217,18 @@ const ProofRequestScreen: FunctionComponent = () => {
     };
   };
 
-  const onSelectField = useCallback(
+  const onSelectField =
     (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
-      (fieldId: PresentationDefinitionField['id'], selected: boolean) => {
-        setSelectedCredentials((current) => {
-          return selectedCredentialsWithUpdatedSelection(
-            current,
-            requestCredentialId,
-            fieldId,
-            selected,
-          );
-        });
-      },
-    [],
-  );
+    (fieldId: PresentationDefinitionField['id'], selected: boolean) => {
+      setSelectedCredentials((current) => {
+        return selectedCredentialsWithUpdatedSelection(
+          current,
+          requestCredentialId,
+          fieldId,
+          selected,
+        );
+      });
+    };
 
   const reject = useCallback(() => {
     if (!isFocused || proofAccepted.current) {
@@ -266,7 +261,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           requestedCredentialId,
           selection.credentialId,
         ) &&
-        allCredentials?.some(
+        presentationDefinition.credentials.some(
           ({ id, state }) =>
             id === selection.credentialId &&
             state === CredentialStateEnum.ACCEPTED,
@@ -305,7 +300,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           style={styles.verifier}
           testID="ProofRequestSharingScreen.entityCluster"
         />
-        {!presentationDefinition || !allCredentials ? (
+        {!presentationDefinition ? (
           <ActivityIndicator
             animate={isFocused}
             testID="ProofRequestSharingScreen.indicator.credentials"
@@ -316,39 +311,40 @@ const ProofRequestScreen: FunctionComponent = () => {
               <ProofRequestGroup key={group.id}>
                 {group.requestedCredentials.map(
                   (
-                    credential,
-                    credentialIndex,
-                    { length: credentialsLength },
-                  ) => (
-                    <ShareCredential
-                      allCredentials={allCredentials}
-                      credentialId={credential.id}
-                      expanded={expandedCredential === credential.id}
-                      key={credential.id}
-                      labels={shareCredentialLabels()}
-                      lastItem={credentialIndex === credentialsLength - 1}
-                      onHeaderPress={onHeaderPress}
-                      onImagePreview={onImagePreview}
-                      onSelectCredential={onSelectCredential(credential.id)}
-                      onSelectField={onSelectField(credential.id)}
-                      request={credential}
-                      selectedCredentialId={
-                        selectedCredentials[credential.id]?.credentialId
-                      }
-                      selectedFields={
-                        selectedCredentials[credential.id]?.submitClaims
-                      }
-                      style={[
-                        styles.requestedCredential,
-                        credentialsLength === credentialIndex + 1 &&
-                          styles.requestedCredentialLast,
-                      ]}
-                      testID={concatTestID(
-                        'ProofRequestSharingScreen.credential',
-                        credential.id,
-                      )}
-                    />
-                  ),
+                    credentialRequest,
+                    credentialRequestIndex,
+                    { length: credentialRequestsLength },
+                  ) => {
+                    const lastItem =
+                      credentialRequestIndex === credentialRequestsLength - 1;
+                    const selected = selectedCredentials[credentialRequest.id];
+                    return (
+                      <ShareCredential
+                        allCredentials={presentationDefinition.credentials}
+                        expanded={expandedCredential === credentialRequest.id}
+                        key={credentialRequest.id}
+                        labels={shareCredentialLabels()}
+                        lastItem={lastItem}
+                        onHeaderPress={onHeaderPress}
+                        onImagePreview={onImagePreview}
+                        onSelectCredential={onSelectCredential(
+                          credentialRequest.id,
+                        )}
+                        onSelectField={onSelectField(credentialRequest.id)}
+                        request={credentialRequest}
+                        selectedCredentialId={selected?.credentialId}
+                        selectedFields={selected?.submitClaims}
+                        style={[
+                          styles.requestedCredential,
+                          lastItem && styles.requestedCredentialLast,
+                        ]}
+                        testID={concatTestID(
+                          'ProofRequestSharingScreen.credential',
+                          credentialRequest.id,
+                        )}
+                      />
+                    );
+                  },
                 )}
               </ProofRequestGroup>
             ))}
