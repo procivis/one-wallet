@@ -91,20 +91,24 @@ const RequestCredentialListScreen = () => {
       subscription.remove();
     };
   }, [handleContinueIssuance]);
+  const testID = 'RequestCredentialListScreen';
 
   return (
     <ScrollViewScreen
       header={{
         leftItem: (
-          <BackButton onPress={rootNavigation.goBack} testID={'back'} />
+          <BackButton
+            onPress={rootNavigation.goBack}
+            testID={concatTestID(testID, 'header.back')}
+          />
         ),
         title: translate('common.issueDocument'),
       }}
       scrollView={{
-        testID: 'scroll',
+        testID: concatTestID(testID, 'scroll'),
       }}
       style={{ backgroundColor: colorScheme.background }}
-      testID="RequestCredentialListScreen"
+      testID={testID}
     >
       <View style={styles.wrapper}>
         {credentialsIssuers.map((credentialIssuer) => (
@@ -116,10 +120,7 @@ const RequestCredentialListScreen = () => {
               imageSource: { uri: credentialIssuer.logo },
             }}
             key={credentialIssuer.name}
-            testID={concatTestID(
-              'RequestCredentialListScreen.issuer',
-              credentialIssuer.name,
-            )}
+            testID={concatTestID(testID, 'issuer', credentialIssuer.name)}
           />
         ))}
       </View>
