@@ -195,6 +195,8 @@
   "historyEntityType.PROOF_SCHEMA": "Proof schema",
   "historyEntityType.TRUST_ANCHOR": "Trust anchor",
   "historyEntityType.TRUST_ENTITY": "Trusted entity",
+  "historyEntityType.WALLET_UNIT": "Wallet unit",
+  "historyEntityType.WALLET_UNIT_ATTESTATION": "Wallet unit attestation",
   "info.accessibility.control.order": "{current} of {length}",
   "info.appInformation.description": "As a leading Swiss Provider of digital identity and certificates solutions, Procivis AG supports government authorities and companies in the provision and usage of trusted online services for digital societies.\n\nFounded in 2017, Procivis is a subsidiary of Orell Füssli and benefits from its many years of experience in the field of security printing of physical identification documents.",
   "info.ble.adapterDisabled": "Please turn Bluetooth on to generate QR code.",

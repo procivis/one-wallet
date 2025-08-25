@@ -23,19 +23,30 @@ export interface RequestCredentialItem {
     type: string;
   }[];
   clientId: string;
+  coreKey: string;
+  display: {
+    de: string;
+    en: string;
+  };
+  enabled: boolean;
   issuer: string;
   logo: string;
   name: string;
+  order: number;
   protocol: string;
   scope?: string[];
 }
 
 const RequestCredentialListScreen = () => {
-  const { credentialsIssuers = [] } = assets;
+  const { credentialIssuers = [] } = assets;
   const rootNavigation = useNavigation<RootNavigationProp>();
   const colorScheme = useAppColorScheme();
   const { mutateAsync: initiateIssuance } = useInitiateIssuance();
   const { mutateAsync: continueIssuance } = useContinueIssuance();
+
+  const enabledCredentialsIssuer = credentialIssuers.filter(
+    (issuer) => issuer.enabled,
+  );
 
   const handleInitiateIssuance = useCallback(
     async (credential: RequestCredentialItem) => {
@@ -111,7 +122,7 @@ const RequestCredentialListScreen = () => {
       testID={testID}
     >
       <View style={styles.wrapper}>
-        {credentialsIssuers.map((credentialIssuer) => (
+        {enabledCredentialsIssuer.map((credentialIssuer) => (
           <RequestCredentialListItem
             credentialDetailPrimary={credentialIssuer.issuer}
             credentialName={credentialIssuer.name}
