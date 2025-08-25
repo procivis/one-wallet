@@ -21,6 +21,7 @@ const ProcessingScreen: FC = () => {
   const { walletStore } = useStores();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure({
+    generateAttestationKey: true,
     generateHwKey: true,
     generateSwKey: true,
   });

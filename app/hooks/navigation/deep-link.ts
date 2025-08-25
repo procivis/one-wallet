@@ -25,7 +25,6 @@ export const useRuntimeDeepLinkHandling = () => {
       const currentRoute = getCurrentRoute(navigation.getState?.() || {});
 
       if (
-        currentRoute === 'RequestCredentialList' &&
         config.requestCredentialRedirectUri &&
         url.startsWith(config.requestCredentialRedirectUri)
       ) {
@@ -72,6 +71,7 @@ export const useInvitationHandling = () => {
   return useCallback(
     (url: string) => {
       const invitationUrl = parseUniversalLink(url) ?? url;
+
       navigation.navigate('CredentialManagement', {
         params: {
           params: { invitationUrl },

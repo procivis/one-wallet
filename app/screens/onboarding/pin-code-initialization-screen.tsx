@@ -20,6 +20,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const { walletStore } = useStores();
 
   const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
+    generateAttestationKey: true,
     generateHwKey: true,
     generateSwKey: true,
   });
