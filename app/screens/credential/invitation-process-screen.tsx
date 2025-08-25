@@ -9,6 +9,7 @@ import {
   Transport,
   useAvailableTransports,
   useBlockOSBackNavigation,
+  useContinueIssuance,
   useInvitationHandler,
   useOpenSettings,
   VerificationProtocol,
@@ -19,6 +20,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { closeBrowser, openBrowser } from '@swan-io/react-native-browser';
 import React, {
   FunctionComponent,
   useCallback,
@@ -26,6 +28,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Linking } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -71,6 +74,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const { availableTransport, transportError } = useAvailableTransports(
     invitationSupportedTransports,
   );
+  const { mutateAsync: continueIssuance } = useContinueIssuance();
 
   useBlockOSBackNavigation();
 
@@ -163,6 +167,39 @@ const InvitationProcessScreen: FunctionComponent = () => {
     canHandleInvitation,
   ]);
 
+  const handleContinueIssuance = useCallback(
+    async (url: string) => {
+      if (
+        config.requestCredentialRedirectUri &&
+        url.startsWith(config.requestCredentialRedirectUri)
+      ) {
+        closeBrowser();
+        const result = await continueIssuance(url);
+        managementNavigation.replace('IssueCredential', {
+          params: {
+            credentialId: result.credentialIds[0],
+            interactionId: result.interactionId,
+          },
+          screen: 'CredentialOffer',
+        });
+      }
+    },
+    [continueIssuance, managementNavigation],
+  );
+
+  useEffect(() => {
+    const subscription = Linking.addListener(
+      'url',
+      ({ url }: { url: string }) => {
+        handleContinueIssuance(url);
+      },
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [handleContinueIssuance]);
+
   useEffect(() => {
     if (!canHandleInvitation || !availableTransport) {
       return;
@@ -175,8 +212,17 @@ const InvitationProcessScreen: FunctionComponent = () => {
       return;
     }
 
-    handleInvitation({ invitationUrl, transport })
+    handleInvitation({
+      redirectUri: config.requestCredentialRedirectUri,
+      transport: [transport],
+      url: invitationUrl,
+    })
       .then((result) => {
+        if ('authorizationCodeFlowUrl' in result) {
+          openBrowser(result.authorizationCodeFlowUrl);
+          return;
+        }
+
         if ('credentialIds' in result) {
           managementNavigation.replace('IssueCredential', {
             params: {

@@ -39,7 +39,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<RootNavigationProp>();
-  const { credentialsIssuers = [] } = assets;
+  const { credentialIssuers = [] } = assets;
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
 
@@ -61,7 +61,8 @@ const WalletScreen: FunctionComponent = observer(() => {
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const showRequestCredentialBtn =
     config.featureFlags.requestCredentialEnabled &&
-    credentialsIssuers.length > 0;
+    credentialIssuers.length > 0 &&
+    credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
   useCredentialStatusCheck();
 
