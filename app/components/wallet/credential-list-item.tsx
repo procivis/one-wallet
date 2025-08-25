@@ -9,8 +9,13 @@ import {
 } from '@procivis/one-react-native-components';
 import { CredentialListItem } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
-import React, { FC } from 'react';
-import { ListRenderItemInfo, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { FC, useMemo } from 'react';
+import {
+  Dimensions,
+  ListRenderItemInfo,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { credentialCardLabels } from '../../utils/credential';
 
@@ -37,6 +42,7 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
   const colorScheme = useAppColorScheme();
   const { data: config } = useCoreConfig();
   const { data: credential } = useCredentialDetail(item.id, isFocused);
+  const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
   if (!credential || !config) {
     return null;
@@ -74,6 +80,7 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
         },
         onCardPress: expanded ? onFoldCards : undefined,
         onHeaderPress: lastItem ? onFoldCards : onHeaderPress,
+        width: cardWidth,
       }}
       detailsCardStyle={styles.listItemExpanded}
       expanded={expanded}

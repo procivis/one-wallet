@@ -17,7 +17,7 @@ import {
   HistoryEntityTypeEnum,
   HistoryListItem,
 } from '@procivis/react-native-one-core';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 import { translate } from '../i18n';
 import { credentialCardLabels } from './credential';
@@ -93,6 +93,7 @@ export const historyDeletedCredentialCardWithName = (
         testID: concatTestID('DeletedCredential', credentialId),
       },
       testID: concatTestID('DeletedCredentialCard', credentialId),
+      width: Dimensions.get('window').width - 32,
     },
   };
 };
@@ -133,6 +134,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
         ),
         statusIcon: HistoryStatusDeleteIcon,
       },
+      width: Dimensions.get('window').width - 32,
     },
   };
 };
