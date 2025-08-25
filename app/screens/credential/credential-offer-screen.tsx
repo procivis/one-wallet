@@ -30,7 +30,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
-import { Alert, Platform, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -67,6 +67,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { credentialId, interactionId, txCode } = route.params;
+  const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: credentialSchema } = useCredentialSchemaDetail(
@@ -235,6 +236,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
                 card={{
                   ...card,
                   onHeaderPress,
+                  width: cardWidth,
                 }}
                 expanded={expanded}
                 onImagePreview={onImagePreview}

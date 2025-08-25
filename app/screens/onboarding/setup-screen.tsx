@@ -11,8 +11,14 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import React, { FC, useCallback, useState } from 'react';
+import {
+  LayoutChangeEvent,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
@@ -42,25 +48,33 @@ const DummyCredential: FC<{
   credentialDetailSecondary,
   style,
   bgImageIndex,
-}) => (
-  <CredentialDetailsCard
-    attributes={[]}
-    card={{
-      cardImage: {
-        imageSource: BG_IMAGES[bgImageIndex].imageSource,
-      },
-      color: BG_IMAGES[bgImageIndex].color,
-      header: {
-        accessory: <View />,
-        credentialDetailPrimary,
-        credentialDetailSecondary,
-        credentialName: name,
-        iconLabelColor: '#000',
-      },
-    }}
-    style={style}
-  />
-);
+}) => {
+  const [width, setWidth] = useState(0);
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    setWidth(event.nativeEvent.layout.width);
+  }, []);
+  return (
+    <CredentialDetailsCard
+      attributes={[]}
+      card={{
+        cardImage: {
+          imageSource: BG_IMAGES[bgImageIndex].imageSource,
+        },
+        color: BG_IMAGES[bgImageIndex].color,
+        header: {
+          accessory: <View />,
+          credentialDetailPrimary,
+          credentialDetailSecondary,
+          credentialName: name,
+          iconLabelColor: '#000',
+        },
+        width,
+      }}
+      onLayout={onLayout}
+      style={style}
+    />
+  );
+};
 
 export const SetupScreen: FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp<'Setup'>>();

@@ -26,7 +26,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 
 import {
   HeaderBackButton,
@@ -49,6 +49,7 @@ const CredentialDetailScreen: FC = () => {
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
+  const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
@@ -178,6 +179,7 @@ const CredentialDetailScreen: FC = () => {
           card={{
             ...card,
             onHeaderPress,
+            width: cardWidth,
           }}
           expanded={expanded}
           onImagePreview={onImagePreview}
