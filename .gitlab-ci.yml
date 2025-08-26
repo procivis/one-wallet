@@ -27,8 +27,8 @@ variables:
   BITRISE_PROJECT_SLUG: 6ee8c26f-6d7b-4bcb-8ddc-be1ba3cd2687
   DEPENDENCY_TRACK_PROJECT_NAME: "ONE-Wallet"
   PNPM_CACHE_FOLDER: "~/.pnpm-store"
-  CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
-  GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+-.+$/
+  CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+/
+  GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+/
 
 
 workflow:
