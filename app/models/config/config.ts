@@ -1,3 +1,5 @@
+import { WalletProviderTypeEnum } from '@procivis/react-native-one-core';
+
 export interface EndpointsConfiguration {
   onboardingInvitation: string;
 }
@@ -5,6 +7,14 @@ export interface EndpointsConfiguration {
 export interface BackendConfiguration {
   endpoints: EndpointsConfiguration;
   host: string;
+}
+
+export interface WalletProviderConfiguration {
+  enabled: boolean;
+  name: string;
+  required: boolean;
+  type: WalletProviderTypeEnum;
+  url: string;
 }
 
 /** features enabled/disabled per flavor */
@@ -32,6 +42,7 @@ export interface Configuration {
   featureFlags: FeatureFlags;
   requestCredentialRedirectUri?: string;
   trustAnchorPublisherReference: string;
+  walletProvider: WalletProviderConfiguration;
 }
 
 export type LocaleOverride = Record<string /* language */, unknown>;

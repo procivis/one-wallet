@@ -9,6 +9,7 @@ import {
   SwitchSetting,
   SwitchSettingProps,
   useAppColorScheme,
+  WalletUnitAttestationIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -128,6 +129,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
 
   const handleClearCache = useCallback(() => {
     navigation.navigate('ClearCache');
+  }, [navigation]);
+
+  const handleWalletUnitAttestation = useCallback(() => {
+    navigation.navigate('WalletUnitAttestation');
   }, [navigation]);
 
   type SettingsListItem =
@@ -255,6 +260,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
               },
             }
           : null,
+
         {
           switchSetting: {
             icon: ScreenCaptureProtectionIcon,
@@ -264,6 +270,16 @@ const DashboardScreen: FunctionComponent = observer(() => {
             value: userSettings.screenCaptureProtection,
           },
         },
+        config.walletProvider.enabled
+          ? {
+              buttonSetting: {
+                icon: WalletUnitAttestationIcon,
+                onPress: handleWalletUnitAttestation,
+                testID: 'SettingsScreen.walletUnitAttestation',
+                title: translate('common.walletUnitAttestation'),
+              },
+            }
+          : null,
       ].filter(nonEmptyFilter),
       title: translate('common.security'),
     },

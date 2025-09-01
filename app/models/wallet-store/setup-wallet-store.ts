@@ -17,6 +17,7 @@ type PossibleStoredData = OldStore | NewStore;
 export async function setupWalletStore(env: Environment) {
   let walletStore: WalletStore;
   const defaultData: NewStore = {
+    holderAttestationKeyId: '',
     holderHwIdentifierId: '',
     holderRseIdentifierId: '',
     holderSwIdentifierId: '',
@@ -32,6 +33,7 @@ export async function setupWalletStore(env: Environment) {
       // migrate from potential old did-ids
       if ('holderDidSwId' in stored) {
         data = {
+          holderAttestationKeyId: defaultData?.holderAttestationKeyId,
           holderHwIdentifierId:
             stored.holderDidHwId || defaultData.holderHwIdentifierId,
           holderRseIdentifierId:

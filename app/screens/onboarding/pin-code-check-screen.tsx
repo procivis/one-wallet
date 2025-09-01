@@ -22,6 +22,7 @@ import { RESULTS } from 'react-native-permissions';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
+import { config } from '../../config';
 import { useInitialDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import {
   biometricAuthenticate,
@@ -38,6 +39,7 @@ import {
   RootRouteProp,
 } from '../../navigators/root/root-routes';
 import { pinLockModalLabels } from '../../utils/pinLock';
+import { useWalletUnitAttestation } from '../settings/wallet-unit-attestation-screen';
 
 const hideSplashAndroidOnly = () =>
   Platform.OS === 'android' ? hideSplashScreen() : undefined;
@@ -46,6 +48,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'PinCodeCheck'>>();
   const route = useRoute<RootRouteProp<'PinCodeCheck'>>();
   const screen = useRef<PinCodeActions>(null);
+  const { data: walletUnitAttestation } = useWalletUnitAttestation();
 
   useFocusEffect(hideSplashAndroidOnly);
 
@@ -74,8 +77,16 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   const onCheckPassed = useCallback(() => {
     // the entry was correct (biometric or manual) -> hide the lock screen
     navigation.pop();
+    if (
+      config.walletProvider.required &&
+      walletUnitAttestation?.status === undefined
+    ) {
+      navigation.navigate('Onboarding', {
+        screen: 'WalletUnitAttestation',
+      });
+    }
     handleInitialDeepLink();
-  }, [handleInitialDeepLink, navigation]);
+  }, [handleInitialDeepLink, navigation, walletUnitAttestation?.status]);
 
   const onPinEntered = useCallback(
     (userEntry: string) => {
