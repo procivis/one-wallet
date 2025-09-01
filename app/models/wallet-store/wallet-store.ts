@@ -5,6 +5,7 @@ import { Instance, types } from 'mobx-state-tree';
  */
 export const WalletStoreModel = types
   .model('WalletStore', {
+    holderAttestationKeyId: types.string,
     holderHwIdentifierId: types.string,
     holderRseIdentifierId: types.string,
     holderSwIdentifierId: types.string,
@@ -25,13 +26,16 @@ export const WalletStoreModel = types
       self.holderHwIdentifierId = '';
       self.holderSwIdentifierId = '';
       self.holderRseIdentifierId = '';
+      self.holderAttestationKeyId = '';
     },
     walletSetup: (
       holderHwIdentifierId: string | null,
       holderSwIdentifierId: string,
+      holderAttestationKeyId: string | null,
     ) => {
       self.holderHwIdentifierId = holderHwIdentifierId ?? '';
       self.holderSwIdentifierId = holderSwIdentifierId;
+      self.holderAttestationKeyId = holderAttestationKeyId ?? '';
     },
   }));
 

@@ -5,6 +5,7 @@ import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
+import { config } from '../../config';
 import { useImportPredefinedCredentialSchemas } from '../../hooks/credential-schemas';
 import { storePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
@@ -20,28 +21,36 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const { walletStore } = useStores();
 
   const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
-    generateAttestationKey: true,
+    generateAttestationKey: config.walletProvider.enabled,
     generateHwKey: true,
     generateSwKey: true,
   });
 
   const importSchemasFromAssets = useImportPredefinedCredentialSchemas();
-  const finishSetup = useCallback(() => {
+
+  const finishSetup = useCallback(async () => {
     if (walletStore.holderIdentifierId) {
       return;
     }
-    initializeONECoreIdentifiers().then(([hwDidId, swDidId]) => {
-      walletStore.walletSetup(hwDidId, swDidId!);
-      importSchemasFromAssets();
-    });
-    resetNavigationAction(rootNavigation, [
-      { name: 'Dashboard', params: { screen: 'Wallet' } },
-    ]);
+    const [hwDidId, swDidId, attestationKeyId] =
+      await initializeONECoreIdentifiers();
+
+    walletStore.walletSetup(hwDidId, swDidId!, attestationKeyId);
+    importSchemasFromAssets();
+
+    if (config.walletProvider.enabled) {
+      navigation.navigate('WalletUnitAttestation');
+    } else {
+      resetNavigationAction(rootNavigation, [
+        { name: 'Dashboard', params: { screen: 'Wallet' } },
+      ]);
+    }
   }, [
+    walletStore,
     initializeONECoreIdentifiers,
     importSchemasFromAssets,
+    navigation,
     rootNavigation,
-    walletStore,
   ]);
 
   const screen = useRef<PinCodeActions>(null);

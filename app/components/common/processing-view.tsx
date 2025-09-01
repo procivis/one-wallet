@@ -93,12 +93,12 @@ export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
     <LoadingResultScreen
       button={bottomButton}
       header={{
-        leftItem: (
+        leftItem: onClose ? (
           <HeaderCloseButton
             onPress={closeHandler}
             testID={concatTestID(testID, 'header.close')}
           />
-        ),
+        ) : undefined,
         modalHandleVisible: Platform.OS === 'ios',
         rightItem:
           state === LoaderViewState.Warning && error ? (
