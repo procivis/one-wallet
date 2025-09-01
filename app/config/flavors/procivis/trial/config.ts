@@ -11,4 +11,8 @@ export const config: Configuration = {
     ...procivisConfig.featureFlags,
     requestCredentialEnabled: false,
   },
+  walletProvider: {
+    ...procivisConfig.walletProvider,
+    enabled: false,
+  },
 };

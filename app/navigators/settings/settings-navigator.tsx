@@ -15,6 +15,7 @@ import LicenceDetailsScreen from '../../screens/settings/licence-details-screen'
 import LicencesScreen from '../../screens/settings/licences-screen';
 import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
 import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
+import WalletUnitAttestationScreen from '../../screens/settings/wallet-unit-attestation-screen';
 import CreateBackupNavigator from '../create-backup/create-backup-navigator';
 import HistoryNavigator from '../history/history-navigator';
 import {
@@ -73,6 +74,10 @@ const SettingsNavigator = () => {
       <Stack.Screen component={RSEChangePinScreen} name="RSEPinCodeChange" />
       <Stack.Screen component={LicencesScreen} name="Licences" />
       <Stack.Screen component={LicenceDetailsScreen} name="LicenceDetails" />
+      <Stack.Screen
+        component={WalletUnitAttestationScreen}
+        name="WalletUnitAttestation"
+      />
     </Stack.Navigator>
   );
 };
