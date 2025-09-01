@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
 import {
+  Dimensions,
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
@@ -49,10 +50,11 @@ const DummyCredential: FC<{
   style,
   bgImageIndex,
 }) => {
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(Dimensions.get('window').width);
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     setWidth(event.nativeEvent.layout.width);
   }, []);
+
   return (
     <CredentialDetailsCard
       attributes={[]}
