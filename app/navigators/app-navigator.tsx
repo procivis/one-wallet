@@ -10,6 +10,7 @@ import {
   PartialState,
 } from '@react-navigation/native';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import { assets, config } from '../config';
 import i18n from '../i18n/i18n';
@@ -117,6 +118,18 @@ const coreConfig = {
       enabled: config.featureFlags.isoMdl,
     },
   },
+  ...Platform.select({
+    android: {
+      verificationEngagement: {
+        NFC: {
+          display: 'verificationEngagement.nfc',
+          enabled: true,
+          order: 2,
+        },
+      },
+    },
+    default: {},
+  }),
 };
 
 export const AppNavigator = (props: NavigationProps) => {
