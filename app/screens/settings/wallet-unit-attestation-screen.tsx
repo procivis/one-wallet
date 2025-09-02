@@ -16,10 +16,11 @@ import { WalletUnitStatusEnum } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, memo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+import { useRegisterHolder } from '../onboarding/wallet-unit-attestation-screen';
 
 const testID = 'WalletUnitAttestation';
 export const ATTESTATION_QUERY_KEY = 'wallet-unit-attestation';
@@ -33,6 +34,21 @@ export const useWalletUnitAttestation = (active = true) => {
     {
       enabled: active,
       keepPreviousData: true,
+    },
+  );
+};
+
+export const useCheckWalletUnitAttestation = () => {
+  const queryClient = useQueryClient();
+  const { core, organisationId } = useONECore();
+
+  return useMutation(
+    async () => core.holderRefreshWalletUnit({ organisationId }),
+    {
+      onError: () =>
+        queryClient.invalidateQueries([ATTESTATION_QUERY_KEY, organisationId]),
+      onSuccess: () =>
+        queryClient.invalidateQueries([ATTESTATION_QUERY_KEY, organisationId]),
     },
   );
 };
@@ -70,16 +86,26 @@ const getStatus = (
 const WalletUnitAttestationScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
-  const {
-    data: walletUnitAttestation,
-    isLoading,
-    refetch,
-  } = useWalletUnitAttestation();
-  const isCheckEnabled = walletUnitAttestation?.status === undefined;
+  const { data: walletUnitAttestation, isLoading: isDetailsLoading } =
+    useWalletUnitAttestation();
+  const { mutateAsync: checkWalletUnitAttestation, isLoading: isCheckLoading } =
+    useCheckWalletUnitAttestation();
+  const { mutateAsync: registerHolder, isLoading: isRegisterLoading } =
+    useRegisterHolder();
+
+  const isCheckButtonEnabled =
+    walletUnitAttestation?.status === undefined &&
+    !isDetailsLoading &&
+    !isCheckLoading &&
+    !isRegisterLoading;
 
   const handleCheck = useCallback(() => {
-    refetch();
-  }, [refetch]);
+    if (!walletUnitAttestation) {
+      registerHolder();
+    } else {
+      checkWalletUnitAttestation();
+    }
+  }, [checkWalletUnitAttestation, registerHolder, walletUnitAttestation]);
 
   const status = getStatus(walletUnitAttestation?.status, colorScheme);
   const Icon = status.icon;
@@ -119,11 +145,11 @@ const WalletUnitAttestationScreen: FC = () => {
       </View>
       <View style={styles.button}>
         <Button
-          disabled={!isCheckEnabled || isLoading}
+          disabled={!isCheckButtonEnabled}
           onPress={handleCheck}
           testID={concatTestID(testID, 'checkButton')}
           title={translate('common.check')}
-          type={isCheckEnabled ? ButtonType.Primary : ButtonType.Border}
+          type={isCheckButtonEnabled ? ButtonType.Primary : ButtonType.Border}
         />
       </View>
     </ScrollViewScreen>
