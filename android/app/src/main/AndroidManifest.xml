@@ -8,6 +8,7 @@
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -18,6 +19,15 @@
 
     <uses-feature
         android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.nfc.hce"
         android:required="false" />
 
     <application
@@ -68,5 +78,17 @@
                 <data android:path="/app-link/${customOpenIDCredentialOfferURLScheme}" />
             </intent-filter>
         </activity>
+
+        <service android:name="ch.procivis.one.core.nfc.EngagementService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
+            </intent-filter>
+            <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/engagement_aid_list"/>
+        </service>
+
+        <meta-data android:name="android.nfc.disable_beam_default" android:value="true" />
     </application>
 </manifest>
