@@ -19,11 +19,18 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Alert, LayoutChangeEvent, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  LayoutChangeEvent,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { openSettings, RESULTS } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
 import { ScannerScreen } from '../../components/vision-camera/vision-camera';
+import { config as appConfig } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { useInvitationHandling } from '../../hooks/navigation/deep-link';
@@ -38,6 +45,8 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
   const [code, setCode] = useState<string>();
   const { status: cameraPermissionStatus, request: requestCameraPermission } =
     useCameraPermission();
+  const showNFCButton = appConfig.featureFlags.nfcEnabled;
+  const isNFCButtonEnabled = Platform.OS !== 'ios';
 
   useCapturePrevention();
 
@@ -117,6 +126,12 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
     [config],
   );
 
+  const handleShareNFC = useCallback(() => {
+    if (Platform.OS === 'android') {
+      navigation.navigate('QRCodeNFC');
+    }
+  }, [navigation]);
+
   const footer =
     isIsoMdlEnabled && isBleEnabled ? (
       <View onLayout={onFooterLayoutChange} style={styles.footer}>
@@ -140,12 +155,25 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
             ]}
           />
         </View>
-        <Button
-          onPress={shareQRCode}
-          testID="QRCodeScannerScreen.share"
-          title={translate('common.shareQrCode')}
-          type={ButtonType.Secondary}
-        />
+        <View style={styles.buttonsGroup}>
+          <Button
+            onPress={shareQRCode}
+            style={styles.button}
+            testID="QRCodeScannerScreen.share"
+            title={translate('common.shareQrCode')}
+            type={ButtonType.Secondary}
+          />
+          {showNFCButton && (
+            <Button
+              disabled={!isNFCButtonEnabled}
+              onPress={handleShareNFC}
+              style={styles.button}
+              testID="QRCodeScannerScreen.shareNFC"
+              title={translate('common.shareNFC')}
+              type={ButtonType.Secondary}
+            />
+          )}
+        </View>
       </View>
     ) : undefined;
 
@@ -169,6 +197,15 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
 });
 
 const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    paddingVertical: 12,
+  },
+  buttonsGroup: {
+    flexDirection: 'row',
+    gap: 10,
+    width: '100%',
+  },
   footer: {
     paddingBottom: 29,
     paddingHorizontal: 12,

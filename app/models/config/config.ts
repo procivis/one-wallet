@@ -30,6 +30,8 @@ export interface FeatureFlags {
   localization: boolean;
   /** MQTT transport enabled */
   mqttTransportEnabled: boolean;
+  /** NFC support enabled */
+  nfcEnabled: boolean;
   /** create request credential enabled */
   requestCredentialEnabled: boolean;
   /** ubiquRse enabled */
