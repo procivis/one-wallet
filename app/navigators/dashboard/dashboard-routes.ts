@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type DashboardNavigatorParamList = {
+  QRCodeNFC: undefined;
   QRCodeScanner: undefined;
   QRCodeShare: undefined;
   Wallet: undefined;
