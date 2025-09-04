@@ -20,6 +20,7 @@ export const commonConfig: Pick<
     isoMdl: true,
     localization: true,
     mqttTransportEnabled: true,
+    nfcEnabled: true,
     requestCredentialEnabled: true,
     ubiquRse: true,
   },
