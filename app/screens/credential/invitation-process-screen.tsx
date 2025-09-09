@@ -1,11 +1,15 @@
 import {
   BluetoothError,
   BluetoothState,
+  ButtonType,
   getInvitationUrlTransports,
   InternetError,
   InternetState,
+  isValidHttpUrl,
   LoaderViewState,
   LoadingResultScreen,
+  reportException,
+  shareUrl,
   Transport,
   useAvailableTransports,
   useBlockOSBackNavigation,
@@ -40,6 +44,7 @@ import { translate, translateError, TxKeyPath } from '../../i18n';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { isInvalidInvitationUrlError } from '../../utils/error';
 
 const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
   [BluetoothState.Unauthorized]:
@@ -102,7 +107,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [availableTransport, permissionStatus]);
 
   const [state, setState] = useState<
-    LoaderViewState.InProgress | LoaderViewState.Warning
+    Exclude<LoaderViewState, LoaderViewState.Success>
   >(LoaderViewState.InProgress);
 
   useEffect(() => {
@@ -240,6 +245,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         }
       })
       .catch((err: unknown) => {
+        setState(LoaderViewState.Warning);
         if (
           err instanceof OneError &&
           err.cause?.includes('BLE adapter not enabled')
@@ -247,8 +253,14 @@ const InvitationProcessScreen: FunctionComponent = () => {
           setAdapterEnabled(false);
         } else {
           setError(err);
+          if (
+            err &&
+            isInvalidInvitationUrlError(err) &&
+            !isValidHttpUrl(invitationUrl)
+          ) {
+            setState(LoaderViewState.Error);
+          }
         }
-        setState(LoaderViewState.Warning);
       });
   }, [
     availableTransport,
@@ -268,15 +280,58 @@ const InvitationProcessScreen: FunctionComponent = () => {
     });
   }, [error, rootNavigation]);
 
-  const openSettingsButton = useMemo(() => {
-    if (state !== LoaderViewState.Warning) {
+  const shareButton = useMemo(() => {
+    if (error && isValidHttpUrl(invitationUrl)) {
+      const url = new URL(invitationUrl);
+      const title = url.host;
+      return {
+        onPress: () => {
+          shareUrl(invitationUrl).catch((err) =>
+            reportException(
+              err,
+              `Failed to share invitation URL: ${invitationUrl}`,
+            ),
+          );
+        },
+        title,
+      };
+    }
+  }, [error, invitationUrl]);
+
+  const button = useMemo(() => {
+    if (state === LoaderViewState.InProgress) {
       return;
+    }
+
+    if (
+      error &&
+      isInvalidInvitationUrlError(error) &&
+      isValidHttpUrl(invitationUrl)
+    ) {
+      return {
+        onPress: () => {
+          Linking.openURL(invitationUrl).catch((err) =>
+            reportException(
+              err,
+              `Failed to open invitation URL: ${invitationUrl}`,
+            ),
+          );
+        },
+        title: translate('common.openInBrowser'),
+      };
     }
 
     if (
       !transportError.internet &&
       (!transportError.ble || transportError.ble === BluetoothState.Unavailable)
     ) {
+      if (!transportError.ble) {
+        return {
+          onPress: managementNavigation.goBack,
+          title: translate('common.close'),
+          type: ButtonType.Secondary,
+        };
+      }
       return;
     }
 
@@ -298,7 +353,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
     };
   }, [
     state,
-    transportError,
+    error,
+    invitationUrl,
+    transportError.internet,
+    transportError.ble,
+    managementNavigation.goBack,
     openMobileNetworkSettings,
     openWiFiSettings,
     openBleSettings,
@@ -306,7 +365,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   const label = useMemo(() => {
-    if (canHandleInvitation) {
+    if (
+      canHandleInvitation &&
+      (!error || !isInvalidInvitationUrlError(error))
+    ) {
       if (
         state === LoaderViewState.Warning &&
         isBleInteraction &&
@@ -320,7 +382,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       );
     }
 
-    if (state !== LoaderViewState.Warning) {
+    if (state === LoaderViewState.InProgress) {
       return translate(`invitationProcessTitle.${state}`);
     }
 
@@ -362,13 +424,16 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
     return translateError(
       error,
-      translate('info.invitation.process.unsupportedInvitation.title'),
+      isValidHttpUrl(invitationUrl)
+        ? translate('info.invitation.process.unsupportedInvitationUrl.title')
+        : translate('info.invitation.process.unsupportedInvitation.title'),
     );
   }, [
     error,
     canHandleInvitation,
     availableTransport,
     state,
+    invitationUrl,
     invitationSupportedTransports,
     transportError,
     isBleInteraction,
@@ -377,7 +442,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   return (
     <LoadingResultScreen
-      button={openSettingsButton}
+      button={button}
       header={{
         leftItem: (
           <HeaderCloseModalButton testID="InvitationProcessScreen.header.close" />
@@ -396,6 +461,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         state,
         testID: 'InvitationProcessScreen.animation',
       }}
+      shareButton={shareButton}
       testID="InvitationProcessScreen"
     />
   );
