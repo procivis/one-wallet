@@ -22,6 +22,9 @@ export const WalletStoreModel = types
     rseSetup: (holderRseIdentifierId: string | null) => {
       self.holderRseIdentifierId = holderRseIdentifierId ?? '';
     },
+    updateAttestationKeyId: (attestationKeyId: string) => {
+      self.holderAttestationKeyId = attestationKeyId;
+    },
     walletDeleted: () => {
       self.holderHwIdentifierId = '';
       self.holderSwIdentifierId = '';
@@ -31,11 +34,9 @@ export const WalletStoreModel = types
     walletSetup: (
       holderHwIdentifierId: string | null,
       holderSwIdentifierId: string,
-      holderAttestationKeyId: string | null,
     ) => {
       self.holderHwIdentifierId = holderHwIdentifierId ?? '';
       self.holderSwIdentifierId = holderSwIdentifierId;
-      self.holderAttestationKeyId = holderAttestationKeyId ?? '';
     },
   }));
 

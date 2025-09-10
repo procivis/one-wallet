@@ -21,7 +21,6 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const { walletStore } = useStores();
 
   const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
-    generateAttestationKey: config.walletProvider.enabled,
     generateHwKey: true,
     generateSwKey: true,
   });
@@ -32,10 +31,9 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     if (walletStore.holderIdentifierId) {
       return;
     }
-    const [hwDidId, swDidId, attestationKeyId] =
-      await initializeONECoreIdentifiers();
+    const [hwDidId, swDidId] = await initializeONECoreIdentifiers();
 
-    walletStore.walletSetup(hwDidId, swDidId!, attestationKeyId);
+    walletStore.walletSetup(hwDidId, swDidId!);
     importSchemasFromAssets();
 
     if (config.walletProvider.enabled) {
