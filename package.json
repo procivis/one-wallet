@@ -38,7 +38,7 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
     "@procivis/one-react-native-components": "0.3.69",
-    "@procivis/react-native-one-core": "1.60537.0",
+    "@procivis/react-native-one-core": "1.60588.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-clipboard/clipboard": "1.14.0",
@@ -170,10 +170,7 @@
       "<rootDir>/test/setup.ts",
       "<rootDir>/node_modules/react-native-gesture-handler/jestSetup.js"
     ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/e2e"
-    ],
+    "testPathIgnorePatterns": ["/node_modules/", "/e2e"],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|@procivis|@react-native|@react-native-async-storage|@react-navigation|@react-native-community|rn-material-ui-textfiel|react-native-screens|react-native-reanimated|expo-)"
     ],
