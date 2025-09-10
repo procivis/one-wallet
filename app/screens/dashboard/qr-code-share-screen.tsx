@@ -76,7 +76,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
       return;
     }
 
-    proposeProof(VerificationProtocol.ISO_MDL)
+    proposeProof({ exchange: VerificationProtocol.ISO_MDL, engagement: [] })
       .then((result) => {
         setProof(result);
       })

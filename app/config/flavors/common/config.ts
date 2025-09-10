@@ -26,6 +26,7 @@ export const commonConfig: Pick<
   requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://request-credential-redirect`,
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,
   walletProvider: {
+    appIntegrityCheckRequired: true,
     enabled: true,
     name: 'PROCIVIS_ONE',
     required: false,
