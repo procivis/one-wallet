@@ -22,11 +22,16 @@ export const useRegisterHolder = () => {
   const { walletStore } = useStores();
 
   return useMutation(async () => {
-    await core.holderRegisterWalletUnit({
-      keyId: walletStore?.holderAttestationKeyId,
+    const result = await core.holderRegisterWalletUnit({
+      keyType: 'ECDSA',
       organisationId,
       walletProvider: config.walletProvider,
     });
+
+    // Store the attestation key ID in the wallet store
+    walletStore.updateAttestationKeyId(result.keyId);
+
+    return result;
   }, {});
 };
 

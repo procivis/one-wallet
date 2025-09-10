@@ -10,6 +10,7 @@ export interface BackendConfiguration {
 }
 
 export interface WalletProviderConfiguration {
+  appIntegrityCheckRequired: boolean;
   enabled: boolean;
   name: string;
   required: boolean;

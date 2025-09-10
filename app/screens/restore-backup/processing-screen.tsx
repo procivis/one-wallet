@@ -9,7 +9,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { ProcessingView } from '../../components/common/processing-view';
-import { config } from '../../config';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
@@ -22,7 +21,6 @@ const ProcessingScreen: FC = () => {
   const { walletStore } = useStores();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure({
-    generateAttestationKey: config.walletProvider.enabled,
     generateHwKey: true,
     generateSwKey: true,
   });
@@ -36,8 +34,8 @@ const ProcessingScreen: FC = () => {
 
   const handleBackupRestore = useCallback(async () => {
     try {
-      await finalizeImport().then(([hwDidId, swDidId, attestationKeyId]) => {
-        walletStore.walletSetup(hwDidId, swDidId!, attestationKeyId);
+      await finalizeImport().then(([hwDidId, swDidId]) => {
+        walletStore.walletSetup(hwDidId, swDidId!);
       });
       setState(LoaderViewState.Success);
     } catch (e) {
