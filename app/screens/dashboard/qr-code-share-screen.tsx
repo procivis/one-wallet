@@ -12,6 +12,7 @@ import {
   useProofDelete,
   useProofState,
   useProposeProof,
+  VerificationEngagement,
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
@@ -76,7 +77,10 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
       return;
     }
 
-    proposeProof({ exchange: VerificationProtocol.ISO_MDL, engagement: [] })
+    proposeProof({
+      engagement: [VerificationEngagement.QR_CODE],
+      exchange: VerificationProtocol.ISO_MDL,
+    })
       .then((result) => {
         setProof(result);
       })
