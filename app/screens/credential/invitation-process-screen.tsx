@@ -8,6 +8,7 @@ import {
   isValidHttpUrl,
   LoaderViewState,
   LoadingResultScreen,
+  parseUniversalLink,
   reportException,
   shareUrl,
   Transport,
@@ -33,6 +34,7 @@ import React, {
   useState,
 } from 'react';
 import { Linking } from 'react-native';
+import RNBlobUtil from 'react-native-blob-util';
 
 import {
   HeaderCloseModalButton,
@@ -67,15 +69,19 @@ const InvitationProcessScreen: FunctionComponent = () => {
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const isFocused = useIsFocused();
-  const { invitationUrl } = route.params;
+  const [invitationUrl, setInvitationUrl] = useState(
+    route.params.invitationUrl,
+  );
   const [error, setError] = useState<unknown>();
   const [canHandleInvitation, setCanHandleInvitation] = useState<boolean>();
-  const [invitationSupportedTransports] = useState(
-    getInvitationUrlTransports(
-      route.params.invitationUrl,
-      config.customOpenIdUrlScheme,
-    ),
-  );
+  const [redirectState, setRedirectState] = useState<'redirecting' | 'done'>();
+  const [invitationSupportedTransports, setInvitationSupportedTransports] =
+    useState(
+      getInvitationUrlTransports(
+        route.params.invitationUrl,
+        config.customOpenIdUrlScheme,
+      ),
+    );
   const { availableTransport, transportError } = useAvailableTransports(
     invitationSupportedTransports,
   );
@@ -206,7 +212,56 @@ const InvitationProcessScreen: FunctionComponent = () => {
   }, [handleContinueIssuance]);
 
   useEffect(() => {
-    if (!canHandleInvitation || !availableTransport) {
+    if (
+      !canHandleInvitation ||
+      !availableTransport ||
+      redirectState === 'redirecting'
+    ) {
+      return;
+    }
+
+    if (!redirectState && isValidHttpUrl(invitationUrl)) {
+      setRedirectState('redirecting');
+      RNBlobUtil.config({ followRedirect: false })
+        .fetch('GET', invitationUrl)
+        .then((response) => {
+          setRedirectState('done');
+          if (response.respInfo.redirects.length === 0) {
+            setRedirectState('done');
+            return;
+          }
+          const headers =
+            typeof response.respInfo.headers === 'object'
+              ? (response.respInfo.headers as Record<any, any>)
+              : undefined;
+          const redirectUrl =
+            headers && typeof headers === 'object' && 'Location' in headers
+              ? (headers['Location'] as string)
+              : undefined;
+          if (!redirectUrl) {
+            setRedirectState('done');
+            return;
+          }
+          const newInvitationUrl =
+            parseUniversalLink(redirectUrl) ?? redirectUrl;
+          if (
+            newInvitationUrl &&
+            !isValidHttpUrl(newInvitationUrl) &&
+            newInvitationUrl !== invitationUrl
+          ) {
+            setInvitationSupportedTransports(
+              getInvitationUrlTransports(
+                newInvitationUrl,
+                config.customOpenIdUrlScheme,
+              ),
+            );
+            setInvitationUrl(newInvitationUrl);
+          }
+          setRedirectState('done');
+        })
+        .catch(() => {
+          setRedirectState('done');
+        });
       return;
     }
 
@@ -268,6 +323,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
     handleInvitation,
     invitationUrl,
     managementNavigation,
+    redirectState,
   ]);
 
   const infoPressHandler = useCallback(() => {
