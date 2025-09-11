@@ -96,6 +96,8 @@
 	<string>Allow $(APP_NAME) to use FaceID.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow $(APP_NAME) to use location.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow $(APP_NAME) to access photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexMono-Regular.ttf</string>
