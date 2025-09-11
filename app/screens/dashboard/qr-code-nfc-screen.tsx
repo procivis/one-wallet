@@ -2,6 +2,7 @@ import {
   LoaderViewState,
   NFCProcess,
   reportException,
+  useNFCStatus,
   useProofDelete,
   useProofState,
   useProposeProof,
@@ -32,6 +33,7 @@ const QRCodeNFCScreen = () => {
     useBlePermissions(VerificationProtocol.ISO_MDL);
   const { mutateAsync: deleteProof } = useProofDelete();
   const { mutateAsync: proposeProof } = useProposeProof();
+  const { isNFCEnabled, recheck: recheckNFCSupport } = useNFCStatus();
 
   useEffect(() => {
     if (permissionStatus !== 'granted') {
@@ -76,12 +78,19 @@ const QRCodeNFCScreen = () => {
   ]);
 
   const handleButtonClick = useCallback(() => {
-    if (permissionStatus === 'granted') {
+    if (permissionStatus === 'granted' && isNFCEnabled) {
       handleClose();
     } else {
       checkPermissions();
+      recheckNFCSupport();
     }
-  }, [checkPermissions, handleClose, permissionStatus]);
+  }, [
+    checkPermissions,
+    handleClose,
+    isNFCEnabled,
+    permissionStatus,
+    recheckNFCSupport,
+  ]);
 
   const pendingProofId = useRef<string | undefined>(undefined);
   pendingProofId.current =
@@ -136,7 +145,7 @@ const QRCodeNFCScreen = () => {
         tryAgain: translate('common.tryAgain'),
       }}
       processState={
-        permissionStatus === 'granted'
+        permissionStatus === 'granted' && isNFCEnabled
           ? LoaderViewState.InProgress
           : LoaderViewState.Warning
       }
