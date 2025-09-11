@@ -18,6 +18,7 @@ import React, { FC, memo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { config } from '../../config';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { useRegisterHolder } from '../onboarding/wallet-unit-attestation-screen';
@@ -43,7 +44,12 @@ export const useCheckWalletUnitAttestation = () => {
   const { core, organisationId } = useONECore();
 
   return useMutation(
-    async () => core.holderRefreshWalletUnit({ organisationId }),
+    async () =>
+      core.holderRefreshWalletUnit({
+        appIntegrityCheckRequired:
+          config.walletProvider.appIntegrityCheckRequired,
+        organisationId,
+      }),
     {
       onError: () =>
         queryClient.invalidateQueries([ATTESTATION_QUERY_KEY, organisationId]),
