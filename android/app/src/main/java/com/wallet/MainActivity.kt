@@ -1,7 +1,12 @@
 package com.wallet
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
+import android.nfc.NfcAdapter
+import android.nfc.cardemulation.CardEmulation
 import android.os.Bundle
 import android.view.WindowManager
+import ch.procivis.one.core.nfc.EngagementService
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
@@ -35,16 +40,31 @@ class MainActivity : ReactActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         RNBootSplash.init(this, R.style.BootTheme_procivis)
         super.onCreate(null)
+        mCardEmulation = getCardEmulationInstance()
     }
 
     // hide content while in background
     override fun onResume() {
         super.onResume()
         window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        mCardEmulation?.setPreferredService(this, ComponentName(this, EngagementService::class.java))
     }
 
     override fun onPause() {
         super.onPause()
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        mCardEmulation?.unsetPreferredService(this)
+    }
+
+    private var mCardEmulation: CardEmulation? = null;
+    private fun getCardEmulationInstance(): CardEmulation? {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)) {
+            return null
+        }
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        if (nfcAdapter == null) {
+            return null
+        }
+        return CardEmulation.getInstance(nfcAdapter)
     }
 }
