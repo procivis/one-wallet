@@ -1,4 +1,5 @@
 import { onSnapshot, SnapshotOut } from 'mobx-state-tree';
+import NfcManager from 'react-native-nfc-manager';
 
 import * as storage from '../../utils/storage';
 import { Environment } from '../environment';
@@ -16,11 +17,14 @@ type PossibleStoredData = OldStore | NewStore;
 
 export async function setupWalletStore(env: Environment) {
   let walletStore: WalletStore;
+  const isNFCSupported = await NfcManager.isSupported();
+
   const defaultData: NewStore = {
     holderAttestationKeyId: '',
     holderHwIdentifierId: '',
     holderRseIdentifierId: '',
     holderSwIdentifierId: '',
+    isNFCSupported,
   };
 
   try {
@@ -40,11 +44,13 @@ export async function setupWalletStore(env: Environment) {
             stored.holderDidRseId || defaultData.holderRseIdentifierId,
           holderSwIdentifierId:
             stored.holderDidSwId || defaultData.holderSwIdentifierId,
+          isNFCSupported,
         };
       } else {
         data = {
           ...defaultData,
           ...stored,
+          isNFCSupported,
         };
       }
     }
