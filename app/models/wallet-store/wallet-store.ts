@@ -9,6 +9,7 @@ export const WalletStoreModel = types
     holderHwIdentifierId: types.string,
     holderRseIdentifierId: types.string,
     holderSwIdentifierId: types.string,
+    isNFCSupported: types.boolean,
   })
   .views((self) => ({
     /** returns the did identifier with higher secure available key backing */
