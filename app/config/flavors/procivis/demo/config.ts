@@ -7,4 +7,8 @@ export const config: Configuration = {
     endpoints: procivisConfig.backendConfig.endpoints,
     host: 'TODO',
   },
+  walletProvider: {
+    ...procivisConfig.walletProvider,
+    url: 'https://core.demo.procivis-one.com',
+  },
 };
