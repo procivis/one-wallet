@@ -6,6 +6,7 @@ test('can be created', () => {
     holderHwIdentifierId: '',
     holderRseIdentifierId: '',
     holderSwIdentifierId: '',
+    isNFCSupported: false,
   });
 
   expect(instance).toBeTruthy();

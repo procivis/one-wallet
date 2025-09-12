@@ -35,17 +35,20 @@ import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { useInvitationHandling } from '../../hooks/navigation/deep-link';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
 
 const QRCodeScannerScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<DashboardNavigationProp<'QRCodeScanner'>>();
   const colorScheme = useAppColorScheme();
+  const { walletStore } = useStores();
   const [footerHeight, setFooterHeight] = useState<number>();
   const [code, setCode] = useState<string>();
   const { status: cameraPermissionStatus, request: requestCameraPermission } =
     useCameraPermission();
-  const showNFCButton = appConfig.featureFlags.nfcEnabled;
+  const showNFCButton =
+    appConfig.featureFlags.nfcEnabled && walletStore.isNFCSupported;
   const isNFCButtonEnabled = Platform.OS !== 'ios';
 
   useCapturePrevention();
