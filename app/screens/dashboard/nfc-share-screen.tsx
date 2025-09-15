@@ -10,6 +10,7 @@ import {
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
+  OneError,
   ProofStateEnum,
   ProposeProofResponse,
 } from '@procivis/react-native-one-core';
@@ -22,8 +23,8 @@ import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-ro
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { useIsAppActive } from '../../utils/appState';
 
-const QRCodeNFCScreen = () => {
-  const navigation = useNavigation<DashboardNavigationProp<'QRCodeNFC'>>();
+const NFCShareScreen = () => {
+  const navigation = useNavigation<DashboardNavigationProp<'NFCShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
   const [proof, setProof] = useState<ProposeProofResponse>();
   const isFocused = useIsFocused();
@@ -31,6 +32,7 @@ const QRCodeNFCScreen = () => {
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.ISO_MDL);
+  const [bleDisabled, setBleDisabled] = useState<boolean>(false);
   const { mutateAsync: deleteProof } = useProofDelete();
   const { mutateAsync: proposeProof } = useProposeProof();
   const { isNFCEnabled, recheck: recheckNFCSupport } = useNFCStatus();
@@ -44,6 +46,7 @@ const QRCodeNFCScreen = () => {
   useEffect(() => {
     if (isFocused) {
       checkPermissions();
+      setBleDisabled(false);
     }
   }, [isFocused, checkPermissions, requestPermission]);
 
@@ -59,22 +62,35 @@ const QRCodeNFCScreen = () => {
       });
       setProof(result);
     } catch (e) {
+      if (
+        e instanceof OneError &&
+        e.cause?.includes('BLE adapter not enabled')
+      ) {
+        setBleDisabled(true);
+      }
+
       reportException(e, 'Failed to propose proof');
     }
   }, [proposeProof]);
 
   useEffect(() => {
-    if (permissionStatus !== 'granted' || proof || !isAppActive || !isFocused) {
+    if (
+      permissionStatus !== 'granted' ||
+      proof ||
+      !isAppActive ||
+      !isFocused ||
+      bleDisabled
+    ) {
       return;
     }
     handleProposeProof();
   }, [
-    proposeProof,
     proof,
     isFocused,
     handleProposeProof,
     isAppActive,
     permissionStatus,
+    bleDisabled,
   ]);
 
   const handleButtonClick = useCallback(() => {
@@ -136,16 +152,16 @@ const QRCodeNFCScreen = () => {
       handleButtonClick={handleButtonClick}
       labels={{
         close: translate('common.close'),
-        conectivityInfo: translate(
-          'info.requestProof.nfcProcess.connectivityWarning',
-        ),
+        conectivityInfo: bleDisabled
+          ? translate('info.ble.adapterDisabled')
+          : translate('info.requestProof.nfcProcess.connectivityWarning'),
         connectivity: translate('common.connectivity'),
         share: translate('common.share'),
         shareInfo: translate('info.requestProof.nfcProcess.share'),
         tryAgain: translate('common.tryAgain'),
       }}
       processState={
-        permissionStatus === 'granted' && isNFCEnabled
+        permissionStatus === 'granted' && isNFCEnabled && !bleDisabled
           ? LoaderViewState.InProgress
           : LoaderViewState.Warning
       }
@@ -154,4 +170,4 @@ const QRCodeNFCScreen = () => {
   );
 };
 
-export default memo(QRCodeNFCScreen);
+export default memo(NFCShareScreen);

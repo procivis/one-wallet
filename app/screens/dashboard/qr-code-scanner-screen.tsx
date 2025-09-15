@@ -130,9 +130,7 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
   );
 
   const handleShareNFC = useCallback(() => {
-    if (Platform.OS === 'android') {
-      navigation.navigate('QRCodeNFC');
-    }
+    navigation.navigate('NFCShare');
   }, [navigation]);
 
   const footer =
