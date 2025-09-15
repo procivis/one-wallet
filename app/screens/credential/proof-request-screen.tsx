@@ -178,6 +178,23 @@ const ProofRequestScreen: FunctionComponent = () => {
         const prevSelection = prev[
           activeCredentialSelection
         ] as PresentationSubmitCredentialRequest;
+        const requestedCredential = presentationDefinition?.requestGroups
+          .find((group) =>
+            group.requestedCredentials.find((cred) =>
+              cred.applicableCredentials.includes(selectedCredentialId),
+            ),
+          )
+          ?.requestedCredentials.find((cred) =>
+            cred.applicableCredentials.includes(selectedCredentialId),
+          );
+        const submitClaims = prevSelection.submitClaims.filter((id) =>
+          requestedCredential?.fields.find(
+            (field) =>
+              field.id === id &&
+              Object.keys(field.keyMap).includes(selectedCredentialId),
+          ),
+        );
+        prevSelection.submitClaims = submitClaims;
         return {
           ...prev,
           [activeCredentialSelection]: {
