@@ -96,7 +96,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
 
   const pendingProofId = useRef<string | undefined>(undefined);
   pendingProofId.current =
-    proofState === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
 
   // delete proof when app goes to background
   useEffect(() => {
@@ -131,7 +131,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   }, [adapterDisabled, permissionStatus, proof, isFocused]);
 
   useEffect(() => {
-    if (proof && proofState === ProofStateEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofStateEnum.REQUESTED) {
       rootNavigation.navigate('CredentialManagement', {
         params: {
           params: {

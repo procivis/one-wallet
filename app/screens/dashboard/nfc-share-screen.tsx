@@ -1,7 +1,9 @@
 import {
+  ButtonType,
+  concatTestID,
   LoaderViewState,
+  LoadingResultScreen,
   NFCProcess,
-  reportException,
   useNFCStatus,
   useProofDelete,
   useProofState,
@@ -17,6 +19,10 @@ import {
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
+import {
+  HeaderCloseModalButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import { useBlePermissions } from '../../hooks/ble-permissions';
 import { translate } from '../../i18n';
 import { DashboardNavigationProp } from '../../navigators/dashboard/dashboard-routes';
@@ -33,6 +39,7 @@ const NFCShareScreen = () => {
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.ISO_MDL);
   const [bleDisabled, setBleDisabled] = useState<boolean>(false);
+  const [error, setError] = useState<unknown>();
   const { mutateAsync: deleteProof } = useProofDelete();
   const { mutateAsync: proposeProof } = useProposeProof();
   const { isNFCEnabled, recheck: recheckNFCSupport } = useNFCStatus();
@@ -55,6 +62,7 @@ const NFCShareScreen = () => {
   }, [navigation]);
 
   const handleProposeProof = useCallback(async () => {
+    setError(undefined);
     try {
       const result = await proposeProof({
         engagement: [VerificationEngagement.NFC],
@@ -67,9 +75,10 @@ const NFCShareScreen = () => {
         e.cause?.includes('BLE adapter not enabled')
       ) {
         setBleDisabled(true);
+        return;
       }
 
-      reportException(e, 'Failed to propose proof');
+      setError(e);
     }
   }, [proposeProof]);
 
@@ -110,7 +119,7 @@ const NFCShareScreen = () => {
 
   const pendingProofId = useRef<string | undefined>(undefined);
   pendingProofId.current =
-    proofState === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
 
   // delete proof when app goes to background
   useEffect(() => {
@@ -131,7 +140,7 @@ const NFCShareScreen = () => {
   );
 
   useEffect(() => {
-    if (proof && proofState === ProofStateEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofStateEnum.REQUESTED) {
       rootNavigation.navigate('CredentialManagement', {
         params: {
           params: {
@@ -146,6 +155,47 @@ const NFCShareScreen = () => {
       });
     }
   }, [proof, proofState, rootNavigation]);
+
+  const infoPressHandler = useCallback(() => {
+    rootNavigation.navigate('NerdMode', {
+      params: { error: error ?? proofState?.metadata },
+      screen: 'ErrorNerdMode',
+    });
+  }, [error, proofState, rootNavigation]);
+
+  const testID = 'RequestProofNFCProcessScreen';
+
+  if (error || proofState?.state === ProofStateEnum.ERROR) {
+    return (
+      <LoadingResultScreen
+        button={{
+          onPress: handleClose,
+          title: translate('common.close'),
+          type: ButtonType.Secondary,
+        }}
+        header={{
+          leftItem: (
+            <HeaderCloseModalButton
+              testID={concatTestID(testID, 'header.close')}
+            />
+          ),
+          rightItem: (
+            <HeaderInfoButton
+              onPress={infoPressHandler}
+              testID={concatTestID(testID, 'header.info')}
+            />
+          ),
+        }}
+        loader={{
+          animate: isFocused,
+          label: translate('invitationProcessTitle.error'),
+          state: LoaderViewState.Error,
+          testID: concatTestID(testID, 'animation'),
+        }}
+        testID={testID}
+      />
+    );
+  }
 
   return (
     <NFCProcess
@@ -165,7 +215,7 @@ const NFCShareScreen = () => {
           ? LoaderViewState.InProgress
           : LoaderViewState.Warning
       }
-      testID="RequestProofNFCProcessScreen"
+      testID={testID}
     />
   );
 };
