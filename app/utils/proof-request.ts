@@ -39,11 +39,13 @@ const preselectClaimsForRequestedCredential = (
     return undefined;
   }
 
+  const isApplicable =
+    credentialRequest.applicableCredentials.includes(credentialId);
   const requiredFields = credentialRequest.fields.filter(
     (field) => field.required,
   );
   const requiredFieldsWithNoKeyMapping = requiredFields.filter(
-    (field) => !(credentialId in field.keyMap),
+    (field) => !(credentialId in field.keyMap) && !isApplicable,
   );
 
   const fullyNestedFields = getFullyNestedFields(
@@ -71,7 +73,7 @@ const preselectClaimsForRequestedCredential = (
   };
 };
 
-const getFullyNestedFields = (
+export const getFullyNestedFields = (
   fields: PresentationDefinitionRequestedCredential['fields'],
   credentialId: CredentialDetail['id'],
 ) => {
