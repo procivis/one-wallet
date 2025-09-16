@@ -29,6 +29,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import uniq from 'lodash.uniq';
 import React, {
   FunctionComponent,
   useCallback,
@@ -51,7 +52,10 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialLabels } from '../../utils/credential-sharing';
-import { preselectCredentialsForRequestGroups } from '../../utils/proof-request';
+import {
+  getFullyNestedFields,
+  preselectCredentialsForRequestGroups,
+} from '../../utils/proof-request';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const isCredentialApplicable = (
@@ -187,12 +191,19 @@ const ProofRequestScreen: FunctionComponent = () => {
           ?.requestedCredentials.find((cred) =>
             cred.applicableCredentials.includes(selectedCredentialId),
           );
-        const submitClaims = prevSelection.submitClaims.filter((id) =>
+        const filteredPrevSelection = prevSelection.submitClaims.filter((id) =>
           requestedCredential?.fields.find(
             (field) =>
               field.id === id &&
               Object.keys(field.keyMap).includes(selectedCredentialId),
           ),
+        );
+        const fullyNestedFields = getFullyNestedFields(
+          requestedCredential?.fields ?? [],
+          selectedCredentialId,
+        ).map((field) => field.id);
+        const submitClaims = uniq(
+          filteredPrevSelection.concat(fullyNestedFields),
         );
         prevSelection.submitClaims = submitClaims;
         return {
