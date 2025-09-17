@@ -135,7 +135,7 @@ const CredentialDetailScreen: FC = () => {
   }, [credentialId, navigation]);
 
   const backButtonHandler = useCallback(() => {
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+    rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
   if (!credential || !config) {

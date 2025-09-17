@@ -56,9 +56,9 @@ const ProcessingScreen: FC = () => {
     }
     dismissed.current = true;
     if (state === LoaderViewState.Warning) {
-      navigation.navigate('RestoreBackupDashboard');
+      navigation.popTo('RestoreBackupDashboard');
     } else if (pinInitialized) {
-      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+      rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
     } else {
       rootNavigation.replace('Onboarding', { screen: 'UserAgreement' });
     }

@@ -14,7 +14,7 @@ import React, {
 import { BackHandler, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export const navigationRef = createNavigationContainerRef<any>();
+export const navigationRef = createNavigationContainerRef();
 
 /**
  * Gets the current screen from any navigation state.
@@ -156,7 +156,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
  */
 export function navigate(name: any, params?: any) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate<any>(name as never, params as never);
+    navigationRef.navigate(name, params);
   }
 }
 
@@ -187,6 +187,12 @@ export const FULL_SCREEN_MODAL_OPTIONS: NativeStackNavigationOptions = {
 /** screens displayed as action sheet overlay */
 export const FORM_SHEET_OPTIONS: NativeStackNavigationOptions = {
   animation: Platform.OS === 'android' ? 'slide_from_bottom' : undefined,
+  contentStyle:
+    Platform.OS === 'ios'
+      ? {
+          height: '100%',
+        }
+      : undefined,
   headerShown: false,
   presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
   sheetAllowedDetents: 'fitToContents',

@@ -41,7 +41,7 @@ const PreviewScreen: FC = () => {
     if (skipRollback.current) {
       return;
     }
-    navigation.navigate('RestoreBackupDashboard');
+    navigation.popTo('RestoreBackupDashboard');
     rollbackImport();
   }, [navigation, rollbackImport]);
   useBeforeRemove(rollback);
@@ -52,7 +52,7 @@ const PreviewScreen: FC = () => {
   }, [processingNavigation]);
 
   const onClose = useCallback(() => {
-    navigation.navigate('RestoreBackupDashboard');
+    navigation.popTo('RestoreBackupDashboard');
   }, [navigation]);
 
   const safeAreaPaddingStyle: ViewStyle | undefined =
