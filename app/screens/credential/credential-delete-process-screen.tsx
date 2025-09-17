@@ -51,7 +51,7 @@ const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const closing = useRef(false);
   const onClose = useCallback(() => {
     closing.current = true;
-    rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+    rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
   useBeforeRemove(() => {
     if (!closing.current) {

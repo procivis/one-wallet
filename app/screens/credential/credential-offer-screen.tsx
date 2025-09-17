@@ -169,7 +169,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         { text: translate('common.cancel') },
         {
           onPress: () =>
-            rootNavigation.navigate('Dashboard', {
+            rootNavigation.popTo('Dashboard', {
               screen: 'Wallet',
             }),
           style: 'destructive',

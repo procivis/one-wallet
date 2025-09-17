@@ -183,8 +183,7 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
 
   const redirectUri = credential?.redirectUri;
   const closeButtonHandler = useCallback(() => {
-    const close = () =>
-      rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+    const close = () => rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
     if (redirectUri) {
       Linking.openURL(redirectUri)
         .then(close)

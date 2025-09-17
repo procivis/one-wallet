@@ -137,7 +137,7 @@ const CreatingScreen: FC = () => {
         navigation.navigate('CreateBackupDashboard');
         return;
       case LoaderViewState.Success:
-        rootNavigation.navigate('Dashboard', { screen: 'Wallet' });
+        rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
         return;
     }
   }, [navigation, rootNavigation, state]);

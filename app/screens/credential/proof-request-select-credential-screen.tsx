@@ -42,13 +42,13 @@ const SelectCredentialScreen: FunctionComponent = () => {
     return request.applicableCredentials.includes(selectedCredentialId);
   }, [request.applicableCredentials, selectedCredentialId]);
   const onConfirm = useCallback(() => {
-    navigation.navigate({
-      merge: true,
-      name: 'ProofRequest',
-      params: {
+    navigation.popTo(
+      'ProofRequest',
+      {
         selectedCredentialId,
       } as ShareCredentialNavigatorParamList['ProofRequest'],
-    });
+      { merge: true },
+    );
   }, [navigation, selectedCredentialId]);
 
   const selectionOptions = useMemo(

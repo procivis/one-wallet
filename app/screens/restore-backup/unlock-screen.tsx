@@ -36,11 +36,11 @@ const UnlockScreen: FC = () => {
       processingNavigation.replace('Preview');
     } catch (e) {
       reportException(e, 'Backup unpacking failure');
-      navigation.navigate({
-        merge: true,
-        name: 'RecoveryPassword',
-        params: { error: true, inputPath },
-      });
+      navigation.popTo(
+        'RecoveryPassword',
+        { error: true, inputPath },
+        { merge: true },
+      );
     }
   }, [navigation, processingNavigation, route.params, unpackBackup]);
 
