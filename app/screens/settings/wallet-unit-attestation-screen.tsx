@@ -23,7 +23,7 @@ import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { useRegisterHolder } from '../onboarding/wallet-unit-attestation-screen';
 
-const testID = 'WalletUnitAttestation';
+const testID = 'WalletUnitAttestationScreen';
 export const ATTESTATION_QUERY_KEY = 'wallet-unit-attestation';
 
 export const useWalletUnitAttestation = (active = true) => {
@@ -122,13 +122,13 @@ const WalletUnitAttestationScreen: FC = () => {
         leftItem: (
           <BackButton
             onPress={navigation.goBack}
-            testID="WalletUnitAttestationScreen.back"
+            testID={concatTestID(testID, 'back')}
           />
         ),
         title: translate('common.walletUnitAttestation'),
       }}
       style={{ backgroundColor: colorScheme.white }}
-      testID="WalletUnitAttestationScreen"
+      testID={testID}
     >
       <View style={styles.contentContainer}>
         <Typography color={colorScheme.text} style={styles.contentDescription}>
