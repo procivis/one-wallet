@@ -18,6 +18,14 @@ import { useStores } from '../models';
 import { RequestCredentialItem } from '../screens/request-credential/request-credential-list-screen';
 import { navigationRef } from './navigation-utilities';
 import RootNavigator from './root/root-navigator';
+import { RootNavigatorParamList } from './root/root-routes';
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface RootParamList extends RootNavigatorParamList {}
+  }
+}
 
 const getNavigationPathRecursive = (
   state?: NavigationState | PartialState<NavigationState>,
@@ -68,7 +76,9 @@ const getCredentialIssuerConfig = (
 };
 
 interface NavigationProps
-  extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+  extends Partial<
+    React.ComponentProps<typeof NavigationContainer<RootNavigatorParamList>>
+  > {}
 
 const coreConfig = {
   credentialIssuer: getCredentialIssuerConfig(assets?.credentialIssuers),

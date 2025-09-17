@@ -44,7 +44,7 @@ export const HeaderCloseModalButton: FC<HeaderButtonProps> = ({
     if (onPress) {
       return onPress();
     }
-    navigation.navigate('Dashboard', {
+    navigation.popTo('Dashboard', {
       screen: 'Wallet',
     });
   }, [onPress, navigation]);
