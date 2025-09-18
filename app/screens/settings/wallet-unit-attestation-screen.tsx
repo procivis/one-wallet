@@ -140,11 +140,17 @@ const WalletUnitAttestationScreen: FC = () => {
             { backgroundColor: status.backgroundColor },
           ]}
         >
-          <Icon />
+          <Icon
+            testID={concatTestID(testID, 'icon', walletUnitAttestation?.status)}
+          />
           <Typography color={colorScheme.text} style={styles.status}>
             {translate('common.status')}
           </Typography>
-          <Typography color={status.textColor} style={styles.statusText}>
+          <Typography
+            color={status.textColor}
+            style={styles.statusText}
+            testID={concatTestID(testID, 'status')}
+          >
             {status.text}
           </Typography>
         </View>
