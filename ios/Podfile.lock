@@ -5,9 +5,9 @@ PODS:
   - FBLazyVector (0.77.3)
   - fmt (11.0.2)
   - glog (0.3.5)
-  - hermes-engine (0.77.1):
-    - hermes-engine/Pre-built (= 0.77.1)
-  - hermes-engine/Pre-built (0.77.1)
+  - hermes-engine (0.77.3):
+    - hermes-engine/Pre-built (= 0.77.3)
+  - hermes-engine/Pre-built (0.77.3)
   - lottie-ios (4.5.0)
   - lottie-react-native (7.2.2):
     - DoubleConversion
@@ -1304,7 +1304,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.16.3):
     - React-Core
-  - react-native-one-core (1.61268.0):
+  - react-native-one-core (1.62561.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
