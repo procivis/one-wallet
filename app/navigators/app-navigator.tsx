@@ -10,7 +10,6 @@ import {
   PartialState,
 } from '@react-navigation/native';
 import React from 'react';
-import { Platform } from 'react-native';
 
 import { assets, config } from '../config';
 import i18n from '../i18n/i18n';
@@ -99,6 +98,14 @@ const coreConfig = {
         },
       },
     },
+    OPENID4VCI_FINAL1: {
+      params: {
+        private: {
+          encryption:
+            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+        },
+      },
+    },
   },
   keyStorage: {
     INTERNAL: {
@@ -122,24 +129,18 @@ const coreConfig = {
       enabled: config.featureFlags.mqttTransportEnabled,
     },
   },
-
+  verificationEngagement: {
+    NFC: {
+      display: 'verificationEngagement.nfc',
+      enabled: true,
+      order: 2,
+    },
+  },
   verificationProtocol: {
     ISO_MDL: {
       enabled: config.featureFlags.isoMdl,
     },
   },
-  ...Platform.select({
-    android: {
-      verificationEngagement: {
-        NFC: {
-          display: 'verificationEngagement.nfc',
-          enabled: true,
-          order: 2,
-        },
-      },
-    },
-    default: {},
-  }),
 };
 
 export const AppNavigator = (props: NavigationProps) => {

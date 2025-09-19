@@ -6,5 +6,13 @@
 	<array>
 		<string>applinks:${ASSOCIATED_INVITATION_DOMAIN}</string>
 	</array>
+	<key>com.apple.developer.nfc.hce</key>
+	<true/>
+	<key>com.apple.developer.nfc.hce.iso7816.select-identifier-prefixes</key>
+	<array>
+		<string>D2760000850101</string>
+	</array>
+	<key>com.apple.developer.nfc.hce.default-contactless-app</key>
+	<true/>
 </dict>
 </plist>

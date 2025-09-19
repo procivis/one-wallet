@@ -19,13 +19,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  Alert,
-  LayoutChangeEvent,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { openSettings, RESULTS } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
@@ -49,7 +43,6 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
     useCameraPermission();
   const showNFCButton =
     appConfig.featureFlags.nfcEnabled && walletStore.isNFCSupported;
-  const isNFCButtonEnabled = Platform.OS !== 'ios';
 
   useCapturePrevention();
 
@@ -166,7 +159,6 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
           />
           {showNFCButton && (
             <Button
-              disabled={!isNFCButtonEnabled}
               onPress={handleShareNFC}
               style={styles.button}
               testID="QRCodeScannerScreen.shareNFC"

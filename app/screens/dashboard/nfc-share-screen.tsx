@@ -18,6 +18,7 @@ import {
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Platform } from 'react-native';
 
 import {
   HeaderCloseModalButton,
@@ -66,7 +67,8 @@ const NFCShareScreen = () => {
     try {
       const result = await proposeProof({
         engagement: [VerificationEngagement.NFC],
-        exchange: VerificationProtocol.ISO_MDL,
+        protocol: VerificationProtocol.ISO_MDL,
+        uiMessage: translate('info.requestProof.nfcProcess.share'),
       });
       setProof(result);
     } catch (e) {
@@ -123,7 +125,11 @@ const NFCShareScreen = () => {
 
   // delete proof when app goes to background
   useEffect(() => {
-    if (isAppActive === false && pendingProofId.current) {
+    if (
+      Platform.OS === 'android' &&
+      isAppActive === false &&
+      pendingProofId.current
+    ) {
       setProof(undefined);
       deleteProof(pendingProofId.current);
     }
