@@ -27,6 +27,7 @@ export interface ProcessingViewProps {
   error?: unknown;
   loaderLabel: string;
   onClose: (() => void) | undefined;
+  secondaryButton?: ButtonProps;
   state: LoaderViewState;
   testID: string;
   title?: string;
@@ -34,6 +35,7 @@ export interface ProcessingViewProps {
 
 export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
   button,
+  secondaryButton,
   testID,
   onClose,
   state,
@@ -116,6 +118,7 @@ export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
         state,
         testID: concatTestID(testID, 'animation'),
       }}
+      secondaryButton={secondaryButton}
       testID={testID}
     />
   );

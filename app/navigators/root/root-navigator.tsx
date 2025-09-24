@@ -9,6 +9,8 @@ import StatusCheckResultScreen from '../../screens/credential/status-check-resul
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import RequestCredentialListScreen from '../../screens/request-credential/request-credential-list-screen';
 import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
+import WalletUnitAttestationScreen from '../../screens/wallet-attestation/wallet-unit-attestation-screen';
+import WalletUnitErrorScreen from '../../screens/wallet-attestation/wallet-unit-error-screen';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
 import CredentialManagementNavigator from '../credential-management/credential-management-navigator';
 import DashboardNavigator from '../dashboard/dashboard-navigator';
@@ -27,6 +29,10 @@ const CredentialUpdateProcess = React.memo(
   formSheetWrapper(CredentialUpdateProcessScreen),
 );
 const StatusCheckResult = React.memo(formSheetWrapper(StatusCheckResultScreen));
+const WalletUnitAttestation = React.memo(
+  formSheetWrapper(WalletUnitAttestationScreen),
+);
+const WalletUnitError = React.memo(formSheetWrapper(WalletUnitErrorScreen));
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
@@ -81,6 +87,11 @@ const RootNavigator: FunctionComponent = () => {
           component={StatusCheckResult}
           name="StatusCheckResult"
         />
+        <RootStack.Screen
+          component={WalletUnitAttestation}
+          name="WalletUnitAttestation"
+        />
+        <RootStack.Screen component={WalletUnitError} name="WalletUnitError" />
       </RootStack.Group>
 
       <RootStack.Group screenOptions={FULL_SCREEN_MODAL_OPTIONS}>

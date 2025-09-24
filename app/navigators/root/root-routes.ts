@@ -32,6 +32,19 @@ export type RootNavigatorParamList = {
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;
   };
+  WalletUnitAttestation: {
+    resetToDashboard?: boolean;
+  } & (
+    | {
+        refresh?: never;
+        register: true;
+      }
+    | {
+        refresh: true;
+        register?: never;
+      }
+  );
+  WalletUnitError: undefined;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =

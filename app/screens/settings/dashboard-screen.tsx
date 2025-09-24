@@ -132,7 +132,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
   }, [navigation]);
 
   const handleWalletUnitAttestation = useCallback(() => {
-    navigation.navigate('WalletUnitAttestation');
+    navigation.navigate('WalletUnitAttestationInfo');
   }, [navigation]);
 
   type SettingsListItem =

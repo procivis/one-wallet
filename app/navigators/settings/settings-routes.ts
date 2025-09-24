@@ -31,7 +31,7 @@ export type SettingsNavigatorParamList = {
   RSEPinCodeChange: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
   SettingsDashboard: undefined;
-  WalletUnitAttestation: undefined;
+  WalletUnitAttestationInfo: undefined;
 };
 
 export type SettingsRouteProp<
