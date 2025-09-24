@@ -2415,7 +2415,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 23d8c5470c648a635893dc0956c6dbaead54b656
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
-  hermes-engine: ccc24d29d650ea725d582a9a53d57cd417fbdb53
+  hermes-engine: b2187dbe13edb0db8fcb2a93a69c1987a30d98a4
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 3a4dca5f080ad23c26ec9b51fc936596716c4331
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
@@ -2454,7 +2454,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: 9429f37cdf4c89c51170a2a0330eecc974e76642
-  react-native-one-core: 7a7f2952459ce223d1ff5b715385eeb928926ce1
+  react-native-one-core: 16ef56e83f6b0af46dca94465de124f04abc6eeb
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c

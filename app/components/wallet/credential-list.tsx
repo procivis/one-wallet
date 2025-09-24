@@ -8,6 +8,7 @@ import {
 import { CredentialListItem } from '@procivis/react-native-one-core';
 import React, { FC, useCallback } from 'react';
 import { Animated, ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -21,6 +22,7 @@ type WalletCredentialListProps = {
   onEndReached: () => void;
   scrollOffset: Animated.Value;
   testID: string;
+  withNotice?: boolean;
 };
 
 const WalletCredentialList: FC<WalletCredentialListProps> = ({
@@ -30,10 +32,12 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
   scrollOffset,
   testID,
   hasNextPage,
+  withNotice,
 }) => {
   const colorScheme = useAppColorScheme();
+  const safeAreaInsets = useSafeAreaInsets();
   const contentInsetsStyle = useListContentInset({
-    headerHeight: 120 + 8,
+    headerHeight: 120 + 8 - (withNotice ? safeAreaInsets.top - 15 : 0),
   });
   const {
     locale: { locale },
@@ -96,7 +100,7 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
       onScroll={Animated.event(
         [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
         {
-          useNativeDriver: true,
+          useNativeDriver: false,
         },
       )}
       onScrollBeginDrag={foldCards}
@@ -114,6 +118,7 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   list: {
+    borderRadius: 30,
     flex: 1,
     marginHorizontal: 16,
     overflow: 'visible',

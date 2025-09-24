@@ -6,7 +6,6 @@ export type OnboardingNavigatorParamList = {
   Security: undefined;
   Setup: undefined;
   UserAgreement: undefined;
-  WalletUnitAttestation: undefined;
 };
 
 export type OnboardingRouteProp<
