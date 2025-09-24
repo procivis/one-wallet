@@ -171,7 +171,11 @@ const NFCShareScreen = () => {
 
   const testID = 'RequestProofNFCProcessScreen';
 
-  if (error || proofState?.state === ProofStateEnum.ERROR) {
+  const isError = error || proofState?.state === ProofStateEnum.ERROR;
+  const isWarning =
+    permissionStatus !== 'granted' || !isNFCEnabled || bleDisabled;
+
+  if (isError || (Platform.OS === 'ios' && !isWarning)) {
     return (
       <LoadingResultScreen
         button={{
@@ -182,20 +186,23 @@ const NFCShareScreen = () => {
         header={{
           leftItem: (
             <HeaderCloseModalButton
+              onPress={handleClose}
               testID={concatTestID(testID, 'header.close')}
             />
           ),
-          rightItem: (
+          rightItem: isError ? (
             <HeaderInfoButton
               onPress={infoPressHandler}
               testID={concatTestID(testID, 'header.info')}
             />
-          ),
+          ) : undefined,
         }}
         loader={{
           animate: isFocused,
-          label: translate('invitationProcessTitle.error'),
-          state: LoaderViewState.Error,
+          label: isError
+            ? translate('info.errorScreen.title')
+            : translate('invitationProcessTitle.inProgress'),
+          state: isError ? LoaderViewState.Error : LoaderViewState.InProgress,
           testID: concatTestID(testID, 'animation'),
         }}
         testID={testID}
@@ -217,9 +224,7 @@ const NFCShareScreen = () => {
         tryAgain: translate('common.tryAgain'),
       }}
       processState={
-        permissionStatus === 'granted' && isNFCEnabled && !bleDisabled
-          ? LoaderViewState.InProgress
-          : LoaderViewState.Warning
+        isWarning ? LoaderViewState.Warning : LoaderViewState.InProgress
       }
       testID={testID}
     />
