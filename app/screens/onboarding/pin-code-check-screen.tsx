@@ -31,6 +31,7 @@ import {
 } from '../../hooks/pin-code/biometric';
 import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { PIN_CODE_CHECK_ACTIVE_EVENT } from '../../hooks/pin-code/pin-code-check';
+import { useWalletUnitAttestation } from '../../hooks/wallet-unit';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
@@ -39,7 +40,6 @@ import {
   RootRouteProp,
 } from '../../navigators/root/root-routes';
 import { pinLockModalLabels } from '../../utils/pinLock';
-import { useWalletUnitAttestation } from '../settings/wallet-unit-attestation-screen';
 
 const hideSplashAndroidOnly = () =>
   Platform.OS === 'android' ? hideSplashScreen() : undefined;
@@ -81,8 +81,9 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       config.walletProvider.required &&
       walletUnitAttestation?.status === undefined
     ) {
-      navigation.navigate('Onboarding', {
-        screen: 'WalletUnitAttestation',
+      navigation.navigate('WalletUnitAttestation', {
+        register: true,
+        resetToDashboard: true,
       });
     }
     handleInitialDeepLink();

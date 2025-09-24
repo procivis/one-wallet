@@ -37,7 +37,10 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     importSchemasFromAssets();
 
     if (config.walletProvider.enabled) {
-      navigation.navigate('WalletUnitAttestation');
+      rootNavigation.navigate('WalletUnitAttestation', {
+        register: true,
+        resetToDashboard: true,
+      });
     } else {
       resetNavigationAction(rootNavigation, [
         { name: 'Dashboard', params: { screen: 'Wallet' } },
@@ -47,7 +50,6 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     walletStore,
     initializeONECoreIdentifiers,
     importSchemasFromAssets,
-    navigation,
     rootNavigation,
   ]);
 
