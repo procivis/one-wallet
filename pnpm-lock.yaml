@@ -18,10 +18,10 @@ importers:
         version: 4.1.1(react@18.3.1)
       '@procivis/one-react-native-components':
         specifier: 0.3.78
-        version: 0.3.78(2af627571eb995c5ab336b55c53c243f)
+        version: 0.3.78(3eee318aa9db3b4604d8690ffac6baaf)
       '@procivis/react-native-one-core':
-        specifier: 1.62799.0
-        version: 1.62799.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))
+        specifier: 1.63160.0
+        version: 1.63160.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker':
         specifier: 5.0.3
         version: 5.0.3
@@ -1789,8 +1789,8 @@ packages:
   '@procivis/one-tests-lib@0.2.1':
     resolution: {integrity: sha1-ZfvCSxjbru6CBDa7AXT24WJMCCk=, tarball: https://gitlab.procivis.ch/api/v4/projects/113/packages/npm/@procivis/one-tests-lib/-/@procivis/one-tests-lib-0.2.1.tgz}
 
-  '@procivis/react-native-one-core@1.62799.0':
-    resolution: {integrity: sha1-vjpV4G4gsUnhHrhcJae48ZtkvkQ=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.62799.0.tgz}
+  '@procivis/react-native-one-core@1.63160.0':
+    resolution: {integrity: sha1-PAxnBuQrSwfTpGseLOYf7kDRCvk=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.63160.0.tgz}
     peerDependencies:
       react-native: '*'
 
@@ -9854,9 +9854,9 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.78(2af627571eb995c5ab336b55c53c243f)':
+  '@procivis/one-react-native-components@0.3.78(3eee318aa9db3b4604d8690ffac6baaf)':
     dependencies:
-      '@procivis/react-native-one-core': 1.62799.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))
+      '@procivis/react-native-one-core': 1.63160.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))
       '@procivis/react-native-picker': 5.0.3
       '@react-native-community/blur': 4.4.1(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@react-native-community/netinfo': 11.4.1(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))
@@ -9891,7 +9891,7 @@ snapshots:
       uuid: 10.0.0
       winston: 3.17.0
 
-  '@procivis/react-native-one-core@1.62799.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))':
+  '@procivis/react-native-one-core@1.63160.0(react-native@0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1))':
     dependencies:
       react-native: 0.77.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli@15.0.1(typescript@5.0.4))(@types/react@18.3.3)(react@18.3.1)
 
