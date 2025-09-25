@@ -5,7 +5,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { config } from '../config';
 import { useStores } from '../models';
-import { isWalletAttestationExpired } from '../utils/wallet-unit';
 
 export const ATTESTATION_QUERY_KEY = 'wallet-unit-attestation';
 
@@ -69,20 +68,20 @@ export const useRefreshWalletUnit = () => {
 
 export const useWalletUnitCheck = () => {
   const { data: walletUnitAttestation, isLoading } = useWalletUnitAttestation();
-  const { mutateAsync: refreshWalletUnit, isLoading: isRefreshing } =
-    useRefreshWalletUnit();
+  const {
+    mutateAsync: refreshWalletUnit,
+    isLoading: isRefreshing,
+    status: refreshStatus,
+  } = useRefreshWalletUnit();
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading || refreshStatus !== 'idle') {
       return;
     }
-    if (
-      walletUnitAttestation?.status === WalletUnitStatusEnum.ERROR ||
-      isWalletAttestationExpired(walletUnitAttestation)
-    ) {
+    if (walletUnitAttestation?.status === WalletUnitStatusEnum.ACTIVE) {
       refreshWalletUnit();
     }
-  }, [isLoading, walletUnitAttestation, refreshWalletUnit]);
+  }, [isLoading, refreshStatus, walletUnitAttestation, refreshWalletUnit]);
 
   return {
     walletUnitAttestation:
