@@ -54,6 +54,10 @@ target 'Wallet' do
 
       target.build_configurations.each do |config|
         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
+        pod_ios_deployment_target = Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
+        if pod_ios_deployment_target <= min_ios_version_supported
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
+        end
       end
     end
   end
