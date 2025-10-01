@@ -94,9 +94,13 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
       });
   }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
 
-  const pendingProofId = useRef<string | undefined>(undefined);
-  pendingProofId.current =
-    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+  const pendingProofId = useRef<string | undefined>(
+    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined,
+  );
+  useEffect(() => {
+    pendingProofId.current =
+      proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+  }, [proof?.proofId, proofState?.state]);
 
   // delete proof when app goes to background
   useEffect(() => {
@@ -132,20 +136,23 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
 
   useEffect(() => {
     if (proof && proofState?.state === ProofStateEnum.REQUESTED) {
-      rootNavigation.navigate('CredentialManagement', {
-        params: {
+      navigation.popTo('Wallet');
+      setTimeout(() => {
+        rootNavigation.navigate('CredentialManagement', {
           params: {
-            request: {
-              interactionId: proof.interactionId,
-              proofId: proof.proofId,
+            params: {
+              request: {
+                interactionId: proof.interactionId,
+                proofId: proof.proofId,
+              },
             },
+            screen: 'ProofRequest',
           },
-          screen: 'ProofRequest',
-        },
-        screen: 'ShareCredential',
-      });
+          screen: 'ShareCredential',
+        });
+      }, 500);
     }
-  }, [proof, proofState, rootNavigation]);
+  }, [navigation, proof, proofState, rootNavigation]);
 
   const testID = 'QRCodeShareScreen';
 
