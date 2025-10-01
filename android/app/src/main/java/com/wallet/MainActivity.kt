@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.cardemulation.CardEmulation
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import ch.procivis.one.core.nfc.EngagementService
 import com.facebook.react.ReactActivity
@@ -15,6 +16,10 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.zoontek.rnbootsplash.RNBootSplash
 
 class MainActivity : ReactActivity() {
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     /**
      * Returns the name of the main component registered from JavaScript. This is used to schedule
      * rendering of the component.
@@ -29,11 +34,11 @@ class MainActivity : ReactActivity() {
      */
     override fun createReactActivityDelegate(): ReactActivityDelegate {
         return DefaultReactActivityDelegate(
-                this,
-                mainComponentName!!,  // If you opted-in for the New Architecture, we enable the Fabric Renderer.
-                fabricEnabled,  // fabricEnabled
-                // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
-                concurrentReactEnabled // concurrentRootEnabled
+            this,
+            mainComponentName!!,  // If you opted-in for the New Architecture, we enable the Fabric Renderer.
+            fabricEnabled,  // fabricEnabled
+            // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
+            concurrentReactEnabled // concurrentRootEnabled
         )
     }
 
@@ -47,13 +52,24 @@ class MainActivity : ReactActivity() {
     override fun onResume() {
         super.onResume()
         window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        mCardEmulation?.setPreferredService(this, ComponentName(this, EngagementService::class.java))
+        try {
+            mCardEmulation?.setPreferredService(
+                this,
+                ComponentName(this, EngagementService::class.java)
+            )
+        } catch (error: Throwable) {
+            Log.wtf(TAG, "setPreferredService failed: $error")
+        }
     }
 
     override fun onPause() {
         super.onPause()
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        mCardEmulation?.unsetPreferredService(this)
+        try {
+            mCardEmulation?.unsetPreferredService(this)
+        } catch (error: Throwable) {
+            Log.wtf(TAG, "unsetPreferredService failed: $error")
+        }
     }
 
     private var mCardEmulation: CardEmulation? = null;
