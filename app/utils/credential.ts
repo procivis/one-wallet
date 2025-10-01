@@ -14,6 +14,8 @@ export const credentialCardHeaderLabels = (): CardHeaderLabels => {
         date,
       }),
     validityIssues: translate('common.validityUpdateIssue'),
+    wuaExpired: translate('info.wua.expired'),
+    wuaRevoked: translate('info.wua.revoked'),
   };
 };
 

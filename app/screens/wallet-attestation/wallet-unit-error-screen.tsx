@@ -3,18 +3,20 @@ import {
   ButtonType,
   LoaderViewState,
   useBlockOSBackNavigation,
+  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import { WalletUnitStatusEnum } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import { ProcessingView } from '../../components/common/processing-view';
-import { useWalletUnitAttestation } from '../../hooks/wallet-unit';
+import { config } from '../../config';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { resetNavigationAction } from '../../utils/navigation';
 
 const WalletUnitErrorScreen: FC = () => {
-  const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const rootNavigation = useNavigation<RootNavigationProp<'WalletUnitError'>>();
   const [state, setState] = useState<
     LoaderViewState.Error | LoaderViewState.Warning
   >(LoaderViewState.Warning);
@@ -30,6 +32,15 @@ const WalletUnitErrorScreen: FC = () => {
   }, [walletUnitAttestation]);
 
   useBlockOSBackNavigation();
+
+  const closeHandler = useCallback(() => {
+    if (config.walletProvider.required) {
+      return;
+    }
+    resetNavigationAction(rootNavigation, [
+      { name: 'Dashboard', params: { screen: 'Wallet' } },
+    ]);
+  }, [rootNavigation]);
 
   const deleteWallet = useCallback(() => {
     rootNavigation.goBack();
@@ -48,8 +59,12 @@ const WalletUnitErrorScreen: FC = () => {
   const button: ButtonProps =
     state === LoaderViewState.Error
       ? {
-          onPress: deleteWallet,
-          title: translate('common.deleteWallet'),
+          onPress: !config.walletProvider.required
+            ? closeHandler
+            : deleteWallet,
+          title: !config.walletProvider.required
+            ? translate('common.close')
+            : translate('common.deleteWallet'),
           type: ButtonType.Primary,
         }
       : {
@@ -61,8 +76,12 @@ const WalletUnitErrorScreen: FC = () => {
   const secondaryButton: ButtonProps | undefined =
     state === LoaderViewState.Warning
       ? {
-          onPress: deleteWallet,
-          title: translate('common.deleteWallet'),
+          onPress: !config.walletProvider.required
+            ? closeHandler
+            : deleteWallet,
+          title: !config.walletProvider.required
+            ? translate('common.close')
+            : translate('common.deleteWallet'),
           type: ButtonType.Secondary,
         }
       : undefined;

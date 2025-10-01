@@ -12,6 +12,7 @@ import {
   StatusWarningIcon,
   Typography,
   useAppColorScheme,
+  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import {
   HolderAttestationWalletUnitResponse,
@@ -21,7 +22,6 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useWalletUnitAttestation } from '../../hooks/wallet-unit';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';

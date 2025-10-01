@@ -3,6 +3,7 @@ import {
   reportTraceInfo,
   useBlockOSBackNavigation,
   usePinCodeSecurity,
+  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import {
   useFocusEffect,
@@ -31,7 +32,6 @@ import {
 } from '../../hooks/pin-code/biometric';
 import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { PIN_CODE_CHECK_ACTIVE_EVENT } from '../../hooks/pin-code/pin-code-check';
-import { useWalletUnitAttestation } from '../../hooks/wallet-unit';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
