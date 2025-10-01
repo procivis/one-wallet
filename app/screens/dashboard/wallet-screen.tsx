@@ -8,6 +8,7 @@ import {
   StatusWarningIcon,
   useAppColorScheme,
   usePagedCredentials,
+  useWalletUnitCheck,
   WalletEmptyList,
 } from '@procivis/one-react-native-components';
 import {
@@ -41,7 +42,6 @@ import WalletNotice, {
 } from '../../components/wallet/wallet-notice';
 import { assets, config } from '../../config';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
-import { useWalletUnitCheck } from '../../hooks/wallet-unit';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { isWalletAttestationExpired } from '../../utils/wallet-unit';
@@ -77,7 +77,9 @@ const WalletScreen: FunctionComponent = observer(() => {
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
   useCredentialStatusCheck();
-  const { walletUnitAttestation } = useWalletUnitCheck();
+  const { isLoading: isLoadingWUA, walletUnitAttestation } = useWalletUnitCheck(
+    config.walletProvider.appIntegrityCheckRequired,
+  );
 
   useEffect(() => {
     if (!isFocused || !config.walletProvider.required) {
@@ -233,7 +235,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         ]}
         testID="WalletScreen"
       >
-        {!credentials && (
+        {(!credentials || isLoadingWUA) && (
           <View style={styles.loadingIndicator}>
             <ActivityIndicator animate={isFocused} />
           </View>

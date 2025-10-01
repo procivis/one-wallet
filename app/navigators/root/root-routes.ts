@@ -33,7 +33,8 @@ export type RootNavigatorParamList = {
     credentialIds: Array<CredentialListItem['id']>;
   };
   WalletUnitAttestation: {
-    resetToDashboard?: boolean;
+    attestationRequired?: boolean;
+    resetToDashboard?: boolean | 'onError';
   } & (
     | {
         refresh?: never;

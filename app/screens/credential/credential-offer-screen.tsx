@@ -17,19 +17,27 @@ import {
   useCredentialReject,
   useCredentialSchemaDetail,
   useTrustEntity,
+  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import {
   ClaimSchema,
   IssuanceProtocolFeatureEnum,
   TrustEntityRoleEnum,
   WalletStorageType,
+  WalletUnitStatusEnum,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { FunctionComponent, useCallback, useMemo, useRef } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
 
 import {
@@ -47,6 +55,10 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
+import {
+  isWalletAttestationExpired,
+  walletUnitAttestationState,
+} from '../../utils/wallet-unit';
 
 // fallback empty attributes for credential offer without claim values
 const getDummyAttributes = (
@@ -74,10 +86,35 @@ const CredentialOfferScreen: FunctionComponent = () => {
     credential?.schema.id,
   );
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
+  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
+    useWalletUnitAttestation();
   const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
+
+  useEffect(() => {
+    if (
+      !credential ||
+      credential.schema.walletStorageType !==
+        WalletStorageType.EUDI_COMPLIANT ||
+      isLoadingWUA
+    ) {
+      return;
+    }
+    if (walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED) {
+      rootNavigation.navigate('WalletUnitError');
+    } else if (
+      !walletUnitAttestation ||
+      isWalletAttestationExpired(walletUnitAttestation)
+    ) {
+      rootNavigation.navigate('WalletUnitAttestation', {
+        ...(walletUnitAttestation ? { refresh: true } : { register: true }),
+        attestationRequired: true,
+        resetToDashboard: 'onError',
+      });
+    }
+  }, [credential, isLoadingWUA, rootNavigation, walletUnitAttestation]);
 
   const infoPressHandler = useCallback(() => {
     rootNavigation.navigate('NerdMode', {
@@ -149,6 +186,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
       ? detailsCardFromCredential(
           credential,
           config,
+          walletUnitAttestationState(walletUnitAttestation),
           `${testID}.detail`,
           credentialCardLabels(),
         )
@@ -196,6 +234,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
     [onCloseButtonPress],
   );
 
+  const isCheckingWUA =
+    credential &&
+    credential.schema.walletStorageType === WalletStorageType.EUDI_COMPLIANT &&
+    isLoadingWUA;
+
   return (
     <ScrollViewScreen
       header={{
@@ -223,7 +266,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
           style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
           testID={concatTestID(testID, 'entityCluster')}
         />
-        {!credential || !config || !card ? (
+        {!credential || !config || !card || isCheckingWUA ? (
           <ActivityIndicator animate={isFocused} />
         ) : (
           <>

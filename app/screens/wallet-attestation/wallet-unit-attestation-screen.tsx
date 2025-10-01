@@ -4,16 +4,21 @@ import {
   LoaderViewState,
   Transport,
   useAvailableTransports,
+  useRefreshWalletUnit,
+  useRegisterWalletUnit,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { config } from '../../config';
-import {
-  useRefreshWalletUnit,
-  useRegisterWalletUnit,
-} from '../../hooks/wallet-unit';
 import { translate, translateError } from '../../i18n';
 import {
   RootNavigationProp,
@@ -25,14 +30,12 @@ const testID = 'WalletUnitAttestationScreen';
 
 const WalletUnitAttestationScreen = () => {
   const [error, setError] = useState<unknown>();
-  const [status, setStatus] = useState<
-    | LoaderViewState.InProgress
-    | LoaderViewState.Warning
-    | LoaderViewState.Error
-    | LoaderViewState.Success
-  >(LoaderViewState.InProgress);
+  const [status, setStatus] = useState<LoaderViewState>(
+    LoaderViewState.InProgress,
+  );
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
   const hasInternetConnection = availableTransport?.includes(Transport.HTTP);
+  const handled = useRef<boolean>(false);
 
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
   const route = useRoute<RootRouteProp<'WalletUnitAttestation'>>();
@@ -41,16 +44,24 @@ const WalletUnitAttestationScreen = () => {
   const { mutateAsync: refreshWalletUnit } = useRefreshWalletUnit();
 
   const closeHandler = useCallback(() => {
-    if (route.params?.resetToDashboard) {
+    const resetToDashboard = route.params?.resetToDashboard;
+    if (
+      resetToDashboard === true ||
+      (resetToDashboard === 'onError' && status !== LoaderViewState.Success)
+    ) {
       resetNavigationAction(rootNavigation, [
         { name: 'Dashboard', params: { screen: 'Wallet' } },
       ]);
     } else {
       rootNavigation.goBack();
     }
-  }, [rootNavigation, route.params?.resetToDashboard]);
+  }, [rootNavigation, route.params?.resetToDashboard, status]);
 
   const handleRegisterOrRefresh = useCallback(async () => {
+    if (hasInternetConnection === undefined || handled.current) {
+      return;
+    }
+    handled.current = true;
     if (!hasInternetConnection) {
       setStatus(LoaderViewState.Warning);
       return;
@@ -58,14 +69,16 @@ const WalletUnitAttestationScreen = () => {
     try {
       setStatus(LoaderViewState.InProgress);
       if (route.params.refresh) {
-        await refreshWalletUnit();
+        await refreshWalletUnit(
+          config.walletProvider.appIntegrityCheckRequired,
+        );
       } else {
-        await registerWalletUnit();
+        await registerWalletUnit(config.walletProvider);
       }
       setStatus(LoaderViewState.Success);
       closeHandler();
     } catch (err) {
-      if (config.walletProvider.required) {
+      if (config.walletProvider.required || route.params.attestationRequired) {
         setStatus(LoaderViewState.Error);
       } else {
         setStatus(LoaderViewState.Warning);
@@ -77,7 +90,7 @@ const WalletUnitAttestationScreen = () => {
     hasInternetConnection,
     refreshWalletUnit,
     registerWalletUnit,
-    route.params.refresh,
+    route.params,
   ]);
 
   useEffect(() => {
@@ -85,6 +98,7 @@ const WalletUnitAttestationScreen = () => {
   }, [handleRegisterOrRefresh]);
 
   const handleRetry = useCallback(() => {
+    handled.current = false;
     handleRegisterOrRefresh();
   }, [handleRegisterOrRefresh]);
 
@@ -100,10 +114,14 @@ const WalletUnitAttestationScreen = () => {
       }
     }
     if (!error) {
-      return translate('walletUnitAttestation.noInternet');
+      if (route.params.refresh) {
+        return translate('walletUnitAttestation.noInternet.refresh');
+      } else {
+        return translate('walletUnitAttestation.noInternet.register');
+      }
     }
     return translateError(error, translate(`walletUnitAttestation.error`));
-  }, [error, registeredNewWallet, status]);
+  }, [error, registeredNewWallet, status, route.params.refresh]);
 
   const button =
     status === LoaderViewState.Warning || status === LoaderViewState.Error
