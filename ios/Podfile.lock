@@ -1304,7 +1304,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.16.3):
     - React-Core
-  - react-native-one-core (1.63714.0):
+  - react-native-one-core (1.64416.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
