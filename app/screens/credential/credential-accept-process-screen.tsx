@@ -181,19 +181,21 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
     requiredStorageType,
   ]);
 
-  const redirectUri = credential?.redirectUri;
   const closeButtonHandler = useCallback(() => {
-    const close = () => rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
-    if (redirectUri) {
-      Linking.openURL(redirectUri)
-        .then(close)
-        .catch((e) => {
-          reportException(e, "Couldn't open redirect URI");
-        });
-    } else {
-      close();
+    rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
+  }, [rootNavigation]);
+
+  const redirectUri = credential?.redirectUri;
+  const redirectButtonHandler = useCallback(() => {
+    if (!redirectUri) {
+      return;
     }
-  }, [redirectUri, rootNavigation]);
+    Linking.openURL(redirectUri)
+      .then(closeButtonHandler)
+      .catch((e) => {
+        reportException(e, "Couldn't open redirect URI");
+      });
+  }, [closeButtonHandler, redirectUri]);
 
   const androidBackHandler = useCallback(() => {
     closeButtonHandler();
@@ -206,16 +208,26 @@ const CredentialAcceptProcessScreen: FunctionComponent = observer(() => {
       button={
         state === LoaderViewState.Success && !isLoading && redirectUri
           ? {
-              onPress: closeButtonHandler,
+              onPress: redirectButtonHandler,
               testID: 'CredentialAcceptProcessScreen.redirect',
               title: translate('common.backToService'),
-              type: ButtonType.Secondary,
+              type: ButtonType.Primary,
             }
           : undefined
       }
       error={error}
       loaderLabel={loaderLabel}
       onClose={closeButtonHandler}
+      secondaryButton={
+        state === LoaderViewState.Success && !isLoading && redirectUri
+          ? {
+              onPress: closeButtonHandler,
+              testID: 'CredentialAcceptProcessScreen.close',
+              title: translate('common.close'),
+              type: ButtonType.Secondary,
+            }
+          : undefined
+      }
       state={state}
       testID="CredentialAcceptProcessScreen"
       title={translate('common.credentialOffering')}
