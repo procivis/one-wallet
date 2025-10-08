@@ -108,35 +108,47 @@ const ProofProcessScreen: FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!usedIdentifierId]);
 
-  const redirectUri = proof?.redirectUri;
   const closeButtonHandler = useCallback(() => {
-    const close = () => rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
-    if (redirectUri) {
-      Linking.openURL(redirectUri)
-        .then(close)
-        .catch((e) => {
-          reportException(e, "Couldn't open redirect URI");
-        });
-    } else {
-      close();
+    rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
+  }, [rootNavigation]);
+
+  const redirectUri = proof?.redirectUri;
+  const redirectButtonHandler = useCallback(() => {
+    if (!redirectUri) {
+      return;
     }
-  }, [redirectUri, rootNavigation]);
+    Linking.openURL(redirectUri)
+      .then(closeButtonHandler)
+      .catch((e) => {
+        reportException(e, "Couldn't open redirect URI");
+      });
+  }, [closeButtonHandler, redirectUri]);
 
   return (
     <ProcessingView
       button={
         state === LoaderViewState.Success && redirectUri
           ? {
-              onPress: closeButtonHandler,
+              onPress: redirectButtonHandler,
               testID: 'ProofRequestAcceptProcessScreen.redirect',
               title: translate('common.backToService'),
-              type: ButtonType.Secondary,
+              type: ButtonType.Primary,
             }
           : undefined
       }
       error={error}
       loaderLabel={loaderLabel}
       onClose={closeButtonHandler}
+      secondaryButton={
+        state === LoaderViewState.Success && redirectUri
+          ? {
+              onPress: closeButtonHandler,
+              testID: 'ProofRequestAcceptProcessScreen.close',
+              title: translate('common.close'),
+              type: ButtonType.Secondary,
+            }
+          : undefined
+      }
       state={state}
       testID="ProofRequestAcceptProcessScreen"
       title={translate('common.shareCredential')}
