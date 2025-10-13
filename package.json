@@ -37,8 +37,8 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
-    "@procivis/one-react-native-components": "0.3.80",
-    "@procivis/react-native-one-core": "1.65274.1",
+    "@procivis/one-react-native-components": "0.3.82",
+    "@procivis/react-native-one-core": "1.65274.2",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-clipboard/clipboard": "1.14.0",
