@@ -59,7 +59,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
     include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
     sort: SortableCredentialColumnEnum.SCHEMA_NAME,
-    status: [
+    states: [
       CredentialStateEnum.ACCEPTED,
       CredentialStateEnum.SUSPENDED,
       CredentialStateEnum.REVOKED,
