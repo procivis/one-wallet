@@ -24,7 +24,7 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
   const { mutateAsync: check } = useCredentialRevocationCheck(false);
   const { data: credentials } = useCredentials({
     ids: credentialIds,
-    status: [CredentialStateEnum.ACCEPTED, CredentialStateEnum.SUSPENDED],
+    states: [CredentialStateEnum.ACCEPTED, CredentialStateEnum.SUSPENDED],
   });
 
   const runCheck = useCallback(
