@@ -20,6 +20,7 @@ import React, {
 import { ProcessingView } from '../../components/common/processing-view';
 import { config } from '../../config';
 import { translate, translateError } from '../../i18n';
+import { useStores } from '../../models';
 import {
   RootNavigationProp,
   RootRouteProp,
@@ -33,6 +34,9 @@ const WalletUnitAttestationScreen = () => {
   const [status, setStatus] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
+  const {
+    walletStore: { walletProvider },
+  } = useStores();
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
   const hasInternetConnection = availableTransport?.includes(Transport.HTTP);
   const handled = useRef<boolean>(false);
@@ -71,15 +75,24 @@ const WalletUnitAttestationScreen = () => {
       setStatus(LoaderViewState.InProgress);
       if (route.params.refresh) {
         await refreshWalletUnit(
-          config.walletProvider.appIntegrityCheckRequired,
+          walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
         );
       } else {
-        await registerWalletUnit(config.walletProvider);
+        await registerWalletUnit({
+          appIntegrityCheckRequired:
+            walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
+          name: walletProvider.name,
+          type: config.walletProvider.type,
+          url: config.walletProvider.url,
+        });
       }
       setStatus(LoaderViewState.Success);
       closeHandler();
     } catch (err) {
-      if (config.walletProvider.required || route.params.attestationRequired) {
+      if (
+        walletProvider.walletUnitAttestation.required ||
+        route.params.attestationRequired
+      ) {
         setStatus(LoaderViewState.Error);
       } else {
         setStatus(LoaderViewState.Warning);
@@ -91,7 +104,9 @@ const WalletUnitAttestationScreen = () => {
     hasInternetConnection,
     refreshWalletUnit,
     registerWalletUnit,
-    route.params,
+    route.params.attestationRequired,
+    route.params.refresh,
+    walletProvider,
   ]);
 
   useEffect(() => {
@@ -134,7 +149,7 @@ const WalletUnitAttestationScreen = () => {
       : undefined;
 
   const secondaryButton =
-    !config.walletProvider.required &&
+    !walletProvider.walletUnitAttestation.required &&
     (status === LoaderViewState.Warning || status === LoaderViewState.Error)
       ? {
           onPress: closeHandler,
@@ -149,7 +164,9 @@ const WalletUnitAttestationScreen = () => {
       button={button}
       error={error}
       loaderLabel={loaderLabel}
-      onClose={config.walletProvider.required ? undefined : closeHandler}
+      onClose={
+        walletProvider.walletUnitAttestation.required ? undefined : closeHandler
+      }
       secondaryButton={secondaryButton}
       state={status}
       testID={testID}

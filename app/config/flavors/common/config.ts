@@ -1,4 +1,3 @@
-import { WalletProviderTypeEnum } from '@procivis/react-native-one-core';
 import rnuc from 'react-native-ultimate-config';
 
 import { Configuration } from '../../../models/config/config';
@@ -9,7 +8,6 @@ export const commonConfig: Pick<
   | 'trustAnchorPublisherReference'
   | 'customOpenIdUrlScheme'
   | 'requestCredentialRedirectUri'
-  | 'walletProvider'
 > = {
   customOpenIdUrlScheme: rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
     ? rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
@@ -26,12 +24,4 @@ export const commonConfig: Pick<
   },
   requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://request-credential-redirect`,
   trustAnchorPublisherReference: rnuc.TRUST_ANCHOR_PUBLISHER_REFERENCE,
-  walletProvider: {
-    appIntegrityCheckRequired: true,
-    enabled: true,
-    name: 'PROCIVIS_ONE',
-    required: false,
-    type: WalletProviderTypeEnum.PROCIVIS_ONE,
-    url: 'https://core.dev.procivis-one.com',
-  },
 };

@@ -9,6 +9,7 @@ import StatusCheckResultScreen from '../../screens/credential/status-check-resul
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import RequestCredentialListScreen from '../../screens/request-credential/request-credential-list-screen';
 import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
+import VersionUpdateScreen from '../../screens/version-update/version-update-screen';
 import WalletUnitAttestationScreen from '../../screens/wallet-attestation/wallet-unit-attestation-screen';
 import WalletUnitErrorScreen from '../../screens/wallet-attestation/wallet-unit-error-screen';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
@@ -32,12 +33,14 @@ const StatusCheckResult = React.memo(formSheetWrapper(StatusCheckResultScreen));
 const WalletUnitAttestation = React.memo(
   formSheetWrapper(WalletUnitAttestationScreen),
 );
+const VersionUpdate = React.memo(formSheetWrapper(VersionUpdateScreen));
 const WalletUnitError = React.memo(formSheetWrapper(WalletUnitErrorScreen));
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const RootNavigator: FunctionComponent = () => {
   const initialRouteName = useInitialRoute();
+
   useAutomaticPinCodeCoverLogic(initialRouteName === 'Dashboard');
   useRuntimeDeepLinkHandling();
 
@@ -92,6 +95,7 @@ const RootNavigator: FunctionComponent = () => {
           name="WalletUnitAttestation"
         />
         <RootStack.Screen component={WalletUnitError} name="WalletUnitError" />
+        <RootStack.Screen component={VersionUpdate} name="VersionUpdate" />
       </RootStack.Group>
 
       <RootStack.Group screenOptions={FULL_SCREEN_MODAL_OPTIONS}>
