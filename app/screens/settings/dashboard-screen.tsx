@@ -55,7 +55,14 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation =
     useNavigation<SettingsNavigationProp<'SettingsDashboard'>>();
-  const { userSettings, locale, walletStore } = useStores();
+  const {
+    userSettings,
+    locale,
+    walletStore,
+    walletStore: {
+      walletProvider: { walletUnitAttestation },
+    },
+  } = useStores();
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -270,7 +277,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             value: userSettings.screenCaptureProtection,
           },
         },
-        config.walletProvider.enabled
+        walletUnitAttestation.enabled
           ? {
               buttonSetting: {
                 icon: WalletUnitAttestationIcon,

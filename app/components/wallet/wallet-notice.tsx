@@ -1,4 +1,6 @@
 import {
+  CloseIcon,
+  concatTestID,
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -8,20 +10,30 @@ import React, {
   ReactElement,
   useMemo,
 } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 export type WalletNoticeProps = {
   accessory?: ComponentType<any> | ReactElement;
   icon?: ComponentType<any> | ReactElement;
+  onClose?: () => void;
   style?: StyleProp<ViewStyle>;
   text: string;
 };
+
+const testID = 'WalletNotice';
 
 const WalletNotice: FunctionComponent<WalletNoticeProps> = ({
   accessory,
   icon,
   style,
   text,
+  onClose,
 }) => {
   const colorScheme = useAppColorScheme();
 
@@ -51,15 +63,36 @@ const WalletNotice: FunctionComponent<WalletNoticeProps> = ({
 
   return (
     <View style={[styles.noticeContainer, style]}>
-      {iconView}
-      <Typography color={colorScheme.white}>{text}</Typography>
-      {accessoryView}
+      <View style={styles.title}>
+        {iconView}
+        <Typography color={colorScheme.white}>{text}</Typography>
+        {accessoryView}
+      </View>
+      {onClose && (
+        <TouchableOpacity
+          onPress={onClose}
+          style={styles.closeIcon}
+          testID={concatTestID(testID, 'close')}
+        >
+          <CloseIcon color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  closeIcon: {
+    position: 'absolute',
+    right: 20,
+    top: 5,
+  },
   noticeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  title: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 5,

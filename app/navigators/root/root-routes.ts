@@ -32,6 +32,7 @@ export type RootNavigatorParamList = {
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;
   };
+  VersionUpdate: undefined;
   WalletUnitAttestation: {
     attestationRequired?: boolean;
     resetToDashboard?: boolean | 'onError';

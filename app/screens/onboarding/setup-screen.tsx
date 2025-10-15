@@ -11,7 +11,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   LayoutChangeEvent,
@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { OnboardingNavigationProp } from '../../navigators/onboarding/onboarding-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -83,6 +84,13 @@ export const SetupScreen: FC = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
   const colorScheme = useAppColorScheme();
   const insets = useSafeAreaInsets();
+  const { checkAppVersion } = useVersionCheck();
+
+  useEffect(() => {
+    setTimeout(() => {
+      checkAppVersion();
+    }, 0);
+  }, [checkAppVersion]);
 
   const onSetup = useCallback(
     () => navigation.navigate('UserAgreement'),
