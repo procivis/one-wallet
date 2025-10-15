@@ -1,3 +1,5 @@
+import { WalletProviderTypeEnum } from '@procivis/react-native-one-core';
+
 import { Configuration } from '../../../../models/config/config';
 import { config as procivisConfig } from '../config';
 
@@ -8,7 +10,7 @@ export const config: Configuration = {
     host: 'TODO',
   },
   walletProvider: {
-    ...procivisConfig.walletProvider,
-    enabled: false,
+    type: WalletProviderTypeEnum.PROCIVIS_ONE,
+    url: 'https://core.trial.procivis-one.com',
   },
 };

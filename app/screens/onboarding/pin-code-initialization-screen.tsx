@@ -5,7 +5,6 @@ import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
-import { config } from '../../config';
 import { useImportPredefinedCredentialSchemas } from '../../hooks/credential-schemas';
 import { storePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
@@ -18,7 +17,12 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
   const navigation =
     useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
-  const { walletStore } = useStores();
+  const {
+    walletStore,
+    walletStore: {
+      walletProvider: { walletUnitAttestation },
+    },
+  } = useStores();
 
   const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
     generateHwKey: true,
@@ -36,7 +40,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     walletStore.walletSetup(hwDidId, swDidId!);
     importSchemasFromAssets();
 
-    if (config.walletProvider.enabled) {
+    if (walletUnitAttestation.enabled) {
       rootNavigation.navigate('WalletUnitAttestation', {
         register: true,
         resetToDashboard: true,
@@ -50,6 +54,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     walletStore,
     initializeONECoreIdentifiers,
     importSchemasFromAssets,
+    walletUnitAttestation.enabled,
     rootNavigation,
   ]);
 

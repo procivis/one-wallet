@@ -23,7 +23,6 @@ import { RESULTS } from 'react-native-permissions';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
-import { config } from '../../config';
 import { useInitialDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import {
   biometricAuthenticate,
@@ -32,6 +31,7 @@ import {
 } from '../../hooks/pin-code/biometric';
 import { usePinCodeValidation } from '../../hooks/pin-code/pin-code';
 import { PIN_CODE_CHECK_ACTIVE_EVENT } from '../../hooks/pin-code/pin-code-check';
+import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { hideSplashScreen } from '../../navigators/root/initialRoute';
@@ -48,6 +48,8 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   const navigation = useNavigation<RootNavigationProp<'PinCodeCheck'>>();
   const route = useRoute<RootRouteProp<'PinCodeCheck'>>();
   const screen = useRef<PinCodeActions>(null);
+  const { checkAppVersion } = useVersionCheck();
+
   const { data: walletUnitAttestation } = useWalletUnitAttestation();
 
   useFocusEffect(hideSplashAndroidOnly);
@@ -61,6 +63,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       pinCodeSecurity: { failedAttempts, lastAttemptTimestamp },
       setPinCodeSecurity,
     },
+    walletStore: { walletProvider },
   } = useStores();
 
   const [error, setError] = useState<string>();
@@ -78,7 +81,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     // the entry was correct (biometric or manual) -> hide the lock screen
     navigation.pop();
     if (
-      config.walletProvider.required &&
+      walletProvider.walletUnitAttestation.required &&
       walletUnitAttestation?.status === undefined
     ) {
       navigation.navigate('WalletUnitAttestation', {
@@ -86,8 +89,15 @@ const PinCodeCheckScreen: FunctionComponent = () => {
         resetToDashboard: true,
       });
     }
+    checkAppVersion();
     handleInitialDeepLink();
-  }, [handleInitialDeepLink, navigation, walletUnitAttestation?.status]);
+  }, [
+    checkAppVersion,
+    handleInitialDeepLink,
+    navigation,
+    walletProvider.walletUnitAttestation.required,
+    walletUnitAttestation?.status,
+  ]);
 
   const onPinEntered = useCallback(
     (userEntry: string) => {

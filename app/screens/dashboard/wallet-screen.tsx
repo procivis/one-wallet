@@ -42,19 +42,26 @@ import WalletNotice, {
 } from '../../components/wallet/wallet-notice';
 import { assets, config } from '../../config';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
+import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { isWalletAttestationExpired } from '../../utils/wallet-unit';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
+  const {
+    walletStore: { walletProvider },
+  } = useStores();
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
   const { credentialIssuers = [] } = assets;
-
+  const { isBelowRecommendedVersion } = useVersionCheck();
+  const [showUpdateNotch, setShowUpdateNotch] = useState(
+    isBelowRecommendedVersion,
+  );
   const [scrollOffset] = useState(() => new Animated.Value(0));
-
   const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
     include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
@@ -78,20 +85,26 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   useCredentialStatusCheck();
   const { isLoading: isLoadingWUA, walletUnitAttestation } = useWalletUnitCheck(
-    config.walletProvider.appIntegrityCheckRequired,
+    walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
   );
 
   useEffect(() => {
-    if (!isFocused || !config.walletProvider.required) {
+    if (!isFocused || !walletProvider.walletUnitAttestation.required) {
       return;
     }
+
     if (
       walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED ||
       isWalletAttestationExpired(walletUnitAttestation)
     ) {
       navigation.navigate('WalletUnitError');
     }
-  }, [isFocused, walletUnitAttestation, navigation]);
+  }, [
+    isFocused,
+    walletUnitAttestation,
+    navigation,
+    walletProvider.walletUnitAttestation.required,
+  ]);
 
   const credentials = useMemo(
     () => credentialsData?.pages.map((page) => page.values).flat(),
@@ -177,9 +190,20 @@ const WalletScreen: FunctionComponent = observer(() => {
     ],
   );
 
+  const handleUpdateNoticeClose = useCallback(() => {
+    setShowUpdateNotch(false);
+  }, []);
+
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
-    if (config.walletProvider.required) {
+    if (walletProvider.walletUnitAttestation.required) {
       return;
+    }
+    if (showUpdateNotch) {
+      return {
+        icon: StatusWarningIcon,
+        onClose: handleUpdateNoticeClose,
+        text: translate('common.updateAvailable'),
+      };
     }
     if (walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED) {
       return {
@@ -202,8 +226,14 @@ const WalletScreen: FunctionComponent = observer(() => {
         text: 'Wallet attestation is expired',
       };
     }
-  }, [walletUnitAttestation, handleRefreshWalletUnit]);
-  const walletAttestationNoticeOffset: ViewStyle | undefined = topNotice
+  }, [
+    walletProvider.walletUnitAttestation.required,
+    showUpdateNotch,
+    walletUnitAttestation,
+    handleUpdateNoticeClose,
+    handleRefreshWalletUnit,
+  ]);
+  const noticeOffset: ViewStyle | undefined = topNotice
     ? {
         marginTop: safeAreaInsets.top + 40,
       }
@@ -230,7 +260,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       <View
         style={[
           styles.background,
-          walletAttestationNoticeOffset,
+          noticeOffset,
           { backgroundColor: colorScheme.background },
         ]}
         testID="WalletScreen"
