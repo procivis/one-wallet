@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  addElementIf,
   ColorScheme,
   CredentialSuspendedIcon,
   CredentialSuspendedTempIcon,
@@ -28,7 +29,6 @@ import { StyleSheet, View } from 'react-native';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
-import { addElementIf } from '../../utils/array';
 import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (

@@ -1,9 +1,12 @@
 import {
   ButtonType,
+  HISTORY_LIST_QUERY_KEY,
   LoaderViewState,
+  PROOF_DETAIL_QUERY_KEY,
   reportException,
   useBlockOSBackNavigation,
   useCredentialDetail,
+  useONECore,
   useProofAccept,
   useProofDetail,
 } from '@procivis/one-react-native-components';
@@ -14,38 +17,71 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Linking } from 'react-native';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
+import { CredentialQuerySelection } from '../../utils/proof-request';
 import { isRSELockedError } from '../../utils/rse';
 
 const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
+
+export const useProofAcceptV2 = () => {
+  const queryClient = useQueryClient();
+  const { core } = useONECore();
+
+  return useMutation(
+    async ({
+      interactionId,
+      credentials,
+    }: {
+      credentials: CredentialQuerySelection;
+      interactionId: string;
+    }) => core.holderSubmitProofV2(interactionId, credentials),
+    {
+      onError: async (err) => {
+        reportException(err, 'Proof submission failure');
+        await queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
+        await queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
+      },
+    },
+  );
+};
 
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
     useNavigation<RootNavigationProp<'CredentialManagement'>>();
   const route = useRoute<ShareCredentialRouteProp<'Processing'>>();
-  const { credentials, interactionId, proofId } = route.params;
+  const { interactionId, proofId, ...params } = route.params;
   const [state, setState] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
   const { mutateAsync: acceptProof } = useProofAccept();
+  const { mutateAsync: acceptProofV2 } = useProofAcceptV2();
   const { data: proof } = useProofDetail(proofId);
   const { walletStore } = useStores();
   const [error, setError] = useState<unknown>();
+  const accepted = useRef(false);
 
   useBlockOSBackNavigation();
 
+  const credentialId =
+    'credentials' in params
+      ? Object.values(params.credentials)[0]?.credentialId
+      : undefined;
+
   // ONE-2078: workaround for selecting matching did
-  const { data: credentialDetail } = useCredentialDetail(
-    Object.values(credentials)[0]?.credentialId,
-  );
+  const { data: credentialDetail } = useCredentialDetail(credentialId);
   const usedIdentifierId = useMemo(() => {
     if (!credentialDetail) {
       return undefined;
@@ -81,13 +117,26 @@ const ProofProcessScreen: FunctionComponent = () => {
   }, [error, state]);
 
   const handleProofSubmit = useCallback(
-    async (identifierId: string) => {
+    async (identifierId?: string) => {
+      if (accepted.current) {
+        return;
+      }
       try {
-        await acceptProof({
-          credentials,
-          identifierId,
-          interactionId,
-        });
+        accepted.current = true;
+        if ('credentials' in params) {
+          const credentials = params.credentials;
+          await acceptProof({
+            credentials,
+            identifierId,
+            interactionId,
+          });
+        } else {
+          const credentials = params.credentialsV2;
+          await acceptProofV2({
+            credentials,
+            interactionId,
+          });
+        }
         setState(LoaderViewState.Success);
       } catch (e) {
         if (isRSELockedError(e)) {
@@ -98,15 +147,14 @@ const ProofProcessScreen: FunctionComponent = () => {
         setError(e);
       }
     },
-    [acceptProof, credentials, interactionId],
+    [params, acceptProof, interactionId, acceptProofV2],
   );
 
   useEffect(() => {
-    if (usedIdentifierId) {
+    if (usedIdentifierId || 'credentialsV2' in params) {
       handleProofSubmit(usedIdentifierId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!usedIdentifierId]);
+  }, [handleProofSubmit, params, usedIdentifierId]);
 
   const closeButtonHandler = useCallback(() => {
     rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
