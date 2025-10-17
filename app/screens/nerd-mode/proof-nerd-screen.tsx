@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  addElementIf,
   getCredentialSchemaWithoutImages,
   NerdModeItemProps,
   NerdModeScreen,
@@ -18,7 +19,6 @@ import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { addElementIf } from '../../utils/array';
 import { attributesLabels, entityLabels } from './utils';
 
 const ProofDetailNerdView: FunctionComponent = () => {

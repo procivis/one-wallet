@@ -1,3 +1,4 @@
+import { ArrayElement } from '@procivis/one-react-native-components';
 import {
   CommonActions,
   EventArg,
@@ -57,9 +58,6 @@ export const OutsideTreeNavigationProvider: FC<PropsWithChildren> = ({
     </NavigationRouteContext.Provider>
   </NavigationContext.Provider>
 );
-
-type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
 
 export const resetNavigationAction = <
   ParamList extends Record<string, object | undefined>,

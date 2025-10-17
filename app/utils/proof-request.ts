@@ -3,7 +3,9 @@ import {
   CredentialStateEnum,
   PresentationDefinitionRequestedCredential,
   PresentationDefinitionRequestGroup,
+  PresentationDefinitionV2,
   PresentationSubmitCredentialRequest,
+  PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 
 export const preselectCredentialsForRequestGroups = (
@@ -23,6 +25,50 @@ export const preselectCredentialsForRequestGroups = (
       );
     }),
   );
+
+  return preselected;
+};
+
+export type CredentialQuerySelection = Record<
+  string,
+  | PresentationSubmitV2CredentialRequest
+  | PresentationSubmitV2CredentialRequest[]
+>;
+
+export type SetCredentialQuerySelection = Record<
+  string,
+  CredentialQuerySelection
+>;
+
+export const preselectCredentialsForPresentationDefinitionV2 = (
+  presentationDefinition: PresentationDefinitionV2,
+) => {
+  const preselected =
+    presentationDefinition.credentialSets.reduce<SetCredentialQuerySelection>(
+      (acc, set, index) => {
+        if (set.required) {
+          acc[index] = set.options[0]?.reduce<CredentialQuerySelection>(
+            (acc2, queryId) => {
+              const credentialQuery =
+                presentationDefinition.credentialQueries[queryId];
+              if (
+                credentialQuery &&
+                'applicableCredentials' in credentialQuery
+              ) {
+                acc2[queryId] = {
+                  credentialId: credentialQuery.applicableCredentials[0].id,
+                  userSelections: [],
+                };
+              }
+              return acc2;
+            },
+            {},
+          );
+        }
+        return acc;
+      },
+      {},
+    );
 
   return preselected;
 };
