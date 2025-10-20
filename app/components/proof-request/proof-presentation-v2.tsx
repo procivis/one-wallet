@@ -1,5 +1,4 @@
 import {
-  ArrayElement,
   Button,
   ButtonType,
   concatTestID,
@@ -15,7 +14,6 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   CredentialListItem,
-  PresentationDefinitionV2,
   PresentationDefinitionV2CredentialClaim,
   PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
@@ -31,20 +29,18 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialLabels } from '../../utils/credential-sharing';
-import { shareCredentialGroupLabels } from '../../utils/credential-sharing-v2';
+import {
+  CredentialSet,
+  credentialSetsFromPresentationDefinitionV2,
+  shareCredentialGroupLabels,
+  sortedCredentialSets,
+} from '../../utils/credential-sharing-v2';
 import {
   CredentialQuerySelection,
   preselectCredentialsForPresentationDefinitionV2,
   SetCredentialQuerySelection,
 } from '../../utils/proof-request';
 import { ProofPresentationProps } from './proof-presentation-props';
-
-type CredentialSet = ArrayElement<
-  PresentationDefinitionV2['credentialSets']
-> & {
-  id: string;
-  valid: boolean;
-};
 
 const ProofPresentationV2: FC<ProofPresentationProps> = ({
   onPresentationDefinitionLoaded,
@@ -91,24 +87,16 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   }, [checkRevocation, core, proofId]);
 
   const credentialSets: CredentialSet[] = useMemo(() => {
-    return (
-      presentationDefinition?.credentialSets.map((set, index) => {
-        const filteredOptions = set.options.filter((group) => {
-          const arrayGroup = Array.isArray(group) ? group : [group];
-          return arrayGroup.every((queryId) => {
-            const query = presentationDefinition.credentialQueries[queryId];
-            return queryId && 'applicableCredentials' in query;
-          });
-        });
-        return {
-          ...set,
-          id: index.toString(),
-          options: filteredOptions.length ? filteredOptions : set.options,
-          valid: Boolean(filteredOptions.length),
-        };
-      }) ?? []
-    );
+    if (!presentationDefinition) {
+      return [];
+    }
+    return credentialSetsFromPresentationDefinitionV2(presentationDefinition);
   }, [presentationDefinition]);
+
+  const { optionSets, simpleSets } = useMemo(
+    () => sortedCredentialSets(credentialSets),
+    [credentialSets],
+  );
 
   // initial selection of credentials/claims
   useEffect(() => {
@@ -468,15 +456,6 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     return null;
   }
 
-  const simpleSets = credentialSets.filter(
-    (set) =>
-      set.required && set.options.length === 1 && set.options[0].length === 1,
-  );
-  const optionSets = credentialSets.filter(
-    (set) =>
-      !set.required || set.options.length > 1 || set.options[0]?.length > 1,
-  );
-
   return (
     <>
       {simpleSets.length && (
@@ -553,9 +532,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                   key={credentialRequestGroupIndex}
                   labels={shareCredentialGroupLabels()}
                   lastGroup={lastGroup}
-                  onGroupSelect={onSelectOption(setIndex.toString())(
-                    credentialRequestGroup,
-                  )}
+                  onGroupSelect={onSelectOption(set.id)(credentialRequestGroup)}
                   onImagePreview={onImagePreview}
                   onSelectCredential={onSelectCredential(set.id)}
                   onSelectField={onSelectField(set.id)}
