@@ -156,54 +156,70 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       });
     };
 
-  const onSelectOption = (setId: string) => (requestGroup: string[]) => () => {
-    const newSetSelection = requestGroup.reduce<CredentialQuerySelection>(
-      (acc, queryId) => {
-        let preselection:
-          | PresentationSubmitV2CredentialRequest
-          | PresentationSubmitV2CredentialRequest[]
-          | undefined = selectedCredentials[setId]?.[queryId];
-        if (!preselection) {
-          preselection = Object.entries(selectedCredentials).find(
-            ([selectionsSetID, set]) => {
-              return selectionsSetID !== setId && set[queryId];
-            },
-          )?.[1][queryId];
-        }
-        if (!preselection) {
-          const credentialQuery =
-            presentationDefinition?.credentialQueries[queryId];
-          if (credentialQuery && 'applicableCredentials' in credentialQuery) {
-            preselection = credentialQuery.applicableCredentials?.[0]
-              ? [
-                  {
-                    credentialId: credentialQuery.applicableCredentials[0].id,
-                    userSelections: [],
-                  },
-                ]
-              : undefined;
-          }
-        }
-        if (preselection) {
-          acc[queryId] = preselection;
-        }
-        return acc;
-      },
-      {},
-    );
+  const onSelectOption =
+    (setId: string) => (requestGroup: string[]) => (selected: boolean) => {
+      const credentialSet =
+        presentationDefinition?.credentialSets[parseInt(setId)];
+      let newSetSelection: CredentialQuerySelection = {};
+      if (!selected && credentialSet?.required) {
+        return;
+      }
+      if (selected) {
+        newSetSelection = requestGroup.reduce<CredentialQuerySelection>(
+          (acc, queryId) => {
+            let preselection:
+              | PresentationSubmitV2CredentialRequest
+              | PresentationSubmitV2CredentialRequest[]
+              | undefined = selectedCredentials[setId]?.[queryId];
+            if (!preselection) {
+              preselection = Object.entries(selectedCredentials).find(
+                ([selectionsSetID, set]) => {
+                  return selectionsSetID !== setId && set[queryId];
+                },
+              )?.[1][queryId];
+            }
+            if (!preselection) {
+              const credentialQuery =
+                presentationDefinition?.credentialQueries[queryId];
+              if (
+                credentialQuery &&
+                'applicableCredentials' in credentialQuery
+              ) {
+                preselection = credentialQuery.applicableCredentials?.[0]
+                  ? [
+                      {
+                        credentialId:
+                          credentialQuery.applicableCredentials[0].id,
+                        userSelections: [],
+                      },
+                    ]
+                  : undefined;
+              }
+            }
+            if (preselection) {
+              acc[queryId] = preselection;
+            }
+            return acc;
+          },
+          {},
+        );
+      }
 
-    if (isEqual(newSetSelection, selectedCredentials[setId])) {
-      return;
-    }
+      if (
+        isEqual(newSetSelection, selectedCredentials[setId]) &&
+        credentialSet?.required
+      ) {
+        return;
+      }
 
-    setSelectedCredentials((prevSelection) => {
-      const newSelection = {
-        ...prevSelection,
-      };
-      newSelection[setId] = newSetSelection;
-      return newSelection;
-    });
-  };
+      setSelectedCredentials((prevSelection) => {
+        const newSelection = {
+          ...prevSelection,
+        };
+        newSelection[setId] = newSetSelection;
+        return newSelection;
+      });
+    };
 
   // result of selection is propagated using the navigation param `selectedV2Credentials`
   useEffect(() => {
