@@ -477,38 +477,44 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       {simpleSets.length && (
         <ProofRequestSet>
           {simpleSets.flatMap((set, setIndex, { length: setLength }) => {
-            const lastItem = setIndex === setLength - 1;
-            const credentialRequestId = set.options[0][0];
-            const selected = selectedCredentials[set.id]?.[
-              credentialRequestId
-            ] as PresentationSubmitV2CredentialRequest;
-            return (
-              <ShareCredentialV2
-                credentialQuery={
-                  presentationDefinition.credentialQueries[credentialRequestId]
-                }
-                credentialRequestId={credentialRequestId}
-                expanded={expandedCredential === credentialRequestId}
-                key={credentialRequestId}
-                labels={shareCredentialLabels()}
-                lastItem={lastItem}
-                onHeaderPress={onHeaderPress}
-                onImagePreview={onImagePreview}
-                onSelectCredential={onSelectCredential(set.id)(
-                  credentialRequestId,
-                )}
-                onSelectField={onSelectField(set.id)(credentialRequestId)}
-                selectedCredentialId={selected?.credentialId}
-                selectedFields={selected?.userSelections}
-                style={[
-                  styles.requestedCredential,
-                  lastItem && styles.requestedCredentialLast,
-                ]}
-                testID={concatTestID(
-                  'ProofRequestSharingScreen.credential',
-                  credentialRequestId,
-                )}
-              />
+            const lastSet = setIndex === setLength - 1;
+            return set.options[0].flatMap(
+              (credentialRequestId, optionIndex, { length: optionLength }) => {
+                const lastItem = lastSet && optionIndex === optionLength - 1;
+                const selected = selectedCredentials[set.id]?.[
+                  credentialRequestId
+                ] as PresentationSubmitV2CredentialRequest;
+                return (
+                  <ShareCredentialV2
+                    credentialQuery={
+                      presentationDefinition.credentialQueries[
+                        credentialRequestId
+                      ]
+                    }
+                    credentialRequestId={credentialRequestId}
+                    expanded={expandedCredential === credentialRequestId}
+                    key={credentialRequestId}
+                    labels={shareCredentialLabels()}
+                    lastItem={lastItem}
+                    onHeaderPress={onHeaderPress}
+                    onImagePreview={onImagePreview}
+                    onSelectCredential={onSelectCredential(set.id)(
+                      credentialRequestId,
+                    )}
+                    onSelectField={onSelectField(set.id)(credentialRequestId)}
+                    selectedCredentialId={selected?.credentialId}
+                    selectedFields={selected?.userSelections}
+                    style={[
+                      styles.requestedCredential,
+                      lastItem && styles.requestedCredentialLast,
+                    ]}
+                    testID={concatTestID(
+                      'ProofRequestSharingScreen.credential',
+                      credentialRequestId,
+                    )}
+                  />
+                );
+              },
             );
           })}
         </ProofRequestSet>
