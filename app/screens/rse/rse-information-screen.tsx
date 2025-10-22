@@ -23,7 +23,7 @@ export const RSEInfoScreen: FC = () => {
   const colorScheme = useAppColorScheme();
 
   const onContinue = useCallback(
-    () => navigation.navigate('Processing', route.params),
+    () => navigation.navigate('CredentialOffer', route.params),
     [navigation, route],
   );
 

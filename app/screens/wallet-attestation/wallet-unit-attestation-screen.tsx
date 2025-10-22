@@ -45,9 +45,10 @@ const WalletUnitAttestationScreen = () => {
 
   const closeHandler = useCallback(() => {
     const resetToDashboard = route.params?.resetToDashboard;
+    const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
     if (
       resetToDashboard === true ||
-      (resetToDashboard === 'onError' && status !== LoaderViewState.Success)
+      (resetToDashboard === 'onError' && errorStatuses.includes(status))
     ) {
       resetNavigationAction(rootNavigation, [
         { name: 'Dashboard', params: { screen: 'Wallet' } },

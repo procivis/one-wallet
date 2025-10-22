@@ -216,7 +216,6 @@
   "info.credentialOffer.confirmationCode.input.error": "Ungültiger Code. Bitte versuchen Sie es erneut!",
   "info.credentialOffer.confirmationCode.input.numberPlaceholder": "%{codeLength}-stelliger Code",
   "info.credentialOffer.confirmationCode.input.textPlaceholder": "%{codeLength} Zeichen langer Code",
-  "info.credentialOffer.process.creatingRSE.title": "Remote Secure Element wird eingerichtet",
   "info.credentialOffer.process.error.rseLocked.title": "Ihr Remote Secure Element ist gesperrt.\nDie Ausstellung der Anmeldeinformationen ist fehlgeschlagen.",
   "info.credentialOffer.process.warning.incompatible.title": "Ihre Wallet ist für den definierten Schlüsseltyp inkompatibel.",
   "info.credentialUpdate.subtitle": "Die folgenden Anmeldeinformation(en) wurden aktualisiert:",

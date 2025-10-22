@@ -12,7 +12,7 @@ const BLACKLIST_KEY_PATTERNS = [
   /^common.pinCodeSet$/,
   /^common.settings$/,
   /^common.unknownIssuer$/,
-  /^info.credentialOffer.process.warning.incompatible.title$/,
+  /^error.incompatibleKeyStorageType$/,
   /^info.settings.security.rse.pinCodeSet.title$/,
   /^info.invitation.process.bleAdapterUnavailable.title$/,
   /^info.invitation.process.blePermissionMissing.title$/,

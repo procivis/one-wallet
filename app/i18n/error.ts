@@ -8,6 +8,10 @@ export const translateError = (error: unknown, fallback: string) => {
     return translate(`error.${error.code}` as TxKeyPath, {
       defaultValue: fallback,
     });
+  } else if (error && error instanceof Error) {
+    return translate(`error.${error.name}` as TxKeyPath, {
+      defaultValue: fallback,
+    });
   }
 
   return fallback;
