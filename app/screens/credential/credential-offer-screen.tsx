@@ -12,6 +12,7 @@ import {
   useBeforeRemove,
   useBlockOSBackNavigation,
   useCoreConfig,
+  useCredentialAccept,
   useCredentialCardExpanded,
   useCredentialDetail,
   useCredentialReject,
@@ -22,9 +23,10 @@ import {
 import {
   ClaimSchema,
   IssuanceProtocolFeatureEnum,
+  OneError,
   TrustEntityRoleEnum,
+  Ubiqu,
   WalletStorageType,
-  WalletUnitStatusEnum,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -37,6 +39,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
 
@@ -46,8 +49,10 @@ import {
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCreateRSE } from '../../hooks/rse';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
+import { IncompatibleKeyStorageError } from '../../models/errors';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -55,10 +60,13 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
-import {
-  isWalletAttestationExpired,
-  walletUnitAttestationState,
-} from '../../utils/wallet-unit';
+import { walletUnitAttestationState } from '../../utils/wallet-unit';
+
+const {
+  addEventListener: addRSEEventListener,
+  PinEventType,
+  PinFlowType,
+} = Ubiqu;
 
 // fallback empty attributes for credential offer without claim values
 const getDummyAttributes = (
@@ -78,9 +86,17 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
-  const { credentialId, interactionId, txCode } = route.params;
+  const { invitationResult, txCode } = route.params;
+  const { interactionId, walletStorageType } = invitationResult;
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
+  const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
+  const { mutateAsync: acceptCredential } = useCredentialAccept();
+  const [rseInitialized, setRseInitialized] = useState(false);
+  const [createdRseIdentifierId, setCreatedRseIdentifierId] =
+    useState<string>();
+  const { generateRSE } = useCreateRSE();
+  const [credentialId, setCredentialId] = useState<string>();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: credentialSchema } = useCredentialSchemaDetail(
     credential?.schema.id,
@@ -93,30 +109,107 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
+  const identifierId = useMemo(() => {
+    switch (walletStorageType) {
+      case WalletStorageType.SOFTWARE:
+        return walletStore.holderSwIdentifierId;
+      case WalletStorageType.HARDWARE:
+        return walletStore.holderHwIdentifierId;
+      case WalletStorageType.REMOTE_SECURE_ELEMENT:
+        return createdRseIdentifierId ?? walletStore.holderRseIdentifierId;
+      default:
+        return walletStore.holderIdentifierId;
+    }
+  }, [walletStore, walletStorageType, createdRseIdentifierId]);
+
   useEffect(() => {
-    if (
-      !credential ||
-      credential.schema.walletStorageType !==
-        WalletStorageType.EUDI_COMPLIANT ||
-      isLoadingWUA
-    ) {
+    return addRSEEventListener((event) => {
+      if (event.type !== PinEventType.SHOW_PIN) {
+        return;
+      }
+      if (event.flowType === PinFlowType.TRANSACTION) {
+        rootNavigation.navigate('RSESign');
+      } else if (event.flowType === PinFlowType.SUBSCRIBE) {
+        navigation.navigate('RSEPinSetup');
+      } else if (event.flowType === PinFlowType.ADD_BIOMETRICS) {
+        navigation.navigate('RSEAddBiometrics');
+      }
+    });
+  }, [navigation, rootNavigation, walletStore.holderRseIdentifierId]);
+
+  const initializeRSE = useCallback(() => {
+    if (rseInitialized) {
       return;
     }
-    if (walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED) {
-      rootNavigation.navigate('WalletUnitError');
-    } else if (
-      !walletUnitAttestation ||
-      isWalletAttestationExpired(walletUnitAttestation)
-    ) {
-      rootNavigation.navigate('WalletUnitAttestation', {
-        ...(walletUnitAttestation ? { refresh: true } : { register: true }),
-        attestationRequired: true,
-        resetToDashboard: 'onError',
+    setRseInitialized(true);
+    generateRSE()
+      .then(setCreatedRseIdentifierId)
+      .catch((error) => {
+        navigation.replace('Result', {
+          error,
+        });
+      });
+  }, [generateRSE, navigation, rseInitialized]);
+
+  const handleCredentialAccept = useCallback(async () => {
+    if (acceptanceInitialized) {
+      return;
+    }
+    setAcceptanceInitialized(true);
+    try {
+      const credentialId = await acceptCredential({
+        identifierId,
+        interactionId,
+        txCode,
+      });
+      setCredentialId(credentialId);
+    } catch (error) {
+      const invalidCodeBRs = ['BR_0169', 'BR_0170'];
+      if (error instanceof OneError && invalidCodeBRs.includes(error.code)) {
+        return navigation.replace('CredentialConfirmationCode', {
+          invalidCode: txCode,
+          invitationResult,
+        });
+      }
+      navigation.replace('Result', {
+        error,
       });
     }
-  }, [credential, isLoadingWUA, rootNavigation, walletUnitAttestation]);
+  }, [
+    acceptanceInitialized,
+    acceptCredential,
+    identifierId,
+    interactionId,
+    txCode,
+    navigation,
+    invitationResult,
+  ]);
+
+  useEffect(() => {
+    if (walletStorageType && !identifierId) {
+      if (walletStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT) {
+        initializeRSE();
+      } else {
+        navigation.replace('Result', {
+          error: new IncompatibleKeyStorageError(),
+        });
+      }
+      return;
+    }
+    handleCredentialAccept();
+  }, [
+    credential,
+    identifierId,
+    handleCredentialAccept,
+    initializeRSE,
+    walletStorageType,
+    navigation,
+  ]);
 
   const infoPressHandler = useCallback(() => {
+    if (!credentialId) {
+      return;
+    }
     rootNavigation.navigate('NerdMode', {
       params: {
         credentialId,
@@ -145,38 +238,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
   useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
+    if (!credentialId) {
+      return;
+    }
+
     skipRejection.current = true;
 
-    const requiredStorageType = credential?.schema.walletStorageType;
-
-    if (
-      requiredStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT &&
-      !walletStore.holderRseIdentifierId
-    ) {
-      navigation.navigate('RSEInfo', {
-        credentialId,
-        interactionId,
-      });
-    } else if (txCode) {
-      navigation.replace('CredentialConfirmationCode', {
-        credentialId,
-        interactionId,
-        txCode,
-      });
-    } else {
-      navigation.replace('Processing', {
-        credentialId,
-        interactionId,
-      });
-    }
-  }, [
-    credential?.schema.walletStorageType,
-    credentialId,
-    interactionId,
-    navigation,
-    txCode,
-    walletStore.holderRseIdentifierId,
-  ]);
+    navigation.replace('Result', {
+      redirectUri: credential?.redirectUri,
+    });
+  }, [credential?.redirectUri, credentialId, navigation]);
 
   const onImagePreview = useCredentialImagePreview();
   const testID = 'CredentialOfferScreen';
@@ -243,12 +314,12 @@ const CredentialOfferScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: closeButton,
-        rightItem: (
+        rightItem: credentialId ? (
           <HeaderInfoButton
             onPress={infoPressHandler}
             testID={concatTestID(testID, 'header.info')}
           />
-        ),
+        ) : undefined,
         static: true,
         title: translate('common.credentialOffering'),
       }}
@@ -258,50 +329,48 @@ const CredentialOfferScreen: FunctionComponent = () => {
       }}
       testID={testID}
     >
-      <View style={styles.content} testID={concatTestID(testID, 'content')}>
-        <EntityDetails
-          identifier={credential?.issuer}
-          labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
-          role={TrustEntityRoleEnum.ISSUER}
-          style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
-          testID={concatTestID(testID, 'entityCluster')}
-        />
-        {!credential || !config || !card || isCheckingWUA ? (
-          <ActivityIndicator animate={isFocused} />
-        ) : (
-          <>
-            <View
-              style={styles.credentialWrapper}
-              testID={`HolderCredentialID.value.${credential.id}`}
-            >
-              <CredentialDetailsCard
-                attributes={displayedAttributes}
-                card={{
-                  ...card,
-                  onHeaderPress,
-                  width: cardWidth,
-                }}
-                expanded={expanded}
-                onImagePreview={onImagePreview}
-                showAllButtonLabel={translate('common.seeAll')}
-              />
-            </View>
-            <View style={styles.bottom}>
-              <Button
-                onPress={onAccept}
-                testID={concatTestID(testID, 'accept')}
-                title={translate('common.accept')}
-              />
-            </View>
-            <ShareDisclaimer
-              action={translate('common.accept')}
-              ppUrl={trustEntity?.privacyUrl}
-              testID={concatTestID(testID, 'disclaimer')}
-              tosUrl={trustEntity?.termsUrl}
+      {!credentialId || !credential || !config || !card || isCheckingWUA ? (
+        <ActivityIndicator animate={isFocused} style={styles.loader} />
+      ) : (
+        <View style={styles.content} testID={concatTestID(testID, 'content')}>
+          <EntityDetails
+            identifier={credential?.issuer}
+            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
+            role={TrustEntityRoleEnum.ISSUER}
+            style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
+            testID={concatTestID(testID, 'entityCluster')}
+          />
+          <View
+            style={styles.credentialWrapper}
+            testID={`HolderCredentialID.value.${credential.id}`}
+          >
+            <CredentialDetailsCard
+              attributes={displayedAttributes}
+              card={{
+                ...card,
+                onHeaderPress,
+                width: cardWidth,
+              }}
+              expanded={expanded}
+              onImagePreview={onImagePreview}
+              showAllButtonLabel={translate('common.seeAll')}
             />
-          </>
-        )}
-      </View>
+          </View>
+          <View style={styles.bottom}>
+            <Button
+              onPress={onAccept}
+              testID={concatTestID(testID, 'accept')}
+              title={translate('common.accept')}
+            />
+          </View>
+          <ShareDisclaimer
+            action={translate('common.accept')}
+            ppUrl={trustEntity?.privacyUrl}
+            testID={concatTestID(testID, 'disclaimer')}
+            tosUrl={trustEntity?.termsUrl}
+          />
+        </View>
+      )}
     </ScrollViewScreen>
   );
 };
@@ -326,6 +395,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 0,
     paddingVertical: 16,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

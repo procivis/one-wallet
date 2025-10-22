@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import CredentialAcceptProcessScreen from '../../screens/credential/credential-accept-process-screen';
+import CredentialAcceptResultScreen from '../../screens/credential/credential-accept-result-screen';
 import CredentialConfirmationCodeScreen from '../../screens/credential/credential-confirmation-code-screen';
 import CredentialOfferScreen from '../../screens/credential/credential-offer-screen';
 import { RSEAddBiometricsScreen } from '../../screens/rse/rse-add-biometrics-screen';
@@ -17,7 +17,7 @@ const CredentialOffer = React.memo(formSheetWrapper(CredentialOfferScreen));
 const CredentialConfirmationCode = React.memo(
   formSheetWrapper(CredentialConfirmationCodeScreen),
 );
-const Processing = React.memo(formSheetWrapper(CredentialAcceptProcessScreen));
+const Result = React.memo(formSheetWrapper(CredentialAcceptResultScreen));
 
 const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
 
@@ -29,7 +29,7 @@ const IssueCredentialNavigator = () => {
         component={CredentialConfirmationCode}
         name="CredentialConfirmationCode"
       />
-      <Stack.Screen component={Processing} name="Processing" />
+      <Stack.Screen component={Result} name="Result" />
       <Stack.Screen
         component={RSEAddBiometricsScreen}
         name="RSEAddBiometrics"

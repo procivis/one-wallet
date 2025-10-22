@@ -6,7 +6,10 @@ import {
   Typography,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
-import { OpenID4VCITxCodeInputMode } from '@procivis/react-native-one-core';
+import {
+  OpenID4VCITxCodeInputMode,
+  WalletStorageType,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
@@ -14,6 +17,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -27,10 +31,15 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
     >();
   const route =
     useRoute<IssueCredentialRouteProp<'CredentialConfirmationCode'>>();
+  const { walletStore } = useStores();
 
   useCapturePrevention();
 
-  const { credentialId, interactionId, txCode, invalidCode } = route.params;
+  const {
+    invalidCode,
+    invitationResult: { txCode: optionalTxCode, walletStorageType },
+  } = route.params;
+  const txCode = optionalTxCode!;
   const [code, setCode] = useState<string | undefined>(invalidCode);
   const isInputLengthValid = code && code.length === txCode.length;
   const inputError = translate(
@@ -60,13 +69,18 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    navigation.replace('Processing', {
-      credentialId,
-      interactionId,
-      txCode: txCode,
-      txCodeValue: code,
+    const needsRSESetup =
+      walletStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT &&
+      !walletStore.holderRseIdentifierId;
+    navigation.replace(needsRSESetup ? 'RSEInfo' : 'CredentialOffer', {
+      invitationResult: route.params.invitationResult,
     });
-  }, [credentialId, interactionId, navigation, txCode, code]);
+  }, [
+    navigation,
+    route.params.invitationResult,
+    walletStorageType,
+    walletStore.holderRseIdentifierId,
+  ]);
 
   return (
     <KeyboardAvoidingView

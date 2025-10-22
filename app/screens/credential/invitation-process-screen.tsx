@@ -6,6 +6,7 @@ import {
   InternetError,
   InternetState,
   isValidHttpUrl,
+  isWalletAttestationExpired,
   LoaderViewState,
   LoadingResultScreen,
   parseUniversalLink,
@@ -17,9 +18,15 @@ import {
   useContinueIssuance,
   useInvitationHandler,
   useOpenSettings,
+  useWalletUnitAttestation,
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
-import { OneError } from '@procivis/react-native-one-core';
+import {
+  InvitationResult,
+  OneError,
+  WalletStorageType,
+  WalletUnitStatusEnum,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -43,6 +50,7 @@ import {
 import { config } from '../../config';
 import { useBlePermissions } from '../../hooks/ble-permissions';
 import { translate, translateError, TxKeyPath } from '../../i18n';
+import { useStores } from '../../models';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -68,6 +76,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const managementNavigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
+  const { walletStore } = useStores();
+  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
+    useWalletUnitAttestation();
   const isFocused = useIsFocused();
   const [invitationUrl, setInvitationUrl] = useState(
     route.params.invitationUrl,
@@ -90,6 +101,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
   useBlockOSBackNavigation();
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
+  const [invitationResult, setInvitationResult] = useState<InvitationResult>();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00);
 
@@ -188,8 +200,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
         const result = await continueIssuance(url);
         managementNavigation.replace('IssueCredential', {
           params: {
-            credentialId: result.credentialIds[0],
-            interactionId: result.interactionId,
+            invitationResult: result,
           },
           screen: 'CredentialOffer',
         });
@@ -278,26 +289,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       url: invitationUrl,
     })
       .then((result) => {
-        if ('authorizationCodeFlowUrl' in result) {
-          openBrowser(result.authorizationCodeFlowUrl);
-          return;
-        }
-
-        if ('credentialIds' in result) {
-          managementNavigation.replace('IssueCredential', {
-            params: {
-              credentialId: result.credentialIds[0],
-              interactionId: result.interactionId,
-              txCode: result?.txCode,
-            },
-            screen: 'CredentialOffer',
-          });
-        } else {
-          managementNavigation.replace('ShareCredential', {
-            params: { request: result },
-            screen: 'ProofRequest',
-          });
-        }
+        setInvitationResult(result);
       })
       .catch((err: unknown) => {
         setState(LoaderViewState.Warning);
@@ -324,6 +316,70 @@ const InvitationProcessScreen: FunctionComponent = () => {
     invitationUrl,
     managementNavigation,
     redirectState,
+    walletStore.holderRseIdentifierId,
+  ]);
+
+  useEffect(() => {
+    if (!invitationResult) {
+      return;
+    }
+    if ('authorizationCodeFlowUrl' in invitationResult) {
+      openBrowser(invitationResult.authorizationCodeFlowUrl);
+      return;
+    } else if ('proofId' in invitationResult) {
+      managementNavigation.replace('ShareCredential', {
+        params: { request: invitationResult },
+        screen: 'ProofRequest',
+      });
+    } else {
+      const needsWUA =
+        invitationResult.walletStorageType === WalletStorageType.EUDI_COMPLIANT;
+      if (needsWUA && isLoadingWUA) {
+        return;
+      }
+
+      if (
+        needsWUA &&
+        walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED
+      ) {
+        rootNavigation.navigate('WalletUnitError');
+      } else if (
+        needsWUA &&
+        (!walletUnitAttestation ||
+          isWalletAttestationExpired(walletUnitAttestation))
+      ) {
+        rootNavigation.navigate('WalletUnitAttestation', {
+          ...(walletUnitAttestation ? { refresh: true } : { register: true }),
+          attestationRequired: true,
+          resetToDashboard: 'onError',
+        });
+      } else if (invitationResult.txCode) {
+        managementNavigation.replace('IssueCredential', {
+          params: {
+            invitationResult: invitationResult,
+          },
+          screen: 'CredentialConfirmationCode',
+        });
+      } else {
+        const needsRSESetup =
+          invitationResult.walletStorageType ===
+            WalletStorageType.REMOTE_SECURE_ELEMENT &&
+          !walletStore.holderRseIdentifierId;
+        managementNavigation.replace('IssueCredential', {
+          params: {
+            invitationResult: invitationResult,
+          },
+          screen: needsRSESetup ? 'RSEInfo' : 'CredentialOffer',
+        });
+      }
+    }
+  }, [
+    invitationResult,
+    isLoadingWUA,
+    managementNavigation,
+    rootNavigation,
+    walletStore.holderRseIdentifierId,
+    walletUnitAttestation,
   ]);
 
   const infoPressHandler = useCallback(() => {
