@@ -493,7 +493,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                     }
                     credentialRequestId={credentialRequestId}
                     expanded={expandedCredential === credentialRequestId}
-                    key={credentialRequestId}
+                    key={`${set.id}-${credentialRequestId}`}
                     labels={shareCredentialLabels()}
                     lastItem={lastItem}
                     onHeaderPress={onHeaderPress}
@@ -509,7 +509,9 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                       lastItem && styles.requestedCredentialLast,
                     ]}
                     testID={concatTestID(
-                      'ProofRequestSharingScreen.credential',
+                      'ProofRequestSharingScreen.credentialSet',
+                      set.id,
+                      'credential',
                       credentialRequestId,
                     )}
                   />
@@ -519,60 +521,69 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
           })}
         </ProofRequestSet>
       )}
-      {optionSets.map((set, setIndex) => (
-        <ProofRequestSet
-          headerLabel={translate('info.proofRequest.set.title', {
-            index: setIndex + 1,
-          })}
-          key={setIndex}
-          showHeader={true}
-          showSeparator={setIndex === 0 && simpleSets.length === 0}
-        >
-          {set.options.map(
-            (
-              credentialRequestGroup,
-              credentialRequestGroupIndex,
-              { length: credentialRequestGroupsLength },
-            ) => {
-              const valid = credentialRequestGroup.every((queryId) => {
-                const query = presentationDefinition.credentialQueries[queryId];
-                return queryId && 'applicableCredentials' in query;
-              });
-              const lastGroup =
-                credentialRequestGroupIndex ===
-                credentialRequestGroupsLength - 1;
-              const groupSelectedCredentials = selectedCredentials[set.id];
-              const selected =
-                groupSelectedCredentials &&
-                Object.keys(groupSelectedCredentials).length ===
-                  credentialRequestGroup.length &&
-                credentialRequestGroup.every((id) =>
-                  Object.keys(groupSelectedCredentials).includes(id),
+      {optionSets.map((set, setIndex) => {
+        const titleOptions = { index: setIndex + 1 };
+        const title = set.required
+          ? translate('info.proofRequest.set.title', titleOptions)
+          : translate('info.proofRequest.optionalSet.title', titleOptions);
+        return (
+          <ProofRequestSet
+            headerLabel={title}
+            key={setIndex}
+            showHeader={true}
+            showSeparator={setIndex === 0 && simpleSets.length === 0}
+          >
+            {set.options.map(
+              (
+                credentialRequestGroup,
+                credentialRequestGroupIndex,
+                { length: credentialRequestGroupsLength },
+              ) => {
+                const valid = credentialRequestGroup.every((queryId) => {
+                  const query =
+                    presentationDefinition.credentialQueries[queryId];
+                  return queryId && 'applicableCredentials' in query;
+                });
+                const lastGroup =
+                  credentialRequestGroupIndex ===
+                  credentialRequestGroupsLength - 1;
+                const groupSelectedCredentials = selectedCredentials[set.id];
+                const selected =
+                  groupSelectedCredentials &&
+                  Object.keys(groupSelectedCredentials).length ===
+                    credentialRequestGroup.length &&
+                  credentialRequestGroup.every((id) =>
+                    Object.keys(groupSelectedCredentials).includes(id),
+                  );
+                return (
+                  <ShareCredentialV2Group
+                    key={`${set.id}-${credentialRequestGroupIndex}`}
+                    labels={shareCredentialGroupLabels()}
+                    lastGroup={lastGroup}
+                    onGroupSelect={onSelectOption(set.id)(
+                      credentialRequestGroup,
+                    )}
+                    onImagePreview={onImagePreview}
+                    onSelectCredential={onSelectCredential(set.id)}
+                    onSelectField={onSelectField(set.id)}
+                    presentationDefinition={presentationDefinition}
+                    requestGroup={credentialRequestGroup}
+                    selected={selected}
+                    selectedCredentials={selectedCredentials[set.id]}
+                    testID={concatTestID(
+                      'ProofRequestSharingScreen.credentialSet',
+                      set.id,
+                      'credentialGroup',
+                      credentialRequestGroupIndex.toString(),
+                    )}
+                    valid={valid}
+                  />
                 );
-              return (
-                <ShareCredentialV2Group
-                  key={credentialRequestGroupIndex}
-                  labels={shareCredentialGroupLabels()}
-                  lastGroup={lastGroup}
-                  onGroupSelect={onSelectOption(set.id)(credentialRequestGroup)}
-                  onImagePreview={onImagePreview}
-                  onSelectCredential={onSelectCredential(set.id)}
-                  onSelectField={onSelectField(set.id)}
-                  presentationDefinition={presentationDefinition}
-                  requestGroup={credentialRequestGroup}
-                  selected={selected}
-                  selectedCredentials={selectedCredentials[set.id]}
-                  testID={concatTestID(
-                    'ProofRequestSharingScreen.credentialGroup',
-                    credentialRequestGroupIndex.toString(),
-                  )}
-                  valid={valid}
-                />
-              );
-            },
-          )}
-        </ProofRequestSet>
-      ))}
+              },
+            )}
+          </ProofRequestSet>
+        );
+      })}
       <View style={styles.bottom}>
         <Button
           disabled={!allSelectionsValid}
