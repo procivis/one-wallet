@@ -273,6 +273,7 @@
   "info.proofRequest.multiSetChange.title": "Credential used in multiple sets",
   "info.proofRequest.multipleCredentials.detail": "Multiple credentials available",
   "info.proofRequest.multipleCredentials.notice": "There is more than one version of this credential available.",
+  "info.proofRequest.optionalSet.title": "Set {{index}} - Please select one option. [optional]",
   "info.proofRequest.process.error.rseLocked.title": "Your Remote Secure Element is locked.\nThe credential cannot be shared.",
   "info.proofRequest.revokedCredential.notice": "Your credential(s) have been revoked by the issuing authority. Please contact the issuing authority to learn more.",
   "info.proofRequest.selectiveDisclosure.notice": "This credential requires you to share all attributes to work.",
