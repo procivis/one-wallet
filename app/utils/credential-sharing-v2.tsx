@@ -63,7 +63,8 @@ export const sortedCredentialSets = (
     });
   });
   const optionSets = credentialSets.filter(
-    (set) => !simpleSets.some((s) => s.id === set.id),
+    (set) =>
+      !simpleSets.some((s) => s.id === set.id) && (set.required || set.valid),
   );
 
   return { optionSets, simpleSets };

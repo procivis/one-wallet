@@ -8,6 +8,8 @@ import {
   PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 
+import { objectByTimestampSorter } from './sorting';
+
 export const preselectCredentialsForRequestGroups = (
   requestGroups: PresentationDefinitionRequestGroup[],
   allCredentials: CredentialDetail[],
@@ -56,7 +58,9 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                 'applicableCredentials' in credentialQuery
               ) {
                 acc2[queryId] = {
-                  credentialId: credentialQuery.applicableCredentials[0].id,
+                  credentialId: credentialQuery.applicableCredentials.sort(
+                    objectByTimestampSorter('issuanceDate', false),
+                  )[0].id,
                   userSelections: [],
                 };
               }
