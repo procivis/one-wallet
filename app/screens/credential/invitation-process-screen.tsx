@@ -560,7 +560,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
           <HeaderCloseModalButton testID="InvitationProcessScreen.header.close" />
         ),
         rightItem:
-          state === LoaderViewState.Warning && error ? (
+          (state === LoaderViewState.Warning ||
+            state === LoaderViewState.Error) &&
+          error ? (
             <HeaderInfoButton
               onPress={infoPressHandler}
               testID="InvitationProcessScreen.header.info"
