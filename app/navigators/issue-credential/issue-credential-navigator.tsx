@@ -18,6 +18,7 @@ const CredentialConfirmationCode = React.memo(
   formSheetWrapper(CredentialConfirmationCodeScreen),
 );
 const Result = React.memo(formSheetWrapper(CredentialAcceptResultScreen));
+const RSEInfo = React.memo(formSheetWrapper(RSEInfoScreen));
 
 const Stack = createNativeStackNavigator<IssueCredentialNavigatorParamList>();
 
@@ -35,7 +36,7 @@ const IssueCredentialNavigator = () => {
         name="RSEAddBiometrics"
         options={FULL_SCREEN_MODAL_OPTIONS}
       />
-      <Stack.Screen component={RSEInfoScreen} name="RSEInfo" />
+      <Stack.Screen component={RSEInfo} name="RSEInfo" />
       <Stack.Screen
         component={RSEPinSetupScreen}
         name="RSEPinSetup"
