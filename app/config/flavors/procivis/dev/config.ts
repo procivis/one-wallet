@@ -5,10 +5,6 @@ import { config as procivisConfig } from '../config';
 
 export const config: Configuration = {
   ...procivisConfig,
-  backendConfig: {
-    endpoints: procivisConfig.backendConfig.endpoints,
-    host: 'TODO',
-  },
   walletProvider: {
     type: WalletProviderTypeEnum.PROCIVIS_ONE,
     url: 'https://core.dev.procivis-one.com',

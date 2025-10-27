@@ -1,4 +1,3 @@
-import { setupBackendConfigStore } from '../backend-config-store/setup-backend-config-store';
 import { Environment } from '../environment';
 import { setupLocaleStore } from '../locale-store/setup-locale-store';
 import { setupUserSettingsStore } from '../user-settings-store/setup-user-settings-store';
@@ -26,7 +25,6 @@ export async function setupRootStore() {
   const env = await createEnvironment();
 
   const rootStoreData = {
-    backendConfigStore: await setupBackendConfigStore(env),
     locale: await setupLocaleStore(env),
     userSettings: await setupUserSettingsStore(env),
     walletStore: await setupWalletStore(env),
