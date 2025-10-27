@@ -534,12 +534,18 @@ const InvitationProcessScreen: FunctionComponent = () => {
       }
     }
 
-    return translateError(
-      error,
-      isValidHttpUrl(invitationUrl)
-        ? translate('info.invitation.process.unsupportedInvitationUrl.title')
-        : translate('info.invitation.process.unsupportedInvitation.title'),
+    let errorMessage = translate(
+      'info.invitation.process.unsupportedInvitation.title',
     );
+    if (isValidHttpUrl(invitationUrl)) {
+      errorMessage = translate(
+        'info.invitation.process.unsupportedInvitationUrl.title',
+      );
+    } else if (error) {
+      errorMessage = translate('info.errorScreen.title');
+    }
+
+    return translateError(error, errorMessage);
   }, [
     error,
     canHandleInvitation,
