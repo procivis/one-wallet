@@ -4,10 +4,4 @@ import { commonConfig } from '../common/config';
 export const config: Omit<Configuration, 'walletProvider'> = {
   ...commonConfig,
   appName: 'Procivis One Wallet',
-  backendConfig: {
-    endpoints: {
-      onboardingInvitation: '/api/v1/onboarding/invitation',
-    },
-    host: 'TODO',
-  },
 };
