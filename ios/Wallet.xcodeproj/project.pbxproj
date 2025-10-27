@@ -38,9 +38,12 @@
 		15C5330D2D54F4EF0004C10E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		258702B773E64857AB05C15E /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../assets/fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
+		337670622EAF7C7400CAA66C /* Wallet.procivis.demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.demo.entitlements; path = Wallet/Wallet.procivis.demo.entitlements; sourceTree = "<group>"; };
+		337670632EAF7C7400CAA66C /* Wallet.procivis.dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.dev.entitlements; path = Wallet/Wallet.procivis.dev.entitlements; sourceTree = "<group>"; };
+		337670642EAF7C7400CAA66C /* Wallet.procivis.test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.test.entitlements; path = Wallet/Wallet.procivis.test.entitlements; sourceTree = "<group>"; };
+		337670652EAF7C7400CAA66C /* Wallet.procivis.trial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.trial.entitlements; path = Wallet/Wallet.procivis.trial.entitlements; sourceTree = "<group>"; };
 		33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Wallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.procivis.storyboard; path = Wallet/LaunchScreen.procivis.storyboard; sourceTree = "<group>"; };
-		33FF67BA2805A2070093779C /* Wallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.entitlements; path = Wallet/Wallet.entitlements; sourceTree = "<group>"; };
 		3FAA02CF5D1A06D29C75F026 /* libPods-Wallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Wallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49BE0797BAED42DC8250E9C0 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 		4C726A7939A743A686EE049A /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-Regular.ttf"; path = "../assets/fonts/IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
@@ -65,13 +68,16 @@
 			isa = PBXGroup;
 			children = (
 				15C5330D2D54F4EF0004C10E /* AppDelegate.swift */,
-				33FF67BA2805A2070093779C /* Wallet.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */,
 				33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */,
 				33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */,
 				1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */,
+				337670622EAF7C7400CAA66C /* Wallet.procivis.demo.entitlements */,
+				337670632EAF7C7400CAA66C /* Wallet.procivis.dev.entitlements */,
+				337670642EAF7C7400CAA66C /* Wallet.procivis.test.entitlements */,
+				337670652EAF7C7400CAA66C /* Wallet.procivis.trial.entitlements */,
 				1598E2262717219400E4B02E /* Void.swift */,
 				15A4F1B92718D04800E1384E /* fonts */,
 			);
@@ -365,7 +371,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon.${CONFIG_NAME}.${ENVIRONMENT}";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Wallet/Wallet.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Wallet/Wallet.${CONFIG_NAME}.${ENVIRONMENT}.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AGG3V6QN4G;
 				ENABLE_BITCODE = NO;
@@ -399,7 +405,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon.${CONFIG_NAME}.${ENVIRONMENT}";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Wallet/Wallet.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Wallet/Wallet.${CONFIG_NAME}.${ENVIRONMENT}.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AGG3V6QN4G;
 				ENABLE_BITCODE = NO;

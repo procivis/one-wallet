@@ -22,11 +22,12 @@ type OldStore = {
 type NewStore = SnapshotOut<WalletStore>;
 type PossibleStoredData = OldStore | NewStore;
 
-const fetchWalletProviderConfig = async (url: string) => {
+const fetchWalletProviderConfig = async () => {
   try {
-    const response = await fetch(url, {
-      headers: { Accept: 'application/json' },
-    });
+    const response = await fetch(
+      `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
+      { headers: { Accept: 'application/json' } },
+    );
     if (!response.ok) {
       throw new Error(`Error status: ${response.status}`);
     }
@@ -38,10 +39,10 @@ const fetchWalletProviderConfig = async (url: string) => {
 
 export async function setupWalletStore(env: Environment) {
   let walletStore: WalletStore;
-  const isNFCSupported = await isNfcHceSupported();
-  const walletProviderData = await fetchWalletProviderConfig(
-    `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
-  );
+  const isNFCSupported = config.featureFlags.nfcEnabled
+    ? await isNfcHceSupported()
+    : false;
+  const walletProviderData = await fetchWalletProviderConfig();
 
   const walletProvider = WalletProviderModel.create(
     walletProviderData ?? {
