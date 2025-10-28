@@ -5,6 +5,7 @@ import {
   getInvitationUrlTransports,
   InternetError,
   InternetState,
+  isUrlValid,
   isValidHttpUrl,
   isWalletAttestationExpired,
   LoaderViewState,
@@ -541,7 +542,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       errorMessage = translate(
         'info.invitation.process.unsupportedInvitationUrl.title',
       );
-    } else if (error) {
+    } else if (error && !isUrlValid(invitationUrl)) {
       errorMessage = translate('info.errorScreen.title');
     }
 
