@@ -33,7 +33,8 @@ export type RootNavigatorParamList = {
     credentialIds: Array<CredentialListItem['id']>;
   };
   VersionUpdate: undefined;
-  WalletUnitAttestation: {
+  WalletUnitError: undefined;
+  WalletUnitRegistration: {
     attestationRequired?: boolean;
     resetToDashboard?: boolean | 'onError';
   } & (
@@ -46,7 +47,6 @@ export type RootNavigatorParamList = {
         register?: never;
       }
   );
-  WalletUnitError: undefined;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =

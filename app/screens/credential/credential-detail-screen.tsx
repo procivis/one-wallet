@@ -15,7 +15,6 @@ import {
   useCredentialCardExpanded,
   useCredentialDetail,
   useHistory,
-  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import {
   HistoryEntityTypeEnum,
@@ -44,7 +43,6 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { historyListItemLabels } from '../../utils/history';
-import { walletUnitAttestationState } from '../../utils/wallet-unit';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
@@ -56,8 +54,6 @@ const CredentialDetailScreen: FC = () => {
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
   const { data: credential } = useCredentialDetail(credentialId, isFocused);
-  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
-    useWalletUnitAttestation();
 
   const { data: historyPages } = useHistory({
     actions: historyListActionsFilter,
@@ -142,14 +138,13 @@ const CredentialDetailScreen: FC = () => {
     rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
   }, [rootNavigation]);
 
-  if (!credential || !config || isLoadingWUA) {
+  if (!credential || !config) {
     return <ActivityIndicator animate={isFocused} />;
   }
   const testID = 'CredentialDetailScreen.detailsCard';
   const { card, attributes } = detailsCardFromCredential(
     credential,
     config,
-    walletUnitAttestationState(walletUnitAttestation),
     testID,
     credentialCardLabels(),
   );

@@ -1304,7 +1304,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.16.3):
     - React-Core
-  - react-native-one-core (1.67952.1):
+  - react-native-one-core (1.70632.1):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -2454,7 +2454,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: 9429f37cdf4c89c51170a2a0330eecc974e76642
-  react-native-one-core: 78e5b0210d56fc1ea3dabbe046a2e931d1878d35
+  react-native-one-core: 944e4bca873852c1dc10ec120068505dd37e71a3
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
@@ -2508,8 +2508,8 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   VisionCamera: 05e4bc4783174689a5878a0797015ab32afae9e4
-  Yoga: 92f3bb322c40a86b7233b815854730442e01b8c4
+  Yoga: 7d51419602153919f32aec72812e324d495ee49d
 
-PODFILE CHECKSUM: b9fe6f6a9f10b14abed33d795da9631ae7099f4a
+PODFILE CHECKSUM: dea14aea421adbbb9bf6faede1ad7678f23e17cc
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

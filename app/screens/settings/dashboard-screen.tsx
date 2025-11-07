@@ -138,10 +138,6 @@ const DashboardScreen: FunctionComponent = observer(() => {
     navigation.navigate('ClearCache');
   }, [navigation]);
 
-  const handleWalletUnitAttestation = useCallback(() => {
-    navigation.navigate('WalletUnitAttestationInfo');
-  }, [navigation]);
-
   type SettingsListItem =
     | {
         buttonSetting: ButtonSettingProps;
@@ -149,6 +145,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
     | {
         switchSetting: SwitchSettingProps;
       };
+
+  const handleWalletUnitRegistration = useCallback(() => {
+    navigation.navigate('WalletUnitRegistrationInfo');
+  }, [navigation]);
 
   const renderSettingsSectionHeader: SectionListProps<
     SettingsListItem,
@@ -281,9 +281,9 @@ const DashboardScreen: FunctionComponent = observer(() => {
           ? {
               buttonSetting: {
                 icon: WalletUnitAttestationIcon,
-                onPress: handleWalletUnitAttestation,
-                testID: 'SettingsScreen.walletUnitAttestation',
-                title: translate('common.walletUnitAttestation'),
+                onPress: handleWalletUnitRegistration,
+                testID: 'SettingsScreen.walletUnitRegistration',
+                title: translate('common.walletUnitRegistration'),
               },
             }
           : null,

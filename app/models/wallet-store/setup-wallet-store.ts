@@ -57,12 +57,12 @@ export async function setupWalletStore(env: Environment) {
   );
 
   const defaultData: NewStore = {
-    holderAttestationKeyId: '',
     holderHwIdentifierId: '',
     holderRseIdentifierId: '',
     holderSwIdentifierId: '',
     isNFCSupported,
     walletProvider,
+    walletUnitId: '',
   };
 
   try {
@@ -75,7 +75,6 @@ export async function setupWalletStore(env: Environment) {
       // migrate from potential old did-ids
       if ('holderDidSwId' in stored) {
         data = {
-          holderAttestationKeyId: defaultData?.holderAttestationKeyId,
           holderHwIdentifierId:
             stored.holderDidHwId || defaultData.holderHwIdentifierId,
           holderRseIdentifierId:
@@ -84,6 +83,7 @@ export async function setupWalletStore(env: Environment) {
             stored.holderDidSwId || defaultData.holderSwIdentifierId,
           isNFCSupported,
           walletProvider,
+          walletUnitId: defaultData.walletUnitId,
         };
       } else {
         data = {

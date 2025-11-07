@@ -117,7 +117,6 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
   const props = detailsCardFromCredential(
     credential,
     config,
-    undefined,
     concatTestID('CredentialSchemaCard', credentialSchema.id),
     credentialCardLabels(),
   );

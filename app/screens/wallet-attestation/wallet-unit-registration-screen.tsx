@@ -4,8 +4,8 @@ import {
   LoaderViewState,
   Transport,
   useAvailableTransports,
-  useRefreshWalletUnit,
   useRegisterWalletUnit,
+  useWalletUnitStatus,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -27,25 +27,26 @@ import {
 } from '../../navigators/root/root-routes';
 import { resetNavigationAction } from '../../utils/navigation';
 
-const testID = 'WalletUnitAttestationScreen';
+const testID = 'WalletUnitRegistrationScreen';
 
-const WalletUnitAttestationScreen = () => {
+const WalletUnitRegistrationScreen = () => {
   const [error, setError] = useState<unknown>();
   const [status, setStatus] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
   const {
-    walletStore: { walletProvider },
+    walletStore,
+    walletStore: { walletProvider, walletUnitId },
   } = useStores();
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
   const hasInternetConnection = availableTransport?.includes(Transport.HTTP);
   const handled = useRef<boolean>(false);
 
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
-  const route = useRoute<RootRouteProp<'WalletUnitAttestation'>>();
+  const route = useRoute<RootRouteProp<'WalletUnitRegistration'>>();
   const { mutateAsync: registerWalletUnit, isSuccess: registeredNewWallet } =
     useRegisterWalletUnit();
-  const { mutateAsync: refreshWalletUnit } = useRefreshWalletUnit();
+  const { mutateAsync: refreshWalletUnit } = useWalletUnitStatus();
 
   const closeHandler = useCallback(() => {
     const resetToDashboard = route.params?.resetToDashboard;
@@ -74,17 +75,13 @@ const WalletUnitAttestationScreen = () => {
     try {
       setStatus(LoaderViewState.InProgress);
       if (route.params.refresh) {
-        await refreshWalletUnit(
-          walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
-        );
+        await refreshWalletUnit(walletUnitId);
       } else {
-        await registerWalletUnit({
-          appIntegrityCheckRequired:
-            walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
-          name: walletProvider.name,
+        const walletUnitId = await registerWalletUnit({
           type: config.walletProvider.type,
-          url: config.walletProvider.url,
+          url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
         });
+        walletStore.walletUnitIdSetup(walletUnitId);
       }
       setStatus(LoaderViewState.Success);
       closeHandler();
@@ -106,7 +103,9 @@ const WalletUnitAttestationScreen = () => {
     registerWalletUnit,
     route.params.attestationRequired,
     route.params.refresh,
-    walletProvider,
+    walletProvider.walletUnitAttestation.required,
+    walletStore,
+    walletUnitId,
   ]);
 
   useEffect(() => {
@@ -120,23 +119,23 @@ const WalletUnitAttestationScreen = () => {
 
   const loaderLabel = useMemo(() => {
     if (status === LoaderViewState.InProgress) {
-      return translate('walletUnitAttestation.inProgress');
+      return translate('walletUnitRegistration.inProgress');
     }
     if (status === LoaderViewState.Success) {
       if (registeredNewWallet) {
-        return translate('walletUnitAttestation.ready');
+        return translate('walletUnitRegistration.ready');
       } else {
-        return translate('walletUnitAttestation.updated');
+        return translate('walletUnitRegistration.updated');
       }
     }
     if (!error) {
       if (route.params.refresh) {
-        return translate('walletUnitAttestation.noInternet.refresh');
+        return translate('walletUnitRegistration.noInternet.refresh');
       } else {
-        return translate('walletUnitAttestation.noInternet.register');
+        return translate('walletUnitRegistration.noInternet.register');
       }
     }
-    return translateError(error, translate(`walletUnitAttestation.error`));
+    return translateError(error, translate(`walletUnitRegistration.error`));
   }, [error, registeredNewWallet, status, route.params.refresh]);
 
   const button =
@@ -170,9 +169,9 @@ const WalletUnitAttestationScreen = () => {
       secondaryButton={secondaryButton}
       state={status}
       testID={testID}
-      title={translate('common.walletAttestation')}
+      title={translate('common.walletRegistration')}
     />
   );
 };
 
-export default memo(WalletUnitAttestationScreen);
+export default memo(WalletUnitRegistrationScreen);

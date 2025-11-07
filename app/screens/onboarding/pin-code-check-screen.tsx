@@ -3,7 +3,7 @@ import {
   reportTraceInfo,
   useBlockOSBackNavigation,
   usePinCodeSecurity,
-  useWalletUnitAttestation,
+  useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
 import {
   useFocusEffect,
@@ -49,22 +49,22 @@ const PinCodeCheckScreen: FunctionComponent = () => {
   const route = useRoute<RootRouteProp<'PinCodeCheck'>>();
   const screen = useRef<PinCodeActions>(null);
   const { checkAppVersion } = useVersionCheck();
-
-  const { data: walletUnitAttestation } = useWalletUnitAttestation();
-
-  useFocusEffect(hideSplashAndroidOnly);
-
-  useBlockOSBackNavigation();
-
-  const biometry = useBiometricType();
   const {
     userSettings: {
       biometrics,
       pinCodeSecurity: { failedAttempts, lastAttemptTimestamp },
       setPinCodeSecurity,
     },
-    walletStore: { walletProvider },
+    walletStore: { walletProvider, walletUnitId },
   } = useStores();
+
+  const { data: walletUnitRegistration } = useWalletUnitDetail(walletUnitId);
+
+  useFocusEffect(hideSplashAndroidOnly);
+
+  useBlockOSBackNavigation();
+
+  const biometry = useBiometricType();
 
   const [error, setError] = useState<string>();
 
@@ -82,9 +82,9 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     navigation.pop();
     if (
       walletProvider.walletUnitAttestation.required &&
-      walletUnitAttestation?.status === undefined
+      walletUnitRegistration?.status === undefined
     ) {
-      navigation.navigate('WalletUnitAttestation', {
+      navigation.navigate('WalletUnitRegistration', {
         register: true,
         resetToDashboard: true,
       });
@@ -96,7 +96,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     handleInitialDeepLink,
     navigation,
     walletProvider.walletUnitAttestation.required,
-    walletUnitAttestation?.status,
+    walletUnitRegistration?.status,
   ]);
 
   const onPinEntered = useCallback(
