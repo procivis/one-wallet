@@ -3,9 +3,9 @@ import {
   ButtonType,
   LoaderViewState,
   useBlockOSBackNavigation,
-  useWalletUnitAttestation,
+  useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
-import { WalletUnitStatusEnum } from '@procivis/react-native-one-core';
+import { WalletUnitStatus } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
@@ -20,19 +20,19 @@ const WalletUnitErrorScreen: FC = () => {
   const [state, setState] = useState<
     LoaderViewState.Error | LoaderViewState.Warning
   >(LoaderViewState.Warning);
-  const { data: walletUnitAttestation } = useWalletUnitAttestation();
   const {
-    walletStore: { walletProvider },
+    walletStore: { walletProvider, walletUnitId },
   } = useStores();
+  const { data: walletUnitDetail } = useWalletUnitDetail(walletUnitId);
 
   useEffect(() => {
-    if (!walletUnitAttestation) {
+    if (!walletUnitDetail) {
       return;
     }
-    if (walletUnitAttestation.status === WalletUnitStatusEnum.REVOKED) {
+    if (walletUnitDetail.status === WalletUnitStatus.REVOKED) {
       setState(LoaderViewState.Error);
     }
-  }, [walletUnitAttestation]);
+  }, [walletUnitDetail]);
 
   useBlockOSBackNavigation();
 
@@ -50,14 +50,14 @@ const WalletUnitErrorScreen: FC = () => {
     rootNavigation.navigate('Settings', { screen: 'DeleteWallet' });
   }, [rootNavigation]);
 
-  const updateAttestation = useCallback(() => {
-    rootNavigation.navigate('WalletUnitAttestation', { refresh: true });
+  const updateRegistration = useCallback(() => {
+    rootNavigation.navigate('WalletUnitRegistration', { refresh: true });
   }, [rootNavigation]);
 
   const loaderLabel =
     state === LoaderViewState.Error
-      ? translate('walletUnitAttestationError.revoked')
-      : translate('walletUnitAttestationError.expired');
+      ? translate('walletUnitRegistrationError.revoked')
+      : translate('walletUnitRegistrationError.expired');
 
   const button: ButtonProps =
     state === LoaderViewState.Error
@@ -71,7 +71,7 @@ const WalletUnitErrorScreen: FC = () => {
           type: ButtonType.Primary,
         }
       : {
-          onPress: updateAttestation,
+          onPress: updateRegistration,
           title: translate('common.update'),
           type: ButtonType.Primary,
         };
@@ -97,7 +97,7 @@ const WalletUnitErrorScreen: FC = () => {
       secondaryButton={secondaryButton}
       state={state}
       testID="WalletUnitErrorScreen"
-      title={translate('common.walletAttestation')}
+      title={translate('common.walletRegistration')}
     />
   );
 };

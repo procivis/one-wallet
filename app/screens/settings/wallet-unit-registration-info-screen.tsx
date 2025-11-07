@@ -12,28 +12,28 @@ import {
   StatusWarningIcon,
   Typography,
   useAppColorScheme,
-  useWalletUnitAttestation,
+  useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
 import {
-  HolderAttestationWalletUnitResponse,
-  WalletUnitStatusEnum,
+  HolderWalletUnitDetail,
+  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-import { isWalletAttestationExpired } from '../../utils/wallet-unit';
 
-const testID = 'WalletUnitAttestationScreen';
+const testID = 'WalletUnitRegistrationScreen';
 
 const getStatus = (
-  walletUnitAttestation: HolderAttestationWalletUnitResponse | undefined,
+  walletUnitDetail: HolderWalletUnitDetail | undefined,
   colorScheme: ColorScheme,
 ) => {
-  if (walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED) {
+  if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
     return {
       backgroundColor: 'rgba(217, 13, 13, 0.05)',
       icon: StatusErrorIcon,
@@ -42,16 +42,7 @@ const getStatus = (
     };
   }
 
-  if (isWalletAttestationExpired(walletUnitAttestation)) {
-    return {
-      backgroundColor: colorScheme.background,
-      icon: StatusWarningIcon,
-      text: translate('common.expired'),
-      textColor: colorScheme.text,
-    };
-  }
-
-  if (walletUnitAttestation?.status === WalletUnitStatusEnum.ACTIVE) {
+  if (walletUnitDetail?.status === WalletUnitStatus.ACTIVE) {
     return {
       backgroundColor: colorScheme.background,
       icon: StatusSuccessIcon,
@@ -68,29 +59,29 @@ const getStatus = (
   };
 };
 
-const WalletUnitAttestationInfoScreen: FC = () => {
-  const isFocused = useIsFocused();
+const WalletUnitRegistrationInfoScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
-  const { data: walletUnitAttestation, isLoading } =
-    useWalletUnitAttestation(isFocused);
+  const {
+    walletStore: { walletUnitId },
+  } = useStores();
+  const { data: walletUnitDetail, isLoading } =
+    useWalletUnitDetail(walletUnitId);
 
   const isCheckButtonEnabled =
-    (walletUnitAttestation?.status === undefined ||
-      isWalletAttestationExpired(walletUnitAttestation)) &&
-    !isLoading;
+    walletUnitDetail?.status === undefined || !isLoading;
 
   const handleCheck = useCallback(() => {
     rootNavigation.navigate(
-      'WalletUnitAttestation',
-      walletUnitAttestation ? { refresh: true } : { register: true },
+      'WalletUnitRegistration',
+      walletUnitDetail ? { refresh: true } : { register: true },
     );
-  }, [rootNavigation, walletUnitAttestation]);
+  }, [rootNavigation, walletUnitDetail]);
 
   const status = useMemo(
-    () => getStatus(walletUnitAttestation, colorScheme),
-    [colorScheme, walletUnitAttestation],
+    () => getStatus(walletUnitDetail, colorScheme),
+    [colorScheme, walletUnitDetail],
   );
   const Icon = status.icon;
 
@@ -103,14 +94,14 @@ const WalletUnitAttestationInfoScreen: FC = () => {
             testID={concatTestID(testID, 'back')}
           />
         ),
-        title: translate('common.walletUnitAttestation'),
+        title: translate('common.walletUnitRegistration'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID={testID}
     >
       <View style={styles.contentContainer}>
         <Typography color={colorScheme.text} style={styles.contentDescription}>
-          {translate('info.walletUnitAttestation.description')}
+          {translate('info.walletUnitRegistration.description')}
         </Typography>
         {isLoading && (
           <View style={styles.loaderWrapper}>
@@ -125,11 +116,7 @@ const WalletUnitAttestationInfoScreen: FC = () => {
             ]}
           >
             <Icon
-              testID={concatTestID(
-                testID,
-                'icon',
-                walletUnitAttestation?.status,
-              )}
+              testID={concatTestID(testID, 'icon', walletUnitDetail?.status)}
             />
             <Typography color={colorScheme.text} style={styles.status}>
               {translate('common.status')}
@@ -151,7 +138,7 @@ const WalletUnitAttestationInfoScreen: FC = () => {
             onPress={handleCheck}
             testID={concatTestID(testID, 'checkButton')}
             title={
-              walletUnitAttestation
+              walletUnitDetail
                 ? translate('common.update')
                 : translate('common.register')
             }
@@ -199,4 +186,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(WalletUnitAttestationInfoScreen);
+export default memo(WalletUnitRegistrationInfoScreen);

@@ -18,7 +18,6 @@ import {
   useCredentialReject,
   useCredentialSchemaDetail,
   useTrustEntity,
-  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import {
   ClaimSchema,
@@ -60,7 +59,6 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
-import { walletUnitAttestationState } from '../../utils/wallet-unit';
 
 const {
   addEventListener: addRSEEventListener,
@@ -101,9 +99,10 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: credentialSchema } = useCredentialSchemaDetail(
     credential?.schema.id,
   );
+  const {
+    walletStore: { walletUnitId },
+  } = useStores();
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
-  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
-    useWalletUnitAttestation();
   const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -158,6 +157,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     setAcceptanceInitialized(true);
     try {
       const credentialId = await acceptCredential({
+        holderWalletUnitId: walletUnitId,
         identifierId,
         interactionId,
         txCode,
@@ -178,6 +178,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [
     acceptanceInitialized,
     acceptCredential,
+    walletUnitId,
     identifierId,
     interactionId,
     txCode,
@@ -257,7 +258,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
       ? detailsCardFromCredential(
           credential,
           config,
-          walletUnitAttestationState(walletUnitAttestation),
           `${testID}.detail`,
           credentialCardLabels(),
         )
@@ -305,11 +305,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
     [onCloseButtonPress],
   );
 
-  const isCheckingWUA =
-    credential &&
-    credential.schema.walletStorageType === WalletStorageType.EUDI_COMPLIANT &&
-    isLoadingWUA;
-
   return (
     <ScrollViewScreen
       header={{
@@ -329,7 +324,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
       }}
       testID={testID}
     >
-      {!credentialId || !credential || !config || !card || isCheckingWUA ? (
+      {!credentialId || !credential || !config || !card ? (
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>

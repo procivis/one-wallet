@@ -41,7 +41,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     importSchemasFromAssets();
 
     if (walletUnitAttestation.enabled) {
-      rootNavigation.navigate('WalletUnitAttestation', {
+      rootNavigation.navigate('WalletUnitRegistration', {
         register: true,
         resetToDashboard: true,
       });
