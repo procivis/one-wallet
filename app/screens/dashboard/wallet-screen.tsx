@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   FoldableHeader,
-  GhostButton,
   Header,
   ScanButton,
   StatusErrorIcon,
@@ -16,7 +15,7 @@ import {
   CredentialListQuery,
   CredentialStateEnum,
   SortableCredentialColumnEnum,
-  WalletUnitStatusEnum,
+  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
@@ -31,7 +30,6 @@ import React, {
 import { Animated, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RefreshIcon } from '../../components/icon/refresh-icon';
 import {
   HeaderOptionsButton,
   HeaderPlusButton,
@@ -46,13 +44,12 @@ import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { isWalletAttestationExpired } from '../../utils/wallet-unit';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const {
-    walletStore: { walletProvider },
+    walletStore: { walletProvider, walletUnitId },
   } = useStores();
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
@@ -84,26 +81,22 @@ const WalletScreen: FunctionComponent = observer(() => {
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
   useCredentialStatusCheck();
-  const { isLoading: isLoadingWUA, walletUnitAttestation } = useWalletUnitCheck(
-    walletProvider.walletUnitAttestation.appIntegrityCheckRequired,
-  );
+  const { isLoading: isLoadingWU, walletUnitDetail } =
+    useWalletUnitCheck(walletUnitId);
 
   useEffect(() => {
     if (!isFocused || !walletProvider.walletUnitAttestation.required) {
       return;
     }
 
-    if (
-      walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED ||
-      isWalletAttestationExpired(walletUnitAttestation)
-    ) {
+    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
       navigation.navigate('WalletUnitError');
     }
   }, [
     isFocused,
-    walletUnitAttestation,
     navigation,
     walletProvider.walletUnitAttestation.required,
+    walletUnitDetail?.status,
   ]);
 
   const credentials = useMemo(
@@ -125,10 +118,6 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const handleRequestCredentialClick = useCallback(() => {
     navigation.navigate('RequestCredentialList');
-  }, [navigation]);
-
-  const handleRefreshWalletUnit = useCallback(() => {
-    navigation.navigate('WalletUnitAttestation', { refresh: true });
   }, [navigation]);
 
   const handleSearchPhraseChange = useMemo(
@@ -205,33 +194,17 @@ const WalletScreen: FunctionComponent = observer(() => {
         text: translate('common.updateAvailable'),
       };
     }
-    if (walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED) {
+    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
       return {
         icon: StatusErrorIcon,
-        text: 'Wallet attestation is revoked',
-      };
-    } else if (isWalletAttestationExpired(walletUnitAttestation)) {
-      return {
-        accessory: (
-          <GhostButton
-            accessibilityLabel={translate(
-              'info.accessibility.walletUnitAttestation.refresh',
-            )}
-            icon={RefreshIcon}
-            onPress={handleRefreshWalletUnit}
-            style={styles.noticeWarning}
-          />
-        ),
-        icon: StatusWarningIcon,
-        text: 'Wallet attestation is expired',
+        text: 'Wallet unit is revoked',
       };
     }
   }, [
     walletProvider.walletUnitAttestation.required,
     showUpdateNotch,
-    walletUnitAttestation,
+    walletUnitDetail?.status,
     handleUpdateNoticeClose,
-    handleRefreshWalletUnit,
   ]);
   const noticeOffset: ViewStyle | undefined = topNotice
     ? {
@@ -265,7 +238,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         ]}
         testID="WalletScreen"
       >
-        {(!credentials || isLoadingWUA) && (
+        {(!credentials || isLoadingWU) && (
           <View style={styles.loadingIndicator}>
             <ActivityIndicator animate={isFocused} />
           </View>

@@ -6,7 +6,6 @@ import {
   useAppColorScheme,
   useCoreConfig,
   useCredentialDetail,
-  useWalletUnitAttestation,
 } from '@procivis/one-react-native-components';
 import { CredentialListItem } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
@@ -19,7 +18,6 @@ import {
 } from 'react-native';
 
 import { credentialCardLabels } from '../../utils/credential';
-import { walletUnitAttestationState } from '../../utils/wallet-unit';
 
 type WalletCredentialListItemProps = {
   expandedCredentialId: string | undefined;
@@ -44,11 +42,9 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
   const colorScheme = useAppColorScheme();
   const { data: config } = useCoreConfig();
   const { data: credential } = useCredentialDetail(item.id, isFocused);
-  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
-    useWalletUnitAttestation();
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
-  if (!credential || !config || isLoadingWUA) {
+  if (!credential || !config) {
     return null;
   }
 
@@ -57,7 +53,6 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
     credential,
     credential.claims,
     config,
-    walletUnitAttestationState(walletUnitAttestation),
     undefined,
     concatTestID(testID, 'card'),
     credentialCardLabels(),

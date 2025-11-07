@@ -7,7 +7,6 @@ import {
   InternetState,
   isUrlValid,
   isValidHttpUrl,
-  isWalletAttestationExpired,
   LoaderViewState,
   LoadingResultScreen,
   parseUniversalLink,
@@ -19,14 +18,14 @@ import {
   useContinueIssuance,
   useInvitationHandler,
   useOpenSettings,
-  useWalletUnitAttestation,
+  useWalletUnitDetail,
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
   InvitationResult,
   OneError,
   WalletStorageType,
-  WalletUnitStatusEnum,
+  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -77,9 +76,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const managementNavigation =
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
+  const {
+    walletStore: { walletUnitId },
+  } = useStores();
   const { walletStore } = useStores();
-  const { data: walletUnitAttestation, isLoading: isLoadingWUA } =
-    useWalletUnitAttestation();
+  const { data: walletUnitDetail, isLoading: isLoadingWU } =
+    useWalletUnitDetail(walletUnitId);
   const isFocused = useIsFocused();
   const [invitationUrl, setInvitationUrl] = useState(
     route.params.invitationUrl,
@@ -333,27 +335,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
         screen: 'ProofRequest',
       });
     } else {
-      const needsWUA =
-        invitationResult.walletStorageType === WalletStorageType.EUDI_COMPLIANT;
-      if (needsWUA && isLoadingWUA) {
+      if (isLoadingWU) {
         return;
       }
 
-      if (
-        needsWUA &&
-        walletUnitAttestation?.status === WalletUnitStatusEnum.REVOKED
-      ) {
+      if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
         rootNavigation.navigate('WalletUnitError');
-      } else if (
-        needsWUA &&
-        (!walletUnitAttestation ||
-          isWalletAttestationExpired(walletUnitAttestation))
-      ) {
-        rootNavigation.navigate('WalletUnitAttestation', {
-          ...(walletUnitAttestation ? { refresh: true } : { register: true }),
-          attestationRequired: true,
-          resetToDashboard: 'onError',
-        });
       } else if (invitationResult.txCode) {
         managementNavigation.replace('IssueCredential', {
           params: {
@@ -376,11 +363,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
     }
   }, [
     invitationResult,
-    isLoadingWUA,
+    isLoadingWU,
     managementNavigation,
     rootNavigation,
     walletStore.holderRseIdentifierId,
-    walletUnitAttestation,
+    walletUnitDetail?.status,
   ]);
 
   const infoPressHandler = useCallback(() => {

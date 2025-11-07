@@ -15,7 +15,7 @@ const AppVersionModel = types.model('AppVersion', {
   updateScreen: types.maybe(UpdateScreenModel),
 });
 
-const WalletUnitAttestationModel = types.model('WalletUnitAttestation', {
+const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
   appIntegrityCheckRequired: types.boolean,
   enabled: types.boolean,
   required: types.boolean,
@@ -25,19 +25,19 @@ export const WalletProviderModel = types.model('WalletProvider', {
   appVersion: types.maybe(AppVersionModel),
   name: types.string,
   walletLink: types.maybe(types.string),
-  walletUnitAttestation: WalletUnitAttestationModel,
+  walletUnitAttestation: WalletUnitRegistrationModel,
 });
 
 export type WalletProviderData = Instance<typeof WalletProviderModel>;
 
 export const WalletStoreModel = types
   .model('WalletStore', {
-    holderAttestationKeyId: types.string,
     holderHwIdentifierId: types.string,
     holderRseIdentifierId: types.string,
     holderSwIdentifierId: types.string,
     isNFCSupported: types.boolean,
     walletProvider: WalletProviderModel,
+    walletUnitId: types.string,
   })
   .views((self) => ({
     /** returns the did identifier with higher secure available key backing */
@@ -51,14 +51,11 @@ export const WalletStoreModel = types
     rseSetup: (holderRseIdentifierId: string | null) => {
       self.holderRseIdentifierId = holderRseIdentifierId ?? '';
     },
-    updateAttestationKeyId: (attestationKeyId: string) => {
-      self.holderAttestationKeyId = attestationKeyId;
-    },
     walletDeleted: () => {
       self.holderHwIdentifierId = '';
       self.holderSwIdentifierId = '';
       self.holderRseIdentifierId = '';
-      self.holderAttestationKeyId = '';
+      self.walletUnitId = '';
     },
     walletSetup: (
       holderHwIdentifierId: string | null,
@@ -66,6 +63,9 @@ export const WalletStoreModel = types
     ) => {
       self.holderHwIdentifierId = holderHwIdentifierId ?? '';
       self.holderSwIdentifierId = holderSwIdentifierId;
+    },
+    walletUnitIdSetup: (walletUnitId: string) => {
+      self.walletUnitId = walletUnitId;
     },
   }));
 
