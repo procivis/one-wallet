@@ -39,20 +39,24 @@ const ProofDetailNerdView: FunctionComponent = () => {
     {
       attributeKey: translate('common.proofSchemaName'),
       highlightedText: proofDetail.proofSchema?.name,
+      testID: 'proofSchemaName',
     },
     {
       attributeKey: translate('common.exchangeProtocol'),
       attributeText: proofDetail.protocol,
+      testID: 'exchangeProtocol',
     },
     {
       attributeKey: translate('common.createDate'),
       attributeText: moment(proofDetail?.createdDate).format(
         'DD.MM.YYYY, HH:mm',
       ),
+      testID: 'createdDate',
     },
     {
       attributeKey: translate('common.proofschema'),
       attributeText: JSON.stringify(proofDetail.proofSchema),
+      testID: 'proofSchema',
     },
   ].filter((el) => Boolean(el?.highlightedText ?? el?.attributeText));
 
@@ -61,19 +65,21 @@ const ProofDetailNerdView: FunctionComponent = () => {
       {
         attributeKey: translate('common.credentialSchemaName'),
         highlightedText: proofInput.credentialSchema.name,
+        testID: 'credentialSchemaName',
       },
       {
         attributeKey: 'entityCluster',
         entityLabels: entityLabels,
         identifier: proofInput.credential?.issuer,
         role: TrustEntityRoleEnum.ISSUER,
-        testID: `ProofRequestNerdView.issuerTrustEntity.${proofInput.credential?.id}`,
+        testID: `issuerTrustEntity.${proofInput.credential?.id}`,
       },
       {
         attributeKey: translate('common.createDate'),
         attributeText: moment(proofInput.credential?.createdDate).format(
           'DD.MM.YYYY, HH:mm',
         ),
+        testID: 'createdDate',
       },
       {
         attributeKey: translate('common.credentialFormat'),

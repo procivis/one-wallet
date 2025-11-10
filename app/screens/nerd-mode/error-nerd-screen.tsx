@@ -19,11 +19,13 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
         attributeKey: translate('common.code'),
         canBeCopied: true,
         highlightedText: error.code,
+        testID: 'code',
       },
       {
         attributeKey: translate('common.message'),
         attributeText: error.message,
         canBeCopied: true,
+        testID: 'message',
       },
     ];
 
@@ -32,6 +34,7 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
         attributeKey: translate('common.cause'),
         attributeText: error.cause,
         canBeCopied: true,
+        testID: 'cause',
       });
     }
 
@@ -44,11 +47,13 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
         attributeKey: translate('common.name'),
         canBeCopied: true,
         highlightedText: error.name,
+        testID: 'name',
       },
       {
         attributeKey: translate('common.message'),
         attributeText: error.message,
         canBeCopied: true,
+        testID: 'message',
       },
     ];
   }
@@ -65,6 +70,7 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
       attributeKey: translate('common.message'),
       attributeText: message,
       canBeCopied: true,
+      testID: 'message',
     },
   ];
 };
