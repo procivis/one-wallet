@@ -35,14 +35,17 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     {
       attributeKey: translate('common.credentialSchema'),
       highlightedText: credentialDetail.schema.name,
+      testID: 'schemaName',
     },
     {
       attributeKey: translate('common.credentialFormat'),
       attributeText: credentialDetail.schema.format,
+      testID: 'credentialFormat',
     },
     {
       attributeKey: translate('common.revocationMethod'),
       attributeText: credentialDetail.schema.revocationMethod,
+      testID: 'credentialFormat',
     },
   ];
 
@@ -62,7 +65,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
           title: translate('common.credentialOfferData'),
         },
       ]}
-      testID="CredentialOffer.nerdView"
+      testID="CredentialOfferNerdView"
       title={translate('common.moreInformation')}
     />
   );
