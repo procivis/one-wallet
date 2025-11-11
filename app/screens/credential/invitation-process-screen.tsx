@@ -25,7 +25,6 @@ import {
   InvitationResult,
   OneError,
   WalletStorageType,
-  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -338,10 +337,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       if (isLoadingWU) {
         return;
       }
-
-      if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
-        rootNavigation.navigate('WalletUnitError');
-      } else if (invitationResult.txCode) {
+      if (invitationResult.txCode) {
         managementNavigation.replace('IssueCredential', {
           params: {
             invitationResult: invitationResult,
