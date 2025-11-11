@@ -1,0 +1,3 @@
+[submodule "assets/ecosystem-assets"]
+	path = assets/ecosystem-assets
+	url = git@gitlab.procivis.ch:procivis/one/one-ecosystem-assets.git
