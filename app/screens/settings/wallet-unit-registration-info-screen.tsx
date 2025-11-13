@@ -64,19 +64,19 @@ const WalletUnitRegistrationInfoScreen: FC = () => {
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
   const {
-    walletStore: { walletUnitId },
+    walletStore: { registeredWalletUnitId },
   } = useStores();
-  const { data: walletUnitDetail, isLoading } =
-    useWalletUnitDetail(walletUnitId);
+  const { data: walletUnitDetail, isLoading } = useWalletUnitDetail(
+    registeredWalletUnitId,
+  );
 
   const isCheckButtonEnabled =
     walletUnitDetail?.status === undefined || !isLoading;
 
   const handleCheck = useCallback(() => {
-    rootNavigation.navigate(
-      'WalletUnitRegistration',
-      walletUnitDetail ? { refresh: true } : { register: true },
-    );
+    rootNavigation.navigate('WalletUnitRegistration', {
+      operation: walletUnitDetail ? 'refresh' : 'register',
+    });
   }, [rootNavigation, walletUnitDetail]);
 
   const status = useMemo(

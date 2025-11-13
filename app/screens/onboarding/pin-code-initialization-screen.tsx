@@ -42,7 +42,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
 
     if (walletUnitAttestation.enabled) {
       rootNavigation.navigate('WalletUnitRegistration', {
-        register: true,
+        operation: 'register',
         resetToDashboard: true,
       });
     } else {

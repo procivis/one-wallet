@@ -46,6 +46,9 @@ export const WalletStoreModel = types
         ? self.holderHwIdentifierId
         : self.holderSwIdentifierId;
     },
+    get registeredWalletUnitId() {
+      return self.walletUnitId ? self.walletUnitId : undefined;
+    },
   }))
   .actions((self) => ({
     rseSetup: (holderRseIdentifierId: string | null) => {
