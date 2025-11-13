@@ -76,11 +76,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const {
-    walletStore: { walletUnitId },
+    walletStore: { registeredWalletUnitId },
   } = useStores();
   const { walletStore } = useStores();
   const { data: walletUnitDetail, isLoading: isLoadingWU } =
-    useWalletUnitDetail(walletUnitId);
+    useWalletUnitDetail(registeredWalletUnitId);
   const isFocused = useIsFocused();
   const [invitationUrl, setInvitationUrl] = useState(
     route.params.invitationUrl,

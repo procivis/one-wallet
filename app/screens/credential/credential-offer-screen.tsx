@@ -100,7 +100,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     credential?.schema.id,
   );
   const {
-    walletStore: { walletUnitId },
+    walletStore: { registeredWalletUnitId },
   } = useStores();
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
   const { walletStore } = useStores();
@@ -157,7 +157,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     setAcceptanceInitialized(true);
     try {
       const credentialId = await acceptCredential({
-        holderWalletUnitId: walletUnitId,
+        holderWalletUnitId: registeredWalletUnitId,
         identifierId,
         interactionId,
         txCode,
@@ -178,7 +178,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [
     acceptanceInitialized,
     acceptCredential,
-    walletUnitId,
+    registeredWalletUnitId,
     identifierId,
     interactionId,
     txCode,
