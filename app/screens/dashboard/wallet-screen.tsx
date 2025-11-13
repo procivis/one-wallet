@@ -49,7 +49,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
   const colorScheme = useAppColorScheme();
   const {
-    walletStore: { walletProvider, walletUnitId },
+    walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
@@ -81,8 +81,9 @@ const WalletScreen: FunctionComponent = observer(() => {
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
   useCredentialStatusCheck();
-  const { isLoading: isLoadingWU, walletUnitDetail } =
-    useWalletUnitCheck(walletUnitId);
+  const { isLoading: isLoadingWU, walletUnitDetail } = useWalletUnitCheck(
+    registeredWalletUnitId,
+  );
 
   useEffect(() => {
     if (!isFocused || !walletProvider.walletUnitAttestation.required) {

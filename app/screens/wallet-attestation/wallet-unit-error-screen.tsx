@@ -21,9 +21,11 @@ const WalletUnitErrorScreen: FC = () => {
     LoaderViewState.Error | LoaderViewState.Warning
   >(LoaderViewState.Warning);
   const {
-    walletStore: { walletProvider, walletUnitId },
+    walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
-  const { data: walletUnitDetail } = useWalletUnitDetail(walletUnitId);
+  const { data: walletUnitDetail } = useWalletUnitDetail(
+    registeredWalletUnitId,
+  );
 
   useEffect(() => {
     if (!walletUnitDetail) {
@@ -51,7 +53,7 @@ const WalletUnitErrorScreen: FC = () => {
   }, [rootNavigation]);
 
   const updateRegistration = useCallback(() => {
-    rootNavigation.navigate('WalletUnitRegistration', { refresh: true });
+    rootNavigation.navigate('WalletUnitRegistration', { operation: 'refresh' });
   }, [rootNavigation]);
 
   const loaderLabel =

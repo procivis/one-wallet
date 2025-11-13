@@ -74,7 +74,7 @@ const WalletUnitRegistrationScreen = () => {
     }
     try {
       setStatus(LoaderViewState.InProgress);
-      if (route.params.refresh) {
+      if (route.params.operation === 'refresh') {
         await refreshWalletUnit(walletUnitId);
       } else {
         const walletUnitId = await registerWalletUnit({
@@ -102,7 +102,7 @@ const WalletUnitRegistrationScreen = () => {
     refreshWalletUnit,
     registerWalletUnit,
     route.params.attestationRequired,
-    route.params.refresh,
+    route.params.operation,
     walletProvider.walletUnitAttestation.required,
     walletStore,
     walletUnitId,
@@ -129,14 +129,14 @@ const WalletUnitRegistrationScreen = () => {
       }
     }
     if (!error) {
-      if (route.params.refresh) {
+      if (route.params.operation === 'refresh') {
         return translate('walletUnitRegistration.noInternet.refresh');
       } else {
         return translate('walletUnitRegistration.noInternet.register');
       }
     }
     return translateError(error, translate(`walletUnitRegistration.error`));
-  }, [error, registeredNewWallet, status, route.params.refresh]);
+  }, [error, registeredNewWallet, status, route.params.operation]);
 
   const button =
     status === LoaderViewState.Warning || status === LoaderViewState.Error

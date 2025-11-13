@@ -36,17 +36,9 @@ export type RootNavigatorParamList = {
   WalletUnitError: undefined;
   WalletUnitRegistration: {
     attestationRequired?: boolean;
+    operation: 'refresh' | 'register';
     resetToDashboard?: boolean | 'onError';
-  } & (
-    | {
-        refresh?: never;
-        register: true;
-      }
-    | {
-        refresh: true;
-        register?: never;
-      }
-  );
+  };
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =

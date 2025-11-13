@@ -55,10 +55,12 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       pinCodeSecurity: { failedAttempts, lastAttemptTimestamp },
       setPinCodeSecurity,
     },
-    walletStore: { walletProvider, walletUnitId },
+    walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
 
-  const { data: walletUnitRegistration } = useWalletUnitDetail(walletUnitId);
+  const { data: walletUnitRegistration } = useWalletUnitDetail(
+    registeredWalletUnitId,
+  );
 
   useFocusEffect(hideSplashAndroidOnly);
 
@@ -85,7 +87,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       walletUnitRegistration?.status === undefined
     ) {
       navigation.navigate('WalletUnitRegistration', {
-        register: true,
+        operation: 'register',
         resetToDashboard: true,
       });
     }
