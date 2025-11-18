@@ -115,6 +115,7 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
               styles.statusWrapper,
               { backgroundColor: status.backgroundColor },
             ]}
+            testID={concatTestID(testID, 'id', walletUnitDetail?.id)}
           >
             <Icon
               testID={concatTestID(testID, 'icon', walletUnitDetail?.status)}
