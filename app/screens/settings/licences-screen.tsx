@@ -4,7 +4,6 @@ import {
   LinkIcon,
   ListSectionHeader,
   ListSectionHeaderProps,
-  reportException,
   SectionListScreen,
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
@@ -49,7 +48,7 @@ const LicencesScreen: FC = () => {
 
   const openURL = useCallback((url: string) => {
     Linking.openURL(url).catch((err) =>
-      reportException(err, `Failed to open user agreement URL: ${url}`),
+      console.warn(`Failed to open user agreement URL: ${url}`, err),
     );
   }, []);
 

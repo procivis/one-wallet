@@ -5,7 +5,6 @@ import {
   ContrastingStatusBar,
   Header,
   LinkIcon,
-  reportException,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -26,7 +25,7 @@ const Link: FC<{ label: string; testID?: string; url: string }> = ({
   const colorScheme = useAppColorScheme();
   const onPress = useCallback(() => {
     Linking.openURL(url).catch((err) =>
-      reportException(err, `Failed to open user agreement URL: ${url}`),
+      console.warn(`Failed to open user agreement URL: ${url}`, err),
     );
   }, [url]);
   return (
