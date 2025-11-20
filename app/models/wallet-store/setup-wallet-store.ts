@@ -57,10 +57,8 @@ export async function setupWalletStore(env: Environment) {
   );
 
   const defaultData: NewStore = {
-    holderHwIdentifierId: '',
-    holderRseIdentifierId: '',
-    holderSwIdentifierId: '',
     isNFCSupported,
+    isRSESetup: false,
     walletProvider,
     walletUnitId: '',
   };
@@ -70,29 +68,9 @@ export async function setupWalletStore(env: Environment) {
       WALLET_STATE_STORAGE_KEY,
     );
 
-    let data: NewStore = defaultData;
-    if (stored) {
-      // migrate from potential old did-ids
-      if ('holderDidSwId' in stored) {
-        data = {
-          holderHwIdentifierId:
-            stored.holderDidHwId || defaultData.holderHwIdentifierId,
-          holderRseIdentifierId:
-            stored.holderDidRseId || defaultData.holderRseIdentifierId,
-          holderSwIdentifierId:
-            stored.holderDidSwId || defaultData.holderSwIdentifierId,
-          isNFCSupported,
-          walletProvider,
-          walletUnitId: defaultData.walletUnitId,
-        };
-      } else {
-        data = {
-          ...defaultData,
-          ...stored,
-          isNFCSupported,
-          walletProvider,
-        };
-      }
+    const data: NewStore = defaultData;
+    if (stored && 'holderDidRseId' in stored) {
+      data.isRSESetup = true;
     }
 
     walletStore = WalletStoreModel.create(data, env);

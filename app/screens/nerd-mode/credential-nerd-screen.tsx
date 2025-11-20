@@ -140,11 +140,11 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       attributeText: credentialDetail.schema.revocationMethod,
       testID: 'revocationMethod',
     },
-    {
+    ...addElementIf(Boolean(credentialDetail.schema.keyStorageSecurity), {
       attributeKey: translate('common.storageType'),
-      attributeText: credentialDetail.schema.walletStorageType,
+      attributeText: credentialDetail.schema.keyStorageSecurity ?? 'UNKNOWN',
       testID: 'storageType',
-    },
+    }),
     {
       attributeKey: translate('common.credentialSchema'),
       attributeText: JSON.stringify(credentialSchemaWithoutImages, null, 1),

@@ -23,6 +23,7 @@ type RSEPinViewProps = {
   errorMessage?: string;
   instruction: string;
   isLoading: boolean;
+  manualDismiss?: React.MutableRefObject<boolean>;
   testID: string;
   title: string;
 };
@@ -32,6 +33,7 @@ const RSEPinView: FC<RSEPinViewProps> = ({
   errorMessage,
   instruction,
   isLoading,
+  manualDismiss,
   testID,
   title,
 }) => {
@@ -81,9 +83,14 @@ const RSEPinView: FC<RSEPinViewProps> = ({
   }, [errorMessage, shakeKeypad]);
 
   const handleClose = useCallback(() => {
+    // Signal that the pin view was manually dismissed, to differentiate from a successful RSE setup
+    if (manualDismiss) {
+      manualDismiss.current = true;
+    }
+
     resetRSEPinFlow();
     navigation.goBack();
-  }, [navigation]);
+  }, [navigation, manualDismiss]);
 
   return (
     <View

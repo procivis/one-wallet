@@ -32,40 +32,23 @@ export type WalletProviderData = Instance<typeof WalletProviderModel>;
 
 export const WalletStoreModel = types
   .model('WalletStore', {
-    holderHwIdentifierId: types.string,
-    holderRseIdentifierId: types.string,
-    holderSwIdentifierId: types.string,
     isNFCSupported: types.boolean,
+    isRSESetup: types.boolean,
     walletProvider: WalletProviderModel,
     walletUnitId: types.string,
   })
   .views((self) => ({
-    /** returns the did identifier with higher secure available key backing */
-    get holderIdentifierId() {
-      return self.holderHwIdentifierId
-        ? self.holderHwIdentifierId
-        : self.holderSwIdentifierId;
-    },
     get registeredWalletUnitId() {
       return self.walletUnitId ? self.walletUnitId : undefined;
     },
   }))
   .actions((self) => ({
-    rseSetup: (holderRseIdentifierId: string | null) => {
-      self.holderRseIdentifierId = holderRseIdentifierId ?? '';
+    rseSetupCompleted: () => {
+      self.isRSESetup = true;
     },
     walletDeleted: () => {
-      self.holderHwIdentifierId = '';
-      self.holderSwIdentifierId = '';
-      self.holderRseIdentifierId = '';
       self.walletUnitId = '';
-    },
-    walletSetup: (
-      holderHwIdentifierId: string | null,
-      holderSwIdentifierId: string,
-    ) => {
-      self.holderHwIdentifierId = holderHwIdentifierId ?? '';
-      self.holderSwIdentifierId = holderSwIdentifierId;
+      self.isRSESetup = false;
     },
     walletUnitIdSetup: (walletUnitId: string) => {
       self.walletUnitId = walletUnitId;
