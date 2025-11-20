@@ -1304,7 +1304,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.16.3):
     - React-Core
-  - react-native-one-core (1.72538.0):
+  - react-native-one-core (1.72811.0):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -2454,7 +2454,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: 21ff40767cde4bd81021ffee12480aee4b5b91bb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-nfc-manager: 66a00e5ddab9704efebe19d605b1b8afb0bb1bd7
-  react-native-one-core: dc929c072f7917887457eb648c3655e474a2142e
+  react-native-one-core: 3798f3c2a2ed1f9f622ea0f108ba2b4cca62c13b
   react-native-picker: 0ca464c49154538aef350db861bb73e3245f9578
   react-native-safe-area-context: 9d7528d2e8fce82d20cb0b643c8be34a4ad57464
   react-native-ultimate-config: b1053842af485aa988af35c97592ad3a282d8795
