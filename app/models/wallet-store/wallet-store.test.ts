@@ -2,10 +2,8 @@ import { WalletStoreModel } from './wallet-store';
 
 test('can be created', () => {
   const instance = WalletStoreModel.create({
-    holderHwIdentifierId: '',
-    holderRseIdentifierId: '',
-    holderSwIdentifierId: '',
     isNFCSupported: false,
+    isRSESetup: false,
     walletProvider: {
       appVersion: {
         minimum: 'v1.50.0',

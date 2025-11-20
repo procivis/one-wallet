@@ -11,14 +11,12 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ProcessingView } from '../../components/common/processing-view';
 import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
-import { useStores } from '../../models';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const ProcessingScreen: FC = () => {
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
-  const { walletStore } = useStores();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure({
     generateHwKey: true,
@@ -34,16 +32,14 @@ const ProcessingScreen: FC = () => {
 
   const handleBackupRestore = useCallback(async () => {
     try {
-      await finalizeImport().then(([hwDidId, swDidId]) => {
-        walletStore.walletSetup(hwDidId, swDidId!);
-      });
+      await finalizeImport();
       setState(LoaderViewState.Success);
     } catch (e) {
       reportException(e, 'Backup restoring failure');
       setState(LoaderViewState.Warning);
       setError(e);
     }
-  }, [finalizeImport, walletStore]);
+  }, [finalizeImport]);
 
   useEffect(() => {
     handleBackupRestore();

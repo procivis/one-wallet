@@ -5,12 +5,11 @@ import {
   PROOF_DETAIL_QUERY_KEY,
   reportException,
   useBlockOSBackNavigation,
-  useCredentialDetail,
   useONECore,
   useProofAccept,
   useProofDetail,
 } from '@procivis/one-react-native-components';
-import { Ubiqu, WalletStorageType } from '@procivis/react-native-one-core';
+import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -25,7 +24,6 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
 import { CredentialQuerySelection } from '../../utils/proof-request';
@@ -69,34 +67,10 @@ const ProofProcessScreen: FunctionComponent = () => {
   const { mutateAsync: acceptProof } = useProofAccept();
   const { mutateAsync: acceptProofV2 } = useProofAcceptV2();
   const { data: proof } = useProofDetail(proofId);
-  const { walletStore } = useStores();
   const [error, setError] = useState<unknown>();
   const accepted = useRef(false);
 
   useBlockOSBackNavigation();
-
-  const credentialId =
-    'credentials' in params
-      ? Object.values(params.credentials)[0]?.credentialId
-      : undefined;
-
-  // ONE-2078: workaround for selecting matching did
-  const { data: credentialDetail } = useCredentialDetail(credentialId);
-  const usedIdentifierId = useMemo(() => {
-    if (!credentialDetail) {
-      return undefined;
-    }
-    switch (credentialDetail.schema.walletStorageType) {
-      case WalletStorageType.SOFTWARE:
-        return walletStore.holderSwIdentifierId;
-      case WalletStorageType.HARDWARE:
-        return walletStore.holderHwIdentifierId;
-      case WalletStorageType.REMOTE_SECURE_ELEMENT:
-        return walletStore.holderRseIdentifierId;
-      default:
-        return walletStore.holderIdentifierId;
-    }
-  }, [walletStore, credentialDetail]);
 
   useEffect(() => {
     return addRSEEventListener((event) => {
@@ -151,10 +125,10 @@ const ProofProcessScreen: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    if (usedIdentifierId || 'credentialsV2' in params) {
-      handleProofSubmit(usedIdentifierId);
+    if ('credentialsV2' in params) {
+      handleProofSubmit();
     }
-  }, [handleProofSubmit, params, usedIdentifierId]);
+  }, [handleProofSubmit, params]);
 
   const closeButtonHandler = useCallback(() => {
     rootNavigation.popTo('Dashboard', { screen: 'Wallet' });

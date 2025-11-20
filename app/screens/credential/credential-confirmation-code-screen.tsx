@@ -7,8 +7,8 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
+  KeyStorageSecurity,
   OpenID4VCITxCodeInputMode,
-  WalletStorageType,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
@@ -25,19 +25,19 @@ import {
 
 const CredentialConfirmationCodeScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
+  const { walletStore } = useStores();
   const navigation =
     useNavigation<
       IssueCredentialNavigationProp<'CredentialConfirmationCode'>
     >();
   const route =
     useRoute<IssueCredentialRouteProp<'CredentialConfirmationCode'>>();
-  const { walletStore } = useStores();
 
   useCapturePrevention();
 
   const {
     invalidCode,
-    invitationResult: { txCode: optionalTxCode, walletStorageType },
+    invitationResult: { txCode: optionalTxCode, keyStorageSecurityLevels = [] },
   } = route.params;
   const txCode = optionalTxCode!;
   const [code, setCode] = useState<string | undefined>(invalidCode);
@@ -70,16 +70,17 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
 
   const handleSubmit = useCallback(() => {
     const needsRSESetup =
-      walletStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT &&
-      !walletStore.holderRseIdentifierId;
+      keyStorageSecurityLevels?.includes(KeyStorageSecurity.HIGH) &&
+      !walletStore.isRSESetup;
+
     navigation.replace(needsRSESetup ? 'RSEInfo' : 'CredentialOffer', {
       invitationResult: route.params.invitationResult,
     });
   }, [
     navigation,
     route.params.invitationResult,
-    walletStorageType,
-    walletStore.holderRseIdentifierId,
+    keyStorageSecurityLevels,
+    walletStore.isRSESetup,
   ]);
 
   return (

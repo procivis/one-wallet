@@ -25,7 +25,6 @@ import {
   OneError,
   TrustEntityRoleEnum,
   Ubiqu,
-  WalletStorageType,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -48,10 +47,8 @@ import {
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
-import { useCreateRSE } from '../../hooks/rse';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
-import { IncompatibleKeyStorageError } from '../../models/errors';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -85,15 +82,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
   const { invitationResult, txCode } = route.params;
-  const { interactionId, walletStorageType } = invitationResult;
+  const { interactionId } = invitationResult;
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
   const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
   const { mutateAsync: acceptCredential } = useCredentialAccept();
-  const [rseInitialized, setRseInitialized] = useState(false);
-  const [createdRseIdentifierId, setCreatedRseIdentifierId] =
-    useState<string>();
-  const { generateRSE } = useCreateRSE();
   const [credentialId, setCredentialId] = useState<string>();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: credentialSchema } = useCredentialSchemaDetail(
@@ -103,26 +96,13 @@ const CredentialOfferScreen: FunctionComponent = () => {
     walletStore: { registeredWalletUnitId },
   } = useStores();
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
-  const { walletStore } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
 
-  const identifierId = useMemo(() => {
-    switch (walletStorageType) {
-      case WalletStorageType.SOFTWARE:
-        return walletStore.holderSwIdentifierId;
-      case WalletStorageType.HARDWARE:
-        return walletStore.holderHwIdentifierId;
-      case WalletStorageType.REMOTE_SECURE_ELEMENT:
-        return createdRseIdentifierId ?? walletStore.holderRseIdentifierId;
-      default:
-        return walletStore.holderIdentifierId;
-    }
-  }, [walletStore, walletStorageType, createdRseIdentifierId]);
-
   useEffect(() => {
     return addRSEEventListener((event) => {
+      console.log({ event: JSON.stringify(event, null, 2) });
       if (event.type !== PinEventType.SHOW_PIN) {
         return;
       }
@@ -134,21 +114,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         navigation.navigate('RSEAddBiometrics');
       }
     });
-  }, [navigation, rootNavigation, walletStore.holderRseIdentifierId]);
-
-  const initializeRSE = useCallback(() => {
-    if (rseInitialized) {
-      return;
-    }
-    setRseInitialized(true);
-    generateRSE()
-      .then(setCreatedRseIdentifierId)
-      .catch((error) => {
-        navigation.replace('Result', {
-          error,
-        });
-      });
-  }, [generateRSE, navigation, rseInitialized]);
+  }, [navigation, rootNavigation]);
 
   const handleCredentialAccept = useCallback(async () => {
     if (acceptanceInitialized) {
@@ -158,7 +124,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
     try {
       const credentialId = await acceptCredential({
         holderWalletUnitId: registeredWalletUnitId,
-        identifierId,
         interactionId,
         txCode,
       });
@@ -179,7 +144,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
     acceptanceInitialized,
     acceptCredential,
     registeredWalletUnitId,
-    identifierId,
     interactionId,
     txCode,
     navigation,
@@ -187,25 +151,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
   ]);
 
   useEffect(() => {
-    if (walletStorageType && !identifierId) {
-      if (walletStorageType === WalletStorageType.REMOTE_SECURE_ELEMENT) {
-        initializeRSE();
-      } else {
-        navigation.replace('Result', {
-          error: new IncompatibleKeyStorageError(),
-        });
-      }
-      return;
-    }
     handleCredentialAccept();
-  }, [
-    credential,
-    identifierId,
-    handleCredentialAccept,
-    initializeRSE,
-    walletStorageType,
-    navigation,
-  ]);
+  }, [credential, handleCredentialAccept, navigation]);
 
   const infoPressHandler = useCallback(() => {
     if (!credentialId) {

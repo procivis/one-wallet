@@ -18,26 +18,20 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<OnboardingNavigationProp<'PinCodeInitialization'>>();
   const {
-    walletStore,
     walletStore: {
       walletProvider: { walletUnitAttestation },
     },
   } = useStores();
 
-  const initializeONECoreIdentifiers = useInitializeONECoreIdentifiers({
-    generateHwKey: true,
-    generateSwKey: true,
+  const initializeCoreWithOrganisation = useInitializeONECoreIdentifiers({
+    generateHwKey: false,
+    generateSwKey: false,
   });
 
   const importSchemasFromAssets = useImportPredefinedCredentialSchemas();
 
   const finishSetup = useCallback(async () => {
-    if (walletStore.holderIdentifierId) {
-      return;
-    }
-    const [hwDidId, swDidId] = await initializeONECoreIdentifiers();
-
-    walletStore.walletSetup(hwDidId, swDidId!);
+    await initializeCoreWithOrganisation();
     importSchemasFromAssets();
 
     if (walletUnitAttestation.enabled) {
@@ -51,9 +45,8 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
       ]);
     }
   }, [
-    walletStore,
-    initializeONECoreIdentifiers,
     importSchemasFromAssets,
+    initializeCoreWithOrganisation,
     walletUnitAttestation.enabled,
     rootNavigation,
   ]);

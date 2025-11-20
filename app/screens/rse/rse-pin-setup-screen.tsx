@@ -1,8 +1,9 @@
 import { Ubiqu } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { IssueCredentialNavigationProp } from '../../navigators/issue-credential/issue-credential-routes';
 import RSEPinView from './rse-pin-view';
 
@@ -32,6 +33,8 @@ export const RSEPinSetupScreen: FC = () => {
   const [enteredLength, setEnteredLength] = useState(0);
   const [step, setStep] = useState<'setPin' | 'confirmPin'>('setPin');
   const [error, setError] = useState<string>();
+  const manualDismiss = useRef(false);
+  const { walletStore } = useStores();
 
   const testID = 'RemoteSecureElementPinSetupScreen';
 
@@ -39,7 +42,12 @@ export const RSEPinSetupScreen: FC = () => {
     return addRSEEventListener((event) => {
       switch (event.type) {
         case PinEventType.HIDE_PIN:
-          navigation.goBack();
+          if (!manualDismiss.current) {
+            if (!walletStore.isRSESetup) {
+              walletStore.rseSetupCompleted();
+            }
+            navigation.goBack();
+          }
           break;
         case PinEventType.DIGITS_ENTERED:
           setEnteredLength(event.digitsEntered);
@@ -60,7 +68,7 @@ export const RSEPinSetupScreen: FC = () => {
         }
       }
     });
-  }, [navigation]);
+  }, [navigation, walletStore]);
 
   return (
     <RSEPinView
@@ -70,6 +78,7 @@ export const RSEPinSetupScreen: FC = () => {
         pinLength,
       })}
       isLoading={false}
+      manualDismiss={manualDismiss}
       testID={testID}
       title={translate(`rsePinSetup.${step}.title`)}
     />
