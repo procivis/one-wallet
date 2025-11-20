@@ -28,7 +28,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>openid-credential-offer</string>
-        <string>${CONFIG_NAME}-one-wallet-${ENVIRONMENT}</string>
+				<string>${CONFIG_NAME}-one-wallet-${ENVIRONMENT}</string>
 				<string>openid4vp</string>
 				<string>$(CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME)</string>
 				<string>$(CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME)</string>
@@ -120,5 +120,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
