@@ -90,45 +90,39 @@ const ProofProcessScreen: FunctionComponent = () => {
     );
   }, [error, state]);
 
-  const handleProofSubmit = useCallback(
-    async (identifierId?: string) => {
-      if (accepted.current) {
-        return;
+  const handleProofSubmit = useCallback(async () => {
+    if (accepted.current) {
+      return;
+    }
+    try {
+      accepted.current = true;
+      if ('credentials' in params) {
+        const credentials = params.credentials;
+        await acceptProof({
+          credentials,
+          interactionId,
+        });
+      } else {
+        const credentials = params.credentialsV2;
+        await acceptProofV2({
+          credentials,
+          interactionId,
+        });
       }
-      try {
-        accepted.current = true;
-        if ('credentials' in params) {
-          const credentials = params.credentials;
-          await acceptProof({
-            credentials,
-            identifierId,
-            interactionId,
-          });
-        } else {
-          const credentials = params.credentialsV2;
-          await acceptProofV2({
-            credentials,
-            interactionId,
-          });
-        }
-        setState(LoaderViewState.Success);
-      } catch (e) {
-        if (isRSELockedError(e)) {
-          setState(LoaderViewState.Error);
-        } else {
-          setState(LoaderViewState.Warning);
-        }
-        setError(e);
+      setState(LoaderViewState.Success);
+    } catch (e) {
+      if (isRSELockedError(e)) {
+        setState(LoaderViewState.Error);
+      } else {
+        setState(LoaderViewState.Warning);
       }
-    },
-    [params, acceptProof, interactionId, acceptProofV2],
-  );
+      setError(e);
+    }
+  }, [params, acceptProof, interactionId, acceptProofV2]);
 
   useEffect(() => {
-    if ('credentialsV2' in params) {
-      handleProofSubmit();
-    }
-  }, [handleProofSubmit, params]);
+    handleProofSubmit();
+  }, [handleProofSubmit]);
 
   const closeButtonHandler = useCallback(() => {
     rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
