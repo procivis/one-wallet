@@ -110,7 +110,7 @@ function App() {
     if (!rootStore) {
       return;
     }
-    if (!rootStore.walletStore.holderRseIdentifierId) {
+    if (!rootStore.walletStore.isRSESetup) {
       resetRSE().catch(() => {});
     }
   }, [rootStore]);

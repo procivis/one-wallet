@@ -243,7 +243,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
             title: translate('common.changePinCode'),
           },
         },
-        walletStore.holderRseIdentifierId
+        walletStore.isRSESetup
           ? {
               buttonSetting: {
                 icon: PINIcon,

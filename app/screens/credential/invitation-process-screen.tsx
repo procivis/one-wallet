@@ -23,8 +23,8 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   InvitationResult,
+  KeyStorageSecurity,
   OneError,
-  WalletStorageType,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -76,9 +76,8 @@ const InvitationProcessScreen: FunctionComponent = () => {
     useNavigation<CredentialManagementNavigationProp<'Invitation'>>();
   const route = useRoute<InvitationRouteProp<'Processing'>>();
   const {
-    walletStore: { registeredWalletUnitId },
+    walletStore: { registeredWalletUnitId, isRSESetup },
   } = useStores();
-  const { walletStore } = useStores();
   const { data: walletUnitDetail, isLoading: isLoadingWU } =
     useWalletUnitDetail(registeredWalletUnitId);
   const isFocused = useIsFocused();
@@ -318,7 +317,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     invitationUrl,
     managementNavigation,
     redirectState,
-    walletStore.holderRseIdentifierId,
   ]);
 
   useEffect(() => {
@@ -346,9 +344,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
         });
       } else {
         const needsRSESetup =
-          invitationResult.walletStorageType ===
-            WalletStorageType.REMOTE_SECURE_ELEMENT &&
-          !walletStore.holderRseIdentifierId;
+          invitationResult.keyStorageSecurityLevels?.includes(
+            KeyStorageSecurity.HIGH,
+          ) && !isRSESetup;
         managementNavigation.replace('IssueCredential', {
           params: {
             invitationResult: invitationResult,
@@ -359,10 +357,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
     }
   }, [
     invitationResult,
+    isRSESetup,
     isLoadingWU,
     managementNavigation,
     rootNavigation,
-    walletStore.holderRseIdentifierId,
     walletUnitDetail?.status,
   ]);
 

@@ -96,11 +96,12 @@ const ProofDetailNerdView: FunctionComponent = () => {
         attributeText: proofInput.credentialSchema.revocationMethod,
         testID: 'revocationMethod',
       },
-      {
+      ...addElementIf(Boolean(proofInput.credentialSchema.keyStorageSecurity), {
         attributeKey: translate('common.storageType'),
-        attributeText: proofInput.credentialSchema.walletStorageType,
+        attributeText:
+          proofInput.credentialSchema.keyStorageSecurity ?? 'UNKNOWN',
         testID: 'storageType',
-      },
+      }),
       {
         attributeKey: translate('common.credentialSchema'),
         attributeText: JSON.stringify(
