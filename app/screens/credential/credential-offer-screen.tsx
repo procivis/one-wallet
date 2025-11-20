@@ -102,7 +102,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   useEffect(() => {
     return addRSEEventListener((event) => {
-      console.log({ event: JSON.stringify(event, null, 2) });
       if (event.type !== PinEventType.SHOW_PIN) {
         return;
       }
