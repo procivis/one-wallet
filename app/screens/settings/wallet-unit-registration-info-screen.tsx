@@ -26,6 +26,7 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
+import { observer } from 'mobx-react-lite';
 
 const testID = 'WalletUnitRegistrationScreen';
 
@@ -59,7 +60,7 @@ const getStatus = (
   };
 };
 
-const WalletUnitRegistrationInfoScreen: FC = () => {
+const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
@@ -148,7 +149,7 @@ const WalletUnitRegistrationInfoScreen: FC = () => {
       </View>
     </ScrollViewScreen>
   );
-};
+});
 
 const styles = StyleSheet.create({
   button: {
