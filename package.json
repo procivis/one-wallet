@@ -38,7 +38,7 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
     "@procivis/one-react-native-components": "0.3.91",
-    "@procivis/react-native-one-core": "1.72811.0",
+    "@procivis/react-native-one-core": "1.73295.0",
     "@procivis/react-native-picker": "5.0.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-clipboard/clipboard": "1.14.0",
@@ -101,7 +101,6 @@
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@eslint/compat": "^1.2.7",
-    "@procivis/one-tests-lib": "^0.2.1",
     "@react-native-community/cli": "15.0.1",
     "@react-native-community/cli-platform-android": "15.0.1",
     "@react-native-community/cli-platform-ios": "15.0.1",
