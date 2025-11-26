@@ -47,7 +47,6 @@ export async function setupWalletStore(env: Environment) {
   const walletProvider = WalletProviderModel.create(
     walletProviderData ?? {
       name: '',
-      walletLink: '',
       walletUnitAttestation: {
         appIntegrityCheckRequired: false,
         enabled: false,

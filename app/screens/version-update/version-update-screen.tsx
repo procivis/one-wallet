@@ -5,13 +5,17 @@ import {
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import { ProcessingView } from '../../components/common/processing-view';
-import useVersionCheck from '../../hooks/version-check/version-check';
+import { config } from '../../config';
+import useVersionCheck, {
+  ignoredUpdateVersionStorageKey,
+} from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { saveString } from '../../utils/storage';
 
 const testID = 'VersionUpdateScreen';
 
@@ -20,7 +24,8 @@ const VersionUpdateScreen = () => {
   const {
     walletStore: { walletProvider },
   } = useStores();
-  const { isBelowMinimumVersion, isRejectedVersion } = useVersionCheck();
+  const { isBelowMinimumVersion, isRejectedVersion, appVersion } =
+    useVersionCheck();
   const state =
     isBelowMinimumVersion || isRejectedVersion
       ? LoaderViewState.Error
@@ -37,14 +42,18 @@ const VersionUpdateScreen = () => {
     }
   }, [state]);
 
-  const updateWalletLink = useMemo(
-    () => walletProvider.appVersion?.updateScreen?.link,
-    [walletProvider.appVersion?.updateScreen?.link],
-  );
+  const updateWalletLink = useMemo(() => {
+    if (Platform.OS === 'ios') {
+      return `https://apps.apple.com/app/${config.appleStoreId}`;
+    }
+    if (Platform.OS === 'android') {
+      return `https://play.google.com/store/apps/details?id=${config.googleStoreId}`;
+    }
+  }, []);
 
   const learnMoreLink = useMemo(
-    () => walletProvider.walletLink,
-    [walletProvider.walletLink],
+    () => walletProvider.appVersion?.updateScreen?.link,
+    [walletProvider.appVersion?.updateScreen?.link],
   );
 
   const handleUpdate = useCallback(() => {
@@ -60,21 +69,18 @@ const VersionUpdateScreen = () => {
   }, [learnMoreLink]);
 
   const handleClose = useCallback(() => {
+    saveString(ignoredUpdateVersionStorageKey, appVersion);
     navigation.goBack();
-  }, [navigation]);
+  }, [appVersion, navigation]);
 
   return (
     <ProcessingView
-      button={
-        updateWalletLink
-          ? {
-              onPress: handleUpdate,
-              testID: concatTestID(testID, 'handleUpdate'),
-              title: translate('common.update'),
-              type: ButtonType.Primary,
-            }
-          : undefined
-      }
+      button={{
+        onPress: handleUpdate,
+        testID: concatTestID(testID, 'handleUpdate'),
+        title: translate('common.update'),
+        type: ButtonType.Primary,
+      }}
       loaderLabel={loaderLabel}
       onClose={state === LoaderViewState.Warning ? handleClose : undefined}
       secondaryButton={

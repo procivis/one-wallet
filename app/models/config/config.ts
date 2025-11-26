@@ -27,8 +27,10 @@ export interface FeatureFlags {
 
 export interface Configuration {
   appName: string;
+  appleStoreId: string;
   customOpenIdUrlScheme?: string;
   featureFlags: FeatureFlags;
+  googleStoreId: string;
   requestCredentialRedirectUri?: string;
   trustAnchorPublisherReference: string;
   walletProvider: WalletProviderConfiguration;
