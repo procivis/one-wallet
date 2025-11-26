@@ -5,6 +5,9 @@ import DeviceInfo from 'react-native-device-info';
 
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { useLoadString } from '../../utils/storage';
+
+export const ignoredUpdateVersionStorageKey = 'ignoredUpdateVersion';
 
 const parseVersion = (version: string) => {
   const trimmedVersion = version.trim();
@@ -19,6 +22,15 @@ const useVersionCheck = () => {
   } = useStores();
   const appVersion = `${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()}`;
   const navigation = useNavigation<RootNavigationProp>();
+  const {
+    value: ignoredUpdateVersion,
+    isLoading: isIgnoredUpdateVersionLoading,
+  } = useLoadString(ignoredUpdateVersionStorageKey);
+
+  const isUpdateNotIgnored = useMemo(
+    () => !isIgnoredUpdateVersionLoading && appVersion !== ignoredUpdateVersion,
+    [ignoredUpdateVersion, isIgnoredUpdateVersionLoading, appVersion],
+  );
 
   const isBelowMinimumVersion = useMemo(() => {
     const minumumVersion = walletProvider.appVersion?.minimum;
@@ -48,17 +60,19 @@ const useVersionCheck = () => {
     const isWrongVersion =
       isBelowMinimumVersion || isBelowRecommendedVersion || isRejectedVersion;
 
-    if (isWrongVersion) {
+    if (isWrongVersion && isUpdateNotIgnored) {
       navigation.navigate('VersionUpdate');
     }
   }, [
     isBelowMinimumVersion,
     isBelowRecommendedVersion,
     isRejectedVersion,
+    isUpdateNotIgnored,
     navigation,
   ]);
 
   return {
+    appVersion,
     checkAppVersion,
     isBelowMinimumVersion,
     isBelowRecommendedVersion,

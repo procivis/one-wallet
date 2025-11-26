@@ -92,6 +92,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
       });
     }
     checkAppVersion();
+
     handleInitialDeepLink();
   }, [
     checkAppVersion,

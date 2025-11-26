@@ -10,11 +10,10 @@ test('can be created', () => {
         minimumRecommended: 'v1.60.0',
         reject: ['v1.51.4', 'v1.51.3'],
         updateScreen: {
-          link: 'https://apps.apple.com/us/app/procivis-one-wallet/id6480111491',
+          link: 'https://procivis.ch',
         },
       },
       name: 'PROCIVIS_ONE',
-      walletLink: 'https://procivis.ch',
       walletUnitAttestation: {
         appIntegrityCheckRequired: true,
         enabled: true,

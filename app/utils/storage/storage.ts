@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Loads a string from storage.
@@ -12,6 +13,23 @@ export async function loadString(key: string): Promise<string | null> {
     // not sure why this would fail... even reading the RN docs I'm unclear
     return null;
   }
+}
+
+export function useLoadString(key: string) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [value, setValue] = useState<string | null>(null);
+
+  const handleLoad = useCallback(async () => {
+    const value = await loadString(key);
+    setValue(value);
+    setIsLoading(false);
+  }, [key]);
+
+  useEffect(() => {
+    handleLoad();
+  }, [handleLoad]);
+
+  return { isLoading, value };
 }
 
 /**
