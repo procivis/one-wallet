@@ -19,6 +19,7 @@ import {
   WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -26,7 +27,6 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
-import { observer } from 'mobx-react-lite';
 
 const testID = 'WalletUnitRegistrationScreen';
 

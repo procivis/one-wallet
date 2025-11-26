@@ -68,9 +68,11 @@ export async function setupWalletStore(env: Environment) {
       WALLET_STATE_STORAGE_KEY,
     );
 
-    const data: NewStore = defaultData;
+    let data: NewStore = defaultData;
     if (stored && 'holderDidRseId' in stored) {
       data.isRSESetup = true;
+    } else if (stored && 'isRSESetup' in stored) {
+      data = stored;
     }
 
     walletStore = WalletStoreModel.create(data, env);
