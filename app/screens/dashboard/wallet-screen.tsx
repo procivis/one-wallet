@@ -44,6 +44,9 @@ import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { saveString, useLoadString } from '../../utils/storage';
+
+const ignoredVersionNotchVersionStorageKey = 'ignoredVersionNotchVersion';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
@@ -54,10 +57,9 @@ const WalletScreen: FunctionComponent = observer(() => {
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
   const { credentialIssuers = [] } = assets;
-  const { isBelowRecommendedVersion } = useVersionCheck();
-  const [showUpdateNotch, setShowUpdateNotch] = useState(
-    isBelowRecommendedVersion,
-  );
+  const { isBelowRecommendedVersion, appVersion } = useVersionCheck();
+  const [isNotchClosed, setIsNotchClosed] = useState(false);
+
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
   const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
@@ -79,6 +81,21 @@ const WalletScreen: FunctionComponent = observer(() => {
     config.featureFlags.requestCredentialEnabled &&
     credentialIssuers.length > 0 &&
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
+
+  const {
+    value: ignoredNotchVersion,
+    isLoading: isIgnoredNotchVersionLoading,
+  } = useLoadString(ignoredVersionNotchVersionStorageKey);
+
+  const isNotchNotIgnored = useMemo(
+    () => !isIgnoredNotchVersionLoading && appVersion !== ignoredNotchVersion,
+    [ignoredNotchVersion, isIgnoredNotchVersionLoading, appVersion],
+  );
+
+  const showUpdateNotch = useMemo(
+    () => !isNotchClosed && isBelowRecommendedVersion && isNotchNotIgnored,
+    [isNotchNotIgnored, isBelowRecommendedVersion, isNotchClosed],
+  );
 
   useCredentialStatusCheck();
   const { isLoading: isLoadingWU, walletUnitDetail } = useWalletUnitCheck(
@@ -181,8 +198,9 @@ const WalletScreen: FunctionComponent = observer(() => {
   );
 
   const handleUpdateNoticeClose = useCallback(() => {
-    setShowUpdateNotch(false);
-  }, []);
+    saveString(ignoredVersionNotchVersionStorageKey, appVersion);
+    setIsNotchClosed(true);
+  }, [appVersion]);
 
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
     if (walletProvider.walletUnitAttestation.required) {

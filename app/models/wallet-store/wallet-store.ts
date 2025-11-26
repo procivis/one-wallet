@@ -24,7 +24,6 @@ const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
 export const WalletProviderModel = types.model('WalletProvider', {
   appVersion: types.maybe(AppVersionModel),
   name: types.string,
-  walletLink: types.maybe(types.string),
   walletUnitAttestation: WalletUnitRegistrationModel,
 });
 
