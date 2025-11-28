@@ -19,8 +19,8 @@ const ProcessingScreen: FC = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
   const pinInitialized = usePinCodeInitialized();
   const finalizeImport = useBackupFinalizeImportProcedure({
-    generateHwKey: true,
-    generateSwKey: true,
+    generateHwKey: false,
+    generateSwKey: false,
   });
   const [state, setState] = useState<
     Exclude<LoaderViewState, LoaderViewState.Error>
