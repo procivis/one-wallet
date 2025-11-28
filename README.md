@@ -303,6 +303,10 @@ Support for the recently published [FIPS-204][fips] is planned for the near futu
 
 Need support or have feedback? [Contact us](https://www.procivis.ch/en/contact).
 
+## Acknowledgements
+
+Thanks to Samuel Rinnetmäki, CTO of Findynet, for the Finnish translation.
+
 ## License
 
 Some rights reserved. This library is published under the [Apache License
