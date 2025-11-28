@@ -49,6 +49,7 @@ import { nonEmptyFilter } from '../../utils/filtering';
 const LocaleNames: Record<Locale, string> = {
   de: 'Deutsch',
   en: 'English',
+  fi: 'Suomi',
 };
 
 const DashboardScreen: FunctionComponent = observer(() => {

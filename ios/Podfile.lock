@@ -2454,7 +2454,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: 9429f37cdf4c89c51170a2a0330eecc974e76642
-  react-native-one-core: 1ccc8bc9194225e72feb88182ce466544440f087
+  react-native-one-core: d833b270308cfdbf1f5e5135c1089a624628f18f
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
@@ -2510,6 +2510,6 @@ SPEC CHECKSUMS:
   VisionCamera: 05e4bc4783174689a5878a0797015ab32afae9e4
   Yoga: 92f3bb322c40a86b7233b815854730442e01b8c4
 
-PODFILE CHECKSUM: dea14aea421adbbb9bf6faede1ad7678f23e17cc
+PODFILE CHECKSUM: b9fe6f6a9f10b14abed33d795da9631ae7099f4a
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
