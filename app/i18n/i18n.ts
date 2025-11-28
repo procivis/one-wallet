@@ -3,14 +3,17 @@ import { findBestLanguageTag } from 'react-native-localize';
 import { register } from 'timeago.js';
 import timeAgoDe from 'timeago.js/lib/lang/de';
 import timeAgoEn from 'timeago.js/lib/lang/en_US';
+import timeAgoFi from 'timeago.js/lib/lang/fi';
 
 import { config, localeOverride } from '../config';
 import de from './de/translation.json';
 import en from './en/translation.json';
+import fi from './fi/translation.json';
 
 const translations = {
   de: Object.assign(de, localeOverride?.de),
   en: Object.assign(en, localeOverride?.en),
+  fi: Object.assign(fi, localeOverride?.fi),
 };
 
 const i18n = new I18n();
@@ -58,6 +61,7 @@ type RecursiveKeyOf<TObj extends Record<string, unknown>> = {
 export const registerTimeAgoLocales = () => {
   register('en', timeAgoEn);
   register('de', timeAgoDe);
+  register('fi', timeAgoFi);
 };
 
 export default i18n;
