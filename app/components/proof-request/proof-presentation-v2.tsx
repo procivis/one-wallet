@@ -474,7 +474,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
   return (
     <>
-      {simpleSets.length && (
+      {simpleSets.length ? (
         <ProofRequestSet>
           {simpleSets.flatMap((set, setIndex, { length: setLength }) => {
             const lastSet = setIndex === setLength - 1;
@@ -520,7 +520,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
             );
           })}
         </ProofRequestSet>
-      )}
+      ) : null}
       {optionSets.map((set, setIndex) => {
         const titleOptions = { index: setIndex + 1 };
         const title = set.required

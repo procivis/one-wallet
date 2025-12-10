@@ -61,6 +61,7 @@
                 <data android:scheme="openid-credential-offer" />
                 <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}" />
                 <data android:scheme="openid4vp" />
+                <data android:scheme="haip-vp" />
                 <data android:scheme="${customOpenIDURLScheme}" />
                 <data android:scheme="${customOpenIDCredentialOfferURLScheme}" />
             </intent-filter>
@@ -74,6 +75,7 @@
                 <data android:host="@string/ASSOCIATED_INVITATION_DOMAIN" />
                 <data android:path="/app-link/openid-credential-offer" />
                 <data android:path="/app-link/openid4vp" />
+                <data android:path="/app-link/haip-vp" />
                 <data android:path="/app-link/${customOpenIDURLScheme}" />
                 <data android:path="/app-link/${customOpenIDCredentialOfferURLScheme}" />
             </intent-filter>
