@@ -8,8 +8,6 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   Claim,
-  ClaimValue,
-  DataTypeEnum,
   HistoryActionEnum,
   HistoryEntityTypeEnum,
   ProofInputClaim,
@@ -37,45 +35,41 @@ import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const claimFromProofInputClaim = (
   input: ProofInputClaim,
+  parentPath?: string,
 ): Claim | undefined => {
-  const value = claimValueFromProofInputClaim(input);
-  if (!value) {
+  if (input.value === undefined) {
     return undefined;
   }
-  return {
-    ...value,
+
+  const path = parentPath
+    ? `${parentPath}/${input.schema.key}`
+    : input.schema.key;
+
+  const schema = {
+    array: input.schema.array,
+    claims: [],
+    createdDate: '',
+    datatype: input.schema.dataType,
     id: input.schema.id,
     key: input.schema.key,
+    lastModified: '',
+    required: input.schema.required,
   };
-};
 
-const claimValueFromProofInputClaim = ({
-  schema,
-  value,
-}: ProofInputClaim): ClaimValue | undefined => {
-  if (!value) {
-    return undefined;
-  }
-
-  if (Array.isArray(value)) {
-    const values = value.map(claimFromProofInputClaim).filter(nonEmptyFilter);
-    return schema.dataType === (DataTypeEnum.Object as string)
-      ? {
-          array: schema.array,
-          dataType: DataTypeEnum.Object,
-          value: values,
-        }
-      : {
-          array: true,
-          dataType: schema.dataType,
-          value: values,
-        };
+  if (Array.isArray(input.value)) {
+    return {
+      path,
+      schema,
+      value: input.value
+        .map((v, index) => claimFromProofInputClaim(v, `${path}/${index}`))
+        .filter(nonEmptyFilter),
+    };
   }
 
   return {
-    array: false,
-    dataType: schema.dataType,
-    value,
+    path,
+    schema,
+    value: input.value,
   };
 };
 
@@ -226,7 +220,9 @@ export const HistoryDetailScreen: FC = () => {
                 credentialCard:
                   historyDeletedCredentialCardFromCredentialSchema(
                     credentialSchema,
-                    claims.map(claimFromProofInputClaim).filter(nonEmptyFilter),
+                    claims
+                      .map((c) => claimFromProofInputClaim(c))
+                      .filter(nonEmptyFilter),
                     config!,
                   ),
               };
@@ -234,7 +230,7 @@ export const HistoryDetailScreen: FC = () => {
             return {
               credentialDetails: {
                 claims: claims
-                  .map(claimFromProofInputClaim)
+                  .map((c) => claimFromProofInputClaim(c))
                   .filter(nonEmptyFilter),
                 credentialId: credential.id,
               },
