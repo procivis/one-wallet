@@ -2454,7 +2454,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: 9429f37cdf4c89c51170a2a0330eecc974e76642
-  react-native-one-core: d833b270308cfdbf1f5e5135c1089a624628f18f
+  react-native-one-core: eb4a3cb564febfc663767a59c34bda54a2d633dd
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: b6552f52e87c808d4e20da0c216e3206831b58ba
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
