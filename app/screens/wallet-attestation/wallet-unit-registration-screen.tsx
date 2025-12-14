@@ -135,7 +135,7 @@ const WalletUnitRegistrationScreen = () => {
         return translate('walletUnitRegistration.noInternet.register');
       }
     }
-    return translateError(error, translate(`walletUnitRegistration.error`));
+    return translateError(error, translate('walletUnitRegistration.error'));
   }, [error, registeredNewWallet, status, route.params.operation]);
 
   const button =
