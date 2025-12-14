@@ -32,7 +32,7 @@
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
     "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv",
     "sort:translations": "node ./.scripts/sort-translations.js",
-    "check:translations": "node ./scripts/get-unused-translations.js",
+    "check:translations": "node ./.scripts/get-unused-translations.js",
     "postinstall": "node ./bin/postinstall"
   },
   "dependencies": {
