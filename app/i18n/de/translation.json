@@ -217,7 +217,6 @@
   "info.credentialOffer.confirmationCode.input.numberPlaceholder": "%{codeLength}-stelliger Code",
   "info.credentialOffer.confirmationCode.input.textPlaceholder": "%{codeLength} Zeichen langer Code",
   "info.credentialOffer.process.error.rseLocked.title": "Ihr Remote Secure Element ist gesperrt.\nDie Ausstellung der Anmeldeinformationen ist fehlgeschlagen.",
-  "info.credentialOffer.process.warning.incompatible.title": "Ihre Wallet ist für den definierten Schlüsseltyp inkompatibel.",
   "info.credentialUpdate.subtitle": "Die folgenden Anmeldeinformation(en) wurden aktualisiert:",
   "info.deleteWalletScreen.confirm": "Ich verstehe, dass alle Anmeldeinformationen in %{appName} gelöscht werden, wenn ich fortfahre.",
   "info.deleteWalletScreen.explainer": "Die Löschung kann nicht rückgängig gemacht werden. Alle in der Wallet gespeicherten Anmeldeinformationen gehen für immer verloren. Eine erneute Ausstellung kann gebührenpflichtig sein.",
