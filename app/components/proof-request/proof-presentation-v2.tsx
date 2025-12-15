@@ -203,6 +203,49 @@ function prepareSubmission(
   return { allSetsValid, credentials };
 }
 
+function getNewSetSelection(
+  requestGroup: string[],
+  selectedCredentials: SetCredentialQuerySelection,
+  setId: string,
+  presentationDefinition: PresentationDefinitionV2 | undefined,
+) {
+  return requestGroup.reduce<CredentialQuerySelection>((acc, queryId) => {
+    let preselection:
+      | PresentationSubmitV2CredentialRequest
+      | PresentationSubmitV2CredentialRequest[]
+      | undefined = selectedCredentials[setId]?.[queryId];
+
+    if (!preselection) {
+      preselection = Object.entries(selectedCredentials).find(
+        ([selectionsSetID, set]) => {
+          return selectionsSetID !== setId && set[queryId];
+        },
+      )?.[1][queryId];
+    }
+
+    if (!preselection) {
+      const credentialQuery =
+        presentationDefinition?.credentialQueries[queryId];
+      if (credentialQuery && 'applicableCredentials' in credentialQuery) {
+        preselection = credentialQuery.applicableCredentials?.[0]
+          ? [
+              {
+                credentialId: credentialQuery.applicableCredentials[0].id,
+                userSelections: [],
+              },
+            ]
+          : undefined;
+      }
+    }
+
+    if (preselection) {
+      acc[queryId] = preselection;
+    }
+
+    return acc;
+  }, {});
+}
+
 const ProofPresentationV2: FC<ProofPresentationProps> = ({
   onPresentationDefinitionLoaded,
   proofAccepted,
@@ -300,48 +343,18 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     (setId: string, requestGroup: string[]) => (selected: boolean) => {
       const credentialSet =
         presentationDefinition?.credentialSets[parseInt(setId)];
-      let newSetSelection: CredentialQuerySelection = {};
+
       if (!selected && credentialSet?.required) {
         return;
       }
+
+      let newSetSelection: CredentialQuerySelection = {};
       if (selected) {
-        newSetSelection = requestGroup.reduce<CredentialQuerySelection>(
-          (acc, queryId) => {
-            let preselection:
-              | PresentationSubmitV2CredentialRequest
-              | PresentationSubmitV2CredentialRequest[]
-              | undefined = selectedCredentials[setId]?.[queryId];
-            if (!preselection) {
-              preselection = Object.entries(selectedCredentials).find(
-                ([selectionsSetID, set]) => {
-                  return selectionsSetID !== setId && set[queryId];
-                },
-              )?.[1][queryId];
-            }
-            if (!preselection) {
-              const credentialQuery =
-                presentationDefinition?.credentialQueries[queryId];
-              if (
-                credentialQuery &&
-                'applicableCredentials' in credentialQuery
-              ) {
-                preselection = credentialQuery.applicableCredentials?.[0]
-                  ? [
-                      {
-                        credentialId:
-                          credentialQuery.applicableCredentials[0].id,
-                        userSelections: [],
-                      },
-                    ]
-                  : undefined;
-              }
-            }
-            if (preselection) {
-              acc[queryId] = preselection;
-            }
-            return acc;
-          },
-          {},
+        newSetSelection = getNewSetSelection(
+          requestGroup,
+          selectedCredentials,
+          setId,
+          presentationDefinition,
         );
       }
 
