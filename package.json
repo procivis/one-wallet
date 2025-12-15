@@ -11,8 +11,8 @@
     "ios": "react-native run-ios",
     "android": "react-native run-android",
     "compile": "tsc --noEmit -p . --pretty",
-    "lint:eslint": "eslint app test e2e --ext .js,.ts,.tsx",
-    "lint:eslint:fix": "eslint app test e2e --ext .js,.ts,.tsx --fix",
+    "lint:eslint": "eslint app test --ext .js,.ts,.tsx",
+    "lint:eslint:fix": "eslint app test --ext .js,.ts,.tsx --fix",
     "lint:prettier": "prettier --check \"app/**/*.{js,json,ts{,x},md}\"",
     "lint:prettier:fix": "prettier --write \"app/**/*.{js,json,ts{,x},md}\"",
     "lint:ts": "tsc --noEmit",
@@ -124,7 +124,6 @@
     "babel-loader": "8.2.2",
     "cross-env": "^7.0.3",
     "deprecated-react-native-prop-types": "^4.1.0",
-    "detox": "^20.36.0",
     "eslint": "^9.19.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
@@ -176,8 +175,7 @@
       "<rootDir>/node_modules/react-native-gesture-handler/jestSetup.js"
     ],
     "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/e2e"
+      "/node_modules/"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|@procivis|@react-native|@react-native-async-storage|@react-navigation|@react-native-community|rn-material-ui-textfiel|react-native-screens|react-native-reanimated|expo-)"
@@ -193,7 +191,6 @@
       "@procivis/react-native-one-core",
       "@sentry/cli",
       "canvas",
-      "detox",
       "dtrace-provider",
       "ejs",
       "sharp"

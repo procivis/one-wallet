@@ -89,12 +89,6 @@ app/config/env.*.js
 !env.js
 rnuc.xcconfig
 
-# Detox
-detox-junit.xml
-
-*.log
-
-
 # Android build stuff
 node_modules_*.png
 index.android.bundle
