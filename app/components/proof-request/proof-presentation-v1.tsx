@@ -34,6 +34,34 @@ import {
 } from '../../utils/proof-request';
 import { ProofPresentationProps } from './proof-presentation-props';
 
+function getNewlySelectedClaims(
+  presentationDefinition: PresentationDefinition | undefined,
+  selectedCredentialId: string,
+  previouslySelectedClaims: string[],
+) {
+  const requestedCredential = presentationDefinition?.requestGroups
+    .find((group) =>
+      group.requestedCredentials.find((cred) =>
+        cred.applicableCredentials.includes(selectedCredentialId),
+      ),
+    )
+    ?.requestedCredentials.find((cred) =>
+      cred.applicableCredentials.includes(selectedCredentialId),
+    );
+  const filteredPrevSelection = previouslySelectedClaims.filter((id) =>
+    requestedCredential?.fields.find(
+      (field) =>
+        field.id === id &&
+        Object.keys(field.keyMap).includes(selectedCredentialId),
+    ),
+  );
+  const fullyNestedFieldIds = getFullyNestedFields(
+    requestedCredential?.fields ?? [],
+    selectedCredentialId,
+  ).map((field) => field.id);
+  return uniq(filteredPrevSelection.concat(fullyNestedFieldIds));
+}
+
 const ProofPresentationV1: FC<ProofPresentationProps> = ({
   onPresentationDefinitionLoaded,
   proofAccepted,
@@ -120,30 +148,11 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
         const prevSelection = prev[
           activeCredentialSelection
         ] as PresentationSubmitCredentialRequest;
-        const requestedCredential = presentationDefinition?.requestGroups
-          .find((group) =>
-            group.requestedCredentials.find((cred) =>
-              cred.applicableCredentials.includes(selectedCredentialId),
-            ),
-          )
-          ?.requestedCredentials.find((cred) =>
-            cred.applicableCredentials.includes(selectedCredentialId),
-          );
-        const filteredPrevSelection = prevSelection.submitClaims.filter((id) =>
-          requestedCredential?.fields.find(
-            (field) =>
-              field.id === id &&
-              Object.keys(field.keyMap).includes(selectedCredentialId),
-          ),
-        );
-        const fullyNestedFields = getFullyNestedFields(
-          requestedCredential?.fields ?? [],
+        prevSelection.submitClaims = getNewlySelectedClaims(
+          presentationDefinition,
           selectedCredentialId,
-        ).map((field) => field.id);
-        const submitClaims = uniq(
-          filteredPrevSelection.concat(fullyNestedFields),
+          prevSelection.submitClaims,
         );
-        prevSelection.submitClaims = submitClaims;
         return {
           ...prev,
           [activeCredentialSelection]: {
