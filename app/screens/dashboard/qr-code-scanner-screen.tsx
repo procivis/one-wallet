@@ -3,6 +3,7 @@ import {
   ButtonType,
   getEnabledExchangeProtocols,
   getEnabledTransports,
+  QRCodeScannerScreen as ScannerScreen,
   Transport,
   Typography,
   useAppColorScheme,
@@ -23,7 +24,6 @@ import { Alert, LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { openSettings, RESULTS } from 'react-native-permissions';
 import { Code } from 'react-native-vision-camera';
 
-import { ScannerScreen } from '../../components/vision-camera/vision-camera';
 import { config as appConfig } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
