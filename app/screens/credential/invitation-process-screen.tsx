@@ -325,7 +325,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
     }
     if ('authorizationCodeFlowUrl' in invitationResult) {
       openBrowser(invitationResult.authorizationCodeFlowUrl);
-      return;
     } else if ('proofId' in invitationResult) {
       managementNavigation.replace('ShareCredential', {
         params: { request: invitationResult },

@@ -57,10 +57,11 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                 credentialQuery &&
                 'applicableCredentials' in credentialQuery
               ) {
+                credentialQuery.applicableCredentials.sort(
+                  objectByTimestampSorter('issuanceDate', false),
+                );
                 acc2[queryId] = {
-                  credentialId: credentialQuery.applicableCredentials.sort(
-                    objectByTimestampSorter('issuanceDate', false),
-                  )[0].id,
+                  credentialId: credentialQuery.applicableCredentials[0].id,
                   userSelections: [],
                 };
               }
