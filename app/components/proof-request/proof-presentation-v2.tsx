@@ -14,7 +14,9 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   CredentialListItem,
+  PresentationDefinitionV2,
   PresentationDefinitionV2CredentialClaim,
+  PresentationDefinitionV2CredentialQuery,
   PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -41,6 +43,165 @@ import {
   SetCredentialQuerySelection,
 } from '../../utils/proof-request';
 import { ProofPresentationProps } from './proof-presentation-props';
+
+function selectCredential(
+  setId: string,
+  credentialQueryId: string,
+  presentationDefinition: PresentationDefinitionV2 | undefined,
+  selectedCredentials: SetCredentialQuerySelection,
+  navigation: ShareCredentialNavigationProp<'ProofRequest'>,
+) {
+  const credentialQuery =
+    presentationDefinition?.credentialQueries[credentialQueryId];
+  if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
+    return;
+  }
+
+  const selectedCredential = selectedCredentials[setId]?.[credentialQueryId];
+  let preselectedCredentialIds: string[] | undefined;
+  if (Array.isArray(selectedCredential)) {
+    preselectedCredentialIds = selectedCredential.map((c) => c.credentialId);
+  } else if (selectedCredential) {
+    preselectedCredentialIds = [selectedCredential.credentialId];
+  }
+
+  preselectedCredentialIds ??= [credentialQuery.applicableCredentials[0]?.id];
+
+  navigation.navigate('SelectCredentialV2', {
+    credentialQuery,
+    credentialQueryId,
+    preselectedCredentialIds,
+  });
+}
+
+function getNewSelection(
+  previousSelection: SetCredentialQuerySelection,
+  credentialQueryId: string,
+  credentialQuery: PresentationDefinitionV2CredentialQuery | undefined,
+  selectedCredentialIds: string[],
+) {
+  if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
+    return { selection: previousSelection, setsChanged: 0 };
+  }
+
+  const newSelection = cloneDeep(previousSelection);
+  let setsChanged = 0;
+  Object.entries(previousSelection).forEach(([setId, queriesSelections]) => {
+    const selection = queriesSelections[credentialQueryId];
+    if (!selection) {
+      return;
+    }
+    const credentialSelections = Array.isArray(selection)
+      ? selection
+      : [selection];
+    setsChanged += 1;
+    if (!credentialQuery.multiple) {
+      const selectedCredentialId = selectedCredentialIds[0];
+      const credential = credentialQuery.applicableCredentials.find(
+        (c) => c.id === selectedCredentialId,
+      );
+      if (!credential) {
+        return;
+      }
+      const credentialAvailablePaths =
+        getV2CredentialAvailablePaths(credential);
+      const userSelections = credentialSelections[0].userSelections.filter(
+        (path) => credentialAvailablePaths.includes(path),
+      );
+      newSelection[setId][credentialQueryId] = {
+        credentialId: selectedCredentialId,
+        userSelections,
+      };
+    } else {
+      const initialUserSelections =
+        credentialSelections.length === 1 &&
+        !selectedCredentialIds.includes(credentialSelections[0].credentialId)
+          ? credentialSelections[0].userSelections
+          : [];
+      const newMultipleSelection = selectedCredentialIds.map((id) => {
+        const credential = credentialQuery.applicableCredentials.find(
+          (c) => c.id === id,
+        );
+        if (!credential) {
+          return undefined;
+        }
+        const credentialAvailablePaths =
+          getV2CredentialAvailablePaths(credential);
+        const alreadySelected = credentialSelections.find(
+          (s) => s.credentialId === id,
+        );
+        const userSelections =
+          alreadySelected?.userSelections ?? initialUserSelections;
+        return {
+          credentialId: id,
+          userSelections: userSelections.filter((path) =>
+            credentialAvailablePaths.includes(path),
+          ),
+        };
+      });
+      newSelection[setId][credentialQueryId] =
+        newMultipleSelection.filter(nonEmptyFilter);
+    }
+  });
+
+  return { selection: newSelection, setsChanged };
+}
+
+function prepareSubmission(
+  credentialSets: CredentialSet[],
+  selectedCredentials: SetCredentialQuerySelection,
+) {
+  let allSetsValid = true;
+  const credentials = credentialSets.reduce<CredentialQuerySelection>(
+    (acc, credentialSet, setIndex) => {
+      const set = selectedCredentials[setIndex.toString()];
+      const setRequired = credentialSet.required;
+      if (!set) {
+        if (setRequired) {
+          allSetsValid = false;
+        }
+        return acc;
+      }
+      if (setRequired && !credentialSet.valid) {
+        allSetsValid = false;
+      }
+      Object.entries(set).forEach(([requestQueryId, request]) => {
+        if (!acc[requestQueryId]) {
+          acc[requestQueryId] = request;
+          return;
+        }
+        const requestArray = Array.isArray(request) ? request : [request];
+        const currentRequest = acc[requestQueryId];
+        requestArray.forEach((credentialRequest) => {
+          let currentCredentialRequest:
+            | PresentationSubmitV2CredentialRequest
+            | undefined;
+          if (Array.isArray(currentRequest)) {
+            currentCredentialRequest = currentRequest.find(
+              (r) => r.credentialId === credentialRequest.credentialId,
+            );
+          } else {
+            currentCredentialRequest = currentRequest;
+          }
+          if (!currentCredentialRequest) {
+            return;
+          }
+          const userSelections = uniq(
+            currentCredentialRequest.userSelections.concat(
+              credentialRequest.userSelections,
+            ),
+          );
+          currentCredentialRequest.userSelections = userSelections;
+        });
+        acc[requestQueryId] = currentRequest;
+      });
+      return acc;
+    },
+    {},
+  );
+
+  return { allSetsValid, credentials };
+}
 
 const ProofPresentationV2: FC<ProofPresentationProps> = ({
   onPresentationDefinitionLoaded,
@@ -126,38 +287,17 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
   const onSelectCredential =
     (setId: string) => (credentialQueryId: string) => () => {
-      const credentialQuery =
-        presentationDefinition?.credentialQueries[credentialQueryId];
-      if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
-        return;
-      }
-
-      const selectedCredential =
-        selectedCredentials[setId]?.[credentialQueryId];
-      let preselectedCredentialIds: string[] | undefined;
-      if (Array.isArray(selectedCredential)) {
-        preselectedCredentialIds = selectedCredential.map(
-          (c) => c.credentialId,
-        );
-      } else if (selectedCredential) {
-        preselectedCredentialIds = [selectedCredential.credentialId];
-      }
-
-      if (!preselectedCredentialIds) {
-        preselectedCredentialIds = [
-          credentialQuery.applicableCredentials[0]?.id,
-        ];
-      }
-
-      sharingNavigation.navigate('SelectCredentialV2', {
-        credentialQuery,
+      selectCredential(
+        setId,
         credentialQueryId,
-        preselectedCredentialIds,
-      });
+        presentationDefinition,
+        selectedCredentials,
+        sharingNavigation,
+      );
     };
 
   const onSelectOption =
-    (setId: string) => (requestGroup: string[]) => (selected: boolean) => {
+    (setId: string, requestGroup: string[]) => (selected: boolean) => {
       const credentialSet =
         presentationDefinition?.credentialSets[parseInt(setId)];
       let newSetSelection: CredentialQuerySelection = {};
@@ -233,71 +373,12 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     }
     const credentialQuery =
       presentationDefinition?.credentialQueries[credentialQueryId];
-    if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
-      return;
-    }
-    const newSelection = cloneDeep(selectedCredentials);
-    let setsChanged = 0;
-    Object.entries(selectedCredentials).forEach(
-      ([setId, queriesSelections]) => {
-        const selection = queriesSelections[credentialQueryId];
-        if (!selection) {
-          return;
-        }
-        const credentialSelections = Array.isArray(selection)
-          ? selection
-          : [selection];
-        setsChanged += 1;
-        if (!credentialQuery.multiple) {
-          const selectedCredentialId = selectedCredentialIds[0];
-          const credential = credentialQuery.applicableCredentials.find(
-            (c) => c.id === selectedCredentialId,
-          );
-          if (!credential) {
-            return;
-          }
-          const credentialAvailablePaths =
-            getV2CredentialAvailablePaths(credential);
-          const userSelections = credentialSelections[0].userSelections.filter(
-            (path) => credentialAvailablePaths.includes(path),
-          );
-          newSelection[setId][credentialQueryId] = {
-            credentialId: selectedCredentialId,
-            userSelections,
-          };
-        } else {
-          const initialUserSelections =
-            credentialSelections.length === 1 &&
-            !selectedCredentialIds.includes(
-              credentialSelections[0].credentialId,
-            )
-              ? credentialSelections[0].userSelections
-              : [];
-          const newMultipleSelection = selectedCredentialIds.map((id) => {
-            const credential = credentialQuery.applicableCredentials.find(
-              (c) => c.id === id,
-            );
-            if (!credential) {
-              return undefined;
-            }
-            const credentialAvailablePaths =
-              getV2CredentialAvailablePaths(credential);
-            const alreadySelected = credentialSelections.find(
-              (s) => s.credentialId === id,
-            );
-            const userSelections =
-              alreadySelected?.userSelections ?? initialUserSelections;
-            return {
-              credentialId: id,
-              userSelections: userSelections.filter((path) =>
-                credentialAvailablePaths.includes(path),
-              ),
-            };
-          });
-          newSelection[setId][credentialQueryId] =
-            newMultipleSelection.filter(nonEmptyFilter);
-        }
-      },
+
+    const { setsChanged, selection: newSelection } = getNewSelection(
+      selectedCredentials,
+      credentialQueryId,
+      credentialQuery,
+      selectedCredentialIds,
     );
 
     if (isEqual(newSelection, selectedCredentials)) {
@@ -372,27 +453,25 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     };
   };
 
-  const onSelectField = useCallback(
+  const onSelectField =
     (setId: string) =>
-      (requestQueryId: string) =>
-      (
-        credentialId: CredentialListItem['id'],
-        fieldPath: PresentationDefinitionV2CredentialClaim['path'],
-        selected: boolean,
-      ) => {
-        setSelectedCredentials((current) => {
-          return selectedCredentialsWithUpdatedSelection(
-            current,
-            setId,
-            requestQueryId,
-            credentialId,
-            fieldPath,
-            selected,
-          );
-        });
-      },
-    [setSelectedCredentials],
-  );
+    (requestQueryId: string) =>
+    (
+      credentialId: CredentialListItem['id'],
+      fieldPath: PresentationDefinitionV2CredentialClaim['path'],
+      selected: boolean,
+    ) => {
+      setSelectedCredentials((current) =>
+        selectedCredentialsWithUpdatedSelection(
+          current,
+          setId,
+          requestQueryId,
+          credentialId,
+          fieldPath,
+          selected,
+        ),
+      );
+    };
 
   useEffect(() => {
     if (!presentationDefinition || credentialSets.length === 0) {
@@ -400,54 +479,11 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       return;
     }
 
-    let allSetsValid = true;
-    const credentials = credentialSets.reduce<CredentialQuerySelection>(
-      (acc, credentialSet, setIndex) => {
-        const set = selectedCredentials[setIndex.toString()];
-        const setRequired = credentialSet.required;
-        if (!set) {
-          if (setRequired) {
-            allSetsValid = false;
-          }
-          return acc;
-        }
-        if (setRequired && !credentialSet.valid) {
-          allSetsValid = false;
-        }
-        Object.entries(set).forEach(([requestQueryId, request]) => {
-          if (!acc[requestQueryId]) {
-            acc[requestQueryId] = request;
-            return;
-          }
-          const requestArray = Array.isArray(request) ? request : [request];
-          const currentRequest = acc[requestQueryId];
-          requestArray.forEach((credentialRequest) => {
-            let currentCredentialRequest:
-              | PresentationSubmitV2CredentialRequest
-              | undefined;
-            if (Array.isArray(currentRequest)) {
-              currentCredentialRequest = currentRequest.find(
-                (r) => r.credentialId === credentialRequest.credentialId,
-              );
-            } else {
-              currentCredentialRequest = currentRequest;
-            }
-            if (!currentCredentialRequest) {
-              return;
-            }
-            const userSelections = uniq(
-              currentCredentialRequest.userSelections.concat(
-                credentialRequest.userSelections,
-              ),
-            );
-            currentCredentialRequest.userSelections = userSelections;
-          });
-          acc[requestQueryId] = currentRequest;
-        });
-        return acc;
-      },
-      {},
+    const { allSetsValid, credentials } = prepareSubmission(
+      credentialSets,
+      selectedCredentials,
     );
+
     setSubmitCredentials(credentials);
     setAllSelectionsValid(allSetsValid);
   }, [credentialSets, presentationDefinition, selectedCredentials]);
@@ -529,7 +565,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
         return (
           <ProofRequestSet
             headerLabel={title}
-            key={setIndex}
+            key={set.id}
             showHeader={true}
             showSeparator={setIndex === 0 && simpleSets.length === 0}
           >
@@ -560,7 +596,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                     key={`${set.id}-${credentialRequestGroupIndex}`}
                     labels={shareCredentialGroupLabels()}
                     lastGroup={lastGroup}
-                    onGroupSelect={onSelectOption(set.id)(
+                    onGroupSelect={onSelectOption(
+                      set.id,
                       credentialRequestGroup,
                     )}
                     onImagePreview={onImagePreview}
