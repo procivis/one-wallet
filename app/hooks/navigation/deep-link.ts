@@ -16,7 +16,7 @@ import { usePinCodeInitialized } from '../pin-code/pin-code';
 
 export const useRuntimeDeepLinkHandling = () => {
   const navigation = useNavigation<RootNavigationProp>();
-  const stateListener = useRef<() => void>();
+  const stateListener = useRef<(() => void) | undefined>(undefined);
   const handleInvitationUrl = useInvitationHandling();
   const pinInitialized = usePinCodeInitialized();
 

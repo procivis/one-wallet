@@ -12,6 +12,7 @@ import './mock-localize';
 import './mock-camera';
 import './mock-react-native-community-netinfo';
 import './mock-react-native-bluetooth-state-manager';
+import './mock-reanimated';
 import './mock-procivis-react-native-one-core';
 
 import { setUpTests as reanimatedSetupTests } from 'react-native-reanimated';

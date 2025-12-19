@@ -1,0 +1,16 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 41ea77f5de33ba55c6d7b433d500a26c8e008604..145d6a40968f512e9e8e0474008be5561c5684d6 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -4,7 +4,7 @@ buildscript {
+       url 'https://maven.google.com/'
+       name 'Google'
+     }
+-    jcenter()
++    mavenCentral()
+     google()
+   }
+ 
+diff --git a/yarn.lock b/yarn.lock
+deleted file mode 100644
+index 30202cdbf76cdad1792454b5755385874f4d141b..0000000000000000000000000000000000000000

@@ -3,6 +3,7 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 import com.android.build.OutputFile
+import groovy.xml.XmlParser
 import groovy.xml.XmlUtil
 
 /**
@@ -67,14 +68,14 @@ ext.enableProguardInReleaseBuilds = true
  * The preferred build flavor of JavaScriptCore (JSC)
  *
  * For example, to use the international variant, you can use:
- * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ * `def jscFlavor = io.github.react-native-community:jsc-android-intl:2026004.+`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
  * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc-intl:+'
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 /**
 * Private function to get the list of Native Architectures you want to build.
@@ -84,11 +85,6 @@ def jscFlavor = 'org.webkit:android-jsc-intl:+'
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
-}
-
-def proguardEnabled() {
-    def isDetoxBuild = System.getenv('RN_DETOX_BUILD') == "1"
-    return isDetoxBuild ? false : enableProguardInReleaseBuilds
 }
 
 android {
@@ -117,10 +113,6 @@ android {
         }
     }
 
-    afterEvaluate {
-        preBuild.dependsOn("generateCodegenArtifactsFromSchema")
-    }
-
     buildFeatures {
         dataBinding true
     }
@@ -141,7 +133,7 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
-            minifyEnabled proguardEnabled()
+            minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
