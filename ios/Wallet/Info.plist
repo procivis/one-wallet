@@ -36,6 +36,8 @@
 			</array>
 		</dict>
 	</array>
+  <key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -99,6 +101,8 @@
 	<string>Allow $(APP_NAME) to use location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(APP_NAME) to access photo gallery</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexMono-Regular.ttf</string>
@@ -119,9 +123,9 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

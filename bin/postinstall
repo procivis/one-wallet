@@ -12,9 +12,6 @@ const TARGET_PLATFORM = process.env.CI_TARGET_RN_PLATFORM;
  * have to remember these extra steps.
  */
 [
-  // Patch all the necessary modules.
-  { command: 'npx patch-package' },
-
   // Make sure we're set up correctly
   { command: 'npx solidarity' },
 

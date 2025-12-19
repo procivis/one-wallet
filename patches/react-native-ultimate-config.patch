@@ -1,7 +1,7 @@
-diff --git a/node_modules/react-native-ultimate-config/android/build.gradle b/node_modules/react-native-ultimate-config/android/build.gradle
-index 1c2da1a..6412a7d 100644
---- a/node_modules/react-native-ultimate-config/android/build.gradle
-+++ b/node_modules/react-native-ultimate-config/android/build.gradle
+diff --git a/android/build.gradle b/android/build.gradle
+index 1c2da1a58336d7c856e7ccb964e346ea13c2760c..8ba3fdeff00ab3902225e5cea8311fd5a4b63792 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
 @@ -35,17 +35,9 @@ def resolveReactNativeDirectory() {
      )
  }
@@ -43,20 +43,29 @@ index 1c2da1a..6412a7d 100644
  afterEvaluate { project ->
    task androidSourcesJar(type: Jar) {
      archiveClassifier = 'sources'
-diff --git a/node_modules/react-native-ultimate-config/index.js b/node_modules/react-native-ultimate-config/index.js
-index 13cbc93..b0b5a42 100644
---- a/node_modules/react-native-ultimate-config/index.js
-+++ b/node_modules/react-native-ultimate-config/index.js
+@@ -124,7 +107,7 @@ afterEvaluate { project ->
+     def javaCompileTask = variant.javaCompileProvider.get()
+ 
+     task "jar${name}"(type: Jar, dependsOn: javaCompileTask) {
+-      from javaCompileTask.destinationDir
++      from javaCompileTask.destinationDirectory
+     }
+   }
+ 
+diff --git a/index.js b/index.js
+index 13cbc93bfd56eb74c4f6e49a0f15d353c0a21023..deffba1b81725eae49ba2eec8ca66540528081ea 100644
+--- a/index.js
++++ b/index.js
 @@ -3,4 +3,4 @@ import override from "./override";
  
  const { UltimateConfig } = NativeModules;
  
 -export default { ...UltimateConfig, ...override };
-+export default { ...UltimateConfig, ...NativeModules.UltimateConfig.getConstants(), ...override };
-diff --git a/node_modules/react-native-ultimate-config/ios/UltimateConfig.h b/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
-index 41ad9ef..492c89f 100644
---- a/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
-+++ b/node_modules/react-native-ultimate-config/ios/UltimateConfig.h
++export default { ...UltimateConfig, ...UltimateConfig.getConstants(), ...override };
+diff --git a/ios/UltimateConfig.h b/ios/UltimateConfig.h
+index 41ad9efb55a3fd96986a49ef9e369e5b6271e328..492c89f81a637c65b3749b0a4b37f8ca17cfb78f 100644
+--- a/ios/UltimateConfig.h
++++ b/ios/UltimateConfig.h
 @@ -1,12 +1,6 @@
  
 -#ifdef RCT_NEW_ARCH_ENABLED
@@ -70,11 +79,11 @@ index 41ad9ef..492c89f 100644
 -#endif
  
  @end
-diff --git a/node_modules/react-native-ultimate-config/ios/UltimateConfig.m b/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
-index 7debfdf..c76bfdb 100644
---- a/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
-+++ b/node_modules/react-native-ultimate-config/ios/UltimateConfig.m
-@@ -14,13 +14,4 @@ RCT_EXPORT_MODULE()
+diff --git a/ios/UltimateConfig.m b/ios/UltimateConfig.m
+index 7debfdff0402385a71111c72517799ec25128e8d..c76bfdb218f014ef643971fa308c85a4133c0bb6 100644
+--- a/ios/UltimateConfig.m
++++ b/ios/UltimateConfig.m
+@@ -14,13 +14,4 @@ - (NSDictionary *)constantsToExport
      return getValues();
  }
  
@@ -88,10 +97,10 @@ index 7debfdf..c76bfdb 100644
 -#endif
 -
  @end
-diff --git a/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec b/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
-index 3421407..9d5d9be 100644
---- a/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
-+++ b/node_modules/react-native-ultimate-config/react-native-ultimate-config.podspec
+diff --git a/react-native-ultimate-config.podspec b/react-native-ultimate-config.podspec
+index 3421407f6b9230bcbd91377bcb5248a8d51d5171..5fd0bb32c5f962668fe630147d9bc2176a3ed5ff 100644
+--- a/react-native-ultimate-config.podspec
++++ b/react-native-ultimate-config.podspec
 @@ -1,7 +1,6 @@
  require "json"
  
@@ -100,10 +109,11 @@ index 3421407..9d5d9be 100644
  
  Pod::Spec.new do |s|
    s.name         = "react-native-ultimate-config"
-@@ -21,18 +20,4 @@ Pod::Spec.new do |s|
+@@ -20,19 +19,4 @@ Pod::Spec.new do |s|
+   s.source_files = "ios/**/*.{h,m,mm}"
  
    s.dependency "React-Core"
- 
+-
 -  # Don't install the dependencies when we run `pod install` in the old architecture.
 -  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
 -    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"

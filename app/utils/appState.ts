@@ -1,6 +1,9 @@
+import {
+  activateKeepAwake,
+  deactivateKeepAwake,
+} from '@sayem314/react-native-keep-awake';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import KeepAwake from 'react-native-keep-awake';
 
 /**
  * Returns current app state
@@ -37,8 +40,8 @@ export function useIsAppActive(): boolean | undefined {
 export function useKeepAwake(keepAwake: boolean = true) {
   useEffect(() => {
     if (keepAwake) {
-      KeepAwake.activate();
-      return () => KeepAwake.deactivate();
+      activateKeepAwake();
+      return () => deactivateKeepAwake();
     }
     return undefined;
   }, [keepAwake]);

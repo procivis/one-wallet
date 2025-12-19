@@ -44,7 +44,7 @@ const WalletNotice: FunctionComponent<WalletNoticeProps> = ({
     if (React.isValidElement(icon)) {
       return icon;
     } else {
-      const IconComponent = icon as React.ComponentType<any>;
+      const IconComponent = icon;
       return <IconComponent />;
     }
   }, [icon]);
@@ -56,7 +56,7 @@ const WalletNotice: FunctionComponent<WalletNoticeProps> = ({
     if (React.isValidElement(accessory)) {
       return accessory;
     } else {
-      const AccessoryComponent = accessory as React.ComponentType<any>;
+      const AccessoryComponent = accessory;
       return <AccessoryComponent />;
     }
   }, [accessory]);
