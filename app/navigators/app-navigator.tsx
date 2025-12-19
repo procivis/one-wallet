@@ -116,7 +116,18 @@ const coreConfig = {
         },
       },
     },
-    UBIQU_RSE: { enabled: config.featureFlags.ubiquRse },
+    SECURE_ELEMENT: {
+      display: 'keyStorage.secureElement',
+      params: { private: { aliasPrefix: 'ch.procivis.one.wallet.keys' } },
+      type: 'SECURE_ELEMENT',
+    },
+    UBIQU_RSE: config.featureFlags.ubiquRse
+      ? {
+          display: 'keyStorage.ubiqu',
+          enabled: true,
+          type: 'REMOTE_SECURE_ELEMENT',
+        }
+      : undefined,
   },
   transport: {
     BLE: {
