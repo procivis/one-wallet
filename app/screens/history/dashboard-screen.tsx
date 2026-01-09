@@ -1,8 +1,8 @@
 import { HistoryListScreen } from '@procivis/one-react-native-components';
 import {
-  HistoryEntityTypeEnum,
-  HistoryListItem,
-  HistoryListQuery,
+  HistoryEntityTypeBindingEnum,
+  HistoryListItemBindingDto,
+  HistoryListQueryBindingDto,
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useState } from 'react';
@@ -17,17 +17,19 @@ const HistoryDashboardScreen: FC = () => {
   const navigation = useNavigation<HistoryNavigationProp<'HistoryDashboard'>>();
   const [isFilterModalOpened, setIsFilterModalOpened] =
     useState<boolean>(false);
-  const [queryParams, setQueryParams] = useState<Partial<HistoryListQuery>>({
+  const [queryParams, setQueryParams] = useState<
+    Partial<HistoryListQueryBindingDto>
+  >({
     actions: historyListActionsFilter,
     entityTypes: [
-      HistoryEntityTypeEnum.BACKUP,
-      HistoryEntityTypeEnum.CREDENTIAL,
-      HistoryEntityTypeEnum.PROOF,
+      HistoryEntityTypeBindingEnum.BACKUP,
+      HistoryEntityTypeBindingEnum.CREDENTIAL,
+      HistoryEntityTypeBindingEnum.PROOF,
     ],
   });
 
   const handleItemPress = useCallback(
-    (entry: HistoryListItem) => {
+    (entry: HistoryListItemBindingDto) => {
       navigation.navigate('Detail', { entry });
     },
     [navigation],

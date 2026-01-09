@@ -20,7 +20,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const CredentialDeleteProcessScreen: FunctionComponent = () => {
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
   const route = useRoute<DeleteCredentialRouteProp<'Processing'>>();
   const [error, setError] = useState<unknown>();
 

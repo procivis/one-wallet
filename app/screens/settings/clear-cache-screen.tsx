@@ -9,7 +9,7 @@ import {
   useAppColorScheme,
   useCacheClear,
 } from '@procivis/one-react-native-components';
-import { CacheType } from '@procivis/react-native-one-core';
+import { CacheTypeBindingDto } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -42,9 +42,12 @@ const ClearCacheScreen: FunctionComponent = () => {
 
   const cacheEntriesToClear = useMemo(() => {
     if (clearType === ClearOptions.RevocationAndTrustData) {
-      return [CacheType.TRUST_LIST, CacheType.STATUS_LIST_CREDENTIAL];
+      return [
+        CacheTypeBindingDto.TRUST_LIST,
+        CacheTypeBindingDto.STATUS_LIST_CREDENTIAL,
+      ];
     } else {
-      return Object.values(CacheType);
+      return Object.values(CacheTypeBindingDto);
     }
   }, [clearType]);
 

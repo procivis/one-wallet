@@ -7,7 +7,7 @@ import {
   useCoreConfig,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
-import { CredentialListItem } from '@procivis/react-native-one-core';
+import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
 import {
@@ -22,8 +22,8 @@ import { credentialCardLabels } from '../../utils/credential';
 type WalletCredentialListItemProps = {
   expandedCredentialId: string | undefined;
   handleCredentialPress: (credentialId: string) => void;
-  index: ListRenderItemInfo<CredentialListItem>['index'];
-  item: ListRenderItemInfo<CredentialListItem>['item'];
+  index: ListRenderItemInfo<CredentialListItemBindingDto>['index'];
+  item: ListRenderItemInfo<CredentialListItemBindingDto>['item'];
   lastItem: boolean;
   onFoldCards: (credentialId?: string) => void;
   onHeaderPress: (credentialId?: string) => void;

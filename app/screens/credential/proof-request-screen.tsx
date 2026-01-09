@@ -8,7 +8,7 @@ import {
   useProofReject,
   useTrustEntity,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRoleEnum } from '@procivis/react-native-one-core';
+import { TrustEntityRoleBindingEnum } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -130,8 +130,8 @@ const ProofRequestScreen: FunctionComponent = () => {
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
         <EntityDetails
           identifier={proof?.verifier}
-          labels={trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER)}
-          role={TrustEntityRoleEnum.VERIFIER}
+          labels={trustEntityDetailsLabels(TrustEntityRoleBindingEnum.VERIFIER)}
+          role={TrustEntityRoleBindingEnum.VERIFIER}
           style={styles.verifier}
           testID="ProofRequestSharingScreen.entityCluster"
         />

@@ -4,8 +4,8 @@ import {
   useCredentials,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialListItem,
-  CredentialStateEnum,
+  CredentialListItemBindingDto,
+  CredentialStateBindingEnum,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
@@ -24,11 +24,14 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
   const { mutateAsync: check } = useCredentialRevocationCheck(false);
   const { data: credentials } = useCredentials({
     ids: credentialIds,
-    states: [CredentialStateEnum.ACCEPTED, CredentialStateEnum.SUSPENDED],
+    states: [
+      CredentialStateBindingEnum.ACCEPTED,
+      CredentialStateBindingEnum.SUSPENDED,
+    ],
   });
 
   const runCheck = useCallback(
-    async (checkedCredentials: CredentialListItem[]) => {
+    async (checkedCredentials: CredentialListItemBindingDto[]) => {
       if (!checkedCredentials.length) {
         return;
       }

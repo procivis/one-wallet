@@ -2,7 +2,7 @@ import {
   ArrayElement,
   ShareCredentialGroupLabels,
 } from '@procivis/one-react-native-components';
-import { PresentationDefinitionV2 } from '@procivis/react-native-one-core';
+import { PresentationDefinitionV2ResponseBindingDto } from '@procivis/react-native-one-core';
 
 import { translate } from '../i18n';
 import { shareCredentialLabels } from './credential-sharing';
@@ -15,21 +15,24 @@ export const shareCredentialGroupLabels = (): ShareCredentialGroupLabels => {
 };
 
 export type CredentialSet = ArrayElement<
-  PresentationDefinitionV2['credentialSets']
+  PresentationDefinitionV2ResponseBindingDto['credentialSets']
 > & {
   id: string;
   valid: boolean;
 };
 
 export const credentialSetsFromPresentationDefinitionV2 = (
-  presentationDefinition: PresentationDefinitionV2,
+  presentationDefinition: PresentationDefinitionV2ResponseBindingDto,
 ): CredentialSet[] => {
   return presentationDefinition.credentialSets.map((set, index) => {
     const filteredOptions = set.options.filter((group) => {
       const arrayGroup = Array.isArray(group) ? group : [group];
       return arrayGroup.every((queryId) => {
         const query = presentationDefinition.credentialQueries[queryId];
-        return queryId && 'applicableCredentials' in query;
+        return (
+          queryId &&
+          query.credentialOrFailureHint.type_ === 'APPLICABLE_CREDENTIALS'
+        );
       });
     });
     return {

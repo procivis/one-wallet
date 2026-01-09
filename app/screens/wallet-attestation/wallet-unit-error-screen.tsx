@@ -5,7 +5,7 @@ import {
   useBlockOSBackNavigation,
   useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
-import { WalletUnitStatus } from '@procivis/react-native-one-core';
+import { WalletUnitStatusBindingEnum } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
@@ -31,7 +31,7 @@ const WalletUnitErrorScreen: FC = () => {
     if (!walletUnitDetail) {
       return;
     }
-    if (walletUnitDetail.status === WalletUnitStatus.REVOKED) {
+    if (walletUnitDetail.status === WalletUnitStatusBindingEnum.REVOKED) {
       setState(LoaderViewState.Error);
     }
   }, [walletUnitDetail]);

@@ -78,7 +78,7 @@ const RequestCredentialListScreen = () => {
         rootNavigation.navigate('CredentialManagement', {
           params: {
             params: {
-              invitationResult: result,
+              invitationResult: { type_: 'CREDENTIAL_ISSUANCE', ...result },
             },
             screen: 'CredentialOffer',
           },

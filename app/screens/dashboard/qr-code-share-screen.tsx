@@ -17,8 +17,8 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   OneError,
-  ProofStateEnum,
-  ProposeProofResponse,
+  ProofStateBindingEnum,
+  ProposeProofResponseBindingDto,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -56,7 +56,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
-  const [proof, setProof] = useState<ProposeProofResponse>();
+  const [proof, setProof] = useState<ProposeProofResponseBindingDto>();
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
 
   useEffect(() => {
@@ -95,11 +95,15 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
 
   const pendingProofId = useRef<string | undefined>(
-    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined,
+    proofState?.state === ProofStateBindingEnum.PENDING
+      ? proof?.proofId
+      : undefined,
   );
   useEffect(() => {
     pendingProofId.current =
-      proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+      proofState?.state === ProofStateBindingEnum.PENDING
+        ? proof?.proofId
+        : undefined;
   }, [proof?.proofId, proofState?.state]);
 
   // delete proof when app goes to background
@@ -135,7 +139,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   }, [adapterDisabled, permissionStatus, proof, isFocused]);
 
   useEffect(() => {
-    if (proof && proofState?.state === ProofStateEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofStateBindingEnum.REQUESTED) {
       navigation.popTo('Wallet');
       setTimeout(() => {
         rootNavigation.navigate('CredentialManagement', {
@@ -144,6 +148,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
               request: {
                 interactionId: proof.interactionId,
                 proofId: proof.proofId,
+                type_: 'PROOF_REQUEST',
               },
             },
             screen: 'ProofRequest',

@@ -11,11 +11,11 @@ import {
   WalletEmptyList,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialListIncludeEntityType,
-  CredentialListQuery,
-  CredentialStateEnum,
-  SortableCredentialColumnEnum,
-  WalletUnitStatus,
+  CredentialListIncludeEntityTypeBindingEnum,
+  CredentialListQueryBindingDto,
+  CredentialStateBindingEnum,
+  SortableCredentialColumnBindingEnum,
+  WalletUnitStatusBindingEnum,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
@@ -62,13 +62,15 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
-  const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
-    include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
-    sort: SortableCredentialColumnEnum.SCHEMA_NAME,
+  const [queryParams, setQueryParams] = useState<
+    Partial<CredentialListQueryBindingDto>
+  >({
+    include: [CredentialListIncludeEntityTypeBindingEnum.LAYOUT_PROPERTIES],
+    sort: SortableCredentialColumnBindingEnum.SCHEMA_NAME,
     states: [
-      CredentialStateEnum.ACCEPTED,
-      CredentialStateEnum.SUSPENDED,
-      CredentialStateEnum.REVOKED,
+      CredentialStateBindingEnum.ACCEPTED,
+      CredentialStateBindingEnum.SUSPENDED,
+      CredentialStateBindingEnum.REVOKED,
     ],
   });
   const {
@@ -107,7 +109,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       return;
     }
 
-    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
+    if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.REVOKED) {
       navigation.navigate('WalletUnitError');
     }
   }, [
@@ -153,7 +155,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const handleCredentialPress = useCallback(
     (credentialId: string) => {
       if (credentialId) {
-        navigation.navigate('CredentialDetail', {
+        navigation.navigate('CredentialDetailBindingDto', {
           params: { credentialId },
           screen: 'Detail',
         });
@@ -213,7 +215,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         text: translate('common.updateAvailable'),
       };
     }
-    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
+    if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.REVOKED) {
       return {
         icon: StatusErrorIcon,
         text: 'Wallet unit is revoked',

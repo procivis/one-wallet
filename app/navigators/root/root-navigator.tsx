@@ -59,7 +59,7 @@ const RootNavigator: FunctionComponent = () => {
       />
       <RootStack.Screen
         component={CredentialDetailNavigator}
-        name="CredentialDetail"
+        name="CredentialDetailBindingDto"
       />
 
       {/* screens with disabled OS navigation */}
