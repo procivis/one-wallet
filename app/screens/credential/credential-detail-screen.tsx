@@ -17,8 +17,8 @@ import {
   useHistory,
 } from '@procivis/one-react-native-components';
 import {
-  HistoryEntityTypeEnum,
-  HistoryListItem,
+  HistoryEntityTypeBindingEnum,
+  HistoryListItemBindingDto,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -46,7 +46,7 @@ import { historyListItemLabels } from '../../utils/history';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
@@ -59,8 +59,8 @@ const CredentialDetailScreen: FC = () => {
     actions: historyListActionsFilter,
     credentialId,
     entityTypes: [
-      HistoryEntityTypeEnum.CREDENTIAL,
-      HistoryEntityTypeEnum.PROOF,
+      HistoryEntityTypeBindingEnum.CREDENTIAL,
+      HistoryEntityTypeBindingEnum.PROOF,
     ],
   });
   const credentialHistory = historyPages?.pages.flatMap((page) => page.values);
@@ -197,17 +197,17 @@ const CredentialDetailScreen: FC = () => {
 
 const DISPLAYED_HISTORY_ITEMS = 3;
 const HistorySection: FC<{
-  historyEntries?: HistoryListItem[];
+  historyEntries?: HistoryListItemBindingDto[];
   onSeeAllHistory?: () => void;
 }> = ({ historyEntries = [], onSeeAllHistory }) => {
   const colorScheme = useAppColorScheme();
   const previewHistoryItems = historyEntries.slice(0, DISPLAYED_HISTORY_ITEMS);
   const expandable = historyEntries.length > DISPLAYED_HISTORY_ITEMS;
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
 
   const handleProofPress = useCallback(
-    (entry: HistoryListItem) => {
+    (entry: HistoryListItemBindingDto) => {
       rootNavigation.navigate('Settings', {
         params: {
           params: { entry },

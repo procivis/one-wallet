@@ -14,9 +14,10 @@ import {
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialDetail,
-  CredentialStateEnum,
-  TrustEntityRoleEnum,
+  CredentialDetailBindingDto,
+  CredentialSchemaDetailBindingDto,
+  CredentialStateBindingEnum,
+  TrustEntityRoleBindingEnum,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -32,10 +33,10 @@ import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (
-  credential: CredentialDetail,
+  credential: CredentialDetailBindingDto,
   colorScheme: ColorScheme,
 ): { icon: ReactElement; text: string; textColor: string } | undefined => {
-  if (credential.state === CredentialStateEnum.SUSPENDED) {
+  if (credential.state === CredentialStateBindingEnum.SUSPENDED) {
     if (credential.suspendEndDate) {
       return {
         icon: CredentialSuspendedTempIcon,
@@ -53,7 +54,7 @@ const getCredentialValidityValue = (
     }
   }
 
-  if (credential.state === CredentialStateEnum.REVOKED) {
+  if (credential.state === CredentialStateBindingEnum.REVOKED) {
     return {
       icon: CredentialSuspendedIcon,
       text: translate('common.revoked'),
@@ -61,7 +62,7 @@ const getCredentialValidityValue = (
     };
   }
 
-  if (credential.state === CredentialStateEnum.ACCEPTED) {
+  if (credential.state === CredentialStateBindingEnum.ACCEPTED) {
     return {
       icon: CredentialValidIcon,
       text: translate('common.valid'),
@@ -90,7 +91,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   );
 
   const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages(
-    credentialDetail.schema,
+    credentialDetail.schema as CredentialSchemaDetailBindingDto,
   );
 
   const nerdModeFields: Array<
@@ -158,7 +159,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       entityCluster={{
         entityLabels: entityLabels,
         identifier: credentialDetail.issuer!,
-        role: TrustEntityRoleEnum.ISSUER,
+        role: TrustEntityRoleBindingEnum.ISSUER,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}

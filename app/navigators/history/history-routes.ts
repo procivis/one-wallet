@@ -1,10 +1,10 @@
-import { HistoryListItem } from '@procivis/react-native-one-core';
+import { HistoryListItemBindingDto } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type HistoryNavigatorParamList = {
   Detail: {
-    entry: HistoryListItem;
+    entry: HistoryListItemBindingDto;
   };
   HistoryDashboard: undefined;
 };

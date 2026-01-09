@@ -9,7 +9,7 @@ import {
   useAppColorScheme,
   useCredentialSchemas,
 } from '@procivis/one-react-native-components';
-import { CredentialSchema } from '@procivis/react-native-one-core';
+import { CredentialSchemaBindingDto } from '@procivis/react-native-one-core';
 import { useIsFocused } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
@@ -20,8 +20,10 @@ import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 
 export interface CredentialSchemaPickerProps {
   onClose: () => void;
-  onSelection: (credentialSchemaId: CredentialSchema['id'] | undefined) => void;
-  selected?: CredentialSchema['id'];
+  onSelection: (
+    credentialSchemaId: CredentialSchemaBindingDto['id'] | undefined,
+  ) => void;
+  selected?: CredentialSchemaBindingDto['id'];
   testID?: string;
   visible: boolean;
 }

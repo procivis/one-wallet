@@ -7,11 +7,11 @@ import {
   useProofDetail,
 } from '@procivis/one-react-native-components';
 import {
-  Claim,
-  HistoryActionEnum,
-  HistoryEntityTypeEnum,
-  ProofInputClaim,
-  TrustEntityRoleEnum,
+  ClaimBindingDto,
+  HistoryActionBindingEnum,
+  HistoryEntityTypeBindingEnum,
+  ProofRequestClaimBindingDto,
+  TrustEntityRoleBindingEnum,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
@@ -34,9 +34,9 @@ import {
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 
 const claimFromProofInputClaim = (
-  input: ProofInputClaim,
+  input: ProofRequestClaimBindingDto,
   parentPath?: string,
-): Claim | undefined => {
+): ClaimBindingDto | undefined => {
   if (input.value === undefined) {
     return undefined;
   }
@@ -56,20 +56,23 @@ const claimFromProofInputClaim = (
     required: input.schema.required,
   };
 
-  if (Array.isArray(input.value)) {
+  if (input.value.type_ === 'CLAIMS') {
     return {
       path,
       schema,
-      value: input.value
-        .map((v, index) => claimFromProofInputClaim(v, `${path}/${index}`))
-        .filter(nonEmptyFilter),
+      value: {
+        type_: 'NESTED',
+        value: input.value.value
+          .map((v, index) => claimFromProofInputClaim(v, `${path}/${index}`))
+          .filter(nonEmptyFilter),
+      },
     };
   }
 
   return {
     path,
     schema,
-    value: input.value,
+    value: { type_: 'STRING', value: input.value.value },
   };
 };
 
@@ -82,12 +85,12 @@ export const HistoryDetailScreen: FC = () => {
 
   const { data: config } = useCoreConfig();
   const { data: issuedCredential } = useCredentialDetail(
-    entry.entityType === HistoryEntityTypeEnum.CREDENTIAL
+    entry.entityType === HistoryEntityTypeBindingEnum.CREDENTIAL
       ? entry.entityId
       : undefined,
   );
   const { data: proof } = useProofDetail(
-    entry.entityType === HistoryEntityTypeEnum.PROOF
+    entry.entityType === HistoryEntityTypeBindingEnum.PROOF
       ? entry.entityId
       : undefined,
   );
@@ -100,27 +103,27 @@ export const HistoryDetailScreen: FC = () => {
 
   const onInfoPressed = useMemo(() => {
     if (
-      entry.entityType === HistoryEntityTypeEnum.BACKUP ||
-      (entry.entityType === HistoryEntityTypeEnum.PROOF && !proof) ||
-      (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL &&
+      entry.entityType === HistoryEntityTypeBindingEnum.BACKUP ||
+      (entry.entityType === HistoryEntityTypeBindingEnum.PROOF && !proof) ||
+      (entry.entityType === HistoryEntityTypeBindingEnum.CREDENTIAL &&
         !issuedCredential)
     ) {
       return undefined;
     }
 
     const infoPressHandler = () => {
-      if (entry.entityType === HistoryEntityTypeEnum.PROOF) {
+      if (entry.entityType === HistoryEntityTypeBindingEnum.PROOF) {
         rootNavigation.navigate('NerdMode', {
           params: {
             proofId: entry.entityId!,
           },
           screen: 'ProofNerdMode',
         });
-      } else if (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL) {
+      } else if (entry.entityType === HistoryEntityTypeBindingEnum.CREDENTIAL) {
         const credentialActions = [
-          HistoryActionEnum.SUSPENDED,
-          HistoryActionEnum.REVOKED,
-          HistoryActionEnum.DEACTIVATED,
+          HistoryActionBindingEnum.SUSPENDED,
+          HistoryActionBindingEnum.REVOKED,
+          HistoryActionBindingEnum.DEACTIVATED,
         ];
         if (credentialActions.includes(entry.action)) {
           rootNavigation.navigate('NerdMode', {
@@ -145,26 +148,26 @@ export const HistoryDetailScreen: FC = () => {
 
   const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
     if (
-      entry.entityType === HistoryEntityTypeEnum.CREDENTIAL &&
+      entry.entityType === HistoryEntityTypeBindingEnum.CREDENTIAL &&
       issuedCredential?.issuer
     ) {
       return {
         entity: {
           identifier: issuedCredential?.issuer ?? entry.target,
-          labels: trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER),
-          role: TrustEntityRoleEnum.ISSUER,
+          labels: trustEntityDetailsLabels(TrustEntityRoleBindingEnum.ISSUER),
+          role: TrustEntityRoleBindingEnum.ISSUER,
           testID: 'EntityDetail',
         },
       };
     } else if (
-      entry.entityType === HistoryEntityTypeEnum.PROOF &&
+      entry.entityType === HistoryEntityTypeBindingEnum.PROOF &&
       proof?.verifier
     ) {
       return {
         entity: {
           identifier: proof?.verifier ?? entry.target,
-          labels: trustEntityDetailsLabels(TrustEntityRoleEnum.VERIFIER),
-          role: TrustEntityRoleEnum.VERIFIER,
+          labels: trustEntityDetailsLabels(TrustEntityRoleBindingEnum.VERIFIER),
+          role: TrustEntityRoleBindingEnum.VERIFIER,
           testID: 'EntityDetail',
         },
       };
@@ -183,7 +186,7 @@ export const HistoryDetailScreen: FC = () => {
   ]);
 
   const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {
-    if (entry.entityType === HistoryEntityTypeEnum.CREDENTIAL) {
+    if (entry.entityType === HistoryEntityTypeBindingEnum.CREDENTIAL) {
       if (!issuedCredential) {
         return {
           cards: [
@@ -205,7 +208,7 @@ export const HistoryDetailScreen: FC = () => {
           },
         ],
       };
-    } else if (entry.entityType === HistoryEntityTypeEnum.PROOF) {
+    } else if (entry.entityType === HistoryEntityTypeBindingEnum.PROOF) {
       if (!proof?.proofInputs?.length) {
         return undefined;
       }

@@ -5,7 +5,7 @@ import {
   useListContentInset,
   WalletEmptySearchResult,
 } from '@procivis/one-react-native-components';
-import { CredentialListItem } from '@procivis/react-native-one-core';
+import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
 import React, { FC, useCallback } from 'react';
 import { Animated, ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,7 +16,7 @@ import ListPageLoadingIndicator from '../list/list-page-loading-indicator';
 import WalletCredentialListItem from './credential-list-item';
 
 type WalletCredentialListProps = {
-  credentials: CredentialListItem[];
+  credentials: CredentialListItemBindingDto[];
   hasNextPage: boolean;
   onCredentialPress: (credentialId: string) => void;
   onEndReached: () => void;
@@ -46,7 +46,7 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
     useCredentialListExpandedCard();
 
   const renderItem = useCallback(
-    ({ item, index }: ListRenderItemInfo<CredentialListItem>) => {
+    ({ item, index }: ListRenderItemInfo<CredentialListItemBindingDto>) => {
       return (
         <WalletCredentialListItem
           expandedCredentialId={expandedCredential}
@@ -69,7 +69,7 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
   );
 
   return (
-    <Animated.FlatList<CredentialListItem>
+    <Animated.FlatList<CredentialListItemBindingDto>
       ListEmptyComponent={
         <WalletEmptySearchResult
           subtitle={translate(

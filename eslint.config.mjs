@@ -63,6 +63,7 @@ export default tsEslint.config([
         {
           format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'],
           leadingUnderscore: 'allow',
+          trailingUnderscore: 'allow',
           selector: 'property',
         },
       ],

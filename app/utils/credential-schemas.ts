@@ -1,4 +1,4 @@
-import { ImportCredentialSchemaRequestSchema } from '@procivis/react-native-one-core';
+import { ImportCredentialSchemaRequestSchemaBindingDto } from '@procivis/react-native-one-core';
 
 export const getCredentialSchemasFromAssets = () => {
   const schemas = require.context(
@@ -8,5 +8,7 @@ export const getCredentialSchemasFromAssets = () => {
   );
   return schemas
     .keys()
-    .map((key) => schemas(key) as ImportCredentialSchemaRequestSchema);
+    .map(
+      (key) => schemas(key) as ImportCredentialSchemaRequestSchemaBindingDto,
+    );
 };

@@ -22,8 +22,8 @@ import {
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
-  InvitationResult,
-  KeyStorageSecurity,
+  HandleInvitationResponseBindingEnum,
+  KeyStorageSecurityBindingEnum,
   OneError,
 } from '@procivis/react-native-one-core';
 import {
@@ -102,7 +102,8 @@ const InvitationProcessScreen: FunctionComponent = () => {
   useBlockOSBackNavigation();
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
-  const [invitationResult, setInvitationResult] = useState<InvitationResult>();
+  const [invitationResult, setInvitationResult] =
+    useState<HandleInvitationResponseBindingEnum>();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00);
 
@@ -201,7 +202,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
         const result = await continueIssuance(url);
         managementNavigation.replace('IssueCredential', {
           params: {
-            invitationResult: result,
+            invitationResult: {
+              type_: 'CREDENTIAL_ISSUANCE',
+              ...result,
+            },
           },
           screen: 'CredentialOffer',
         });
@@ -323,9 +327,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
     if (!invitationResult) {
       return;
     }
-    if ('authorizationCodeFlowUrl' in invitationResult) {
+    if (invitationResult.type_ === 'AUTHORIZATION_CODE_FLOW') {
       openBrowser(invitationResult.authorizationCodeFlowUrl);
-    } else if ('proofId' in invitationResult) {
+    } else if (invitationResult.type_ === 'PROOF_REQUEST') {
       managementNavigation.replace('ShareCredential', {
         params: { request: invitationResult },
         screen: 'ProofRequest',
@@ -344,7 +348,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       } else {
         const needsRSESetup =
           invitationResult.keyStorageSecurityLevels?.includes(
-            KeyStorageSecurity.HIGH,
+            KeyStorageSecurityBindingEnum.HIGH,
           ) && !isRSESetup;
         managementNavigation.replace('IssueCredential', {
           params: {

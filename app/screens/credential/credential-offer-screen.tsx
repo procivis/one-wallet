@@ -20,10 +20,10 @@ import {
   useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
-  ClaimSchema,
+  CredentialClaimSchemaBindingDto,
   IssuanceProtocolFeatureEnum,
   OneError,
-  TrustEntityRoleEnum,
+  TrustEntityRoleBindingEnum,
   Ubiqu,
 } from '@procivis/react-native-one-core';
 import {
@@ -65,7 +65,7 @@ const {
 
 // fallback empty attributes for credential offer without claim values
 const getDummyAttributes = (
-  claimSchemas: ClaimSchema[],
+  claimSchemas: CredentialClaimSchemaBindingDto[],
 ): CredentialAttribute[] =>
   claimSchemas.map((schema) => ({
     attributes: [],
@@ -276,8 +276,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
           <EntityDetails
             identifier={credential?.issuer}
-            labels={trustEntityDetailsLabels(TrustEntityRoleEnum.ISSUER)}
-            role={TrustEntityRoleEnum.ISSUER}
+            labels={trustEntityDetailsLabels(TrustEntityRoleBindingEnum.ISSUER)}
+            role={TrustEntityRoleBindingEnum.ISSUER}
             style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
             testID={concatTestID(testID, 'entityCluster')}
           />

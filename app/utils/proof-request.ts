@@ -1,22 +1,22 @@
 import {
-  CredentialDetail,
-  CredentialStateEnum,
-  PresentationDefinitionRequestedCredential,
-  PresentationDefinitionRequestGroup,
-  PresentationDefinitionV2,
-  PresentationSubmitCredentialRequest,
-  PresentationSubmitV2CredentialRequest,
+  CredentialDetailBindingDto,
+  CredentialStateBindingEnum,
+  PresentationDefinitionRequestedCredentialBindingDto,
+  PresentationDefinitionRequestGroupBindingDto,
+  PresentationDefinitionV2ResponseBindingDto,
+  PresentationSubmitCredentialRequestBindingDto,
+  PresentationSubmitV2CredentialRequestBindingDto,
 } from '@procivis/react-native-one-core';
 
 import { objectByTimestampSorter } from './sorting';
 
 export const preselectCredentialsForRequestGroups = (
-  requestGroups: PresentationDefinitionRequestGroup[],
-  allCredentials: CredentialDetail[],
+  requestGroups: PresentationDefinitionRequestGroupBindingDto[],
+  allCredentials: CredentialDetailBindingDto[],
 ) => {
   const preselected: Record<
-    PresentationDefinitionRequestedCredential['id'],
-    PresentationSubmitCredentialRequest | undefined
+    PresentationDefinitionRequestedCredentialBindingDto['id'],
+    PresentationSubmitCredentialRequestBindingDto | undefined
   > = {};
 
   requestGroups.forEach((group) =>
@@ -33,8 +33,7 @@ export const preselectCredentialsForRequestGroups = (
 
 export type CredentialQuerySelection = Record<
   string,
-  | PresentationSubmitV2CredentialRequest
-  | PresentationSubmitV2CredentialRequest[]
+  PresentationSubmitV2CredentialRequestBindingDto[]
 >;
 
 export type SetCredentialQuerySelection = Record<
@@ -43,7 +42,7 @@ export type SetCredentialQuerySelection = Record<
 >;
 
 export const preselectCredentialsForPresentationDefinitionV2 = (
-  presentationDefinition: PresentationDefinitionV2,
+  presentationDefinition: PresentationDefinitionV2ResponseBindingDto,
 ) => {
   const preselected =
     presentationDefinition.credentialSets.reduce<SetCredentialQuerySelection>(
@@ -55,15 +54,20 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                 presentationDefinition.credentialQueries[queryId];
               if (
                 credentialQuery &&
-                'applicableCredentials' in credentialQuery
+                credentialQuery.credentialOrFailureHint.type_ ===
+                  'APPLICABLE_CREDENTIALS'
               ) {
-                credentialQuery.applicableCredentials.sort(
+                credentialQuery.credentialOrFailureHint.applicableCredentials.sort(
                   objectByTimestampSorter('issuanceDate', false),
                 );
-                acc2[queryId] = {
-                  credentialId: credentialQuery.applicableCredentials[0].id,
-                  userSelections: [],
-                };
+                acc2[queryId] = [
+                  {
+                    credentialId:
+                      credentialQuery.credentialOrFailureHint
+                        .applicableCredentials[0].id,
+                    userSelections: [],
+                  },
+                ];
               }
               return acc2;
             },
@@ -79,9 +83,9 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
 };
 
 const preselectClaimsForRequestedCredential = (
-  credentialRequest: PresentationDefinitionRequestedCredential,
-  allCredentials: CredentialDetail[],
-): PresentationSubmitCredentialRequest | undefined => {
+  credentialRequest: PresentationDefinitionRequestedCredentialBindingDto,
+  allCredentials: CredentialDetailBindingDto[],
+): PresentationSubmitCredentialRequestBindingDto | undefined => {
   const credentialId = pickPreselectedCredential(
     credentialRequest,
     allCredentials,
@@ -125,8 +129,8 @@ const preselectClaimsForRequestedCredential = (
 };
 
 export const getFullyNestedFields = (
-  fields: PresentationDefinitionRequestedCredential['fields'],
-  credentialId: CredentialDetail['id'],
+  fields: PresentationDefinitionRequestedCredentialBindingDto['fields'],
+  credentialId: CredentialDetailBindingDto['id'],
 ) => {
   const allKeys = fields
     .filter((field) => credentialId in field.keyMap)
@@ -139,12 +143,12 @@ export const getFullyNestedFields = (
 };
 
 const pickPreselectedCredential = (
-  credentialRequest: PresentationDefinitionRequestedCredential,
-  allCredentials: CredentialDetail[],
-): CredentialDetail['id'] | undefined => {
+  credentialRequest: PresentationDefinitionRequestedCredentialBindingDto,
+  allCredentials: CredentialDetailBindingDto[],
+): CredentialDetailBindingDto['id'] | undefined => {
   const applicableValidCredential = allCredentials.find(
     ({ id, state }) =>
-      state === CredentialStateEnum.ACCEPTED &&
+      state === CredentialStateBindingEnum.ACCEPTED &&
       credentialRequest.applicableCredentials.includes(id),
   );
   if (applicableValidCredential) {
@@ -153,7 +157,7 @@ const pickPreselectedCredential = (
 
   const inapplicableValidCredential = allCredentials.find(
     ({ id, state }) =>
-      state === CredentialStateEnum.ACCEPTED &&
+      state === CredentialStateBindingEnum.ACCEPTED &&
       credentialRequest.inapplicableCredentials.includes(id),
   );
   if (inapplicableValidCredential) {

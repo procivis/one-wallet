@@ -7,7 +7,10 @@ import {
   useCredentialDetail,
   useCredentialRevocationCheck,
 } from '@procivis/one-react-native-components';
-import { CredentialDetail, Ubiqu } from '@procivis/react-native-one-core';
+import {
+  CredentialDetailBindingDto,
+  Ubiqu,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -31,7 +34,8 @@ const {
 } = Ubiqu;
 
 const CredentialUpdateProcessScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
+  const navigation =
+    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
   const route = useRoute<RootRouteProp<'CredentialUpdateProcess'>>();
   const { credentialId } = route.params;
   const [error, setError] = useState<unknown>();
@@ -59,7 +63,7 @@ const CredentialUpdateProcessScreen: FunctionComponent = () => {
   const { data: credential } = useCredentialDetail(credentialId);
 
   const runStatusCheck = useCallback(
-    async (credentialDetail: CredentialDetail) => {
+    async (credentialDetail: CredentialDetailBindingDto) => {
       try {
         setState(LoaderViewState.InProgress);
 

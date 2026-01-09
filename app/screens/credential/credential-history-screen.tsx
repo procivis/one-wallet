@@ -1,8 +1,8 @@
 import { HistoryListScreen } from '@procivis/one-react-native-components';
 import {
-  HistoryEntityTypeEnum,
-  HistoryListItem,
-  HistoryListQuery,
+  HistoryEntityTypeBindingEnum,
+  HistoryListItemBindingDto,
+  HistoryListQueryBindingDto,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo, useState } from 'react';
@@ -18,20 +18,20 @@ import { historyListItemLabels } from '../../utils/history';
 
 export const CredentialHistoryScreen: FC = () => {
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetail'>>();
+    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'History'>>();
   const route = useRoute<CredentialDetailRouteProp<'History'>>();
 
   const { credentialId } = route.params;
 
   const [searchPhrase, setSearchPhrase] = useState('');
-  const query = useMemo<Partial<HistoryListQuery>>(
+  const query = useMemo<Partial<HistoryListQueryBindingDto>>(
     () => ({
       actions: historyListActionsFilter,
       credentialId,
       entityTypes: [
-        HistoryEntityTypeEnum.CREDENTIAL,
-        HistoryEntityTypeEnum.PROOF,
+        HistoryEntityTypeBindingEnum.CREDENTIAL,
+        HistoryEntityTypeBindingEnum.PROOF,
       ],
       search: searchPhrase ? { text: searchPhrase } : undefined,
     }),
@@ -39,7 +39,7 @@ export const CredentialHistoryScreen: FC = () => {
   );
 
   const handleProofPress = useCallback(
-    (entry: HistoryListItem) => {
+    (entry: HistoryListItemBindingDto) => {
       rootNavigation.navigate('Settings', {
         params: {
           params: { entry },

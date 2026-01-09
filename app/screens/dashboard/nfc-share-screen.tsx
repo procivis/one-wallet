@@ -13,8 +13,8 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   OneError,
-  ProofStateEnum,
-  ProposeProofResponse,
+  ProofStateBindingEnum,
+  ProposeProofResponseBindingDto,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -33,7 +33,7 @@ import { useIsAppActive } from '../../utils/appState';
 const NFCShareScreen = () => {
   const navigation = useNavigation<DashboardNavigationProp<'NFCShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
-  const [proof, setProof] = useState<ProposeProofResponse>();
+  const [proof, setProof] = useState<ProposeProofResponseBindingDto>();
   const isFocused = useIsFocused();
   const isAppActive = useIsAppActive();
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
@@ -121,7 +121,9 @@ const NFCShareScreen = () => {
 
   const pendingProofId = useRef<string | undefined>(undefined);
   pendingProofId.current =
-    proofState?.state === ProofStateEnum.PENDING ? proof?.proofId : undefined;
+    proofState?.state === ProofStateBindingEnum.PENDING
+      ? proof?.proofId
+      : undefined;
 
   // delete proof when app goes to background
   useEffect(() => {
@@ -146,13 +148,14 @@ const NFCShareScreen = () => {
   );
 
   useEffect(() => {
-    if (proof && proofState?.state === ProofStateEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofStateBindingEnum.REQUESTED) {
       rootNavigation.navigate('CredentialManagement', {
         params: {
           params: {
             request: {
               interactionId: proof.interactionId,
               proofId: proof.proofId,
+              type_: 'PROOF_REQUEST',
             },
           },
           screen: 'ProofRequest',
@@ -171,7 +174,7 @@ const NFCShareScreen = () => {
 
   const testID = 'RequestProofNFCProcessScreen';
 
-  const isError = error || proofState?.state === ProofStateEnum.ERROR;
+  const isError = error || proofState?.state === ProofStateBindingEnum.ERROR;
   const isWarning =
     permissionStatus !== 'granted' || !isNFCEnabled || bleDisabled;
 

@@ -13,11 +13,11 @@ import {
   useONECore,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialListItem,
-  PresentationDefinitionV2,
-  PresentationDefinitionV2CredentialClaim,
-  PresentationDefinitionV2CredentialQuery,
-  PresentationSubmitV2CredentialRequest,
+  CredentialListItemBindingDto,
+  CredentialQueryResponseBindingDto,
+  PresentationDefinitionV2ClaimBindingDto,
+  PresentationDefinitionV2ResponseBindingDto,
+  PresentationSubmitV2CredentialRequestBindingDto,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { cloneDeep, isEqual, uniq } from 'lodash';
@@ -47,25 +47,28 @@ import { ProofPresentationProps } from './proof-presentation-props';
 function selectCredential(
   setId: string,
   credentialQueryId: string,
-  presentationDefinition: PresentationDefinitionV2 | undefined,
+  presentationDefinition:
+    | PresentationDefinitionV2ResponseBindingDto
+    | undefined,
   selectedCredentials: SetCredentialQuerySelection,
   navigation: ShareCredentialNavigationProp<'ProofRequest'>,
 ) {
   const credentialQuery =
     presentationDefinition?.credentialQueries[credentialQueryId];
-  if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
+  if (
+    !credentialQuery ||
+    credentialQuery.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS'
+  ) {
     return;
   }
 
-  const selectedCredential = selectedCredentials[setId]?.[credentialQueryId];
-  let preselectedCredentialIds: string[] | undefined;
-  if (Array.isArray(selectedCredential)) {
-    preselectedCredentialIds = selectedCredential.map((c) => c.credentialId);
-  } else if (selectedCredential) {
-    preselectedCredentialIds = [selectedCredential.credentialId];
-  }
+  let preselectedCredentialIds: string[] | undefined = selectedCredentials[
+    setId
+  ]?.[credentialQueryId]?.map((c) => c.credentialId);
 
-  preselectedCredentialIds ??= [credentialQuery.applicableCredentials[0]?.id];
+  preselectedCredentialIds ??= [
+    credentialQuery.credentialOrFailureHint.applicableCredentials[0]?.id,
+  ];
 
   navigation.navigate('SelectCredentialV2', {
     credentialQuery,
@@ -77,12 +80,18 @@ function selectCredential(
 function getNewSelection(
   previousSelection: SetCredentialQuerySelection,
   credentialQueryId: string,
-  credentialQuery: PresentationDefinitionV2CredentialQuery | undefined,
+  credentialQuery: CredentialQueryResponseBindingDto | undefined,
   selectedCredentialIds: string[],
 ) {
-  if (!credentialQuery || !('applicableCredentials' in credentialQuery)) {
+  if (
+    !credentialQuery ||
+    credentialQuery.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS'
+  ) {
     return { selection: previousSelection, setsChanged: 0 };
   }
+
+  const applicableCredentials =
+    credentialQuery.credentialOrFailureHint.applicableCredentials;
 
   const newSelection = cloneDeep(previousSelection);
   let setsChanged = 0;
@@ -97,7 +106,7 @@ function getNewSelection(
     setsChanged += 1;
     if (!credentialQuery.multiple) {
       const selectedCredentialId = selectedCredentialIds[0];
-      const credential = credentialQuery.applicableCredentials.find(
+      const credential = applicableCredentials.find(
         (c) => c.id === selectedCredentialId,
       );
       if (!credential) {
@@ -108,10 +117,12 @@ function getNewSelection(
       const userSelections = credentialSelections[0].userSelections.filter(
         (path) => credentialAvailablePaths.includes(path),
       );
-      newSelection[setId][credentialQueryId] = {
-        credentialId: selectedCredentialId,
-        userSelections,
-      };
+      newSelection[setId][credentialQueryId] = [
+        {
+          credentialId: selectedCredentialId,
+          userSelections,
+        },
+      ];
     } else {
       const initialUserSelections =
         credentialSelections.length === 1 &&
@@ -119,9 +130,7 @@ function getNewSelection(
           ? credentialSelections[0].userSelections
           : [];
       const newMultipleSelection = selectedCredentialIds.map((id) => {
-        const credential = credentialQuery.applicableCredentials.find(
-          (c) => c.id === id,
-        );
+        const credential = applicableCredentials.find((c) => c.id === id);
         if (!credential) {
           return undefined;
         }
@@ -174,7 +183,7 @@ function prepareSubmission(
         const currentRequest = acc[requestQueryId];
         requestArray.forEach((credentialRequest) => {
           let currentCredentialRequest:
-            | PresentationSubmitV2CredentialRequest
+            | PresentationSubmitV2CredentialRequestBindingDto
             | undefined;
           if (Array.isArray(currentRequest)) {
             currentCredentialRequest = currentRequest.find(
@@ -207,12 +216,14 @@ function getNewSetSelection(
   requestGroup: string[],
   selectedCredentials: SetCredentialQuerySelection,
   setId: string,
-  presentationDefinition: PresentationDefinitionV2 | undefined,
+  presentationDefinition:
+    | PresentationDefinitionV2ResponseBindingDto
+    | undefined,
 ) {
   return requestGroup.reduce<CredentialQuerySelection>((acc, queryId) => {
     let preselection:
-      | PresentationSubmitV2CredentialRequest
-      | PresentationSubmitV2CredentialRequest[]
+      | PresentationSubmitV2CredentialRequestBindingDto
+      | PresentationSubmitV2CredentialRequestBindingDto[]
       | undefined = selectedCredentials[setId]?.[queryId];
 
     if (!preselection) {
@@ -225,8 +236,12 @@ function getNewSetSelection(
 
     if (!preselection) {
       const credentialQuery =
-        presentationDefinition?.credentialQueries[queryId];
-      if (credentialQuery && 'applicableCredentials' in credentialQuery) {
+        presentationDefinition?.credentialQueries[queryId]
+          .credentialOrFailureHint;
+      if (
+        credentialQuery &&
+        credentialQuery.type_ === 'APPLICABLE_CREDENTIALS'
+      ) {
         preselection = credentialQuery.applicableCredentials?.[0]
           ? [
               {
@@ -278,10 +293,14 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     const credentialIds = new Set<string>(
       Object.values(definition.credentialQueries)
         .flatMap((query) => {
-          if (!('applicableCredentials' in query)) {
+          if (
+            query.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS'
+          ) {
             return;
           }
-          return query.applicableCredentials.flatMap(({ id }) => id);
+          return query.credentialOrFailureHint.applicableCredentials.flatMap(
+            ({ id }) => id,
+          );
         })
         .filter(nonEmptyFilter),
     );
@@ -433,18 +452,13 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     currentSelectedCredentials: SetCredentialQuerySelection,
     setId: string,
     requestQueryId: string,
-    credentialId: CredentialListItem['id'],
-    updatedFieldPath: PresentationDefinitionV2CredentialClaim['path'],
+    credentialId: CredentialListItemBindingDto['id'],
+    updatedFieldPath: PresentationDefinitionV2ClaimBindingDto['path'],
     selected: boolean,
   ) => {
     const set = currentSelectedCredentials[setId];
     const query = set[requestQueryId];
-    let prevSelection: PresentationSubmitV2CredentialRequest | undefined;
-    if (Array.isArray(query)) {
-      prevSelection = query.find((r) => r.credentialId === credentialId);
-    } else if (query.credentialId === credentialId) {
-      prevSelection = query;
-    }
+    const prevSelection = query.find((r) => r.credentialId === credentialId);
     if (!prevSelection) {
       return currentSelectedCredentials;
     }
@@ -470,8 +484,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     (setId: string) =>
     (requestQueryId: string) =>
     (
-      credentialId: CredentialListItem['id'],
-      fieldPath: PresentationDefinitionV2CredentialClaim['path'],
+      credentialId: CredentialListItemBindingDto['id'],
+      fieldPath: PresentationDefinitionV2ClaimBindingDto['path'],
       selected: boolean,
     ) => {
       setSelectedCredentials((current) =>
@@ -530,15 +544,14 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
             return set.options[0].flatMap(
               (credentialRequestId, optionIndex, { length: optionLength }) => {
                 const lastItem = lastSet && optionIndex === optionLength - 1;
-                const selected = selectedCredentials[set.id]?.[
-                  credentialRequestId
-                ] as PresentationSubmitV2CredentialRequest;
+                const selected =
+                  selectedCredentials[set.id]?.[credentialRequestId]?.[0];
                 return (
                   <ShareCredentialV2
                     credentialQuery={
                       presentationDefinition.credentialQueries[
                         credentialRequestId
-                      ]
+                      ].credentialOrFailureHint
                     }
                     credentialRequestId={credentialRequestId}
                     expanded={expandedCredential === credentialRequestId}
@@ -591,7 +604,11 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                 const valid = credentialRequestGroup.every((queryId) => {
                   const query =
                     presentationDefinition.credentialQueries[queryId];
-                  return queryId && 'applicableCredentials' in query;
+                  return (
+                    queryId &&
+                    query.credentialOrFailureHint.type_ ===
+                      'APPLICABLE_CREDENTIALS'
+                  );
                 });
                 const lastGroup =
                   credentialRequestGroupIndex ===

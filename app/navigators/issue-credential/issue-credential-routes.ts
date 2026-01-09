@@ -1,6 +1,11 @@
-import { InvitationResultCredentialIssuance } from '@procivis/react-native-one-core';
+import { HandleInvitationResponseBindingEnum } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type InvitationResultCredentialIssuance = Extract<
+  HandleInvitationResponseBindingEnum,
+  { type_: 'CREDENTIAL_ISSUANCE' }
+>;
 
 export type IssueCredentialNavigatorParamList = {
   CredentialConfirmationCode: {
