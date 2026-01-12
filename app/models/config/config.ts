@@ -32,8 +32,8 @@ export interface Configuration {
   featureFlags: FeatureFlags;
   googleStoreId: string;
   requestCredentialRedirectUri?: string;
-  trustAnchorPublisherReference: string;
-  walletProvider: WalletProviderConfiguration;
+  trustAnchorPublisherReference?: string;
+  walletProvider?: WalletProviderConfiguration;
 }
 
 export type LocaleOverride = Record<string /* language */, unknown>;
