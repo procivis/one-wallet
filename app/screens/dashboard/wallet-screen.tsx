@@ -155,7 +155,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const handleCredentialPress = useCallback(
     (credentialId: string) => {
       if (credentialId) {
-        navigation.navigate('CredentialDetailBindingDto', {
+        navigation.navigate('CredentialDetail', {
           params: { credentialId },
           screen: 'Detail',
         });

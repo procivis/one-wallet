@@ -18,7 +18,7 @@ import { historyListItemLabels } from '../../utils/history';
 
 export const CredentialHistoryScreen: FC = () => {
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'History'>>();
   const route = useRoute<CredentialDetailRouteProp<'History'>>();
 

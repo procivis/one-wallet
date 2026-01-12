@@ -46,7 +46,7 @@ import { historyListItemLabels } from '../../utils/history';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
   const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
@@ -204,7 +204,7 @@ const HistorySection: FC<{
   const previewHistoryItems = historyEntries.slice(0, DISPLAYED_HISTORY_ITEMS);
   const expandable = historyEntries.length > DISPLAYED_HISTORY_ITEMS;
   const rootNavigation =
-    useNavigation<RootNavigationProp<'CredentialDetailBindingDto'>>();
+    useNavigation<RootNavigationProp<'CredentialDetail'>>();
 
   const handleProofPress = useCallback(
     (entry: HistoryListItemBindingDto) => {
