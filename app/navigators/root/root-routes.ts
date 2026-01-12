@@ -11,7 +11,7 @@ import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
 
 export type RootNavigatorParamList = {
-  CredentialDetailBindingDto: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
+  CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   CredentialManagement: NavigatorScreenParams<CredentialManagementNavigatorParamList>;
   CredentialUpdateProcess: {
     credentialId: CredentialListItemBindingDto['id'];
