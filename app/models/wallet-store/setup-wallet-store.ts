@@ -23,6 +23,11 @@ type NewStore = SnapshotOut<WalletStore>;
 type PossibleStoredData = OldStore | NewStore;
 
 const fetchWalletProviderConfig = async () => {
+  if (!config.walletProvider) {
+    // no provider specified, skip wallet-unit setup
+    return undefined;
+  }
+
   try {
     const response = await fetch(
       `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,

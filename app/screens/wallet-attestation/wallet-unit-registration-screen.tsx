@@ -77,6 +77,10 @@ const WalletUnitRegistrationScreen = () => {
       if (route.params.operation === 'refresh') {
         await refreshWalletUnit(walletUnitId);
       } else {
+        if (!config.walletProvider) {
+          throw new Error('No wallet provider specified');
+        }
+
         const walletUnitId = await registerWalletUnit({
           type: config.walletProvider.type,
           url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
