@@ -190,8 +190,6 @@
   "historyAction.OFFERED": "offered",
   "historyAction.PENDING": "pending",
   "historyAction.REACTIVATED": "reactivated",
-  "historyAction.REGISTRATION_CERTIFICATE_CREATED": "registration certificate created",
-  "historyAction.REGISTRATION_CERTIFICATE_REVOKED": "registration certificate revoked",
   "historyAction.REJECTED": "rejected",
   "historyAction.REMOVED": "removed",
   "historyAction.REQUESTED": "requested",
