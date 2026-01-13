@@ -76,8 +76,10 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
 
     navigation.replace(needsRSESetup ? 'RSEInfo' : 'CredentialOffer', {
       invitationResult: route.params.invitationResult,
+      txCode: code,
     });
   }, [
+    code,
     navigation,
     route.params.invitationResult,
     keyStorageSecurityLevels,
