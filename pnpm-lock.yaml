@@ -1313,7 +1313,7 @@ packages:
     engines: {node: '>=14'}
 
   '@procivis/one-react-native-components@0.3.99':
-    resolution: {integrity: sha1-HYzy71VVf6RgwFUXQp1BWn9pKPE=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.99.tgz}
+    resolution: {integrity: sha1-HYzy71VVf6RgwFUXQp1BWn9pKPE=}
     peerDependencies:
       '@procivis/react-native-one-core': ^1.80487.0
       '@procivis/react-native-picker': '*'
@@ -1344,12 +1344,12 @@ packages:
       timeago.js: ^4.0.2
 
   '@procivis/react-native-one-core@1.81885.0':
-    resolution: {integrity: sha1-2jjBdruNsGhdB8lUxelHYXyoODk=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.81885.0.tgz}
+    resolution: {integrity: sha1-2jjBdruNsGhdB8lUxelHYXyoODk=}
     peerDependencies:
       react-native: '*'
 
   '@procivis/react-native-picker@5.0.3':
-    resolution: {integrity: sha1-EkZCn2YIfzKjFzTd+fl2P4uQFZY=, tarball: https://gitlab.procivis.ch/api/v4/projects/76/packages/npm/@procivis/react-native-picker/-/@procivis/react-native-picker-5.0.3.tgz}
+    resolution: {integrity: sha1-EkZCn2YIfzKjFzTd+fl2P4uQFZY=}
 
   '@react-native-async-storage/async-storage@1.24.0':
     resolution: {integrity: sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==}
