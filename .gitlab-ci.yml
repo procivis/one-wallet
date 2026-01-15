@@ -204,7 +204,7 @@ build:
 
 .upload_bom:
   stage: scan
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.88.0-0.2
+  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.92.0-0.1
   needs: [build_deps]
   variables:
     SBOM_FILE_PATH: "bom.json"
