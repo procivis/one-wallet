@@ -30,6 +30,8 @@
 				<string>openid-credential-offer</string>
 				<string>${CONFIG_NAME}-one-wallet-${ENVIRONMENT}</string>
 				<string>openid4vp</string>
+				<string>openid4vp-draft20</string>
+				<string>openid4vp-draft25</string>
 				<string>haip-vci</string>
 				<string>haip-vp</string>
 				<string>swiyu</string>

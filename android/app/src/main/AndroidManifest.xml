@@ -61,6 +61,8 @@
                 <data android:scheme="openid-credential-offer" />
                 <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}" />
                 <data android:scheme="openid4vp" />
+                <data android:scheme="openid4vp-draft20" />
+                <data android:scheme="openid4vp-draft25" />
                 <data android:scheme="haip-vci" />
                 <data android:scheme="haip-vp" />
                 <data android:scheme="swiyu" />
@@ -77,6 +79,8 @@
                 <data android:host="@string/ASSOCIATED_INVITATION_DOMAIN" />
                 <data android:path="/app-link/openid-credential-offer" />
                 <data android:path="/app-link/openid4vp" />
+                <data android:path="/app-link/openid4vp-draft20" />
+                <data android:path="/app-link/openid4vp-draft25" />
                 <data android:path="/app-link/haip-vci" />
                 <data android:path="/app-link/haip-vp" />
                 <data android:path="/app-link/swiyu" />
