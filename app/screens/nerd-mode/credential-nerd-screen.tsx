@@ -15,7 +15,6 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   CredentialDetailBindingDto,
-  CredentialSchemaDetailBindingDto,
   CredentialStateBindingEnum,
   TrustEntityRoleBindingEnum,
 } from '@procivis/react-native-one-core';
@@ -91,7 +90,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   );
 
   const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages(
-    credentialDetail.schema as CredentialSchemaDetailBindingDto,
+    credentialDetail.schema,
   );
 
   const nerdModeFields: Array<

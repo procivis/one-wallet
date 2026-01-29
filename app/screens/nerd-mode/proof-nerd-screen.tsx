@@ -6,10 +6,7 @@ import {
   NerdModeScreen,
   useProofDetail,
 } from '@procivis/one-react-native-components';
-import {
-  CredentialSchemaDetailBindingDto,
-  TrustEntityRoleBindingEnum,
-} from '@procivis/react-native-one-core';
+import { TrustEntityRoleBindingEnum } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -108,9 +105,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
       {
         attributeKey: translate('common.credentialSchema'),
         attributeText: JSON.stringify(
-          getCredentialSchemaWithoutImages(
-            proofInput.credentialSchema as CredentialSchemaDetailBindingDto,
-          ),
+          getCredentialSchemaWithoutImages(proofInput.credentialSchema),
           null,
           1,
         ),
