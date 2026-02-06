@@ -8,6 +8,7 @@ export const getCredentialSchemasFromAssets = () => {
   );
   return schemas
     .keys()
+    .filter((key) => key.includes('schemas'))
     .map(
       (key) => schemas(key) as ImportCredentialSchemaRequestSchemaBindingDto,
     );
