@@ -457,25 +457,23 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     selected: boolean,
   ) => {
     const set = currentSelectedCredentials[setId];
-    const query = set[requestQueryId];
+    const query = cloneDeep(set[requestQueryId]);
     const prevSelection = query.find((r) => r.credentialId === credentialId);
     if (!prevSelection) {
       return currentSelectedCredentials;
     }
-    let userSelections = [...prevSelection.userSelections];
     if (selected) {
-      userSelections.push(updatedFieldPath);
+      prevSelection.userSelections.push(updatedFieldPath);
     } else {
-      userSelections = userSelections.filter((p) => p !== updatedFieldPath);
+      prevSelection.userSelections = prevSelection.userSelections.filter(
+        (p) => p !== updatedFieldPath,
+      );
     }
     return {
       ...currentSelectedCredentials,
       [setId]: {
         ...set,
-        [requestQueryId]: {
-          ...query,
-          userSelections,
-        },
+        [requestQueryId]: query,
       },
     };
   };
