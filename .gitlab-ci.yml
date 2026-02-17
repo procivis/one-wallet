@@ -176,11 +176,9 @@ build:
         - Android_DEV
         - iOS_DEV
         - Android_TEST
-        - Android_DEMO
         - Android_TRIAL
       - BITRISE_PIPELINE:
         - iOS_TEST_and_review
-        - iOS_DEMO_and_review
         - iOS_TRIAL_and_review
   rules:
     - if: $CI_PIPELINE_SOURCE != "push"

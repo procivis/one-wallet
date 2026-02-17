@@ -27,7 +27,6 @@
     "rnuc:dev": "pnpm rnuc ./app/config/flavors/procivis/dev/.env",
     "rnuc:test": "pnpm rnuc ./app/config/flavors/procivis/test/.env",
     "rnuc:trial": "pnpm rnuc ./app/config/flavors/procivis/trial/.env",
-    "rnuc:demo": "pnpm rnuc ./app/config/flavors/procivis/demo/.env",
     "check:licenses": "npx license-checker-rseidelsohn --production --direct --csv --out licenses.csv",
     "check:licenses:full": "npx license-checker-rseidelsohn --production --csv --out licenses_full.csv",
     "sort:translations": "node ./.scripts/sort-translations.js",
