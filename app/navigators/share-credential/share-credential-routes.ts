@@ -8,9 +8,9 @@ import {
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type InvitationResultProofRequest = Extract<
-  HandleInvitationResponseBindingEnum,
-  { type_: 'PROOF_REQUEST' }
+type InvitationResultProofRequest = Omit<
+  Extract<HandleInvitationResponseBindingEnum, { type_: 'PROOF_REQUEST' }>,
+  'protocol'
 >;
 
 export type ShareCredentialNavigatorParamList = {

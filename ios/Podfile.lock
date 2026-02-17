@@ -2020,7 +2020,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.17.2):
     - React-Core
-  - react-native-one-core (1.86468.0):
+  - react-native-one-core (1.88624.1):
     - React-Core
   - react-native-picker (5.0.3):
     - React-Core
@@ -3654,7 +3654,7 @@ SPEC CHECKSUMS:
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  hermes-engine: fd4a2f16acd5a3443cafe4801ad2f6fd809be03c
+  hermes-engine: be7bbcce1986cf00b65bf64fd45f043e1e1595ab
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: d849be4292d467c0e13fd4ca5042bb352b7d1a61
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
@@ -3701,7 +3701,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: f1e9b76f4cf5665bf5547dcd86e8ee69823856cd
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: ef3b44c4f1975ab16d6109bb1671ab68068aba58
-  react-native-one-core: 2677cecb25e8740f78d6a569df7e7159f2018395
+  react-native-one-core: d8df010222f83ec98dc40c6bd05ec1394e91bdeb
   react-native-picker: 208cd4d747bb5088aac73c7412b07f8a1fc45902
   react-native-safe-area-context: 54d812805f3c4e08a4580ad086cbde1d8780c2e4
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c

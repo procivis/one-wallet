@@ -2,9 +2,12 @@ import { HandleInvitationResponseBindingEnum } from '@procivis/react-native-one-
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type InvitationResultCredentialIssuance = Extract<
-  HandleInvitationResponseBindingEnum,
-  { type_: 'CREDENTIAL_ISSUANCE' }
+type InvitationResultCredentialIssuance = Omit<
+  Extract<
+    HandleInvitationResponseBindingEnum,
+    { type_: 'CREDENTIAL_ISSUANCE' }
+  >,
+  'protocol' | 'requiresWalletInstanceAttestation'
 >;
 
 export type IssueCredentialNavigatorParamList = {
