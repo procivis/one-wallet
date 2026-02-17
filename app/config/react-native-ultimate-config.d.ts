@@ -2,7 +2,7 @@ declare module 'react-native-ultimate-config' {
   type Flavor = {
     readonly CONFIG_NAME: 'procivis';
     readonly DETOX_BUILD: boolean | undefined;
-    readonly ENVIRONMENT: 'dev' | 'test' | 'demo' | 'trial';
+    readonly ENVIRONMENT: 'dev' | 'test' | 'trial';
   };
 
   type Config = Flavor & {
