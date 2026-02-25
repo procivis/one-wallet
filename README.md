@@ -192,6 +192,22 @@ and regulations mature and harden.
 
 ### Credential models
 
+#### IETF SD-JWT VC
+
+- [IETF SD-JWT-based Verifiable Credentials][sdjwtvc]:
+
+| Standard       | Supported representations | Supported proof/signature types                                                                                                          |
+| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| IETF SD-JWT VC | SD-JWT                    | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / [ML-DSA-65 (FIPS 204)][fips]\*</li></ul> |
+
+#### ISO mdoc
+
+- [ISO/IEC 18013-5:2021][iso5] standard for mdoc credentials in the following variations:
+
+| Standard             | Supported representations | Supported proof/signature types                                                   |
+| -------------------- | ------------------------- | --------------------------------------------------------------------------------- |
+| ISO/IEC 18013-5:2021 | mdoc                      | <ul><li>COSE / ECDSA [ES256][es2]</li><li>COSE / EdDSA [Ed25519][ed255]</li></ul> |
+
 #### W3C VC
 
 - [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
@@ -199,28 +215,9 @@ and regulations mature and harden.
 | Securing mechanism                           | Supported representations                           | Supported proof/signature types                                                                                                                                                                                                                                       |
 | -------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [W3C Data Integrity Proofs][vcdi] (embedded) | [JSON-LD][jld] in Compacted Document Form           | <ul><li>[W3C Data Integrity ECDSA Cryptosuites v1.0][ecd] / [ecdsa-rdfc-2019][ecd2019]</li><li>[W3C Data Integrity EdDSA Cryptosuites v1.0][edd] / [eddsa-rdfc-2022][edd2022]</li><li>[W3C Data Integrity BBS Cryptosuites v1.0][bbs] / [bbs-2023][bbs2023]</li></ul> |
-| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]\*                                                                                                                                        |
+| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / [ML-DSA-65 (FIPS 204)][fips]\*</li></ul>                                                                                                                              |
 
-\* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
-Support for the recently published [FIPS-204][fips] is planned for the near future.
-
-#### ISO mdoc
-
-- [ISO/IEC 18013-5:2021][iso5] standard for mdoc credentials.
-  - [COSE][cose] proofs
-    - ECDSA [ES256][es2]
-    - EdDSA [Ed25519][ed255]
-
-#### IETF SD-JWT VC
-
-- [IETF SD-JWT-based Verifiable Credentials][sdjwtvc]:
-
-| Standard       | Supported representations | Supported proof/signature types                                                                                                          |
-| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| IETF SD-JWT VC | SD-JWT                    | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / CRYSTALS-DILITHIUM 3 [CRYDI3][crydi3]\*</li></ul> |
-
-\* CRYSTALS-DILITHIUM is a post-quantum resistant signature scheme, selected by NIST for [Post-Quantum Cryptography Standardization][pqc].
-Support for the recently published [FIPS-204][fips] is planned for the near future.
+- **Backwards compatibility**: Procivis One supports verification of proofs which use VCDM 1.1.
 
 ### Exchange and transport
 
@@ -245,8 +242,8 @@ Support for the recently published [FIPS-204][fips] is planned for the near futu
 ### Revocation methods
 
 - [Bitstring Status List v1.0][sl]
-- [Linked Validity Verifiable Credentials (LVVC)][lvvc]
 - [Token Status List - Draft 03][tsl]
+- [Certificate Revocation List][crl]
 
 ## Support
 
@@ -277,7 +274,7 @@ Version 2.0](./LICENSE).
 [comp]: https://github.com/procivis/one-react-native-components
 [core]: https://github.com/procivis/one-core
 [cose]: https://www.rfc-editor.org/rfc/rfc9052
-[crydi3]: https://datatracker.ietf.org/doc/html/draft-ietf-cose-dilithium-01
+[crl]: https://www.ietf.org/rfc/rfc5280.txt
 [docs]: https://docs.procivis.ch/
 [ecd]: https://www.w3.org/TR/vc-di-ecdsa/
 [ecd2019]: https://www.w3.org/TR/vc-di-ecdsa/#ecdsa-rdfc-2019
