@@ -291,7 +291,6 @@ Version 2.0](./LICENSE).
 [jose]: https://w3c.github.io/vc-jose-cose/
 [jw]: https://datatracker.ietf.org/doc/html/rfc7519
 [key]: https://github.com/procivis#key-features
-[lvvc]: https://eprint.iacr.org/2022/1658.pdf
 [owf]: https://github.com/openwallet-foundation-labs/identity-credential
 [pow]: https://github.com/procivis/one-wallet
 [pqc]: https://csrc.nist.gov/pqc-standardization
