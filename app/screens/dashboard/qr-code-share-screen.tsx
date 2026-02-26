@@ -148,6 +148,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
               request: {
                 interactionId: proof.interactionId,
                 proofId: proof.proofId,
+                protocol: VerificationProtocol.ISO_MDL,
                 type_: 'PROOF_REQUEST',
               },
             },
