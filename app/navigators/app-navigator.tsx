@@ -90,7 +90,7 @@ const coreConfig = {
         },
       },
     },
-    OPENID4VCI_DRAFT13_SWIYU: {
+    OPENID4VCI_FINAL1_SWIYU: {
       params: {
         private: {
           encryption:
