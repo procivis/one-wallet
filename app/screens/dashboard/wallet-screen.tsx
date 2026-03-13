@@ -9,7 +9,9 @@ import {
   usePagedCredentials,
   useWalletUnitCheck,
   WalletEmptyList,
+  WalletNotice,
 } from '@procivis/one-react-native-components';
+import { WalletNoticeProps } from '@procivis/one-react-native-components/lib/typescript/ui-components/notice/wallet-notice';
 import {
   CredentialListIncludeEntityTypeBindingEnum,
   CredentialListQueryBindingDto,
@@ -35,18 +37,12 @@ import {
   HeaderPlusButton,
 } from '../../components/navigation/header-buttons';
 import WalletCredentialList from '../../components/wallet/credential-list';
-import WalletNotice, {
-  WalletNoticeProps,
-} from '../../components/wallet/wallet-notice';
 import { assets, config } from '../../config';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { saveString, useLoadString } from '../../utils/storage';
-
-const ignoredVersionNotchVersionStorageKey = 'ignoredVersionNotchVersion';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
@@ -57,8 +53,8 @@ const WalletScreen: FunctionComponent = observer(() => {
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
   const { credentialIssuers = [] } = assets;
-  const { isBelowRecommendedVersion, appVersion } = useVersionCheck();
-  const [isNotchClosed, setIsNotchClosed] = useState(false);
+  const { ignoreRecommendedVersionNotice, showRecommendedUpdateNotice } =
+    useVersionCheck();
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
@@ -83,21 +79,6 @@ const WalletScreen: FunctionComponent = observer(() => {
     config.featureFlags.requestCredentialEnabled &&
     credentialIssuers.length > 0 &&
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
-
-  const {
-    value: ignoredNotchVersion,
-    isLoading: isIgnoredNotchVersionLoading,
-  } = useLoadString(ignoredVersionNotchVersionStorageKey);
-
-  const isNotchNotIgnored = useMemo(
-    () => !isIgnoredNotchVersionLoading && appVersion !== ignoredNotchVersion,
-    [ignoredNotchVersion, isIgnoredNotchVersionLoading, appVersion],
-  );
-
-  const showUpdateNotch = useMemo(
-    () => !isNotchClosed && isBelowRecommendedVersion && isNotchNotIgnored,
-    [isNotchNotIgnored, isBelowRecommendedVersion, isNotchClosed],
-  );
 
   useCredentialStatusCheck();
   const { isLoading: isLoadingWU, walletUnitDetail } = useWalletUnitCheck(
@@ -199,19 +180,14 @@ const WalletScreen: FunctionComponent = observer(() => {
     ],
   );
 
-  const handleUpdateNoticeClose = useCallback(() => {
-    saveString(ignoredVersionNotchVersionStorageKey, appVersion);
-    setIsNotchClosed(true);
-  }, [appVersion]);
-
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
     if (walletProvider.walletUnitAttestation.required) {
       return;
     }
-    if (showUpdateNotch) {
+    if (showRecommendedUpdateNotice) {
       return {
         icon: StatusWarningIcon,
-        onClose: handleUpdateNoticeClose,
+        onClose: ignoreRecommendedVersionNotice,
         text: translate('common.updateAvailable'),
       };
     }
@@ -223,9 +199,9 @@ const WalletScreen: FunctionComponent = observer(() => {
     }
   }, [
     walletProvider.walletUnitAttestation.required,
-    showUpdateNotch,
+    showRecommendedUpdateNotice,
     walletUnitDetail?.status,
-    handleUpdateNoticeClose,
+    ignoreRecommendedVersionNotice,
   ]);
   const noticeOffset: ViewStyle | undefined = topNotice
     ? {

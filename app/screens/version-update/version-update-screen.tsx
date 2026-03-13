@@ -9,13 +9,10 @@ import { Linking, Platform } from 'react-native';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { config } from '../../config';
-import useVersionCheck, {
-  ignoredUpdateVersionStorageKey,
-} from '../../hooks/version-check/version-check';
+import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { saveString } from '../../utils/storage';
 
 const testID = 'VersionUpdateScreen';
 
@@ -24,7 +21,7 @@ const VersionUpdateScreen = () => {
   const {
     walletStore: { walletProvider },
   } = useStores();
-  const { isBelowMinimumVersion, isRejectedVersion, appVersion } =
+  const { ignoreRecommendedVersion, isBelowMinimumVersion, isRejectedVersion } =
     useVersionCheck();
   const state =
     isBelowMinimumVersion || isRejectedVersion
@@ -69,9 +66,9 @@ const VersionUpdateScreen = () => {
   }, [learnMoreLink]);
 
   const handleClose = useCallback(() => {
-    saveString(ignoredUpdateVersionStorageKey, appVersion);
+    ignoreRecommendedVersion();
     navigation.goBack();
-  }, [appVersion, navigation]);
+  }, [ignoreRecommendedVersion, navigation]);
 
   return (
     <ProcessingView
