@@ -1,13 +1,13 @@
-import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
+import { CredentialListItem } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type DeleteCredentialNavigatorParamList = {
   Processing: {
-    credentialId: CredentialListItemBindingDto['id'];
+    credentialId: CredentialListItem['id'];
   };
   Prompt: {
-    credentialId: CredentialListItemBindingDto['id'];
+    credentialId: CredentialListItem['id'];
   };
 };
 

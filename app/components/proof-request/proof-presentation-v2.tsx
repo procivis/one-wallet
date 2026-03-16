@@ -13,11 +13,11 @@ import {
   useONECore,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialListItemBindingDto,
-  CredentialQueryResponseBindingDto,
-  PresentationDefinitionV2ClaimBindingDto,
-  PresentationDefinitionV2ResponseBindingDto,
-  PresentationSubmitV2CredentialRequestBindingDto,
+  CredentialListItem,
+  CredentialQuery,
+  PresentationDefinitionV2,
+  PresentationDefinitionV2Claim,
+  PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { cloneDeep, isEqual, uniq } from 'lodash';
@@ -47,9 +47,7 @@ import { ProofPresentationProps } from './proof-presentation-props';
 function selectCredential(
   setId: string,
   credentialQueryId: string,
-  presentationDefinition:
-    | PresentationDefinitionV2ResponseBindingDto
-    | undefined,
+  presentationDefinition: PresentationDefinitionV2 | undefined,
   selectedCredentials: SetCredentialQuerySelection,
   navigation: ShareCredentialNavigationProp<'ProofRequest'>,
 ) {
@@ -80,7 +78,7 @@ function selectCredential(
 function getNewSelection(
   previousSelection: SetCredentialQuerySelection,
   credentialQueryId: string,
-  credentialQuery: CredentialQueryResponseBindingDto | undefined,
+  credentialQuery: CredentialQuery | undefined,
   selectedCredentialIds: string[],
 ) {
   if (
@@ -183,7 +181,7 @@ function prepareSubmission(
         const currentRequest = acc[requestQueryId];
         requestArray.forEach((credentialRequest) => {
           let currentCredentialRequest:
-            | PresentationSubmitV2CredentialRequestBindingDto
+            | PresentationSubmitV2CredentialRequest
             | undefined;
           if (Array.isArray(currentRequest)) {
             currentCredentialRequest = currentRequest.find(
@@ -216,14 +214,12 @@ function getNewSetSelection(
   requestGroup: string[],
   selectedCredentials: SetCredentialQuerySelection,
   setId: string,
-  presentationDefinition:
-    | PresentationDefinitionV2ResponseBindingDto
-    | undefined,
+  presentationDefinition: PresentationDefinitionV2 | undefined,
 ) {
   return requestGroup.reduce<CredentialQuerySelection>((acc, queryId) => {
     let preselection:
-      | PresentationSubmitV2CredentialRequestBindingDto
-      | PresentationSubmitV2CredentialRequestBindingDto[]
+      | PresentationSubmitV2CredentialRequest
+      | PresentationSubmitV2CredentialRequest[]
       | undefined = selectedCredentials[setId]?.[queryId];
 
     if (!preselection) {
@@ -452,8 +448,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     currentSelectedCredentials: SetCredentialQuerySelection,
     setId: string,
     requestQueryId: string,
-    credentialId: CredentialListItemBindingDto['id'],
-    updatedFieldPath: PresentationDefinitionV2ClaimBindingDto['path'],
+    credentialId: CredentialListItem['id'],
+    updatedFieldPath: PresentationDefinitionV2Claim['path'],
     selected: boolean,
   ) => {
     const set = currentSelectedCredentials[setId];
@@ -482,8 +478,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     (setId: string) =>
     (requestQueryId: string) =>
     (
-      credentialId: CredentialListItemBindingDto['id'],
-      fieldPath: PresentationDefinitionV2ClaimBindingDto['path'],
+      credentialId: CredentialListItem['id'],
+      fieldPath: PresentationDefinitionV2Claim['path'],
       selected: boolean,
     ) => {
       setSelectedCredentials((current) =>

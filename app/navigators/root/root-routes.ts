@@ -1,4 +1,4 @@
-import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
+import { CredentialListItem } from '@procivis/react-native-one-core';
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ImageSourcePropType } from 'react-native';
@@ -14,7 +14,7 @@ export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   CredentialManagement: NavigatorScreenParams<CredentialManagementNavigatorParamList>;
   CredentialUpdateProcess: {
-    credentialId: CredentialListItemBindingDto['id'];
+    credentialId: CredentialListItem['id'];
   };
   Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;
   ImagePreview: {
@@ -30,7 +30,7 @@ export type RootNavigatorParamList = {
   RequestCredentialList: undefined;
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
   StatusCheckResult: {
-    credentialIds: Array<CredentialListItemBindingDto['id']>;
+    credentialIds: Array<CredentialListItem['id']>;
   };
   VersionUpdate: undefined;
   WalletUnitError: undefined;

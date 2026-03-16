@@ -1,14 +1,14 @@
 import { EntityDetailsLabels } from '@procivis/one-react-native-components';
-import { TrustEntityRoleBindingEnum } from '@procivis/react-native-one-core';
+import { TrustEntityRole } from '@procivis/react-native-one-core';
 
 import { translate } from '../i18n';
 
 export const trustEntityDetailsLabels = (
-  role: Exclude<TrustEntityRoleBindingEnum, TrustEntityRoleBindingEnum.BOTH>,
+  role: Exclude<TrustEntityRole, TrustEntityRole.BOTH>,
 ): EntityDetailsLabels => {
   return {
     unknown:
-      role === TrustEntityRoleBindingEnum.ISSUER
+      role === TrustEntityRole.ISSUER
         ? translate('common.unknownIssuer')
         : translate('common.unknownVerifier'),
   };

@@ -10,11 +10,11 @@ import {
   useONECore,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialStateBindingEnum,
-  PresentationDefinitionBindingDto,
-  PresentationDefinitionFieldBindingDto,
-  PresentationDefinitionRequestedCredentialBindingDto,
-  PresentationSubmitCredentialRequestBindingDto,
+  CredentialState,
+  PresentationDefinition,
+  PresentationDefinitionField,
+  PresentationDefinitionRequestedCredential,
+  PresentationSubmitCredentialRequest,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { uniq } from 'lodash';
@@ -35,7 +35,7 @@ import {
 import { ProofPresentationProps } from './proof-presentation-props';
 
 function getNewlySelectedClaims(
-  presentationDefinition: PresentationDefinitionBindingDto | undefined,
+  presentationDefinition: PresentationDefinition | undefined,
   selectedCredentialId: string,
   previouslySelectedClaims: string[],
 ) {
@@ -75,9 +75,9 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
   const [activeCredentialSelection, setActiveCredentialSelection] =
-    useState<PresentationDefinitionRequestedCredentialBindingDto['id']>();
+    useState<PresentationDefinitionRequestedCredential['id']>();
   const [selectedCredentials, setSelectedCredentials] = useState<
-    Record<string, PresentationSubmitCredentialRequestBindingDto | undefined>
+    Record<string, PresentationSubmitCredentialRequest | undefined>
   >({});
 
   const {
@@ -126,14 +126,12 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
   }, [presentationDefinition, setInitialCredential]);
 
   const onSelectCredential =
-    (
-      requestCredentialId: PresentationDefinitionRequestedCredentialBindingDto['id'],
-    ) =>
+    (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
     () => {
       const requestedCredential =
         presentationDefinition?.requestGroups[0].requestedCredentials.find(
           (credential) => credential.id === requestCredentialId,
-        ) as PresentationDefinitionRequestedCredentialBindingDto;
+        ) as PresentationDefinitionRequestedCredential;
 
       setActiveCredentialSelection(requestCredentialId);
       sharingNavigation.navigate('SelectCredential', {
@@ -149,7 +147,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
       setSelectedCredentials((prev) => {
         const prevSelection = prev[
           activeCredentialSelection
-        ] as PresentationSubmitCredentialRequestBindingDto;
+        ] as PresentationSubmitCredentialRequest;
         prevSelection.submitClaims = getNewlySelectedClaims(
           presentationDefinition,
           selectedCredentialId,
@@ -171,15 +169,15 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
   const selectedCredentialsWithUpdatedSelection = (
     currentSelectedCredentials: Record<
       string,
-      PresentationSubmitCredentialRequestBindingDto | undefined
+      PresentationSubmitCredentialRequest | undefined
     >,
-    updatedCredentialId: PresentationDefinitionRequestedCredentialBindingDto['id'],
-    updatedFieldId: PresentationDefinitionFieldBindingDto['id'],
+    updatedCredentialId: PresentationDefinitionRequestedCredential['id'],
+    updatedFieldId: PresentationDefinitionField['id'],
     selected: boolean,
   ) => {
     const prevSelection = currentSelectedCredentials[
       updatedCredentialId
-    ] as PresentationSubmitCredentialRequestBindingDto;
+    ] as PresentationSubmitCredentialRequest;
     let submitClaims = [...prevSelection.submitClaims];
     if (selected) {
       submitClaims.push(updatedFieldId);
@@ -195,13 +193,8 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
   };
 
   const onSelectField = useCallback(
-    (
-        requestCredentialId: PresentationDefinitionRequestedCredentialBindingDto['id'],
-      ) =>
-      (
-        fieldId: PresentationDefinitionFieldBindingDto['id'],
-        selected: boolean,
-      ) => {
+    (requestCredentialId: PresentationDefinitionRequestedCredential['id']) =>
+      (fieldId: PresentationDefinitionField['id'], selected: boolean) => {
         setSelectedCredentials((current) => {
           return selectedCredentialsWithUpdatedSelection(
             current,
@@ -218,7 +211,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
     proofAccepted.current = true;
     sharingNavigation.replace('Processing', {
       credentials: Object.entries(selectedCredentials).reduce<
-        Record<string, PresentationSubmitCredentialRequestBindingDto[]>
+        Record<string, PresentationSubmitCredentialRequest[]>
       >((aggr, [key, value]) => {
         if (!value) {
           return aggr;
@@ -237,7 +230,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
   ]);
 
   const isCredentialApplicable = (
-    presentationDefinition: PresentationDefinitionBindingDto,
+    presentationDefinition: PresentationDefinition,
     requestedCredentialId: string,
     selectedCredentialId: string,
   ) => {
@@ -265,8 +258,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
         ) &&
         presentationDefinition.credentials.some(
           ({ id, state }) =>
-            id === selection.credentialId &&
-            state === CredentialStateBindingEnum.ACCEPTED,
+            id === selection.credentialId && state === CredentialState.ACCEPTED,
         ),
     ) &&
     Object.values(selectedCredentials).flatMap(

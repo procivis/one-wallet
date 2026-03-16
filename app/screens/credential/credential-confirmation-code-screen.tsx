@@ -7,8 +7,8 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import {
-  KeyStorageSecurityBindingEnum,
-  OpenId4vciTxCodeInputModeBindingEnum,
+  KeyStorageSecurity,
+  OpenId4vciTxCodeInputMode,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
@@ -46,8 +46,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
     'info.credentialOffer.confirmationCode.input.error',
   );
   const isInvalid = invalidCode && code === invalidCode;
-  const isNumericInput =
-    txCode.inputMode === OpenId4vciTxCodeInputModeBindingEnum.NUMERIC;
+  const isNumericInput = txCode.inputMode === OpenId4vciTxCodeInputMode.NUMERIC;
   const keyboardType = isNumericInput ? 'number-pad' : 'default';
   const submitBtnDisabled = Boolean(!code || !isInputLengthValid);
   const inputPlaceholder = isNumericInput
@@ -71,7 +70,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
 
   const handleSubmit = useCallback(() => {
     const needsRSESetup =
-      keyStorageSecurityLevels?.includes(KeyStorageSecurityBindingEnum.HIGH) &&
+      keyStorageSecurityLevels?.includes(KeyStorageSecurity.HIGH) &&
       !walletStore.isRSESetup;
 
     navigation.replace(needsRSESetup ? 'RSEInfo' : 'CredentialOffer', {

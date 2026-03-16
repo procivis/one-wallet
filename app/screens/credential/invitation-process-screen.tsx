@@ -22,8 +22,8 @@ import {
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
-  HandleInvitationResponseBindingEnum,
-  KeyStorageSecurityBindingEnum,
+  HandleInvitationResponse,
+  KeyStorageSecurity,
   OneError,
 } from '@procivis/react-native-one-core';
 import {
@@ -103,7 +103,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
 
   const { mutateAsync: handleInvitation } = useInvitationHandler();
   const [invitationResult, setInvitationResult] =
-    useState<HandleInvitationResponseBindingEnum>();
+    useState<HandleInvitationResponse>();
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00);
 
@@ -348,7 +348,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
       } else {
         const needsRSESetup =
           invitationResult.keyStorageSecurityLevels?.includes(
-            KeyStorageSecurityBindingEnum.HIGH,
+            KeyStorageSecurity.HIGH,
           ) && !isRSESetup;
         managementNavigation.replace('IssueCredential', {
           params: {

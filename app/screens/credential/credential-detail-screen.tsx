@@ -17,8 +17,8 @@ import {
   useHistory,
 } from '@procivis/one-react-native-components';
 import {
-  HistoryEntityTypeBindingEnum,
-  HistoryListItemBindingDto,
+  HistoryEntityType,
+  HistoryListItem,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -58,10 +58,7 @@ const CredentialDetailScreen: FC = () => {
   const { data: historyPages } = useHistory({
     actions: historyListActionsFilter,
     credentialId,
-    entityTypes: [
-      HistoryEntityTypeBindingEnum.CREDENTIAL,
-      HistoryEntityTypeBindingEnum.PROOF,
-    ],
+    entityTypes: [HistoryEntityType.CREDENTIAL, HistoryEntityType.PROOF],
   });
   const credentialHistory = historyPages?.pages.flatMap((page) => page.values);
 
@@ -197,7 +194,7 @@ const CredentialDetailScreen: FC = () => {
 
 const DISPLAYED_HISTORY_ITEMS = 3;
 const HistorySection: FC<{
-  historyEntries?: HistoryListItemBindingDto[];
+  historyEntries?: HistoryListItem[];
   onSeeAllHistory?: () => void;
 }> = ({ historyEntries = [], onSeeAllHistory }) => {
   const colorScheme = useAppColorScheme();
@@ -207,7 +204,7 @@ const HistorySection: FC<{
     useNavigation<RootNavigationProp<'CredentialDetail'>>();
 
   const handleProofPress = useCallback(
-    (entry: HistoryListItemBindingDto) => {
+    (entry: HistoryListItem) => {
       rootNavigation.navigate('Settings', {
         params: {
           params: { entry },

@@ -5,7 +5,7 @@ import {
   ScrollViewScreen,
   SelectCredentialV2,
 } from '@procivis/one-react-native-components';
-import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
+import { CredentialListItem } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { uniq } from 'lodash';
 import React, {
@@ -61,7 +61,7 @@ const SelectCredentialV2Screen: FunctionComponent = () => {
       : [];
 
   const onCredentialSelected = useCallback(
-    (credentialId: CredentialListItemBindingDto['id'], selected: boolean) => {
+    (credentialId: CredentialListItem['id'], selected: boolean) => {
       setSelectedCredentialIds((prevSelection) => {
         let newSelection = [...prevSelection];
         if (credentialQuery.multiple) {

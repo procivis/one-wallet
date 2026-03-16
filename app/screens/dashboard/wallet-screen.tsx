@@ -13,11 +13,11 @@ import {
 } from '@procivis/one-react-native-components';
 import { WalletNoticeProps } from '@procivis/one-react-native-components/lib/typescript/ui-components/notice/wallet-notice';
 import {
-  CredentialListIncludeEntityTypeBindingEnum,
-  CredentialListQueryBindingDto,
-  CredentialStateBindingEnum,
-  SortableCredentialColumnBindingEnum,
-  WalletUnitStatusBindingEnum,
+  CredentialListIncludeEntityType,
+  CredentialListQuery,
+  CredentialState,
+  SortableCredentialColumn,
+  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
@@ -58,15 +58,13 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
-  const [queryParams, setQueryParams] = useState<
-    Partial<CredentialListQueryBindingDto>
-  >({
-    include: [CredentialListIncludeEntityTypeBindingEnum.LAYOUT_PROPERTIES],
-    sort: SortableCredentialColumnBindingEnum.SCHEMA_NAME,
+  const [queryParams, setQueryParams] = useState<Partial<CredentialListQuery>>({
+    include: [CredentialListIncludeEntityType.LAYOUT_PROPERTIES],
+    sort: SortableCredentialColumn.SCHEMA_NAME,
     states: [
-      CredentialStateBindingEnum.ACCEPTED,
-      CredentialStateBindingEnum.SUSPENDED,
-      CredentialStateBindingEnum.REVOKED,
+      CredentialState.ACCEPTED,
+      CredentialState.SUSPENDED,
+      CredentialState.REVOKED,
     ],
   });
   const {
@@ -90,7 +88,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       return;
     }
 
-    if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.REVOKED) {
+    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
       navigation.navigate('WalletUnitError');
     }
   }, [
@@ -191,7 +189,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         text: translate('common.updateAvailable'),
       };
     }
-    if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.REVOKED) {
+    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
       return {
         icon: StatusErrorIcon,
         text: 'Wallet unit is revoked',

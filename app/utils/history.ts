@@ -7,15 +7,15 @@ import {
   HistoryStatusDeleteIcon,
 } from '@procivis/one-react-native-components';
 import {
-  ClaimBindingDto,
-  Config,
-  CredentialDetailBindingDto,
-  CredentialRoleBindingDto,
-  CredentialSchemaBindingDto,
-  CredentialStateBindingEnum,
-  HistoryActionBindingEnum,
-  HistoryEntityTypeBindingEnum,
-  HistoryListItemBindingDto,
+  Claim,
+  CoreConfig,
+  CredentialDetail,
+  CredentialRole,
+  CredentialSchemaListItem,
+  CredentialState,
+  HistoryAction,
+  HistoryEntityType,
+  HistoryListItem,
 } from '@procivis/react-native-one-core';
 import { Dimensions, View } from 'react-native';
 
@@ -41,7 +41,7 @@ export const schemaColorForName = (proofSchemaName: string) => {
   return color;
 };
 
-export const getEntryTitle = (entry: HistoryListItemBindingDto) => {
+export const getEntryTitle = (entry: HistoryListItem) => {
   const entityType = translate(`historyEntityType.${entry.entityType}`);
   const action = translate(`historyAction.${entry.action}`);
   return `${entityType} ${action}`;
@@ -50,18 +50,16 @@ export const getEntryTitle = (entry: HistoryListItemBindingDto) => {
 export const historyListItemLabels: () => HistoryListItemLabels = () => ({
   actions: Object.assign(
     {},
-    ...Object.keys(HistoryActionBindingEnum).map((key) => ({
-      [key]: translate(`historyAction.${key as HistoryActionBindingEnum}`),
+    ...Object.keys(HistoryAction).map((key) => ({
+      [key]: translate(`historyAction.${key as HistoryAction}`),
     })),
-  ) as { [key in keyof typeof HistoryActionBindingEnum]: string },
+  ) as { [key in keyof typeof HistoryAction]: string },
   entityTypes: Object.assign(
     {},
-    ...Object.keys(HistoryEntityTypeBindingEnum).map((key) => ({
-      [key]: translate(
-        `historyEntityType.${key as HistoryEntityTypeBindingEnum}`,
-      ),
+    ...Object.keys(HistoryEntityType).map((key) => ({
+      [key]: translate(`historyEntityType.${key as HistoryEntityType}`),
     })),
-  ) as { [key in keyof typeof HistoryEntityTypeBindingEnum]: string },
+  ) as { [key in keyof typeof HistoryEntityType]: string },
 });
 
 export const historyProofSchemaHeader = (
@@ -101,20 +99,20 @@ export const historyDeletedCredentialCardWithName = (
 };
 
 export const historyDeletedCredentialCardFromCredentialSchema = (
-  credentialSchema: CredentialSchemaBindingDto,
-  claims: ClaimBindingDto[],
-  config: Config,
+  credentialSchema: CredentialSchemaListItem,
+  claims: Claim[],
+  config: CoreConfig,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
-  const credential: CredentialDetailBindingDto = {
+  const credential: CredentialDetail = {
     claims,
     createdDate: '',
     id: '',
     issuanceDate: '',
     lastModified: '',
     protocol: '',
-    role: CredentialRoleBindingDto.HOLDER,
+    role: CredentialRole.HOLDER,
     schema: credentialSchema,
-    state: CredentialStateBindingEnum.ACCEPTED,
+    state: CredentialState.ACCEPTED,
   };
   const props = detailsCardFromCredential(
     credential,

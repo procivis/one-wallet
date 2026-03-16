@@ -6,7 +6,7 @@ import {
   useAppColorScheme,
   useHistory,
 } from '@procivis/one-react-native-components';
-import { HistoryEntityTypeBindingEnum } from '@procivis/react-native-one-core';
+import { HistoryEntityType } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -23,7 +23,7 @@ const DashboardScreen: FC = () => {
     useNavigation<CreateBackupNavigationProp<'CreateBackupDashboard'>>();
   const settingsNavigation = useNavigation<SettingsNavigationProp>();
   const { data: historyData } = useHistory({
-    entityTypes: [HistoryEntityTypeBindingEnum.BACKUP],
+    entityTypes: [HistoryEntityType.BACKUP],
     pageSize: 1,
   });
   const lastBackupEntry = historyData?.pages?.[0]?.values?.[0];

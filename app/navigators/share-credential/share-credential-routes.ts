@@ -1,15 +1,15 @@
 import {
-  CredentialQueryResponseBindingDto,
-  HandleInvitationResponseBindingEnum,
-  PresentationDefinitionRequestedCredentialBindingDto,
-  PresentationSubmitCredentialRequestBindingDto,
-  PresentationSubmitV2CredentialRequestBindingDto,
+  CredentialQuery,
+  HandleInvitationResponse,
+  PresentationDefinitionRequestedCredential,
+  PresentationSubmitCredentialRequest,
+  PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type InvitationResultProofRequest = Extract<
-  HandleInvitationResponseBindingEnum,
+  HandleInvitationResponse,
   { type_: 'PROOF_REQUEST' }
 >;
 
@@ -20,15 +20,12 @@ export type ShareCredentialNavigatorParamList = {
   } & (
     | {
         credentials: Record<
-          PresentationDefinitionRequestedCredentialBindingDto['id'],
-          PresentationSubmitCredentialRequestBindingDto[]
+          PresentationDefinitionRequestedCredential['id'],
+          PresentationSubmitCredentialRequest[]
         >;
       }
     | {
-        credentialsV2: Record<
-          string,
-          PresentationSubmitV2CredentialRequestBindingDto[]
-        >;
+        credentialsV2: Record<string, PresentationSubmitV2CredentialRequest[]>;
       }
   );
   ProofRequest: {
@@ -41,10 +38,10 @@ export type ShareCredentialNavigatorParamList = {
   };
   SelectCredential: {
     preselectedCredentialId: string;
-    request: PresentationDefinitionRequestedCredentialBindingDto;
+    request: PresentationDefinitionRequestedCredential;
   };
   SelectCredentialV2: {
-    credentialQuery: CredentialQueryResponseBindingDto;
+    credentialQuery: CredentialQuery;
     credentialQueryId: string;
     preselectedCredentialIds: string[];
   };
