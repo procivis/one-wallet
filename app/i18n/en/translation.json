@@ -222,6 +222,7 @@
   "historyEntityType.SUPERVISORY_AUTHORITY": "Supervisory authority",
   "historyEntityType.TRUST_ANCHOR": "Trust anchor",
   "historyEntityType.TRUST_ENTITY": "Trusted entity",
+  "historyEntityType.TRUST_LIST_PUBLICATION": "Trust list publication",
   "historyEntityType.USER": "User",
   "historyEntityType.WALLET_RELYING_PARTY": "Wallet relying party",
   "historyEntityType.WALLET_UNIT": "Wallet unit",

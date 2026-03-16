@@ -1,8 +1,8 @@
 import { HistoryListScreen } from '@procivis/one-react-native-components';
 import {
-  HistoryEntityTypeBindingEnum,
-  HistoryListItemBindingDto,
-  HistoryListQueryBindingDto,
+  HistoryEntityType,
+  HistoryListItem,
+  HistoryListQuery,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback, useMemo, useState } from 'react';
@@ -25,21 +25,18 @@ export const CredentialHistoryScreen: FC = () => {
   const { credentialId } = route.params;
 
   const [searchPhrase, setSearchPhrase] = useState('');
-  const query = useMemo<Partial<HistoryListQueryBindingDto>>(
+  const query = useMemo<Partial<HistoryListQuery>>(
     () => ({
       actions: historyListActionsFilter,
       credentialId,
-      entityTypes: [
-        HistoryEntityTypeBindingEnum.CREDENTIAL,
-        HistoryEntityTypeBindingEnum.PROOF,
-      ],
+      entityTypes: [HistoryEntityType.CREDENTIAL, HistoryEntityType.PROOF],
       search: searchPhrase ? { text: searchPhrase } : undefined,
     }),
     [credentialId, searchPhrase],
   );
 
   const handleProofPress = useCallback(
-    (entry: HistoryListItemBindingDto) => {
+    (entry: HistoryListItem) => {
       rootNavigation.navigate('Settings', {
         params: {
           params: { entry },

@@ -17,8 +17,8 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   OneError,
-  ProofStateBindingEnum,
-  ProposeProofResponseBindingDto,
+  ProofState,
+  ProposeProofResponse,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -56,7 +56,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   const { permissionStatus, checkPermissions, requestPermission } =
     useBlePermissions(VerificationProtocol.ISO_MDL);
   const [adapterDisabled, setAdapterDisabled] = useState<boolean>(false);
-  const [proof, setProof] = useState<ProposeProofResponseBindingDto>();
+  const [proof, setProof] = useState<ProposeProofResponse>();
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
 
   useEffect(() => {
@@ -95,15 +95,11 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   }, [adapterDisabled, proposeProof, proof, isAppActive, isFocused]);
 
   const pendingProofId = useRef<string | undefined>(
-    proofState?.state === ProofStateBindingEnum.PENDING
-      ? proof?.proofId
-      : undefined,
+    proofState?.state === ProofState.PENDING ? proof?.proofId : undefined,
   );
   useEffect(() => {
     pendingProofId.current =
-      proofState?.state === ProofStateBindingEnum.PENDING
-        ? proof?.proofId
-        : undefined;
+      proofState?.state === ProofState.PENDING ? proof?.proofId : undefined;
   }, [proof?.proofId, proofState?.state]);
 
   // delete proof when app goes to background
@@ -139,7 +135,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
   }, [adapterDisabled, permissionStatus, proof, isFocused]);
 
   useEffect(() => {
-    if (proof && proofState?.state === ProofStateBindingEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofState.REQUESTED) {
       navigation.popTo('Wallet');
       setTimeout(() => {
         rootNavigation.navigate('CredentialManagement', {

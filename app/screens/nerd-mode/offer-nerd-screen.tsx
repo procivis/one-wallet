@@ -4,7 +4,7 @@ import {
   NerdModeScreen,
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRoleBindingEnum } from '@procivis/react-native-one-core';
+import { TrustEntityRole } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -54,7 +54,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
       entityCluster={{
         entityLabels,
         identifier: credentialDetail.issuer,
-        role: TrustEntityRoleBindingEnum.ISSUER,
+        role: TrustEntityRole.ISSUER,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}

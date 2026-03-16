@@ -15,8 +15,8 @@ import {
   useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
 import {
-  HolderWalletUnitResponseBindingDto,
-  WalletUnitStatusBindingEnum,
+  HolderWalletUnit,
+  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -31,10 +31,10 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 const testID = 'WalletUnitRegistrationScreen';
 
 const getStatus = (
-  walletUnitDetail: HolderWalletUnitResponseBindingDto | undefined,
+  walletUnitDetail: HolderWalletUnit | undefined,
   colorScheme: ColorScheme,
 ) => {
-  if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.REVOKED) {
+  if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
     return {
       backgroundColor: 'rgba(217, 13, 13, 0.05)',
       icon: StatusErrorIcon,
@@ -43,7 +43,7 @@ const getStatus = (
     };
   }
 
-  if (walletUnitDetail?.status === WalletUnitStatusBindingEnum.ACTIVE) {
+  if (walletUnitDetail?.status === WalletUnitStatus.ACTIVE) {
     return {
       backgroundColor: colorScheme.background,
       icon: StatusSuccessIcon,

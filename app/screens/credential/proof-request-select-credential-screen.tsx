@@ -6,7 +6,7 @@ import {
   SelectCredential,
   useCredentials,
 } from '@procivis/one-react-native-components';
-import { CredentialStateBindingEnum } from '@procivis/react-native-one-core';
+import { CredentialState } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -58,8 +58,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
         .filter((credentialId) =>
           allCredentials?.some(
             ({ id, state }) =>
-              id === credentialId &&
-              state === CredentialStateBindingEnum.ACCEPTED,
+              id === credentialId && state === CredentialState.ACCEPTED,
           ),
         ),
     [allCredentials, request],

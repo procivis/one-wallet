@@ -1,7 +1,7 @@
-import { WalletProviderTypeBindingEnum } from '@procivis/react-native-one-core';
+import { WalletProviderType } from '@procivis/react-native-one-core';
 
 export interface WalletProviderConfiguration {
-  type: WalletProviderTypeBindingEnum;
+  type: WalletProviderType;
   url: string;
 }
 

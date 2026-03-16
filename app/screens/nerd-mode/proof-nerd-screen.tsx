@@ -6,7 +6,7 @@ import {
   NerdModeScreen,
   useProofDetail,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRoleBindingEnum } from '@procivis/react-native-one-core';
+import { TrustEntityRole } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -71,7 +71,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         attributeKey: 'entityCluster',
         entityLabels: entityLabels,
         identifier: proofInput.credential?.issuer,
-        role: TrustEntityRoleBindingEnum.ISSUER,
+        role: TrustEntityRole.ISSUER,
         testID: `issuerTrustEntity.${proofInput.credential?.id}`,
       },
       {
@@ -120,7 +120,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
       entityCluster={{
         entityLabels: entityLabels,
         identifier: proofDetail.verifier,
-        role: TrustEntityRoleBindingEnum.VERIFIER,
+        role: TrustEntityRole.VERIFIER,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
       }}
       labels={attributesLabels}

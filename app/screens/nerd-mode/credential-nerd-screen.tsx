@@ -14,9 +14,9 @@ import {
   useCredentialDetail,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialDetailBindingDto,
-  CredentialStateBindingEnum,
-  TrustEntityRoleBindingEnum,
+  CredentialDetail,
+  CredentialState,
+  TrustEntityRole,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -32,10 +32,10 @@ import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (
-  credential: CredentialDetailBindingDto,
+  credential: CredentialDetail,
   colorScheme: ColorScheme,
 ): { icon: ReactElement; text: string; textColor: string } | undefined => {
-  if (credential.state === CredentialStateBindingEnum.SUSPENDED) {
+  if (credential.state === CredentialState.SUSPENDED) {
     if (credential.suspendEndDate) {
       return {
         icon: CredentialSuspendedTempIcon,
@@ -53,7 +53,7 @@ const getCredentialValidityValue = (
     }
   }
 
-  if (credential.state === CredentialStateBindingEnum.REVOKED) {
+  if (credential.state === CredentialState.REVOKED) {
     return {
       icon: CredentialSuspendedIcon,
       text: translate('common.revoked'),
@@ -61,7 +61,7 @@ const getCredentialValidityValue = (
     };
   }
 
-  if (credential.state === CredentialStateBindingEnum.ACCEPTED) {
+  if (credential.state === CredentialState.ACCEPTED) {
     return {
       icon: CredentialValidIcon,
       text: translate('common.valid'),
@@ -158,7 +158,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       entityCluster={{
         entityLabels: entityLabels,
         identifier: credentialDetail.issuer!,
-        role: TrustEntityRoleBindingEnum.ISSUER,
+        role: TrustEntityRole.ISSUER,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}

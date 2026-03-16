@@ -1,9 +1,9 @@
-import { HandleInvitationResponseBindingEnum } from '@procivis/react-native-one-core';
+import { HandleInvitationResponse } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type InvitationResultCredentialIssuance = Extract<
-  HandleInvitationResponseBindingEnum,
+  HandleInvitationResponse,
   { type_: 'CREDENTIAL_ISSUANCE' }
 >;
 

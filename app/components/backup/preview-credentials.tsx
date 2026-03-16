@@ -2,7 +2,7 @@ import {
   CredentialDetails,
   useCredentialListExpandedCard,
 } from '@procivis/one-react-native-components';
-import { CredentialListItemBindingDto } from '@procivis/react-native-one-core';
+import { CredentialListItem } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
 import { View } from 'react-native';
 
@@ -10,7 +10,7 @@ import { useCredentialImagePreview } from '../../hooks/credential-card/image-pre
 import { credentialCardLabels } from '../../utils/credential';
 
 interface PreviewCredentialsProps {
-  credentials: CredentialListItemBindingDto[] | undefined;
+  credentials: CredentialListItem[] | undefined;
 }
 
 export const PreviewCredentials: FC<PreviewCredentialsProps> = ({

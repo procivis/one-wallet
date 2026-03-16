@@ -13,8 +13,8 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   OneError,
-  ProofStateBindingEnum,
-  ProposeProofResponseBindingDto,
+  ProofState,
+  ProposeProofResponse,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -33,7 +33,7 @@ import { useIsAppActive } from '../../utils/appState';
 const NFCShareScreen = () => {
   const navigation = useNavigation<DashboardNavigationProp<'NFCShare'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Dashboard'>>();
-  const [proof, setProof] = useState<ProposeProofResponseBindingDto>();
+  const [proof, setProof] = useState<ProposeProofResponse>();
   const isFocused = useIsFocused();
   const isAppActive = useIsAppActive();
   const { data: proofState } = useProofState(proof?.proofId, isFocused);
@@ -121,9 +121,7 @@ const NFCShareScreen = () => {
 
   const pendingProofId = useRef<string | undefined>(undefined);
   pendingProofId.current =
-    proofState?.state === ProofStateBindingEnum.PENDING
-      ? proof?.proofId
-      : undefined;
+    proofState?.state === ProofState.PENDING ? proof?.proofId : undefined;
 
   // delete proof when app goes to background
   useEffect(() => {
@@ -148,7 +146,7 @@ const NFCShareScreen = () => {
   );
 
   useEffect(() => {
-    if (proof && proofState?.state === ProofStateBindingEnum.REQUESTED) {
+    if (proof && proofState?.state === ProofState.REQUESTED) {
       rootNavigation.navigate('CredentialManagement', {
         params: {
           params: {
@@ -175,7 +173,7 @@ const NFCShareScreen = () => {
 
   const testID = 'RequestProofNFCProcessScreen';
 
-  const isError = error || proofState?.state === ProofStateBindingEnum.ERROR;
+  const isError = error || proofState?.state === ProofState.ERROR;
   const isWarning =
     permissionStatus !== 'granted' || !isNFCEnabled || bleDisabled;
 
