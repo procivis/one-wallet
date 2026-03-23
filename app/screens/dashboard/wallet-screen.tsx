@@ -7,6 +7,8 @@ import {
   StatusWarningIcon,
   useAppColorScheme,
   usePagedCredentials,
+  useTrustCollectionSync,
+  useTrustListSubscriptionUpdate,
   useWalletUnitCheck,
   WalletEmptyList,
   WalletNotice,
@@ -55,6 +57,9 @@ const WalletScreen: FunctionComponent = observer(() => {
   const { credentialIssuers = [] } = assets;
   const { ignoreRecommendedVersionNotice, showRecommendedUpdateNotice } =
     useVersionCheck();
+  const { mutateAsync: trustListCollectionSync } = useTrustCollectionSync();
+  const { mutateAsync: trustListSubscriptionUpdate } =
+    useTrustListSubscriptionUpdate();
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
@@ -177,6 +182,15 @@ const WalletScreen: FunctionComponent = observer(() => {
       showRequestCredentialBtn,
     ],
   );
+
+  const runTrustTasks = useCallback(async () => {
+    await trustListCollectionSync();
+    await trustListSubscriptionUpdate();
+  }, [trustListSubscriptionUpdate, trustListCollectionSync]);
+
+  useEffect(() => {
+    runTrustTasks();
+  }, [runTrustTasks]);
 
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
     if (walletProvider.walletUnitAttestation.required) {
