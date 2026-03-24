@@ -3,6 +3,7 @@ import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ImageSourcePropType } from 'react-native';
 
+import { TrustEcosystemsRouteParams } from '../../screens/trust-ecosystems/trust-ecosystems-screen';
 import { CredentialDetailNavigatorParamList } from '../credential-detail/credential-detail-routes';
 import { CredentialManagementNavigatorParamList } from '../credential-management/credential-management-routes';
 import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
@@ -32,6 +33,7 @@ export type RootNavigatorParamList = {
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;
   };
+  TrustEcosystems: TrustEcosystemsRouteParams;
   VersionUpdate: undefined;
   WalletUnitError: undefined;
   WalletUnitRegistration: {

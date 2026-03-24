@@ -49,10 +49,19 @@ const WalletUnitRegistrationScreen = () => {
   const { mutateAsync: registerWalletUnit, isSuccess: registeredNewWallet } =
     useRegisterWalletUnit();
   const { mutateAsync: refreshWalletUnit } = useWalletUnitStatus();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
 
   const closeHandler = useCallback(() => {
     const resetToDashboard = route.params?.resetToDashboard;
     const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
+    if (resetToDashboard === true && featureFlags?.trustEcosystemsEnabled) {
+      rootNavigation.navigate('TrustEcosystems', { resetToDashboard: true });
+      return;
+    }
     if (
       resetToDashboard === true ||
       (resetToDashboard === 'onError' && errorStatuses.includes(status))
@@ -63,7 +72,12 @@ const WalletUnitRegistrationScreen = () => {
     } else {
       rootNavigation.goBack();
     }
-  }, [rootNavigation, route.params?.resetToDashboard, status]);
+  }, [
+    featureFlags?.trustEcosystemsEnabled,
+    rootNavigation,
+    route.params?.resetToDashboard,
+    status,
+  ]);
 
   const handleRegisterOrRefresh = useCallback(async () => {
     if (hasInternetConnection === undefined || handled.current) {

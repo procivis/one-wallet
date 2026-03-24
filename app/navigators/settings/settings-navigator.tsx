@@ -16,6 +16,7 @@ import LicencesScreen from '../../screens/settings/licences-screen';
 import PinCodeChangeScreen from '../../screens/settings/pin-code-change-screen';
 import PinCodeSetScreen from '../../screens/settings/pin-code-set-screen';
 import WalletUnitRegistrationInfoScreen from '../../screens/settings/wallet-unit-registration-info-screen';
+import { TrustEcosystemsScreen } from '../../screens/trust-ecosystems/trust-ecosystems-screen';
 import CreateBackupNavigator from '../create-backup/create-backup-navigator';
 import HistoryNavigator from '../history/history-navigator';
 import {
@@ -78,6 +79,7 @@ const SettingsNavigator = () => {
         component={WalletUnitRegistrationInfoScreen}
         name="WalletUnitRegistrationInfo"
       />
+      <Stack.Screen component={TrustEcosystemsScreen} name="TrustEcosystems" />
     </Stack.Navigator>
   );
 };

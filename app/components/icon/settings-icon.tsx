@@ -189,7 +189,24 @@ export const PINIcon: FC<SvgProps> = (props) => {
       />
       <Path
         d="M17 15.9679C17 16.5379 16.538 16.9999 15.969 16.9999C15.398 16.9999 14.937 16.5379 14.937 15.9679C14.937 15.3989 15.398 14.9369 15.969 14.9369C16.538 14.9369 17 15.3989 17 15.9679Z"
-        fill="#141414"
+        fill={colorScheme.text}
+      />
+    </Svg>
+  );
+};
+
+// https://www.figma.com/design/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library--Design-?node-id=137-196&t=mXYsQYLs51UFAoX6-0
+export const TrustEcosystemIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+  return (
+    <Svg fill="none" height="24" viewBox="0 0 24 24" width="24" {...props}>
+      <Path
+        d="M11 8H6.5a3.5 3.5 0 100 7H11v1H6.5a4.5 4.5 0 110-9H11v1zM20.965 11A3.5 3.5 0 0017.5 8H13V7h4.5a4.5 4.5 0 014.473 4h-1.008z"
+        fill={colorScheme.text}
+      />
+      <Path
+        d="M16 12H8v-1h8v1zM21.38 13.937a.326.326 0 01.443 0l.008.007.236.252c.11.125.11.314 0 .439l-.005.006-4.49 4.574-2.64-2.744a.34.34 0 010-.445l.007-.008.24-.24a.313.313 0 01.447 0l.002.002 1.947 2.035 3.805-3.878z"
+        fill={colorScheme.text}
       />
     </Svg>
   );
