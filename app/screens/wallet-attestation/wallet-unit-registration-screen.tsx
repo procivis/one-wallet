@@ -7,6 +7,7 @@ import {
   useRegisterWalletUnit,
   useWalletUnitStatus,
 } from '@procivis/one-react-native-components';
+import { WalletUnitStatus } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   memo,
@@ -34,6 +35,7 @@ const WalletUnitRegistrationScreen = () => {
   const [status, setStatus] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
+  const [walletUnitStatus, setWalletUnitStatus] = useState<WalletUnitStatus>();
   const {
     walletStore,
     walletStore: { walletProvider, walletUnitId },
@@ -81,11 +83,22 @@ const WalletUnitRegistrationScreen = () => {
           throw new Error('No wallet provider specified');
         }
 
-        const walletUnitId = await registerWalletUnit({
+        const walletUnit = await registerWalletUnit({
           type: config.walletProvider.type,
           url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
         });
-        walletStore.walletUnitIdSetup(walletUnitId);
+        walletStore.walletUnitIdSetup(walletUnit.id);
+        setWalletUnitStatus(walletUnit.status);
+        if (walletUnit.status === WalletUnitStatus.UNATTESTED) {
+          if (
+            walletProvider.walletUnitAttestation.required ||
+            route.params.attestationRequired
+          ) {
+            setStatus(LoaderViewState.Error);
+          } else {
+            setStatus(LoaderViewState.Warning);
+          }
+        }
       }
       setStatus(LoaderViewState.Success);
       closeHandler();
@@ -142,18 +155,46 @@ const WalletUnitRegistrationScreen = () => {
     return translateError(error, translate('walletUnitRegistration.error'));
   }, [error, registeredNewWallet, status, route.params.operation]);
 
-  const button =
-    status === LoaderViewState.Warning || status === LoaderViewState.Error
-      ? {
-          onPress: handleRetry,
-          testID: concatTestID(testID, 'retry'),
-          title: translate('common.retry'),
-        }
-      : undefined;
+  const retryButton = useMemo(
+    () => ({
+      onPress: handleRetry,
+      testID: concatTestID(testID, 'retry'),
+      title: translate('common.retry'),
+    }),
+    [handleRetry],
+  );
+
+  const closeButton = useMemo(
+    () => ({
+      onPress: closeHandler,
+      testID: concatTestID(testID, 'close'),
+      title: translate('common.close'),
+      type: ButtonType.Secondary,
+    }),
+    [closeHandler],
+  );
+
+  const button = useMemo(() => {
+    switch (walletUnitStatus) {
+      case WalletUnitStatus.ERROR:
+        return retryButton;
+      case WalletUnitStatus.UNATTESTED:
+        return !walletProvider.walletUnitAttestation.required
+          ? closeButton
+          : undefined;
+      default:
+        return closeButton;
+    }
+  }, [
+    closeButton,
+    retryButton,
+    walletProvider.walletUnitAttestation.required,
+    walletUnitStatus,
+  ]);
 
   const secondaryButton =
-    !walletProvider.walletUnitAttestation.required &&
-    (status === LoaderViewState.Warning || status === LoaderViewState.Error)
+    walletUnitStatus === WalletUnitStatus.ERROR &&
+    !walletProvider.walletUnitAttestation.required
       ? {
           onPress: closeHandler,
           testID: concatTestID(testID, 'close'),
