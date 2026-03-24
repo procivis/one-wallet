@@ -31,6 +31,7 @@ export type SettingsNavigatorParamList = {
   RSEPinCodeChange: undefined;
   RestoreBackup: NavigatorScreenParams<RestoreBackupNavigatorParamList>;
   SettingsDashboard: undefined;
+  TrustEcosystems: undefined;
   WalletUnitRegistrationInfo: undefined;
 };
 

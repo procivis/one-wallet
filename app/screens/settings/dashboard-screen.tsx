@@ -35,6 +35,7 @@ import {
   RestoreBackupIcon,
   ScreenCaptureProtectionIcon,
   TouchIDIcon,
+  TrustEcosystemIcon,
 } from '../../components/icon/settings-icon';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { config } from '../../config';
@@ -61,7 +62,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
     locale,
     walletStore,
     walletStore: {
-      walletProvider: { walletUnitAttestation },
+      walletProvider: { walletUnitAttestation, featureFlags },
     },
   } = useStores();
   const translate = useUpdatedTranslate();
@@ -122,6 +123,10 @@ const DashboardScreen: FunctionComponent = observer(() => {
       !userSettings.screenCaptureProtection,
     );
   }, [userSettings]);
+
+  const handleTrustEcosystems = useCallback(() => {
+    navigation.navigate('TrustEcosystems');
+  }, [navigation]);
 
   const handleAppInformation = useCallback(() => {
     navigation.navigate('AppInformation');
@@ -268,7 +273,6 @@ const DashboardScreen: FunctionComponent = observer(() => {
               },
             }
           : null,
-
         {
           switchSetting: {
             icon: ScreenCaptureProtectionIcon,
@@ -278,6 +282,16 @@ const DashboardScreen: FunctionComponent = observer(() => {
             value: userSettings.screenCaptureProtection,
           },
         },
+        featureFlags?.trustEcosystemsEnabled
+          ? {
+              buttonSetting: {
+                icon: TrustEcosystemIcon,
+                onPress: handleTrustEcosystems,
+                testID: 'SettingsScreen.trustEcosystems',
+                title: translate('common.trustEcosystems'),
+              },
+            }
+          : null,
         walletUnitAttestation.enabled
           ? {
               buttonSetting: {

@@ -15,6 +15,22 @@ const AppVersionModel = types.model('AppVersion', {
   updateScreen: types.maybe(UpdateScreenModel),
 });
 
+const FeatureFlagsModel = types.model('FeatureFlags', {
+  trustEcosystemsEnabled: types.boolean,
+});
+
+const TranslatedLabelModel = types.model('TranslatedLabel', {
+  lang: types.string,
+  value: types.string,
+});
+
+const TrustCollectionModel = types.model('TrustCollection', {
+  description: types.array(TranslatedLabelModel),
+  displayName: types.array(TranslatedLabelModel),
+  id: types.string,
+  logo: types.string,
+});
+
 const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
   appIntegrityCheckRequired: types.boolean,
   enabled: types.boolean,
@@ -23,7 +39,9 @@ const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
 
 export const WalletProviderModel = types.model('WalletProvider', {
   appVersion: types.maybe(AppVersionModel),
+  featureFlags: types.maybe(FeatureFlagsModel),
   name: types.string,
+  trustCollections: types.array(TrustCollectionModel),
   walletUnitAttestation: WalletUnitRegistrationModel,
 });
 

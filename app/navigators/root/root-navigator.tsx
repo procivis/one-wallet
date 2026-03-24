@@ -9,6 +9,7 @@ import StatusCheckResultScreen from '../../screens/credential/status-check-resul
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import RequestCredentialListScreen from '../../screens/request-credential/request-credential-list-screen';
 import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
+import { TrustEcosystemsScreen } from '../../screens/trust-ecosystems/trust-ecosystems-screen';
 import VersionUpdateScreen from '../../screens/version-update/version-update-screen';
 import WalletUnitErrorScreen from '../../screens/wallet-attestation/wallet-unit-error-screen';
 import WalletUnitRegistrationScreen from '../../screens/wallet-attestation/wallet-unit-registration-screen';
@@ -93,6 +94,10 @@ const RootNavigator: FunctionComponent = () => {
         <RootStack.Screen
           component={WalletUnitRegistration}
           name="WalletUnitRegistration"
+        />
+        <RootStack.Screen
+          component={TrustEcosystemsScreen}
+          name="TrustEcosystems"
         />
         <RootStack.Screen component={WalletUnitError} name="WalletUnitError" />
         <RootStack.Screen component={VersionUpdate} name="VersionUpdate" />
