@@ -184,9 +184,17 @@ const WalletScreen: FunctionComponent = observer(() => {
   );
 
   const runTrustTasks = useCallback(async () => {
-    await trustListCollectionSync();
+    if (registeredWalletUnitId) {
+      await trustListCollectionSync({
+        holderWalletUnitId: registeredWalletUnitId,
+      });
+    }
     await trustListSubscriptionUpdate();
-  }, [trustListSubscriptionUpdate, trustListCollectionSync]);
+  }, [
+    trustListSubscriptionUpdate,
+    trustListCollectionSync,
+    registeredWalletUnitId,
+  ]);
 
   useEffect(() => {
     runTrustTasks();
