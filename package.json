@@ -185,7 +185,8 @@
       "react-native-touch-id": "patches/react-native-touch-id.patch",
       "react-native-ultimate-config": "patches/react-native-ultimate-config.patch",
       "rn-screenshot-prevent": "patches/rn-screenshot-prevent.patch",
-      "react-native-worklets-core": "patches/react-native-worklets-core.patch"
+      "react-native-worklets-core": "patches/react-native-worklets-core.patch",
+      "react-native": "patches/react-native.patch"
     }
   }
 }
