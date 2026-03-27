@@ -1,0 +1,15 @@
+diff --git a/third-party-podspecs/fmt.podspec b/third-party-podspecs/fmt.podspec
+index 2f38990e226c13f483aaf1b986302d4094243814..bfc68adcaee918d8f71b7c579c5bcdf9f50b799a 100644
+--- a/third-party-podspecs/fmt.podspec
++++ b/third-party-podspecs/fmt.podspec
+@@ -26,4 +26,10 @@ Pod::Spec.new do |spec|
+   spec.public_header_files = "include/fmt/*.h"
+   spec.header_mappings_dir = "include"
+   spec.source_files = ["include/fmt/*.h", "src/format.cc"]
++  # TODO: Remove after upgrading React Native past 0.83.x
++  # Fix fmt 11.0.2 consteval build error with Xcode 26.4 (facebook/react-native#55601)
++  # Fixed in RN 0.84+ which bumps fmt to a compatible version.
++  spec.prepare_command = <<~SCRIPT
++    perl -i -pe 's/^#  define FMT_USE_CONSTEVAL 1$/#  define FMT_USE_CONSTEVAL 0/' include/fmt/base.h
++  SCRIPT
+ end
