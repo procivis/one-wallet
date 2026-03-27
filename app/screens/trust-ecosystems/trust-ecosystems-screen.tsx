@@ -85,22 +85,22 @@ export const TrustEcosystemsScreen: FC = () => {
   const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>([]);
   const {
     locale: { locale },
-    walletStore: {
-      walletProvider: { trustCollections },
-      registeredWalletUnitId,
-    },
+    walletStore: { registeredWalletUnitId },
   } = useStores();
   const { data: walletUnit, isLoading } = useWalletUnitTrustCollections(
     registeredWalletUnitId,
   );
+  const trustCollections = walletUnit?.trustCollections;
   const { mutateAsync: updateWalletUnit } = useWalletUnitUpdate();
 
   useEffect(() => {
-    if (isLoading || !walletUnit?.trustCollections) {
+    if (isLoading || !trustCollections) {
       return;
     }
-    setSelectedEcosystems(walletUnit.trustCollections.map((tc) => tc.id));
-  }, [isLoading, walletUnit?.trustCollections]);
+    setSelectedEcosystems(
+      trustCollections.filter((tc) => tc.selected).map((tc) => tc.id),
+    );
+  }, [isLoading, trustCollections]);
 
   const language = locale ?? i18n.defaultLocale ?? 'en';
 
@@ -155,17 +155,17 @@ export const TrustEcosystemsScreen: FC = () => {
             <Typography color={colorScheme.text} style={styles.subtitle}>
               {translate('info.trustEcosystems.subtitle')}
             </Typography>
-            {trustCollections.map((te) => (
+            {trustCollections?.map((tc) => (
               <TrustEcosystem
                 description={
-                  te.description.find((l) => l.lang === language)?.value
+                  tc.description.find((l) => l.lang === language)?.value
                 }
-                icon={{ uri: te.logo }}
-                key={te.id}
-                label={te.displayName.find((l) => l.lang === language)?.value}
-                selected={selectedEcosystems.includes(te.id)}
-                setSelected={setSelected(te.id)}
-                testID={`TrustEcosystemsScreen.item.${te.id}`}
+                icon={{ uri: tc.logo }}
+                key={tc.id}
+                label={tc.displayName.find((l) => l.lang === language)?.value}
+                selected={selectedEcosystems.includes(tc.id)}
+                setSelected={setSelected(tc.id)}
+                testID={`TrustEcosystemsScreen.item.${tc.id}`}
               />
             ))}
           </View>
