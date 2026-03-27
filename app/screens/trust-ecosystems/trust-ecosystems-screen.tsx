@@ -55,10 +55,10 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
     >
       <Image source={icon} style={styles.trustEcosystemIcon} />
       <View style={styles.trustEcosystemLabels}>
-        <Typography color={colorScheme.text} preset="s">
+        <Typography color={colorScheme.text} numberOfLines={1} preset="s">
           {label}
         </Typography>
-        <Typography color={colorScheme.text} preset="s">
+        <Typography color={colorScheme.text} numberOfLines={1} preset="s">
           {description}
         </Typography>
       </View>
@@ -160,7 +160,7 @@ export const TrustEcosystemsScreen: FC = () => {
                 description={
                   te.description.find((l) => l.lang === language)?.value
                 }
-                icon={0}
+                icon={{ uri: te.logo }}
                 key={te.id}
                 label={te.displayName.find((l) => l.lang === language)?.value}
                 selected={selectedEcosystems.includes(te.id)}
@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
   trustEcosystemIcon: {
     borderRadius: 4,
     height: 32,
+    marginRight: 16,
     width: 32,
   },
   trustEcosystemLabels: {

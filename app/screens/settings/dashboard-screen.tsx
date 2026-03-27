@@ -62,6 +62,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
     locale,
     walletStore,
     walletStore: {
+      registeredWalletUnitId,
       walletProvider: { walletUnitAttestation, featureFlags },
     },
   } = useStores();
@@ -282,6 +283,8 @@ const DashboardScreen: FunctionComponent = observer(() => {
             value: userSettings.screenCaptureProtection,
           },
         },
+        walletUnitAttestation.enabled &&
+        registeredWalletUnitId &&
         featureFlags?.trustEcosystemsEnabled
           ? {
               buttonSetting: {

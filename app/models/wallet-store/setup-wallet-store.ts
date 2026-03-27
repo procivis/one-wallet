@@ -51,7 +51,12 @@ export async function setupWalletStore(env: Environment) {
 
   const walletProvider = WalletProviderModel.create(
     walletProviderData ?? {
+      appVersion: undefined,
+      featureFlags: {
+        trustEcosystemsEnabled: true,
+      },
       name: '',
+      trustCollections: [],
       walletUnitAttestation: {
         appIntegrityCheckRequired: false,
         enabled: false,
@@ -79,6 +84,7 @@ export async function setupWalletStore(env: Environment) {
       data = stored;
     }
 
+    data.walletProvider = walletProvider;
     walletStore = WalletStoreModel.create(data, env);
   } catch (_e) {
     walletStore = WalletStoreModel.create(defaultData, env);
