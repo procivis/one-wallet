@@ -127,6 +127,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
             <TextInput
               autoComplete="one-time-code"
               error={isInvalid ? inputError : ''}
+              inputAccessoryViewID={'none'}
               keyboardType={keyboardType}
               label={translate('common.code')}
               onAccessoryPress={clearValue}
