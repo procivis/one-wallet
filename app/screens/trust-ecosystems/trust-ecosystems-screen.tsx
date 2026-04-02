@@ -2,6 +2,7 @@ import {
   Button,
   ButtonType,
   Checkbox,
+  concatTestID,
   ContrastingStatusBar,
   Header,
   LoaderView,
@@ -53,18 +54,32 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
       ]}
       testID={testID}
     >
-      <Image source={icon} style={styles.trustEcosystemIcon} />
+      <Image
+        source={icon}
+        style={styles.trustEcosystemIcon}
+        testID={concatTestID(testID, 'image')}
+      />
       <View style={styles.trustEcosystemLabels}>
-        <Typography color={colorScheme.text} numberOfLines={1} preset="s">
+        <Typography
+          color={colorScheme.text}
+          numberOfLines={1}
+          preset="s"
+          testID={concatTestID(testID, 'label')}
+        >
           {label}
         </Typography>
-        <Typography color={colorScheme.text} numberOfLines={1} preset="s">
+        <Typography
+          color={colorScheme.text}
+          numberOfLines={1}
+          preset="s"
+          testID={concatTestID(testID, 'description')}
+        >
           {description}
         </Typography>
       </View>
       <Checkbox
         onValueChanged={onPress}
-        testID={`${testID}.checkbox`}
+        testID={concatTestID(testID, 'checkbox')}
         value={selected}
       />
     </TouchableOpacity>
@@ -155,7 +170,7 @@ export const TrustEcosystemsScreen: FC = () => {
             <Typography color={colorScheme.text} style={styles.subtitle}>
               {translate('info.trustEcosystems.subtitle')}
             </Typography>
-            {trustCollections?.map((tc) => (
+            {trustCollections?.map((tc, index) => (
               <TrustEcosystem
                 description={
                   tc.description.find((l) => l.lang === language)?.value
@@ -165,7 +180,7 @@ export const TrustEcosystemsScreen: FC = () => {
                 label={tc.displayName.find((l) => l.lang === language)?.value}
                 selected={selectedEcosystems.includes(tc.id)}
                 setSelected={setSelected(tc.id)}
-                testID={`TrustEcosystemsScreen.item.${tc.id}`}
+                testID={`TrustEcosystemsScreen.item.${index}`}
               />
             ))}
           </View>
