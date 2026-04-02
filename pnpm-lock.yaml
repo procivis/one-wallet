@@ -29,8 +29,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(@types/react@19.2.7)(react@19.2.0)
       '@procivis/one-react-native-components':
-        specifier: 0.3.112
-        version: 0.3.112(2b0141d88211d13f5e31a7605dba5da7)
+        specifier: 0.3.114
+        version: 0.3.114(2b0141d88211d13f5e31a7605dba5da7)
       '@procivis/react-native-one-core':
         specifier: 1.95657.0
         version: 1.95657.0(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))
@@ -1315,10 +1315,10 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.112':
-    resolution: {integrity: sha1-ti+f7T7v3s3o3ztj4xD3vmbhrRI=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.112.tgz}
+  '@procivis/one-react-native-components@0.3.114':
+    resolution: {integrity: sha1-O3adxcpf89mnVOQ3a9AhzkaENOI=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.114.tgz}
     peerDependencies:
-      '@procivis/react-native-one-core': ^1.95657.0
+      '@procivis/react-native-one-core': ^1.96018.0
       '@procivis/react-native-picker': '*'
       '@react-native-community/blur': '*'
       '@react-native-community/netinfo': ^11.4.1
@@ -3713,7 +3713,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -7947,7 +7947,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.112(2b0141d88211d13f5e31a7605dba5da7)':
+  '@procivis/one-react-native-components@0.3.114(2b0141d88211d13f5e31a7605dba5da7)':
     dependencies:
       '@procivis/react-native-one-core': 1.95657.0(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))
       '@procivis/react-native-picker': 5.0.3
