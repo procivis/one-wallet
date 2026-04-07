@@ -3652,7 +3652,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458
-  fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
+  fmt: ef0a98103bd75695e5734efe6b9016b2675ffcd5
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: fd4a2f16acd5a3443cafe4801ad2f6fd809be03c
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59

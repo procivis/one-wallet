@@ -21,6 +21,7 @@ import { translate } from '../../i18n';
 import i18n from '../../i18n/i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
+import { compareStrings } from '../../utils/arrays';
 import { resetNavigationAction } from '../../utils/navigation';
 
 type TrustEcosystemProps = {
@@ -105,7 +106,9 @@ export const TrustEcosystemsScreen: FC = () => {
   const { data: walletUnit, isLoading } = useWalletUnitTrustCollections(
     registeredWalletUnitId,
   );
-  const trustCollections = walletUnit?.trustCollections;
+  const trustCollections = walletUnit?.trustCollections.sort((a, b) =>
+    compareStrings(a, b, 'id'),
+  );
   const { mutateAsync: updateWalletUnit } = useWalletUnitUpdate();
 
   useEffect(() => {
@@ -187,7 +190,6 @@ export const TrustEcosystemsScreen: FC = () => {
 
           <View style={styles.bottom}>
             <Button
-              disabled={selectedEcosystems.length === 0}
               onPress={onContinue}
               style={[
                 styles.button,
@@ -197,11 +199,7 @@ export const TrustEcosystemsScreen: FC = () => {
               ]}
               testID="TrustEcosystemsScreen.accept"
               title={translate('common.accept')}
-              type={
-                selectedEcosystems.length === 0
-                  ? ButtonType.Secondary
-                  : ButtonType.Primary
-              }
+              type={ButtonType.Primary}
             />
           </View>
         </>
