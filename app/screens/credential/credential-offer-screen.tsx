@@ -48,7 +48,6 @@ import {
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -92,9 +91,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: credentialSchema } = useCredentialSchemaDetail(
     credential?.schema.id,
   );
-  const {
-    walletStore: { registeredWalletUnitId },
-  } = useStores();
   const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -122,7 +118,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
     setAcceptanceInitialized(true);
     try {
       const credentialId = await acceptCredential({
-        holderWalletUnitId: registeredWalletUnitId,
         interactionId,
         txCode,
       });
@@ -142,7 +137,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [
     acceptanceInitialized,
     acceptCredential,
-    registeredWalletUnitId,
     interactionId,
     txCode,
     navigation,
