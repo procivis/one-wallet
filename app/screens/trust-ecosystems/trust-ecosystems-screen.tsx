@@ -1,4 +1,5 @@
 import {
+  BackButtonIcon,
   Button,
   ButtonType,
   Checkbox,
@@ -6,6 +7,7 @@ import {
   ContrastingStatusBar,
   Header,
   LoaderView,
+  LoaderViewState,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -13,6 +15,7 @@ import {
   useWalletUnitUpdate,
 } from '@procivis/one-react-native-components';
 import { Route, useNavigation, useRoute } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -93,7 +96,7 @@ export type TrustEcosystemsRouteParams =
     }
   | undefined;
 
-export const TrustEcosystemsScreen: FC = () => {
+export const TrustEcosystemsScreen: FC = observer(() => {
   const navigation = useNavigation<RootNavigationProp>();
   const route =
     useRoute<Route<'TrustEcosystems', TrustEcosystemsRouteParams>>();
@@ -162,11 +165,14 @@ export const TrustEcosystemsScreen: FC = () => {
     >
       <ContrastingStatusBar backgroundColor={colorScheme.white} />
       <Header
+        backIcon={BackButtonIcon.Close}
         onBack={navigation.goBack}
         title={translate('common.trustEcosystems')}
       />
-      {isLoading ? (
-        <LoaderView animate={true} />
+      {!trustCollections ? (
+        <View style={styles.loader}>
+          <LoaderView animate={true} state={LoaderViewState.InProgress} />
+        </View>
       ) : (
         <>
           <View style={styles.top}>
@@ -206,7 +212,7 @@ export const TrustEcosystemsScreen: FC = () => {
       )}
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   bottom: {
@@ -215,6 +221,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
+  },
+  loader: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   screen: {
     flex: 1,

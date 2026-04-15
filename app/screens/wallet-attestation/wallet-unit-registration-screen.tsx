@@ -43,6 +43,7 @@ const WalletUnitRegistrationScreen = () => {
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
   const hasInternetConnection = availableTransport?.includes(Transport.HTTP);
   const handled = useRef<boolean>(false);
+  const cancelled = useRef<boolean>(false);
 
   const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
   const route = useRoute<RootRouteProp<'WalletUnitRegistration'>>();
@@ -56,10 +57,19 @@ const WalletUnitRegistrationScreen = () => {
   } = useStores();
 
   const closeHandler = useCallback(() => {
+    cancelled.current = true;
     const resetToDashboard = route.params?.resetToDashboard;
     const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
-    if (resetToDashboard === true && featureFlags?.trustEcosystemsEnabled) {
-      rootNavigation.navigate('TrustEcosystems', { resetToDashboard: true });
+    const failed = errorStatuses.includes(status);
+    if (
+      resetToDashboard === true &&
+      featureFlags?.trustEcosystemsEnabled &&
+      !failed
+    ) {
+      resetNavigationAction(rootNavigation, [
+        { name: 'Dashboard', params: { screen: 'Wallet' } },
+        { name: 'TrustEcosystems', params: { resetToDashboard: false } },
+      ]);
       return;
     }
     if (
@@ -114,9 +124,15 @@ const WalletUnitRegistrationScreen = () => {
           }
         }
       }
+      if (cancelled.current) {
+        return;
+      }
       setStatus(LoaderViewState.Success);
       closeHandler();
     } catch (err) {
+      if (cancelled.current) {
+        return;
+      }
       if (
         walletProvider.walletUnitAttestation.required ||
         route.params.attestationRequired
