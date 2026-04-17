@@ -114,14 +114,16 @@ const WalletUnitRegistrationScreen = () => {
         walletStore.walletUnitIdSetup(walletUnit.id);
         setWalletUnitStatus(walletUnit.status);
         if (walletUnit.status === WalletUnitStatus.UNATTESTED) {
-          if (
+          const attestationRequired =
             walletProvider.walletUnitAttestation.required ||
-            route.params.attestationRequired
-          ) {
-            setStatus(LoaderViewState.Error);
-          } else {
-            setStatus(LoaderViewState.Warning);
-          }
+            route.params.attestationRequired;
+          setStatus(
+            attestationRequired
+              ? LoaderViewState.Error
+              : LoaderViewState.Warning,
+          );
+          setError(new Error(translate('walletUnitRegistration.unattested')));
+          return;
         }
       }
       if (cancelled.current) {
@@ -175,6 +177,9 @@ const WalletUnitRegistrationScreen = () => {
         return translate('walletUnitRegistration.updated');
       }
     }
+    if (walletUnitStatus === WalletUnitStatus.UNATTESTED) {
+      return translate('walletUnitRegistration.unattested');
+    }
     if (!error) {
       if (route.params.operation === 'refresh') {
         return translate('walletUnitRegistration.noInternet.refresh');
@@ -183,7 +188,13 @@ const WalletUnitRegistrationScreen = () => {
       }
     }
     return translateError(error, translate('walletUnitRegistration.error'));
-  }, [error, registeredNewWallet, status, route.params.operation]);
+  }, [
+    error,
+    registeredNewWallet,
+    status,
+    route.params.operation,
+    walletUnitStatus,
+  ]);
 
   const retryButton = useMemo(
     () => ({

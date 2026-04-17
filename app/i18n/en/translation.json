@@ -389,6 +389,7 @@
   "walletUnitRegistration.noInternet.refresh": "No internet connection.",
   "walletUnitRegistration.noInternet.register": "No internet connection. Initialization only partially complete.",
   "walletUnitRegistration.ready": "Wallet ready",
+  "walletUnitRegistration.unattested": "Wallet attestation requires hardware-backed keys, which this device doesn't support.",
   "walletUnitRegistration.updated": "Wallet registration updated",
   "walletUnitRegistrationError.expired": "Wallet registration expired. Please try to update or delete your wallet.",
   "walletUnitRegistrationError.revoked": "Wallet registration revoked."
