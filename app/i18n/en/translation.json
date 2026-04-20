@@ -203,6 +203,7 @@
   "historyAction.UPDATED": "updated",
   "historyAction.WITHDRAWN": "withdrawn",
   "historyAction.WRP_AC_RECEIVED": "Access certificate received",
+  "historyAction.WRP_NR_RECEIVED": "National registry certificate received",
   "historyAction.WRP_RC_RECEIVED": "Registration certificate received",
   "historyEntityType.BACKUP": "Backup",
   "historyEntityType.CERTIFICATE": "Certificate",
