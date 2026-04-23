@@ -28,7 +28,8 @@ variables:
   PNPM_CACHE_FOLDER: "~/.pnpm-store"
   CI_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+/
   GITHUB_TAG_PATTERN: /^v[0-9]+\.[0-9]+\.[0-9]+/
-
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
 
 workflow:
   rules:

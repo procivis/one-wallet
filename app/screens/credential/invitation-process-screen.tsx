@@ -53,7 +53,10 @@ import { useStores } from '../../models';
 import { CredentialManagementNavigationProp } from '../../navigators/credential-management/credential-management-routes';
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { isInvalidInvitationUrlError } from '../../utils/error';
+import {
+  isInvalidInvitationUrlError,
+  isUntrustedRelyingPartyError,
+} from '../../utils/error';
 
 const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
   [BluetoothState.Unauthorized]:
@@ -298,7 +301,13 @@ const InvitationProcessScreen: FunctionComponent = () => {
       })
       .catch((err: unknown) => {
         setState(LoaderViewState.Warning);
-        if (
+        if (!err) {
+          return;
+        }
+        if (isUntrustedRelyingPartyError(err)) {
+          setError(err);
+          setState(LoaderViewState.Error);
+        } else if (
           err instanceof OneError &&
           err.cause?.includes('BLE adapter not enabled')
         ) {
@@ -306,7 +315,6 @@ const InvitationProcessScreen: FunctionComponent = () => {
         } else {
           setError(err);
           if (
-            err &&
             isInvalidInvitationUrlError(err) &&
             !isValidHttpUrl(invitationUrl)
           ) {
@@ -462,6 +470,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   const label = useMemo(() => {
+    if (error && isUntrustedRelyingPartyError(error)) {
+      return translate('info.invitation.process.untrustedRelyingParty.title');
+    }
     if (
       canHandleInvitation &&
       (!error || !isInvalidInvitationUrlError(error))

@@ -9,3 +9,13 @@ export const isInvalidInvitationUrlError = (error: unknown) => {
 
   return false;
 };
+
+export const isUntrustedRelyingPartyError = (error: unknown) => {
+  if (error && error instanceof OneError) {
+    if (['BR_0410'].includes(error.code)) {
+      return true;
+    }
+  }
+
+  return false;
+};

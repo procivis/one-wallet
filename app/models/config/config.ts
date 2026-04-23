@@ -13,6 +13,8 @@ export interface FeatureFlags {
   httpTransportEnabled: boolean;
   /** ISO mDL flows enabled */
   isoMdl: boolean;
+  /** legacy Trust Management enabled */
+  legacyTrustManagementEnabled: boolean;
   /** language selection enabled in settings */
   localization: boolean;
   /** MQTT transport enabled */
