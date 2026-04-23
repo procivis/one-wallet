@@ -2,10 +2,12 @@ import {
   ActivityIndicator,
   EntityDetails,
   ScrollViewScreen,
+  TrustInfo,
   useBeforeRemove,
   useCoreConfig,
   useProofDetail,
   useProofReject,
+  useProofRequestTrustInformation,
   useTrustEntity,
 } from '@procivis/one-react-native-components';
 import { TrustEntityRole } from '@procivis/react-native-one-core';
@@ -33,10 +35,12 @@ import { ProofPresentationProps } from '../../components/proof-request/proof-pre
 import ProofPresentationV1 from '../../components/proof-request/proof-presentation-v1';
 import ProofPresentationV2 from '../../components/proof-request/proof-presentation-v2';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
+import { config as appConfig } from '../../config';
 import { translate } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
+import { trustInfoLabels } from '../../utils/trust-info';
 
 const ProofRequestScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
@@ -48,7 +52,14 @@ const ProofRequestScreen: FunctionComponent = () => {
     request: { interactionId, proofId },
   } = route.params;
   const { data: proof } = useProofDetail(proofId);
-  const { data: trustEntity } = useTrustEntity(proof?.verifier?.id);
+  const { data: trustInformation } = useProofRequestTrustInformation(
+    appConfig.featureFlags.legacyTrustManagementEnabled ? undefined : proofId,
+  );
+  const { data: trustEntity } = useTrustEntity(
+    appConfig.featureFlags.legacyTrustManagementEnabled
+      ? proof?.verifier?.id
+      : undefined,
+  );
 
   // If this is true, we should not attempt to reject in useBeforeRemove
   const proofAccepted = useRef<boolean>(false);
@@ -78,6 +89,16 @@ const ProofRequestScreen: FunctionComponent = () => {
   const onPresentationDefinitionLoaded = useCallback(() => {
     setPresentationDefinitionLoaded(true);
   }, []);
+
+  const trustDetailsPressHandler = useCallback(() => {
+    console.log('trust info pressed', trustInformation);
+    if (!trustInformation) {
+      return;
+    }
+    rootNavigation.navigate('TrustInfo', {
+      trustInformation,
+    });
+  }, [rootNavigation, trustInformation]);
 
   const infoPressHandler = useCallback(() => {
     rootNavigation.navigate('NerdMode', {
@@ -128,13 +149,24 @@ const ProofRequestScreen: FunctionComponent = () => {
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        <EntityDetails
-          identifier={proof?.verifier}
-          labels={trustEntityDetailsLabels(TrustEntityRole.VERIFIER)}
-          role={TrustEntityRole.VERIFIER}
-          style={styles.verifier}
-          testID="ProofRequestSharingScreen.entityCluster"
-        />
+        {appConfig.featureFlags.legacyTrustManagementEnabled && (
+          <EntityDetails
+            identifier={proof?.verifier}
+            labels={trustEntityDetailsLabels(TrustEntityRole.VERIFIER)}
+            role={TrustEntityRole.VERIFIER}
+            style={styles.verifier}
+            testID="ProofRequestSharingScreen.entityCluster"
+          />
+        )}
+        {!appConfig.featureFlags.legacyTrustManagementEnabled && (
+          <TrustInfo
+            labels={trustInfoLabels()}
+            onPress={trustDetailsPressHandler}
+            style={styles.verifier}
+            testID="ProofRequestSharingScreen.trustInfo"
+            trustInformation={trustInformation?.eudiEcosystem}
+          />
+        )}
         <>
           {ProofPresentation && (
             <ProofPresentation

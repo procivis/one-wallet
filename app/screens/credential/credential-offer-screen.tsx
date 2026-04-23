@@ -8,6 +8,7 @@ import {
   detailsCardFromCredential,
   EntityDetails,
   ScrollViewScreen,
+  TrustInfo,
   useAppColorScheme,
   useBeforeRemove,
   useBlockOSBackNavigation,
@@ -17,6 +18,7 @@ import {
   useCredentialDetail,
   useCredentialReject,
   useCredentialSchemaDetail,
+  useCredentialTrustInformation,
   useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
@@ -46,6 +48,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
+import { config as appConfig } from '../../config';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
 import {
@@ -55,6 +58,7 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
+import { trustInfoLabels } from '../../utils/trust-info';
 
 const {
   addEventListener: addRSEEventListener,
@@ -91,7 +95,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: credentialSchema } = useCredentialSchemaDetail(
     credential?.schema.id,
   );
-  const { data: trustEntity } = useTrustEntity(credential?.issuer?.id);
+  const { data: trustInformation } = useCredentialTrustInformation(
+    appConfig.featureFlags.legacyTrustManagementEnabled
+      ? undefined
+      : credentialId,
+  );
+  const { data: trustEntity } = useTrustEntity(
+    appConfig.featureFlags.legacyTrustManagementEnabled
+      ? credential?.issuer?.id
+      : undefined,
+  );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
@@ -146,6 +159,15 @@ const CredentialOfferScreen: FunctionComponent = () => {
   useEffect(() => {
     handleCredentialAccept();
   }, [credential, handleCredentialAccept, navigation]);
+
+  const trustDetailsPressHandler = useCallback(() => {
+    if (!trustInformation) {
+      return;
+    }
+    rootNavigation.navigate('TrustInfo', {
+      trustInformation,
+    });
+  }, [rootNavigation, trustInformation]);
 
   const infoPressHandler = useCallback(() => {
     if (!credentialId) {
@@ -268,13 +290,30 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
-          <EntityDetails
-            identifier={credential?.issuer}
-            labels={trustEntityDetailsLabels(TrustEntityRole.ISSUER)}
-            role={TrustEntityRole.ISSUER}
-            style={[styles.issuer, { borderBottomColor: colorScheme.grayDark }]}
-            testID={concatTestID(testID, 'entityCluster')}
-          />
+          {appConfig.featureFlags.legacyTrustManagementEnabled && (
+            <EntityDetails
+              identifier={credential?.issuer}
+              labels={trustEntityDetailsLabels(TrustEntityRole.ISSUER)}
+              role={TrustEntityRole.ISSUER}
+              style={[
+                styles.issuer,
+                { borderBottomColor: colorScheme.grayDark },
+              ]}
+              testID={concatTestID(testID, 'entityCluster')}
+            />
+          )}
+          {!appConfig.featureFlags.legacyTrustManagementEnabled && (
+            <TrustInfo
+              labels={trustInfoLabels()}
+              onPress={trustDetailsPressHandler}
+              style={[
+                styles.issuer,
+                { borderBottomColor: colorScheme.grayDark },
+              ]}
+              testID={concatTestID(testID, 'trustInfo')}
+              trustInformation={trustInformation?.eudiEcosystem}
+            />
+          )}
           <View
             style={styles.credentialWrapper}
             testID={`HolderCredentialID.value.${credential.id}`}

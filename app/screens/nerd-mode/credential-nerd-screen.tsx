@@ -12,23 +12,27 @@ import {
   Typography,
   useAppColorScheme,
   useCredentialDetail,
+  useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
 import {
   CredentialDetail,
   CredentialState,
   TrustEntityRole,
+  TrustInformationDetail,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { FunctionComponent, ReactElement, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { config as appConfig } from '../../config';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { trustInfoLabels } from '../../utils/trust-info';
 import { attributesLabels, entityLabels } from './utils';
 
 const getCredentialValidityValue = (
@@ -79,6 +83,23 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
+  const { data: trustInformation } = useCredentialTrustInformation(
+    appConfig.featureFlags.legacyTrustManagementEnabled
+      ? undefined
+      : credentialId,
+  );
+
+  const trustDetailsPressHandler = useCallback(
+    (trustInformation: TrustInformationDetail) => {
+      if (!trustInformation) {
+        return;
+      }
+      nav.navigate('TrustInfo', {
+        trustInformation,
+      });
+    },
+    [nav],
+  );
 
   if (!credentialDetail) {
     return <ActivityIndicator animate={isFocused} />;
@@ -158,11 +179,16 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       entityCluster={{
         entityLabels: entityLabels,
         identifier: credentialDetail.issuer!,
+        legacyTrustManagementEnabled:
+          appConfig.featureFlags.legacyTrustManagementEnabled,
         role: TrustEntityRole.ISSUER,
+        trustInfoLabels: trustInfoLabels(),
+        trustInformation,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
+      onOpenTrustInfoDetails={trustDetailsPressHandler}
       sections={[
         {
           data: nerdModeFields,

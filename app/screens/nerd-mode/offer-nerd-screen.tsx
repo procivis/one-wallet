@@ -3,18 +3,24 @@ import {
   NerdModeItemProps,
   NerdModeScreen,
   useCredentialDetail,
+  useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRole } from '@procivis/react-native-one-core';
+import {
+  TrustEntityRole,
+  TrustInformationDetail,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 
+import { config as appConfig } from '../../config';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
+import { trustInfoLabels } from '../../utils/trust-info';
 import { attributesLabels, entityLabels } from './utils';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
@@ -24,6 +30,23 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const copyToClipboard = useCopyToClipboard();
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
+  const { data: trustInformation } = useCredentialTrustInformation(
+    appConfig.featureFlags.legacyTrustManagementEnabled
+      ? undefined
+      : credentialId,
+  );
+
+  const trustDetailsPressHandler = useCallback(
+    (trustInformation: TrustInformationDetail) => {
+      if (!trustInformation) {
+        return;
+      }
+      nav.navigate('TrustInfo', {
+        trustInformation,
+      });
+    },
+    [nav],
+  );
 
   if (!credentialDetail) {
     return <ActivityIndicator animate={isFocused} />;
@@ -49,16 +72,22 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     },
   ];
 
+  console.log('trustInformation', trustInformation);
   return (
     <NerdModeScreen
       entityCluster={{
         entityLabels,
         identifier: credentialDetail.issuer,
+        legacyTrustManagementEnabled:
+          appConfig.featureFlags.legacyTrustManagementEnabled,
         role: TrustEntityRole.ISSUER,
+        trustInfoLabels: trustInfoLabels(),
+        trustInformation,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
+      onOpenTrustInfoDetails={trustDetailsPressHandler}
       sections={[
         {
           data: nerdModeFields,
