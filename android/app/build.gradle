@@ -137,39 +137,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-
-    // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            // SW-673: remove network-security config from procivis flavor and debug
-            def processManifest = output.getProcessManifestProvider().get()
-            processManifest.doLast { task ->
-                def outputDir = task.getMultiApkManifestOutputDirectory()
-                File outputDirectory
-                if (outputDir instanceof File) {
-                    outputDirectory = outputDir
-                } else {
-                    outputDirectory = outputDir.get().asFile
-                }
-                File manifestOutFile = file("$outputDirectory${File.separator}AndroidManifest.xml")
-
-                if (manifestOutFile.exists() && manifestOutFile.canRead() && manifestOutFile.canWrite()) {
-                    def buildType = getPluginBuildType(project)
-                    if (project.config.get("CONFIG_NAME") == "procivis" || buildType == "debug") {
-                        def manifestContent = manifestOutFile.getText()
-                        def xml = new XmlParser(false, false).parseText(manifestContent)
-
-                        def app = xml.'application'[0]
-                        app.attributes().remove("android:networkSecurityConfig")
-                        app.attributes()["android:usesCleartextTraffic"] = "true"
-
-                        def serializedContent = XmlUtil.serialize(xml)
-                        manifestOutFile.write(serializedContent)
-                    }
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -182,16 +149,5 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
-    }
-}
-
-def static getPluginBuildType(project) {
-    def runTasks = project.getGradle().startParameter.taskNames
-    if (runTasks.toString().contains("Release")) {
-        return "release"
-    } else if (runTasks.toString().contains("Debug")) {
-        return "debug"
-    } else {
-        return ""
     }
 }

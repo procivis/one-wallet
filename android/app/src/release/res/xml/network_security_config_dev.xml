@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" /> <!-- ONE-8938: Enable trust for user CAs -->
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">c.lencr.org</domain> <!-- Allow CRL download for Let's Encrypt CAs -->
+    </domain-config>
+</network-security-config>
