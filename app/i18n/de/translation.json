@@ -254,7 +254,7 @@
   "info.proofRequest.multipleCredentials.notice": "Es ist mehr als eine Version dieser Anmeldeinformation verfügbar.",
   "info.proofRequest.process.error.rseLocked.title": "Ihr Remote Secure Element ist gesperrt.\nDie Anmeldeinformation kann nicht geteilt werden.",
   "info.proofRequest.revokedCredential.notice": "Ihre Anmeldeinformation(en) wurden von der ausstellenden Behörde widerrufen. Bitte kontaktieren Sie die ausstellende Behörde, um mehr zu erfahren.",
-  "info.proofRequest.selectiveDisclosure.notice": "Diese Anmeldeinformationen erfordern, dass Sie alle Attribute teilen, um zu funktionieren.",
+  "info.proofRequest.selectiveDisclosure": "Müssen alle Attribute offengelegt werden.",
   "info.proofRequest.suspendedCredential.notice": "Ihre Anmeldeinformation(en) wurden von der ausstellenden Behörde ausgesetzt. Bitte kontaktieren Sie die ausstellende Behörde, um mehr zu erfahren.",
   "info.restoreBackup.dashboard.description": "Willkommen zum Wiederherstellungsleitfaden für Ihre digitale Wallet! Wenn Sie Ihre Wallet auf einen früheren Zustand zurücksetzen müssen, führt Sie dieser Leitfaden durch den Prozess der Wiederherstellung aus einem Backup.\n\nBitte befolgen Sie diese Schritte sorgfältig, um eine erfolgreiche Wiederherstellung sicherzustellen. Denken Sie daran, dass das Wiederherstellen aus einem Backup Ihre aktuellen Daten ersetzen kann, was möglicherweise zum Verlust von Anmeldeinformationen oder Änderungen führt, die nach dem Erstellen des Backups vorgenommen wurden.\nGehen Sie mit Vorsicht vor.",
   "info.restoreBackup.import.description": "Bitte wählen Sie Ihre Backup-Datei aus, um fortzufahren.",

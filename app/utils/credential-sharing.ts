@@ -14,9 +14,7 @@ export const shareCredentialCardLabels = (): ShareCredentialCardLabels => {
     multipleCredentials: translate(
       'info.proofRequest.multipleCredentials.detail',
     ),
-    selectiveDisclosureNotice: translate(
-      'info.proofRequest.selectiveDisclosure.notice',
-    ),
+    selectiveDisclosure: translate('info.proofRequest.selectiveDisclosure'),
   };
 };
 

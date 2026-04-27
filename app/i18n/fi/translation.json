@@ -275,7 +275,7 @@
   "info.proofRequest.optionalSet.title": "Ryhmä {{index}} - Valitse yksi vaihtoehto. [valinnainen]",
   "info.proofRequest.process.error.rseLocked.title": "Etävarmennusyksikkösi on lukittu.\nTodistetta ei voi jakaa.",
   "info.proofRequest.revokedCredential.notice": "Myöntäjä on perunut todisteesi. Ota yhteyttä myöntäjään.",
-  "info.proofRequest.selectiveDisclosure.notice": "Tämä todiste vaatii kaikkien attribuuttien jakamisen toimiakseen.",
+  "info.proofRequest.selectiveDisclosure": "Vaaditaan kaikkien ominaisuuksien jakamiseen työssä.",
   "info.proofRequest.set.title": "Ryhmä {{index}} - Valitse yksi vaihtoehto.",
   "info.proofRequest.suspendedCredential.notice": "Myöntäjä on hyllyttänyt todisteesi. Ota yhteyttä myöntäjään.",
   "info.requestProof.nfcProcess.connectivityWarning": "NFC on pois päältä.\nKytke se päälle.",
