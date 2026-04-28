@@ -12,13 +12,13 @@ import {
   getCurrentRoute,
   RootNavigationStateUpdatedEvent,
 } from '../../utils/navigation';
-import { usePinCodeInitialized } from '../pin-code/pin-code';
+import { useIsOnboarded } from '../onboarded';
 
 export const useRuntimeDeepLinkHandling = () => {
   const navigation = useNavigation<RootNavigationProp>();
   const stateListener = useRef<(() => void) | undefined>(undefined);
   const handleInvitationUrl = useInvitationHandling();
-  const pinInitialized = usePinCodeInitialized();
+  const isOnboarded = useIsOnboarded();
 
   const handleRuntimeInvitationLink = useCallback(
     (url: string) => {
@@ -55,7 +55,7 @@ export const useRuntimeDeepLinkHandling = () => {
   );
 
   useCommonRuntimeDeepLinkHandling(
-    Boolean(pinInitialized),
+    Boolean(isOnboarded),
     handleRuntimeInvitationLink,
   );
 };

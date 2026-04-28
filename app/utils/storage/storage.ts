@@ -54,7 +54,7 @@ export async function saveString(key: string, value: string): Promise<boolean> {
  */
 export async function load<Value = any>(key: string): Promise<Value | null> {
   try {
-    const almostThere = await AsyncStorage.getItem(key);
+    const almostThere = await loadString(key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return almostThere && JSON.parse(almostThere);
   } catch {
@@ -69,12 +69,7 @@ export async function load<Value = any>(key: string): Promise<Value | null> {
  * @param value The value to store.
  */
 export async function save(key: string, value: unknown): Promise<boolean> {
-  try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch {
-    return false;
-  }
+  return await saveString(key, JSON.stringify(value));
 }
 
 /**

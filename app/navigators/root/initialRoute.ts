@@ -2,7 +2,7 @@ import { reportException } from '@procivis/one-react-native-components';
 import { useEffect, useMemo } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
-import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
+import { useIsOnboarded } from '../../hooks/onboarded';
 import { RootNavigatorParamList } from './root-routes';
 
 /**
@@ -18,9 +18,9 @@ export const hideSplashScreen = () => {
  * @returns Initial RootNavigation screen routeName or undefined (until initialized)
  */
 export const useInitialRoute = () => {
-  const pinInitialized = usePinCodeInitialized();
+  const isOnboarded = useIsOnboarded();
   const initialRoute: keyof RootNavigatorParamList | undefined = useMemo(() => {
-    switch (pinInitialized) {
+    switch (isOnboarded) {
       case undefined:
         return undefined;
       case false:
@@ -28,7 +28,7 @@ export const useInitialRoute = () => {
       case true:
         return 'Dashboard';
     }
-  }, [pinInitialized]);
+  }, [isOnboarded]);
 
   useEffect(() => {
     if (initialRoute === 'Onboarding') {
