@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { ProcessingView } from '../../components/common/processing-view';
-import { usePinCodeInitialized } from '../../hooks/pin-code/pin-code';
+import { useIsOnboarded } from '../../hooks/onboarded';
 import { translate, translateError } from '../../i18n';
 import { RestoreBackupNavigationProp } from '../../navigators/restore-backup/restore-backup-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -17,7 +17,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 const ProcessingScreen: FC = () => {
   const navigation = useNavigation<RestoreBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp>();
-  const pinInitialized = usePinCodeInitialized();
+  const isOnboarded = useIsOnboarded();
   const finalizeImport = useBackupFinalizeImportProcedure({
     generateHwKey: false,
     generateSwKey: false,
@@ -53,12 +53,12 @@ const ProcessingScreen: FC = () => {
     dismissed.current = true;
     if (state === LoaderViewState.Warning) {
       navigation.popTo('RestoreBackupDashboard');
-    } else if (pinInitialized) {
+    } else if (isOnboarded) {
       rootNavigation.popTo('Dashboard', { screen: 'Wallet' });
     } else {
       rootNavigation.replace('Onboarding', { screen: 'UserAgreement' });
     }
-  }, [pinInitialized, navigation, rootNavigation, state]);
+  }, [isOnboarded, navigation, rootNavigation, state]);
   useBeforeRemove(closeButtonHandler);
 
   return (

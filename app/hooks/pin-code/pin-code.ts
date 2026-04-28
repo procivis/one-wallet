@@ -6,36 +6,40 @@ import { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
 import { Sha256 } from '../../utils/sha256';
-import { loadString, remove, saveString } from '../../utils/storage';
+import {
+  loadString as loadStringFromAsyncStorage,
+  remove as removeFromAsyncStorage,
+} from '../../utils/storage';
+import {
+  loadString,
+  remove,
+  saveString,
+} from '../../utils/storage/secureStorage';
 
 export const PIN_CODE_LENGTH = 6;
 const STORAGE_KEY = 'pin-code-sha256';
 
+async function migratePinCodeToSafeStorage(): Promise<string | null> {
+  const oldPinCode = await loadStringFromAsyncStorage(STORAGE_KEY);
+  if (oldPinCode) {
+    saveString(STORAGE_KEY, oldPinCode);
+    await removeFromAsyncStorage(STORAGE_KEY);
+  }
+  return oldPinCode;
+}
+
 async function loadPinCode(): Promise<string | null> {
-  return loadString(STORAGE_KEY);
+  return loadString(STORAGE_KEY).then(async (pinCode) => {
+    if (pinCode === null) {
+      pinCode = await migratePinCodeToSafeStorage();
+    }
+    return pinCode;
+  });
 }
 
 // emitted when pin code initialized
 const PIN_CODE_INITIALIZATION_EVENT = 'pin-code-initialization';
 let globalPinInitialized: boolean | undefined;
-export function usePinCodeInitialized(): boolean | undefined {
-  const [initialized, setInitialized] = useState<boolean | undefined>(
-    globalPinInitialized,
-  );
-  useEffect(() => {
-    if (globalPinInitialized === undefined) {
-      loadPinCode().then((loaded) => {
-        setInitialized(Boolean(loaded));
-        globalPinInitialized = Boolean(loaded);
-      });
-    }
-  }, []);
-
-  useOnPinCodeInitialized(setInitialized);
-
-  return initialized;
-}
-
 export function useOnPinCodeInitialized(
   callback: (initialized: boolean) => void,
 ) {

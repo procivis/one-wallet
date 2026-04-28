@@ -1,16 +1,17 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
+import * as Keychain from 'react-native-keychain';
 
 /**
- * Loads a string from storage.
+ * Loads a string from secure storage.
  *
  * @param key The key to fetch.
  */
 export async function loadString(key: string): Promise<string | null> {
   try {
-    return await AsyncStorage.getItem(key);
+    return await Keychain.getGenericPassword({ service: key }).then(
+      (credentials) => (credentials === false ? null : credentials.password),
+    );
   } catch {
-    // not sure why this would fail... even reading the RN docs I'm unclear
     return null;
   }
 }
@@ -33,14 +34,14 @@ export function useLoadString(key: string) {
 }
 
 /**
- * Saves a string to storage.
+ * Saves a string to secure storage.
  *
  * @param key The key to fetch.
  * @param value The value to store.
  */
 export async function saveString(key: string, value: string): Promise<boolean> {
   try {
-    await AsyncStorage.setItem(key, value);
+    await Keychain.setGenericPassword('', value, { service: key });
     return true;
   } catch {
     return false;
@@ -48,7 +49,7 @@ export async function saveString(key: string, value: string): Promise<boolean> {
 }
 
 /**
- * Loads something from storage and runs it thru JSON.parse.
+ * Loads something from secure storage and runs it thru JSON.parse.
  *
  * @param key The key to fetch.
  */
@@ -63,7 +64,7 @@ export async function load<Value = any>(key: string): Promise<Value | null> {
 }
 
 /**
- * Saves an object to storage.
+ * Saves an object to secure storage.
  *
  * @param key The key to fetch.
  * @param value The value to store.
@@ -73,13 +74,13 @@ export async function save(key: string, value: unknown): Promise<boolean> {
 }
 
 /**
- * Removes something from storage.
+ * Removes something from secure storage.
  *
  * @param key The key to kill.
  */
 export async function remove(key: string): Promise<void> {
   try {
-    await AsyncStorage.removeItem(key);
+    await Keychain.resetGenericPassword({ service: key });
     // eslint-disable-next-line no-empty
   } catch {}
 }
@@ -89,7 +90,8 @@ export async function remove(key: string): Promise<void> {
  */
 export async function clear(): Promise<void> {
   try {
-    await AsyncStorage.clear();
+    const services = await Keychain.getAllGenericPasswordServices();
+    await Promise.all(services.map((service) => remove(service)));
     // eslint-disable-next-line no-empty
   } catch {}
 }
