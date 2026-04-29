@@ -37,6 +37,7 @@ const getStatus = (
   if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
     return {
       backgroundColor: 'rgba(217, 13, 13, 0.05)',
+      description: undefined,
       icon: StatusErrorIcon,
       text: translate('common.revoked'),
       textColor: colorScheme.error,
@@ -46,14 +47,26 @@ const getStatus = (
   if (walletUnitDetail?.status === WalletUnitStatus.ACTIVE) {
     return {
       backgroundColor: colorScheme.background,
+      description: undefined,
       icon: StatusSuccessIcon,
       text: translate('common.accepted'),
       textColor: colorScheme.text,
     };
   }
 
+  if (walletUnitDetail?.status === WalletUnitStatus.UNATTESTED) {
+    return {
+      backgroundColor: colorScheme.background,
+      description: translate('walletUnitRegistration.unattested'),
+      icon: StatusWarningIcon,
+      text: translate('common.unattested'),
+      textColor: colorScheme.text,
+    };
+  }
+
   return {
     backgroundColor: colorScheme.background,
+    description: undefined,
     icon: StatusWarningIcon,
     text: translate('common.none'),
     textColor: colorScheme.text,
@@ -72,7 +85,8 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   );
 
   const isCheckButtonEnabled =
-    walletUnitDetail?.status === undefined || !isLoading;
+    walletUnitDetail?.status !== WalletUnitStatus.UNATTESTED &&
+    (walletUnitDetail?.status === undefined || !isLoading);
 
   const handleCheck = useCallback(() => {
     rootNavigation.navigate('WalletUnitRegistration', {
@@ -95,7 +109,7 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
             testID={concatTestID(testID, 'back')}
           />
         ),
-        title: translate('common.walletUnitRegistration'),
+        title: translate('common.walletUnitAttestation'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID={testID}
@@ -109,7 +123,41 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
             <LoaderView animate={true} state={LoaderViewState.InProgress} />
           </View>
         )}
-        {!isLoading && (
+        {!isLoading && status.description && (
+          <View
+            style={[
+              styles.statusWrapperCentered,
+              { backgroundColor: status.backgroundColor },
+            ]}
+            testID={concatTestID(
+              testID,
+              'id',
+              walletUnitDetail?.providerWalletUnitId,
+            )}
+          >
+            <Icon
+              height={64}
+              testID={concatTestID(testID, 'icon', walletUnitDetail?.status)}
+              width={64}
+            />
+            <Typography
+              color={status.textColor}
+              style={styles.statusTextCentered}
+              testID={concatTestID(testID, 'status')}
+            >
+              {status.text}
+            </Typography>
+            <Typography
+              align="center"
+              color={colorScheme.text}
+              preset="s/line-height-small"
+              style={styles.statusDescription}
+            >
+              {status.description}
+            </Typography>
+          </View>
+        )}
+        {!isLoading && !status.description && (
           <View
             style={[
               styles.statusWrapper,
@@ -180,8 +228,16 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     paddingVertical: 12,
   },
+  statusDescription: {
+    opacity: 0.7,
+    paddingBottom: 8,
+    paddingTop: 12,
+  },
   statusText: {
     paddingHorizontal: 6,
+  },
+  statusTextCentered: {
+    marginTop: 8,
   },
   statusWrapper: {
     alignItems: 'center',
@@ -189,6 +245,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 11,
+  },
+  statusWrapperCentered: {
+    alignItems: 'center',
+    borderRadius: 8,
+    paddingBottom: 12,
+    paddingHorizontal: 12,
+    paddingTop: 20,
   },
 });
 
