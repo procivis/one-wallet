@@ -59,12 +59,13 @@ const WalletUnitRegistrationScreen = () => {
   const closeHandler = useCallback(() => {
     cancelled.current = true;
     const resetToDashboard = route.params?.resetToDashboard;
-    const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
-    const failed = errorStatuses.includes(status);
+    const hasWalletUnit = Boolean(walletUnitId);
+    const isHardError = status === LoaderViewState.Error;
     if (
       resetToDashboard === true &&
       featureFlags?.trustEcosystemsEnabled &&
-      !failed
+      hasWalletUnit &&
+      !isHardError
     ) {
       resetNavigationAction(rootNavigation, [
         { name: 'Dashboard', params: { screen: 'Wallet' } },
@@ -72,6 +73,7 @@ const WalletUnitRegistrationScreen = () => {
       ]);
       return;
     }
+    const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
     if (
       resetToDashboard === true ||
       (resetToDashboard === 'onError' && errorStatuses.includes(status))
@@ -87,6 +89,7 @@ const WalletUnitRegistrationScreen = () => {
     rootNavigation,
     route.params?.resetToDashboard,
     status,
+    walletUnitId,
   ]);
 
   const handleRegisterOrRefresh = useCallback(async () => {
