@@ -16,9 +16,9 @@ import {
 } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback } from 'react';
 
-import { config as appConfig } from '../../config';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { trustInfoLabels } from '../../utils/trust-info';
 import { attributesLabels, entityLabels } from './utils';
@@ -28,12 +28,16 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const nav = useNavigation();
   const route = useRoute<NerdModeRouteProp<'OfferNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
+
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
   const { data: trustInformation } = useCredentialTrustInformation(
-    appConfig.featureFlags.legacyTrustManagementEnabled
-      ? undefined
-      : credentialId,
+    featureFlags?.trustEcosystemsEnabled ? credentialId : undefined,
   );
 
   const trustDetailsPressHandler = useCallback(
@@ -78,8 +82,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
       entityCluster={{
         entityLabels,
         identifier: credentialDetail.issuer,
-        legacyTrustManagementEnabled:
-          appConfig.featureFlags.legacyTrustManagementEnabled,
+        legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
         role: TrustEntityRole.ISSUER,
         trustInfoLabels: trustInfoLabels(),
         trustInformation,

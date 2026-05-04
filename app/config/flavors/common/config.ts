@@ -16,7 +16,6 @@ export const commonConfig: Pick<
     bleEnabled: true,
     httpTransportEnabled: true,
     isoMdl: true,
-    legacyTrustManagementEnabled: true,
     localization: true,
     mqttTransportEnabled: true,
     nfcEnabled: true,

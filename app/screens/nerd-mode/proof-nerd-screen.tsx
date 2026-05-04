@@ -21,9 +21,9 @@ import {
 import moment from 'moment';
 import React, { FunctionComponent, useCallback } from 'react';
 
-import { config as appConfig } from '../../config';
 import { useCopyToClipboard } from '../../hooks/clipboard';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { trustInfoLabels } from '../../utils/trust-info';
@@ -34,17 +34,23 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const nav = useNavigation<RootNavigationProp>();
   const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
+
   const { proofId } = route.params;
   const { data: proofDetail } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    appConfig.featureFlags.legacyTrustManagementEnabled ? undefined : proofId,
+    featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
   );
   const credentialIDs =
     proofDetail?.proofInputs
       .map((input) => input.credential?.id)
       .filter(nonEmptyFilter) ?? [];
   const credentialsTrustInformation = useCredentialsTrustInformation(
-    appConfig.featureFlags.legacyTrustManagementEnabled ? [] : credentialIDs,
+    featureFlags?.trustEcosystemsEnabled ? credentialIDs : [],
   );
 
   const trustDetailsPressHandler = useCallback(
@@ -109,8 +115,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
           attributeKey: 'entityCluster',
           entityLabels: entityLabels,
           identifier: proofInput.credential?.issuer,
-          legacyTrustManagementEnabled:
-            appConfig.featureFlags.legacyTrustManagementEnabled,
+          legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
           role: TrustEntityRole.ISSUER,
           testID: `issuerTrustEntity.${proofInput.credential?.id}`,
           trustInfoLabels: trustInfoLabels(),
@@ -166,8 +171,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
       entityCluster={{
         entityLabels: entityLabels,
         identifier: proofDetail.verifier,
-        legacyTrustManagementEnabled:
-          appConfig.featureFlags.legacyTrustManagementEnabled,
+        legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
         role: TrustEntityRole.VERIFIER,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
         trustInfoLabels: trustInfoLabels(),

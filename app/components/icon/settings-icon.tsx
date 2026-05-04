@@ -113,6 +113,19 @@ export const ScreenCaptureProtectionIcon: FC<SvgProps> = (props) => {
   );
 };
 
+// https://www.figma.com/design/dNr1Ocp0YjQFkz7y8XtwBe/Procivis-One-Wallet-Developments-2026?node-id=4254-3072&t=ydQjH10knGBWTWvd-0
+export const WarningIcon: FC<SvgProps> = (props) => {
+  const colorScheme = useAppColorScheme();
+  return (
+    <Svg fill="none" height={24} viewBox="0 0 24 24" width={24} {...props}>
+      <Path
+        d="M11.5 6c.34 0 .664.082.972.244.307.158.559.4.753.725l5.49 9.138a1.902 1.902 0 01.285.983c0 .352-.082.673-.248.962-.166.289-.4.519-.703.69-.298.172-.653.258-1.065.258H6.016c-.412 0-.77-.086-1.073-.258a1.833 1.833 0 01-.702-.69A1.945 1.945 0 014 17.09c0-.343.095-.671.284-.983L9.775 6.97c.185-.32.434-.562.745-.725.313-.162.64-.244.98-.244zm-.75 10v1.5h1.5V16h-1.5zm0-1h1.5V8h-1.5v7z"
+        fill={colorScheme.black}
+      />
+    </Svg>
+  );
+};
+
 // https://www.figma.com/file/S3WwgTMHuqxAsfu5zElCzq/App-Icon-Library-(Design)?type=design&node-id=41-632&t=ExFCur2RDCznJCXv-4
 export const FaceIDIcon: FC<SvgProps> = (props) => {
   const colorScheme = useAppColorScheme();

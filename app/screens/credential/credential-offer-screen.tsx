@@ -26,6 +26,7 @@ import {
   IssuanceProtocolFeature,
   OneError,
   TrustEntityRole,
+  TrustResolutionResult,
   Ubiqu,
 } from '@procivis/react-native-one-core';
 import {
@@ -48,9 +49,9 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
-import { config as appConfig } from '../../config';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import {
   IssueCredentialNavigationProp,
   IssueCredentialRouteProp,
@@ -84,6 +85,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<IssueCredentialNavigationProp<'CredentialOffer'>>();
   const route = useRoute<IssueCredentialRouteProp<'CredentialOffer'>>();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
   const { invitationResult, txCode } = route.params;
   const { interactionId } = invitationResult;
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
@@ -96,14 +102,13 @@ const CredentialOfferScreen: FunctionComponent = () => {
     credential?.schema.id,
   );
   const { data: trustInformation } = useCredentialTrustInformation(
-    appConfig.featureFlags.legacyTrustManagementEnabled
-      ? undefined
-      : credentialId,
+    featureFlags?.trustEcosystemsEnabled &&
+      credential?.trustInformation?.result === TrustResolutionResult.TRUSTED
+      ? credentialId
+      : undefined,
   );
   const { data: trustEntity } = useTrustEntity(
-    appConfig.featureFlags.legacyTrustManagementEnabled
-      ? credential?.issuer?.id
-      : undefined,
+    featureFlags?.trustEcosystemsEnabled ? undefined : credential?.issuer?.id,
   );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -290,7 +295,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
-          {appConfig.featureFlags.legacyTrustManagementEnabled && (
+          {!featureFlags?.trustEcosystemsEnabled && (
             <EntityDetails
               identifier={credential?.issuer}
               labels={trustEntityDetailsLabels(TrustEntityRole.ISSUER)}
@@ -302,7 +307,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
               testID={concatTestID(testID, 'entityCluster')}
             />
           )}
-          {!appConfig.featureFlags.legacyTrustManagementEnabled && (
+          {featureFlags?.trustEcosystemsEnabled && (
             <TrustInfo
               labels={trustInfoLabels()}
               onPress={trustDetailsPressHandler}

@@ -9,11 +9,18 @@ import {
   SwitchSetting,
   SwitchSettingProps,
   useAppColorScheme,
+  useWalletUnitDetail,
+  useWalletUnitUpdate,
   WalletUnitAttestationIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   SectionListProps,
   StyleProp,
@@ -36,6 +43,7 @@ import {
   ScreenCaptureProtectionIcon,
   TouchIDIcon,
   TrustEcosystemIcon,
+  WarningIcon,
 } from '../../components/icon/settings-icon';
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { config } from '../../config';
@@ -69,6 +77,18 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
   const { showActionSheetWithOptions } = useActionSheet();
+  const { data: holderWalletUnit, isLoading: isLoadingWalletUnit } =
+    useWalletUnitDetail(registeredWalletUnitId);
+  const { mutateAsync: updateHolderWalletUnit } = useWalletUnitUpdate();
+  const [allowUntrustedRelyingParties, setAllowUntrustedRelyingParties] =
+    useState<boolean>(!holderWalletUnit?.trustedRpRequired);
+
+  useEffect(() => {
+    if (!holderWalletUnit) {
+      return;
+    }
+    setAllowUntrustedRelyingParties(!holderWalletUnit.trustedRpRequired);
+  }, [holderWalletUnit]);
 
   const handleChangeLanguage = useCallback(() => {
     // all locales, currently selected as first
@@ -124,6 +144,20 @@ const DashboardScreen: FunctionComponent = observer(() => {
       !userSettings.screenCaptureProtection,
     );
   }, [userSettings]);
+
+  const handleAllowUntrustedRelyingPartiesChange = useCallback(() => {
+    if (!registeredWalletUnitId) {
+      return;
+    }
+    const trustedRpRequired = !holderWalletUnit?.trustedRpRequired;
+    updateHolderWalletUnit({
+      update: {
+        trustedRpRequired,
+      },
+      walletUnitId: registeredWalletUnitId,
+    });
+    setAllowUntrustedRelyingParties(!trustedRpRequired);
+  }, [holderWalletUnit, registeredWalletUnitId, updateHolderWalletUnit]);
 
   const handleTrustEcosystems = useCallback(() => {
     navigation.navigate('TrustEcosystems');
@@ -283,6 +317,20 @@ const DashboardScreen: FunctionComponent = observer(() => {
             value: userSettings.screenCaptureProtection,
           },
         },
+        featureFlags?.trustEcosystemsEnabled && registeredWalletUnitId
+          ? {
+              switchSetting: {
+                disabled: isLoadingWalletUnit,
+                icon: WarningIcon,
+                onChange: handleAllowUntrustedRelyingPartiesChange,
+                testID: 'SettingsScreen.allowUntrustedRelyingParties',
+                title: translate(
+                  'info.settings.security.allowUntrustedRelyingParties',
+                ),
+                value: allowUntrustedRelyingParties,
+              },
+            }
+          : null,
         walletUnitAttestation.enabled &&
         registeredWalletUnitId &&
         featureFlags?.trustEcosystemsEnabled
