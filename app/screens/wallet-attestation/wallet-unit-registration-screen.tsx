@@ -111,8 +111,11 @@ const WalletUnitRegistrationScreen = () => {
         }
 
         const walletUnit = await registerWalletUnit({
-          type: config.walletProvider.type,
-          url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
+          trustedRpRequired: true,
+          walletProvider: {
+            type: config.walletProvider.type,
+            url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
+          },
         });
         walletStore.walletUnitIdSetup(walletUnit.id);
         setWalletUnitStatus(walletUnit.status);

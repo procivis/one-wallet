@@ -35,8 +35,8 @@ import { ProofPresentationProps } from '../../components/proof-request/proof-pre
 import ProofPresentationV1 from '../../components/proof-request/proof-presentation-v1';
 import ProofPresentationV2 from '../../components/proof-request/proof-presentation-v2';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
-import { config as appConfig } from '../../config';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
 import { trustEntityDetailsLabels } from '../../utils/trust-entity';
@@ -45,6 +45,11 @@ import { trustInfoLabels } from '../../utils/trust-info';
 const ProofRequestScreen: FunctionComponent = () => {
   const rootNavigation = useNavigation<RootNavigationProp>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
@@ -53,12 +58,10 @@ const ProofRequestScreen: FunctionComponent = () => {
   } = route.params;
   const { data: proof } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    appConfig.featureFlags.legacyTrustManagementEnabled ? undefined : proofId,
+    featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
   );
   const { data: trustEntity } = useTrustEntity(
-    appConfig.featureFlags.legacyTrustManagementEnabled
-      ? proof?.verifier?.id
-      : undefined,
+    featureFlags?.trustEcosystemsEnabled ? undefined : proof?.verifier?.id,
   );
 
   // If this is true, we should not attempt to reject in useBeforeRemove
@@ -149,7 +152,7 @@ const ProofRequestScreen: FunctionComponent = () => {
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        {appConfig.featureFlags.legacyTrustManagementEnabled && (
+        {!featureFlags?.trustEcosystemsEnabled && (
           <EntityDetails
             identifier={proof?.verifier}
             labels={trustEntityDetailsLabels(TrustEntityRole.VERIFIER)}
@@ -158,7 +161,7 @@ const ProofRequestScreen: FunctionComponent = () => {
             testID="ProofRequestSharingScreen.entityCluster"
           />
         )}
-        {!appConfig.featureFlags.legacyTrustManagementEnabled && (
+        {featureFlags?.trustEcosystemsEnabled && (
           <TrustInfo
             labels={trustInfoLabels()}
             onPress={trustDetailsPressHandler}
