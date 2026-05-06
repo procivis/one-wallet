@@ -1,5 +1,8 @@
+import { reportException } from '@procivis/one-react-native-components';
 import { useCallback, useEffect, useState } from 'react';
 import * as Keychain from 'react-native-keychain';
+
+const USER_NAME = 'username';
 
 /**
  * Loads a string from secure storage.
@@ -11,7 +14,8 @@ export async function loadString(key: string): Promise<string | null> {
     return await Keychain.getGenericPassword({ service: key }).then(
       (credentials) => (credentials === false ? null : credentials.password),
     );
-  } catch {
+  } catch (e) {
+    reportException(e, 'Failed to load secure string');
     return null;
   }
 }
@@ -41,9 +45,10 @@ export function useLoadString(key: string) {
  */
 export async function saveString(key: string, value: string): Promise<boolean> {
   try {
-    await Keychain.setGenericPassword('', value, { service: key });
+    await Keychain.setGenericPassword(USER_NAME, value, { service: key });
     return true;
-  } catch {
+  } catch (e) {
+    reportException(e, 'Failed to save secure string');
     return false;
   }
 }
