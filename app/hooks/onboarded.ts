@@ -12,14 +12,14 @@ export const useIsOnboarded = () => {
       return;
     }
     core
-      .listIdentifiers({
-        organisationId,
-        page: 0,
-        pageSize: 2,
+      .getOrganisation(organisationId)
+      .then(() => {
+        setOnboarded(true);
+        globalOnboarded = true;
       })
-      .then((identifiers) => {
-        setOnboarded(identifiers.totalItems > 0);
-        globalOnboarded = identifiers.totalItems > 0;
+      .catch(() => {
+        setOnboarded(false);
+        globalOnboarded = false;
       });
   }, [core, organisationId]);
 
