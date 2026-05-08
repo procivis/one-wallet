@@ -82,14 +82,6 @@ interface NavigationProps
 const coreConfig = {
   credentialIssuer: getCredentialIssuerConfig(assets?.credentialIssuers),
   issuanceProtocol: {
-    OPENID4VCI_DRAFT13: {
-      params: {
-        private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
-        },
-      },
-    },
     OPENID4VCI_FINAL1: {
       params: {
         private: {
