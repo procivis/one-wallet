@@ -111,7 +111,7 @@ const WalletUnitRegistrationScreen = () => {
         }
 
         const walletUnit = await registerWalletUnit({
-          trustedRpRequired: true,
+          trustedRpRequired: false,
           walletProvider: {
             type: config.walletProvider.type,
             url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
