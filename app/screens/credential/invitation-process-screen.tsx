@@ -54,8 +54,9 @@ import { CredentialManagementNavigationProp } from '../../navigators/credential-
 import { InvitationRouteProp } from '../../navigators/invitation/invitation-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
+  isDisallowedByTrustEcosystemError,
   isInvalidInvitationUrlError,
-  isUntrustedRelyingPartyError,
+  isUntrustedPartyError,
 } from '../../utils/error';
 
 const bleErrorKeys: Record<BluetoothError, TxKeyPath> = {
@@ -304,7 +305,10 @@ const InvitationProcessScreen: FunctionComponent = () => {
         if (!err) {
           return;
         }
-        if (isUntrustedRelyingPartyError(err)) {
+        if (
+          isUntrustedPartyError(err) ||
+          isDisallowedByTrustEcosystemError(err)
+        ) {
           setError(err);
           setState(LoaderViewState.Error);
         } else if (
@@ -470,8 +474,13 @@ const InvitationProcessScreen: FunctionComponent = () => {
   ]);
 
   const label = useMemo(() => {
-    if (error && isUntrustedRelyingPartyError(error)) {
-      return translate('info.invitation.process.untrustedRelyingParty.title');
+    if (error && isUntrustedPartyError(error)) {
+      return translate('info.invitation.process.untrustedParty.title');
+    }
+    if (error && isDisallowedByTrustEcosystemError(error)) {
+      return translate(
+        'info.invitation.process.disallowedByTrustEcosystem.title',
+      );
     }
     if (
       canHandleInvitation &&
