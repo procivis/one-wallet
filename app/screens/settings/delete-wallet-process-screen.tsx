@@ -15,7 +15,6 @@ import React, {
 import { useQueryClient } from 'react-query';
 
 import { ProcessingView } from '../../components/common/processing-view';
-import { resetOnboarding } from '../../hooks/onboarded';
 import { removePin } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
@@ -48,7 +47,6 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
 
     try {
       await removePin();
-      resetOnboarding();
     } catch (e) {
       reportException(e, 'Failed to remove PIN');
       setState(LoaderViewState.Warning);
