@@ -88,17 +88,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!config.trustAnchorPublisherReference) {
+    if (!config.walletProvider?.url) {
       return;
     }
     configureNetInfo({
-      reachabilityHeaders: {
-        accept: 'application/json',
-      },
-      reachabilityTest: async (response) => {
-        return Promise.resolve(response.status >= 200 && response.status < 300);
-      },
-      reachabilityUrl: config.trustAnchorPublisherReference,
+      reachabilityTest: () => Promise.resolve(true),
+      reachabilityUrl: config.walletProvider.url,
     });
   }, []);
 
