@@ -5,10 +5,7 @@ import {
   useCredentialDetail,
   useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
-import {
-  TrustEntityRole,
-  TrustInformationDetail,
-} from '@procivis/react-native-one-core';
+import { TrustInformationDetail } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -21,7 +18,7 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { trustInfoLabels } from '../../utils/trust-info';
-import { attributesLabels, entityLabels } from './utils';
+import { attributesLabels } from './utils';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -80,10 +77,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        entityLabels,
         identifier: credentialDetail.issuer,
-        legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
-        role: TrustEntityRole.ISSUER,
         trustInfoLabels: trustInfoLabels(),
         trustInformation,
       }}

@@ -9,10 +9,7 @@ import {
   useProofDetail,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
-import {
-  TrustEntityRole,
-  TrustInformationDetail,
-} from '@procivis/react-native-one-core';
+import { TrustInformationDetail } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -27,7 +24,7 @@ import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { trustInfoLabels } from '../../utils/trust-info';
-import { attributesLabels, entityLabels } from './utils';
+import { attributesLabels } from './utils';
 
 const ProofDetailNerdView: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -99,11 +96,8 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const credentialsFields = proofDetail.proofInputs
     .map((proofInput) => {
       const credentialId = proofInput.credential?.id;
-      const trustInformationIndex = credentialId
-        ? credentialIDs.indexOf(credentialId)
-        : undefined;
-      const trustInformation = trustInformationIndex
-        ? credentialsTrustInformation[trustInformationIndex].data
+      const trustInformation = credentialId
+        ? credentialsTrustInformation[credentialIDs.indexOf(credentialId)]?.data
         : undefined;
       return [
         {
@@ -113,10 +107,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         },
         {
           attributeKey: 'entityCluster',
-          entityLabels: entityLabels,
           identifier: proofInput.credential?.issuer,
-          legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
-          role: TrustEntityRole.ISSUER,
           testID: `issuerTrustEntity.${proofInput.credential?.id}`,
           trustInfoLabels: trustInfoLabels(),
           trustInformation,
@@ -169,10 +160,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        entityLabels: entityLabels,
         identifier: proofDetail.verifier,
-        legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
-        role: TrustEntityRole.VERIFIER,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
         trustInfoLabels: trustInfoLabels(),
         trustInformation,
