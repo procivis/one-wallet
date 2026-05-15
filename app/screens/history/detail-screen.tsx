@@ -5,19 +5,20 @@ import {
   useCredentialDetail,
   useCredentials,
   useProofDetail,
+  useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
 import {
   Claim,
   HistoryAction,
   HistoryEntityType,
   ProofClaim,
-  TrustEntityRole,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
 
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import {
   HistoryNavigationProp,
   HistoryRouteProp,
@@ -31,7 +32,7 @@ import {
   historyListItemLabels,
   historyProofSchemaHeader,
 } from '../../utils/history';
-import { trustEntityDetailsLabels } from '../../utils/trust-entity';
+import { trustInfoLabels } from '../../utils/trust-info';
 
 const claimFromProofInputClaim = (
   input: ProofClaim,
@@ -82,6 +83,11 @@ export const HistoryDetailScreen: FC = () => {
   const route = useRoute<HistoryRouteProp<'Detail'>>();
   const onImagePreview = useCredentialImagePreview();
   const { entry } = route.params;
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
 
   const { data: config } = useCoreConfig();
   const { data: issuedCredential } = useCredentialDetail(
@@ -91,6 +97,12 @@ export const HistoryDetailScreen: FC = () => {
   );
   const { data: proof } = useProofDetail(
     entry.entityType === HistoryEntityType.PROOF ? entry.entityId : undefined,
+  );
+  const { data: proofTrustInformation } = useProofRequestTrustInformation(
+    featureFlags?.trustEcosystemsEnabled &&
+      entry.entityType === HistoryEntityType.PROOF
+      ? entry.entityId
+      : undefined,
   );
   const { data: credentials } = useCredentials({
     ids:
@@ -144,42 +156,43 @@ export const HistoryDetailScreen: FC = () => {
   }, [entry, issuedCredential, proof, rootNavigation]);
 
   const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
-    if (
-      entry.entityType === HistoryEntityType.CREDENTIAL &&
-      issuedCredential?.issuer
-    ) {
-      return {
-        entity: {
-          identifier: issuedCredential?.issuer ?? entry.target,
-          labels: trustEntityDetailsLabels(TrustEntityRole.ISSUER),
-          role: TrustEntityRole.ISSUER,
-          testID: 'EntityDetail',
-        },
-      };
-    } else if (
-      entry.entityType === HistoryEntityType.PROOF &&
-      proof?.verifier
-    ) {
-      return {
-        entity: {
-          identifier: proof?.verifier ?? entry.target,
-          labels: trustEntityDetailsLabels(TrustEntityRole.VERIFIER),
-          role: TrustEntityRole.VERIFIER,
-          testID: 'EntityDetail',
-        },
-      };
-    } else if (entry.name) {
+    if (featureFlags?.trustEcosystemsEnabled) {
+      if (
+        entry.entityType === HistoryEntityType.CREDENTIAL &&
+        issuedCredential
+      ) {
+        const name = issuedCredential.trustInformation?.name;
+        return {
+          entity: {
+            labels: trustInfoLabels(),
+            testID: 'EntityDetail',
+            trustInformation: name ? { name } : undefined,
+          },
+        };
+      }
+      if (entry.entityType === HistoryEntityType.PROOF) {
+        const verifierName = proofTrustInformation?.eudiEcosystem?.name;
+        return {
+          entity: {
+            labels: trustInfoLabels(),
+            testID: 'EntityDetail',
+            trustInformation: verifierName ? { name: verifierName } : undefined,
+          },
+        };
+      }
+    }
+    if (entry.name) {
       return {
         credentialHeader: historyProofSchemaHeader(entry.entityId, entry.name),
       };
     }
   }, [
-    entry.entityId,
+    featureFlags?.trustEcosystemsEnabled,
     entry.entityType,
+    entry.entityId,
     entry.name,
-    entry.target,
-    issuedCredential?.issuer,
-    proof?.verifier,
+    issuedCredential,
+    proofTrustInformation?.eudiEcosystem?.name,
   ]);
 
   const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {

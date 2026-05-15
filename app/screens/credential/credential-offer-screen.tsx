@@ -6,7 +6,6 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
-  EntityDetails,
   ScrollViewScreen,
   TrustInfo,
   useAppColorScheme,
@@ -19,13 +18,11 @@ import {
   useCredentialReject,
   useCredentialSchemaDetail,
   useCredentialTrustInformation,
-  useTrustEntity,
 } from '@procivis/one-react-native-components';
 import {
   ClaimSchema,
   IssuanceProtocolFeature,
   OneError,
-  TrustEntityRole,
   TrustResolutionResult,
   Ubiqu,
 } from '@procivis/react-native-one-core';
@@ -58,7 +55,6 @@ import {
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
-import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 import { trustInfoLabels } from '../../utils/trust-info';
 
 const {
@@ -106,9 +102,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
       credential?.trustInformation?.result === TrustResolutionResult.TRUSTED
       ? credentialId
       : undefined,
-  );
-  const { data: trustEntity } = useTrustEntity(
-    featureFlags?.trustEcosystemsEnabled ? undefined : credential?.issuer?.id,
   );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -295,18 +288,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
-          {!featureFlags?.trustEcosystemsEnabled && (
-            <EntityDetails
-              identifier={credential?.issuer}
-              labels={trustEntityDetailsLabels(TrustEntityRole.ISSUER)}
-              role={TrustEntityRole.ISSUER}
-              style={[
-                styles.issuer,
-                { borderBottomColor: colorScheme.grayDark },
-              ]}
-              testID={concatTestID(testID, 'entityCluster')}
-            />
-          )}
           {featureFlags?.trustEcosystemsEnabled && (
             <TrustInfo
               labels={trustInfoLabels()}
@@ -344,9 +325,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
           </View>
           <ShareDisclaimer
             action={translate('common.accept')}
-            ppUrl={trustEntity?.privacyUrl}
+            ppUrl="TODO"
             testID={concatTestID(testID, 'disclaimer')}
-            tosUrl={trustEntity?.termsUrl}
+            tosUrl="TODO"
           />
         </View>
       )}

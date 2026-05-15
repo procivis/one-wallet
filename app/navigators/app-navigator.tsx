@@ -160,10 +160,7 @@ export const AppNavigator = (props: NavigationProps) => {
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}
     >
-      <ONECoreContextProvider
-        config={coreConfig}
-        publisherReference={config.trustAnchorPublisherReference}
-      >
+      <ONECoreContextProvider config={coreConfig}>
         <NavigationContainer
           onStateChange={onNavigationChange}
           ref={navigationRef}

@@ -17,7 +17,6 @@ import {
 import {
   CredentialDetail,
   CredentialState,
-  TrustEntityRole,
   TrustInformationDetail,
 } from '@procivis/react-native-one-core';
 import {
@@ -33,7 +32,7 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { trustInfoLabels } from '../../utils/trust-info';
-import { attributesLabels, entityLabels } from './utils';
+import { attributesLabels } from './utils';
 
 const getCredentialValidityValue = (
   credential: CredentialDetail,
@@ -180,10 +179,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        entityLabels: entityLabels,
         identifier: credentialDetail.issuer!,
-        legacyTrustManagementEnabled: !featureFlags?.trustEcosystemsEnabled,
-        role: TrustEntityRole.ISSUER,
         trustInfoLabels: trustInfoLabels(),
         trustInformation,
       }}

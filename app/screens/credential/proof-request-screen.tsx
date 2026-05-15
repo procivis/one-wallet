@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  EntityDetails,
   ScrollViewScreen,
   TrustInfo,
   useBeforeRemove,
@@ -8,9 +7,7 @@ import {
   useProofDetail,
   useProofReject,
   useProofRequestTrustInformation,
-  useTrustEntity,
 } from '@procivis/one-react-native-components';
-import { TrustEntityRole } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -39,7 +36,6 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
-import { trustEntityDetailsLabels } from '../../utils/trust-entity';
 import { trustInfoLabels } from '../../utils/trust-info';
 
 const ProofRequestScreen: FunctionComponent = () => {
@@ -59,9 +55,6 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { data: proof } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
     featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
-  );
-  const { data: trustEntity } = useTrustEntity(
-    featureFlags?.trustEcosystemsEnabled ? undefined : proof?.verifier?.id,
   );
 
   // If this is true, we should not attempt to reject in useBeforeRemove
@@ -152,15 +145,6 @@ const ProofRequestScreen: FunctionComponent = () => {
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        {!featureFlags?.trustEcosystemsEnabled && (
-          <EntityDetails
-            identifier={proof?.verifier}
-            labels={trustEntityDetailsLabels(TrustEntityRole.VERIFIER)}
-            role={TrustEntityRole.VERIFIER}
-            style={styles.verifier}
-            testID="ProofRequestSharingScreen.entityCluster"
-          />
-        )}
         {featureFlags?.trustEcosystemsEnabled && (
           <TrustInfo
             labels={trustInfoLabels()}
@@ -185,9 +169,9 @@ const ProofRequestScreen: FunctionComponent = () => {
           ) : (
             <ShareDisclaimer
               action={translate('common.share')}
-              ppUrl={trustEntity?.privacyUrl}
+              ppUrl="TODO"
               testID="ProofRequestSharingScreen.disclaimer"
-              tosUrl={trustEntity?.termsUrl}
+              tosUrl="TODO"
             />
           )}
         </>
