@@ -67,6 +67,9 @@ export const WalletStoreModel = types
       self.walletUnitId = '';
       self.isRSESetup = false;
     },
+    walletUnitIdCleared: () => {
+      self.walletUnitId = '';
+    },
     walletUnitIdSetup: (walletUnitId: string) => {
       self.walletUnitId = walletUnitId;
     },
