@@ -146,7 +146,15 @@ const ProofDetailNerdView: FunctionComponent = () => {
         {
           attributeKey: translate('common.credentialSchema'),
           attributeText: JSON.stringify(
-            getCredentialSchemaWithoutImages(proofInput.credentialSchema),
+            getCredentialSchemaWithoutImages({
+              ...proofInput.credentialSchema,
+              formats: [
+                {
+                  format: proofInput.credentialSchema.format,
+                  schemaId: proofInput.credentialSchema.schemaId,
+                },
+              ],
+            }),
             null,
             1,
           ),

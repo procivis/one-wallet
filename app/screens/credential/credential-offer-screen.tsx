@@ -47,6 +47,7 @@ import {
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import {
@@ -106,6 +107,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
   const { expanded, onHeaderPress } = useCredentialCardExpanded();
+  const language = useCurrentLanguage();
 
   useEffect(() => {
     return addRSEEventListener((event) => {
@@ -128,11 +130,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
     }
     setAcceptanceInitialized(true);
     try {
-      const credentialId = await acceptCredential({
+      const { credentialIds } = await acceptCredential({
         interactionId,
         txCode,
       });
-      setCredentialId(credentialId);
+      setCredentialId(credentialIds[0]);
     } catch (error) {
       const invalidCodeBRs = ['BR_0169', 'BR_0170'];
       if (error instanceof OneError && invalidCodeBRs.includes(error.code)) {
@@ -220,6 +222,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
           config,
           `${testID}.detail`,
           credentialCardLabels(),
+          language,
         )
       : { attributes: [], card: undefined };
 

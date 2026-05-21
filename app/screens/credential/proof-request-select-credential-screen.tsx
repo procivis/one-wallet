@@ -18,6 +18,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
@@ -32,6 +33,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
   const onImagePreview = useCredentialImagePreview();
   const { data: allCredentials } = useCredentials();
+  const language = useCurrentLanguage();
 
   const { preselectedCredentialId, request } = route.params;
 
@@ -90,6 +92,7 @@ const SelectCredentialScreen: FunctionComponent = () => {
               <SelectCredential
                 credentialId={credentialId}
                 labels={shareCredentialCardLabels()}
+                language={language}
                 lastItem={index === length - 1}
                 onImagePreview={onImagePreview}
                 onPress={

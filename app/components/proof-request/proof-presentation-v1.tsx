@@ -22,6 +22,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import {
   ShareCredentialNavigationProp,
@@ -79,6 +80,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
   const [selectedCredentials, setSelectedCredentials] = useState<
     Record<string, PresentationSubmitCredentialRequest | undefined>
   >({});
+  const language = useCurrentLanguage();
 
   const {
     request: { interactionId, proofId },
@@ -288,6 +290,7 @@ const ProofPresentationV1: FC<ProofPresentationProps> = ({
                   expanded={expandedCredential === credentialRequest.id}
                   key={credentialRequest.id}
                   labels={shareCredentialLabels()}
+                  language={language}
                   lastItem={lastItem}
                   onHeaderPress={onHeaderPress}
                   onImagePreview={onImagePreview}

@@ -20,8 +20,8 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
-import i18n from '../../i18n/i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { compareStrings } from '../../utils/arrays';
@@ -103,7 +103,6 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const colorScheme = useAppColorScheme();
   const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>([]);
   const {
-    locale: { locale },
     walletStore: { registeredWalletUnitId },
   } = useStores();
   const { data: walletUnit, isLoading } = useWalletUnitTrustCollections(
@@ -123,7 +122,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     );
   }, [isLoading, trustCollections]);
 
-  const language = locale ?? i18n.defaultLocale ?? 'en';
+  const language = useCurrentLanguage();
 
   const onContinue = useCallback(() => {
     if (registeredWalletUnitId) {
