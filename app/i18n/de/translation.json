@@ -154,7 +154,7 @@
   "credentialOfferTitle.inProgress": "Anmeldeinformation wird ausgestellt",
   "credentialOfferTitle.success": "Anmeldeinformation ausgestellt",
   "credentialOfferTitle.warning": "Ausstellung fehlgeschlagen",
-  "credentialUpdateTitle.inProgress": "Wird aktualisiert...",
+  "credentialUpdateTitle.inProgress": "Aktualisierungsstatus...",
   "credentialUpdateTitle.success": "Aktualisierung erfolgreich, keine Updates",
   "credentialUpdateTitle.warning": "Etwas ist schiefgelaufen",
   "deleteWalletProcessTitle.inProgress": "Alle Anmeldeinformationen werden gelöscht...",
