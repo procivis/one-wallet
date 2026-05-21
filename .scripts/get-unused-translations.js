@@ -2,10 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC_DIR = path.join(__dirname, '../app');
-const TRANSLATIONS_DIR = path.join(
-  __dirname,
-  '../app/i18n/',
-)
+const TRANSLATIONS_DIR = path.join(__dirname, '../app/i18n/');
 const LANGUAGES = ['en', 'de', 'fi'];
 const TRANSLATION_REGEX = /translate\(\s*(['"])(.*?)\1/g;
 
@@ -27,7 +24,7 @@ const ADDITIONAL_SOURCE_KEY_PATTERNS = [
   /^securityBiometricsSetTitle\.(dis|en)abled$/,
   /^shareDisclaimer\.(noUrls|ppOnly|tosAndPp|tosOnly)$/,
   // LoaderViewState translations
-  /^(createBackupProcessing|credentialDeleteTitle|credentialOfferTitle|credentialUpdateTitle|deleteWalletProcessTitle|invitationProcessTitle|proofRequestProcessTitle|restoreBackupProcessing)\.(error|inProgress|success|warning)$/,
+  /^(createBackupProcessing|credentialDeleteTitle|credentialOfferTitle|credentialUpdateTitle|credentialRefreshTitle|deleteWalletProcessTitle|invitationProcessTitle|proofRequestProcessTitle|restoreBackupProcessing)\.(error|inProgress|success|warning)$/,
   // PIN change stage translations
   /^(onboardingPinCodeScreen|onboardingPinCodeScreenChange)\.(check|confirm|initial)\.(title|subtitle)$/,
 ];
@@ -55,11 +52,7 @@ function walkDir(dir, usedKeys) {
 }
 
 function loadTranslation(lang) {
-  const fn = path.join(
-    TRANSLATIONS_DIR,
-    lang,
-    'translation.json',
-  );
+  const fn = path.join(TRANSLATIONS_DIR, lang, 'translation.json');
   const translationJson = JSON.parse(fs.readFileSync(fn, 'utf-8'));
   let translationKeys = new Set();
   flattenJson(translationKeys, translationJson);
@@ -78,14 +71,13 @@ function flattenJson(translationKeys, obj, prefix = '') {
   }
 }
 
-
 // traverse source directory and find all used translation keys
 let usedKeysInSource = new Set();
 walkDir(SRC_DIR, usedKeysInSource);
 
 // check each language for problems
 let hasProblems = false;
-LANGUAGES.forEach(lang => {
+LANGUAGES.forEach((lang) => {
   console.log(`🔍 Checking ${lang}`);
 
   let langTranslationKeys = loadTranslation(lang);
@@ -93,7 +85,9 @@ LANGUAGES.forEach(lang => {
   // check for unused keys
   const unusedKeys = [...langTranslationKeys]
     .filter((key) => !usedKeysInSource.has(key))
-    .filter((key) => !ADDITIONAL_SOURCE_KEY_PATTERNS.some((regex) => regex.test(key)));
+    .filter(
+      (key) => !ADDITIONAL_SOURCE_KEY_PATTERNS.some((regex) => regex.test(key)),
+    );
 
   if (unusedKeys.length) {
     console.log(`❌ Unused translation keys (total ${unusedKeys.length})`);
@@ -104,12 +98,13 @@ LANGUAGES.forEach(lang => {
   }
 
   // check for missing keys
-  const missingKeys = [...usedKeysInSource]
-    .filter(key => !langTranslationKeys.has(key));
+  const missingKeys = [...usedKeysInSource].filter(
+    (key) => !langTranslationKeys.has(key),
+  );
 
   if (missingKeys.length) {
     console.log(`⚠️ Missing translation keys (total ${missingKeys.length})`);
-    missingKeys.forEach(key => console.log(key));
+    missingKeys.forEach((key) => console.log(key));
   } else {
     console.log('✨ No missing translation keys');
   }

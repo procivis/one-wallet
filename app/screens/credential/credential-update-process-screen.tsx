@@ -31,8 +31,9 @@ const {
 } = Ubiqu;
 
 const CredentialUpdateProcessScreen: FunctionComponent = () => {
-  const navigation = useNavigation<RootNavigationProp<'CredentialDetail'>>();
-  const route = useRoute<RootRouteProp<'CredentialUpdateProcess'>>();
+  const navigation =
+    useNavigation<RootNavigationProp<'CredentialStatusUpdateProcess'>>();
+  const route = useRoute<RootRouteProp<'CredentialStatusUpdateProcess'>>();
   const { credentialId } = route.params;
   const [error, setError] = useState<unknown>();
   const [state, setState] = useState<

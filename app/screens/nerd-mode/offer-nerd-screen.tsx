@@ -73,7 +73,6 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     },
   ];
 
-  console.log('trustInformation', trustInformation);
   return (
     <NerdModeScreen
       entityCluster={{

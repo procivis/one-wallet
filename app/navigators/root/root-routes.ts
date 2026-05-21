@@ -17,7 +17,11 @@ import { SettingsNavigatorParamList } from '../settings/settings-routes';
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
   CredentialManagement: NavigatorScreenParams<CredentialManagementNavigatorParamList>;
-  CredentialUpdateProcess: {
+  CredentialRefresh: {
+    credentialId: CredentialListItem['id'];
+    interactionId: CredentialListItem['id'];
+  };
+  CredentialStatusUpdateProcess: {
     credentialId: CredentialListItem['id'];
   };
   Dashboard: NavigatorScreenParams<DashboardNavigatorParamList>;

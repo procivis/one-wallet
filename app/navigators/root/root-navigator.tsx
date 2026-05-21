@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 
 import { useRuntimeDeepLinkHandling } from '../../hooks/navigation/deep-link';
 import { useAutomaticPinCodeCoverLogic } from '../../hooks/pin-code/pin-code-check';
+import CredentialRefreshScreen from '../../screens/credential/credential-refresh-screen';
 import CredentialUpdateProcessScreen from '../../screens/credential/credential-update-process-screen';
 import ImagePreviewScreen from '../../screens/credential/image-preview-screen';
 import StatusCheckResultScreen from '../../screens/credential/status-check-result-screen';
@@ -85,8 +86,12 @@ const RootNavigator: FunctionComponent = () => {
           options={{ gestureEnabled: false }}
         />
         <RootStack.Screen
+          component={CredentialRefreshScreen}
+          name="CredentialRefresh"
+        />
+        <RootStack.Screen
           component={CredentialUpdateProcess}
-          name="CredentialUpdateProcess"
+          name="CredentialStatusUpdateProcess"
         />
         <RootStack.Screen
           component={StatusCheckResult}

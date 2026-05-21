@@ -7,6 +7,7 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
+  GhostButton,
   HistoryListItemView,
   ScrollViewScreen,
   Typography,
@@ -14,6 +15,7 @@ import {
   useCoreConfig,
   useCredentialCardExpanded,
   useCredentialDetail,
+  useCredentialSchemaDetail,
   useHistory,
 } from '@procivis/one-react-native-components';
 import {
@@ -28,6 +30,7 @@ import {
 import React, { FC, useCallback, useMemo } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 
+import { RefreshIcon } from '../../components/icon/refresh-icon';
 import {
   HeaderBackButton,
   HeaderOptionsButton,
@@ -52,10 +55,15 @@ const CredentialDetailScreen: FC = () => {
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
   const language = useCurrentLanguage();
+  const colorScheme = useAppColorScheme();
 
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
   const { data: credential } = useCredentialDetail(credentialId, isFocused);
+  const { data: credentialSchema } = useCredentialSchemaDetail(
+    credential?.schema.id,
+    isFocused,
+  );
 
   const { data: historyPages } = useHistory({
     actions: historyListActionsFilter,
@@ -76,7 +84,7 @@ const CredentialDetailScreen: FC = () => {
       destructiveButtonIndex: 2,
       options: [
         translate('common.moreInformation'),
-        translate('common.refreshCredential'),
+        translate('common.checkStatus'),
         translate('common.deleteCredential'),
         translate('common.close'),
       ],
@@ -84,8 +92,18 @@ const CredentialDetailScreen: FC = () => {
     [],
   );
 
-  const handleRefresh = useCallback(() => {
-    rootNavigation.navigate('CredentialUpdateProcess', {
+  const handleBatchRefresh = useCallback(() => {
+    if (!credential?.interactionId) {
+      return;
+    }
+    rootNavigation.navigate('CredentialRefresh', {
+      credentialId,
+      interactionId: credential?.interactionId,
+    });
+  }, [credentialId, rootNavigation, credential]);
+
+  const handleStatusUpdateCheck = useCallback(() => {
+    rootNavigation.navigate('CredentialStatusUpdateProcess', {
       credentialId,
     });
   }, [credentialId, rootNavigation]);
@@ -108,7 +126,7 @@ const CredentialDetailScreen: FC = () => {
             });
             return;
           case 1:
-            handleRefresh();
+            handleStatusUpdateCheck();
             return;
           case 2:
             handleDelete();
@@ -123,7 +141,7 @@ const CredentialDetailScreen: FC = () => {
       options,
       showActionSheetWithOptions,
       rootNavigation,
-      handleRefresh,
+      handleStatusUpdateCheck,
     ],
   );
 
@@ -159,11 +177,26 @@ const CredentialDetailScreen: FC = () => {
           />
         ),
         rightItem: (
-          <HeaderOptionsButton
-            accessibilityLabel={'common.settings'}
-            onPress={onActions}
-            testID="CredentialDetailScreen.header.action"
-          />
+          <View style={styles.headerRightItemWrapper}>
+            {credentialSchema?.batchSize && (
+              <GhostButton
+                accessibilityLabel={translate('common.refreshCredential')}
+                icon={
+                  <RefreshIcon
+                    color={colorScheme.text}
+                    style={styles.refreshIcon}
+                  />
+                }
+                onPress={handleBatchRefresh}
+                testID="CredentialDetailScreen.header.refresh"
+              />
+            )}
+            <HeaderOptionsButton
+              accessibilityLabel={'common.settings'}
+              onPress={onActions}
+              testID="CredentialDetailScreen.header.action"
+            />
+          </View>
         ),
         testID: 'CredentialDetailScreen.header',
         title: credential.schema.name,
@@ -262,6 +295,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginHorizontal: 16,
   },
+  headerRightItemWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 8,
+  },
   history: {
     marginHorizontal: 16,
   },
@@ -271,6 +309,9 @@ const styles = StyleSheet.create({
   historySectionTitle: {
     marginHorizontal: 4,
     marginVertical: 16,
+  },
+  refreshIcon: {
+    transform: [{ scaleX: -1 }],
   },
 });
 

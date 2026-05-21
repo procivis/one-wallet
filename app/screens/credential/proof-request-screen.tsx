@@ -87,7 +87,6 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, []);
 
   const trustDetailsPressHandler = useCallback(() => {
-    console.log('trust info pressed', trustInformation);
     if (!trustInformation) {
       return;
     }

@@ -167,7 +167,7 @@
   "credentialOfferTitle.inProgress": "Myönnetään todistetta",
   "credentialOfferTitle.success": "Todiste myönnetty",
   "credentialOfferTitle.warning": "Myöntäminen epäonnistui",
-  "credentialUpdateTitle.inProgress": "Päivitetään...",
+  "credentialUpdateTitle.inProgress": "Tilan päivittäminen...",
   "credentialUpdateTitle.success": "Päivitys onnistui",
   "credentialUpdateTitle.warning": "Jotain meni pieleen",
   "deleteWalletProcessTitle.inProgress": "Poistetaan kaikki todisteet...",
