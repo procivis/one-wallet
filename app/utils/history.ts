@@ -102,6 +102,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
   credentialSchema: CredentialSchemaListItem,
   claims: Claim[],
   config: CoreConfig,
+  language: string,
 ): Omit<CredentialDetailsCardProps, 'expanded'> => {
   const credential: CredentialDetail = {
     claims,
@@ -111,7 +112,11 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
     lastModified: '',
     protocol: '',
     role: CredentialRole.HOLDER,
-    schema: credentialSchema,
+    schema: {
+      ...credentialSchema,
+      format: credentialSchema.formats[0]?.format ?? '',
+      schemaId: credentialSchema.formats[0]?.schemaId ?? '',
+    },
     state: CredentialState.ACCEPTED,
   };
   const props = detailsCardFromCredential(
@@ -119,6 +124,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
     config,
     concatTestID('CredentialSchemaCard', credentialSchema.id),
     credentialCardLabels(),
+    language,
   );
   return {
     ...props,

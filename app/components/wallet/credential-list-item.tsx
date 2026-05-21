@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { useCurrentLanguage } from '../../hooks/language';
 import { credentialCardLabels } from '../../utils/credential';
 
 type WalletCredentialListItemProps = {
@@ -43,6 +44,7 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
   const { data: config } = useCoreConfig();
   const { data: credential } = useCredentialDetail(item.id, isFocused);
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
+  const language = useCurrentLanguage();
 
   if (!credential || !config) {
     return null;
@@ -56,6 +58,7 @@ const WalletCredentialListItem: FC<WalletCredentialListItemProps> = ({
     undefined,
     concatTestID(testID, 'card'),
     credentialCardLabels(),
+    language,
   );
   const headerAccessory = (
     <TouchableOpacity

@@ -112,9 +112,15 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     colorScheme,
   );
 
-  const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages(
-    credentialDetail.schema,
-  );
+  const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages({
+    ...credentialDetail.schema,
+    formats: [
+      {
+        format: credentialDetail.schema.format,
+        schemaId: credentialDetail.schema.schemaId,
+      },
+    ],
+  });
 
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>

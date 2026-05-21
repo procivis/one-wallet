@@ -3,8 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 
 import wrpr from '../../../assets/ecosystem-assets/wallet-relying-party-registry/config.json';
-import i18n from '../../i18n/i18n';
-import { useStores } from '../../models';
+import { useCurrentLanguage } from '../../hooks/language';
 import {
   RootNavigationProp,
   RootRouteProp,
@@ -15,10 +14,7 @@ const TrustInfoScreen: FC = () => {
   const navigation = useNavigation<RootNavigationProp<'TrustInfo'>>();
   const route = useRoute<RootRouteProp<'TrustInfo'>>();
   const { trustInformation } = route.params;
-  const {
-    locale: { locale },
-  } = useStores();
-  const language = locale ?? i18n.defaultLocale ?? 'en';
+  const language = useCurrentLanguage();
   const countries = wrpr.walletRelyingPartyRegistry.contactCountries;
 
   return (

@@ -25,9 +25,8 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
-import i18n from '../../i18n/i18n';
-import { useStores } from '../../models';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialRouteProp,
@@ -276,10 +275,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   const [submitCredentials, setSubmitCredentials] =
     useState<CredentialQuerySelection>({});
   const [allSelectionsValid, setAllSelectionsValid] = useState(true);
-  const {
-    locale: { locale },
-  } = useStores();
-  const language = locale ?? i18n.defaultLocale ?? 'en';
+  const language = useCurrentLanguage();
 
   const {
     request: { interactionId, proofId },

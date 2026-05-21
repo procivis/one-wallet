@@ -33,6 +33,7 @@ import {
   HeaderOptionsButton,
 } from '../../components/navigation/header-buttons';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
 import { historyListActionsFilter } from '../../models/core/history';
@@ -50,6 +51,7 @@ const CredentialDetailScreen: FC = () => {
   const navigation = useNavigation<CredentialDetailNavigationProp<'Detail'>>();
   const route = useRoute<CredentialDetailRouteProp<'Detail'>>();
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
+  const language = useCurrentLanguage();
 
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
@@ -144,6 +146,7 @@ const CredentialDetailScreen: FC = () => {
     config,
     testID,
     credentialCardLabels(),
+    language,
   );
 
   return (

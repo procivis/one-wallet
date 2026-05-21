@@ -17,6 +17,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
 
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import {
@@ -55,6 +56,7 @@ const claimFromProofInputClaim = (
     key: input.schema.key,
     lastModified: '',
     required: input.schema.required,
+    translations: { name: {} },
   };
 
   if (input.value.type_ === 'CLAIMS') {
@@ -88,6 +90,7 @@ export const HistoryDetailScreen: FC = () => {
       walletProvider: { featureFlags },
     },
   } = useStores();
+  const language = useCurrentLanguage();
 
   const { data: config } = useCoreConfig();
   const { data: issuedCredential } = useCredentialDetail(
@@ -232,11 +235,20 @@ export const HistoryDetailScreen: FC = () => {
               return {
                 credentialCard:
                   historyDeletedCredentialCardFromCredentialSchema(
-                    credentialSchema,
+                    {
+                      ...credentialSchema,
+                      formats: [
+                        {
+                          format: credentialSchema.format,
+                          schemaId: credentialSchema.schemaId,
+                        },
+                      ],
+                    },
                     claims
                       .map((c) => claimFromProofInputClaim(c))
                       .filter(nonEmptyFilter),
                     config!,
+                    language,
                   ),
               };
             }
@@ -260,6 +272,7 @@ export const HistoryDetailScreen: FC = () => {
     entry.name,
     issuedCredential,
     proof,
+    language,
   ]);
 
   return (
