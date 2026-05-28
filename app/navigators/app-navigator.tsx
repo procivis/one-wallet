@@ -81,6 +81,24 @@ interface NavigationProps
 
 const coreConfig = {
   credentialIssuer: getCredentialIssuerConfig(assets?.credentialIssuers),
+  format: {
+    MDOC_SHORT_EXPIRY: {
+      display: {
+        de: 'ISO mdoc (kurze Gültigkeit)',
+        en: 'ISO mdoc (short expiry)',
+      },
+      order: 101,
+      params: {
+        public: {
+          leeway: 10,
+          msoExpectedUpdateIn: 60,
+          msoExpiresIn: 60,
+          msoMinimumRefreshTime: 10,
+        },
+      },
+      type: 'MDOC',
+    },
+  },
   issuanceProtocol: {
     OPENID4VCI_FINAL1: {
       params: {
