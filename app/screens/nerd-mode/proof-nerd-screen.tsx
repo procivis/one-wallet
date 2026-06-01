@@ -184,7 +184,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         },
         ...addElementIf(Boolean(proofDetail.proofInputs.length), {
           data: credentialsFields,
-          title: translate('common.credentials'),
+          title: translate('common.credential(s)'),
         }),
       ]}
       testID="ProofRequestNerdView"

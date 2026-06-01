@@ -6,6 +6,7 @@ import {
   useBackupInfo,
   useCredentials,
 } from '@procivis/one-react-native-components';
+import { CredentialType } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
@@ -23,7 +24,9 @@ const PreviewScreen: FC = () => {
   const navigation =
     useNavigation<CreateBackupProcessingNavigationProp<'Preview'>>();
   const { params } = useRoute<CreateBackupProcessingRouteProp<'Preview'>>();
-  const { data: credentials } = useCredentials();
+  const { data: credentials } = useCredentials({
+    types: [CredentialType.SINGLE, CredentialType.BATCH_PARENT],
+  });
   const { data: backupInfo } = useBackupInfo();
   const nonExportableCredentials = backupInfo?.credentials;
 

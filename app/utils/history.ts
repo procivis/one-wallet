@@ -13,6 +13,7 @@ import {
   CredentialRole,
   CredentialSchemaListItem,
   CredentialState,
+  CredentialType,
   HistoryAction,
   HistoryEntityType,
   HistoryListItem,
@@ -118,6 +119,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
       schemaId: credentialSchema.formats[0]?.schemaId ?? '',
     },
     state: CredentialState.ACCEPTED,
+    type: CredentialType.SINGLE,
   };
   const props = detailsCardFromCredential(
     credential,

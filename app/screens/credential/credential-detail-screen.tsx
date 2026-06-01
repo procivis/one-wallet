@@ -4,11 +4,13 @@ import {
   Button,
   ButtonType,
   concatTestID,
+  CredentialCardRatio,
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
   GhostButton,
   HistoryListItemView,
+  ListItemView,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -19,6 +21,7 @@ import {
   useHistory,
 } from '@procivis/one-react-native-components';
 import {
+  CredentialType,
   HistoryEntityType,
   HistoryListItem,
 } from '@procivis/react-native-one-core';
@@ -30,6 +33,7 @@ import {
 import React, { FC, useCallback, useMemo } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 
+import Badge from '../../components/badge/badge';
 import { RefreshIcon } from '../../components/icon/refresh-icon';
 import {
   HeaderBackButton,
@@ -167,6 +171,8 @@ const CredentialDetailScreen: FC = () => {
     language,
   );
 
+  const badgeTop = Math.ceil(cardWidth / CredentialCardRatio) - 34;
+
   return (
     <ScrollViewScreen
       header={{
@@ -219,7 +225,58 @@ const CredentialDetailScreen: FC = () => {
           showAllButtonLabel={translate('common.seeAll')}
           testID={testID}
         />
+        {credential.type === CredentialType.BATCH_PARENT &&
+          credential.remainingBatchItemCount && (
+            <Badge
+              style={[styles.credentialBadge, { top: badgeTop }]}
+              type="pill"
+              value={credential.remainingBatchItemCount.toString()}
+            />
+          )}
       </View>
+      {credential.type === CredentialType.BATCH_PARENT &&
+        credential.remainingBatchItemCount && (
+          <View style={styles.history}>
+            <Typography
+              accessibilityRole="header"
+              color={colorScheme.text}
+              preset="m"
+              style={styles.sectionTitle}
+            >
+              {translate('common.credentials')}
+            </Typography>
+            <View
+              style={styles.historyLog}
+              testID="CredentialDetailScreen.credentials"
+            >
+              <ListItemView
+                accessory={
+                  <Badge
+                    value={credential.remainingBatchItemCount.toString()}
+                  />
+                }
+                first={true}
+                icon={
+                  <View
+                    style={[
+                      styles.avatarPlaceholder,
+                      { backgroundColor: colorScheme.background },
+                    ]}
+                  >
+                    <Typography
+                      color={colorScheme.black}
+                      style={styles.avatarPlaceholderText}
+                    >
+                      {credential.schema.format.split(' ')[0].split('_')[0]}
+                    </Typography>
+                  </View>
+                }
+                label={credential.schema.format}
+                last={true}
+              />
+            </View>
+          </View>
+        )}
       <HistorySection
         historyEntries={credentialHistory}
         onSeeAllHistory={onSeeAllHistory}
@@ -257,7 +314,7 @@ const HistorySection: FC<{
         accessibilityRole="header"
         color={colorScheme.text}
         preset="m"
-        style={styles.historySectionTitle}
+        style={styles.sectionTitle}
       >
         {translate('common.history')}
       </Typography>
@@ -290,6 +347,20 @@ const HistorySection: FC<{
 };
 
 const styles = StyleSheet.create({
+  avatarPlaceholder: {
+    alignItems: 'center',
+    borderRadius: 25,
+    height: 50,
+    justifyContent: 'center',
+    width: 50,
+  },
+  avatarPlaceholderText: {
+    textTransform: 'uppercase',
+  },
+  credentialBadge: {
+    position: 'absolute',
+    right: 12,
+  },
   credentialWrapper: {
     ...CredentialCardShadow,
     marginBottom: 12,
@@ -306,12 +377,12 @@ const styles = StyleSheet.create({
   historyLog: {
     marginBottom: 12,
   },
-  historySectionTitle: {
-    marginHorizontal: 4,
-    marginVertical: 16,
-  },
   refreshIcon: {
     transform: [{ scaleX: -1 }],
+  },
+  sectionTitle: {
+    marginHorizontal: 4,
+    marginVertical: 16,
   },
 });
 

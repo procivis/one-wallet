@@ -18,6 +18,7 @@ import {
   CredentialListIncludeEntityType,
   CredentialListQuery,
   CredentialState,
+  CredentialType,
   SortableCredentialColumn,
   WalletUnitStatus,
 } from '@procivis/react-native-one-core';
@@ -71,6 +72,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       CredentialState.SUSPENDED,
       CredentialState.REVOKED,
     ],
+    types: [CredentialType.SINGLE, CredentialType.BATCH_PARENT],
   });
   const {
     data: credentialsData,
