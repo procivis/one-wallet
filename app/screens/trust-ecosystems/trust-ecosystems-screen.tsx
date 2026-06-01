@@ -92,6 +92,7 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
 
 export type TrustEcosystemsRouteParams =
   | {
+      preselect?: boolean;
       resetToDashboard?: boolean;
     }
   | undefined;
@@ -113,14 +114,20 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   );
   const { mutateAsync: updateWalletUnit } = useWalletUnitUpdate();
 
+  useEffect(() => {}, [route.params?.preselect, walletUnit]);
+
   useEffect(() => {
     if (isLoading || !trustCollections) {
       return;
     }
-    setSelectedEcosystems(
-      trustCollections.filter((tc) => tc.selected).map((tc) => tc.id),
-    );
-  }, [isLoading, trustCollections]);
+    if (route.params?.preselect) {
+      setSelectedEcosystems(trustCollections.map(({ id }) => id));
+    } else {
+      setSelectedEcosystems(
+        trustCollections.filter((tc) => tc.selected).map((tc) => tc.id),
+      );
+    }
+  }, [isLoading, trustCollections, route]);
 
   const language = useCurrentLanguage();
 

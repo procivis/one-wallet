@@ -39,6 +39,9 @@ const WalletUnitRegistrationScreen = () => {
   const {
     walletStore,
     walletStore: { walletProvider, walletUnitId },
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
   } = useStores();
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
   const hasInternetConnection = availableTransport?.includes(Transport.HTTP);
@@ -50,47 +53,53 @@ const WalletUnitRegistrationScreen = () => {
   const { mutateAsync: registerWalletUnit, isSuccess: registeredNewWallet } =
     useRegisterWalletUnit();
   const { mutateAsync: refreshWalletUnit } = useWalletUnitStatus();
-  const {
-    walletStore: {
-      walletProvider: { featureFlags },
+
+  const close = useCallback(
+    (
+      status: LoaderViewState,
+      walletUnitStatus: WalletUnitStatus | undefined,
+    ) => {
+      cancelled.current = true;
+      const resetToDashboard = route.params?.resetToDashboard;
+      const hasWalletUnit = walletUnitStatus === WalletUnitStatus.ACTIVE;
+      const isHardError = status === LoaderViewState.Error;
+      if (
+        resetToDashboard === true &&
+        featureFlags?.trustEcosystemsEnabled &&
+        hasWalletUnit &&
+        !isHardError
+      ) {
+        resetNavigationAction(rootNavigation, [
+          { name: 'Dashboard', params: { screen: 'Wallet' } },
+          {
+            name: 'TrustEcosystems',
+            params: { preselect: true, resetToDashboard: false },
+          },
+        ]);
+        return;
+      }
+      const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
+      if (
+        resetToDashboard === true ||
+        (resetToDashboard === 'onError' && errorStatuses.includes(status))
+      ) {
+        resetNavigationAction(rootNavigation, [
+          { name: 'Dashboard', params: { screen: 'Wallet' } },
+        ]);
+      } else {
+        rootNavigation.goBack();
+      }
     },
-  } = useStores();
+    [
+      featureFlags?.trustEcosystemsEnabled,
+      rootNavigation,
+      route.params?.resetToDashboard,
+    ],
+  );
 
   const closeHandler = useCallback(() => {
-    cancelled.current = true;
-    const resetToDashboard = route.params?.resetToDashboard;
-    const hasWalletUnit = Boolean(walletUnitId);
-    const isHardError = status === LoaderViewState.Error;
-    if (
-      resetToDashboard === true &&
-      featureFlags?.trustEcosystemsEnabled &&
-      hasWalletUnit &&
-      !isHardError
-    ) {
-      resetNavigationAction(rootNavigation, [
-        { name: 'Dashboard', params: { screen: 'Wallet' } },
-        { name: 'TrustEcosystems', params: { resetToDashboard: false } },
-      ]);
-      return;
-    }
-    const errorStatuses = [LoaderViewState.Error, LoaderViewState.Warning];
-    if (
-      resetToDashboard === true ||
-      (resetToDashboard === 'onError' && errorStatuses.includes(status))
-    ) {
-      resetNavigationAction(rootNavigation, [
-        { name: 'Dashboard', params: { screen: 'Wallet' } },
-      ]);
-    } else {
-      rootNavigation.goBack();
-    }
-  }, [
-    featureFlags?.trustEcosystemsEnabled,
-    rootNavigation,
-    route.params?.resetToDashboard,
-    status,
-    walletUnitId,
-  ]);
+    close(status, walletUnitStatus);
+  }, [close, status, walletUnitStatus]);
 
   const handleRegisterOrRefresh = useCallback(async () => {
     if (hasInternetConnection === undefined || handled.current) {
@@ -103,6 +112,7 @@ const WalletUnitRegistrationScreen = () => {
     }
     try {
       setStatus(LoaderViewState.InProgress);
+      let walletUnit;
       if (route.params.operation === 'refresh') {
         await refreshWalletUnit(walletUnitId);
       } else {
@@ -110,7 +120,7 @@ const WalletUnitRegistrationScreen = () => {
           throw new Error('No wallet provider specified');
         }
 
-        const walletUnit = await registerWalletUnit({
+        walletUnit = await registerWalletUnit({
           trustedRpRequired: false,
           walletProvider: {
             type: config.walletProvider.type,
@@ -136,7 +146,7 @@ const WalletUnitRegistrationScreen = () => {
         return;
       }
       setStatus(LoaderViewState.Success);
-      closeHandler();
+      close(LoaderViewState.Success, walletUnit?.status);
     } catch (err) {
       if (cancelled.current) {
         return;
@@ -152,7 +162,7 @@ const WalletUnitRegistrationScreen = () => {
       setError(err);
     }
   }, [
-    closeHandler,
+    close,
     hasInternetConnection,
     refreshWalletUnit,
     registerWalletUnit,
