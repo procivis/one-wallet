@@ -7,6 +7,7 @@ import {
   useCredentials,
   useRollbackImport,
 } from '@procivis/one-react-native-components';
+import { CredentialType } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useRef } from 'react';
 import {
@@ -33,7 +34,9 @@ const PreviewScreen: FC = () => {
     useNavigation<RestoreBackupProcessingNavigationProp<'Preview'>>();
   const colorScheme = useAppColorScheme();
   const { top } = useSafeAreaInsets();
-  const { data: credentials } = useCredentials();
+  const { data: credentials } = useCredentials({
+    types: [CredentialType.SINGLE, CredentialType.BATCH_PARENT],
+  });
   const { mutateAsync: rollbackImport } = useRollbackImport();
 
   const skipRollback = useRef(false);

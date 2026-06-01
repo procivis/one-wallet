@@ -130,11 +130,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
     }
     setAcceptanceInitialized(true);
     try {
-      const { credentialIds } = await acceptCredential({
+      const credentialId = await acceptCredential({
         interactionId,
         txCode,
       });
-      setCredentialId(credentialIds[0]);
+      setCredentialId(credentialId);
     } catch (error) {
       const invalidCodeBRs = ['BR_0169', 'BR_0170'];
       if (error instanceof OneError && invalidCodeBRs.includes(error.code)) {

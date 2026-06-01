@@ -31,11 +31,16 @@ const SelectCredentialScreen: FunctionComponent = () => {
   const navigation =
     useNavigation<ShareCredentialNavigationProp<'SelectCredential'>>();
   const route = useRoute<ShareCredentialRouteProp<'SelectCredential'>>();
-  const onImagePreview = useCredentialImagePreview();
-  const { data: allCredentials } = useCredentials();
-  const language = useCurrentLanguage();
-
   const { preselectedCredentialId, request } = route.params;
+  const onImagePreview = useCredentialImagePreview();
+  const credentialIds = request.inapplicableCredentials.concat(
+    request.applicableCredentials,
+  );
+  const { data: selectionCredentials } = useCredentials({
+    ids: credentialIds,
+    states: [CredentialState.ACCEPTED],
+  });
+  const language = useCurrentLanguage();
 
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>(
     preselectedCredentialId,
@@ -54,16 +59,8 @@ const SelectCredentialScreen: FunctionComponent = () => {
   }, [navigation, selectedCredentialId]);
 
   const selectionOptions = useMemo(
-    () =>
-      request.inapplicableCredentials
-        .concat(request.applicableCredentials)
-        .filter((credentialId) =>
-          allCredentials?.some(
-            ({ id, state }) =>
-              id === credentialId && state === CredentialState.ACCEPTED,
-          ),
-        ),
-    [allCredentials, request],
+    () => selectionCredentials?.map((c) => c.id) ?? [],
+    [selectionCredentials],
   );
 
   return (

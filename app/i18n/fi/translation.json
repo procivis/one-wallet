@@ -41,6 +41,7 @@
   "common.credentialSchemaName": "Todisteen skeeman nimi",
   "common.credentialUpdate": "Todisteen päivitys",
   "common.credentials": "Todisteet",
+  "common.credential(s)": "Todisteet",
   "common.date": "Päivämäärä",
   "common.dateAdded": "Lisätty",
   "common.delete": "Poista",
