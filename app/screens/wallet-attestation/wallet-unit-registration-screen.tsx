@@ -61,7 +61,7 @@ const WalletUnitRegistrationScreen = () => {
     ) => {
       cancelled.current = true;
       const resetToDashboard = route.params?.resetToDashboard;
-      const hasWalletUnit = walletUnitStatus === WalletUnitStatus.ACTIVE;
+      const hasWalletUnit = walletUnitStatus !== undefined;
       const isHardError = status === LoaderViewState.Error;
       if (
         resetToDashboard === true &&
