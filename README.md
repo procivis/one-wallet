@@ -229,9 +229,9 @@ and regulations mature and harden.
   - [Draft 20][vp20]
   - [OID4VP over BLE][ble]; optimized version of Draft 00
   - OID4VP over MQTT; proprietary adaptation of "OID4VP over BLE" via MQTT channel
-- ISO/IEC 18013
+- ISO/IEC 18013 (Verification)
   - [18013-5][iso5]: Device engagement using either NFC or QR Code, data retrieval using BLE
-  - [18013-7][iso7]: Online data retrieval via OID4VP
+  - [18013-7 Annex B][iso7]: Online data retrieval via OID4VP
 
 ### Key storage
 
