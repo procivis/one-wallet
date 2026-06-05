@@ -1,5 +1,5 @@
 import { reportException } from '@procivis/one-react-native-components';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
 import { useIsOnboarded } from '../../hooks/onboarded';
@@ -19,16 +19,22 @@ export const hideSplashScreen = () => {
  */
 export const useInitialRoute = () => {
   const isOnboarded = useIsOnboarded();
-  const initialRoute: keyof RootNavigatorParamList | undefined = useMemo(() => {
-    switch (isOnboarded) {
-      case undefined:
-        return undefined;
-      case false:
-        return 'Onboarding';
-      case true:
-        return 'Dashboard';
+  const [initialRoute, setInitialRoute] =
+    useState<keyof RootNavigatorParamList>();
+
+  useEffect(() => {
+    if (initialRoute) {
+      return;
     }
-  }, [isOnboarded]);
+    switch (isOnboarded) {
+      case false:
+        setInitialRoute('Onboarding');
+        break;
+      case true:
+        setInitialRoute('Dashboard');
+        break;
+    }
+  }, [initialRoute, isOnboarded]);
 
   useEffect(() => {
     if (initialRoute === 'Onboarding') {
