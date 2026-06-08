@@ -62,8 +62,7 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     (userEntry: string) => {
       if (pin) {
         if (pin === userEntry) {
-          storePin(pin);
-          finishSetup();
+          finishSetup().then(() => storePin(pin));
         } else {
           screen.current?.clearEntry();
           screen.current?.shakeKeypad();
