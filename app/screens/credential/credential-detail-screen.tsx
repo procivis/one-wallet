@@ -17,10 +17,10 @@ import {
   useCoreConfig,
   useCredentialCardExpanded,
   useCredentialDetail,
-  useCredentialSchemaDetail,
   useHistory,
 } from '@procivis/one-react-native-components';
 import {
+  CredentialState,
   CredentialType,
   HistoryEntityType,
   HistoryListItem,
@@ -64,10 +64,6 @@ const CredentialDetailScreen: FC = () => {
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
   const { data: credential } = useCredentialDetail(credentialId, isFocused);
-  const { data: credentialSchema } = useCredentialSchemaDetail(
-    credential?.schema.id,
-    isFocused,
-  );
 
   const { data: historyPages } = useHistory({
     actions: historyListActionsFilter,
@@ -184,19 +180,21 @@ const CredentialDetailScreen: FC = () => {
         ),
         rightItem: (
           <View style={styles.headerRightItemWrapper}>
-            {credentialSchema?.batchSize && (
-              <GhostButton
-                accessibilityLabel={translate('common.refreshCredential')}
-                icon={
-                  <RefreshIcon
-                    color={colorScheme.text}
-                    style={styles.refreshIcon}
-                  />
-                }
-                onPress={handleBatchRefresh}
-                testID="CredentialDetailScreen.header.refresh"
-              />
-            )}
+            {credential.type === CredentialType.BATCH_PARENT &&
+              credential.remainingBatchItemCount !== undefined && (
+                <GhostButton
+                  accessibilityLabel={translate('common.refreshCredential')}
+                  disabled={credential.state !== CredentialState.ACCEPTED}
+                  icon={
+                    <RefreshIcon
+                      color={colorScheme.text}
+                      style={styles.refreshIcon}
+                    />
+                  }
+                  onPress={handleBatchRefresh}
+                  testID="CredentialDetailScreen.header.refresh"
+                />
+              )}
             <HeaderOptionsButton
               accessibilityLabel={'common.settings'}
               onPress={onActions}
@@ -226,7 +224,7 @@ const CredentialDetailScreen: FC = () => {
           testID={testID}
         />
         {credential.type === CredentialType.BATCH_PARENT &&
-          credential.remainingBatchItemCount && (
+          credential.remainingBatchItemCount !== undefined && (
             <Badge
               style={[styles.credentialBadge, { top: badgeTop }]}
               type="pill"
@@ -235,7 +233,7 @@ const CredentialDetailScreen: FC = () => {
           )}
       </View>
       {credential.type === CredentialType.BATCH_PARENT &&
-        credential.remainingBatchItemCount && (
+        credential.remainingBatchItemCount !== undefined && (
           <View style={styles.history}>
             <Typography
               accessibilityRole="header"
