@@ -2,7 +2,7 @@ import { HistoryAction } from '@procivis/react-native-one-core';
 
 const historyActionsDenyList = [
   HistoryAction.ACCEPTED,
-  HistoryAction.ISSUED,
+  HistoryAction.OFFERED,
   HistoryAction.PENDING,
 ];
 
