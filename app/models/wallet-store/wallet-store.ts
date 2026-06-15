@@ -16,6 +16,7 @@ const AppVersionModel = types.model('AppVersion', {
 });
 
 const FeatureFlagsModel = types.model('FeatureFlags', {
+  documentSigningEnabled: types.boolean,
   trustEcosystemsEnabled: types.boolean,
 });
 
@@ -37,8 +38,17 @@ const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
   required: types.boolean,
 });
 
+const DocumentSignerModel = types.model('DocumentSigner', {
+  description: types.array(TranslatedLabelModel),
+  displayName: types.array(TranslatedLabelModel),
+  logo: types.string,
+  name: types.string,
+  type: types.enumeration('Type', ['WALLET_CENTRIC', 'RP_CENTRIC']),
+});
+
 export const WalletProviderModel = types.model('WalletProvider', {
   appVersion: types.maybe(AppVersionModel),
+  documentSigners: types.array(DocumentSignerModel),
   featureFlags: types.maybe(FeatureFlagsModel),
   name: types.string,
   trustCollections: types.array(TrustCollectionModel),
@@ -46,6 +56,7 @@ export const WalletProviderModel = types.model('WalletProvider', {
 });
 
 export type WalletProviderData = Instance<typeof WalletProviderModel>;
+export type DocumentSigner = Instance<typeof DocumentSignerModel>;
 
 export const WalletStoreModel = types
   .model('WalletStore', {

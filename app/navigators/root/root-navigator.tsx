@@ -10,6 +10,7 @@ import StatusCheckResultScreen from '../../screens/credential/status-check-resul
 import PinCodeCheckScreen from '../../screens/onboarding/pin-code-check-screen';
 import RequestCredentialListScreen from '../../screens/request-credential/request-credential-list-screen';
 import { RSESignScreen } from '../../screens/rse/rse-sign-screen';
+import signDocumentProviderListScreen from '../../screens/sign-document-provider/sign-document-provider-list-screen';
 import { TrustEcosystemsScreen } from '../../screens/trust-ecosystems/trust-ecosystems-screen';
 import TrustInfoScreen from '../../screens/trust-info/trust-info-screen';
 import VersionUpdateScreen from '../../screens/version-update/version-update-screen';
@@ -26,6 +27,7 @@ import {
 import NerdModeNavigator from '../nerd-mode/nerd-mode-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
+import SignDocumentNavigator from '../sign-document/sign-document-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
 import { RootNavigatorParamList } from './root-routes';
 
@@ -64,6 +66,10 @@ const RootNavigator: FunctionComponent = () => {
         component={CredentialDetailNavigator}
         name="CredentialDetail"
       />
+      <RootStack.Screen
+        component={signDocumentProviderListScreen}
+        name="SignDocumentProviderListScreen"
+      />
 
       {/* screens with disabled OS navigation */}
       <RootStack.Group screenOptions={{ gestureEnabled: false }}>
@@ -85,6 +91,11 @@ const RootNavigator: FunctionComponent = () => {
           name="CredentialManagement"
           options={{ gestureEnabled: false }}
         />
+        <RootStack.Screen
+          component={SignDocumentNavigator}
+          name="SignDocument"
+        />
+
         <RootStack.Screen
           component={CredentialRefreshScreen}
           name="CredentialRefresh"

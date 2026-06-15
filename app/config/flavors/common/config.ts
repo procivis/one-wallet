@@ -4,7 +4,10 @@ import { Configuration } from '../../../models/config/config';
 
 export const commonConfig: Pick<
   Configuration,
-  'featureFlags' | 'customOpenIdUrlScheme' | 'requestCredentialRedirectUri'
+  | 'featureFlags'
+  | 'customOpenIdUrlScheme'
+  | 'requestCredentialRedirectUri'
+  | 'signDocumentRedirectUri'
 > = {
   customOpenIdUrlScheme: rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
     ? rnuc.CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME
@@ -20,4 +23,5 @@ export const commonConfig: Pick<
     ubiquRse: true,
   },
   requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://request-credential-redirect`,
+  signDocumentRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://sign-document-redirect`,
 };
