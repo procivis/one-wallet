@@ -10,6 +10,7 @@ import {
   PartialState,
 } from '@react-navigation/native';
 import React from 'react';
+import Config from 'react-native-ultimate-config';
 
 import { assets, config } from '../config';
 import i18n from '../i18n/i18n';
@@ -81,6 +82,24 @@ interface NavigationProps
 
 const coreConfig = {
   credentialIssuer: getCredentialIssuerConfig(assets?.credentialIssuers),
+  documentSignerProvider: {
+    SIGN8: {
+      params: {
+        private: {
+          accountId: Config.SIGN8_ACCOUNT_ID,
+          clientId: Config.SIGN8_CLIENT_ID,
+          clientSecret: Config.SIGN8_CLIENT_SECRET,
+          conformanceLevel: 'Ades-B-B',
+          cscBaseUrl: 'https://api.uat.sign8.eu',
+          hashAlgorithm: '2.16.840.1.101.3.4.2.1',
+          oauthUrl: 'https://auth.uat.sign8.eu',
+          redirectUri: config.signDocumentRedirectUri,
+          signatureFormat: 'P',
+          signatureQualifier: 'eu_eidas_qes',
+        },
+      },
+    },
+  },
   format: {
     MDOC_SHORT_EXPIRY: {
       display: {
@@ -174,6 +193,7 @@ const coreConfig = {
 
 export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
+
   return (
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}

@@ -11,6 +11,9 @@ declare module 'react-native-ultimate-config' {
     readonly CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME: string | undefined;
     readonly CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME: string | undefined;
     readonly SENTRY_DSN?: string;
+    readonly SIGN8_ACCOUNT_ID?: string;
+    readonly SIGN8_CLIENT_ID?: string;
+    readonly SIGN8_CLIENT_SECRET?: string;
   };
   const config: Readonly<Config>;
   export default config;

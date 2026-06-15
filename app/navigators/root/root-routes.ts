@@ -13,6 +13,7 @@ import { DashboardNavigatorParamList } from '../dashboard/dashboard-routes';
 import { NerdModeNavigatorParamList } from '../nerd-mode/nerd-mode-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
+import { SignDocumentNavigatorParamList } from '../sign-document/sign-document-routes';
 
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
@@ -37,6 +38,8 @@ export type RootNavigatorParamList = {
   RSESign: undefined;
   RequestCredentialList: undefined;
   Settings?: NavigatorScreenParams<SettingsNavigatorParamList>;
+  SignDocument: NavigatorScreenParams<SignDocumentNavigatorParamList>;
+  SignDocumentProviderListScreen: undefined;
   StatusCheckResult: {
     credentialIds: Array<CredentialListItem['id']>;
   };

@@ -70,6 +70,12 @@ export const useInvitationHandling = () => {
 
   return useCallback(
     (url: string) => {
+      if (
+        config.signDocumentRedirectUri &&
+        url.startsWith(config.signDocumentRedirectUri)
+      ) {
+        return;
+      }
       const invitationUrl = parseUniversalLink(url) ?? url;
 
       navigation.navigate('CredentialManagement', {

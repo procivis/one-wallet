@@ -32,6 +32,7 @@ export interface Configuration {
   featureFlags: FeatureFlags;
   googleStoreId: string;
   requestCredentialRedirectUri?: string;
+  signDocumentRedirectUri?: string;
   walletProvider?: WalletProviderConfiguration;
 }
 

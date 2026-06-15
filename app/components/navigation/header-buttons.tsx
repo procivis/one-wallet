@@ -4,7 +4,6 @@ import {
   GhostButton,
   InfoIcon,
   OptionsIcon,
-  PlusIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
@@ -70,20 +69,6 @@ export const HeaderInfoButton: FC<HeaderInfoButtonProps> = ({
     <GhostButton
       accessibilityLabel={translate('common.info')}
       icon={InfoIcon}
-      onPress={onPress}
-      testID={testID}
-    />
-  );
-};
-
-export const HeaderPlusButton: FC<HeaderInfoButtonProps> = ({
-  onPress,
-  testID,
-}) => {
-  return (
-    <GhostButton
-      accessibilityLabel={translate('common.info')}
-      icon={<PlusIcon />}
       onPress={onPress}
       testID={testID}
     />

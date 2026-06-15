@@ -36,6 +36,7 @@ const fetchWalletProviderConfig = async () => {
     if (!response.ok) {
       throw new Error(`Error status: ${response.status}`);
     }
+
     return (await response.json()) as WalletProviderData;
   } catch (e) {
     reportException(e, 'Fetching wallet provider config failed!');
@@ -52,7 +53,9 @@ export async function setupWalletStore(env: Environment) {
   const walletProvider = WalletProviderModel.create(
     walletProviderData ?? {
       appVersion: undefined,
+      documentSigners: [],
       featureFlags: {
+        documentSigningEnabled: false,
         trustEcosystemsEnabled: true,
       },
       name: '',

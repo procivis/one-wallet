@@ -35,10 +35,7 @@ import React, {
 import { Animated, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  HeaderOptionsButton,
-  HeaderPlusButton,
-} from '../../components/navigation/header-buttons';
+import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
 import WalletCredentialList from '../../components/wallet/credential-list';
 import { assets, config } from '../../config';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
@@ -53,6 +50,8 @@ const WalletScreen: FunctionComponent = observer(() => {
   const {
     walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
+  const documentSigningEnabled =
+    walletProvider.featureFlags?.documentSigningEnabled;
   const safeAreaInsets = useSafeAreaInsets();
   const navigation = useNavigation<RootNavigationProp>();
   const { credentialIssuers = [] } = assets;
@@ -126,6 +125,10 @@ const WalletScreen: FunctionComponent = observer(() => {
     navigation.navigate('RequestCredentialList');
   }, [navigation]);
 
+  const handleSignDocumentClick = useCallback(() => {
+    navigation.navigate('SignDocumentProviderListScreen');
+  }, [navigation]);
+
   const handleSearchPhraseChange = useMemo(
     () => debounce(setQueryParams, 500),
     [],
@@ -161,16 +164,6 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   const rightButtons = useMemo(
     () => [
-      ...(showRequestCredentialBtn
-        ? [
-            <HeaderPlusButton
-              key="plus"
-              onPress={handleRequestCredentialClick}
-              testID="WalletScreen.header.action-issue-document"
-            />,
-          ]
-        : []),
-
       <HeaderOptionsButton
         accessibilityLabel="common.settings"
         key="options"
@@ -178,11 +171,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         testID="WalletScreen.header.action-settings"
       />,
     ],
-    [
-      handleRequestCredentialClick,
-      handleWalletSettingsClick,
-      showRequestCredentialBtn,
-    ],
+    [handleWalletSettingsClick],
   );
 
   const runTrustTasks = useCallback(async () => {
@@ -276,7 +265,15 @@ const WalletScreen: FunctionComponent = observer(() => {
         )}
         {!isEmpty && (
           <ScanButton
+            onIssuePress={
+              showRequestCredentialBtn
+                ? handleRequestCredentialClick
+                : undefined
+            }
             onScanPress={handleScanPress}
+            onSignPress={
+              documentSigningEnabled ? handleSignDocumentClick : undefined
+            }
             testID="WalletScreen.scan"
           />
         )}
