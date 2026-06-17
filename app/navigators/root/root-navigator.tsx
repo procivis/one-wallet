@@ -15,7 +15,6 @@ import { TrustEcosystemsScreen } from '../../screens/trust-ecosystems/trust-ecos
 import TrustInfoScreen from '../../screens/trust-info/trust-info-screen';
 import VersionUpdateScreen from '../../screens/version-update/version-update-screen';
 import WalletUnitErrorScreen from '../../screens/wallet-attestation/wallet-unit-error-screen';
-import WalletUnitRegistrationScreen from '../../screens/wallet-attestation/wallet-unit-registration-screen';
 import CredentialDetailNavigator from '../credential-detail/credential-detail-navigator';
 import CredentialManagementNavigator from '../credential-management/credential-management-navigator';
 import DashboardNavigator from '../dashboard/dashboard-navigator';
@@ -28,6 +27,7 @@ import NerdModeNavigator from '../nerd-mode/nerd-mode-navigator';
 import OnboardingNavigator from '../onboarding/onboarding-navigator';
 import SettingsNavigator from '../settings/settings-navigator';
 import SignDocumentNavigator from '../sign-document/sign-document-navigator';
+import WalletUnitRegistrationNavigator from '../wallet-unit-registration/wallet-unit-registration-navigator';
 import { hideSplashScreen, useInitialRoute } from './initialRoute';
 import { RootNavigatorParamList } from './root-routes';
 
@@ -36,7 +36,7 @@ const CredentialUpdateProcess = React.memo(
 );
 const StatusCheckResult = React.memo(formSheetWrapper(StatusCheckResultScreen));
 const WalletUnitRegistration = React.memo(
-  formSheetWrapper(WalletUnitRegistrationScreen),
+  formSheetWrapper(WalletUnitRegistrationNavigator),
 );
 const VersionUpdate = React.memo(formSheetWrapper(VersionUpdateScreen));
 const WalletUnitError = React.memo(formSheetWrapper(WalletUnitErrorScreen));

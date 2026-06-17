@@ -46,12 +46,20 @@ const DocumentSignerModel = types.model('DocumentSigner', {
   type: types.enumeration('Type', ['WALLET_CENTRIC', 'RP_CENTRIC']),
 });
 
+const UserAuthenticationModel = types.model('UserAuthentication', {
+  clientId: types.string,
+  identityProvider: types.string,
+  redirectUri: types.string,
+  required: types.boolean,
+});
+
 export const WalletProviderModel = types.model('WalletProvider', {
   appVersion: types.maybe(AppVersionModel),
   documentSigners: types.array(DocumentSignerModel),
   featureFlags: types.maybe(FeatureFlagsModel),
   name: types.string,
   trustCollections: types.array(TrustCollectionModel),
+  userAuthentication: types.maybe(UserAuthenticationModel),
   walletUnitAttestation: WalletUnitRegistrationModel,
 });
 

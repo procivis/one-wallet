@@ -99,7 +99,7 @@ const WalletUnitErrorScreen: FC = () => {
       secondaryButton={secondaryButton}
       state={state}
       testID="WalletUnitErrorScreen"
-      title={translate('common.walletRegistration')}
+      title={translate('common.walletActivation')}
     />
   );
 };
