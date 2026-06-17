@@ -35,6 +35,7 @@
 				<string>haip-vci</string>
 				<string>haip-vp</string>
 				<string>swiyu</string>
+				<string>swiyu-verify</string>
 				<string>$(CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME)</string>
 				<string>$(CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME)</string>
 			</array>
