@@ -17,7 +17,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleProp, ViewStyle } from 'react-native';
 
 import { translate, translateError } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -29,17 +29,19 @@ export interface ProcessingViewProps {
   onClose: (() => void) | undefined;
   secondaryButton?: ButtonProps;
   state: LoaderViewState;
+  style?: StyleProp<ViewStyle>;
   testID: string;
   title?: string;
 }
 
 export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
   button,
-  secondaryButton,
-  testID,
-  onClose,
-  state,
   error,
+  onClose,
+  secondaryButton,
+  state,
+  style,
+  testID,
   title,
   loaderLabel,
 }) => {
@@ -119,6 +121,7 @@ export const ProcessingView: FunctionComponent<ProcessingViewProps> = ({
         testID: concatTestID(testID, 'animation'),
       }}
       secondaryButton={secondaryButton}
+      style={style}
       testID={testID}
     />
   );

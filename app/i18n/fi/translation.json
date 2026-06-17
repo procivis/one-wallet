@@ -153,7 +153,7 @@
   "common.version": "Versio",
   "common.visitWebsite": "Vieraile virallisella sivustolla",
   "common.wallet": "Lompakko",
-  "common.walletRegistration": "Lompakon todiste",
+  "common.walletActivation": "Lompakon todiste",
   "common.walletDeletion": "Lompakon poisto",
   "common.walletUnitRegistration": "Lompakkoyksikön todiste",
   "common.wrongPassword": "Väärä salasana",

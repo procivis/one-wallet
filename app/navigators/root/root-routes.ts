@@ -14,6 +14,7 @@ import { NerdModeNavigatorParamList } from '../nerd-mode/nerd-mode-routes';
 import { OnboardingNavigatorParamList } from '../onboarding/onboarding-routes';
 import { SettingsNavigatorParamList } from '../settings/settings-routes';
 import { SignDocumentNavigatorParamList } from '../sign-document/sign-document-routes';
+import { WalletUnitRegistrationParams } from '../wallet-unit-registration/wallet-unit-registration-routes';
 
 export type RootNavigatorParamList = {
   CredentialDetail: NavigatorScreenParams<CredentialDetailNavigatorParamList>;
@@ -49,11 +50,7 @@ export type RootNavigatorParamList = {
   };
   VersionUpdate: undefined;
   WalletUnitError: undefined;
-  WalletUnitRegistration: {
-    attestationRequired?: boolean;
-    operation: 'refresh' | 'register';
-    resetToDashboard?: boolean | 'onError';
-  };
+  WalletUnitRegistration: WalletUnitRegistrationParams;
 };
 
 export type RootRouteProp<RouteName extends keyof RootNavigatorParamList> =

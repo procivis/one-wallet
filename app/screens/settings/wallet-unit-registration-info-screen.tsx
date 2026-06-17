@@ -100,6 +100,11 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   );
   const Icon = status.icon;
 
+  const showButton =
+    !isLoading &&
+    walletUnitDetail?.status !== WalletUnitStatus.ACTIVE &&
+    walletUnitDetail?.status !== WalletUnitStatus.UNATTESTED;
+
   return (
     <ScrollViewScreen
       header={{
@@ -186,7 +191,7 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
         )}
       </View>
       <View style={styles.button}>
-        {!isLoading && (
+        {showButton && (
           <Button
             disabled={!isCheckButtonEnabled}
             onPress={handleCheck}
