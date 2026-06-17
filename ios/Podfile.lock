@@ -3685,7 +3685,7 @@ SPEC CHECKSUMS:
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458
   fmt: ef0a98103bd75695e5734efe6b9016b2675ffcd5
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  hermes-engine: be7bbcce1986cf00b65bf64fd45f043e1e1595ab
+  hermes-engine: fd4a2f16acd5a3443cafe4801ad2f6fd809be03c
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: d849be4292d467c0e13fd4ca5042bb352b7d1a61
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f

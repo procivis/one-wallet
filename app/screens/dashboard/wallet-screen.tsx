@@ -275,7 +275,10 @@ const WalletScreen: FunctionComponent = observer(() => {
           />
         )}
         {!isEmpty && (
-          <ScanButton onPress={handleScanPress} testID="WalletScreen.scan" />
+          <ScanButton
+            onScanPress={handleScanPress}
+            testID="WalletScreen.scan"
+          />
         )}
         <FoldableHeader
           header={
