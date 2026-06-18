@@ -169,6 +169,9 @@ const CredentialDetailScreen: FC = () => {
 
   const badgeTop = Math.ceil(cardWidth / CredentialCardRatio) - 34;
 
+  const title =
+    credential.schema.translations?.name[language] ?? credential.schema.name;
+
   return (
     <ScrollViewScreen
       header={{
@@ -203,7 +206,7 @@ const CredentialDetailScreen: FC = () => {
           </View>
         ),
         testID: 'CredentialDetailScreen.header',
-        title: credential.schema.name,
+        title,
       }}
       scrollView={{
         testID: 'CredentialDetailScreen.scroll',
