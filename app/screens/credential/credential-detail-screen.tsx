@@ -263,9 +263,14 @@ const CredentialDetailScreen: FC = () => {
                   >
                     <Typography
                       color={colorScheme.black}
+                      numberOfLines={1}
+                      preset="s/line-height-small"
                       style={styles.avatarPlaceholderText}
                     >
-                      {credential.schema.format.split(' ')[0].split('_')[0]}
+                      {credential.schema.format
+                        .split(' ')[0]
+                        .split('_')[0]
+                        .substring(0, 3)}
                     </Typography>
                   </View>
                 }
@@ -347,10 +352,10 @@ const HistorySection: FC<{
 const styles = StyleSheet.create({
   avatarPlaceholder: {
     alignItems: 'center',
-    borderRadius: 25,
-    height: 50,
+    borderRadius: 24,
+    height: 48,
     justifyContent: 'center',
-    width: 50,
+    width: 48,
   },
   avatarPlaceholderText: {
     textTransform: 'uppercase',
