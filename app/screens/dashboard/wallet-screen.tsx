@@ -245,8 +245,6 @@ const WalletScreen: FunctionComponent = observer(() => {
         )}
         {credentials && isEmpty && (
           <WalletEmptyList
-            onScanPress={handleScanPress}
-            scanButtonTitle={translate('common.scanQrCode')}
             subtitle={translate('info.wallet.credentialsList.empty.subtitle')}
             testID="WalletScreen.empty"
             title={translate('common.noCredentialsYet')}
@@ -263,20 +261,16 @@ const WalletScreen: FunctionComponent = observer(() => {
             withNotice={Boolean(topNotice)}
           />
         )}
-        {!isEmpty && (
-          <ScanButton
-            onIssuePress={
-              showRequestCredentialBtn
-                ? handleRequestCredentialClick
-                : undefined
-            }
-            onScanPress={handleScanPress}
-            onSignPress={
-              documentSigningEnabled ? handleSignDocumentClick : undefined
-            }
-            testID="WalletScreen.scan"
-          />
-        )}
+        <ScanButton
+          onIssuePress={
+            showRequestCredentialBtn ? handleRequestCredentialClick : undefined
+          }
+          onScanPress={handleScanPress}
+          onSignPress={
+            documentSigningEnabled ? handleSignDocumentClick : undefined
+          }
+          testID="WalletScreen.scan"
+        />
         <FoldableHeader
           header={
             <Header
