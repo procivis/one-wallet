@@ -5,7 +5,11 @@ import ReactAppDependencyProvider
 import RNBootSplash
 
 @main
-class AppDelegate: RCTAppDelegate {
+class AppDelegate: RCTAppDelegate, RNAppAuthAuthorizationFlowManager {
+  
+  public weak var authorizationFlowManagerDelegate:
+    RNAppAuthAuthorizationFlowManagerDelegate?
+  
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = "Wallet"
     self.dependencyProvider = RCTAppDependencyProvider()
@@ -35,10 +39,19 @@ class AppDelegate: RCTAppDelegate {
   }
   
   override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    if let authorizationFlowManagerDelegate,
+       authorizationFlowManagerDelegate.resumeExternalUserAgentFlow(with: url) {
+      return true
+    }
     return RCTLinkingManager.application(app, open: url, options: options)
   }
   
   override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([any UIUserActivityRestoring]?) -> Void) -> Bool {
-    RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
+    if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+       let authorizationFlowManagerDelegate,
+       authorizationFlowManagerDelegate.resumeExternalUserAgentFlow(with: userActivity.webpageURL) {
+      return true
+    }
+    return RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
   }
 }

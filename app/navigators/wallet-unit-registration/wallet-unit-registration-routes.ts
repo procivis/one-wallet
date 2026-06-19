@@ -8,10 +8,7 @@ export type WalletUnitRegistrationParams = {
 
 export type WalletUnitRegistrationNavigatorParamList = {
   Info: WalletUnitRegistrationParams;
-  Login: WalletUnitRegistrationParams;
-  Registration: WalletUnitRegistrationParams & {
-    code?: string;
-  };
+  Registration: WalletUnitRegistrationParams;
 };
 
 export type WalletUnitRegistrationRouteProp<

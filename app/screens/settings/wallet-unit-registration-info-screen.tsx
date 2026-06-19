@@ -64,6 +64,16 @@ const getStatus = (
     };
   }
 
+  if (walletUnitDetail?.status === WalletUnitStatus.PENDING) {
+    return {
+      backgroundColor: colorScheme.background,
+      description: translate('walletUnitRegistration.inactive'),
+      icon: StatusWarningIcon,
+      text: translate('common.inactive'),
+      textColor: colorScheme.text,
+    };
+  }
+
   return {
     backgroundColor: colorScheme.background,
     description: undefined,
@@ -75,7 +85,8 @@ const getStatus = (
 
 const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   const colorScheme = useAppColorScheme();
-  const navigation = useNavigation<SettingsNavigationProp<'AppInformation'>>();
+  const navigation =
+    useNavigation<SettingsNavigationProp<'WalletUnitRegistrationInfo'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
   const {
     walletStore: { registeredWalletUnitId },
@@ -90,7 +101,10 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
 
   const handleCheck = useCallback(() => {
     rootNavigation.navigate('WalletUnitRegistration', {
-      operation: walletUnitDetail ? 'refresh' : 'register',
+      operation:
+        walletUnitDetail && walletUnitDetail.status !== WalletUnitStatus.ERROR
+          ? 'refresh'
+          : 'register',
     });
   }, [rootNavigation, walletUnitDetail]);
 
