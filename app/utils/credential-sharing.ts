@@ -9,6 +9,9 @@ import { credentialCardLabels } from './credential';
 export const shareCredentialCardLabels = (): ShareCredentialCardLabels => {
   return {
     ...credentialCardLabels(),
+    disclosurePolicyViolation: translate(
+      'info.proofRequest.disclosurePolicyViolation',
+    ),
     missingAttribute: translate('common.missingAttribute'),
     missingCredential: translate('common.credentialMissing'),
     multipleCredentials: translate(

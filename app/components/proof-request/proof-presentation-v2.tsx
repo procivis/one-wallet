@@ -7,6 +7,9 @@ import {
   ProofRequestSet,
   ShareCredentialV2,
   ShareCredentialV2Group,
+  StatusWarningIcon,
+  Typography,
+  useAppColorScheme,
   useCredentialListExpandedCard,
   useCredentialRevocationCheck,
   useMemoAsync,
@@ -262,6 +265,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   onPresentationDefinitionLoaded,
   proofAccepted,
 }) => {
+  const colorScheme = useAppColorScheme();
   const onImagePreview = useCredentialImagePreview();
   const { core } = useONECore();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck(false);
@@ -306,6 +310,28 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
     return definition;
   }, [checkRevocation, core, proofId]);
+
+  const disclosurePolicyViolation = useMemo(
+    () =>
+      Object.values(selectedCredentials).some((selection) =>
+        Object.entries(selection).some(([queryId, credentials]) => {
+          const query = presentationDefinition?.credentialQueries[queryId];
+          if (
+            query?.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS'
+          ) {
+            return false;
+          }
+          return query.credentialOrFailureHint.applicableCredentials
+            .filter(({ id }) =>
+              credentials.some(({ credentialId }) => id === credentialId),
+            )
+            .some(({ embeddedDisclosurePolicyViolation }) =>
+              Boolean(embeddedDisclosurePolicyViolation),
+            );
+        }),
+      ),
+    [selectedCredentials, presentationDefinition],
+  );
 
   const credentialSets: CredentialSet[] = useMemo(() => {
     if (!presentationDefinition) {
@@ -650,6 +676,23 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
         );
       })}
       <View style={styles.bottom}>
+        {disclosurePolicyViolation && (
+          <View
+            style={[
+              styles.disclosureViolationWrapper,
+              { backgroundColor: colorScheme.white },
+            ]}
+          >
+            <StatusWarningIcon />
+            <Typography
+              color={colorScheme.text}
+              preset="xs/line-height-small"
+              style={styles.disclosureViolationText}
+            >
+              {translate('info.proofRequest.disclosurePolicyViolation.notice')}
+            </Typography>
+          </View>
+        )}
         <Button
           disabled={!allSelectionsValid}
           onPress={onSubmit}
@@ -669,6 +712,17 @@ const styles = StyleSheet.create({
     marginTop: 64,
     paddingBottom: Platform.OS === 'android' ? 16 : 0,
     paddingTop: 16,
+  },
+  disclosureViolationText: {
+    flexShrink: 1,
+    marginLeft: 12,
+  },
+  disclosureViolationWrapper: {
+    alignItems: 'center',
+    borderRadius: 12,
+    flexDirection: 'row',
+    marginBottom: 16,
+    padding: 12,
   },
   requestedCredential: {
     marginBottom: 12,
