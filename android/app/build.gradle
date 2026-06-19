@@ -105,6 +105,7 @@ android {
         manifestPlaceholders = [
             customOpenIDURLScheme: project.config.get("CUSTOM_OPENID_PROOF_REQUEST_URL_SCHEME") ?: "",
             customOpenIDCredentialOfferURLScheme: project.config.get("CUSTOM_OPENID_CREDENTIAL_OFFER_URL_SCHEME") ?: "",
+            appAuthRedirectScheme: "${project.config.get("CONFIG_NAME")}-one-wallet-${project.config.get("ENVIRONMENT")}"
         ]
 
         // only supported architectures
