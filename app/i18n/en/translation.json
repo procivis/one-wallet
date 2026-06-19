@@ -321,6 +321,8 @@
   "info.onboarding.userAgreement.subtitle": "Please read and accept our terms of service and privacy policy to use the Procivis One Wallet.",
   "info.pinLockModal.subtitle": "Wait {{min}} min {{sec}} sec and try again.",
   "info.pinLockModal.title": "{{attempts}} failed attempts to enter PIN",
+  "info.proofRequest.disclosurePolicyViolation": "The issuer has not authorized this disclosure.",
+  "info.proofRequest.disclosurePolicyViolation.notice": "One or more issuers have not authorized sharing their credentials with this party. You may proceed at your own risk.",
   "info.proofRequest.group.header": "Combined credentials",
   "info.proofRequest.invalidCredential.notice": "This credential validity could not be confirmed. Please try again in few minutes.",
   "info.proofRequest.multiSetChange.message": "This change will affect credential in multiple sets. Continue?",

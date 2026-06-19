@@ -8,6 +8,7 @@ import {
   useProofReject,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
+import { PresentationDefinitionVersion } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -17,7 +18,6 @@ import React, {
   ComponentType,
   FunctionComponent,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -60,25 +60,27 @@ const ProofRequestScreen: FunctionComponent = () => {
   // If this is true, we should not attempt to reject in useBeforeRemove
   const proofAccepted = useRef<boolean>(false);
 
-  const [presentationDefinitionVersion, setPresentationDefinitionVersion] =
-    useState<'V1' | 'V2'>();
   const [presentationDefinitionLoaded, setPresentationDefinitionLoaded] =
     useState(false);
 
-  useEffect(() => {
+  const presentationDefinitionVersion = useMemo(() => {
     if (!config || !proof) {
-      return;
+      return undefined;
     }
-    const verificationProtocol = config.verificationProtocol[proof.protocol];
-    const protocolCapabilities = verificationProtocol?.capabilities;
-    const supportedPresentationDefinition = (protocolCapabilities as any)[
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      'supportedPresentationDefinition'
-    ] as unknown as string[];
-    if (supportedPresentationDefinition?.includes('V2')) {
-      setPresentationDefinitionVersion('V2');
+
+    const supportedPresentationDefinition =
+      config.verificationProtocol[proof.protocol]?.capabilities
+        ?.supportedPresentationDefinition;
+
+    // prefer V2
+    if (
+      supportedPresentationDefinition?.includes(
+        PresentationDefinitionVersion.V2,
+      )
+    ) {
+      return PresentationDefinitionVersion.V2;
     } else {
-      setPresentationDefinitionVersion('V1');
+      return PresentationDefinitionVersion.V1;
     }
   }, [config, proof]);
 
@@ -113,10 +115,13 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const ProofPresentation: ComponentType<ProofPresentationProps> | undefined =
     useMemo(() => {
-      if (presentationDefinitionVersion === 'V1') {
-        return ProofPresentationV1;
-      } else if (presentationDefinitionVersion === 'V2') {
-        return ProofPresentationV2;
+      switch (presentationDefinitionVersion) {
+        case PresentationDefinitionVersion.V1: {
+          return ProofPresentationV1;
+        }
+        case PresentationDefinitionVersion.V2: {
+          return ProofPresentationV2;
+        }
       }
     }, [presentationDefinitionVersion]);
 
