@@ -12,7 +12,6 @@ import React, { FC, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import {
   WalletUnitRegistrationNavigationProp,
   WalletUnitRegistrationRouteProp,
@@ -23,16 +22,8 @@ const WalletUnitInfoScreen: FC = () => {
   const navigation =
     useNavigation<WalletUnitRegistrationNavigationProp<'Info'>>();
   const colorScheme = useAppColorScheme();
-  const {
-    walletStore: { walletProvider },
-  } = useStores();
 
   const onContinue = useCallback(
-    () => navigation.navigate('Login', route.params),
-    [navigation, route],
-  );
-
-  const onSkip = useCallback(
     () => navigation.navigate('Registration', route.params),
     [navigation, route],
   );
@@ -72,18 +63,9 @@ const WalletUnitInfoScreen: FC = () => {
           onPress={onContinue}
           style={styles.button}
           testID={concatTestID(testID, 'continue')}
-          title={translate('common.linkAccount')}
+          title={translate('common.continue')}
           type={ButtonType.Primary}
         />
-        {!walletProvider.userAuthentication?.required && (
-          <Button
-            onPress={onSkip}
-            style={styles.button}
-            testID={concatTestID(testID, 'skip')}
-            title={translate('common.skip')}
-            type={ButtonType.Secondary}
-          />
-        )}
       </View>
     </ScrollViewScreen>
   );

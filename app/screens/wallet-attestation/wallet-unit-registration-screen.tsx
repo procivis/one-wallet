@@ -2,7 +2,6 @@ import {
   ButtonType,
   concatTestID,
   LoaderViewState,
-  reportException,
   Transport,
   useActivateWalletUnit,
   useAppColorScheme,
@@ -12,7 +11,10 @@ import {
   useWalletUnitDetail,
   useWalletUnitStatus,
 } from '@procivis/one-react-native-components';
-import { WalletUnitStatus } from '@procivis/react-native-one-core';
+import {
+  HolderWalletUnit,
+  WalletUnitStatus,
+} from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   memo,
@@ -22,13 +24,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { AuthConfiguration, authorize } from 'react-native-app-auth';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { config } from '../../config';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { WalletUnitRegistrationRouteProp } from '../../navigators/wallet-unit-registration/wallet-unit-registration-routes';
+import {
+  WalletUnitRegistrationNavigationProp,
+  WalletUnitRegistrationRouteProp,
+} from '../../navigators/wallet-unit-registration/wallet-unit-registration-routes';
 import { resetNavigationAction } from '../../utils/navigation';
 
 const testID = 'WalletUnitRegistrationScreen';
@@ -44,7 +50,7 @@ const WalletUnitRegistrationScreen = () => {
     walletStore,
     walletStore: { walletProvider, walletUnitId },
     walletStore: {
-      walletProvider: { featureFlags },
+      walletProvider: { featureFlags, userAuthentication },
     },
   } = useStores();
   const { availableTransport } = useAvailableTransports([Transport.HTTP]);
@@ -52,9 +58,11 @@ const WalletUnitRegistrationScreen = () => {
   const handled = useRef<boolean>(false);
   const cancelled = useRef<boolean>(false);
 
-  const rootNavigation = useNavigation<RootNavigationProp<'Onboarding'>>();
+  const rootNavigation = useNavigation<RootNavigationProp>();
+  const wuaNavigation =
+    useNavigation<WalletUnitRegistrationNavigationProp<'Registration'>>();
   const route = useRoute<WalletUnitRegistrationRouteProp<'Registration'>>();
-  const { data: walletUnit } = useWalletUnitDetail(walletUnitId);
+  const { data: walletUnit, refetch } = useWalletUnitDetail(walletUnitId);
   const { mutateAsync: registerWalletUnit, isSuccess: registeredNewWallet } =
     useRegisterWalletUnit();
   const { mutateAsync: activateWalletUnit } = useActivateWalletUnit();
@@ -104,12 +112,17 @@ const WalletUnitRegistrationScreen = () => {
           { name: 'Dashboard', params: { screen: 'Wallet' } },
         ]);
       } else {
-        rootNavigation.goBack();
+        const state = wuaNavigation.getState();
+        wuaNavigation.goBack();
+        if (state.routes.length == 2) {
+          wuaNavigation.goBack();
+        }
       }
     },
     [
       featureFlags?.trustEcosystemsEnabled,
       rootNavigation,
+      wuaNavigation,
       route.params?.resetToDashboard,
     ],
   );
@@ -117,6 +130,34 @@ const WalletUnitRegistrationScreen = () => {
   const closeHandler = useCallback(() => {
     close(status, walletUnitStatus);
   }, [close, status, walletUnitStatus]);
+
+  const handleActivateWalletUnit = useCallback(
+    async (id: string, nonce: string) => {
+      if (!userAuthentication) {
+        return;
+      }
+      const config: AuthConfiguration = {
+        additionalParameters: {
+          nonce,
+        },
+        clientId: userAuthentication.clientId,
+        issuer: userAuthentication.identityProvider,
+        redirectUrl: userAuthentication.redirectUri,
+        scopes: ['openid', 'profile'],
+      };
+      try {
+        const result = await authorize(config);
+        await activateWalletUnit({
+          id,
+          userIdToken: result.idToken,
+        });
+      } catch (e) {
+        console.error(e);
+        throw new Error(translate('walletUnitRegistration.inactive'));
+      }
+    },
+    [activateWalletUnit, userAuthentication],
+  );
 
   const handleRegisterOrRefresh = useCallback(async () => {
     if (hasInternetConnection === undefined || handled.current) {
@@ -129,50 +170,83 @@ const WalletUnitRegistrationScreen = () => {
     }
     try {
       setStatus(LoaderViewState.InProgress);
-      let walletUnit;
-      if (route.params.operation === 'refresh') {
+      let noewWalletUnitStatus: WalletUnitStatus | undefined;
+      let register = true;
+
+      if (
+        route.params.operation === 'refresh' ||
+        walletUnitStatus === WalletUnitStatus.PENDING
+      ) {
+        register = false;
         await refreshWalletUnit(walletUnitId);
-      } else {
+        let refetchedWalletUnit: HolderWalletUnit | undefined = (
+          await refetch()
+        ).data;
+        if (
+          refetchedWalletUnit?.status === WalletUnitStatus.PENDING &&
+          refetchedWalletUnit.userNonce
+        ) {
+          try {
+            await handleActivateWalletUnit(
+              refetchedWalletUnit.id,
+              refetchedWalletUnit.userNonce,
+            );
+          } catch (e) {
+            refetchedWalletUnit = (await refetch()).data;
+            if (refetchedWalletUnit?.status !== WalletUnitStatus.ERROR) {
+              throw e;
+            }
+          }
+        }
+        if (refetchedWalletUnit?.status === WalletUnitStatus.ERROR) {
+          register = true;
+        }
+      }
+
+      if (register) {
         if (!config.walletProvider) {
           throw new Error('No wallet provider specified');
         }
 
-        walletUnit = await registerWalletUnit({
+        const registeredWalletUnit = await registerWalletUnit({
           trustedRpRequired: false,
           walletProvider: {
             type: config.walletProvider.type,
             url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
           },
         });
-        if (route.params.code) {
+        noewWalletUnitStatus = registeredWalletUnit.status;
+
+        if (userAuthentication && registeredWalletUnit.userNonce) {
           try {
-            await activateWalletUnit({
-              id: walletUnit.id,
-              userIdToken: route.params.code,
-            });
+            await handleActivateWalletUnit(
+              registeredWalletUnit.id,
+              registeredWalletUnit.userNonce,
+            );
+            const { data: refetchedWalletUnit } = await refetch();
+            if (refetchedWalletUnit) {
+              noewWalletUnitStatus = refetchedWalletUnit.status;
+            }
           } catch (e) {
-            reportException(e);
+            if (registeredWalletUnit.status === WalletUnitStatus.PENDING) {
+              walletStore.walletUnitIdSetup(registeredWalletUnit.id);
+              setWalletUnitStatus(registeredWalletUnit.status);
+              throw e;
+            }
           }
         }
-        walletStore.walletUnitIdSetup(walletUnit.id);
-        setWalletUnitStatus(walletUnit.status);
-        if (walletUnit.status === WalletUnitStatus.UNATTESTED) {
-          const attestationRequired =
-            walletProvider.walletUnitAttestation.required;
-          setStatus(
-            attestationRequired
-              ? LoaderViewState.Error
-              : LoaderViewState.Warning,
-          );
-          setError(new Error(translate('walletUnitRegistration.unattested')));
-          return;
+
+        walletStore.walletUnitIdSetup(registeredWalletUnit.id);
+        if (registeredWalletUnit.status === WalletUnitStatus.UNATTESTED) {
+          throw new Error(translate('walletUnitRegistration.unattested'));
         }
       }
       if (cancelled.current) {
         return;
       }
       setStatus(LoaderViewState.Success);
-      close(LoaderViewState.Success, walletUnit?.status);
+      setWalletUnitStatus(noewWalletUnitStatus);
+      close(LoaderViewState.Success, noewWalletUnitStatus);
     } catch (err) {
       if (cancelled.current) {
         return;
@@ -189,11 +263,14 @@ const WalletUnitRegistrationScreen = () => {
     hasInternetConnection,
     refreshWalletUnit,
     registerWalletUnit,
-    activateWalletUnit,
+    handleActivateWalletUnit,
+    refetch,
     route.params,
     walletProvider.walletUnitAttestation.required,
     walletStore,
     walletUnitId,
+    walletUnitStatus,
+    userAuthentication,
   ]);
 
   useEffect(() => {
@@ -218,6 +295,8 @@ const WalletUnitRegistrationScreen = () => {
     }
     if (walletUnitStatus === WalletUnitStatus.UNATTESTED) {
       return translate('walletUnitRegistration.unattested');
+    } else if (walletUnitStatus === WalletUnitStatus.PENDING) {
+      return translate('walletUnitRegistration.inactive');
     }
     if (!error) {
       if (route.params.operation === 'refresh') {
@@ -255,8 +334,12 @@ const WalletUnitRegistrationScreen = () => {
   );
 
   const button = useMemo(() => {
+    if (status === LoaderViewState.InProgress) {
+      return undefined;
+    }
     switch (walletUnitStatus) {
       case WalletUnitStatus.ERROR:
+      case WalletUnitStatus.PENDING:
         return retryButton;
       case WalletUnitStatus.UNATTESTED:
         return !walletProvider.walletUnitAttestation.required
@@ -268,22 +351,38 @@ const WalletUnitRegistrationScreen = () => {
         return closeButton;
     }
   }, [
+    status,
     closeButton,
     retryButton,
     walletProvider.walletUnitAttestation.required,
     walletUnitStatus,
   ]);
 
-  const secondaryButton =
-    walletUnitStatus === WalletUnitStatus.ERROR &&
-    !walletProvider.walletUnitAttestation.required
-      ? {
-          onPress: closeHandler,
-          testID: concatTestID(testID, 'close'),
-          title: translate('common.close'),
-          type: ButtonType.Secondary,
-        }
-      : undefined;
+  const secondaryButton = useMemo(() => {
+    if (
+      status === LoaderViewState.InProgress ||
+      walletProvider.walletUnitAttestation.required
+    ) {
+      return undefined;
+    }
+    if (
+      walletUnitStatus === WalletUnitStatus.ERROR ||
+      walletUnitStatus === WalletUnitStatus.PENDING
+    ) {
+      return {
+        onPress: closeHandler,
+        testID: concatTestID(testID, 'close'),
+        title: translate('common.close'),
+        type: ButtonType.Secondary,
+      };
+    }
+    return undefined;
+  }, [
+    closeHandler,
+    status,
+    walletProvider.walletUnitAttestation.required,
+    walletUnitStatus,
+  ]);
 
   return (
     <ProcessingView

@@ -4,7 +4,6 @@ import React from 'react';
 
 import { useStores } from '../../models';
 import WalletUnitInfoScreen from '../../screens/wallet-attestation/wallet-unit-info-screen';
-import WalletUnitLoginScreen from '../../screens/wallet-attestation/wallet-unit-login-screen';
 import WalletUnitRegistrationScreen from '../../screens/wallet-attestation/wallet-unit-registration-screen';
 import { RootRouteProp } from '../root/root-routes';
 import { WalletUnitRegistrationNavigatorParamList } from './wallet-unit-registration-routes';
@@ -32,11 +31,6 @@ const WalletUnitRegistrationNavigator = () => {
         component={WalletUnitInfoScreen}
         initialParams={route.params}
         name="Info"
-      />
-      <Stack.Screen
-        component={WalletUnitLoginScreen}
-        initialParams={route.params}
-        name="Login"
       />
       <Stack.Screen
         component={WalletUnitRegistrationScreen}

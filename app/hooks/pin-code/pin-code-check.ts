@@ -43,7 +43,11 @@ export const useAutomaticPinCodeCoverLogic = (enabled: boolean) => {
     const { routes, index } = navigation.getState?.() || {};
     const currentRoute = routes?.[index ?? 0]?.name;
 
-    if (currentRoute === 'PinCodeCheck' || currentRoute === 'Onboarding') {
+    if (
+      ['PinCodeCheck', 'Onboarding', 'WalletUnitRegistration'].includes(
+        currentRoute,
+      )
+    ) {
       return false;
     }
     navigation.navigate('PinCodeCheck');
