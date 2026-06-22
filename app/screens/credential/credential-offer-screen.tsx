@@ -315,8 +315,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
                 width: cardWidth,
               }}
               expanded={expanded}
+              lessLabel={translate('common.less')}
+              moreLabel={translate('common.more')}
               onImagePreview={onImagePreview}
               showAllButtonLabel={translate('common.seeAll')}
+              showLessButtonLabel={translate('common.seeLess')}
             />
           </View>
           <View style={styles.bottom}>
