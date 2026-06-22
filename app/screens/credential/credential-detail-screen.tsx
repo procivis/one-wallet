@@ -222,8 +222,11 @@ const CredentialDetailScreen: FC = () => {
             width: cardWidth,
           }}
           expanded={expanded}
+          lessLabel={translate('common.less')}
+          moreLabel={translate('common.more')}
           onImagePreview={onImagePreview}
           showAllButtonLabel={translate('common.seeAll')}
+          showLessButtonLabel={translate('common.seeLess')}
           testID={testID}
         />
         {credential.type === CredentialType.BATCH_PARENT &&
