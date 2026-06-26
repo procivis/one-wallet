@@ -58,16 +58,19 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="openid-credential-offer" />
-                <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}" />
                 <data android:scheme="openid4vp" />
                 <data android:scheme="openid4vp-draft20" />
-                <data android:scheme="openid4vp-draft25" />
                 <data android:scheme="haip-vci" />
                 <data android:scheme="haip-vp" />
                 <data android:scheme="swiyu" />
                 <data android:scheme="swiyu-verify" />
                 <data android:scheme="${customOpenIDURLScheme}" />
                 <data android:scheme="${customOpenIDCredentialOfferURLScheme}" />
+
+                <!-- redirect back from the issuance authentication flow -->
+                <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}-issue" />
+                <!-- redirect back from the signature authentication flow -->
+                <data android:scheme="${CONFIG_NAME}-one-wallet-${ENVIRONMENT}-sign" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -80,7 +83,6 @@
                 <data android:path="/app-link/openid-credential-offer" />
                 <data android:path="/app-link/openid4vp" />
                 <data android:path="/app-link/openid4vp-draft20" />
-                <data android:path="/app-link/openid4vp-draft25" />
                 <data android:path="/app-link/haip-vci" />
                 <data android:path="/app-link/haip-vp" />
                 <data android:path="/app-link/swiyu" />
