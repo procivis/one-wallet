@@ -57,15 +57,31 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                 credentialQuery.credentialOrFailureHint.type_ ===
                   'APPLICABLE_CREDENTIALS'
               ) {
-                credentialQuery.credentialOrFailureHint.applicableCredentials.sort(
+                const applicableCredentials =
+                  credentialQuery.credentialOrFailureHint.applicableCredentials;
+                applicableCredentials.sort(
                   objectByTimestampSorter('issuanceDate', false),
                 );
+                const selectedCredential = applicableCredentials[0];
+
+                const userSelections: PresentationSubmitV2CredentialRequest['userSelections'] =
+                  [];
+
+                // preselect all claims for the ISO mDL flow
+                if (
+                  selectedCredential.claims.every((claim) => !claim.required)
+                ) {
+                  userSelections.push(
+                    ...selectedCredential.claims
+                      .filter((claim) => claim.userSelection)
+                      .map((claim) => claim.path),
+                  );
+                }
+
                 acc2[queryId] = [
                   {
-                    credentialId:
-                      credentialQuery.credentialOrFailureHint
-                        .applicableCredentials[0].id,
-                    userSelections: [],
+                    credentialId: selectedCredential.id,
+                    userSelections,
                   },
                 ];
               }
