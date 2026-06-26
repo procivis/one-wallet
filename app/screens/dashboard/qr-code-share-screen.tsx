@@ -136,7 +136,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
 
   useEffect(() => {
     if (proof && proofState?.state === ProofState.REQUESTED) {
-      navigation.popTo('Wallet');
+      rootNavigation.popToTop();
       setTimeout(() => {
         rootNavigation.navigate('CredentialManagement', {
           params: {
@@ -152,9 +152,9 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
           },
           screen: 'ShareCredential',
         });
-      }, 500);
+      }, 800);
     }
-  }, [navigation, proof, proofState, rootNavigation]);
+  }, [proof, proofState, rootNavigation]);
 
   const testID = 'QRCodeShareScreen';
 
