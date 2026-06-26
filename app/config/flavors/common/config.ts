@@ -22,6 +22,6 @@ export const commonConfig: Pick<
     requestCredentialEnabled: true,
     ubiquRse: true,
   },
-  requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://request-credential-redirect`,
-  signDocumentRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}://sign-document-redirect`,
+  requestCredentialRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}-issue://request-credential-redirect`,
+  signDocumentRedirectUri: `${rnuc.CONFIG_NAME}-one-wallet-${rnuc.ENVIRONMENT}-sign://sign-document-redirect`,
 };
