@@ -29,7 +29,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
 
 import BleWarning from '../../components/ble/ble-warning';
@@ -176,7 +176,9 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
       }}
       testID={testID}
     >
-      <ContrastingStatusBar backgroundColor={colorScheme.background} />
+      {Platform.OS !== 'ios' && (
+        <ContrastingStatusBar backgroundColor={colorScheme.background} />
+      )}
       <View style={styles.content} testID="QRCodeShareScreen.content">
         <Typography
           align="center"
