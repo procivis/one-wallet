@@ -16,7 +16,7 @@ const AppVersionModel = types.model('AppVersion', {
 });
 
 const FeatureFlagsModel = types.model('FeatureFlags', {
-  documentSigningEnabled: types.boolean,
+  documentSigningEnabled: types.maybe(types.boolean),
   trustEcosystemsEnabled: types.boolean,
 });
 
