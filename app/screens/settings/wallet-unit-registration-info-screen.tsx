@@ -47,7 +47,7 @@ const getStatus = (
   if (walletUnitDetail?.status === WalletUnitStatus.ACTIVE) {
     return {
       backgroundColor: colorScheme.background,
-      description: undefined,
+      description: translate('walletUnitRegistration.accepted'),
       icon: StatusSuccessIcon,
       text: translate('common.accepted'),
       textColor: colorScheme.text,
@@ -122,13 +122,14 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   return (
     <ScrollViewScreen
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: (
           <BackButton
             onPress={navigation.goBack}
             testID={concatTestID(testID, 'back')}
           />
         ),
-        title: translate('common.walletUnitAttestation'),
+        title: translate('common.walletUnitRegistration'),
       }}
       style={{ backgroundColor: colorScheme.white }}
       testID={testID}

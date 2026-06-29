@@ -44,6 +44,7 @@ const AppInformationScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: (
           <BackButton
             onPress={navigation.goBack}

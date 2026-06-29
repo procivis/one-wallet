@@ -59,6 +59,7 @@ const ClearCacheScreen: FunctionComponent = () => {
   return (
     <ScrollViewScreen
       header={{
+        backgroundColor: colorScheme.white,
         leftItem: (
           <HeaderBackButton testID={concatTestID(testID, 'header.back')} />
         ),
