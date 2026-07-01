@@ -203,7 +203,9 @@ build:
 
 .upload_bom:
   stage: scan
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.92.0-0.1
+  image: 
+    name: $CI_REGISTRY/procivis/one/one-operations/core-base:1.95.0-1.0
+    pull_policy: if-not-present
   needs: [build_deps]
   variables:
     SBOM_FILE_PATH: "bom.json"
@@ -254,7 +256,9 @@ dtrack:ios:generate-bom:
 
 dtrack:ios:upload-bom:
   stage: scan
-  image: $CI_REGISTRY/procivis/one/one-operations/core-base:1.88.0-0.2
+  image: 
+    name: $CI_REGISTRY/procivis/one/one-operations/core-base:1.95.0-1.0
+    pull_policy: if-not-present
   needs:
     - job: dtrack:ios:generate-bom
       artifacts: true
