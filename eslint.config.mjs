@@ -13,6 +13,7 @@ import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sortKeysPlugin from 'eslint-plugin-sort-keys';
 import tsSortKeysPlugin from 'eslint-plugin-typescript-sort-keys';
 import tsEslint from 'typescript-eslint';
+import testingLibrary from 'eslint-plugin-testing-library';
 
 export default tsEslint.config([
   jsEslint.configs.recommended,
@@ -27,6 +28,10 @@ export default tsEslint.config([
       }),
     },
     rules: reactNativePlugin.configs.all.rules,
+  },
+  {
+    files: ['**/*.test.[jt]s?(x)'],
+    ...testingLibrary.configs['flat/react'],
   },
   {
     languageOptions: {
