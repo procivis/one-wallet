@@ -1,8 +1,6 @@
 import {
   CredentialQuery,
   HandleInvitationResponse,
-  PresentationDefinitionRequestedCredential,
-  PresentationSubmitCredentialRequest,
   PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 import { RouteProp } from '@react-navigation/native';
@@ -15,19 +13,10 @@ type InvitationResultProofRequest = Extract<
 
 export type ShareCredentialNavigatorParamList = {
   Processing: {
+    credentialsV2: Record<string, PresentationSubmitV2CredentialRequest[]>;
     interactionId: string;
     proofId: string;
-  } & (
-    | {
-        credentials: Record<
-          PresentationDefinitionRequestedCredential['id'],
-          PresentationSubmitCredentialRequest[]
-        >;
-      }
-    | {
-        credentialsV2: Record<string, PresentationSubmitV2CredentialRequest[]>;
-      }
-  );
+  };
   ProofRequest: {
     request: InvitationResultProofRequest;
     selectedCredentialId?: string;
@@ -35,10 +24,6 @@ export type ShareCredentialNavigatorParamList = {
       credentialQueryId: string;
       selectedCredentialIds: string[];
     };
-  };
-  SelectCredential: {
-    preselectedCredentialId: string;
-    request: PresentationDefinitionRequestedCredential;
   };
   SelectCredentialV2: {
     credentialQuery: CredentialQuery;

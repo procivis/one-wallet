@@ -1,11 +1,8 @@
 import {
   ButtonType,
-  HISTORY_LIST_QUERY_KEY,
   LoaderViewState,
-  PROOF_DETAIL_QUERY_KEY,
   reportException,
   useBlockOSBackNavigation,
-  useONECore,
   useProofAccept,
   useProofDetail,
 } from '@procivis/one-react-native-components';
@@ -20,41 +17,14 @@ import React, {
   useState,
 } from 'react';
 import { Linking } from 'react-native';
-import { useMutation, useQueryClient } from 'react-query';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { translate, translateError } from '../../i18n';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { ShareCredentialRouteProp } from '../../navigators/share-credential/share-credential-routes';
-import { CredentialQuerySelection } from '../../utils/proof-request';
 import { isRSELockedError } from '../../utils/rse';
 
 const { addEventListener: addRSEEventListener, PinEventType } = Ubiqu;
-
-export const useProofAcceptV2 = () => {
-  const queryClient = useQueryClient();
-  const { core } = useONECore();
-
-  return useMutation(
-    async ({
-      interactionId,
-      credentials,
-    }: {
-      credentials: CredentialQuerySelection;
-      interactionId: string;
-    }) => core.holderSubmitProofV2(interactionId, credentials),
-    {
-      onError: async (err) => {
-        reportException(err, 'Proof submission failure');
-        await queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
-      },
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(PROOF_DETAIL_QUERY_KEY);
-        await queryClient.invalidateQueries(HISTORY_LIST_QUERY_KEY);
-      },
-    },
-  );
-};
 
 const ProofProcessScreen: FunctionComponent = () => {
   const rootNavigation =
@@ -64,8 +34,7 @@ const ProofProcessScreen: FunctionComponent = () => {
   const [state, setState] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
-  const { mutateAsync: acceptProof } = useProofAccept();
-  const { mutateAsync: acceptProofV2 } = useProofAcceptV2();
+  const { mutateAsync: acceptProofV2 } = useProofAccept();
   const { data: proof } = useProofDetail(proofId);
   const [error, setError] = useState<unknown>();
   const accepted = useRef(false);
@@ -96,19 +65,11 @@ const ProofProcessScreen: FunctionComponent = () => {
     }
     try {
       accepted.current = true;
-      if ('credentials' in params) {
-        const credentials = params.credentials;
-        await acceptProof({
-          credentials,
-          interactionId,
-        });
-      } else {
-        const credentials = params.credentialsV2;
-        await acceptProofV2({
-          credentials,
-          interactionId,
-        });
-      }
+      const credentials = params.credentialsV2;
+      await acceptProofV2({
+        credentials,
+        interactionId,
+      });
       setState(LoaderViewState.Success);
     } catch (e) {
       if (isRSELockedError(e)) {
@@ -118,7 +79,7 @@ const ProofProcessScreen: FunctionComponent = () => {
       }
       setError(e);
     }
-  }, [params, acceptProof, interactionId, acceptProofV2]);
+  }, [params, interactionId, acceptProofV2]);
 
   useEffect(() => {
     handleProofSubmit();

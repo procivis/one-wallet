@@ -3,33 +3,21 @@ import {
   ScrollViewScreen,
   TrustInfo,
   useBeforeRemove,
-  useCoreConfig,
-  useProofDetail,
   useProofReject,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
-import { PresentationDefinitionVersion } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, {
-  ComponentType,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
-import { ProofPresentationProps } from '../../components/proof-request/proof-presentation-props';
-import ProofPresentationV1 from '../../components/proof-request/proof-presentation-v1';
 import ProofPresentationV2 from '../../components/proof-request/proof-presentation-v2';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
 import { translate } from '../../i18n';
@@ -46,13 +34,11 @@ const ProofRequestScreen: FunctionComponent = () => {
       walletProvider: { featureFlags },
     },
   } = useStores();
-  const { data: config } = useCoreConfig();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
   const {
     request: { interactionId, proofId },
   } = route.params;
-  const { data: proof } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
     featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
   );
@@ -62,27 +48,6 @@ const ProofRequestScreen: FunctionComponent = () => {
 
   const [presentationDefinitionLoaded, setPresentationDefinitionLoaded] =
     useState(false);
-
-  const presentationDefinitionVersion = useMemo(() => {
-    if (!config || !proof) {
-      return undefined;
-    }
-
-    const supportedPresentationDefinition =
-      config.verificationProtocol[proof.protocol]?.capabilities
-        ?.supportedPresentationDefinition;
-
-    // prefer V2
-    if (
-      supportedPresentationDefinition?.includes(
-        PresentationDefinitionVersion.V2,
-      )
-    ) {
-      return PresentationDefinitionVersion.V2;
-    } else {
-      return PresentationDefinitionVersion.V1;
-    }
-  }, [config, proof]);
 
   const onPresentationDefinitionLoaded = useCallback(() => {
     setPresentationDefinitionLoaded(true);
@@ -112,18 +77,6 @@ const ProofRequestScreen: FunctionComponent = () => {
     }
     rejectProof(interactionId);
   }, [interactionId, isFocused, rejectProof]);
-
-  const ProofPresentation: ComponentType<ProofPresentationProps> | undefined =
-    useMemo(() => {
-      switch (presentationDefinitionVersion) {
-        case PresentationDefinitionVersion.V1: {
-          return ProofPresentationV1;
-        }
-        case PresentationDefinitionVersion.V2: {
-          return ProofPresentationV2;
-        }
-      }
-    }, [presentationDefinitionVersion]);
 
   useBeforeRemove(reject);
 
@@ -159,12 +112,10 @@ const ProofRequestScreen: FunctionComponent = () => {
           />
         )}
         <>
-          {ProofPresentation && (
-            <ProofPresentation
-              onPresentationDefinitionLoaded={onPresentationDefinitionLoaded}
-              proofAccepted={proofAccepted}
-            />
-          )}
+          <ProofPresentationV2
+            onPresentationDefinitionLoaded={onPresentationDefinitionLoaded}
+            proofAccepted={proofAccepted}
+          />
           {!presentationDefinitionLoaded ? (
             <ActivityIndicator
               animate={isFocused}
