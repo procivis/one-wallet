@@ -14,6 +14,4 @@ jest.mock('react-native', () => {
       };
     }),
   });
-
-  return rn;
 });

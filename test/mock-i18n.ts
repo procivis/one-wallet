@@ -1,7 +1,13 @@
 jest.mock('i18n-js', () => {
-  return {
+  const mock: Record<string, unknown> = {
+    currentLocale: () => 'en',
+    fallbacks: true,
+    locale: 'en',
     t: (key: string) => `${key}.test`,
+    translations: {},
   };
-});
 
-export {};
+  mock.I18n = () => mock;
+
+  return mock;
+});
