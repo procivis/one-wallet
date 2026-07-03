@@ -29,16 +29,21 @@ const useProviderAuth = ({ provider }: UseProviderAuthProps) => {
   });
 
   const handleDocumentSigning = useCallback(
-    (code: string) => {
+    (code: string | null) => {
+      if (code) {
+        return navigation.navigate('SignDocument', {
+          params: {
+            code,
+            codeVerifier,
+            document,
+            documentName,
+            provider,
+          },
+          screen: 'WalletCentricProcessScreen',
+        });
+      }
       navigation.navigate('SignDocument', {
-        params: {
-          code,
-          codeVerifier,
-          document,
-          documentName,
-          provider,
-        },
-        screen: 'WalletCentricProcessScreen',
+        screen: 'WalletCentricSignErrorScreen',
       });
     },
     [navigation, codeVerifier, document, documentName, provider],
@@ -53,9 +58,7 @@ const useProviderAuth = ({ provider }: UseProviderAuthProps) => {
         const params = new URL(url).searchParams;
         const authCode = params.get('code');
         closeBrowser();
-        if (authCode) {
-          handleDocumentSigning(authCode);
-        }
+        handleDocumentSigning(authCode);
       }
     },
     [handleDocumentSigning],

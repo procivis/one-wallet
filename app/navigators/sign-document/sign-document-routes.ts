@@ -10,6 +10,7 @@ export type SignDocumentNavigatorParamList = {
     provider: string;
   };
   WalletCentricSavedScreen: undefined;
+  WalletCentricSignErrorScreen: undefined;
 };
 
 export type SignDocumentRouteProp<
