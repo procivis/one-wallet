@@ -3,6 +3,7 @@ import React from 'react';
 
 import WalletCentricProcessScreen from '../../screens/sign-document-provider/wallet-centric/process-screen';
 import WalletCentricSavedScreen from '../../screens/sign-document-provider/wallet-centric/saved-screen';
+import WalletCentricSignScreen from '../../screens/sign-document-provider/wallet-centric/sign-error-screen';
 import { formSheetWrapper } from '../navigation-utilities';
 import { SignDocumentNavigatorParamList } from './sign-document-routes';
 
@@ -22,6 +23,10 @@ const SignDocumentNavigator = () => {
       <Stack.Screen
         component={WalletCentricSavedScreen}
         name="WalletCentricSavedScreen"
+      />
+      <Stack.Screen
+        component={WalletCentricSignScreen}
+        name="WalletCentricSignErrorScreen"
       />
     </Stack.Navigator>
   );
