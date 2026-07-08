@@ -114,30 +114,40 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   );
   const { mutateAsync: updateWalletUnit } = useWalletUnitUpdate();
 
-  useEffect(() => {}, [route.params?.preselect, walletUnit]);
+  const saveTrustCollections = useCallback(
+    (trustCollections: string[]) => {
+      if (!registeredWalletUnitId) {
+        return;
+      }
+      updateWalletUnit({
+        update: { trustCollections },
+        walletUnitId: registeredWalletUnitId,
+      });
+    },
+    [updateWalletUnit, registeredWalletUnitId],
+  );
 
   useEffect(() => {
     if (isLoading || !trustCollections) {
       return;
     }
     if (route.params?.preselect) {
-      setSelectedEcosystems(trustCollections.map(({ id }) => id));
+      const preselected = trustCollections
+        .filter((tc) => tc.defaultSelected)
+        .map(({ id }) => id);
+      setSelectedEcosystems(preselected);
+      saveTrustCollections(preselected);
     } else {
       setSelectedEcosystems(
         trustCollections.filter((tc) => tc.selected).map((tc) => tc.id),
       );
     }
-  }, [isLoading, trustCollections, route]);
+  }, [isLoading, trustCollections, route, saveTrustCollections]);
 
   const language = useCurrentLanguage();
 
   const onContinue = useCallback(() => {
-    if (registeredWalletUnitId) {
-      updateWalletUnit({
-        update: { trustCollections: selectedEcosystems },
-        walletUnitId: registeredWalletUnitId,
-      });
-    }
+    saveTrustCollections(selectedEcosystems);
     if (route.params?.resetToDashboard) {
       resetNavigationAction(navigation, [
         { name: 'Dashboard', params: { screen: 'Wallet' } },
@@ -147,10 +157,9 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     }
   }, [
     navigation,
-    registeredWalletUnitId,
     route.params?.resetToDashboard,
     selectedEcosystems,
-    updateWalletUnit,
+    saveTrustCollections,
   ]);
 
   const setSelected = useCallback(
