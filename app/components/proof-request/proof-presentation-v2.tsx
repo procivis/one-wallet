@@ -123,6 +123,7 @@ function getNewSelection(
         {
           credentialId: selectedCredentialId,
           userSelections,
+          transactionDataIds: [],
         },
       ];
     } else {
@@ -148,6 +149,7 @@ function getNewSelection(
           userSelections: userSelections.filter((path) =>
             credentialAvailablePaths.includes(path),
           ),
+          transactionDataIds: [],
         };
       });
       newSelection[setId][credentialQueryId] =
@@ -247,6 +249,7 @@ function getNewSetSelection(
               {
                 credentialId: credentialQuery.applicableCredentials[0].id,
                 userSelections: [],
+                transactionDataIds: [],
               },
             ]
           : undefined;
