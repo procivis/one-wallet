@@ -56,6 +56,7 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                   {
                     credentialId: selectedCredential.id,
                     userSelections,
+                    transactionDataIds: [],
                   },
                 ];
               }
