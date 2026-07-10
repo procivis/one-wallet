@@ -5,7 +5,6 @@ import {
   concatTestID,
   ContrastingStatusBar,
   CredentialWarningIcon,
-  QrCode,
   ScrollViewScreen,
   Typography,
   useAppColorScheme,
@@ -29,8 +28,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { RESULTS } from 'react-native-permissions';
+import QRCode from 'react-native-qrcode-svg';
 
 import BleWarning from '../../components/ble/ble-warning';
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
@@ -128,7 +128,13 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
     }
 
     return proof?.url ? (
-      <QrCode content={proof.url} onError={setQrError} />
+      <QRCode
+        ecl="L"
+        onError={setQrError}
+        quietZone={0}
+        size={Dimensions.get('window').width - 56}
+        value={proof.url}
+      />
     ) : (
       <ActivityIndicator animate={isFocused} />
     );
