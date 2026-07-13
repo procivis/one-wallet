@@ -116,14 +116,13 @@ function getNewSelection(
       }
       const credentialAvailablePaths =
         getV2CredentialAvailablePaths(credential);
-      const userSelections = credentialSelections[0].userSelections.filter(
+      const userSelections = credentialSelections[0].userSelections?.filter(
         (path) => credentialAvailablePaths.includes(path),
       );
       newSelection[setId][credentialQueryId] = [
         {
           credentialId: selectedCredentialId,
           userSelections,
-          transactionDataIds: [],
         },
       ];
     } else {
@@ -146,10 +145,10 @@ function getNewSelection(
           alreadySelected?.userSelections ?? initialUserSelections;
         return {
           credentialId: id,
-          userSelections: userSelections.filter((path) =>
+          transactionDataIds: [],
+          userSelections: userSelections?.filter((path) =>
             credentialAvailablePaths.includes(path),
           ),
-          transactionDataIds: [],
         };
       });
       newSelection[setId][credentialQueryId] =
@@ -200,8 +199,8 @@ function prepareSubmission(
             return;
           }
           const userSelections = uniq(
-            currentCredentialRequest.userSelections.concat(
-              credentialRequest.userSelections,
+            currentCredentialRequest.userSelections?.concat(
+              credentialRequest.userSelections ?? [],
             ),
           );
           currentCredentialRequest.userSelections = userSelections;
@@ -249,7 +248,6 @@ function getNewSetSelection(
               {
                 credentialId: credentialQuery.applicableCredentials[0].id,
                 userSelections: [],
-                transactionDataIds: [],
               },
             ]
           : undefined;
@@ -490,9 +488,13 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       return currentSelectedCredentials;
     }
     if (selected) {
-      prevSelection.userSelections.push(updatedFieldPath);
+      if (!prevSelection.userSelections) {
+        prevSelection.userSelections = [updatedFieldPath];
+      } else {
+        prevSelection.userSelections.push(updatedFieldPath);
+      }
     } else {
-      prevSelection.userSelections = prevSelection.userSelections.filter(
+      prevSelection.userSelections = prevSelection.userSelections?.filter(
         (p) => p !== updatedFieldPath,
       );
     }
