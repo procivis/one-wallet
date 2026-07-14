@@ -8,6 +8,7 @@ import {
   ShareCredentialV2,
   ShareCredentialV2Group,
   StatusWarningIcon,
+  TouchableOpacity,
   Typography,
   useAppColorScheme,
   useCredentialListExpandedCard,
@@ -44,9 +45,11 @@ import {
 import {
   CredentialQuerySelection,
   preselectCredentialsForPresentationDefinitionV2,
+  preselectTransactionCredentialsForPresentationDefinitionV2,
   SetCredentialQuerySelection,
 } from '../../utils/proof-request';
 import { ProofPresentationProps } from './proof-presentation-props';
+import TransactionRequestListItem from './transaction-request-list-item';
 
 function selectCredential(
   setId: string,
@@ -122,6 +125,7 @@ function getNewSelection(
       newSelection[setId][credentialQueryId] = [
         {
           credentialId: selectedCredentialId,
+          transactionDataIds: [],
           userSelections,
         },
       ];
@@ -162,6 +166,7 @@ function getNewSelection(
 function prepareSubmission(
   credentialSets: CredentialSet[],
   selectedCredentials: SetCredentialQuerySelection,
+  transactionSelectedCredentials: Record<string, string>,
 ) {
   let allSetsValid = true;
   const credentials = credentialSets.reduce<CredentialQuerySelection>(
@@ -178,8 +183,16 @@ function prepareSubmission(
         allSetsValid = false;
       }
       Object.entries(set).forEach(([requestQueryId, request]) => {
+        const transactionDataIds = Object.entries(
+          transactionSelectedCredentials,
+        )
+          .filter(([_, selectedQueryId]) => selectedQueryId === requestQueryId)
+          .map(([transactionId]) => transactionId);
         if (!acc[requestQueryId]) {
-          acc[requestQueryId] = request;
+          acc[requestQueryId] = request.map((credentialRequest) => ({
+            ...credentialRequest,
+            transactionDataIds,
+          }));
           return;
         }
         const requestArray = Array.isArray(request) ? request : [request];
@@ -204,6 +217,7 @@ function prepareSubmission(
             ),
           );
           currentCredentialRequest.userSelections = userSelections;
+          currentCredentialRequest.transactionDataIds = transactionDataIds;
         });
         acc[requestQueryId] = currentRequest;
       });
@@ -275,6 +289,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
+  const [transactionSelectedCredentials, setTransactionSelectedCredentials] =
+    useState<Record<string, string>>({});
   const [selectedCredentials, setSelectedCredentials] =
     useState<SetCredentialQuerySelection>({});
   const [submitCredentials, setSubmitCredentials] =
@@ -284,7 +300,8 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
   const {
     request: { interactionId, proofId },
-    selectedV2Credentials,
+    selectedCredentials: updatedCredentialSelection,
+    selectedTransactionCredential,
   } = route.params;
 
   const presentationDefinition = useMemoAsync(async () => {
@@ -354,6 +371,11 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     setSelectedCredentials(
       preselectCredentialsForPresentationDefinitionV2(presentationDefinition),
     );
+    setTransactionSelectedCredentials(
+      preselectTransactionCredentialsForPresentationDefinitionV2(
+        presentationDefinition,
+      ),
+    );
   }, [presentationDefinition, setSelectedCredentials]);
 
   // Initially expanded credential
@@ -371,6 +393,35 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       setInitialCredential(firstCredentialId);
     }
   }, [presentationDefinition, setInitialCredential]);
+
+  const onTransactionDetails = (transactionId: string) => () => {
+    if (!presentationDefinition) {
+      return;
+    }
+    const allSelectedCredentials = Object.values(selectedCredentials).reduce(
+      (acc, setSelections) => {
+        Object.entries(setSelections).forEach(([queryId, querySelections]) => {
+          const transactionDataIds = Object.entries(
+            transactionSelectedCredentials,
+          )
+            .filter(([_, selectedQueryId]) => selectedQueryId === queryId)
+            .map(([transactionId]) => transactionId);
+          acc[queryId] = querySelections.map((querySelection) => ({
+            ...querySelection,
+            transactionDataIds,
+          }));
+        });
+        return acc;
+      },
+      {} as CredentialQuerySelection,
+    );
+    sharingNavigation.navigate('TransactionDetails', {
+      credentialQuerySelections: allSelectedCredentials,
+      presentationDefinition,
+      proofId,
+      transactionId,
+    });
+  };
 
   const onSelectCredential =
     (setId: string) => (credentialQueryId: string) => () => {
@@ -418,58 +469,84 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       });
     };
 
-  // result of selection is propagated using the navigation param `selectedV2Credentials`
+  const handleCredentialSelection = useCallback(
+    (credentialQueryId: string, selectedCredentialIds: string[]) => {
+      const credentialQuery =
+        presentationDefinition?.credentialQueries[credentialQueryId];
+
+      const { setsChanged, selection: newSelection } = getNewSelection(
+        selectedCredentials,
+        credentialQueryId,
+        credentialQuery,
+        selectedCredentialIds,
+      );
+
+      if (isEqual(newSelection, selectedCredentials)) {
+        return;
+      }
+
+      if (setsChanged > 1) {
+        // notify user that the change will affect other sets
+        Alert.alert(
+          translate('info.proofRequest.multiSetChange.title'),
+          translate('info.proofRequest.multiSetChange.message'),
+          [
+            {
+              isPreferred: true,
+              onPress: () => {
+                setSelectedCredentials(newSelection);
+              },
+              style: 'default',
+              text: translate('common.continue'),
+            },
+            {
+              isPreferred: false,
+              style: 'cancel',
+              text: translate('common.cancel'),
+            },
+          ],
+        );
+      } else {
+        setSelectedCredentials(newSelection);
+      }
+    },
+    [presentationDefinition?.credentialQueries, selectedCredentials],
+  );
+
+  // result of credential selection is propagated using the navigation param `selectedCredentials`
   useEffect(() => {
-    if (!selectedV2Credentials) {
+    if (!updatedCredentialSelection) {
       return;
     }
-    sharingNavigation.setParams({ selectedV2Credentials: undefined });
-    const { credentialQueryId, selectedCredentialIds } = selectedV2Credentials;
+    sharingNavigation.setParams({ selectedCredentials: undefined });
+    const { credentialQueryId, selectedCredentialIds } =
+      updatedCredentialSelection;
     if (selectedCredentialIds.length === 0) {
       return;
     }
-    const credentialQuery =
-      presentationDefinition?.credentialQueries[credentialQueryId];
+    handleCredentialSelection(credentialQueryId, selectedCredentialIds);
+  }, [
+    handleCredentialSelection,
+    sharingNavigation,
+    updatedCredentialSelection,
+  ]);
 
-    const { setsChanged, selection: newSelection } = getNewSelection(
-      selectedCredentials,
-      credentialQueryId,
-      credentialQuery,
-      selectedCredentialIds,
-    );
-
-    if (isEqual(newSelection, selectedCredentials)) {
+  // result of transaction related selection is propagated using the navigation param `selectedTransactionCredential`
+  useEffect(() => {
+    if (!selectedTransactionCredential) {
       return;
     }
-
-    if (setsChanged > 1) {
-      // notify user that the change will affect other sets
-      Alert.alert(
-        translate('info.proofRequest.multiSetChange.title'),
-        translate('info.proofRequest.multiSetChange.message'),
-        [
-          {
-            isPreferred: true,
-            onPress: () => {
-              setSelectedCredentials(newSelection);
-            },
-            style: 'default',
-            text: translate('common.continue'),
-          },
-          {
-            isPreferred: false,
-            style: 'cancel',
-            text: translate('common.cancel'),
-          },
-        ],
-      );
-    } else {
-      setSelectedCredentials(newSelection);
-    }
+    sharingNavigation.setParams({ selectedTransactionCredential: undefined });
+    const { credentialId, transactionId, queryId } =
+      selectedTransactionCredential;
+    setTransactionSelectedCredentials((previousValue) => ({
+      ...previousValue,
+      [transactionId]: queryId,
+    }));
+    handleCredentialSelection(queryId, [credentialId]);
   }, [
-    presentationDefinition?.credentialQueries,
-    selectedCredentials,
-    selectedV2Credentials,
+    handleCredentialSelection,
+    selectedTransactionCredential,
     sharingNavigation,
   ]);
 
@@ -536,11 +613,17 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     const { allSetsValid, credentials } = prepareSubmission(
       credentialSets,
       selectedCredentials,
+      transactionSelectedCredentials,
     );
 
     setSubmitCredentials(credentials);
     setAllSelectionsValid(allSetsValid);
-  }, [credentialSets, presentationDefinition, selectedCredentials]);
+  }, [
+    credentialSets,
+    presentationDefinition,
+    selectedCredentials,
+    transactionSelectedCredentials,
+  ]);
 
   const onSubmit = useCallback(() => {
     proofAccepted.current = true;
@@ -564,8 +647,44 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
   return (
     <>
+      {presentationDefinition.transactionData.length && (
+        <ProofRequestSet
+          headerLabel={translate('common.actionsToAuthorize')}
+          showHeader={true}
+        >
+          <View style={styles.transactions}>
+            {presentationDefinition.transactionData.map((transaction) => {
+              const credentialQuery =
+                presentationDefinition.credentialQueries[
+                  transactionSelectedCredentials[transaction.id]
+                ];
+              const credential =
+                credentialQuery?.credentialOrFailureHint.type_ ===
+                'APPLICABLE_CREDENTIALS'
+                  ? credentialQuery.credentialOrFailureHint
+                      .applicableCredentials[0]
+                  : undefined;
+              return (
+                <TouchableOpacity
+                  key={transaction.id}
+                  onPress={onTransactionDetails(transaction.id)}
+                >
+                  <TransactionRequestListItem
+                    credential={credential}
+                    transaction={transaction}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </ProofRequestSet>
+      )}
       {simpleSets.length ? (
-        <ProofRequestSet>
+        <ProofRequestSet
+          headerLabel={translate('common.requestedCredentials')}
+          showHeader={Boolean(presentationDefinition.transactionData.length)}
+          showSeparator={false}
+        >
           {simpleSets.flatMap((set, setIndex, { length: setLength }) => {
             const lastSet = setIndex === setLength - 1;
             return set.options[0].flatMap(
@@ -734,6 +853,11 @@ const styles = StyleSheet.create({
   },
   requestedCredentialLast: {
     marginBottom: 0,
+  },
+  transactions: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
   },
 });
 

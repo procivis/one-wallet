@@ -29,8 +29,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(@types/react@19.2.7)(react@19.2.0)
       '@procivis/one-react-native-components':
-        specifier: 0.3.146
-        version: 0.3.146(747d7b9c96d041b4d374008cd0ea7c5d)
+        specifier: 0.3.147
+        version: 0.3.147(747d7b9c96d041b4d374008cd0ea7c5d)
       '@procivis/react-native-one-core':
         specifier: 1.115727.0
         version: 1.115727.0(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))
@@ -124,6 +124,9 @@ importers:
       react-native-app-auth:
         specifier: ^8.4.0
         version: 8.4.0(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))
+      react-native-base64:
+        specifier: ^0.2.2
+        version: 0.2.2
       react-native-blob-util:
         specifier: ^0.22.2
         version: 0.22.2(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))(react@19.2.0)
@@ -269,6 +272,9 @@ importers:
       '@types/react':
         specifier: ^19.2.0
         version: 19.2.7
+      '@types/react-native-base64':
+        specifier: ^0.2.2
+        version: 0.2.2
       '@types/react-native-get-random-values':
         specifier: ^1.8.2
         version: 1.8.2
@@ -1330,8 +1336,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.146':
-    resolution: {integrity: sha1-g2JULRgB323z/pvPXQMppC8gnFE=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.146.tgz}
+  '@procivis/one-react-native-components@0.3.147':
+    resolution: {integrity: sha1-oPNJLzlWn1MQgOFMDarNVFochTU=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.147.tgz}
     peerDependencies:
       '@procivis/react-native-one-core': ^1.115439.0
       '@procivis/react-native-picker': '*'
@@ -1869,6 +1875,9 @@ packages:
 
   '@types/qrcode-svg@1.1.5':
     resolution: {integrity: sha512-GjkD+HB8S1wrIsf3skHDtcYBjzNhTxocMbX+wG166xDkaVOnLiMUla7bLjbwxo6mMvqqWQNP0Dk8nkIeizSmnw==}
+
+  '@types/react-native-base64@0.2.2':
+    resolution: {integrity: sha512-obr+/L9Jaxdr+xCVS/IQcYgreg5xtnui4Wqw/G1acBUtW2CnqVJj6lK6F/5F3+5d2oZEo5xDDLqy8GVn2HbEmw==}
 
   '@types/react-native-get-random-values@1.8.2':
     resolution: {integrity: sha512-CmtnfZnHKkVupG71SI9S7DDqkV6dtxxNIAzh2r1F1/tB8vg2weBtLhHmcruMIwp9Y69IZZ3DwJ0BhRpsbj42QA==}
@@ -5440,6 +5449,9 @@ packages:
   react-native-base64@0.0.2:
     resolution: {integrity: sha512-Fu/J1a2y0X22EJDWqJR2oEa1fpP4gTFjYxk8ElJdt1Yak3HOXmFJ7EohLVHU2DaQkgmKfw8qb7u/48gpzveRbg==}
 
+  react-native-base64@0.2.2:
+    resolution: {integrity: sha512-9iDzlDQrJqRlgoi7GnO4dqK/7/6lpA3DFrArhp85tDB7ZI6wLr7luHihb/pX6jhm4zlHqOz2OYSGJ6PSgyUO1g==}
+
   react-native-blob-util@0.22.2:
     resolution: {integrity: sha512-Czx01QMg7aLsm/4F/7+eqoRAi1q/qjLY2Kao16g+n2SRnTH1+qkD8Qhx2q9okB+VNQvZKB1LbiXhktzYQV52xQ==}
     peerDependencies:
@@ -8026,7 +8038,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.146(747d7b9c96d041b4d374008cd0ea7c5d)':
+  '@procivis/one-react-native-components@0.3.147(747d7b9c96d041b4d374008cd0ea7c5d)':
     dependencies:
       '@procivis/react-native-one-core': 1.115727.0(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))
       '@procivis/react-native-picker': 5.0.3
@@ -8770,6 +8782,8 @@ snapshots:
       parse-path: 7.1.0
 
   '@types/qrcode-svg@1.1.5': {}
+
+  '@types/react-native-base64@0.2.2': {}
 
   '@types/react-native-get-random-values@1.8.2': {}
 
@@ -13163,6 +13177,8 @@ snapshots:
       react-native-base64: 0.0.2
 
   react-native-base64@0.0.2: {}
+
+  react-native-base64@0.2.2: {}
 
   react-native-blob-util@0.22.2(react-native@0.83.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))(react@19.2.0):
     dependencies:
