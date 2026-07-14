@@ -45,17 +45,33 @@ const SelectCredentialV2Screen: FunctionComponent = () => {
   }, [selectedCredentialIds]);
 
   const onConfirm = useCallback(() => {
-    navigation.popTo(
-      'ProofRequest',
-      {
-        selectedV2Credentials: {
-          credentialQueryId,
-          selectedCredentialIds,
-        },
-      } as ShareCredentialNavigatorParamList['ProofRequest'],
-      { merge: true },
-    );
-  }, [credentialQueryId, navigation, selectedCredentialIds]);
+    const selectedCredentials = {
+      credentialQueryId,
+      selectedCredentialIds,
+    };
+    if (route.params.navigateBackToTransactions) {
+      navigation.popTo(
+        'TransactionDetails',
+        {
+          selectedCredentials,
+        } as ShareCredentialNavigatorParamList['TransactionDetails'],
+        { merge: true },
+      );
+    } else {
+      navigation.popTo(
+        'ProofRequest',
+        {
+          selectedCredentials,
+        } as ShareCredentialNavigatorParamList['ProofRequest'],
+        { merge: true },
+      );
+    }
+  }, [
+    credentialQueryId,
+    navigation,
+    route.params.navigateBackToTransactions,
+    selectedCredentialIds,
+  ]);
 
   const selectionOptions =
     credentialQuery.credentialOrFailureHint.type_ === 'APPLICABLE_CREDENTIALS'

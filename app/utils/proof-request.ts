@@ -71,3 +71,15 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
 
   return preselected;
 };
+
+export const preselectTransactionCredentialsForPresentationDefinitionV2 = (
+  presentationDefinition: PresentationDefinitionV2,
+): Record<string, string> => {
+  return presentationDefinition.transactionData.reduce(
+    (acc, transactionData) => ({
+      ...acc,
+      [transactionData.id]: transactionData.credentialQueryIds[0],
+    }),
+    {},
+  );
+};

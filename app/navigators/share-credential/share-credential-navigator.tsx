@@ -4,6 +4,7 @@ import React from 'react';
 import ProofProcessScreen from '../../screens/credential/proof-process-screen';
 import ProofRequestScreen from '../../screens/credential/proof-request-screen';
 import SelectCredentialV2Screen from '../../screens/credential/proof-request-select-credential-v2-screen';
+import ProofRequestTransactionDataScreen from '../../screens/credential/proof-request-transaction-data-screen';
 import { formSheetWrapper } from '../navigation-utilities';
 import { ShareCredentialNavigatorParamList } from './share-credential-routes';
 
@@ -12,6 +13,9 @@ const SelectCredentialV2 = React.memo(
   formSheetWrapper(SelectCredentialV2Screen),
 );
 const Processing = React.memo(formSheetWrapper(ProofProcessScreen));
+const TransactionDataScreen = React.memo(
+  formSheetWrapper(ProofRequestTransactionDataScreen),
+);
 
 const Stack = createNativeStackNavigator<ShareCredentialNavigatorParamList>();
 
@@ -21,6 +25,10 @@ const ShareCredentialNavigator = () => {
       <Stack.Screen component={ProofRequest} name="ProofRequest" />
       <Stack.Screen component={SelectCredentialV2} name="SelectCredentialV2" />
       <Stack.Screen component={Processing} name="Processing" />
+      <Stack.Screen
+        component={TransactionDataScreen}
+        name="TransactionDetails"
+      />
     </Stack.Navigator>
   );
 };
