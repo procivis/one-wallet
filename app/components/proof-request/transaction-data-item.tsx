@@ -85,11 +85,11 @@ const ListItem: FC<ListItemProps> = ({
 };
 
 enum TransactionDataDocumentInfoParameter {
-  Access = 'transactionData.qesApproval.documentInfo.access',
   Checksum = 'transactionData.qesApproval.documentInfo.checksum',
   ConformanceLevel = 'transactionData.qesApproval.documentInfo.conformance_level',
   Label = 'transactionData.qesApproval.documentInfo.label',
   Link = 'transactionData.qesApproval.documentInfo.href',
+  OneTimePassword = 'transactionData.qesApproval.documentInfo.access.oneTimePassword',
   SignatureFormat = 'transactionData.qesApproval.documentInfo.signature_format',
   SignedProps = 'transactionData.qesApproval.documentInfo.signed_props',
 }
@@ -98,8 +98,10 @@ const transactionDataParameterTitle = (
   key: TransactionDataDocumentInfoParameter,
 ): string => {
   switch (key) {
-    case TransactionDataDocumentInfoParameter.Access:
-      return translate('transactionData.qesApproval.documentInfo.access');
+    case TransactionDataDocumentInfoParameter.OneTimePassword:
+      return translate(
+        'transactionData.qesApproval.documentInfo.access.oneTimePassword',
+      );
     case TransactionDataDocumentInfoParameter.Checksum:
       return translate('transactionData.qesApproval.documentInfo.checksum');
     case TransactionDataDocumentInfoParameter.ConformanceLevel:
@@ -129,17 +131,7 @@ export type TransactionDataItemProps = {
 const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
   const colorScheme = useAppColorScheme();
   const [expanded, setExpanded] = useState(false);
-  const attributes = item.attributes.filter((attribute) => {
-    if (
-      attribute.key ===
-        (TransactionDataDocumentInfoParameter.Access as string) &&
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      JSON.parse(attribute.value).type !== 'OTP'
-    ) {
-      return false;
-    }
-    return true;
-  });
+  const attributes = item.attributes;
   const [expandable, setExpandable] = useState(attributes.length > 3);
   const linkHandler = useCallback(
     (url: string) => () => {
@@ -172,16 +164,6 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
             let action: ListItemProps['action'] | undefined = undefined;
             let itemDefaultNumberOfLines = 1;
             if (
-              attribute.key ===
-              (TransactionDataDocumentInfoParameter.Access as string)
-            ) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              if (JSON.parse(value).type !== 'OTP') {
-                return null;
-              }
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              value = JSON.parse(value).oneTimePassword as string;
-            } else if (
               attribute.key ===
               (TransactionDataDocumentInfoParameter.Link as string)
             ) {
