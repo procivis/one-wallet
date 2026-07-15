@@ -430,7 +430,7 @@
   "shareDisclaimer.ppOnly": "By tapping on “%{action}” you agree to the %{pp} provided by this entity.",
   "shareDisclaimer.tosAndPp": "By tapping on “%{action}” you agree to the %{tos} and %{pp} provided by this entity.",
   "shareDisclaimer.tosOnly": "By tapping on “%{action}” you agree to the %{tos} provided by this entity.",
-  "transactionData.qesApproval.documentInfo.access": "One time password",
+  "transactionData.qesApproval.documentInfo.access.oneTimePassword": "One time password",
   "transactionData.qesApproval.documentInfo.checksum": "Checksum",
   "transactionData.qesApproval.documentInfo.conformance_level": "Conformance level",
   "transactionData.qesApproval.documentInfo.href": "Link",
