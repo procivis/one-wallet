@@ -2,6 +2,7 @@ import {
   ButtonType,
   concatTestID,
   LoaderViewState,
+  reportTraceInfo,
   Transport,
   useActivateWalletUnit,
   useAppColorScheme,
@@ -24,7 +25,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { AuthConfiguration, authorize } from 'react-native-app-auth';
+import {
+  AppAuthError,
+  AuthConfiguration,
+  authorize,
+} from 'react-native-app-auth';
 
 import { ProcessingView } from '../../components/common/processing-view';
 import { config } from '../../config';
@@ -145,16 +150,15 @@ const WalletUnitRegistrationScreen = () => {
         redirectUrl: userAuthentication.redirectUri,
         scopes: ['openid', 'profile'],
       };
-      try {
-        const result = await authorize(config);
-        await activateWalletUnit({
-          id,
-          userIdToken: result.idToken,
-        });
-      } catch (e) {
-        console.error(e);
+
+      const result = await authorize(config).catch((e: AppAuthError) => {
+        reportTraceInfo('Authentication', 'Authorization failed', e);
         throw new Error(translate('walletUnitRegistration.inactive'));
-      }
+      });
+      await activateWalletUnit({
+        id,
+        userIdToken: result.idToken,
+      });
     },
     [activateWalletUnit, userAuthentication],
   );
