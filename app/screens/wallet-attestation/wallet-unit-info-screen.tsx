@@ -9,7 +9,7 @@ import {
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
 import {
@@ -33,12 +33,11 @@ const WalletUnitInfoScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        backgroundColor: colorScheme.white,
         leftItem:
           route.params.operation === 'refresh' ? (
             <HeaderCloseButton testID={concatTestID(testID, 'header.back')} />
           ) : undefined,
-        modalHandleVisible: true,
+        modalHandleVisible: Platform.OS === 'ios',
         static: true,
         title: translate('common.walletActivation'),
       }}
