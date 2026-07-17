@@ -262,6 +262,10 @@ const WalletScreen: FunctionComponent = observer(() => {
           />
         )}
         <ScanButton
+          labels={{
+            issue: translate('common.issue'),
+            sign: translate('common.sign'),
+          }}
           onIssuePress={
             showRequestCredentialBtn ? handleRequestCredentialClick : undefined
           }
