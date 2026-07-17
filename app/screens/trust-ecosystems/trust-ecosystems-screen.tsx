@@ -11,9 +11,11 @@ import {
   TouchableOpacity,
   Typography,
   useAppColorScheme,
+  useCoreConfig,
   useWalletUnitTrustCollections,
   useWalletUnitUpdate,
 } from '@procivis/one-react-native-components';
+import { DisplayName } from '@procivis/react-native-one-core';
 import { Route, useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -26,6 +28,19 @@ import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { compareStrings } from '../../utils/arrays';
 import { resetNavigationAction } from '../../utils/navigation';
+
+const getTranslatedDisplayName = (
+  translations: Array<DisplayName>,
+  language: string,
+  defaultLanguage?: string,
+) => {
+  const translation = translations.find((t) => t.lang === language);
+  const defaultTranslation = translations.find(
+    (t) => t.lang === defaultLanguage,
+  );
+  const anyTranslation = translations[0];
+  return (translation ?? defaultTranslation ?? anyTranslation)?.value;
+};
 
 type TrustEcosystemProps = {
   description?: string;
@@ -106,6 +121,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const {
     walletStore: { registeredWalletUnitId },
   } = useStores();
+  const { data: config } = useCoreConfig();
   const { data: walletUnit, isLoading } = useWalletUnitTrustCollections(
     registeredWalletUnitId,
   );
@@ -145,6 +161,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   }, [isLoading, trustCollections, route, saveTrustCollections]);
 
   const language = useCurrentLanguage();
+  const defaultLanguage = config?.globalSettings.defaultLanguage;
 
   const onContinue = useCallback(() => {
     saveTrustCollections(selectedEcosystems);
@@ -196,12 +213,18 @@ export const TrustEcosystemsScreen: FC = observer(() => {
             </Typography>
             {trustCollections?.map((tc, index) => (
               <TrustEcosystem
-                description={
-                  tc.description.find((l) => l.lang === language)?.value
-                }
+                description={getTranslatedDisplayName(
+                  tc.description,
+                  language,
+                  defaultLanguage,
+                )}
                 icon={{ uri: tc.logo }}
                 key={tc.id}
-                label={tc.displayName.find((l) => l.lang === language)?.value}
+                label={getTranslatedDisplayName(
+                  tc.displayName,
+                  language,
+                  defaultLanguage,
+                )}
                 selected={selectedEcosystems.includes(tc.id)}
                 setSelected={setSelected(tc.id)}
                 testID={`TrustEcosystemsScreen.item.${index}`}

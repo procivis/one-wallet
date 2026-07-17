@@ -400,6 +400,10 @@
   "passwordStrength.tip.length": "Vähintään 8 merkkiä",
   "passwordStrength.tip.number": "Sisältää numeron",
   "passwordStrength.tip.symbol": "Sisältää erikoismerkin",
+
+  "common.sign": "Merkki",
+  "common.issue": "Antaa",
+
   "passwordStrength.tip.title": "Salasanavinkkejä ja parhaita käytäntöjä:",
   "passwordStrength.tip.upper": "Sisältää ison kirjaimen",
   "proofRequestProcessTitle.error": "Jakaminen epäonnistui",
