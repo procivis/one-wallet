@@ -11,7 +11,7 @@
 - [Background](#background)
 - [EU Digital Identity Ecosystem](#eu-digital-identity-ecosystem)
 - [Interoperability and conformance](#interoperability-and-conformance)
-- [Supported standards](#supported-standards)
+- [Standards and technologies](#standards-and-technologies)
 - [Support](#support)
 - [License](#license)
 
@@ -188,61 +188,24 @@ regulatory ecosystems.
 We continue to look for more opportunities for interoperability testing as the standards
 and regulations mature and harden.
 
-## Supported standards
+## Standards and technologies
 
-### Credential models
+| Category | Supported |
+| -------- | --------- |
+| Credential formats | SD-JWT VC, ISO mdoc, W3C VC |
+| Issuance protocol | OpenID4VCI |
+| Presentation protocols | OpenID4VP, ISO/IEC 18013-5, ISO/IEC 18013-7 |
+| Transport and engagement | BLE, MQTT, NFC, QR code |
+| Revocation | Bitstring Status List, Token Status List, CRL |
+| Key storage | Secure Enclave, Android Keystore, Azure Key Vault, HSM, internal database |
+| DID methods | did\:key, did\:web, did\:jwk, did\:webvh |
+| Trust infrastructure | ETSI Trusted Lists, Lists of Trusted Lists (LoTL), and Lists of Trusted Entities (LoTE), EUDI Access and Registration Certificates |
+| Cryptographic suites | ES256, Ed25519, ML-DSA-65, BBS |
+| Wallet attestations | Wallet Unit Attestation (WUA) and Wallet Instance Attestation (WIA) |
 
-#### IETF SD-JWT VC
-
-- [IETF SD-JWT-based Verifiable Credentials][sdjwtvc]:
-
-| Standard       | Supported representations | Supported proof/signature types                                                                                                          |
-| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| IETF SD-JWT VC | SD-JWT                    | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / [ML-DSA-65 (FIPS 204)][fips]\*</li></ul> |
-
-#### ISO mdoc
-
-- [ISO/IEC 18013-5:2021][iso5] standard for mdoc credentials in the following variations:
-
-| Standard             | Supported representations | Supported proof/signature types                                                   |
-| -------------------- | ------------------------- | --------------------------------------------------------------------------------- |
-| ISO/IEC 18013-5:2021 | mdoc                      | <ul><li>COSE / ECDSA [ES256][es2]</li><li>COSE / EdDSA [Ed25519][ed255]</li></ul> |
-
-#### W3C VC
-
-- [W3C Verifiable Credentials Data Model 2.0][vcdm] in the following variations:
-
-| Securing mechanism                           | Supported representations                           | Supported proof/signature types                                                                                                                                                                                                                                       |
-| -------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [W3C Data Integrity Proofs][vcdi] (embedded) | [JSON-LD][jld] in Compacted Document Form           | <ul><li>[W3C Data Integrity ECDSA Cryptosuites v1.0][ecd] / [ecdsa-rdfc-2019][ecd2019]</li><li>[W3C Data Integrity EdDSA Cryptosuites v1.0][edd] / [eddsa-rdfc-2022][edd2022]</li><li>[W3C Data Integrity BBS Cryptosuites v1.0][bbs] / [bbs-2023][bbs2023]</li></ul> |
-| [W3C VC-JOSE-COSE][jose] (enveloping)        | <ul><li>[SD-JWT][sdjwt]</li><li>[JWT][jw]</li></ul> | <ul><li>JOSE / ECDSA [ES256][es2]</li><li>JOSE / EdDSA [Ed25519][ed255]</li><li>JOSE / [ML-DSA-65 (FIPS 204)][fips]\*</li></ul>                                                                                                                              |
-
-- **Backwards compatibility**: Procivis One supports verification of proofs which use VCDM 1.1.
-
-### Exchange and transport
-
-- OpenID4VCI (Issuance)
-  - [v1.0][vci1]
-- OpenID4VP (Verification)
-  - [v1.0][vp1.0]
-  - [Draft 25][vp25]
-  - [Draft 20][vp20]
-  - [OID4VP over BLE][ble]; optimized version of Draft 00
-  - OID4VP over MQTT; proprietary adaptation of "OID4VP over BLE" via MQTT channel
-- ISO/IEC 18013 (Verification)
-  - [18013-5][iso5]: Device engagement using either NFC or QR Code, data retrieval using BLE
-  - [18013-7 Annex B][iso7]: Online data retrieval via OID4VP
-
-### Key storage
-
-- Secure Enclave (iOS) and Android Keystore (TEE or Strongbox)
-- Internal encrypted database
-
-### Revocation methods
-
-- [Bitstring Status List v1.0][sl]
-- [Token Status List - Draft 03][tsl]
-- [Certificate Revocation List][crl]
+For the full list of supported standards, specifications, protocol versions, and
+ETSI coverage, see the [Supported Standards and Technologies][supptech] page in
+the Procivis One documentation.
 
 ## Support
 
@@ -266,43 +229,16 @@ Version 2.0](./LICENSE).
 © Procivis AG, [https://www.procivis.ch](https://www.procivis.ch).
 
 [archi]: https://github.com/procivis#architecture
-[bbs]: https://www.w3.org/TR/vc-di-bbs/
-[bbs2023]: https://www.w3.org/TR/vc-di-bbs/#bbs-2023
-[ble]: https://openid.net/specs/openid-4-verifiable-presentations-over-ble-1_0.html
 [canivc]: https://canivc.com/implementations/procivis-one-core/
 [comp]: https://github.com/procivis/one-react-native-components
 [core]: https://github.com/procivis/one-core
-[cose]: https://www.rfc-editor.org/rfc/rfc9052
-[crl]: https://www.ietf.org/rfc/rfc5280.txt
 [docs]: https://docs.procivis.ch/
 [ecd]: https://www.w3.org/TR/vc-di-ecdsa/
-[ecd2019]: https://www.w3.org/TR/vc-di-ecdsa/#ecdsa-rdfc-2019
-[edd]: https://www.w3.org/TR/vc-di-eddsa/
-[edd2022]: https://www.w3.org/TR/vc-di-eddsa/#eddsa-rdfc-2022
-[ed255]: https://datatracker.ietf.org/doc/html/rfc8037
-[es2]: https://datatracker.ietf.org/doc/html/rfc7518
 [eudiwi]: https://issuer.eudiw.dev/
 [eudiwv]: https://verifier.eudiw.dev/home
-[fips]: https://csrc.nist.gov/pubs/fips/204/final
-[iso5]: https://www.iso.org/standard/69084.html
-[iso7]: https://www.iso.org/standard/82772.html
-[jld]: https://www.w3.org/TR/json-ld11/
-[jose]: https://w3c.github.io/vc-jose-cose/
-[jw]: https://datatracker.ietf.org/doc/html/rfc7519
 [key]: https://github.com/procivis#key-features
 [owf]: https://github.com/openwallet-foundation-labs/identity-credential
 [pow]: https://github.com/procivis/one-wallet
-[pqc]: https://csrc.nist.gov/pqc-standardization
 [rncore]: https://github.com/procivis/react-native-one-core
-[sdjwt]: https://www.ietf.org/archive/id/draft-ietf-oauth-selective-disclosure-jwt-12.html
-[sdjwtvc]: https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-05.html
 [sdkref]: https://docs.procivis.ch/sdk
-[sl]: https://www.w3.org/TR/vc-bitstring-status-list/
 [trial]: https://docs.procivis.ch/trial
-[tsl]: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list-03
-[vcdi]: https://www.w3.org/TR/vc-data-integrity/
-[vcdm]: https://www.w3.org/TR/vc-data-model-2.0/
-[vci1]: https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html
-[vp1.0]: https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html
-[vp20]: https://openid.net/specs/openid-4-verifiable-presentations-1_0-20.html
-[vp25]: https://openid.net/specs/openid-4-verifiable-presentations-1_0-25.html
