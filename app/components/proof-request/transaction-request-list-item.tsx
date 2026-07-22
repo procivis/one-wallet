@@ -2,6 +2,7 @@ import {
   concatTestID,
   CredentialLogo,
   credentialLogoFromCredential,
+  CredentialWarningIcon,
   Typography,
   UpIcon,
   useAppColorScheme,
@@ -13,7 +14,7 @@ import {
   PresentationDefinitionV2Credential,
 } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
@@ -31,6 +32,10 @@ const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
   const colorScheme = useAppColorScheme();
   const { data: config } = useCoreConfig();
   const language = useCurrentLanguage();
+  const iconBackgroundStyle: ViewStyle = {
+    backgroundColor: colorScheme.background,
+    borderColor: colorScheme.background,
+  };
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
       <View style={styles.row}>
@@ -67,18 +72,25 @@ const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
           {translate('common.authorizedBy')}
         </Typography>
         {credential && config && (
-          <CredentialLogo
-            size={20}
-            {...credentialLogoFromCredential(
-              {
-                ...credential,
-                type: CredentialType.SINGLE,
-              },
-              config,
-              concatTestID('TransactionRequestListItem', transaction.id),
-              language,
-            )}
-          />
+          <View style={[styles.icon, iconBackgroundStyle]}>
+            <CredentialLogo
+              size={20}
+              {...credentialLogoFromCredential(
+                {
+                  ...credential,
+                  type: CredentialType.SINGLE,
+                },
+                config,
+                concatTestID('TransactionRequestListItem', transaction.id),
+                language,
+              )}
+            />
+          </View>
+        )}
+        {!credential && (
+          <View style={[styles.missingIcon, iconBackgroundStyle]}>
+            <CredentialWarningIcon />
+          </View>
         )}
       </View>
     </View>
@@ -110,6 +122,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 12,
+  },
+  icon: {
+    borderRadius: 6,
+    padding: 4,
+  },
+  missingIcon: {
+    borderRadius: 6,
+    padding: 2,
   },
   row: {
     alignItems: 'center',
