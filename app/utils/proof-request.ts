@@ -78,7 +78,11 @@ export const preselectTransactionCredentialsForPresentationDefinitionV2 = (
   return presentationDefinition.transactionData.reduce(
     (acc, transactionData) => ({
       ...acc,
-      [transactionData.id]: transactionData.credentialQueryIds[0],
+      [transactionData.id]: transactionData.credentialQueryIds.find(
+        (queryId) =>
+          presentationDefinition.credentialQueries[queryId]
+            .credentialOrFailureHint.type_ === 'APPLICABLE_CREDENTIALS',
+      ),
     }),
     {},
   );

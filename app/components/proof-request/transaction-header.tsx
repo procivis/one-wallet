@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
+    gap: 8,
   },
 });
 
