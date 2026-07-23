@@ -91,7 +91,10 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
       return;
     }
     const credentialId =
-      credentialQuerySelections[credentialQueryId][0].credentialId;
+      credentialQuerySelections[credentialQueryId]?.[0]?.credentialId;
+    if (!credentialId) {
+      return;
+    }
     setSelectedCredential({
       credentialId,
       queryId: credentialQueryId,
