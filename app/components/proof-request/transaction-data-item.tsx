@@ -148,7 +148,10 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
       <View style={styles.row}>
-        <TransactionHeader logoInitials={item.title} title={item.title} />
+        <TransactionHeader
+          logoInitials={item.title.replaceAll(/[^A-Z]/g, '')}
+          title={item.title}
+        />
       </View>
       <View>
         {attributes

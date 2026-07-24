@@ -35,7 +35,7 @@ const TransactionHeader: FC<TransactionHeaderProps> = ({
 
   return (
     <View style={[styles.row, style]}>
-      <CredentialLogo credentialName={logoInitials} />
+      <CredentialLogo credentialName={logoInitials} showFullName={true} />
       <Typography color={colorScheme.text} preset="m" style={styles.name}>
         {title}
       </Typography>
