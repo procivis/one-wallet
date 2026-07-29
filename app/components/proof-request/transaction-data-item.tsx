@@ -155,7 +155,7 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
       </View>
       <View>
         {attributes
-          .splice(
+          .slice(
             0,
             expanded || !expandable ? attributes.length : collapsedLength,
           )
