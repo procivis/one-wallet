@@ -4,17 +4,18 @@ import {
   LoaderViewState,
   reportTraceInfo,
   Transport,
-  useActivateWalletUnit,
+  useActivateInstance,
   useAppColorScheme,
   useAvailableTransports,
   useBlockOSBackNavigation,
-  useRegisterWalletUnit,
-  useWalletUnitDetail,
-  useWalletUnitStatus,
+  useInstanceDetail,
+  useInstanceStatus,
+  useRegisterInstance,
 } from '@procivis/one-react-native-components';
 import {
-  HolderWalletUnit,
-  WalletUnitStatus,
+  HolderInstance,
+  InstanceRole,
+  InstanceStatus,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
@@ -50,7 +51,7 @@ const WalletUnitRegistrationScreen = () => {
   const [status, setStatus] = useState<LoaderViewState>(
     LoaderViewState.InProgress,
   );
-  const [walletUnitStatus, setWalletUnitStatus] = useState<WalletUnitStatus>();
+  const [walletUnitStatus, setWalletUnitStatus] = useState<InstanceStatus>();
   const {
     walletStore,
     walletStore: { walletProvider, walletUnitId },
@@ -67,11 +68,11 @@ const WalletUnitRegistrationScreen = () => {
   const wuaNavigation =
     useNavigation<WalletUnitRegistrationNavigationProp<'Registration'>>();
   const route = useRoute<WalletUnitRegistrationRouteProp<'Registration'>>();
-  const { data: walletUnit, refetch } = useWalletUnitDetail(walletUnitId);
+  const { data: walletUnit, refetch } = useInstanceDetail(walletUnitId);
   const { mutateAsync: registerWalletUnit, isSuccess: registeredNewWallet } =
-    useRegisterWalletUnit();
-  const { mutateAsync: activateWalletUnit } = useActivateWalletUnit();
-  const { mutateAsync: refreshWalletUnit } = useWalletUnitStatus();
+    useRegisterInstance();
+  const { mutateAsync: activateWalletUnit } = useActivateInstance();
+  const { mutateAsync: refreshWalletUnit } = useInstanceStatus();
 
   useEffect(() => {
     if (!walletUnit || walletUnitStatus === walletUnit.status) {
@@ -85,10 +86,7 @@ const WalletUnitRegistrationScreen = () => {
   );
 
   const close = useCallback(
-    (
-      status: LoaderViewState,
-      walletUnitStatus: WalletUnitStatus | undefined,
-    ) => {
+    (status: LoaderViewState, walletUnitStatus: InstanceStatus | undefined) => {
       cancelled.current = true;
       const resetToDashboard = route.params?.resetToDashboard;
       const hasWalletUnit = walletUnitStatus !== undefined;
@@ -157,6 +155,7 @@ const WalletUnitRegistrationScreen = () => {
       });
       await activateWalletUnit({
         id,
+        userAccessToken: result.accessToken,
         userIdToken: result.idToken,
       });
     },
@@ -174,20 +173,19 @@ const WalletUnitRegistrationScreen = () => {
     }
     try {
       setStatus(LoaderViewState.InProgress);
-      let noewWalletUnitStatus: WalletUnitStatus | undefined;
+      let noewWalletUnitStatus: InstanceStatus | undefined;
       let register = true;
 
       if (
         route.params.operation === 'refresh' ||
-        walletUnitStatus === WalletUnitStatus.PENDING
+        walletUnitStatus === InstanceStatus.PENDING
       ) {
         register = false;
         await refreshWalletUnit(walletUnitId);
-        let refetchedWalletUnit: HolderWalletUnit | undefined = (
-          await refetch()
-        ).data;
+        let refetchedWalletUnit: HolderInstance | undefined = (await refetch())
+          .data;
         if (
-          refetchedWalletUnit?.status === WalletUnitStatus.PENDING &&
+          refetchedWalletUnit?.status === InstanceStatus.PENDING &&
           refetchedWalletUnit.userNonce
         ) {
           try {
@@ -197,12 +195,12 @@ const WalletUnitRegistrationScreen = () => {
             );
           } catch (e) {
             refetchedWalletUnit = (await refetch()).data;
-            if (refetchedWalletUnit?.status !== WalletUnitStatus.ERROR) {
+            if (refetchedWalletUnit?.status !== InstanceStatus.ERROR) {
               throw e;
             }
           }
         }
-        if (refetchedWalletUnit?.status === WalletUnitStatus.ERROR) {
+        if (refetchedWalletUnit?.status === InstanceStatus.ERROR) {
           register = true;
         }
       }
@@ -213,11 +211,11 @@ const WalletUnitRegistrationScreen = () => {
         }
 
         const registeredWalletUnit = await registerWalletUnit({
-          trustedRpRequired: false,
-          walletProvider: {
+          provider: {
             type: config.walletProvider.type,
             url: `${config.walletProvider.url}/ssi/wallet-provider/v1/${config.walletProvider.type}`,
           },
+          role: InstanceRole.WALLET,
         });
         noewWalletUnitStatus = registeredWalletUnit.status;
 
@@ -232,7 +230,7 @@ const WalletUnitRegistrationScreen = () => {
               noewWalletUnitStatus = refetchedWalletUnit.status;
             }
           } catch (e) {
-            if (registeredWalletUnit.status === WalletUnitStatus.PENDING) {
+            if (registeredWalletUnit.status === InstanceStatus.PENDING) {
               walletStore.walletUnitIdSetup(registeredWalletUnit.id);
               setWalletUnitStatus(registeredWalletUnit.status);
               throw e;
@@ -241,7 +239,7 @@ const WalletUnitRegistrationScreen = () => {
         }
 
         walletStore.walletUnitIdSetup(registeredWalletUnit.id);
-        if (registeredWalletUnit.status === WalletUnitStatus.UNATTESTED) {
+        if (registeredWalletUnit.status === InstanceStatus.UNATTESTED) {
           throw new Error(translate('walletUnitRegistration.unattested'));
         }
       }
@@ -297,9 +295,9 @@ const WalletUnitRegistrationScreen = () => {
         return translate('walletUnitRegistration.updated');
       }
     }
-    if (walletUnitStatus === WalletUnitStatus.UNATTESTED) {
+    if (walletUnitStatus === InstanceStatus.UNATTESTED) {
       return translate('walletUnitRegistration.unattested');
-    } else if (walletUnitStatus === WalletUnitStatus.PENDING) {
+    } else if (walletUnitStatus === InstanceStatus.PENDING) {
       return translate('walletUnitRegistration.inactive');
     }
     if (!error) {
@@ -342,10 +340,10 @@ const WalletUnitRegistrationScreen = () => {
       return undefined;
     }
     switch (walletUnitStatus) {
-      case WalletUnitStatus.ERROR:
-      case WalletUnitStatus.PENDING:
+      case InstanceStatus.ERROR:
+      case InstanceStatus.PENDING:
         return retryButton;
-      case WalletUnitStatus.UNATTESTED:
+      case InstanceStatus.UNATTESTED:
         return !walletProvider.walletUnitAttestation.required
           ? closeButton
           : undefined;
@@ -370,8 +368,8 @@ const WalletUnitRegistrationScreen = () => {
       return undefined;
     }
     if (
-      walletUnitStatus === WalletUnitStatus.ERROR ||
-      walletUnitStatus === WalletUnitStatus.PENDING
+      walletUnitStatus === InstanceStatus.ERROR ||
+      walletUnitStatus === InstanceStatus.PENDING
     ) {
       return {
         onPress: closeHandler,

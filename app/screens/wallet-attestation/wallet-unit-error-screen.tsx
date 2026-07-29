@@ -3,9 +3,9 @@ import {
   ButtonType,
   LoaderViewState,
   useBlockOSBackNavigation,
-  useWalletUnitDetail,
+  useInstanceDetail,
 } from '@procivis/one-react-native-components';
-import { WalletUnitStatus } from '@procivis/react-native-one-core';
+import { InstanceStatus } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
@@ -23,15 +23,13 @@ const WalletUnitErrorScreen: FC = () => {
   const {
     walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
-  const { data: walletUnitDetail } = useWalletUnitDetail(
-    registeredWalletUnitId,
-  );
+  const { data: walletUnitDetail } = useInstanceDetail(registeredWalletUnitId);
 
   useEffect(() => {
     if (!walletUnitDetail) {
       return;
     }
-    if (walletUnitDetail.status === WalletUnitStatus.REVOKED) {
+    if (walletUnitDetail.status === InstanceStatus.REVOKED) {
       setState(LoaderViewState.Error);
     }
   }, [walletUnitDetail]);

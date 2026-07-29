@@ -2,8 +2,8 @@ import {
   PinLockModal,
   reportTraceInfo,
   useBlockOSBackNavigation,
+  useInstanceDetail,
   usePinCodeSecurity,
-  useWalletUnitDetail,
 } from '@procivis/one-react-native-components';
 import {
   useFocusEffect,
@@ -58,7 +58,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
 
-  const { data: walletUnitRegistration } = useWalletUnitDetail(
+  const { data: walletUnitRegistration } = useInstanceDetail(
     registeredWalletUnitId,
   );
 
