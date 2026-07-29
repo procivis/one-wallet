@@ -16,6 +16,7 @@ stages:
   - scan
   - scan_validation
   - build
+  - mobile_tests
   - sdk
   - license
   - github
@@ -200,6 +201,22 @@ build:
   extends:
     - .bitrise:app_build
 
+test:android:smoke:
+  stage: mobile_tests
+  allow_failure: true
+  variables:
+    CHECK_LINT: false
+    MOBILE_TEST: true
+    APP_TYPE: wallet
+    PLATFORM: android
+  trigger:
+    project: procivis/one/one-tests
+    branch: main
+    strategy: depend
+    forward:
+      pipeline_variables: true
+  extends:
+    - .only_main
 
 .upload_bom:
   stage: scan
