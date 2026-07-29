@@ -9,8 +9,8 @@ import {
   SwitchSetting,
   SwitchSettingProps,
   useAppColorScheme,
-  useWalletUnitDetail,
-  useWalletUnitUpdate,
+  useOrganisationDetail,
+  useOrganisationUpdate,
   WalletUnitAttestationIcon,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
@@ -77,18 +77,18 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const translate = useUpdatedTranslate();
   const biometry = useBiometricType();
   const { showActionSheetWithOptions } = useActionSheet();
-  const { data: holderWalletUnit, isLoading: isLoadingWalletUnit } =
-    useWalletUnitDetail(registeredWalletUnitId);
-  const { mutateAsync: updateHolderWalletUnit } = useWalletUnitUpdate();
+  const { data: orgDetail, isLoading } = useOrganisationDetail();
+  const { mutateAsync: updateOrganisation } = useOrganisationUpdate();
   const [allowUntrustedRelyingParties, setAllowUntrustedRelyingParties] =
-    useState<boolean>(!holderWalletUnit?.trustedRpRequired);
+    useState<boolean>(!orgDetail?.configuration?.trustedRpRequired);
 
   useEffect(() => {
-    if (!holderWalletUnit) {
-      return;
+    if (orgDetail) {
+      setAllowUntrustedRelyingParties(
+        !orgDetail.configuration?.trustedRpRequired,
+      );
     }
-    setAllowUntrustedRelyingParties(!holderWalletUnit.trustedRpRequired);
-  }, [holderWalletUnit]);
+  }, [orgDetail]);
 
   const handleChangeLanguage = useCallback(() => {
     // all locales, currently selected as first
@@ -146,18 +146,12 @@ const DashboardScreen: FunctionComponent = observer(() => {
   }, [userSettings]);
 
   const handleAllowUntrustedRelyingPartiesChange = useCallback(() => {
-    if (!registeredWalletUnitId) {
-      return;
-    }
-    const trustedRpRequired = !holderWalletUnit?.trustedRpRequired;
-    updateHolderWalletUnit({
-      update: {
-        trustedRpRequired,
-      },
-      walletUnitId: registeredWalletUnitId,
+    const trustedRpRequired = !orgDetail?.configuration?.trustedRpRequired;
+    updateOrganisation({
+      configuration: { trustedRpRequired },
     });
     setAllowUntrustedRelyingParties(!trustedRpRequired);
-  }, [holderWalletUnit, registeredWalletUnitId, updateHolderWalletUnit]);
+  }, [orgDetail, updateOrganisation]);
 
   const handleTrustEcosystems = useCallback(() => {
     navigation.navigate('TrustEcosystems');
@@ -320,7 +314,7 @@ const DashboardScreen: FunctionComponent = observer(() => {
         featureFlags?.trustEcosystemsEnabled && registeredWalletUnitId
           ? {
               switchSetting: {
-                disabled: isLoadingWalletUnit,
+                disabled: isLoading,
                 icon: WarningIcon,
                 onChange: handleAllowUntrustedRelyingPartiesChange,
                 testID: 'SettingsScreen.allowUntrustedRelyingParties',

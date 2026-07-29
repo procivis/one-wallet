@@ -12,10 +12,13 @@ import {
   Typography,
   useAppColorScheme,
   useCoreConfig,
-  useWalletUnitTrustCollections,
-  useWalletUnitUpdate,
+  useOrganisationTrustCollections,
+  useOrganisationUpdate,
 } from '@procivis/one-react-native-components';
-import { DisplayName } from '@procivis/react-native-one-core';
+import {
+  DisplayName,
+  UpsertOrganisationRequest,
+} from '@procivis/react-native-one-core';
 import { Route, useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -24,7 +27,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
-import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { compareStrings } from '../../utils/arrays';
 import { resetNavigationAction } from '../../utils/navigation';
@@ -118,29 +120,19 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     useRoute<Route<'TrustEcosystems', TrustEcosystemsRouteParams>>();
   const colorScheme = useAppColorScheme();
   const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>([]);
-  const {
-    walletStore: { registeredWalletUnitId },
-  } = useStores();
   const { data: config } = useCoreConfig();
-  const { data: walletUnit, isLoading } = useWalletUnitTrustCollections(
-    registeredWalletUnitId,
-  );
-  const trustCollections = walletUnit?.trustCollections.sort((a, b) =>
+  const { data: orgTrustCollections, isLoading } =
+    useOrganisationTrustCollections();
+  const trustCollections = orgTrustCollections?.sort((a, b) =>
     compareStrings(a, b, 'id'),
   );
-  const { mutateAsync: updateWalletUnit } = useWalletUnitUpdate();
+  const { mutateAsync: updateOrganisation } = useOrganisationUpdate();
 
   const saveTrustCollections = useCallback(
-    (trustCollections: string[]) => {
-      if (!registeredWalletUnitId) {
-        return;
-      }
-      updateWalletUnit({
-        update: { trustCollections },
-        walletUnitId: registeredWalletUnitId,
-      });
+    (trustCollections: UpsertOrganisationRequest['trustCollections']) => {
+      updateOrganisation({ trustCollections });
     },
-    [updateWalletUnit, registeredWalletUnitId],
+    [updateOrganisation],
   );
 
   useEffect(() => {

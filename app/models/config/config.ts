@@ -1,7 +1,7 @@
-import { WalletProviderType } from '@procivis/react-native-one-core';
+import { InstanceProviderType } from '@procivis/react-native-one-core';
 
 export interface WalletProviderConfiguration {
-  type: WalletProviderType;
+  type: InstanceProviderType;
   url: string;
 }
 

@@ -16,9 +16,9 @@ import {
   useAvailableTransports,
   useBlockOSBackNavigation,
   useContinueIssuance,
+  useInstanceDetail,
   useInvitationHandler,
   useOpenSettings,
-  useWalletUnitDetail,
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import {
@@ -82,8 +82,9 @@ const InvitationProcessScreen: FunctionComponent = () => {
   const {
     walletStore: { registeredWalletUnitId, isRSESetup },
   } = useStores();
-  const { data: walletUnitDetail, isLoading: isLoadingWU } =
-    useWalletUnitDetail(registeredWalletUnitId);
+  const { data: walletUnitDetail, isLoading: isLoadingWU } = useInstanceDetail(
+    registeredWalletUnitId,
+  );
   const isFocused = useIsFocused();
   const [invitationUrl, setInvitationUrl] = useState(
     route.params.invitationUrl,

@@ -12,11 +12,11 @@ import {
   StatusWarningIcon,
   Typography,
   useAppColorScheme,
-  useWalletUnitDetail,
+  useInstanceDetail,
 } from '@procivis/one-react-native-components';
 import {
-  HolderWalletUnit,
-  WalletUnitStatus,
+  HolderInstance,
+  InstanceStatus,
 } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -31,10 +31,10 @@ import { SettingsNavigationProp } from '../../navigators/settings/settings-route
 const testID = 'WalletUnitRegistrationScreen';
 
 const getStatus = (
-  walletUnitDetail: HolderWalletUnit | undefined,
+  walletUnitDetail: HolderInstance | undefined,
   colorScheme: ColorScheme,
 ) => {
-  if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
+  if (walletUnitDetail?.status === InstanceStatus.REVOKED) {
     return {
       backgroundColor: 'rgba(217, 13, 13, 0.05)',
       description: undefined,
@@ -44,7 +44,7 @@ const getStatus = (
     };
   }
 
-  if (walletUnitDetail?.status === WalletUnitStatus.ACTIVE) {
+  if (walletUnitDetail?.status === InstanceStatus.ACTIVE) {
     return {
       backgroundColor: colorScheme.background,
       description: translate('walletUnitRegistration.accepted'),
@@ -54,7 +54,7 @@ const getStatus = (
     };
   }
 
-  if (walletUnitDetail?.status === WalletUnitStatus.UNATTESTED) {
+  if (walletUnitDetail?.status === InstanceStatus.UNATTESTED) {
     return {
       backgroundColor: colorScheme.background,
       description: translate('walletUnitRegistration.unattested'),
@@ -64,7 +64,7 @@ const getStatus = (
     };
   }
 
-  if (walletUnitDetail?.status === WalletUnitStatus.PENDING) {
+  if (walletUnitDetail?.status === InstanceStatus.PENDING) {
     return {
       backgroundColor: colorScheme.background,
       description: translate('walletUnitRegistration.inactive'),
@@ -91,18 +91,18 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
   const {
     walletStore: { registeredWalletUnitId },
   } = useStores();
-  const { data: walletUnitDetail, isLoading } = useWalletUnitDetail(
+  const { data: walletUnitDetail, isLoading } = useInstanceDetail(
     registeredWalletUnitId,
   );
 
   const isCheckButtonEnabled =
-    walletUnitDetail?.status !== WalletUnitStatus.UNATTESTED &&
+    walletUnitDetail?.status !== InstanceStatus.UNATTESTED &&
     (walletUnitDetail?.status === undefined || !isLoading);
 
   const handleCheck = useCallback(() => {
     rootNavigation.navigate('WalletUnitRegistration', {
       operation:
-        walletUnitDetail && walletUnitDetail.status !== WalletUnitStatus.ERROR
+        walletUnitDetail && walletUnitDetail.status !== InstanceStatus.ERROR
           ? 'refresh'
           : 'register',
     });
@@ -116,8 +116,8 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
 
   const showButton =
     !isLoading &&
-    walletUnitDetail?.status !== WalletUnitStatus.ACTIVE &&
-    walletUnitDetail?.status !== WalletUnitStatus.UNATTESTED;
+    walletUnitDetail?.status !== InstanceStatus.ACTIVE &&
+    walletUnitDetail?.status !== InstanceStatus.UNATTESTED;
 
   return (
     <ScrollViewScreen
@@ -152,7 +152,7 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
             testID={concatTestID(
               testID,
               'id',
-              walletUnitDetail?.providerWalletUnitId,
+              walletUnitDetail?.providerInstanceId,
             )}
           >
             <Icon
@@ -186,7 +186,7 @@ const WalletUnitRegistrationInfoScreen: FC = observer(() => {
             testID={concatTestID(
               testID,
               'id',
-              walletUnitDetail?.providerWalletUnitId,
+              walletUnitDetail?.providerInstanceId,
             )}
           >
             <Icon

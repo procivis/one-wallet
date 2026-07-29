@@ -6,10 +6,10 @@ import {
   StatusErrorIcon,
   StatusWarningIcon,
   useAppColorScheme,
+  useInstanceCheck,
   usePagedCredentials,
   useTrustCollectionSync,
   useTrustListSubscriptionUpdate,
-  useWalletUnitCheck,
   WalletEmptyList,
   WalletNotice,
 } from '@procivis/one-react-native-components';
@@ -19,8 +19,8 @@ import {
   CredentialListQuery,
   CredentialState,
   CredentialType,
+  InstanceStatus,
   SortableCredentialColumn,
-  WalletUnitStatus,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
@@ -85,7 +85,7 @@ const WalletScreen: FunctionComponent = observer(() => {
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
   useCredentialStatusCheck();
-  const { isLoading: isLoadingWU, walletUnitDetail } = useWalletUnitCheck(
+  const { isLoading: isLoadingWU, instanceDetail } = useInstanceCheck(
     registeredWalletUnitId,
   );
 
@@ -94,14 +94,14 @@ const WalletScreen: FunctionComponent = observer(() => {
       return;
     }
 
-    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
+    if (instanceDetail?.status === InstanceStatus.REVOKED) {
       navigation.navigate('WalletUnitError');
     }
   }, [
     isFocused,
     navigation,
     walletProvider.walletUnitAttestation.required,
-    walletUnitDetail?.status,
+    instanceDetail?.status,
   ]);
 
   const credentials = useMemo(
@@ -194,7 +194,7 @@ const WalletScreen: FunctionComponent = observer(() => {
         text: translate('common.updateAvailable'),
       };
     }
-    if (walletUnitDetail?.status === WalletUnitStatus.REVOKED) {
+    if (instanceDetail?.status === InstanceStatus.REVOKED) {
       return {
         icon: StatusErrorIcon,
         text: 'Wallet unit is revoked',
@@ -203,7 +203,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   }, [
     walletProvider.walletUnitAttestation.required,
     showRecommendedUpdateNotice,
-    walletUnitDetail?.status,
+    instanceDetail?.status,
     ignoreRecommendedVersionNotice,
   ]);
   const noticeOffset: ViewStyle | undefined = topNotice
