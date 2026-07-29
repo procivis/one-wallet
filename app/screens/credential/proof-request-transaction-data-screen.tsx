@@ -4,8 +4,8 @@ import {
   ScrollViewScreen,
   ShareCredentialV2Group,
   useAppColorScheme,
+  useTransactionData,
 } from '@procivis/one-react-native-components';
-import { useTransactionData } from '@procivis/one-react-native-components/src/utils/hooks/core/transaction';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FunctionComponent,
@@ -43,7 +43,7 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
     transactionId,
   } = route.params;
   const { data: transactionData } = useTransactionData(proofId, transactionId);
-  console.log(JSON.stringify(transactionData, undefined, 2));
+
   const [selectedCredential, setSelectedCredential] = useState<
     { credentialId: string; queryId: string } | undefined
   >(
@@ -138,7 +138,6 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
     });
   }, [navigation, selectedCredentials]);
 
-  console.log(transactionData);
   return (
     <ScrollViewScreen
       header={{
