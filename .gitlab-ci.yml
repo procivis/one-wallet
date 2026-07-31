@@ -50,6 +50,7 @@ workflow:
 
 .only_main:
   rules:
+    - !reference [.rule:skip_in_schedule, rules]
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: on_success
     - when: never
