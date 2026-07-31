@@ -109,10 +109,10 @@ const coreConfig = {
       order: 101,
       params: {
         public: {
-          leeway: 10,
-          msoExpectedUpdateIn: 60,
-          msoExpiresIn: 60,
-          msoMinimumRefreshTime: 10,
+          leewaySeconds: 10,
+          msoExpectedUpdateInSeconds: 60,
+          msoExpiresInSeconds: 60,
+          msoMinimumRefreshSeconds: 10,
         },
       },
       type: 'MDOC',
