@@ -217,7 +217,7 @@ test:android:smoke:
     forward:
       pipeline_variables: true
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
       when: on_success
       needs:  
         - job: "build: [Android_DEV]"  
