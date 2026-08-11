@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
-    "@procivis/one-react-native-components": "0.3.154",
+    "@procivis/one-react-native-components": "0.3.155",
     "@procivis/react-native-one-core": "1.119306.0",
     "@procivis/react-native-picker": "5.0.3",
     "@quidone/react-native-wheel-picker": "^1.7.0",
