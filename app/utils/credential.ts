@@ -7,12 +7,13 @@ import { translate } from '../i18n';
 
 export const credentialCardHeaderLabels = (): CardHeaderLabels => {
   return {
+    expired: translate('common.expired'),
+    expiredAt: (date: string) =>
+      translate('info.credentialDetail.validity.expiredAt', { date }),
     revoked: translate('common.revoked'),
     suspended: translate('common.suspended'),
     suspendedUntil: (date: string) =>
-      translate('info.credentialDetail.validity.suspendedUntil', {
-        date,
-      }),
+      translate('info.credentialDetail.validity.suspendedUntil', { date }),
     validityIssues: translate('common.validityUpdateIssue'),
   };
 };
