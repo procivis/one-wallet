@@ -56,6 +56,24 @@ const getCredentialValidityValue = (
     }
   }
 
+  if (credential.state === CredentialState.EXPIRED) {
+    if (credential.expiresAt) {
+      return {
+        icon: CredentialSuspendedIcon,
+        text: translate('info.credentialDetail.validity.expiredAt', {
+          date: credential.expiresAt,
+        }),
+        textColor: colorScheme.error,
+      };
+    } else {
+      return {
+        icon: CredentialSuspendedIcon,
+        text: translate('common.expired'),
+        textColor: colorScheme.error,
+      };
+    }
+  }
+
   if (credential.state === CredentialState.REVOKED) {
     return {
       icon: CredentialSuspendedIcon,

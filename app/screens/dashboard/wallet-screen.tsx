@@ -70,6 +70,7 @@ const WalletScreen: FunctionComponent = observer(() => {
       CredentialState.ACCEPTED,
       CredentialState.SUSPENDED,
       CredentialState.REVOKED,
+      CredentialState.EXPIRED,
     ],
     types: [CredentialType.SINGLE, CredentialType.BATCH_PARENT],
   });
