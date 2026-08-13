@@ -98,10 +98,10 @@ enum TransactionDataParameter {
   EMandateTransactionId = 'transactionData.eMandate.transactionId',
   Label = 'transactionData.qesApproval.documentInfo.label',
   Link = 'transactionData.qesApproval.documentInfo.href',
-  LoginRiskAction = 'transactionData.loginRiskTransacrtion.action',
-  LoginRiskDateTime = 'transactionData.loginRiskTransacrtion.dateTime',
-  LoginRiskService = 'transactionData.loginRiskTransacrtion.service',
-  LoginRiskTransactionId = 'transactionData.loginRiskTransacrtion.transactionId',
+  LoginRiskAction = 'transactionData.loginRiskTransaction.action',
+  LoginRiskDateTime = 'transactionData.loginRiskTransaction.dateTime',
+  LoginRiskService = 'transactionData.loginRiskTransaction.service',
+  LoginRiskTransactionId = 'transactionData.loginRiskTransaction.transactionId',
   OneTimePassword = 'transactionData.qesApproval.documentInfo.access.oneTimePassword',
   SignatureFormat = 'transactionData.qesApproval.documentInfo.signature_format',
   SignedProps = 'transactionData.qesApproval.documentInfo.signed_props',
@@ -132,13 +132,13 @@ const transactionDataParameterTitle = (
     case TransactionDataParameter.SignedProps:
       return translate('transactionData.qesApproval.documentInfo.signed_props');
     case TransactionDataParameter.LoginRiskTransactionId:
-      return translate('transactionData.loginRiskTransacrtion.transactionId');
+      return translate('transactionData.loginRiskTransaction.transactionId');
     case TransactionDataParameter.LoginRiskAction:
-      return translate('transactionData.loginRiskTransacrtion.action');
+      return translate('transactionData.loginRiskTransaction.action');
     case TransactionDataParameter.LoginRiskService:
-      return translate('transactionData.loginRiskTransacrtion.service');
+      return translate('transactionData.loginRiskTransaction.service');
     case TransactionDataParameter.LoginRiskDateTime:
-      return translate('transactionData.loginRiskTransacrtion.dateTime');
+      return translate('transactionData.loginRiskTransaction.dateTime');
     case TransactionDataParameter.AccountAccessTransactionId:
       return translate('transactionData.accountAccess.transactionId');
     case TransactionDataParameter.AccountAccessDescription:
