@@ -1,41 +1,80 @@
 import {
-  concatTestID,
-  CredentialLogo,
-  credentialLogoFromCredential,
-  CredentialWarningIcon,
-  Typography,
   UpIcon,
   useAppColorScheme,
-  useCoreConfig,
 } from '@procivis/one-react-native-components';
 import {
-  CredentialType,
   PresentationDefinitionTransactionData,
   PresentationDefinitionV2Credential,
 } from '@procivis/react-native-one-core';
 import React, { FC } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
+import { PAYMENT_SCA_TRANSACTION_TYPE } from '../../utils/payment-transaction';
+import PaymentRequestListItem from './payment-request-list-item';
+import TransactionAuthorizedBy from './transaction-authorized-by';
 import TransactionHeader from './transaction-header';
+
+type TransactionHeaderConfig = {
+  logoInitials: string;
+  titleKey: string;
+};
+
+export const TRANSACTION_HEADER_CONFIG: Record<
+  string,
+  TransactionHeaderConfig
+> = {
+  QES_APPROVAL: {
+    logoInitials: 'QES',
+    titleKey: translate('common.signatureRequest'),
+  },
+  SCA_ACCOUNT_ACCESS: {
+    logoInitials: 'SCA',
+    titleKey: translate('common.accountAccess'),
+  },
+  SCA_EMANDATE: {
+    logoInitials: 'SCA',
+    titleKey: translate('common.eMandate'),
+  },
+  SCA_LOGIN_RISK_TRANSACTION: {
+    logoInitials: 'SCA',
+    titleKey: translate('common.loginRiskTransaction'),
+  },
+  SCA_PAYMENT_CONFIRMATION: {
+    logoInitials: 'SCA',
+    titleKey: translate('common.paymentConfirmation'),
+  },
+};
+
+export const DEFAULT_TRANSACTION_HEADER =
+  TRANSACTION_HEADER_CONFIG.QES_APPROVAL;
 
 export type TransactionRequestListItemProps = {
   credential?: PresentationDefinitionV2Credential;
+  proofId: string;
   transaction: PresentationDefinitionTransactionData;
 };
 
 const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
   credential,
+  proofId,
   transaction,
 }) => {
   const colorScheme = useAppColorScheme();
-  const { data: config } = useCoreConfig();
-  const language = useCurrentLanguage();
-  const iconBackgroundStyle: ViewStyle = {
-    backgroundColor: colorScheme.background,
-    borderColor: colorScheme.background,
-  };
+
+  if (transaction.type === PAYMENT_SCA_TRANSACTION_TYPE) {
+    return (
+      <PaymentRequestListItem
+        credential={credential}
+        proofId={proofId}
+        transaction={transaction}
+      />
+    );
+  }
+
+  const header =
+    TRANSACTION_HEADER_CONFIG[transaction.type] ?? DEFAULT_TRANSACTION_HEADER;
+
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
       <View style={styles.row}>
@@ -47,61 +86,25 @@ const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
                 { backgroundColor: colorScheme.background },
               ]}
             >
-              <UpIcon
-                color={colorScheme.text}
-                style={[
-                  styles.chevron,
-                  { backgroundColor: colorScheme.background },
-                ]}
-              />
+              <UpIcon color={colorScheme.text} style={styles.chevron} />
             </View>
           }
-          logoInitials="QES"
-          title={translate('common.signatureRequest')}
+          logoInitials={header.logoInitials}
+          title={header.titleKey}
         />
       </View>
       <View
         style={[styles.separator, { backgroundColor: colorScheme.accentText }]}
       />
-      <View style={styles.row}>
-        <Typography
-          color={colorScheme.text}
-          preset="xs/line-height-small"
-          style={styles.authorizedBy}
-        >
-          {translate('common.authorizedBy')}
-        </Typography>
-        {credential && config && (
-          <View style={[styles.icon, iconBackgroundStyle]}>
-            <CredentialLogo
-              size={20}
-              {...credentialLogoFromCredential(
-                {
-                  ...credential,
-                  type: CredentialType.SINGLE,
-                },
-                config,
-                concatTestID('TransactionRequestListItem', transaction.id),
-                language,
-              )}
-            />
-          </View>
-        )}
-        {!credential && (
-          <View style={[styles.missingIcon, iconBackgroundStyle]}>
-            <CredentialWarningIcon />
-          </View>
-        )}
-      </View>
+      <TransactionAuthorizedBy
+        credential={credential}
+        transaction={transaction}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  authorizedBy: {
-    flex: 1,
-    opacity: 0.7,
-  },
   chevron: {
     marginLeft: 2,
     transform: [
@@ -122,14 +125,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 12,
-  },
-  icon: {
-    borderRadius: 6,
-    padding: 4,
-  },
-  missingIcon: {
-    borderRadius: 6,
-    padding: 2,
   },
   row: {
     alignItems: 'center',

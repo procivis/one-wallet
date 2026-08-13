@@ -84,40 +84,79 @@ const ListItem: FC<ListItemProps> = ({
   );
 };
 
-enum TransactionDataDocumentInfoParameter {
+enum TransactionDataParameter {
+  AccountAccessDescription = 'transactionData.accountAccess.description',
+  AccountAccessTransactionId = 'transactionData.accountAccess.transactionId',
   Checksum = 'transactionData.qesApproval.documentInfo.checksum',
   ConformanceLevel = 'transactionData.qesApproval.documentInfo.conformance_level',
+  EMandateCreditorId = 'transactionData.eMandate.creditorId',
+  EMandateDateTime = 'transactionData.eMandate.dateTime',
+  EMandateEndDate = 'transactionData.eMandate.endDate',
+  EMandatePurpose = 'transactionData.eMandate.purpose',
+  EMandateReferenceNumber = 'transactionData.eMandate.referenceNumber',
+  EMandateStartDate = 'transactionData.eMandate.startDate',
+  EMandateTransactionId = 'transactionData.eMandate.transactionId',
   Label = 'transactionData.qesApproval.documentInfo.label',
   Link = 'transactionData.qesApproval.documentInfo.href',
+  LoginRiskAction = 'transactionData.loginRiskTransacrtion.action',
+  LoginRiskDateTime = 'transactionData.loginRiskTransacrtion.dateTime',
+  LoginRiskService = 'transactionData.loginRiskTransacrtion.service',
+  LoginRiskTransactionId = 'transactionData.loginRiskTransacrtion.transactionId',
   OneTimePassword = 'transactionData.qesApproval.documentInfo.access.oneTimePassword',
   SignatureFormat = 'transactionData.qesApproval.documentInfo.signature_format',
   SignedProps = 'transactionData.qesApproval.documentInfo.signed_props',
 }
 
 const transactionDataParameterTitle = (
-  key: TransactionDataDocumentInfoParameter,
+  key: TransactionDataParameter,
 ): string => {
   switch (key) {
-    case TransactionDataDocumentInfoParameter.OneTimePassword:
+    case TransactionDataParameter.OneTimePassword:
       return translate(
         'transactionData.qesApproval.documentInfo.access.oneTimePassword',
       );
-    case TransactionDataDocumentInfoParameter.Checksum:
+    case TransactionDataParameter.Checksum:
       return translate('transactionData.qesApproval.documentInfo.checksum');
-    case TransactionDataDocumentInfoParameter.ConformanceLevel:
+    case TransactionDataParameter.ConformanceLevel:
       return translate(
         'transactionData.qesApproval.documentInfo.conformance_level',
       );
-    case TransactionDataDocumentInfoParameter.Label:
+    case TransactionDataParameter.Label:
       return translate('transactionData.qesApproval.documentInfo.label');
-    case TransactionDataDocumentInfoParameter.Link:
+    case TransactionDataParameter.Link:
       return translate('transactionData.qesApproval.documentInfo.href');
-    case TransactionDataDocumentInfoParameter.SignatureFormat:
+    case TransactionDataParameter.SignatureFormat:
       return translate(
         'transactionData.qesApproval.documentInfo.signature_format',
       );
-    case TransactionDataDocumentInfoParameter.SignedProps:
+    case TransactionDataParameter.SignedProps:
       return translate('transactionData.qesApproval.documentInfo.signed_props');
+    case TransactionDataParameter.LoginRiskTransactionId:
+      return translate('transactionData.loginRiskTransacrtion.transactionId');
+    case TransactionDataParameter.LoginRiskAction:
+      return translate('transactionData.loginRiskTransacrtion.action');
+    case TransactionDataParameter.LoginRiskService:
+      return translate('transactionData.loginRiskTransacrtion.service');
+    case TransactionDataParameter.LoginRiskDateTime:
+      return translate('transactionData.loginRiskTransacrtion.dateTime');
+    case TransactionDataParameter.AccountAccessTransactionId:
+      return translate('transactionData.accountAccess.transactionId');
+    case TransactionDataParameter.AccountAccessDescription:
+      return translate('transactionData.accountAccess.description');
+    case TransactionDataParameter.EMandateTransactionId:
+      return translate('transactionData.eMandate.transactionId');
+    case TransactionDataParameter.EMandatePurpose:
+      return translate('transactionData.eMandate.purpose');
+    case TransactionDataParameter.EMandateCreditorId:
+      return translate('transactionData.eMandate.creditorId');
+    case TransactionDataParameter.EMandateReferenceNumber:
+      return translate('transactionData.eMandate.referenceNumber');
+    case TransactionDataParameter.EMandateDateTime:
+      return translate('transactionData.eMandate.dateTime');
+    case TransactionDataParameter.EMandateStartDate:
+      return translate('transactionData.eMandate.startDate');
+    case TransactionDataParameter.EMandateEndDate:
+      return translate('transactionData.eMandate.endDate');
 
     default:
       return key;
@@ -147,12 +186,14 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
   const collapsedLength = attributes.length <= 3 ? attributes.length : 2;
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
-      <View style={styles.row}>
-        <TransactionHeader
-          logoInitials={item.title.replaceAll(/[^A-Z]/g, '')}
-          title={item.title}
-        />
-      </View>
+      {item.title && (
+        <View style={styles.row}>
+          <TransactionHeader
+            logoInitials={item.title?.replaceAll(/[^A-Z]/g, '') ?? ''}
+            title={item.title ?? ''}
+          />
+        </View>
+      )}
       <View>
         {attributes
           .slice(
@@ -161,15 +202,12 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
           )
           .map((attribute, index) => {
             const title = transactionDataParameterTitle(
-              attribute.key as TransactionDataDocumentInfoParameter,
+              attribute.key as TransactionDataParameter,
             );
             let value = attribute.value.replace(/^"(.+)"$/, '$1');
             let action: ListItemProps['action'] | undefined = undefined;
             let itemDefaultNumberOfLines = 1;
-            if (
-              attribute.key ===
-              (TransactionDataDocumentInfoParameter.Link as string)
-            ) {
+            if (attribute.key === (TransactionDataParameter.Link as string)) {
               if (value.startsWith('http://') || value.startsWith('https://')) {
                 action = {
                   icon: LinkIcon,
@@ -184,13 +222,12 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
               }
             } else if (
               attribute.key ===
-                (TransactionDataDocumentInfoParameter.SignedProps as string) &&
+                (TransactionDataParameter.SignedProps as string) &&
               !expandable
             ) {
               setExpandable(true);
             } else if (
-              attribute.key ===
-                (TransactionDataDocumentInfoParameter.Checksum as string) &&
+              attribute.key === (TransactionDataParameter.Checksum as string) &&
               !expandable
             ) {
               setExpandable(true);

@@ -109,10 +109,11 @@ const coreConfig = {
       order: 101,
       params: {
         public: {
+          expirationSeconds: 60,
           leewaySeconds: 10,
           msoExpectedUpdateInSeconds: 60,
-          msoExpiresInSeconds: 60,
           msoMinimumRefreshSeconds: 10,
+          revocationMethod: 'MDOC_MSO_UPDATE_SUSPENSION',
         },
       },
       type: 'MDOC',
