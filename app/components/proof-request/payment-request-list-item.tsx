@@ -1,6 +1,8 @@
 import {
+  Typography,
   UpIcon,
   useAppColorScheme,
+  useTransactionData,
 } from '@procivis/one-react-native-components';
 import {
   PresentationDefinitionTransactionData,
@@ -10,70 +12,30 @@ import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
-import { PAYMENT_SCA_TRANSACTION_TYPE } from '../../utils/payment-transaction';
-import PaymentRequestListItem from './payment-request-list-item';
+import {
+  formatPaymentAmount,
+  parsePaymentTransactionData,
+} from '../../utils/payment-transaction';
+import PaymentRecurringBadge from './payment-recurring-badge';
 import TransactionAuthorizedBy from './transaction-authorized-by';
 import TransactionHeader from './transaction-header';
 
-type TransactionHeaderConfig = {
-  logoInitials: string;
-  titleKey: string;
-};
-
-export const TRANSACTION_HEADER_CONFIG: Record<
-  string,
-  TransactionHeaderConfig
-> = {
-  QES_APPROVAL: {
-    logoInitials: 'QES',
-    titleKey: translate('common.signatureRequest'),
-  },
-  SCA_ACCOUNT_ACCESS: {
-    logoInitials: 'SCA',
-    titleKey: translate('common.accountAccess'),
-  },
-  SCA_EMANDATE: {
-    logoInitials: 'SCA',
-    titleKey: translate('common.eMandate'),
-  },
-  SCA_LOGIN_RISK_TRANSACTION: {
-    logoInitials: 'SCA',
-    titleKey: translate('common.loginRiskTransaction'),
-  },
-  SCA_PAYMENT_CONFIRMATION: {
-    logoInitials: 'SCA',
-    titleKey: translate('common.paymentConfirmation'),
-  },
-};
-
-export const DEFAULT_TRANSACTION_HEADER =
-  TRANSACTION_HEADER_CONFIG.QES_APPROVAL;
-
-export type TransactionRequestListItemProps = {
+export type PaymentRequestListItemProps = {
   credential?: PresentationDefinitionV2Credential;
   proofId: string;
   transaction: PresentationDefinitionTransactionData;
 };
 
-const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
+const PaymentRequestListItem: FC<PaymentRequestListItemProps> = ({
   credential,
   proofId,
   transaction,
 }) => {
   const colorScheme = useAppColorScheme();
+  const { data: transactionData } = useTransactionData(proofId, transaction.id);
 
-  if (transaction.type === PAYMENT_SCA_TRANSACTION_TYPE) {
-    return (
-      <PaymentRequestListItem
-        credential={credential}
-        proofId={proofId}
-        transaction={transaction}
-      />
-    );
-  }
-
-  const header =
-    TRANSACTION_HEADER_CONFIG[transaction.type] ?? DEFAULT_TRANSACTION_HEADER;
+  const payment = parsePaymentTransactionData(transactionData);
+  const amount = formatPaymentAmount(payment?.amount, payment?.currency);
 
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
@@ -89,9 +51,23 @@ const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
               <UpIcon color={colorScheme.text} style={styles.chevron} />
             </View>
           }
-          logoInitials={header.logoInitials}
-          title={header.titleKey}
+          logoInitials="SCA"
+          title={
+            transactionData?.transactionDataDisplay[0].title ??
+            translate('common.paymentConfirmation')
+          }
         />
+      </View>
+      <View
+        style={[styles.separator, { backgroundColor: colorScheme.accentText }]}
+      />
+      <View style={styles.amountWrapper}>
+        {amount && (
+          <Typography color={colorScheme.text} preset="xl">
+            {amount}
+          </Typography>
+        )}
+        {payment?.recurring && <PaymentRecurringBadge />}
       </View>
       <View
         style={[styles.separator, { backgroundColor: colorScheme.accentText }]}
@@ -105,6 +81,11 @@ const TransactionRequestListItem: FC<TransactionRequestListItemProps> = ({
 };
 
 const styles = StyleSheet.create({
+  amountWrapper: {
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 8,
+  },
   chevron: {
     marginLeft: 2,
     transform: [
@@ -138,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TransactionRequestListItem;
+export default PaymentRequestListItem;

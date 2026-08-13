@@ -16,8 +16,13 @@ import React, {
 import { StyleSheet, View } from 'react-native';
 
 import { HeaderBackButton } from '../../components/navigation/header-buttons';
+import PaymentTransactionDetails from '../../components/proof-request/payment-transaction-details';
 import TransactionDataItem from '../../components/proof-request/transaction-data-item';
 import TransactionHeader from '../../components/proof-request/transaction-header';
+import {
+  DEFAULT_TRANSACTION_HEADER,
+  TRANSACTION_HEADER_CONFIG,
+} from '../../components/proof-request/transaction-request-list-item';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
@@ -27,6 +32,7 @@ import {
   ShareCredentialRouteProp,
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialGroupLabels } from '../../utils/credential-sharing-v2';
+import { PAYMENT_SCA_TRANSACTION_TYPE } from '../../utils/payment-transaction';
 
 const ProofRequestTransactionDataScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
@@ -43,6 +49,11 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
     transactionId,
   } = route.params;
   const { data: transactionData } = useTransactionData(proofId, transactionId);
+
+  const isPayment = transactionData?.type === PAYMENT_SCA_TRANSACTION_TYPE;
+  const header =
+    TRANSACTION_HEADER_CONFIG[transactionData?.type ?? ''] ??
+    DEFAULT_TRANSACTION_HEADER;
 
   const [selectedCredential, setSelectedCredential] = useState<
     { credentialId: string; queryId: string } | undefined
@@ -161,21 +172,36 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
         testID="ProofRequestTransactionDataScreen.content"
       >
         <TransactionHeader
-          logoInitials="QES"
+          logoInitials={header.logoInitials}
           style={[styles.container, { backgroundColor: colorScheme.white }]}
-          title={translate('common.signatureRequest')}
+          title={
+            isPayment
+              ? transactionData?.transactionDataDisplay[0]?.title ??
+                header.titleKey
+              : header.titleKey
+          }
         />
-        <ProofRequestSet
-          headerLabel={translate('common.signatureRequest')}
-          showHeader={true}
-          showSeparator={false}
-        >
-          <View style={styles.data}>
-            {transactionData?.transactionDataDisplay.map((data, index) => (
-              <TransactionDataItem item={data} key={index} />
-            ))}
-          </View>
-        </ProofRequestSet>
+        {isPayment ? (
+          <ProofRequestSet
+            headerLabel="Details"
+            showHeader={true}
+            showSeparator={false}
+          >
+            <PaymentTransactionDetails transactionData={transactionData} />
+          </ProofRequestSet>
+        ) : (
+          <ProofRequestSet
+            headerLabel={header.titleKey}
+            showHeader={true}
+            showSeparator={false}
+          >
+            <View style={styles.data}>
+              {transactionData?.transactionDataDisplay.map((data, index) => (
+                <TransactionDataItem item={data} key={index} />
+              ))}
+            </View>
+          </ProofRequestSet>
+        )}
         <ProofRequestSet
           headerLabel={translate('common.credentialYouWillPresent')}
           showHeader={true}

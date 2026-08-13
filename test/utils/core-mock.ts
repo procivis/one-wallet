@@ -85,6 +85,7 @@ export const dummyCoreConfig: CoreConfig = {
   credentialIssuer: {},
   datatype: {},
   did: {},
+  ecosystem: {},
   format: {},
   globalSettings: {
     defaultLanguage: 'en',

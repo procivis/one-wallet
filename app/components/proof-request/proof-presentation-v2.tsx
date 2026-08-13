@@ -671,6 +671,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                 >
                   <TransactionRequestListItem
                     credential={credential}
+                    proofId={proofId}
                     transaction={transaction}
                   />
                 </TouchableOpacity>
