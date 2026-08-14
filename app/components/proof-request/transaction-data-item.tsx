@@ -1,4 +1,5 @@
 import {
+  ImportIcon,
   LinkIcon,
   reportException,
   TouchableOpacity,
@@ -6,7 +7,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { TransactionDataDisplay } from '@procivis/react-native-one-core';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import {
   Image,
   ImageSourcePropType,
@@ -15,10 +16,15 @@ import {
   View,
 } from 'react-native';
 import base64 from 'react-native-base64';
+import { TemporaryDirectoryPath, writeFile } from 'react-native-fs';
+import Share from 'react-native-share';
 import { SvgProps } from 'react-native-svg';
 
 import { translate } from '../../i18n';
 import TransactionHeader from './transaction-header';
+
+const JSON_DATA_URL_PREFIX = 'data:application/json;base64,';
+const PDF_DATA_URL_PREFIX = 'data:application/pdf;base64,';
 
 type ListItemProps = {
   action?: {
@@ -163,6 +169,29 @@ const transactionDataParameterTitle = (
   }
 };
 
+const documentFileName = (label: string | undefined): string => {
+  const name = label?.replace(/[^\w\-. ]/g, '').trim() || 'document';
+  return name.toLowerCase().endsWith('.pdf') ? name : `${name}.pdf`;
+};
+
+const savePdfDocument = async (
+  dataUrl: string,
+  fileName: string,
+): Promise<void> => {
+  const filePath = `${TemporaryDirectoryPath}/${fileName}`;
+  await writeFile(
+    filePath,
+    dataUrl.slice(PDF_DATA_URL_PREFIX.length),
+    'base64',
+  );
+  await Share.open({
+    failOnCancel: false,
+    filename: fileName,
+    type: 'application/pdf',
+    url: `file://${filePath}`,
+  });
+};
+
 export type TransactionDataItemProps = {
   item: TransactionDataDisplay;
 };
@@ -176,6 +205,23 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
     (url: string) => () => {
       Linking.openURL(url).catch((e) => {
         reportException(e, `Error opening contact link ${url}`);
+      });
+    },
+    [],
+  );
+  const pdfFileName = useMemo(
+    () =>
+      documentFileName(
+        attributes.find(
+          ({ key }) => key === (TransactionDataParameter.Label as string),
+        )?.value,
+      ),
+    [attributes],
+  );
+  const pdfHandler = useCallback(
+    (dataUrl: string, fileName: string) => () => {
+      savePdfDocument(dataUrl, fileName).catch((e) => {
+        reportException(e, `Error saving document ${fileName}`);
       });
     },
     [],
@@ -213,10 +259,14 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
                   icon: LinkIcon,
                   onPress: linkHandler(value),
                 };
-              } else if (value.startsWith('data:application/json;base64,')) {
-                value = base64.decode(
-                  value.replace('data:application/json;base64,', ''),
-                );
+              } else if (value.startsWith(PDF_DATA_URL_PREFIX)) {
+                action = {
+                  icon: ImportIcon,
+                  onPress: pdfHandler(value, pdfFileName),
+                };
+                value = pdfFileName;
+              } else if (value.startsWith(JSON_DATA_URL_PREFIX)) {
+                value = base64.decode(value.slice(JSON_DATA_URL_PREFIX.length));
                 itemDefaultNumberOfLines = 5;
                 setExpandable(true);
               }
