@@ -250,6 +250,8 @@ test:android:smoke:
       --project-name ${DEPENDENCY_TRACK_PROJECT_NAME}
       --project-version ${D_TRACK_PROJECT_VERSION}
       --author ${AUTHOR}
+      --no-install-deps
+      --spec-version 1.6
       ${PROJECT_PATH}
   artifacts:
     when: always
