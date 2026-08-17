@@ -440,5 +440,18 @@
   "walletUnitRegistration.unattested": "Lompakkoyksikön todistus vaatii laitteistotuettuja avaimia, joita tämä laite ei tue.",
   "walletUnitRegistration.updated": "Lompakon todiste päivitetty",
   "walletUnitRegistrationError.expired": "Lompakon todiste vanhentunut. Yritä päivittää tai poistaa lompakko.",
-  "walletUnitRegistrationError.revoked": "Lompakon todiste peruttu."
+  "walletUnitRegistrationError.revoked": "Lompakon todiste peruttu.",
+  "common.actionsToAuthorize": "Valtuutettavat toiminnot",
+  "common.requestedCredentials": "Pyydetyt todisteet",
+  "transactionData.qesApproval.documentInfo.access.oneTimePassword": "Kertakäyttösalasana",
+  "transactionData.qesApproval.documentInfo.checksum": "Tarkastussumma",
+  "transactionData.qesApproval.documentInfo.conformance_level": "Vaatimustenmukaisuustaso",
+  "transactionData.qesApproval.documentInfo.label": "Tunniste",
+  "transactionData.qesApproval.documentInfo.href": "Linkki",
+  "transactionData.qesApproval.documentInfo.signature_format": "Allekirjoitusmuoto",
+  "transactionData.qesApproval.documentInfo.signed_props": "Allekirjoitetut ominaisuudet",
+  "common.signatureRequest": "Allekirjoituspyyntö",
+  "common.authorizedBy": "Valtuuttanut",
+  "common.requestDetails": "Pyynnön tiedot",
+  "common.credentialYouWillPresent": "Todiste, jonka esität"
 }
