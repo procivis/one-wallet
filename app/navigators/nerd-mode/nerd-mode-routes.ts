@@ -14,6 +14,10 @@ export type NerdModeNavigatorParamList = {
   ProofNerdMode: {
     proofId: string;
   };
+  TransactionNerdMode: {
+    proofId: string;
+    transactionId: string;
+  };
 };
 
 export type NerdModeRouteProp<

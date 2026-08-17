@@ -7,7 +7,7 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { TransactionDataDisplay } from '@procivis/react-native-one-core';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import {
   Image,
   ImageSourcePropType,
@@ -20,7 +20,9 @@ import { TemporaryDirectoryPath, writeFile } from 'react-native-fs';
 import Share from 'react-native-share';
 import { SvgProps } from 'react-native-svg';
 
+import { useExpandableList } from '../../hooks/expandable-list';
 import { translate } from '../../i18n';
+import SeeMoreButton from './see-more-button';
 import TransactionHeader from './transaction-header';
 
 const JSON_DATA_URL_PREFIX = 'data:application/json;base64,';
@@ -198,9 +200,14 @@ export type TransactionDataItemProps = {
 
 const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
   const colorScheme = useAppColorScheme();
-  const [expanded, setExpanded] = useState(false);
   const attributes = item.attributes;
-  const [expandable, setExpandable] = useState(attributes.length > 3);
+  const {
+    expandable,
+    expanded,
+    forceExpandable,
+    toggleExpanded,
+    visibleItems,
+  } = useExpandableList(attributes);
   const linkHandler = useCallback(
     (url: string) => () => {
       Linking.openURL(url).catch((e) => {
@@ -226,10 +233,6 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
     },
     [],
   );
-  const toggleExpanded = useCallback(() => {
-    setExpanded((previousValue) => !previousValue);
-  }, []);
-  const collapsedLength = attributes.length <= 3 ? attributes.length : 2;
   return (
     <View style={[styles.container, { backgroundColor: colorScheme.white }]}>
       {item.title && (
@@ -241,83 +244,61 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
         </View>
       )}
       <View>
-        {attributes
-          .slice(
-            0,
-            expanded || !expandable ? attributes.length : collapsedLength,
-          )
-          .map((attribute, index) => {
-            const title = transactionDataParameterTitle(
-              attribute.key as TransactionDataParameter,
-            );
-            let value = attribute.value.replace(/^"(.+)"$/, '$1');
-            let action: ListItemProps['action'] | undefined = undefined;
-            let itemDefaultNumberOfLines = 1;
-            if (attribute.key === (TransactionDataParameter.Link as string)) {
-              if (value.startsWith('http://') || value.startsWith('https://')) {
-                action = {
-                  icon: LinkIcon,
-                  onPress: linkHandler(value),
-                };
-              } else if (value.startsWith(PDF_DATA_URL_PREFIX)) {
-                action = {
-                  icon: ImportIcon,
-                  onPress: pdfHandler(value, pdfFileName),
-                };
-                value = pdfFileName;
-              } else if (value.startsWith(JSON_DATA_URL_PREFIX)) {
-                value = base64.decode(value.slice(JSON_DATA_URL_PREFIX.length));
-                itemDefaultNumberOfLines = 5;
-                setExpandable(true);
-              }
-            } else if (
-              attribute.key ===
-                (TransactionDataParameter.SignedProps as string) &&
-              !expandable
-            ) {
-              setExpandable(true);
-            } else if (
-              attribute.key === (TransactionDataParameter.Checksum as string) &&
-              !expandable
-            ) {
-              setExpandable(true);
+        {visibleItems.map((attribute, index) => {
+          const title = transactionDataParameterTitle(
+            attribute.key as TransactionDataParameter,
+          );
+          let value = attribute.value.replace(/^"(.+)"$/, '$1');
+          let action: ListItemProps['action'] | undefined = undefined;
+          let itemDefaultNumberOfLines = 1;
+          if (attribute.key === (TransactionDataParameter.Link as string)) {
+            if (value.startsWith('http://') || value.startsWith('https://')) {
+              action = {
+                icon: LinkIcon,
+                onPress: linkHandler(value),
+              };
+            } else if (value.startsWith(PDF_DATA_URL_PREFIX)) {
+              action = {
+                icon: ImportIcon,
+                onPress: pdfHandler(value, pdfFileName),
+              };
+              value = pdfFileName;
+            } else if (value.startsWith(JSON_DATA_URL_PREFIX)) {
+              value = base64.decode(value.slice(JSON_DATA_URL_PREFIX.length));
+              itemDefaultNumberOfLines = 5;
+              forceExpandable();
             }
-            return (
-              <View key={index}>
-                <View
-                  style={[
-                    styles.separator,
-                    { backgroundColor: colorScheme.accentText },
-                  ]}
-                />
-                <ListItem
-                  action={action}
-                  numberOfLines={expanded ? 0 : itemDefaultNumberOfLines}
-                  title={title}
-                  value={value}
-                />
-              </View>
-            );
-          })}
+          } else if (
+            attribute.key ===
+              (TransactionDataParameter.SignedProps as string) &&
+            !expandable
+          ) {
+            forceExpandable();
+          } else if (
+            attribute.key === (TransactionDataParameter.Checksum as string) &&
+            !expandable
+          ) {
+            forceExpandable();
+          }
+          return (
+            <View key={index}>
+              <View
+                style={[
+                  styles.separator,
+                  { backgroundColor: colorScheme.accentText },
+                ]}
+              />
+              <ListItem
+                action={action}
+                numberOfLines={expanded ? 0 : itemDefaultNumberOfLines}
+                title={title}
+                value={value}
+              />
+            </View>
+          );
+        })}
         {expandable && (
-          <View>
-            <View
-              style={[
-                styles.separator,
-                { backgroundColor: colorScheme.accentText },
-              ]}
-            />
-            <TouchableOpacity
-              onPress={toggleExpanded}
-              style={styles.expandButton}
-            >
-              <Typography align="center" color={colorScheme.text}>
-                {expanded
-                  ? translate('common.seeLess')
-                  : translate('common.seeMore')}
-              </Typography>
-            </TouchableOpacity>
-          </View>
+          <SeeMoreButton expanded={expanded} onPress={toggleExpanded} />
         )}
       </View>
     </View>
@@ -336,11 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 12,
-  },
-  expandButton: {
-    paddingBottom: 10,
-    paddingTop: 16,
-    width: '100%',
   },
   item: {
     alignItems: 'center',

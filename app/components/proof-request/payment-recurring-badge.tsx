@@ -5,21 +5,29 @@ import {
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const RECURRING_LABEL = 'Recurring';
+import { translate } from '../../i18n';
+import { RefreshIcon } from '../icon/refresh-icon';
 
 const PaymentRecurringBadge: FC = () => {
   const colorScheme = useAppColorScheme();
   return (
     <View style={styles.recurring}>
       <View
-        style={[styles.recurringDot, { backgroundColor: colorScheme.success }]}
-      />
+        style={[styles.recurringIcon, { backgroundColor: colorScheme.success }]}
+      >
+        <RefreshIcon
+          color={colorScheme.white}
+          height={11}
+          style={styles.recurringIconGlyph}
+          width={11}
+        />
+      </View>
       <Typography
         color={colorScheme.text}
-        preset="xs/line-height-small"
+        preset="s/line-height-capped"
         style={styles.recurringLabel}
       >
-        {RECURRING_LABEL}
+        {translate('common.recurring')}
       </Typography>
     </View>
   );
@@ -31,10 +39,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 6,
   },
-  recurringDot: {
-    borderRadius: 4,
-    height: 8,
-    width: 8,
+  recurringIcon: {
+    alignItems: 'center',
+    borderRadius: 9,
+    height: 18,
+    justifyContent: 'center',
+    width: 18,
+  },
+  recurringIconGlyph: {
+    transform: [{ scaleX: -1 }],
   },
   recurringLabel: {
     opacity: 0.7,

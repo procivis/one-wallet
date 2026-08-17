@@ -15,7 +15,10 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { HeaderBackButton } from '../../components/navigation/header-buttons';
+import {
+  HeaderBackButton,
+  HeaderInfoButton,
+} from '../../components/navigation/header-buttons';
 import PaymentTransactionDetails from '../../components/proof-request/payment-transaction-details';
 import TransactionDataItem from '../../components/proof-request/transaction-data-item';
 import TransactionHeader from '../../components/proof-request/transaction-header';
@@ -26,6 +29,7 @@ import {
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
+import { RootNavigationProp } from '../../navigators/root/root-routes';
 import {
   ShareCredentialNavigationProp,
   ShareCredentialNavigatorParamList,
@@ -38,6 +42,7 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const navigation =
     useNavigation<ShareCredentialNavigationProp<'TransactionDetails'>>();
+  const rootNavigation = useNavigation<RootNavigationProp>();
   const route = useRoute<ShareCredentialRouteProp<'TransactionDetails'>>();
   const onImagePreview = useCredentialImagePreview();
   const language = useCurrentLanguage();
@@ -96,6 +101,16 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
       { merge: true },
     );
   }, [navigation, selectedCredential, transactionId]);
+
+  const infoPressHandler = useCallback(() => {
+    rootNavigation.navigate('NerdMode', {
+      params: {
+        proofId,
+        transactionId,
+      },
+      screen: 'TransactionNerdMode',
+    });
+  }, [proofId, rootNavigation, transactionId]);
 
   const onSelectOption = (credentialQueryId: string) => (selected: boolean) => {
     if (!selected) {
@@ -156,6 +171,12 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
           <HeaderBackButton
             onPress={onConfirm}
             testID="ProofRequestTransactionDataScreen.header.back"
+          />
+        ),
+        rightItem: (
+          <HeaderInfoButton
+            onPress={infoPressHandler}
+            testID="ProofRequestTransactionDataScreen.header.info"
           />
         ),
         static: true,
