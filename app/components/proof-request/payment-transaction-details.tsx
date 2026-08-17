@@ -6,16 +6,20 @@ import {
   useAppColorScheme,
 } from '@procivis/one-react-native-components';
 import { ProofTransactionData } from '@procivis/react-native-one-core';
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 
+import { useExpandableList } from '../../hooks/expandable-list';
 import { translate } from '../../i18n';
 import {
   formatPaymentAmount,
   formatPaymentDate,
+  formatPaymentDateOnly,
+  formatPaymentFrequency,
   parsePaymentTransactionData,
 } from '../../utils/payment-transaction';
 import PaymentRecurringBadge from './payment-recurring-badge';
+import SeeMoreButton from './see-more-button';
 
 const initialsFromName = (name: string): string =>
   name
@@ -60,13 +64,42 @@ export type PaymentTransactionDetailsProps = {
 const PaymentTransactionDetails: FC<PaymentTransactionDetailsProps> = ({
   transactionData,
 }) => {
-  console.log('asd', transactionData);
   const colorScheme = useAppColorScheme();
   const payment = parsePaymentTransactionData(transactionData);
 
   const amount = formatPaymentAmount(payment?.amount, payment?.currency);
   const date = formatPaymentDate(payment?.executionDate);
+  const frequency = formatPaymentFrequency(payment?.recurrenceFrequency);
+  const startDate = formatPaymentDateOnly(payment?.recurrenceStartDate);
   const website = payment?.website;
+  const transactionId = payment?.transactionId;
+
+  const detailRows = useMemo(() => {
+    const rows: DetailRowProps[] = [];
+    if (transactionId) {
+      rows.push({
+        title: translate('common.transactionId'),
+        value: transactionId,
+      });
+    }
+    if (date) {
+      rows.push({ title: translate('common.dateAndTime'), value: date });
+    }
+    if (startDate) {
+      rows.push({ title: translate('common.startDate'), value: startDate });
+    }
+    if (frequency) {
+      rows.push({ title: translate('common.frequency'), value: frequency });
+    }
+    return rows;
+  }, [date, frequency, startDate, transactionId]);
+
+  const {
+    expandable,
+    expanded,
+    toggleExpanded,
+    visibleItems: visibleRows,
+  } = useExpandableList(detailRows, { maxItemsWithoutExpand: 2 });
 
   const onOpenWebsite = useCallback(() => {
     if (!website) {
@@ -125,14 +158,11 @@ const PaymentTransactionDetails: FC<PaymentTransactionDetailsProps> = ({
           )}
         </View>
       )}
-      {payment?.transactionId && (
-        <DetailRow
-          title={translate('common.transactionId')}
-          value={payment.transactionId}
-        />
-      )}
-      {date && (
-        <DetailRow title={translate('common.dateAndTime')} value={date} />
+      {visibleRows.map((row) => (
+        <DetailRow key={row.title} title={row.title} value={row.value} />
+      ))}
+      {expandable && (
+        <SeeMoreButton expanded={expanded} onPress={toggleExpanded} />
       )}
     </View>
   );
