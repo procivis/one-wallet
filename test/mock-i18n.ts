@@ -7,7 +7,7 @@ jest.mock('i18n-js', () => {
     translations: {},
   };
 
-  mock.I18n = () => mock;
+  mock.I18n = jest.fn().mockImplementation(() => mock);
 
   return mock;
 });

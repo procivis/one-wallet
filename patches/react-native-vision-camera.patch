@@ -1,0 +1,13 @@
+diff --git a/nitrogen/generated/ios/c++/views/HybridPreviewViewComponent.mm b/nitrogen/generated/ios/c++/views/HybridPreviewViewComponent.mm
+index 888870cb39f3ec6b55e85ec2c9b9fbfc81b7678f..0d73003d773ba787502f7f38cf7b682be785f078 100644
+--- a/nitrogen/generated/ios/c++/views/HybridPreviewViewComponent.mm
++++ b/nitrogen/generated/ios/c++/views/HybridPreviewViewComponent.mm
+@@ -52,6 +52,8 @@ - (instancetype) init {
+   if (self = [super init]) {
+     std::shared_ptr<HybridPreviewViewSpec> hybridView = VisionCamera::VisionCameraAutolinking::createPreviewView();
+     _hybridView = std::dynamic_pointer_cast<HybridPreviewViewSpecSwift>(hybridView);
++    static const auto defaultProps = std::make_shared<const HybridPreviewViewProps>();
++    _props = defaultProps;
+     [self updateView];
+   }
+   return self;

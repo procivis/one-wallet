@@ -97,6 +97,7 @@ const WalletCredentialList: FC<WalletCredentialListProps> = ({
       keyExtractor={(item) => item.id}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.1}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onScroll={Animated.event(
         [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
         {

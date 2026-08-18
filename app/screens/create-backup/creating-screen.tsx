@@ -7,6 +7,7 @@ import {
   useBlockOSBackNavigation,
   useCreateBackup,
 } from '@procivis/one-react-native-components';
+import { useRunAfterTransition } from '@procivis/one-react-native-components/src/utils/hooks/navigation/run-after-transition';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, {
   FC,
@@ -16,13 +17,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  InteractionManager,
-  NativeModules,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { NativeModules, Platform, StyleSheet, View } from 'react-native';
 import { DocumentDirectoryPath, unlink } from 'react-native-fs';
 import Share from 'react-native-share';
 
@@ -37,6 +32,7 @@ const CreatingScreen: FC = () => {
   const colorScheme = useAppColorScheme();
   const navigation = useNavigation<CreateBackupNavigationProp<'Processing'>>();
   const rootNavigation = useNavigation<RootNavigationProp<'Settings'>>();
+  const runAfterTransition = useRunAfterTransition();
   const {
     params: { password },
   } = useRoute<CreateBackupProcessingRouteProp<'Creating'>>();
@@ -94,7 +90,7 @@ const CreatingScreen: FC = () => {
       }
     };
     setIsSaving(true);
-    InteractionManager.runAfterInteractions(() => {
+    runAfterTransition(() => {
       if (Platform.OS === 'ios') {
         setTimeout(() => {
           saveBackup();
@@ -103,7 +99,7 @@ const CreatingScreen: FC = () => {
         saveBackup();
       }
     });
-  }, [backupFileName, backupFilePath]);
+  }, [backupFileName, backupFilePath, runAfterTransition]);
 
   const handleBackupCreate = useCallback(async () => {
     try {

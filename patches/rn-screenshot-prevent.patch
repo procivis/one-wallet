@@ -1,3 +1,67 @@
+diff --git a/android/src/main/java/com/screenshotprevent/ScreenshotPreventModule.kt b/android/src/main/java/com/screenshotprevent/ScreenshotPreventModule.kt
+index 4f702213610a7c8b8746204c8873a4c6f71b7223..b41f729bba5109249f1b041286c0470d9f1f9ec9 100644
+--- a/android/src/main/java/com/screenshotprevent/ScreenshotPreventModule.kt
++++ b/android/src/main/java/com/screenshotprevent/ScreenshotPreventModule.kt
+@@ -22,7 +22,7 @@ class ScreenshotPreventModule internal constructor(context: ReactApplicationCont
+ 
+   private var lifecycleEventListener = object : LifecycleEventListener {
+     override fun onHostResume() {
+-      currentActivity?.let {
++      reactApplicationContext.getCurrentActivity()?.let {
+         if (overlayLayout != null) {
+           it.runOnUiThread {
+             (it.window.decorView.rootView as ViewGroup).removeView(overlayLayout)
+@@ -39,7 +39,7 @@ class ScreenshotPreventModule internal constructor(context: ReactApplicationCont
+     }
+ 
+     override fun onHostPause() {
+-      currentActivity?.let {
++      reactApplicationContext.getCurrentActivity()?.let {
+         if (overlayLayout != null) {
+           it.runOnUiThread {
+             val layoutParams = RelativeLayout.LayoutParams(
+@@ -71,7 +71,7 @@ class ScreenshotPreventModule internal constructor(context: ReactApplicationCont
+ 
+   @ReactMethod
+   override fun enabled(enabled: Boolean) {
+-    currentActivity?.let {
++    reactApplicationContext.getCurrentActivity()?.let {
+       it.runOnUiThread {
+         if (enabled) {
+           it.window.setFlags(
+@@ -87,7 +87,7 @@ class ScreenshotPreventModule internal constructor(context: ReactApplicationCont
+ 
+   @ReactMethod
+   override fun enableSecureView(imagePath: String?) {
+-    currentActivity?.let {
++    reactApplicationContext.getCurrentActivity()?.let {
+       if (overlayLayout == null) {
+         createOverlayLayout(it, imagePath)
+       }
+@@ -103,7 +103,7 @@ class ScreenshotPreventModule internal constructor(context: ReactApplicationCont
+ 
+   @ReactMethod
+   override fun disableSecureView() {
+-    currentActivity?.let {
++    reactApplicationContext.getCurrentActivity()?.let {
+       it.runOnUiThread {
+         if (overlayLayout != null) {
+           (it.window.decorView.rootView as ViewGroup).removeView(overlayLayout)
+diff --git a/ios/ScreenshotPrevent.h b/ios/ScreenshotPrevent.h
+index 7ac565114db96b9606ade38931c8e31122d3a276..f3f9fda433cbcad4c02f4eb7ae2ffa179a9ef137 100644
+--- a/ios/ScreenshotPrevent.h
++++ b/ios/ScreenshotPrevent.h
+@@ -1,8 +1,8 @@
+ 
+ #ifdef RCT_NEW_ARCH_ENABLED
+ #import "RNScreenshotPreventSpec.h"
+-#import "RCTBridgeModule.h"
+-#import "RCTConvert.h"
++#import <React/RCTBridgeModule.h>
++#import <React/RCTConvert.h>
+ 
+ @interface ScreenshotPrevent : NSObject <NativeScreenshotPreventSpec>
+ #else
 diff --git a/ios/ScreenshotPrevent.mm b/ios/ScreenshotPrevent.mm
 index 87eb48535f92072c373ab4ccc75969bfc2687546..76680598c91bf239a3f946729d7ed0e6ba1d8721 100644
 --- a/ios/ScreenshotPrevent.mm

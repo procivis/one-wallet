@@ -1,18 +1,10 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": [
-      "jest"
-    ],
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["jest"]
   },
-  "include": [
-    "index.js",
-    "eslint.config.mjs",
-    "app/**/*",
-    "test/**/*"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/Pods"
-  ],
+  "include": ["index.js", "eslint.config.mjs", "app/**/*", "test/**/*"],
+  "exclude": ["**/node_modules", "**/Pods"]
 }

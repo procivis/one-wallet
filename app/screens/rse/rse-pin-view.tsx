@@ -48,6 +48,7 @@ const RSEPinView: FC<RSEPinViewProps> = ({
     const duration = 300;
     const iterations = 4;
     const animationConfig = {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       easing: Easing.linear,
       useNativeDriver: true,
     };

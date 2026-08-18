@@ -181,13 +181,17 @@ const DashboardScreen: FunctionComponent = observer(() => {
         switchSetting: SwitchSettingProps;
       };
 
+  type ListSection = ListSectionHeaderProps & {
+    data: SettingsListItem[];
+  };
+
   const handleWalletUnitRegistration = useCallback(() => {
     navigation.navigate('WalletUnitRegistrationInfo');
   }, [navigation]);
 
   const renderSettingsSectionHeader: SectionListProps<
     SettingsListItem,
-    ListSectionHeaderProps
+    ListSection
   >['renderSectionHeader'] = ({ section }) => {
     if (!section.title) {
       return null;
@@ -197,14 +201,14 @@ const DashboardScreen: FunctionComponent = observer(() => {
 
   const renderSettingsSectionFooter: SectionListProps<
     SettingsListItem,
-    ListSectionHeaderProps
+    ListSection
   >['renderSectionFooter'] = () => {
     return <View style={styles.sectionFooter} />;
   };
 
   const renderSettingsItem: SectionListProps<
     SettingsListItem,
-    ListSectionHeaderProps
+    ListSection
   >['renderItem'] = ({ item, index, section }) => {
     const style: StyleProp<ViewStyle> = [
       { backgroundColor: colorScheme.white },
@@ -220,182 +224,182 @@ const DashboardScreen: FunctionComponent = observer(() => {
     return null;
   };
 
-  const sections: SectionListProps<
-    SettingsListItem,
-    ListSectionHeaderProps
-  >['sections'] = [
-    {
-      data: [
-        config.featureFlags.localization
-          ? {
-              buttonSetting: {
-                icon: LanguageIcon,
-                onPress: handleChangeLanguage,
-                testID: 'SettingsScreen.languageChange',
-                title: translate('common.changeLanguage'),
-              },
-            }
-          : undefined,
-        {
-          buttonSetting: {
-            icon: HistoryIcon,
-            onPress: handleHistory,
-            testID: 'SettingsScreen.history',
-            title: translate('common.history'),
+  const sections: SectionListProps<SettingsListItem, ListSection>['sections'] =
+    [
+      {
+        data: [
+          config.featureFlags.localization
+            ? {
+                buttonSetting: {
+                  icon: LanguageIcon,
+                  onPress: handleChangeLanguage,
+                  testID: 'SettingsScreen.languageChange',
+                  title: translate('common.changeLanguage'),
+                },
+              }
+            : undefined,
+          {
+            buttonSetting: {
+              icon: HistoryIcon,
+              onPress: handleHistory,
+              testID: 'SettingsScreen.history',
+              title: translate('common.history'),
+            },
           },
-        },
-      ].filter(nonEmptyFilter),
-      title: translate('common.general'),
-    },
-    {
-      data: [
-        {
-          buttonSetting: {
-            icon: CreateBackupIcon,
-            onPress: handleCreateBackup,
-            testID: 'SettingsScreen.createBackup',
-            title: translate('common.createBackup'),
+        ].filter(nonEmptyFilter),
+        title: translate('common.general'),
+      },
+      {
+        data: [
+          {
+            buttonSetting: {
+              icon: CreateBackupIcon,
+              onPress: handleCreateBackup,
+              testID: 'SettingsScreen.createBackup',
+              title: translate('common.createBackup'),
+            },
           },
-        },
-        {
-          buttonSetting: {
-            icon: RestoreBackupIcon,
-            onPress: handleRestoreBackup,
-            testID: 'SettingsScreen.restoreBackup',
-            title: translate('common.restoreBackup'),
+          {
+            buttonSetting: {
+              icon: RestoreBackupIcon,
+              onPress: handleRestoreBackup,
+              testID: 'SettingsScreen.restoreBackup',
+              title: translate('common.restoreBackup'),
+            },
           },
-        },
-      ],
-      title: translate('common.backup&Recovery'),
-    },
-    {
-      data: [
-        {
-          buttonSetting: {
-            icon: PINIcon,
-            onPress: handleChangePinCode,
-            testID: 'SettingsScreen.changePIN',
-            title: translate('common.changePinCode'),
+        ],
+        title: translate('common.backup&Recovery'),
+      },
+      {
+        data: [
+          {
+            buttonSetting: {
+              icon: PINIcon,
+              onPress: handleChangePinCode,
+              testID: 'SettingsScreen.changePIN',
+              title: translate('common.changePinCode'),
+            },
           },
-        },
-        walletStore.isRSESetup
-          ? {
-              buttonSetting: {
-                icon: PINIcon,
-                onPress: handleChangeRSEPinCode,
-                testID: 'SettingsScreen.changeRSEPIN',
-                title: translate('info.settings.security.rse.pinCode'),
-              },
-            }
-          : null,
-        biometry
-          ? {
-              switchSetting: {
-                disabled: biometricSetting.toggleUnavailable,
-                icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
-                onChange: biometricSetting.onPress,
-                testID: 'SettingsScreen.biometry',
-                title: translate('common.useBiometrics'),
-                value: biometricSetting.toggleUnavailable
-                  ? false
-                  : userSettings.biometrics,
-              },
-            }
-          : null,
-        {
-          switchSetting: {
-            icon: ScreenCaptureProtectionIcon,
-            onChange: handleScreenCaptureProtectionChange,
-            testID: 'SettingsScreen.screenCaptureProtection',
-            title: translate('info.settings.security.screenCaptureProtection'),
-            value: userSettings.screenCaptureProtection,
+          walletStore.isRSESetup
+            ? {
+                buttonSetting: {
+                  icon: PINIcon,
+                  onPress: handleChangeRSEPinCode,
+                  testID: 'SettingsScreen.changeRSEPIN',
+                  title: translate('info.settings.security.rse.pinCode'),
+                },
+              }
+            : null,
+          biometry
+            ? {
+                switchSetting: {
+                  disabled: biometricSetting.toggleUnavailable,
+                  icon: biometry === Biometry.FaceID ? FaceIDIcon : TouchIDIcon,
+                  onChange: biometricSetting.onPress,
+                  testID: 'SettingsScreen.biometry',
+                  title: translate('common.useBiometrics'),
+                  value: biometricSetting.toggleUnavailable
+                    ? false
+                    : userSettings.biometrics,
+                },
+              }
+            : null,
+          {
+            switchSetting: {
+              icon: ScreenCaptureProtectionIcon,
+              onChange: handleScreenCaptureProtectionChange,
+              testID: 'SettingsScreen.screenCaptureProtection',
+              title: translate(
+                'info.settings.security.screenCaptureProtection',
+              ),
+              value: userSettings.screenCaptureProtection,
+            },
           },
-        },
-        featureFlags?.trustEcosystemsEnabled && registeredWalletUnitId
-          ? {
-              switchSetting: {
-                disabled: isLoading,
-                icon: WarningIcon,
-                onChange: handleAllowUntrustedRelyingPartiesChange,
-                testID: 'SettingsScreen.allowUntrustedRelyingParties',
-                title: translate(
-                  'info.settings.security.allowUntrustedRelyingParties',
-                ),
-                value: allowUntrustedRelyingParties,
-              },
-            }
-          : null,
-        walletUnitAttestation.enabled &&
-        registeredWalletUnitId &&
-        featureFlags?.trustEcosystemsEnabled
-          ? {
-              buttonSetting: {
-                icon: TrustEcosystemIcon,
-                onPress: handleTrustEcosystems,
-                testID: 'SettingsScreen.trustEcosystems',
-                title: translate('common.trustEcosystems'),
-              },
-            }
-          : null,
-        walletUnitAttestation.enabled
-          ? {
-              buttonSetting: {
-                icon: WalletUnitAttestationIcon,
-                onPress: handleWalletUnitRegistration,
-                testID: 'SettingsScreen.walletUnitRegistration',
-                title: translate('common.walletUnitRegistration'),
-              },
-            }
-          : null,
-      ].filter(nonEmptyFilter),
-      title: translate('common.security'),
-    },
-    {
-      data: [
-        {
-          buttonSetting: {
-            icon: InformationIcon,
-            onPress: handleAppInformation,
-            testID: 'SettingsScreen.help',
-            title: translate('common.information'),
+          featureFlags?.trustEcosystemsEnabled && registeredWalletUnitId
+            ? {
+                switchSetting: {
+                  disabled: isLoading,
+                  icon: WarningIcon,
+                  onChange: handleAllowUntrustedRelyingPartiesChange,
+                  testID: 'SettingsScreen.allowUntrustedRelyingParties',
+                  title: translate(
+                    'info.settings.security.allowUntrustedRelyingParties',
+                  ),
+                  value: allowUntrustedRelyingParties,
+                },
+              }
+            : null,
+          walletUnitAttestation.enabled &&
+          registeredWalletUnitId &&
+          featureFlags?.trustEcosystemsEnabled
+            ? {
+                buttonSetting: {
+                  icon: TrustEcosystemIcon,
+                  onPress: handleTrustEcosystems,
+                  testID: 'SettingsScreen.trustEcosystems',
+                  title: translate('common.trustEcosystems'),
+                },
+              }
+            : null,
+          walletUnitAttestation.enabled
+            ? {
+                buttonSetting: {
+                  icon: WalletUnitAttestationIcon,
+                  onPress: handleWalletUnitRegistration,
+                  testID: 'SettingsScreen.walletUnitRegistration',
+                  title: translate('common.walletUnitRegistration'),
+                },
+              }
+            : null,
+        ].filter(nonEmptyFilter),
+        title: translate('common.security'),
+      },
+      {
+        data: [
+          {
+            buttonSetting: {
+              icon: InformationIcon,
+              onPress: handleAppInformation,
+              testID: 'SettingsScreen.help',
+              title: translate('common.information'),
+            },
           },
-        },
-        {
-          buttonSetting: {
-            icon: LicencesIcon,
-            onPress: handleLicences,
-            testID: 'SettingsScreen.licences',
-            title: translate('common.licences&Agreements'),
+          {
+            buttonSetting: {
+              icon: LicencesIcon,
+              onPress: handleLicences,
+              testID: 'SettingsScreen.licences',
+              title: translate('common.licences&Agreements'),
+            },
           },
-        },
-      ],
-      title: translate('common.help&Information'),
-    },
-    {
-      data: [
-        {
-          buttonSetting: {
-            icon: ClearCacheIcon,
-            onPress: handleClearCache,
-            testID: 'SettingsScreen.clearCache',
-            title: translate('common.clearCache'),
+        ],
+        title: translate('common.help&Information'),
+      },
+      {
+        data: [
+          {
+            buttonSetting: {
+              icon: ClearCacheIcon,
+              onPress: handleClearCache,
+              testID: 'SettingsScreen.clearCache',
+              title: translate('common.clearCache'),
+            },
           },
-        },
-        {
-          buttonSetting: {
-            icon: DeleteIcon,
-            onPress: handleDeleteWallet,
-            testID: 'SettingsScreen.deleteWallet',
-            title: translate('common.deleteWallet'),
+          {
+            buttonSetting: {
+              icon: DeleteIcon,
+              onPress: handleDeleteWallet,
+              testID: 'SettingsScreen.deleteWallet',
+              title: translate('common.deleteWallet'),
+            },
           },
-        },
-      ],
-      title: translate('common.app'),
-    },
-  ];
+        ],
+        title: translate('common.app'),
+      },
+    ];
 
   return (
-    <SectionListScreen<SettingsListItem, ListSectionHeaderProps>
+    <SectionListScreen<SettingsListItem, ListSection>
       header={{
         leftItem: <HeaderBackButton testID="SettingsScreen.header.back" />,
         title: translate('common.settings'),

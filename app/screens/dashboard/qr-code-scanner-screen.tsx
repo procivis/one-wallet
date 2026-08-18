@@ -22,7 +22,7 @@ import React, {
 } from 'react';
 import { Alert, LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { openSettings, RESULTS } from 'react-native-permissions';
-import { Code } from 'react-native-vision-camera';
+import { Barcode } from 'react-native-vision-camera-barcode-scanner';
 
 import { config as appConfig } from '../../config';
 import { useCameraPermission } from '../../hooks/camera-permissions';
@@ -47,9 +47,9 @@ const QRCodeScannerScreen: FunctionComponent = observer(() => {
   useCapturePrevention();
 
   const handleCodeScan = useCallback(
-    (scannedCode: Code[]) => {
-      if (!code) {
-        setCode(scannedCode[0].value);
+    (scannedCode: Barcode[]) => {
+      if (!code && scannedCode && scannedCode.length) {
+        setCode(scannedCode[0].rawValue);
       }
     },
     [code, setCode],

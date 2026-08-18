@@ -13,7 +13,8 @@ $VCEnableLocation = false
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-platform :ios, min_ios_version_supported
+barcode_scanner_min_ios_version = 15.5
+platform :ios, [min_ios_version_supported.to_f, barcode_scanner_min_ios_version].max
 prepare_react_native_project!
 
 setup_permissions(['FaceID', 'Bluetooth', 'Camera'])
