@@ -18,6 +18,7 @@ import './mock-reanimated';
 import './mock-react-native-reanimated-carousel';
 import './mock-react-native-svg';
 import './mock-procivis-react-native-one-core';
+import './mock-react-native-vision-camera';
 
 jest.useFakeTimers();
 

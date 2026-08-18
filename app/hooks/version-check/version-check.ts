@@ -1,7 +1,7 @@
+import { useRunAfterTransition } from '@procivis/one-react-native-components/src/utils/hooks/navigation/run-after-transition';
 import { useNavigation } from '@react-navigation/native';
 import { compare } from 'compare-versions';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { InteractionManager } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 import { useStores } from '../../models';
@@ -25,6 +25,7 @@ const useVersionCheck = () => {
   } = useStores();
   const appVersion = `${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()}`;
   const navigation = useNavigation<RootNavigationProp>();
+  const runAfterTransition = useRunAfterTransition();
   const {
     value: ignoredRecommendedVersion,
     isLoading: isIgnoredRecommendedVersionLoading,
@@ -101,7 +102,7 @@ const useVersionCheck = () => {
       isBelowMinimumVersion || isBelowRecommendedVersion || isRejectedVersion;
 
     if (isWrongVersion && isUpdateNotIgnored) {
-      InteractionManager.runAfterInteractions(() => {
+      runAfterTransition(() => {
         navigation.navigate('VersionUpdate');
       });
       return false;
@@ -113,6 +114,7 @@ const useVersionCheck = () => {
     isRejectedVersion,
     isUpdateNotIgnored,
     navigation,
+    runAfterTransition,
   ]);
 
   const showRecommendedUpdateNotice = useMemo(() => {

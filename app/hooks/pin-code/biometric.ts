@@ -4,6 +4,7 @@ import {
 } from '@procivis/one-react-native-components';
 import { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
+import ReactNativeBiometrics from 'react-native-biometrics';
 import {
   check as checkPermission,
   PERMISSIONS,
@@ -11,7 +12,6 @@ import {
   request as requestPermission,
   RESULTS,
 } from 'react-native-permissions';
-import TouchID from 'react-native-touch-id';
 
 export enum Biometry {
   FaceID = 'faceID',
@@ -19,13 +19,14 @@ export enum Biometry {
 }
 
 export async function getBiometricType(): Promise<Biometry | null> {
+  const rnBiometrics = new ReactNativeBiometrics();
   try {
-    const type = await TouchID.isSupported().catch(() => false);
-    if (!type) {
+    const { biometryType } = await rnBiometrics.isSensorAvailable();
+    if (!biometryType) {
       return null;
     }
 
-    if (type === 'FaceID') {
+    if (biometryType === 'FaceID') {
       return Biometry.FaceID;
     } else {
       return Biometry.Other;
@@ -36,11 +37,14 @@ export async function getBiometricType(): Promise<Biometry | null> {
   return null;
 }
 
-export async function biometricAuthenticate(
-  options: { cancelLabel?: string; promptMessage?: string } = {},
-): Promise<void> {
-  await TouchID.authenticate(options.promptMessage, {
-    cancelText: options.cancelLabel,
+export async function biometricAuthenticate(options: {
+  cancelLabel: string;
+  promptMessage: string;
+}): Promise<void> {
+  const rnBiometrics = new ReactNativeBiometrics();
+  await rnBiometrics.simplePrompt({
+    cancelButtonText: options.cancelLabel,
+    promptMessage: options.promptMessage,
   });
 }
 

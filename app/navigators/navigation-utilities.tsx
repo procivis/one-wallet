@@ -14,7 +14,10 @@ import React, {
 import { BackHandler, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export const navigationRef = createNavigationContainerRef();
+import { RootNavigatorParamList } from './root/root-routes';
+
+export const navigationRef =
+  createNavigationContainerRef<RootNavigatorParamList>();
 
 /**
  * Gets the current screen from any navigation state.

@@ -24,7 +24,7 @@ import { configure as configureNetInfo } from '@react-native-community/netinfo';
 import * as Sentry from '@sentry/react-native';
 import React, { useEffect, useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -74,8 +74,6 @@ function App() {
       return;
     }
     StatusBar.setBarStyle(darkMode ? 'light-content' : 'dark-content', true);
-    StatusBar.setBackgroundColor('transparent', true);
-    StatusBar.setTranslucent(true);
   }, [darkMode]);
 
   // Kick off initial async loading actions, like loading fonts and RootStore
@@ -126,7 +124,9 @@ function App() {
             <ActionSheetProvider>
               <AccessibilityFocusHistoryProvider>
                 <ColorSchemeProvider<AppColorScheme> colorScheme={colorScheme}>
-                  <AppNavigator />
+                  <GestureHandlerRootView>
+                    <AppNavigator />
+                  </GestureHandlerRootView>
                 </ColorSchemeProvider>
               </AccessibilityFocusHistoryProvider>
             </ActionSheetProvider>
@@ -137,6 +137,4 @@ function App() {
   );
 }
 
-export default Sentry.wrap(
-  gestureHandlerRootHOC(App) as unknown as React.ComponentType,
-);
+export default Sentry.wrap(App);
