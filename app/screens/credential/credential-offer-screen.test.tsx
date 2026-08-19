@@ -75,6 +75,8 @@ describe('CredentialOfferScreen', () => {
     expect(screen.queryByTestId('CredentialOfferScreen')).toBeNull();
     expect(screen.getByTestId('Screen-Result')).toBeVisible();
     expect(screen.getByTestId('Param-error')).toHaveTextContent(acceptError);
+    // a failed acceptance leaves nothing to reject
+    expect(ONE_CORE_MOCK.holderRejectCredential).not.toHaveBeenCalled();
   });
 
   it.each(['BR_0169', 'BR_0170'])(

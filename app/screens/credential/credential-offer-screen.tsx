@@ -6,6 +6,7 @@ import {
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
+  reportException,
   ScrollViewScreen,
   TrustInfo,
   useAppColorScheme,
@@ -93,6 +94,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
   const { mutateAsync: acceptCredential } = useCredentialAccept();
+  const acceptance = useRef<Promise<string> | undefined>(undefined);
   const [credentialId, setCredentialId] = useState<string>();
   const { data: credential } = useCredentialDetail(credentialId);
   const { data: credentialSchema } = useCredentialSchemaDetail(
@@ -130,10 +132,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
     }
     setAcceptanceInitialized(true);
     try {
-      const credentialId = await acceptCredential({
+      acceptance.current = acceptCredential({
         interactionId,
         txCode,
       });
+      const credentialId = await acceptance.current;
       setCredentialId(credentialId);
     } catch (error) {
       const invalidCodeBRs = ['BR_0169', 'BR_0170'];
@@ -183,18 +186,39 @@ const CredentialOfferScreen: FunctionComponent = () => {
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
-    const exchangeConfig = config?.issuanceProtocol[credential?.protocol ?? ''];
+    const exchangeConfig = config?.issuanceProtocol[invitationResult.protocol];
     const exchangeCapabilities = exchangeConfig?.capabilities;
     const exchangeFeatures = exchangeCapabilities?.features;
-    const supportsRejection = exchangeFeatures?.includes(
-      IssuanceProtocolFeature.SupportsRejection,
-    );
-    if (!skipRejection.current && supportsRejection) {
-      rejectCredential(interactionId);
+    // a not yet loaded config is not treated as unsupported
+    const rejectionUnsupported =
+      exchangeFeatures !== undefined &&
+      !exchangeFeatures.includes(IssuanceProtocolFeature.SupportsRejection);
+    if (skipRejection.current || rejectionUnsupported) {
+      return;
     }
+
+    const rejectAfterAcceptance = async () => {
+      try {
+        // a rejection sent before the acceptance completes finds no credential
+        await acceptance.current;
+      } catch {
+        // the acceptance failed, there is nothing to reject
+        return;
+      }
+      try {
+        await rejectCredential(interactionId);
+      } catch (error) {
+        // BR_0237: rejection not supported by the protocol
+        if (error instanceof OneError && error.code === 'BR_0237') {
+          return;
+        }
+        reportException(error, 'Failed to reject credential offer');
+      }
+    };
+    void rejectAfterAcceptance();
   }, [
     config?.issuanceProtocol,
-    credential?.protocol,
+    invitationResult.protocol,
     interactionId,
     rejectCredential,
   ]);
