@@ -101,7 +101,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     credential?.schema.id,
   );
   const { data: trustInformation } = useCredentialTrustInformation(
-    featureFlags?.trustEcosystemsEnabled &&
+    featureFlags?.ecosystemsEnabled &&
       credential?.trustInformation?.result === TrustResolutionResult.TRUSTED
       ? credentialId
       : undefined,
@@ -164,11 +164,11 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [credential, handleCredentialAccept, navigation]);
 
   const trustDetailsPressHandler = useCallback(() => {
-    if (!trustInformation) {
+    if (!trustInformation?.issuer) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
-      trustInformation,
+      trustInformation: trustInformation.issuer,
     });
   }, [rootNavigation, trustInformation]);
 
@@ -315,7 +315,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
-          {featureFlags?.trustEcosystemsEnabled && (
+          {featureFlags?.ecosystemsEnabled && (
             <TrustInfo
               labels={trustInfoLabels()}
               onPress={trustDetailsPressHandler}
@@ -324,7 +324,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
                 { borderBottomColor: colorScheme.grayDark },
               ]}
               testID={concatTestID(testID, 'trustInfo')}
-              trustInformation={trustInformation?.eudiEcosystem}
+              trustInformation={trustInformation?.issuer?.value[0]}
             />
           )}
           <View

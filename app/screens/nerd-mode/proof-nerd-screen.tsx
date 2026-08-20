@@ -9,7 +9,7 @@ import {
   useProofDetail,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
-import { TrustInformationDetail } from '@procivis/react-native-one-core';
+import { TrustInformationDetailInfo } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -40,18 +40,18 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const { proofId } = route.params;
   const { data: proofDetail } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
+    featureFlags?.ecosystemsEnabled ? proofId : undefined,
   );
   const credentialIDs =
     proofDetail?.proofInputs
       .map((input) => input.credential?.id)
       .filter(nonEmptyFilter) ?? [];
   const credentialsTrustInformation = useCredentialsTrustInformation(
-    featureFlags?.trustEcosystemsEnabled ? credentialIDs : [],
+    featureFlags?.ecosystemsEnabled ? credentialIDs : [],
   );
 
   const trustDetailsPressHandler = useCallback(
-    (trustInformation: TrustInformationDetail) => {
+    (trustInformation: TrustInformationDetailInfo) => {
       if (!trustInformation) {
         return;
       }
@@ -171,7 +171,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
         identifier: proofDetail.verifier,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
         trustInfoLabels: trustInfoLabels(),
-        trustInformation,
+        trustInformation: trustInformation?.verifier,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}

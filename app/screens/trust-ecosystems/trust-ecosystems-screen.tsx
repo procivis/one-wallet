@@ -12,7 +12,7 @@ import {
   Typography,
   useAppColorScheme,
   useCoreConfig,
-  useOrganisationTrustCollections,
+  useOrganisationEcosystems,
   useOrganisationUpdate,
 } from '@procivis/one-react-native-components';
 import {
@@ -27,6 +27,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { compareStrings } from '../../utils/arrays';
 import { resetNavigationAction } from '../../utils/navigation';
@@ -84,7 +85,7 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
         <Typography
           color={colorScheme.text}
           numberOfLines={1}
-          preset="s"
+          preset="s/line-height-small"
           testID={concatTestID(testID, 'label')}
         >
           {label}
@@ -92,7 +93,7 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
         <Typography
           color={colorScheme.text}
           numberOfLines={1}
-          preset="s"
+          preset="s/line-height-small"
           testID={concatTestID(testID, 'description')}
         >
           {description}
@@ -121,12 +122,16 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const colorScheme = useAppColorScheme();
   const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>([]);
   const { data: config } = useCoreConfig();
-  const { data: orgTrustCollections, isLoading } =
-    useOrganisationTrustCollections();
-  const trustCollections = orgTrustCollections?.sort((a, b) =>
-    compareStrings(a, b, 'id'),
+  const { data: ecosystems, isLoading } = useOrganisationEcosystems();
+  const trustCollections = ecosystems?.sort((a, b) =>
+    compareStrings(a, b, 'name'),
   );
   const { mutateAsync: updateOrganisation } = useOrganisationUpdate();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
 
   const saveTrustCollections = useCallback(
     (trustCollections: UpsertOrganisationRequest['trustCollections']) => {
@@ -142,12 +147,12 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     if (route.params?.preselect) {
       const preselected = trustCollections
         .filter((tc) => tc.defaultSelected)
-        .map(({ id }) => id);
+        .map(({ name }) => name);
       setSelectedEcosystems(preselected);
       saveTrustCollections(preselected);
     } else {
       setSelectedEcosystems(
-        trustCollections.filter((tc) => tc.selected).map((tc) => tc.id),
+        trustCollections.filter((tc) => tc.selected).map((tc) => tc.name),
       );
     }
   }, [isLoading, trustCollections, route, saveTrustCollections]);
@@ -182,6 +187,8 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     [],
   );
 
+  console.log(JSON.stringify(trustCollections, undefined, 2));
+
   return (
     <SafeAreaView
       style={[styles.screen, { backgroundColor: colorScheme.white }]}
@@ -191,7 +198,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
       <Header
         backIcon={BackButtonIcon.Close}
         onBack={navigation.goBack}
-        title={translate('common.trustEcosystems')}
+        title={translate('common.enableEcosystems')}
       />
       {!trustCollections ? (
         <View style={styles.loader}>
@@ -211,14 +218,14 @@ export const TrustEcosystemsScreen: FC = observer(() => {
                   defaultLanguage,
                 )}
                 icon={{ uri: tc.logo }}
-                key={tc.id}
+                key={tc.name}
                 label={getTranslatedDisplayName(
                   tc.displayName,
                   language,
                   defaultLanguage,
                 )}
-                selected={selectedEcosystems.includes(tc.id)}
-                setSelected={setSelected(tc.id)}
+                selected={selectedEcosystems.includes(tc.name)}
+                setSelected={setSelected(tc.name)}
                 testID={`TrustEcosystemsScreen.item.${index}`}
               />
             ))}
@@ -226,6 +233,10 @@ export const TrustEcosystemsScreen: FC = observer(() => {
 
           <View style={styles.bottom}>
             <Button
+              disabled={
+                featureFlags?.ecosystemsEnforcementEnabled &&
+                selectedEcosystems.length === 0
+              }
               onPress={onContinue}
               style={[
                 styles.button,
@@ -276,12 +287,12 @@ const styles = StyleSheet.create({
     height: 68,
     justifyContent: 'space-between',
     marginTop: 8,
-    paddingHorizontal: 12,
+    paddingLeft: 12,
   },
   trustEcosystemIcon: {
     borderRadius: 4,
     height: 32,
-    marginRight: 16,
+    marginRight: 8,
     width: 32,
   },
   trustEcosystemLabels: {

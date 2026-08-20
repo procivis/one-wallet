@@ -35,7 +35,6 @@ export const defaultMockStore = (): RootStore => {
       walletProvider: WalletProviderModel.create({
         documentSigners: [],
         name: 'PROCIVIS_ONE',
-        trustCollections: [],
         walletUnitAttestation: {
           appIntegrityCheckRequired: false,
           enabled: false,

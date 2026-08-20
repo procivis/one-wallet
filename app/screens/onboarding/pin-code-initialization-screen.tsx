@@ -5,7 +5,6 @@ import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
-import { useImportPredefinedCredentialSchemas } from '../../hooks/credential-schemas';
 import { storePin } from '../../hooks/pin-code/pin-code';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -28,11 +27,8 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
     generateSwKey: false,
   });
 
-  const importSchemasFromAssets = useImportPredefinedCredentialSchemas();
-
   const finishSetup = useCallback(async () => {
     await initializeCoreWithOrganisation();
-    importSchemasFromAssets();
 
     if (walletUnitAttestation.enabled) {
       resetNavigationAction(rootNavigation, [
@@ -48,7 +44,6 @@ const PinCodeInitializationScreen: FunctionComponent = () => {
       ]);
     }
   }, [
-    importSchemasFromAssets,
     initializeCoreWithOrganisation,
     walletUnitAttestation.enabled,
     rootNavigation,

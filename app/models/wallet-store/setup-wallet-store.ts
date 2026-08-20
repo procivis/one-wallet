@@ -56,10 +56,10 @@ export async function setupWalletStore(env: Environment) {
       documentSigners: [],
       featureFlags: {
         documentSigningEnabled: false,
-        trustEcosystemsEnabled: true,
+        ecosystemsEnabled: true,
+        ecosystemsEnforcementEnabled: true,
       },
       name: '',
-      trustCollections: [],
       walletUnitAttestation: {
         appIntegrityCheckRequired: false,
         enabled: false,
@@ -85,6 +85,16 @@ export async function setupWalletStore(env: Environment) {
       data.isRSESetup = true;
     } else if (stored && 'isRSESetup' in stored) {
       data = stored;
+      if (
+        data.walletProvider.featureFlags &&
+        'trustEcosystemsEnabled' in data.walletProvider.featureFlags &&
+        typeof data.walletProvider.featureFlags.trustEcosystemsEnabled ===
+          'boolean'
+      ) {
+        data.walletProvider.featureFlags.ecosystemsEnabled =
+          data.walletProvider.featureFlags.trustEcosystemsEnabled;
+        delete data.walletProvider.featureFlags.trustEcosystemsEnabled;
+      }
     }
 
     data.walletProvider = walletProvider;

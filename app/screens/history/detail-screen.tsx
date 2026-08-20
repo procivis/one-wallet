@@ -102,7 +102,7 @@ export const HistoryDetailScreen: FC = () => {
     entry.entityType === HistoryEntityType.PROOF ? entry.entityId : undefined,
   );
   const { data: proofTrustInformation } = useProofRequestTrustInformation(
-    featureFlags?.trustEcosystemsEnabled &&
+    featureFlags?.ecosystemsEnabled &&
       entry.entityType === HistoryEntityType.PROOF
       ? entry.entityId
       : undefined,
@@ -159,7 +159,7 @@ export const HistoryDetailScreen: FC = () => {
   }, [entry, issuedCredential, proof, rootNavigation]);
 
   const dataHeader: HistoryDetailsViewProps['data']['header'] = useMemo(() => {
-    if (featureFlags?.trustEcosystemsEnabled) {
+    if (featureFlags?.ecosystemsEnabled) {
       if (
         entry.entityType === HistoryEntityType.CREDENTIAL &&
         issuedCredential
@@ -174,7 +174,7 @@ export const HistoryDetailScreen: FC = () => {
         };
       }
       if (entry.entityType === HistoryEntityType.PROOF) {
-        const verifierName = proofTrustInformation?.eudiEcosystem?.name;
+        const verifierName = proofTrustInformation?.verifier?.value[0]?.name;
         return {
           entity: {
             labels: trustInfoLabels(),
@@ -190,12 +190,12 @@ export const HistoryDetailScreen: FC = () => {
       };
     }
   }, [
-    featureFlags?.trustEcosystemsEnabled,
+    featureFlags?.ecosystemsEnabled,
     entry.entityType,
     entry.entityId,
     entry.name,
     issuedCredential,
-    proofTrustInformation?.eudiEcosystem?.name,
+    proofTrustInformation?.verifier?.value,
   ]);
 
   const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {
