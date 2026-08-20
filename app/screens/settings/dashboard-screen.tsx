@@ -59,6 +59,7 @@ const LocaleNames: Record<Locale, string> = {
   de: 'Deutsch',
   en: 'English',
   fi: 'Suomi',
+  sv: 'Swedish',
 };
 
 const DashboardScreen: FunctionComponent = observer(() => {

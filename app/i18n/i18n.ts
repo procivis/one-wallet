@@ -4,16 +4,19 @@ import { register } from 'timeago.js';
 import timeAgoDe from 'timeago.js/lib/lang/de';
 import timeAgoEn from 'timeago.js/lib/lang/en_US';
 import timeAgoFi from 'timeago.js/lib/lang/fi';
+import timeAgoSv from 'timeago.js/lib/lang/sv';
 
 import { config, localeOverride } from '../config';
 import de from './de/translation.json';
 import en from './en/translation.json';
 import fi from './fi/translation.json';
+import sv from './sv/translation.json';
 
 const translations = {
   de: Object.assign(de, localeOverride?.de),
   en: Object.assign(en, localeOverride?.en),
   fi: Object.assign(fi, localeOverride?.fi),
+  sv: Object.assign(sv, localeOverride?.sv),
 };
 
 const i18n = new I18n();
@@ -62,6 +65,7 @@ export const registerTimeAgoLocales = () => {
   register('en', timeAgoEn);
   register('de', timeAgoDe);
   register('fi', timeAgoFi);
+  register('sv', timeAgoSv);
 };
 
 export default i18n;
