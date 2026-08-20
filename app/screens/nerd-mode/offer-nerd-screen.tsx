@@ -5,7 +5,10 @@ import {
   useCredentialDetail,
   useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
-import { TrustInformationDetailInfo } from '@procivis/react-native-one-core';
+import {
+  TrustInformationDetailInfo,
+  TrustResolutionResult,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -34,7 +37,11 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
   const { data: trustInformation } = useCredentialTrustInformation(
-    featureFlags?.ecosystemsEnabled ? credentialId : undefined,
+    featureFlags?.ecosystemsEnabled &&
+      credentialDetail?.trustInformation?.result ===
+        TrustResolutionResult.TRUSTED
+      ? credentialId
+      : undefined,
   );
 
   const trustDetailsPressHandler = useCallback(

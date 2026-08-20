@@ -12,6 +12,7 @@ import {
   HistoryAction,
   HistoryEntityType,
   ProofClaim,
+  TrustResolutionResult,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
@@ -103,7 +104,8 @@ export const HistoryDetailScreen: FC = () => {
   );
   const { data: proofTrustInformation } = useProofRequestTrustInformation(
     featureFlags?.ecosystemsEnabled &&
-      entry.entityType === HistoryEntityType.PROOF
+      entry.entityType === HistoryEntityType.PROOF &&
+      proof?.trustInformation?.result === TrustResolutionResult.TRUSTED
       ? entry.entityId
       : undefined,
   );
