@@ -93,7 +93,7 @@ const WalletUnitRegistrationScreen = () => {
       const isHardError = status === LoaderViewState.Error;
       if (
         resetToDashboard === true &&
-        featureFlags?.trustEcosystemsEnabled &&
+        featureFlags?.ecosystemsEnabled &&
         hasWalletUnit &&
         !isHardError
       ) {
@@ -123,7 +123,7 @@ const WalletUnitRegistrationScreen = () => {
       }
     },
     [
-      featureFlags?.trustEcosystemsEnabled,
+      featureFlags?.ecosystemsEnabled,
       rootNavigation,
       wuaNavigation,
       route.params?.resetToDashboard,

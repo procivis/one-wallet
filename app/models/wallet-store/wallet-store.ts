@@ -17,19 +17,13 @@ const AppVersionModel = types.model('AppVersion', {
 
 const FeatureFlagsModel = types.model('FeatureFlags', {
   documentSigningEnabled: types.maybe(types.boolean),
-  trustEcosystemsEnabled: types.boolean,
+  ecosystemsEnabled: types.boolean,
+  ecosystemsEnforcementEnabled: types.boolean,
 });
 
 const TranslatedLabelModel = types.model('TranslatedLabel', {
   lang: types.string,
   value: types.string,
-});
-
-const TrustCollectionModel = types.model('TrustCollection', {
-  description: types.array(TranslatedLabelModel),
-  displayName: types.array(TranslatedLabelModel),
-  id: types.string,
-  logo: types.string,
 });
 
 const WalletUnitRegistrationModel = types.model('WalletUnitRegistration', {
@@ -58,7 +52,6 @@ export const WalletProviderModel = types.model('WalletProvider', {
   documentSigners: types.array(DocumentSignerModel),
   featureFlags: types.maybe(FeatureFlagsModel),
   name: types.string,
-  trustCollections: types.array(TrustCollectionModel),
   userAuthentication: types.maybe(UserAuthenticationModel),
   walletUnitAttestation: WalletUnitRegistrationModel,
 });

@@ -40,7 +40,7 @@ const ProofRequestScreen: FunctionComponent = () => {
     request: { interactionId, proofId },
   } = route.params;
   const { data: trustInformation } = useProofRequestTrustInformation(
-    featureFlags?.trustEcosystemsEnabled ? proofId : undefined,
+    featureFlags?.ecosystemsEnabled ? proofId : undefined,
   );
 
   // If this is true, we should not attempt to reject in useBeforeRemove
@@ -54,11 +54,11 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, []);
 
   const trustDetailsPressHandler = useCallback(() => {
-    if (!trustInformation) {
+    if (!trustInformation?.verifier) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
-      trustInformation,
+      trustInformation: trustInformation.verifier,
     });
   }, [rootNavigation, trustInformation]);
 
@@ -102,13 +102,13 @@ const ProofRequestScreen: FunctionComponent = () => {
       testID="ProofRequestSharingScreen"
     >
       <View style={styles.content} testID="ProofRequestSharingScreen.content">
-        {featureFlags?.trustEcosystemsEnabled && (
+        {featureFlags?.ecosystemsEnabled && (
           <TrustInfo
             labels={trustInfoLabels()}
             onPress={trustDetailsPressHandler}
             style={styles.verifier}
             testID="ProofRequestSharingScreen.trustInfo"
-            trustInformation={trustInformation?.eudiEcosystem}
+            trustInformation={trustInformation?.verifier?.value[0]}
           />
         )}
         <>

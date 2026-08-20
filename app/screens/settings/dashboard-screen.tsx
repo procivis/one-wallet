@@ -79,13 +79,15 @@ const DashboardScreen: FunctionComponent = observer(() => {
   const { showActionSheetWithOptions } = useActionSheet();
   const { data: orgDetail, isLoading } = useOrganisationDetail();
   const { mutateAsync: updateOrganisation } = useOrganisationUpdate();
-  const [allowUntrustedRelyingParties, setAllowUntrustedRelyingParties] =
-    useState<boolean>(!orgDetail?.configuration?.trustedRpRequired);
+  const [enforceEcosystemInteractions, setEnforceEcosystemInteractions] =
+    useState<boolean>(
+      Boolean(orgDetail?.configuration?.enforceEcosystemAsHolder),
+    );
 
   useEffect(() => {
     if (orgDetail) {
-      setAllowUntrustedRelyingParties(
-        !orgDetail.configuration?.trustedRpRequired,
+      setEnforceEcosystemInteractions(
+        Boolean(orgDetail.configuration?.enforceEcosystemAsHolder),
       );
     }
   }, [orgDetail]);
@@ -145,12 +147,13 @@ const DashboardScreen: FunctionComponent = observer(() => {
     );
   }, [userSettings]);
 
-  const handleAllowUntrustedRelyingPartiesChange = useCallback(() => {
-    const trustedRpRequired = !orgDetail?.configuration?.trustedRpRequired;
+  const handleEnforceEcosystemInteractionsChange = useCallback(() => {
+    const enforceEcosystemAsHolder =
+      orgDetail?.configuration?.enforceEcosystemAsHolder;
     updateOrganisation({
-      configuration: { trustedRpRequired },
+      configuration: { enforceEcosystemAsHolder },
     });
-    setAllowUntrustedRelyingParties(!trustedRpRequired);
+    setEnforceEcosystemInteractions(Boolean(enforceEcosystemAsHolder));
   }, [orgDetail, updateOrganisation]);
 
   const handleTrustEcosystems = useCallback(() => {
@@ -315,29 +318,30 @@ const DashboardScreen: FunctionComponent = observer(() => {
               value: userSettings.screenCaptureProtection,
             },
           },
-          featureFlags?.trustEcosystemsEnabled && registeredWalletUnitId
+          featureFlags?.ecosystemsEnabled && registeredWalletUnitId
             ? {
                 switchSetting: {
-                  disabled: isLoading,
+                  disabled:
+                    isLoading || featureFlags.ecosystemsEnforcementEnabled,
                   icon: WarningIcon,
-                  onChange: handleAllowUntrustedRelyingPartiesChange,
-                  testID: 'SettingsScreen.allowUntrustedRelyingParties',
+                  onChange: handleEnforceEcosystemInteractionsChange,
+                  testID: 'SettingsScreen.enforceEcosystemInteractions',
                   title: translate(
-                    'info.settings.security.allowUntrustedRelyingParties',
+                    'info.settings.security.enforceEcosystemInteractions',
                   ),
-                  value: allowUntrustedRelyingParties,
+                  value: enforceEcosystemInteractions,
                 },
               }
             : null,
           walletUnitAttestation.enabled &&
           registeredWalletUnitId &&
-          featureFlags?.trustEcosystemsEnabled
+          featureFlags?.ecosystemsEnabled
             ? {
                 buttonSetting: {
                   icon: TrustEcosystemIcon,
                   onPress: handleTrustEcosystems,
-                  testID: 'SettingsScreen.trustEcosystems',
-                  title: translate('common.trustEcosystems'),
+                  testID: 'SettingsScreen.enabledEcosystems',
+                  title: translate('common.enabledEcosystems'),
                 },
               }
             : null,

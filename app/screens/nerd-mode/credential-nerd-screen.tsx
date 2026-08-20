@@ -17,7 +17,7 @@ import {
 import {
   CredentialDetail,
   CredentialState,
-  TrustInformationDetail,
+  TrustInformationDetailInfo,
 } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
@@ -106,11 +106,11 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
   const { data: trustInformation } = useCredentialTrustInformation(
-    featureFlags?.trustEcosystemsEnabled ? credentialId : undefined,
+    featureFlags?.ecosystemsEnabled ? credentialId : undefined,
   );
 
   const trustDetailsPressHandler = useCallback(
-    (trustInformation: TrustInformationDetail) => {
+    (trustInformation: TrustInformationDetailInfo) => {
       if (!trustInformation) {
         return;
       }
@@ -205,7 +205,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       entityCluster={{
         identifier: credentialDetail.issuer!,
         trustInfoLabels: trustInfoLabels(),
-        trustInformation,
+        trustInformation: trustInformation?.issuer,
       }}
       labels={attributesLabels}
       onClose={nav.goBack}
