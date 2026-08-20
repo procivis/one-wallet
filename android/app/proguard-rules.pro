@@ -14,3 +14,5 @@
 -keepclassmembers class com.wallet.BuildConfig {
    public static <fields>;
 }
+
+-keep class com.google.mlkit.** { *; }

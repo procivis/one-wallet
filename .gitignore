@@ -93,6 +93,7 @@ rnuc.xcconfig
 node_modules_*.png
 index.android.bundle
 modules.json
+gradle-daemon-jvm.properties
 
 # SBOM
 bom*.json
