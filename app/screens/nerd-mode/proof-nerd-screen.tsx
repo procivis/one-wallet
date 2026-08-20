@@ -9,7 +9,10 @@ import {
   useProofDetail,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
-import { TrustInformationDetailInfo } from '@procivis/react-native-one-core';
+import {
+  TrustInformationDetailInfo,
+  TrustResolutionResult,
+} from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -40,7 +43,10 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const { proofId } = route.params;
   const { data: proofDetail } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    featureFlags?.ecosystemsEnabled ? proofId : undefined,
+    featureFlags?.ecosystemsEnabled &&
+      proofDetail?.trustInformation?.result === TrustResolutionResult.TRUSTED
+      ? proofId
+      : undefined,
   );
   const credentialIDs =
     proofDetail?.proofInputs

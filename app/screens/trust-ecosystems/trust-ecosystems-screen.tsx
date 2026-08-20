@@ -187,8 +187,6 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     [],
   );
 
-  console.log(JSON.stringify(trustCollections, undefined, 2));
-
   return (
     <SafeAreaView
       style={[styles.screen, { backgroundColor: colorScheme.white }]}
