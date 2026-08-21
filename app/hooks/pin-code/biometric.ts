@@ -42,10 +42,16 @@ export async function biometricAuthenticate(options: {
   promptMessage: string;
 }): Promise<void> {
   const rnBiometrics = new ReactNativeBiometrics();
-  await rnBiometrics.simplePrompt({
-    cancelButtonText: options.cancelLabel,
-    promptMessage: options.promptMessage,
-  });
+  await rnBiometrics
+    .simplePrompt({
+      cancelButtonText: options.cancelLabel,
+      promptMessage: options.promptMessage,
+    })
+    .then((result) => {
+      if (!result.success) {
+        throw Error(`Biometric check failure: ${result.error}`);
+      }
+    });
 }
 
 export const useBiometricType = (): Biometry | null => {
