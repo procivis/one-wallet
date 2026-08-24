@@ -214,6 +214,7 @@
   "historyAction.DELIVERED": "toimitettu",
   "historyAction.ERRORED": "tapahtui virhe",
   "historyAction.EXPIRED": "vanhentunut",
+  "historyAction.EXPIRING": "vanhenee",
   "historyAction.IMPORTED": "tuotu",
   "historyAction.INTERACTION_CREATED": "vuorovaikutus luotu",
   "historyAction.INTERACTION_ERRORED": "vuorovaikutus virheellinen",

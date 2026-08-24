@@ -236,6 +236,7 @@
   "historyAction.DELIVERED": "delivered",
   "historyAction.ERRORED": "errored",
   "historyAction.EXPIRED": "expired",
+  "historyAction.EXPIRING": "expiring",
   "historyAction.IMPORTED": "imported",
   "historyAction.INTERACTION_CREATED": "interaction created",
   "historyAction.INTERACTION_ERRORED": "interaction errored",

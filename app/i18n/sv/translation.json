@@ -236,6 +236,7 @@
   "historyAction.DELIVERED": "levererad",
   "historyAction.ERRORED": "felaktig",
   "historyAction.EXPIRED": "utgången",
+  "historyAction.EXPIRING": "går ut",
   "historyAction.IMPORTED": "importerad",
   "historyAction.INTERACTION_CREATED": "interaktion skapad",
   "historyAction.INTERACTION_ERRORED": "interaktionsfel",
