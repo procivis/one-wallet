@@ -216,6 +216,7 @@
   "historyAction.DELIVERED": "geliefert",
   "historyAction.ERRORED": "fehlerhaft",
   "historyAction.EXPIRED": "abgelaufen",
+  "historyAction.EXPIRING": "läuft ab",
   "historyAction.IMPORTED": "importiert",
   "historyAction.INTERACTION_CREATED": "Interaktion erstellt",
   "historyAction.INTERACTION_ERRORED": "Interaktion fehlgeschlagen",
