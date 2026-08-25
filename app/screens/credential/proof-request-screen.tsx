@@ -130,9 +130,10 @@ const ProofRequestScreen: FunctionComponent = () => {
           ) : (
             <ShareDisclaimer
               action={translate('common.share')}
-              ppUrl="TODO"
+              // TODO: propagate proper URLs
+              ppUrl={undefined}
               testID="ProofRequestSharingScreen.disclaimer"
-              tosUrl="TODO"
+              tosUrl={undefined}
             />
           )}
         </>
