@@ -83,7 +83,7 @@
     "react-native-nitro-modules": "^0.36.5",
     "react-native-permissions": "^4.1.5",
     "react-native-qrcode-svg": "^6.3.21",
-    "react-native-reanimated": "4.6.0-nightly-20260816-8c1bcf8e2",
+    "react-native-reanimated": "4.6.0",
     "react-native-reanimated-carousel": "^5.1.1",
     "react-native-safe-area-context": "^5.9.0",
     "react-native-screens": "^4.27.0",
