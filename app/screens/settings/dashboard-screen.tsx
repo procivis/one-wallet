@@ -150,11 +150,11 @@ const DashboardScreen: FunctionComponent = observer(() => {
 
   const handleEnforceEcosystemInteractionsChange = useCallback(() => {
     const enforceEcosystemAsHolder =
-      orgDetail?.configuration?.enforceEcosystemAsHolder;
+      !orgDetail?.configuration?.enforceEcosystemAsHolder;
     updateOrganisation({
       configuration: { enforceEcosystemAsHolder },
     });
-    setEnforceEcosystemInteractions(Boolean(enforceEcosystemAsHolder));
+    setEnforceEcosystemInteractions(enforceEcosystemAsHolder);
   }, [orgDetail, updateOrganisation]);
 
   const handleTrustEcosystems = useCallback(() => {
