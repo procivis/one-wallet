@@ -134,8 +134,12 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   } = useStores();
 
   const saveTrustCollections = useCallback(
-    (trustCollections: UpsertOrganisationRequest['trustCollections']) => {
-      updateOrganisation({ trustCollections });
+    (
+      selectedEcosystems: NonNullable<
+        UpsertOrganisationRequest['configuration']
+      >['selectedEcosystems'],
+    ) => {
+      updateOrganisation({ configuration: { selectedEcosystems } });
     },
     [updateOrganisation],
   );
