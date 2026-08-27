@@ -2350,7 +2350,7 @@ PODS:
     - Yoga
   - RNSystemtime (1.0.4):
     - React
-  - RNWorklets (0.12.0):
+  - RNWorklets (0.12.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2372,10 +2372,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNWorklets/apple (= 0.12.0)
-    - RNWorklets/common (= 0.12.0)
+    - RNWorklets/apple (= 0.12.1)
+    - RNWorklets/common (= 0.12.1)
     - Yoga
-  - RNWorklets/apple (0.12.0):
+  - RNWorklets/apple (0.12.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2398,7 +2398,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNWorklets/common (0.12.0):
+  - RNWorklets/common (0.12.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2999,7 +2999,7 @@ SPEC CHECKSUMS:
   RNSVG: df7b2c0679ac7b9a668af6c6b40e2c6cb4df88f5
   RNSwanBrowser: e3aa042570d94f995ace02a533bbd2ff91c72742
   RNSystemtime: 00c2bd6b2c1e380d76ecff01e57c89dfd1a558cd
-  RNWorklets: e5af02db1cde28bbca98616a886854d23ef6dab0
+  RNWorklets: 0f21cfc67d4ac5dcd085805b89236cc626a038f6
   SocketRocket: d57b1af80c029e12a75cd9b218287c67381e4593
   VisionCamera: ac95fd4a5019aa59e0b2894a4b2f36fabb94b3ef
   VisionCameraBarcodeScanner: 8e3c6a741f3b6bcc424f0830338d0d870d57cd19
