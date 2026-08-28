@@ -1454,7 +1454,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.17.2):
     - React-Core
-  - react-native-one-core (1.122909.0):
+  - react-native-one-core (1.123589.0):
     - React-Core
   - react-native-safe-area-context (5.9.0):
     - hermes-engine

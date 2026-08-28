@@ -13,6 +13,7 @@ import {
   ImageSourcePropType,
   Linking,
   StyleSheet,
+  TextLayoutEvent,
   View,
 } from 'react-native';
 import base64 from 'react-native-base64';
@@ -34,6 +35,7 @@ type ListItemProps = {
     onPress: () => void;
   };
   dark?: boolean;
+  forceExpandable: () => void;
   numberOfLines: number;
   title: string;
   value: string | ImageSourcePropType;
@@ -43,6 +45,7 @@ const ListItem: FC<ListItemProps> = ({
   action,
   dark,
   numberOfLines,
+  forceExpandable,
   title,
   value,
 }) => {
@@ -64,13 +67,26 @@ const ListItem: FC<ListItemProps> = ({
           {title}
         </Typography>
         {typeof value === 'string' ? (
-          <Typography
-            color={colorScheme.text}
-            numberOfLines={numberOfLines}
-            preset="s/line-height-capped"
-          >
-            {value}
-          </Typography>
+          <>
+            <Typography
+              color={colorScheme.text}
+              numberOfLines={numberOfLines}
+              preset="s/line-height-capped"
+            >
+              {value}
+            </Typography>
+            <Typography
+              color={colorScheme.text}
+              onTextLayout={(e: TextLayoutEvent) => {
+                if (e.nativeEvent.lines.length > 1) {
+                  forceExpandable();
+                }
+              }}
+              style={styles.hiddenElement}
+            >
+              {value}
+            </Typography>
+          </>
         ) : (
           <Image source={value} />
         )}
@@ -290,6 +306,7 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
               />
               <ListItem
                 action={action}
+                forceExpandable={forceExpandable}
                 numberOfLines={expanded ? 0 : itemDefaultNumberOfLines}
                 title={title}
                 value={value}
@@ -317,6 +334,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 12,
+  },
+  hiddenElement: {
+    left: 0,
+    opacity: 0,
+    position: 'absolute',
+    right: 0,
+    zIndex: -1,
   },
   item: {
     alignItems: 'center',
