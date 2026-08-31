@@ -384,6 +384,7 @@
   "info.proofRequest.selectiveDisclosure": "Müssen alle Attribute offengelegt werden.",
   "info.proofRequest.set.title": "Set {{index}} - Bitte wählen Sie eine Option.",
   "info.proofRequest.suspendedCredential.notice": "Ihre Anmeldeinformation(en) wurden von der ausstellenden Behörde ausgesetzt. Bitte kontaktieren Sie die ausstellende Behörde, um mehr zu erfahren.",
+  "info.proofRequest.transactionData.credentialTaken": "Diese Anmeldeinformation autorisiert bereits eine andere Aktion dieses Typs.",
   "info.requestProof.nfcProcess.connectivityWarning": "NFC ist ausgeschaltet.\nBitte einschalten.",
   "info.requestProof.nfcProcess.share": "Halten Sie das NFC-Gerät an die obere Rückseite Ihres Geräts.",
   "info.restoreBackup.dashboard.description": "Willkommen zum Wiederherstellungsleitfaden für Ihre digitale Wallet! Wenn Sie Ihre Wallet auf einen früheren Zustand zurücksetzen müssen, führt Sie dieser Leitfaden durch den Prozess der Wiederherstellung aus einem Backup.\n\nBitte befolgen Sie diese Schritte sorgfältig, um eine erfolgreiche Wiederherstellung sicherzustellen. Denken Sie daran, dass das Wiederherstellen aus einem Backup Ihre aktuellen Daten ersetzen kann, was möglicherweise zum Verlust von Anmeldeinformationen oder Änderungen führt, die nach dem Erstellen des Backups vorgenommen wurden.\nGehen Sie mit Vorsicht vor.",

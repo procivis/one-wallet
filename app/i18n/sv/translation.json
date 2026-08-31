@@ -384,6 +384,7 @@
   "info.proofRequest.selectiveDisclosure": "Alla attribut måste delas för att detta ska fungera.",
   "info.proofRequest.set.title": "Uppsättning {{index}} – Välj ett alternativ.",
   "info.proofRequest.suspendedCredential.notice": "Ditt/dina intyg har pausats av den utfärdande myndigheten. Kontakta den utfärdande myndigheten för mer information.",
+  "info.proofRequest.transactionData.credentialTaken": "Detta intyg auktoriserar redan en annan åtgärd av denna typ.",
   "info.requestProof.nfcProcess.connectivityWarning": "NFC är avstängt.\n Aktivera NFC för att använda det.",
   "info.requestProof.nfcProcess.share": "Håll NFC-enheten mot den övre baksidan\n av din enhet.",
   "info.restoreBackup.dashboard.description": "Välkommen till återställningsguiden för din digitala plånbok! Om du behöver återställa plånboken till ett tidigare tillstånd hjälper den här guiden dig att återställa den från en säkerhetskopia.\n\nFölj dessa steg noggrant för att säkerställa en lyckad återställning. Observera att en återställning från en säkerhetskopia kan ersätta dina aktuella data, vilket kan leda till att intyg eller ändringar som gjorts efter att säkerhetskopian skapades går förlorade.\nFortsätt med försiktighet.",

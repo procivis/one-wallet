@@ -384,6 +384,7 @@
   "info.proofRequest.selectiveDisclosure": "Required to share all attributes to work.",
   "info.proofRequest.set.title": "Set {{index}} - Please select one option.",
   "info.proofRequest.suspendedCredential.notice": "Your credential(s) have been suspended by the issuing authority. Please contact the issuing authority to learn more.",
+  "info.proofRequest.transactionData.credentialTaken": "This credential already authorizes another action of this type.",
   "info.requestProof.nfcProcess.connectivityWarning": "NFC is turned off.\n Please turn on to use.",
   "info.requestProof.nfcProcess.share": "Hold the NFC-device on the upper back\n of your device.",
   "info.restoreBackup.dashboard.description": "Welcome to the restoration guide for your digital wallet! If you need to revert your wallet to a previous state, this guide will walk you through the process of restoring it from a backup.\n\nPlease follow these steps carefully to ensure a successful restoration. Remember, restoring from a backup might replace your current data, potentially leading to the loss of any credentials or changes made after the backup was created.\nProceed with caution.",
