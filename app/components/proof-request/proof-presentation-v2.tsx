@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Typography,
   useAppColorScheme,
+  useCoreConfig,
   useCredentialListExpandedCard,
   useCredentialRevocationCheck,
   useMemoAsync,
@@ -45,9 +46,14 @@ import {
 import {
   CredentialQuerySelection,
   preselectCredentialsForPresentationDefinitionV2,
-  preselectTransactionCredentialsForPresentationDefinitionV2,
   SetCredentialQuerySelection,
 } from '../../utils/proof-request';
+import {
+  assignTransactionData,
+  pinTransactionDataQuery,
+  presentationDefinitionTransactionDataContext,
+  TransactionDataAssignment,
+} from '../../utils/transaction-data-assignment';
 import { ProofPresentationProps } from './proof-presentation-props';
 import TransactionRequestListItem from './transaction-request-list-item';
 
@@ -283,14 +289,16 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   const colorScheme = useAppColorScheme();
   const onImagePreview = useCredentialImagePreview();
   const { core } = useONECore();
+  const { data: config } = useCoreConfig();
   const { mutateAsync: checkRevocation } = useCredentialRevocationCheck(false);
   const { expandedCredential, onHeaderPress, setInitialCredential } =
     useCredentialListExpandedCard();
   const sharingNavigation =
     useNavigation<ShareCredentialNavigationProp<'ProofRequest'>>();
   const route = useRoute<ShareCredentialRouteProp<'ProofRequest'>>();
-  const [transactionSelectedCredentials, setTransactionSelectedCredentials] =
-    useState<Record<string, string>>({});
+  // credential queries the user explicitly chose per transaction data entry
+  const [pinnedTransactionQueries, setPinnedTransactionQueries] =
+    useState<TransactionDataAssignment>({});
   const [selectedCredentials, setSelectedCredentials] =
     useState<SetCredentialQuerySelection>({});
   const [submitCredentials, setSubmitCredentials] =
@@ -371,12 +379,30 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     setSelectedCredentials(
       preselectCredentialsForPresentationDefinitionV2(presentationDefinition),
     );
-    setTransactionSelectedCredentials(
-      preselectTransactionCredentialsForPresentationDefinitionV2(
-        presentationDefinition,
-      ),
-    );
   }, [presentationDefinition, setSelectedCredentials]);
+
+  const transactionDataContext = useMemo(
+    () =>
+      presentationDefinition
+        ? presentationDefinitionTransactionDataContext(
+            presentationDefinition,
+            config,
+          )
+        : undefined,
+    [config, presentationDefinition],
+  );
+
+  // credential query authorizing each transaction data entry
+  const transactionSelectedCredentials = useMemo(
+    () =>
+      transactionDataContext
+        ? assignTransactionData(
+            transactionDataContext,
+            pinnedTransactionQueries,
+          )
+        : {},
+    [pinnedTransactionQueries, transactionDataContext],
+  );
 
   // Initially expanded credential
   useEffect(() => {
@@ -417,6 +443,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     );
     sharingNavigation.navigate('TransactionDetails', {
       credentialQuerySelections: allSelectedCredentials,
+      pinnedTransactionQueries,
       presentationDefinition,
       proofId,
       transactionId,
@@ -539,15 +566,22 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     sharingNavigation.setParams({ selectedTransactionCredential: undefined });
     const { credentialId, transactionId, queryId } =
       selectedTransactionCredential;
-    setTransactionSelectedCredentials((previousValue) => ({
-      ...previousValue,
-      [transactionId]: queryId,
-    }));
+    if (transactionDataContext) {
+      setPinnedTransactionQueries((previousValue) =>
+        pinTransactionDataQuery(
+          transactionDataContext,
+          previousValue,
+          transactionId,
+          queryId,
+        ),
+      );
+    }
     handleCredentialSelection(queryId, [credentialId]);
   }, [
     handleCredentialSelection,
     selectedTransactionCredential,
     sharingNavigation,
+    transactionDataContext,
   ]);
 
   const selectedCredentialsWithUpdatedSelection = (

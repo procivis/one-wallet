@@ -384,6 +384,7 @@
   "info.proofRequest.selectiveDisclosure": "Vaaditaan kaikkien ominaisuuksien jakamiseen työssä.",
   "info.proofRequest.set.title": "Ryhmä {{index}} - Valitse yksi vaihtoehto.",
   "info.proofRequest.suspendedCredential.notice": "Myöntäjä on hyllyttänyt todisteesi. Ota yhteyttä myöntäjään.",
+  "info.proofRequest.transactionData.credentialTaken": "Tämä todiste valtuuttaa jo toisen tämäntyyppisen toiminnon.",
   "info.requestProof.nfcProcess.connectivityWarning": "NFC on pois päältä.\nKytke se päälle.",
   "info.requestProof.nfcProcess.share": "Pidä NFC-laitetta laitteen yläosan takana.",
   "info.restoreBackup.dashboard.description": "Tervetuloa lompakon palautusoppaaseen! Jos haluat palauttaa lompakkosi aiempaan tilaan, tämä opas ohjaa sinut läpi prosessin.",

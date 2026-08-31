@@ -2,8 +2,10 @@ import {
   concatTestID,
   ProofRequestSet,
   ScrollViewScreen,
+  ShareCredentialCardNotice,
   ShareCredentialV2Group,
   useAppColorScheme,
+  useCoreConfig,
   useTransactionData,
 } from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -11,6 +13,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -37,6 +40,10 @@ import {
 } from '../../navigators/share-credential/share-credential-routes';
 import { shareCredentialGroupLabels } from '../../utils/credential-sharing-v2';
 import { PAYMENT_SCA_TRANSACTION_TYPE } from '../../utils/payment-transaction';
+import {
+  canPinTransactionDataQuery,
+  presentationDefinitionTransactionDataContext,
+} from '../../utils/transaction-data-assignment';
 
 const ProofRequestTransactionDataScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
@@ -48,12 +55,35 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
   const language = useCurrentLanguage();
   const {
     credentialQuerySelections,
+    pinnedTransactionQueries,
     presentationDefinition,
     proofId,
     selectedCredentials,
     transactionId,
   } = route.params;
   const { data: transactionData } = useTransactionData(proofId, transactionId);
+  const { data: config } = useCoreConfig();
+
+  const transactionDataContext = useMemo(
+    () =>
+      presentationDefinitionTransactionDataContext(
+        presentationDefinition,
+        config,
+      ),
+    [config, presentationDefinition],
+  );
+
+  // a credential already authorizing another action of the same type cannot be chosen
+  const isQuerySelectable = useCallback(
+    (queryId: string) =>
+      canPinTransactionDataQuery(
+        transactionDataContext,
+        pinnedTransactionQueries,
+        transactionId,
+        queryId,
+      ),
+    [pinnedTransactionQueries, transactionDataContext, transactionId],
+  );
 
   const isPayment = transactionData?.type === PAYMENT_SCA_TRANSACTION_TYPE;
   const header =
@@ -113,7 +143,7 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
   }, [proofId, rootNavigation, transactionId]);
 
   const onSelectOption = (credentialQueryId: string) => (selected: boolean) => {
-    if (!selected) {
+    if (!selected || !isQuerySelectable(credentialQueryId)) {
       return;
     }
     const credentialId =
@@ -132,7 +162,9 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
       presentationDefinition?.credentialQueries[credentialQueryId];
     if (
       !credentialQuery ||
-      credentialQuery.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS'
+      credentialQuery.credentialOrFailureHint.type_ !==
+        'APPLICABLE_CREDENTIALS' ||
+      !isQuerySelectable(credentialQueryId)
     ) {
       return;
     }
@@ -232,6 +264,11 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
             (queryId, index, { length }) => {
               const lastItem = index === length - 1;
               const selected = selectedCredential?.queryId === queryId;
+              const selectable = isQuerySelectable(queryId);
+              const testID = concatTestID(
+                'ProofRequestTransactionDataScreen.credential',
+                index.toString(),
+              );
               return (
                 <View key={queryId} style={styles.item}>
                   <ShareCredentialV2Group
@@ -247,12 +284,17 @@ const ProofRequestTransactionDataScreen: FunctionComponent = () => {
                     requestGroup={[queryId]}
                     selected={selected}
                     selectedCredentials={credentialQuerySelections}
-                    testID={concatTestID(
-                      'ProofRequestTransactionDataScreen.credential',
-                      index.toString(),
-                    )}
-                    valid={true}
+                    testID={testID}
+                    valid={selectable}
                   />
+                  {!selectable && (
+                    <ShareCredentialCardNotice
+                      testID={concatTestID(testID, 'notice.taken')}
+                      text={translate(
+                        'info.proofRequest.transactionData.credentialTaken',
+                      )}
+                    />
+                  )}
                 </View>
               );
             },

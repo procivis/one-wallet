@@ -8,6 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { CredentialQuerySelection } from '../../utils/proof-request';
+import { TransactionDataAssignment } from '../../utils/transaction-data-assignment';
 
 type InvitationResultProofRequest = Extract<
   HandleInvitationResponse,
@@ -40,6 +41,7 @@ export type ShareCredentialNavigatorParamList = {
   };
   TransactionDetails: {
     credentialQuerySelections: CredentialQuerySelection;
+    pinnedTransactionQueries: TransactionDataAssignment;
     presentationDefinition: PresentationDefinitionV2;
     proofId: string;
     selectedCredentials?: {
