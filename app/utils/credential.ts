@@ -10,10 +10,12 @@ export const credentialCardHeaderLabels = (): CardHeaderLabels => {
     expired: translate('common.expired'),
     expiredAt: (date: string) =>
       translate('info.credentialDetail.validity.expiredAt', { date }),
+    false: translate('common.false'),
     revoked: translate('common.revoked'),
     suspended: translate('common.suspended'),
     suspendedUntil: (date: string) =>
       translate('info.credentialDetail.validity.suspendedUntil', { date }),
+    true: translate('common.true'),
     validityIssues: translate('common.validityUpdateIssue'),
   };
 };
