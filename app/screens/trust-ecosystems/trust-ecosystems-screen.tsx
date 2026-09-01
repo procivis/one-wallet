@@ -118,9 +118,12 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const route =
     useRoute<Route<'TrustEcosystems', TrustEcosystemsRouteParams>>();
   const colorScheme = useAppColorScheme();
-  const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>([]);
+  const [selectedEcosystems, setSelectedEcosystems] = useState<string[]>();
   const { data: config } = useCoreConfig();
-  const { data: ecosystems, isLoading } = useOrganisationEcosystems();
+  const { data: ecosystems, isLoading } = useOrganisationEcosystems(
+    true,
+    selectedEcosystems !== undefined,
+  );
   const trustCollections = ecosystems?.sort((a, b) =>
     compareStrings(a, b, 'name'),
   );
@@ -152,7 +155,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   );
 
   useEffect(() => {
-    if (isLoading || !trustCollections) {
+    if (isLoading || !trustCollections || selectedEcosystems !== undefined) {
       return;
     }
     if (route.params?.preselect) {
@@ -166,12 +169,21 @@ export const TrustEcosystemsScreen: FC = observer(() => {
         trustCollections.filter((tc) => tc.selected).map((tc) => tc.name),
       );
     }
-  }, [isLoading, trustCollections, route, saveTrustCollections]);
+  }, [
+    isLoading,
+    trustCollections,
+    selectedEcosystems,
+    route,
+    saveTrustCollections,
+  ]);
 
   const language = useCurrentLanguage();
   const defaultLanguage = config?.globalSettings.defaultLanguage;
 
   const onContinue = useCallback(() => {
+    if (selectedEcosystems === undefined) {
+      return;
+    }
     saveTrustCollections(selectedEcosystems);
     navigation.goBack();
   }, [navigation, selectedEcosystems, saveTrustCollections]);
@@ -179,9 +191,11 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const setSelected = useCallback(
     (id: string) => (selected: boolean) => {
       if (selected) {
-        setSelectedEcosystems((previous) => [...previous, id]);
+        setSelectedEcosystems((previous) => [...(previous ?? []), id]);
       } else {
-        setSelectedEcosystems((previous) => previous.filter((te) => te !== id));
+        setSelectedEcosystems((previous) =>
+          (previous ?? []).filter((te) => te !== id),
+        );
       }
     },
     [],
@@ -222,7 +236,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
                   language,
                   defaultLanguage,
                 )}
-                selected={selectedEcosystems.includes(tc.name)}
+                selected={Boolean(selectedEcosystems?.includes(tc.name))}
                 setSelected={setSelected(tc.name)}
                 testID={`TrustEcosystemsScreen.item.${index}`}
               />
@@ -233,12 +247,12 @@ export const TrustEcosystemsScreen: FC = observer(() => {
             <Button
               disabled={
                 featureFlags?.ecosystemsEnforcementEnabled &&
-                selectedEcosystems.length === 0
+                !selectedEcosystems?.length
               }
               onPress={onContinue}
               style={[
                 styles.button,
-                selectedEcosystems.length === 0 && {
+                !selectedEcosystems?.length && {
                   borderColor: colorScheme.background,
                 },
               ]}
