@@ -30,7 +30,6 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { compareStrings } from '../../utils/arrays';
-import { resetNavigationAction } from '../../utils/navigation';
 
 const getTranslatedDisplayName = (
   translations: Array<DisplayName>,
@@ -111,7 +110,6 @@ const TrustEcosystem: FC<TrustEcosystemProps> = ({
 export type TrustEcosystemsRouteParams =
   | {
       preselect?: boolean;
-      resetToDashboard?: boolean;
     }
   | undefined;
 
@@ -136,10 +134,19 @@ export const TrustEcosystemsScreen: FC = observer(() => {
   const saveTrustCollections = useCallback(
     (
       selectedEcosystems: NonNullable<
-        UpsertOrganisationRequest['configuration']
-      >['selectedEcosystems'],
+        NonNullable<
+          UpsertOrganisationRequest['configuration']
+        >['selectedEcosystems']
+      >,
     ) => {
-      updateOrganisation({ configuration: { selectedEcosystems } });
+      updateOrganisation({
+        configuration: {
+          enforceEcosystemAsVerifier: selectedEcosystems.length
+            ? undefined
+            : false,
+          selectedEcosystems,
+        },
+      });
     },
     [updateOrganisation],
   );
@@ -166,19 +173,8 @@ export const TrustEcosystemsScreen: FC = observer(() => {
 
   const onContinue = useCallback(() => {
     saveTrustCollections(selectedEcosystems);
-    if (route.params?.resetToDashboard) {
-      resetNavigationAction(navigation, [
-        { name: 'Dashboard', params: { screen: 'Wallet' } },
-      ]);
-    } else {
-      navigation.goBack();
-    }
-  }, [
-    navigation,
-    route.params?.resetToDashboard,
-    selectedEcosystems,
-    saveTrustCollections,
-  ]);
+    navigation.goBack();
+  }, [navigation, selectedEcosystems, saveTrustCollections]);
 
   const setSelected = useCallback(
     (id: string) => (selected: boolean) => {
