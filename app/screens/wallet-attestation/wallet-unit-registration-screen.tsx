@@ -101,7 +101,7 @@ const WalletUnitRegistrationScreen = () => {
           { name: 'Dashboard', params: { screen: 'Wallet' } },
           {
             name: 'TrustEcosystems',
-            params: { preselect: true, resetToDashboard: false },
+            params: { preselect: true },
           },
         ]);
         return;

@@ -323,7 +323,9 @@ const DashboardScreen: FunctionComponent = observer(() => {
             ? {
                 switchSetting: {
                   disabled:
-                    isLoading || featureFlags.ecosystemsEnforcementEnabled,
+                    isLoading ||
+                    featureFlags.ecosystemsEnforcementEnabled ||
+                    !orgDetail?.ecosystems.filter((e) => e.selected).length,
                   icon: WarningIcon,
                   onChange: handleEnforceEcosystemInteractionsChange,
                   testID: 'SettingsScreen.enforceEcosystemInteractions',
