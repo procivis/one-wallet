@@ -3,6 +3,7 @@ import {
   NerdModeItemProps,
   NerdModeScreen,
   useCredentialDetail,
+  useCredentials,
   useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
 import {
@@ -34,13 +35,16 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     },
   } = useStores();
 
-  const { credentialId } = route.params;
-  const { data: credentialDetail } = useCredentialDetail(credentialId);
+  const { credentialIds } = route.params;
+  const { data: credentialDetail } = useCredentialDetail(credentialIds[0]);
+  const { data: credentials } = useCredentials({
+    ids: credentialIds,
+  });
   const { data: trustInformation } = useCredentialTrustInformation(
     featureFlags?.ecosystemsEnabled &&
       credentialDetail?.trustInformation?.result ===
         TrustResolutionResult.TRUSTED
-      ? credentialId
+      ? credentialIds[0]
       : undefined,
   );
 
@@ -56,7 +60,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
     [nav],
   );
 
-  if (!credentialDetail) {
+  if (!credentialDetail || !credentials) {
     return <ActivityIndicator animate={isFocused} />;
   }
 
@@ -69,14 +73,18 @@ const CredentialOfferNerdView: FunctionComponent = () => {
       testID: 'schemaName',
     },
     {
-      attributeKey: translate('common.credentialFormat'),
-      attributeText: credentialDetail.schema.format,
-      testID: 'credentialFormat',
+      attributeKey: translate('common.credentialFormats'),
+      attributeText: credentials
+        .map((c) => c.schema.formats[0].format)
+        .join(', '),
+      testID: 'credentialFormats',
     },
     {
-      attributeKey: translate('common.revocationMethod'),
-      attributeText: credentialDetail.schema.revocationMethod,
-      testID: 'credentialFormat',
+      attributeKey: translate('common.allowsRevocation'),
+      attributeText: credentialDetail.schema.allowRevocation
+        ? translate('common.yes')
+        : translate('common.no'),
+      testID: 'revocationMethod',
     },
   ];
 

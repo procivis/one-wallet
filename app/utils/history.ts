@@ -113,11 +113,7 @@ export const historyDeletedCredentialCardFromCredentialSchema = (
     lastModified: '',
     protocol: '',
     role: CredentialRole.HOLDER,
-    schema: {
-      ...credentialSchema,
-      format: credentialSchema.formats[0]?.format ?? '',
-      schemaId: credentialSchema.formats[0]?.schemaId ?? '',
-    },
+    schema: credentialSchema,
     state: CredentialState.ACCEPTED,
     type: CredentialType.SINGLE,
   };

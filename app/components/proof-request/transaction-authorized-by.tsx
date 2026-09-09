@@ -50,6 +50,15 @@ const TransactionAuthorizedBy: FC<TransactionAuthorizedByProps> = ({
             {...credentialLogoFromCredential(
               {
                 ...credential,
+                schema: {
+                  ...credential.schema,
+                  formats: [
+                    {
+                      ecosystemSchemaId: credential.schema.schemaId,
+                      format: credential.schema.format,
+                    },
+                  ],
+                },
                 type: CredentialType.SINGLE,
               },
               config,

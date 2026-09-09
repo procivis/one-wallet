@@ -135,11 +135,6 @@ const ProofDetailNerdView: FunctionComponent = () => {
           attributeText: proofInput.credentialSchema.schemaId,
           testID: 'documentType',
         },
-        {
-          attributeKey: translate('common.revocationMethod'),
-          attributeText: proofInput.credentialSchema.revocationMethod,
-          testID: 'revocationMethod',
-        },
         ...addElementIf(
           Boolean(proofInput.credentialSchema.keyStorageSecurity),
           {
@@ -156,8 +151,8 @@ const ProofDetailNerdView: FunctionComponent = () => {
               ...proofInput.credentialSchema,
               formats: [
                 {
+                  ecosystemSchemaId: proofInput.credentialSchema.schemaId,
                   format: proofInput.credentialSchema.format,
-                  schemaId: proofInput.credentialSchema.schemaId,
                 },
               ],
             }),

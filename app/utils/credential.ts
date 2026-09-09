@@ -1,6 +1,7 @@
 import {
   CardHeaderLabels,
   CardLabels,
+  OfferCardLabels,
 } from '@procivis/one-react-native-components';
 
 import { translate } from '../i18n';
@@ -26,5 +27,15 @@ export const credentialCardLabels = (): CardLabels => {
     validityIssuesNotice: translate(
       'info.credentialDetail.validity.msoValidityIssue.notice',
     ),
+  };
+};
+
+export const credentialOfferCardLabels = (): OfferCardLabels => {
+  return {
+    ...credentialCardLabels(),
+    less: translate('common.less'),
+    more: translate('common.more'),
+    showAll: translate('common.seeAll'),
+    showLess: translate('common.seeLess'),
   };
 };

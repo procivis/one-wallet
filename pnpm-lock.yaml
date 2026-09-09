@@ -29,11 +29,11 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(@types/react@19.2.7)(react@19.2.3)
       '@procivis/one-react-native-components':
-        specifier: 0.3.170
-        version: 0.3.170(10bdaf9f84ee2015aab85f7c79d33aca)
+        specifier: 0.4.2
+        version: 0.4.2(9e25ea5ddfa1add808f7e40871a2fbf7)
       '@procivis/react-native-one-core':
-        specifier: 1.123589.0
-        version: 1.123589.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))
+        specifier: 1.125655.0
+        version: 1.125655.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))
       '@quidone/react-native-wheel-picker':
         specifier: ^1.7.0
         version: 1.7.1(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
@@ -1504,16 +1504,17 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@procivis/one-react-native-components@0.3.170':
-    resolution: {integrity: sha1-nK5JcLuVBjXiAas/IgF+tXuskWE=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.3.170.tgz}
+  '@procivis/one-react-native-components@0.4.2':
+    resolution: {integrity: sha1-kQBX6LTqPk9Mjte+un97oUYsXpM=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.4.2.tgz}
+    engines: {node: '>= 22.11.0'}
     peerDependencies:
-      '@procivis/react-native-one-core': ^1.122909.0
-      '@procivis/react-native-picker': '*'
+      '@procivis/react-native-one-core': ^1.125655.0
       '@quidone/react-native-wheel-picker': ^1.7.0
       '@react-native-community/blur': '*'
       '@react-native-community/netinfo': ^11.4.1
       '@react-native/normalize-color': '*'
       '@react-navigation/native': '*'
+      '@react-navigation/native-stack': '*'
       '@sentry/react-native': ^5.24.1
       apisauce: 3.2.2
       lodash: ^4.18.0
@@ -1536,13 +1537,10 @@ packages:
       react-query: ^3.39.3
       timeago.js: ^4.0.2
 
-  '@procivis/react-native-one-core@1.123589.0':
-    resolution: {integrity: sha1-iTg9ib9dukZixrYSqQew9Xyctvs=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.123589.0.tgz}
+  '@procivis/react-native-one-core@1.125655.0':
+    resolution: {integrity: sha1-zOapk6/WZILUGiMLs7gKvAcA3kk=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.125655.0.tgz}
     peerDependencies:
       react-native: '*'
-
-  '@procivis/react-native-picker@5.0.3':
-    resolution: {integrity: sha1-EkZCn2YIfzKjFzTd+fl2P4uQFZY=, tarball: https://gitlab.procivis.ch/api/v4/projects/76/packages/npm/@procivis/react-native-picker/-/@procivis/react-native-picker-5.0.3.tgz}
 
   '@quidone/react-native-wheel-picker@1.7.1':
     resolution: {integrity: sha512-vvykuAvrIeC6qLicwjQvGwu82fGgpgi86+ckH/dRAM2U7aYx0e9GZW55RgCz/EtLNMoU5mSvZ+UG14WOKM32qA==}
@@ -8653,15 +8651,15 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@procivis/one-react-native-components@0.3.170(10bdaf9f84ee2015aab85f7c79d33aca)':
+  '@procivis/one-react-native-components@0.4.2(9e25ea5ddfa1add808f7e40871a2fbf7)':
     dependencies:
-      '@procivis/react-native-one-core': 1.123589.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))
-      '@procivis/react-native-picker': 5.0.3
+      '@procivis/react-native-one-core': 1.125655.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))
       '@quidone/react-native-wheel-picker': 1.7.1(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
       '@react-native-community/blur': 4.4.1(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
       '@react-native-community/netinfo': 11.4.1(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))
       '@react-native/normalize-color': 2.1.0
       '@react-navigation/native': 7.3.16(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
+      '@react-navigation/native-stack': 7.18.8(352f774237f132407700fb75d8d98733)
       '@sentry/react-native': 8.22.0(dotenv@17.4.2)(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)(webpack@5.104.0)
       apisauce: 2.0.0
       lodash: 4.17.21
@@ -8684,13 +8682,9 @@ snapshots:
       react-query: 3.39.3(react-dom@19.2.0(react@19.2.3))(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
       timeago.js: 4.0.2
 
-  '@procivis/react-native-one-core@1.123589.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))':
+  '@procivis/react-native-one-core@1.125655.0(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))':
     dependencies:
       react-native: 0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3)
-
-  '@procivis/react-native-picker@5.0.3':
-    dependencies:
-      prop-types: 15.8.1
 
   '@quidone/react-native-wheel-picker@1.7.1(react-native@0.87.0(patch_hash=e24555f2cff57bd876e62c9e45a573c0037f30eb581c5f0e397c7a00bac76bb1)(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.87.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)':
     dependencies:

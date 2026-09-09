@@ -149,7 +149,7 @@ export const HistoryDetailScreen: FC = () => {
         } else {
           rootNavigation.navigate('NerdMode', {
             params: {
-              credentialId: entry.entityId!,
+              credentialIds: [entry.entityId!],
             },
             screen: 'OfferNerdMode',
           });
@@ -241,8 +241,8 @@ export const HistoryDetailScreen: FC = () => {
                       ...credentialSchema,
                       formats: [
                         {
+                          ecosystemSchemaId: credentialSchema.schemaId,
                           format: credentialSchema.format,
-                          schemaId: credentialSchema.schemaId,
                         },
                       ],
                     },

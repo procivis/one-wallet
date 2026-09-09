@@ -1,3 +1,4 @@
+import { HolderAcceptCredentialResponse } from '@procivis/react-native-one-core';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Alert, AlertButton } from 'react-native';
 
@@ -27,9 +28,11 @@ describe('CredentialOfferScreen rejection', () => {
 
   it('rejects an offer that is still being accepted', async () => {
     const credentialId = dummyCredentialDetail.id;
-    let completeAcceptance: (id: string) => void = () => {};
+    let completeAcceptance: (
+      response: HolderAcceptCredentialResponse,
+    ) => void = () => {};
     ONE_CORE_MOCK.holderAcceptCredential.mockReturnValueOnce(
-      new Promise<string>((resolve) => {
+      new Promise<HolderAcceptCredentialResponse>((resolve) => {
         completeAcceptance = resolve;
       }),
     );
@@ -58,11 +61,12 @@ describe('CredentialOfferScreen rejection', () => {
     // the offer must not be rejected before the acceptance completes
     expect(ONE_CORE_MOCK.holderRejectCredential).not.toHaveBeenCalled();
 
-    completeAcceptance(credentialId);
+    completeAcceptance({ credentialIds: [credentialId] });
 
     await waitFor(() =>
       expect(ONE_CORE_MOCK.holderRejectCredential).toHaveBeenCalledWith(
         invitationResult.interactionId,
+        undefined,
       ),
     );
   });
