@@ -1,11 +1,10 @@
 import {
   ActivityIndicator,
   Button,
+  ButtonType,
   concatTestID,
-  CredentialAttribute,
   CredentialCardShadow,
-  CredentialDetailsCard,
-  detailsCardFromCredential,
+  CredentialOfferDetails,
   reportException,
   ScrollViewScreen,
   TrustInfo,
@@ -14,14 +13,12 @@ import {
   useBlockOSBackNavigation,
   useCoreConfig,
   useCredentialAccept,
-  useCredentialCardExpanded,
   useCredentialDetail,
   useCredentialReject,
-  useCredentialSchemaDetail,
   useCredentialTrustInformation,
 } from '@procivis/one-react-native-components';
 import {
-  ClaimSchema,
+  HolderAcceptCredentialResponse,
   IssuanceProtocolFeature,
   OneError,
   TrustResolutionResult,
@@ -40,13 +37,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 
 import {
   HeaderCloseModalButton,
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
+import { useCredentialOfferSelectedCards } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
@@ -56,7 +54,7 @@ import {
   IssueCredentialRouteProp,
 } from '../../navigators/issue-credential/issue-credential-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { credentialCardLabels } from '../../utils/credential';
+import { credentialOfferCardLabels } from '../../utils/credential';
 import { trustInfoLabels } from '../../utils/trust-info';
 
 const {
@@ -64,17 +62,6 @@ const {
   PinEventType,
   PinFlowType,
 } = Ubiqu;
-
-// fallback empty attributes for credential offer without claim values
-const getDummyAttributes = (
-  claimSchemas: ClaimSchema[],
-): CredentialAttribute[] =>
-  claimSchemas.map((schema) => ({
-    attributes: [],
-    id: schema.id,
-    name: schema.key,
-    path: schema.key,
-  }));
 
 const CredentialOfferScreen: FunctionComponent = () => {
   const isFocused = useIsFocused();
@@ -90,25 +77,24 @@ const CredentialOfferScreen: FunctionComponent = () => {
   } = useStores();
   const { invitationResult, txCode } = route.params;
   const { interactionId } = invitationResult;
-  const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
 
   const [acceptanceInitialized, setAcceptanceInitialized] = useState(false);
   const { mutateAsync: acceptCredential } = useCredentialAccept();
-  const acceptance = useRef<Promise<string> | undefined>(undefined);
-  const [credentialId, setCredentialId] = useState<string>();
-  const { data: credential } = useCredentialDetail(credentialId);
-  const { data: credentialSchema } = useCredentialSchemaDetail(
-    credential?.schema.id,
-  );
+  const acceptance = useRef<
+    Promise<HolderAcceptCredentialResponse> | undefined
+  >(undefined);
+  const [credentialIds, setCredentialIds] = useState<string[]>();
+  const { data: credential } = useCredentialDetail(credentialIds?.[0]);
   const { data: trustInformation } = useCredentialTrustInformation(
     featureFlags?.ecosystemsEnabled &&
       credential?.trustInformation?.result === TrustResolutionResult.TRUSTED
-      ? credentialId
+      ? credentialIds?.[0]
       : undefined,
   );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
-  const { expanded, onHeaderPress } = useCredentialCardExpanded();
+  const { onHeaderPress, selectedCredentials, setInitialSelection } =
+    useCredentialOfferSelectedCards();
   const language = useCurrentLanguage();
 
   useEffect(() => {
@@ -136,8 +122,9 @@ const CredentialOfferScreen: FunctionComponent = () => {
         interactionId,
         txCode,
       });
-      const credentialId = await acceptance.current;
-      setCredentialId(credentialId);
+      const result = await acceptance.current;
+      setCredentialIds(result.credentialIds);
+      setInitialSelection(result.credentialIds);
     } catch (error) {
       const invalidCodeBRs = ['BR_0169', 'BR_0170'];
       if (error instanceof OneError && invalidCodeBRs.includes(error.code)) {
@@ -157,6 +144,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     txCode,
     navigation,
     invitationResult,
+    setInitialSelection,
   ]);
 
   useEffect(() => {
@@ -173,16 +161,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [rootNavigation, trustInformation]);
 
   const infoPressHandler = useCallback(() => {
-    if (!credentialId) {
+    if (!credentialIds) {
       return;
     }
     rootNavigation.navigate('NerdMode', {
       params: {
-        credentialId,
+        credentialIds,
       },
       screen: 'OfferNerdMode',
     });
-  }, [credentialId, rootNavigation]);
+  }, [credentialIds, rootNavigation]);
 
   const skipRejection = useRef(false);
   const reject = useCallback(() => {
@@ -206,7 +194,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         return;
       }
       try {
-        await rejectCredential(interactionId);
+        await rejectCredential({ interactionId });
       } catch (error) {
         // BR_0237: rejection not supported by the protocol
         if (error instanceof OneError && error.code === 'BR_0237') {
@@ -225,37 +213,47 @@ const CredentialOfferScreen: FunctionComponent = () => {
   useBeforeRemove(reject);
 
   const onAccept = useCallback(() => {
-    if (!credentialId) {
+    if (!credentialIds || selectedCredentials.length === 0) {
       return;
     }
 
     skipRejection.current = true;
 
-    navigation.replace('Result', {
-      redirectUri: credential?.redirectUri,
-    });
-  }, [credential?.redirectUri, credentialId, navigation]);
+    const showResultScreen = () => {
+      navigation.replace('Result', {
+        redirectUri: credential?.redirectUri,
+      });
+    };
+
+    if (selectedCredentials.length === credentialIds.length) {
+      showResultScreen();
+    } else {
+      const credentialsToReject = credentialIds.filter(
+        (id) => !selectedCredentials.includes(id),
+      );
+      rejectCredential({ credentialIds: credentialsToReject, interactionId })
+        .then(() => {
+          showResultScreen();
+        })
+        .catch((error) => {
+          // BR_0237: rejection not supported by the protocol
+          if (error instanceof OneError && error.code === 'BR_0237') {
+            return;
+          }
+          reportException(error, 'Failed to reject credential offer');
+        });
+    }
+  }, [
+    credential?.redirectUri,
+    credentialIds,
+    interactionId,
+    navigation,
+    rejectCredential,
+    selectedCredentials,
+  ]);
 
   const onImagePreview = useCredentialImagePreview();
   const testID = 'CredentialOfferScreen';
-
-  const { card, attributes } =
-    credential && config
-      ? detailsCardFromCredential(
-          credential,
-          config,
-          `${testID}.detail`,
-          credentialCardLabels(),
-          language,
-        )
-      : { attributes: [], card: undefined };
-
-  const displayedAttributes = useMemo(() => {
-    if (attributes && attributes.length) {
-      return attributes;
-    }
-    return credentialSchema ? getDummyAttributes(credentialSchema.claims) : [];
-  }, [attributes, credentialSchema]);
 
   const onCloseButtonPress = useCallback(() => {
     Alert.alert(
@@ -296,7 +294,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     <ScrollViewScreen
       header={{
         leftItem: closeButton,
-        rightItem: credentialId ? (
+        rightItem: credentialIds ? (
           <HeaderInfoButton
             onPress={infoPressHandler}
             testID={concatTestID(testID, 'header.info')}
@@ -311,7 +309,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
       }}
       testID={testID}
     >
-      {!credentialId || !credential || !config || !card ? (
+      {!credentialIds || !credential || !config ? (
         <ActivityIndicator animate={isFocused} style={styles.loader} />
       ) : (
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
@@ -331,26 +329,31 @@ const CredentialOfferScreen: FunctionComponent = () => {
             style={styles.credentialWrapper}
             testID={`HolderCredentialID.value.${credential.id}`}
           >
-            <CredentialDetailsCard
-              attributes={displayedAttributes}
-              card={{
-                ...card,
-                onHeaderPress,
-                width: cardWidth,
-              }}
-              expanded={expanded}
-              lessLabel={translate('common.less')}
-              moreLabel={translate('common.more')}
-              onImagePreview={onImagePreview}
-              showAllButtonLabel={translate('common.seeAll')}
-              showLessButtonLabel={translate('common.seeLess')}
-            />
+            {credentialIds.map((id, index, { length }) => (
+              <CredentialOfferDetails
+                credentialId={id}
+                hideHeaderAccessory={credentialIds.length === 1}
+                key={id}
+                labels={credentialOfferCardLabels()}
+                language={language}
+                lastItem={index === length - 1}
+                onHeaderPress={onHeaderPress}
+                onImagePreview={onImagePreview}
+                selected={selectedCredentials.includes(id)}
+              />
+            ))}
           </View>
           <View style={styles.bottom}>
             <Button
+              disabled={selectedCredentials.length === 0}
               onPress={onAccept}
               testID={concatTestID(testID, 'accept')}
               title={translate('common.accept')}
+              type={
+                selectedCredentials.length === 0
+                  ? ButtonType.Secondary
+                  : ButtonType.Primary
+              }
             />
           </View>
           <ShareDisclaimer

@@ -4,7 +4,7 @@ import {
   CoreConfig,
   CredentialDetail,
   CredentialRole,
-  CredentialSchemaInfo,
+  CredentialSchemaListItem,
   CredentialState,
   CredentialType,
   interfaceMethodNames,
@@ -31,16 +31,18 @@ export const ONE_CORE_MOCK: ONECoreMock = {
   uninitialize: jest.fn((..._args) => Promise.resolve()),
 };
 
-export const dummyCredentialSchemaInfo: CredentialSchemaInfo = {
+export const dummyCredentialSchema: CredentialSchemaListItem = {
   allowSuspension: false,
   createdDate: '2026-07-02T08:58:43.002Z',
-  format: 'JWT',
+  formats: [{
+    ecosystemSchemaId: 'schemaId',
+    format: 'JWT',
+  }],
   id: 'credentialSchemaInfo-id',
   importedSourceUrl: 'importedSourceUrl',
   lastModified: '2026-07-02T08:58:43.002Z',
   name: 'schema-name',
   requiresWalletInstanceAttestation: false,
-  schemaId: 'schemaId',
 };
 
 export const dummyClaimSchemaInfo: ClaimSchemaInfo = {
@@ -75,7 +77,7 @@ export const dummyCredentialDetail: CredentialDetail = {
   lastModified: '2026-07-02T08:58:43.002Z',
   protocol: 'string',
   role: CredentialRole.HOLDER,
-  schema: dummyCredentialSchemaInfo,
+  schema: dummyCredentialSchema,
   state: CredentialState.ACCEPTED,
   type: CredentialType.SINGLE,
 };
@@ -96,6 +98,7 @@ export const dummyCoreConfig: CoreConfig = {
   keyStorage: {},
   revocation: {},
   task: {},
+  transactionDataProvider: {},
   transport: {},
   verificationProtocol: {},
   verifierProvider: {},

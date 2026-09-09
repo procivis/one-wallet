@@ -24,7 +24,9 @@ describe('CredentialOfferScreen', () => {
 
   it('renders offer', async () => {
     const credentialId = dummyCredentialDetail.id;
-    ONE_CORE_MOCK.holderAcceptCredential.mockResolvedValueOnce(credentialId);
+    ONE_CORE_MOCK.holderAcceptCredential.mockResolvedValueOnce({
+      credentialIds: [credentialId],
+    });
     ONE_CORE_MOCK.getCredential.mockImplementation((id) => {
       expect(id).toEqual(credentialId);
       return Promise.resolve(dummyCredentialDetail);
@@ -50,12 +52,12 @@ describe('CredentialOfferScreen', () => {
     const claim = dummyCredentialDetail.claims[0];
     expect(
       credential.getAllByTestId(
-        'CredentialOfferScreen.detail.attribute.0.title',
+        'Credential.credential.credential-id.detail.attribute.0.title',
       )[0],
     ).toHaveTextContent(claim.schema.translations.name['en']);
     expect(
       credential.getAllByTestId(
-        'CredentialOfferScreen.detail.attribute.0.value',
+        'Credential.credential.credential-id.detail.attribute.0.value',
       )[0],
     ).toHaveTextContent(claim.value.value as string);
   });

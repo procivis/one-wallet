@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
   ActivityIndicator,
+  Badge,
   Button,
   ButtonType,
   concatTestID,
@@ -33,7 +34,6 @@ import {
 import React, { FC, useCallback, useMemo } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 
-import Badge from '../../components/badge/badge';
 import { RefreshIcon } from '../../components/icon/refresh-icon';
 import {
   HeaderBackButton,
@@ -273,14 +273,14 @@ const CredentialDetailScreen: FC = () => {
                       preset="s/line-height-small"
                       style={styles.avatarPlaceholderText}
                     >
-                      {credential.schema.format
+                      {credential.schema.formats[0].format
                         .split(' ')[0]
                         .split('_')[0]
                         .substring(0, 3)}
                     </Typography>
                   </View>
                 }
-                label={credential.schema.format}
+                label={credential.schema.formats[0].format}
                 last={true}
               />
             </View>

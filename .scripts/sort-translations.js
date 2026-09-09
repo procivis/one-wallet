@@ -3,6 +3,8 @@ const fs = require('fs');
 const translationDirs = [
   `${__dirname}/../app/i18n/de`,
   `${__dirname}/../app/i18n/en`,
+  `${__dirname}/../app/i18n/fi`,
+  `${__dirname}/../app/i18n/sv`,
 ];
 const translationsToSort = shell.find(translationDirs).filter(function (file) {
   return file.endsWith('.json');

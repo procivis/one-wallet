@@ -135,15 +135,9 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
     colorScheme,
   );
 
-  const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages({
-    ...credentialDetail.schema,
-    formats: [
-      {
-        format: credentialDetail.schema.format,
-        schemaId: credentialDetail.schema.schemaId,
-      },
-    ],
-  });
+  const credentialSchemaWithoutImages = getCredentialSchemaWithoutImages(
+    credentialDetail.schema,
+  );
 
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
@@ -177,19 +171,24 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
       ),
       testID: 'dateAdded',
     },
-    {
+    ...addElementIf(Boolean(credentialDetail.schema.formats[0].format), {
       attributeKey: translate('common.credentialFormat'),
-      attributeText: credentialDetail.schema.format,
+      attributeText: credentialDetail.schema.formats[0].format,
       testID: 'credentialFormat',
-    },
+    }),
+    ...addElementIf(
+      Boolean(credentialDetail.schema.formats[0].ecosystemSchemaId),
+      {
+        attributeKey: translate('common.documentType'),
+        attributeText: credentialDetail.schema.formats[0].ecosystemSchemaId,
+        testID: 'documentType',
+      },
+    ),
     {
-      attributeKey: translate('common.documentType'),
-      attributeText: credentialDetail.schema.schemaId,
-      testID: 'documentType',
-    },
-    {
-      attributeKey: translate('common.revocationMethod'),
-      attributeText: credentialDetail.schema.revocationMethod,
+      attributeKey: translate('common.allowsRevocation'),
+      attributeText: credentialDetail.schema.allowRevocation
+        ? translate('common.yes')
+        : translate('common.no'),
       testID: 'revocationMethod',
     },
     ...addElementIf(Boolean(credentialDetail.schema.keyStorageSecurity), {
