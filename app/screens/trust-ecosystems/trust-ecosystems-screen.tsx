@@ -144,7 +144,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     ) => {
       updateOrganisation({
         configuration: {
-          enforceEcosystemAsVerifier: selectedEcosystems.length
+          enforceEcosystemAsHolder: selectedEcosystems.length
             ? undefined
             : false,
           selectedEcosystems,
