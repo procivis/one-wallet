@@ -1,0 +1,4 @@
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+  <background android:drawable="@color/ic_launcher_procivis_demo_background"/>
+  <foreground android:drawable="@mipmap/ic_launcher_procivis_demo_foreground"/>
+</adaptive-icon>
