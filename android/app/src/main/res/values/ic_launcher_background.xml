@@ -1,0 +1,6 @@
+<resources>
+  <color name="ic_launcher_procivis_demo_background">#000000</color>
+  <color name="ic_launcher_procivis_dev_background">#000000</color>
+  <color name="ic_launcher_procivis_test_background">#000000</color>
+  <color name="ic_launcher_procivis_trial_background">#14141E</color>
+</resources>
