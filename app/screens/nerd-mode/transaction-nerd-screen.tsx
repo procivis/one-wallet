@@ -14,6 +14,7 @@ import {
 import React, { FunctionComponent } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { attributesLabels } from './utils';
@@ -31,6 +32,7 @@ const TransactionDataNerdView: FunctionComponent = () => {
   const nav = useNavigation();
   const route = useRoute<NerdModeRouteProp<'TransactionNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
 
   const { proofId, transactionId } = route.params;
   const { data: transactionData } = useTransactionData(proofId, transactionId);
@@ -83,6 +85,7 @@ const TransactionDataNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       labels={attributesLabels}
+      language={language}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[

@@ -8,6 +8,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { attributesLabels } from './utils';
@@ -79,6 +80,7 @@ const ErrorNerdScreen: FC = () => {
   const navigation = useNavigation();
   const route = useRoute<NerdModeRouteProp<'ErrorNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
 
   const { error } = route.params;
 
@@ -95,6 +97,7 @@ const ErrorNerdScreen: FC = () => {
   return (
     <NerdModeScreen
       labels={attributesLabels}
+      language={language}
       onClose={navigation.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={sections}
