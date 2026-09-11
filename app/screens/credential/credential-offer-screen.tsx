@@ -22,7 +22,6 @@ import {
   HolderAcceptCredentialResponse,
   IssuanceProtocolFeature,
   OneError,
-  TrustResolutionResult,
   Ubiqu,
 } from '@procivis/react-native-one-core';
 import {
@@ -88,10 +87,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const { data: orgDetail } = useOrganisationDetail();
   const { data: credential } = useCredentialDetail(credentialIds?.[0]);
   const { data: trustInformation } = useCredentialTrustInformation(
-    featureFlags?.ecosystemsEnabled &&
-      credential?.trustInformation?.result === TrustResolutionResult.TRUSTED
-      ? credentialIds?.[0]
-      : undefined,
+    featureFlags?.ecosystemsEnabled ? credentialIds?.[0] : undefined,
   );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
@@ -153,13 +149,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
     handleCredentialAccept();
   }, [credential, handleCredentialAccept, navigation]);
 
+  console.log('trust info', credential?.trustInformation);
+  console.log('trust info details', trustInformation);
   const trustDetailsPressHandler = useCallback(() => {
-    if (!credential?.trustInformation || !trustInformation?.verifier) {
+    if (!credential?.trustInformation || !trustInformation) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
+      ecosystemErrors: trustInformation.ecosystemErrors,
       result: credential?.trustInformation.result,
-      trustInformation: trustInformation.verifier,
+      trustInformation: trustInformation.issuer,
     });
   }, [rootNavigation, credential, trustInformation]);
 

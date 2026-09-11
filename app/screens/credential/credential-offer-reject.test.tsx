@@ -20,6 +20,7 @@ describe('CredentialOfferScreen rejection', () => {
 
   const invitationResult: IssueCredentialNavigatorParamList['CredentialOffer']['invitationResult'] =
     {
+      ecosystemErrors: {},
       interactionId: 'interactionId',
       protocol: 'protocol',
       requiresWalletInstanceAttestation: false,
@@ -61,7 +62,7 @@ describe('CredentialOfferScreen rejection', () => {
     // the offer must not be rejected before the acceptance completes
     expect(ONE_CORE_MOCK.holderRejectCredential).not.toHaveBeenCalled();
 
-    completeAcceptance({ credentialIds: [credentialId] });
+    completeAcceptance({ credentialIds: [credentialId], ecosystemErrors: {} });
 
     await waitFor(() =>
       expect(ONE_CORE_MOCK.holderRejectCredential).toHaveBeenCalledWith(

@@ -210,6 +210,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
             invitationResult: {
               type_: 'CREDENTIAL_ISSUANCE',
               ...result,
+              ecosystemErrors: {},
             },
           },
           screen: 'CredentialOffer',

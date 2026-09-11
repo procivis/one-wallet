@@ -151,6 +151,7 @@ const NFCShareScreen = () => {
         params: {
           params: {
             request: {
+              ecosystemErrors: {},
               interactionId: proof.interactionId,
               proofId: proof.proofId,
               protocol: VerificationProtocol.ISO_MDL,

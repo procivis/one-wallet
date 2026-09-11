@@ -16,6 +16,7 @@ describe('CredentialOfferScreen', () => {
 
   const invitationResult: IssueCredentialNavigatorParamList['CredentialOffer']['invitationResult'] =
     {
+      ecosystemErrors: {},
       interactionId: 'interactionId',
       protocol: 'protocol',
       requiresWalletInstanceAttestation: false,
@@ -26,6 +27,7 @@ describe('CredentialOfferScreen', () => {
     const credentialId = dummyCredentialDetail.id;
     ONE_CORE_MOCK.holderAcceptCredential.mockResolvedValueOnce({
       credentialIds: [credentialId],
+      ecosystemErrors: {},
     });
     ONE_CORE_MOCK.getCredential.mockImplementation((id) => {
       expect(id).toEqual(credentialId);

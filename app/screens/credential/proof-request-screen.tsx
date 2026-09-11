@@ -8,7 +8,6 @@ import {
   useProofReject,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
-import { TrustResolutionResult } from '@procivis/react-native-one-core';
 import {
   useIsFocused,
   useNavigation,
@@ -47,10 +46,7 @@ const ProofRequestScreen: FunctionComponent = () => {
   const { data: orgDetail } = useOrganisationDetail();
   const { data: proof } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    featureFlags?.ecosystemsEnabled &&
-      proof?.trustInformation?.result === TrustResolutionResult.TRUSTED
-      ? proofId
-      : undefined,
+    featureFlags?.ecosystemsEnabled ? proofId : undefined,
   );
 
   // If this is true, we should not attempt to reject in useBeforeRemove
@@ -64,10 +60,11 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, []);
 
   const trustDetailsPressHandler = useCallback(() => {
-    if (!proof?.trustInformation || !trustInformation?.verifier) {
+    if (!proof?.trustInformation || !trustInformation) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
+      ecosystemErrors: trustInformation.ecosystemErrors,
       result: proof?.trustInformation.result,
       trustInformation: trustInformation.verifier,
     });
