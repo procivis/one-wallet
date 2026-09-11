@@ -13,6 +13,7 @@ import {
   useAppColorScheme,
   useCredentialDetail,
   useCredentialTrustInformation,
+  useOrganisationDetail,
 } from '@procivis/one-react-native-components';
 import {
   CredentialDetail,
@@ -29,6 +30,7 @@ import React, { FunctionComponent, ReactElement, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -98,11 +100,13 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   const colorScheme = useAppColorScheme();
   const route = useRoute<NerdModeRouteProp<'CredentialNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
   const {
     walletStore: {
       walletProvider: { featureFlags },
     },
   } = useStores();
+  const { data: orgDetail } = useOrganisationDetail();
 
   const { credentialId } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialId);
@@ -120,10 +124,13 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
         return;
       }
       nav.navigate('TrustInfo', {
+        result:
+          credentialDetail?.trustInformation?.result ??
+          TrustResolutionResult.UNKNOWN,
         trustInformation,
       });
     },
-    [nav],
+    [nav, credentialDetail],
   );
 
   if (!credentialDetail) {
@@ -207,11 +214,15 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        identifier: credentialDetail.issuer!,
+        result:
+          credentialDetail.trustInformation?.result ??
+          TrustResolutionResult.UNKNOWN,
+        translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
         trustInformation: trustInformation?.issuer,
       }}
       labels={attributesLabels}
+      language={language}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       onOpenTrustInfoDetails={trustDetailsPressHandler}

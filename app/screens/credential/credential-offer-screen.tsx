@@ -16,6 +16,7 @@ import {
   useCredentialDetail,
   useCredentialReject,
   useCredentialTrustInformation,
+  useOrganisationDetail,
 } from '@procivis/one-react-native-components';
 import {
   HolderAcceptCredentialResponse,
@@ -84,6 +85,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
     Promise<HolderAcceptCredentialResponse> | undefined
   >(undefined);
   const [credentialIds, setCredentialIds] = useState<string[]>();
+  const { data: orgDetail } = useOrganisationDetail();
   const { data: credential } = useCredentialDetail(credentialIds?.[0]);
   const { data: trustInformation } = useCredentialTrustInformation(
     featureFlags?.ecosystemsEnabled &&
@@ -152,13 +154,14 @@ const CredentialOfferScreen: FunctionComponent = () => {
   }, [credential, handleCredentialAccept, navigation]);
 
   const trustDetailsPressHandler = useCallback(() => {
-    if (!trustInformation?.issuer) {
+    if (!credential?.trustInformation || !trustInformation?.verifier) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
-      trustInformation: trustInformation.issuer,
+      result: credential?.trustInformation.result,
+      trustInformation: trustInformation.verifier,
     });
-  }, [rootNavigation, trustInformation]);
+  }, [rootNavigation, credential, trustInformation]);
 
   const infoPressHandler = useCallback(() => {
     if (!credentialIds) {
@@ -316,13 +319,28 @@ const CredentialOfferScreen: FunctionComponent = () => {
           {featureFlags?.ecosystemsEnabled && (
             <TrustInfo
               labels={trustInfoLabels()}
+              language={language}
               onPress={trustDetailsPressHandler}
               style={[
                 styles.issuer,
                 { borderBottomColor: colorScheme.grayDark },
               ]}
               testID={concatTestID(testID, 'trustInfo')}
-              trustInformation={trustInformation?.issuer?.value[0]}
+              translate={
+                orgDetail?.configuration?.enforceEcosystemAsHolder === false
+              }
+              trustInformation={
+                credential?.trustInformation && trustInformation
+                  ? {
+                      identifier:
+                        trustInformation.verifier?.value[0]?.identifier,
+                      name:
+                        credential.trustInformation.name ??
+                        trustInformation.verifier?.value[0]?.name,
+                      result: credential.trustInformation.result,
+                    }
+                  : undefined
+              }
             />
           )}
           <View

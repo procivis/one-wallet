@@ -3,6 +3,7 @@ import {
   ScrollViewScreen,
   TrustInfo,
   useBeforeRemove,
+  useOrganisationDetail,
   useProofDetail,
   useProofReject,
   useProofRequestTrustInformation,
@@ -22,6 +23,7 @@ import {
 } from '../../components/navigation/header-buttons';
 import ProofPresentationV2 from '../../components/proof-request/proof-presentation-v2';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -36,11 +38,13 @@ const ProofRequestScreen: FunctionComponent = () => {
       walletProvider: { featureFlags },
     },
   } = useStores();
+  const language = useCurrentLanguage();
   const { mutateAsync: rejectProof } = useProofReject();
   const isFocused = useIsFocused();
   const {
     request: { interactionId, proofId },
   } = route.params;
+  const { data: orgDetail } = useOrganisationDetail();
   const { data: proof } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
     featureFlags?.ecosystemsEnabled &&
@@ -60,13 +64,14 @@ const ProofRequestScreen: FunctionComponent = () => {
   }, []);
 
   const trustDetailsPressHandler = useCallback(() => {
-    if (!trustInformation?.verifier) {
+    if (!proof?.trustInformation || !trustInformation?.verifier) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
+      result: proof?.trustInformation.result,
       trustInformation: trustInformation.verifier,
     });
-  }, [rootNavigation, trustInformation]);
+  }, [rootNavigation, proof, trustInformation]);
 
   const infoPressHandler = useCallback(() => {
     rootNavigation.navigate('NerdMode', {
@@ -111,10 +116,24 @@ const ProofRequestScreen: FunctionComponent = () => {
         {featureFlags?.ecosystemsEnabled && (
           <TrustInfo
             labels={trustInfoLabels()}
+            language={language}
             onPress={trustDetailsPressHandler}
             style={styles.verifier}
             testID="ProofRequestSharingScreen.trustInfo"
-            trustInformation={trustInformation?.verifier?.value[0]}
+            translate={
+              orgDetail?.configuration?.enforceEcosystemAsHolder === false
+            }
+            trustInformation={
+              proof?.trustInformation && trustInformation
+                ? {
+                    identifier: trustInformation.verifier?.value[0]?.identifier,
+                    name:
+                      proof.trustInformation.name ??
+                      trustInformation.verifier?.value[0]?.name,
+                    result: proof.trustInformation.result,
+                  }
+                : undefined
+            }
           />
         )}
         <>

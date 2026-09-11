@@ -6,6 +6,7 @@ import {
   NerdModeScreen,
   nonEmptyFilter,
   useCredentialsTrustInformation,
+  useOrganisationDetail,
   useProofDetail,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
@@ -22,6 +23,7 @@ import moment from 'moment';
 import React, { FunctionComponent, useCallback } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -34,11 +36,13 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const nav = useNavigation<RootNavigationProp>();
   const route = useRoute<NerdModeRouteProp<'ProofNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
   const {
     walletStore: {
       walletProvider: { featureFlags },
     },
   } = useStores();
+  const { data: orgDetail } = useOrganisationDetail();
 
   const { proofId } = route.params;
   const { data: proofDetail } = useProofDetail(proofId);
@@ -62,10 +66,13 @@ const ProofDetailNerdView: FunctionComponent = () => {
         return;
       }
       nav.navigate('TrustInfo', {
+        result:
+          proofDetail?.trustInformation?.result ??
+          TrustResolutionResult.UNKNOWN,
         trustInformation,
       });
     },
-    [nav],
+    [nav, proofDetail],
   );
 
   if (!proofDetail) {
@@ -169,12 +176,15 @@ const ProofDetailNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        identifier: proofDetail.verifier,
+        result:
+          proofDetail.trustInformation?.result ?? TrustResolutionResult.UNKNOWN,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
+        translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
         trustInformation: trustInformation?.verifier,
       }}
       labels={attributesLabels}
+      language={language}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       onOpenTrustInfoDetails={trustDetailsPressHandler}

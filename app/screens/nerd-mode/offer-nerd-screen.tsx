@@ -5,6 +5,7 @@ import {
   useCredentialDetail,
   useCredentials,
   useCredentialTrustInformation,
+  useOrganisationDetail,
 } from '@procivis/one-react-native-components';
 import {
   TrustInformationDetailInfo,
@@ -18,6 +19,7 @@ import {
 import React, { FunctionComponent, useCallback } from 'react';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
@@ -29,11 +31,13 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const nav = useNavigation();
   const route = useRoute<NerdModeRouteProp<'OfferNerdMode'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
   const {
     walletStore: {
       walletProvider: { featureFlags },
     },
   } = useStores();
+  const { data: orgDetail } = useOrganisationDetail();
 
   const { credentialIds } = route.params;
   const { data: credentialDetail } = useCredentialDetail(credentialIds[0]);
@@ -54,10 +58,13 @@ const CredentialOfferNerdView: FunctionComponent = () => {
         return;
       }
       nav.navigate('TrustInfo', {
+        result:
+          credentialDetail?.trustInformation?.result ??
+          TrustResolutionResult.UNKNOWN,
         trustInformation,
       });
     },
-    [nav],
+    [nav, credentialDetail],
   );
 
   if (!credentialDetail || !credentials) {
@@ -91,11 +98,15 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        identifier: credentialDetail.issuer,
+        result:
+          credentialDetail.trustInformation?.result ??
+          TrustResolutionResult.UNKNOWN,
+        translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
         trustInformation: trustInformation?.issuer,
       }}
       labels={attributesLabels}
+      language={language}
       onClose={nav.goBack}
       onCopyToClipboard={copyToClipboard}
       onOpenTrustInfoDetails={trustDetailsPressHandler}

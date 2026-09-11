@@ -1,4 +1,7 @@
-import { TrustInfoDetailsScreen } from '@procivis/one-react-native-components';
+import {
+  TrustInfoDetailsScreen,
+  useOrganisationDetail,
+} from '@procivis/one-react-native-components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC } from 'react';
 
@@ -13,7 +16,8 @@ import { trustInfoDetailsScreenLabels } from '../../utils/trust-info';
 const TrustInfoScreen: FC = () => {
   const navigation = useNavigation<RootNavigationProp<'TrustInfo'>>();
   const route = useRoute<RootRouteProp<'TrustInfo'>>();
-  const { trustInformation } = route.params;
+  const { result, trustInformation } = route.params;
+  const { data: orgDetail } = useOrganisationDetail();
   const language = useCurrentLanguage();
   const countries = wrpr.walletRelyingPartyRegistry.contactCountries;
 
@@ -23,7 +27,9 @@ const TrustInfoScreen: FC = () => {
       labels={trustInfoDetailsScreenLabels()}
       language={language}
       onClose={navigation.goBack}
+      result={result}
       testID={'TrustInfoDetailsScreen'}
+      translate={orgDetail?.configuration?.enforceEcosystemAsHolder === false}
       trustInformation={trustInformation}
     />
   );

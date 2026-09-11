@@ -4,6 +4,7 @@ import {
   useCoreConfig,
   useCredentialDetail,
   useCredentials,
+  useOrganisationDetail,
   useProofDetail,
   useProofRequestTrustInformation,
 } from '@procivis/one-react-native-components';
@@ -12,7 +13,6 @@ import {
   HistoryAction,
   HistoryEntityType,
   ProofClaim,
-  TrustResolutionResult,
 } from '@procivis/react-native-one-core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { FC, useMemo } from 'react';
@@ -94,8 +94,15 @@ export const HistoryDetailScreen: FC = () => {
   const language = useCurrentLanguage();
 
   const { data: config } = useCoreConfig();
+  const { data: orgDetail } = useOrganisationDetail();
   const { data: issuedCredential } = useCredentialDetail(
     entry.entityType === HistoryEntityType.CREDENTIAL
+      ? entry.entityId
+      : undefined,
+  );
+  const { data: credentialTrustInformation } = useProofRequestTrustInformation(
+    featureFlags?.ecosystemsEnabled &&
+      entry.entityType === HistoryEntityType.CREDENTIAL
       ? entry.entityId
       : undefined,
   );
@@ -104,8 +111,7 @@ export const HistoryDetailScreen: FC = () => {
   );
   const { data: proofTrustInformation } = useProofRequestTrustInformation(
     featureFlags?.ecosystemsEnabled &&
-      entry.entityType === HistoryEntityType.PROOF &&
-      proof?.trustInformation?.result === TrustResolutionResult.TRUSTED
+      entry.entityType === HistoryEntityType.PROOF
       ? entry.entityId
       : undefined,
   );
@@ -166,38 +172,60 @@ export const HistoryDetailScreen: FC = () => {
         entry.entityType === HistoryEntityType.CREDENTIAL &&
         issuedCredential
       ) {
-        const name = issuedCredential.trustInformation?.name;
         return {
           entity: {
             labels: trustInfoLabels(),
+            language,
             testID: 'EntityDetail',
-            trustInformation: name ? { name } : undefined,
+            translate:
+              orgDetail?.configuration?.enforceEcosystemAsHolder === false,
+            trustInformation:
+              issuedCredential.trustInformation && credentialTrustInformation
+                ? {
+                    ...issuedCredential.trustInformation,
+                    identifier:
+                      credentialTrustInformation.issuer?.value[0]?.identifier,
+                  }
+                : undefined,
           },
-        };
+        } satisfies HistoryDetailsViewProps['data']['header'];
       }
-      if (entry.entityType === HistoryEntityType.PROOF) {
-        const verifierName = proofTrustInformation?.verifier?.value[0]?.name;
+      if (entry.entityType === HistoryEntityType.PROOF && proof) {
         return {
           entity: {
             labels: trustInfoLabels(),
+            language,
             testID: 'EntityDetail',
-            trustInformation: verifierName ? { name: verifierName } : undefined,
+            translate:
+              orgDetail?.configuration?.enforceEcosystemAsHolder === false,
+            trustInformation:
+              proof.trustInformation && proofTrustInformation
+                ? {
+                    ...proof.trustInformation,
+                    identifier:
+                      proofTrustInformation.issuer?.value[0]?.identifier,
+                  }
+                : undefined,
           },
-        };
+        } satisfies HistoryDetailsViewProps['data']['header'];
       }
     }
     if (entry.name) {
       return {
         credentialHeader: historyProofSchemaHeader(entry.entityId, entry.name),
-      };
+      } satisfies HistoryDetailsViewProps['data']['header'];
     }
   }, [
     featureFlags?.ecosystemsEnabled,
+    entry.name,
     entry.entityType,
     entry.entityId,
-    entry.name,
     issuedCredential,
-    proofTrustInformation?.verifier?.value,
+    proof,
+    language,
+    orgDetail?.configuration?.enforceEcosystemAsHolder,
+    credentialTrustInformation,
+    proofTrustInformation,
   ]);
 
   const assets: HistoryDetailsViewProps['assets'] = useMemo(() => {

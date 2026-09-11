@@ -1,6 +1,7 @@
 import {
   CredentialListItem,
   TrustInformationDetailInfo,
+  TrustResolutionResult,
 } from '@procivis/react-native-one-core';
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -46,6 +47,7 @@ export type RootNavigatorParamList = {
   };
   TrustEcosystems: TrustEcosystemsRouteParams;
   TrustInfo: {
+    result: TrustResolutionResult;
     trustInformation: TrustInformationDetailInfo;
   };
   VersionUpdate: undefined;

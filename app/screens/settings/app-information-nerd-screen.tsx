@@ -11,6 +11,7 @@ import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-ultimate-config';
 
 import { useCopyToClipboard } from '../../hooks/clipboard';
+import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { SettingsNavigationProp } from '../../navigators/settings/settings-routes';
 import { attributesLabels } from '../nerd-mode/utils';
@@ -19,6 +20,7 @@ const AppInformationNerdScreen: FC = () => {
   const navigation =
     useNavigation<SettingsNavigationProp<'AppInformationNerd'>>();
   const copyToClipboard = useCopyToClipboard();
+  const language = useCurrentLanguage();
 
   const appVersion = `v${DeviceInfo.getVersion()}.${DeviceInfo.getBuildNumber()}`;
   const appFlavor = `${Config.CONFIG_NAME}, ${Config.ENVIRONMENT}`;
@@ -67,6 +69,7 @@ const AppInformationNerdScreen: FC = () => {
   return (
     <NerdModeScreen
       labels={attributesLabels}
+      language={language}
       onClose={navigation.goBack}
       onCopyToClipboard={copyToClipboard}
       sections={[
