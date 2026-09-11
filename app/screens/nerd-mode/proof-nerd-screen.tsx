@@ -47,10 +47,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const { proofId } = route.params;
   const { data: proofDetail } = useProofDetail(proofId);
   const { data: trustInformation } = useProofRequestTrustInformation(
-    featureFlags?.ecosystemsEnabled &&
-      proofDetail?.trustInformation?.result === TrustResolutionResult.TRUSTED
-      ? proofId
-      : undefined,
+    featureFlags?.ecosystemsEnabled ? proofId : undefined,
   );
   const credentialIDs =
     proofDetail?.proofInputs

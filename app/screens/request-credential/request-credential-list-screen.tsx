@@ -78,7 +78,11 @@ const RequestCredentialListScreen = () => {
         rootNavigation.navigate('CredentialManagement', {
           params: {
             params: {
-              invitationResult: { type_: 'CREDENTIAL_ISSUANCE', ...result },
+              invitationResult: {
+                type_: 'CREDENTIAL_ISSUANCE',
+                ...result,
+                ecosystemErrors: {},
+              },
             },
             screen: 'CredentialOffer',
           },

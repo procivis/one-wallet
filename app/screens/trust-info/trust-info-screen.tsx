@@ -16,7 +16,7 @@ import { trustInfoDetailsScreenLabels } from '../../utils/trust-info';
 const TrustInfoScreen: FC = () => {
   const navigation = useNavigation<RootNavigationProp<'TrustInfo'>>();
   const route = useRoute<RootRouteProp<'TrustInfo'>>();
-  const { result, trustInformation } = route.params;
+  const { ecosystemErrors, result, trustInformation } = route.params;
   const { data: orgDetail } = useOrganisationDetail();
   const language = useCurrentLanguage();
   const countries = wrpr.walletRelyingPartyRegistry.contactCountries;
@@ -24,6 +24,7 @@ const TrustInfoScreen: FC = () => {
   return (
     <TrustInfoDetailsScreen
       countries={countries}
+      ecosystemErrors={ecosystemErrors}
       labels={trustInfoDetailsScreenLabels()}
       language={language}
       onClose={navigation.goBack}

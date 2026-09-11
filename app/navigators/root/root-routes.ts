@@ -1,5 +1,6 @@
 import {
   CredentialListItem,
+  EcosystemOutcome,
   TrustInformationDetailInfo,
   TrustResolutionResult,
 } from '@procivis/react-native-one-core';
@@ -47,8 +48,9 @@ export type RootNavigatorParamList = {
   };
   TrustEcosystems: TrustEcosystemsRouteParams;
   TrustInfo: {
+    ecosystemErrors?: Record<string, EcosystemOutcome>;
     result: TrustResolutionResult;
-    trustInformation: TrustInformationDetailInfo;
+    trustInformation?: TrustInformationDetailInfo;
   };
   VersionUpdate: undefined;
   WalletUnitError: undefined;
