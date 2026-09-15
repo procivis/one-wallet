@@ -173,12 +173,11 @@ const ProofDetailNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        result:
-          proofDetail.trustInformation?.result ?? TrustResolutionResult.UNKNOWN,
         testID: 'ProofRequestNerdView.verifierTrustEntity',
         translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
-        trustInformation: trustInformation?.verifier,
+        trustInformation: proofDetail.trustInformation,
+        trustInformationDetail: trustInformation?.verifier,
       }}
       labels={attributesLabels}
       language={language}

@@ -98,12 +98,10 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
-        result:
-          credentialDetail.trustInformation?.result ??
-          TrustResolutionResult.UNKNOWN,
         translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
-        trustInformation: trustInformation?.issuer,
+        trustInformation: credentialDetail.trustInformation,
+        trustInformationDetail: trustInformation?.issuer,
       }}
       labels={attributesLabels}
       language={language}

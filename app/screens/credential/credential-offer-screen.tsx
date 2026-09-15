@@ -156,7 +156,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
-      ecosystemErrors: trustInformation.ecosystemErrors,
       result: credential?.trustInformation.result,
       trustInformation: trustInformation.issuer,
     });

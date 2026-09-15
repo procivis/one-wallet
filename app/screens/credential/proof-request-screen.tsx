@@ -64,7 +64,6 @@ const ProofRequestScreen: FunctionComponent = () => {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
-      ecosystemErrors: trustInformation.ecosystemErrors,
       result: proof?.trustInformation.result,
       trustInformation: trustInformation.verifier,
     });
