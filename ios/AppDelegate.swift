@@ -76,7 +76,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
-      
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return };
+
         let delegate = ReactNativeDelegate()
         let factory = RCTReactNativeFactory(delegate: delegate)
         delegate.dependencyProvider = RCTAppDependencyProvider()
@@ -91,6 +92,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
           in: window,
           launchOptions: [:] // TODO: update to connectionOptions:(UISceneConnectionOptions *_Nullable)connectionOptions with react-native 0.88.0 release
         )
+        appDelegate.window = window;
 
         window?.makeKeyAndVisible()
     }
