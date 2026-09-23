@@ -15,6 +15,8 @@ import {
   useCredentialAccept,
   useCredentialDetail,
   useCredentialReject,
+  useCredentialRejectFormat,
+  useCredentialsOffer,
   useCredentialTrustInformation,
   useOrganisationDetail,
 } from '@procivis/one-react-native-components';
@@ -83,14 +85,20 @@ const CredentialOfferScreen: FunctionComponent = () => {
   const acceptance = useRef<
     Promise<HolderAcceptCredentialResponse> | undefined
   >(undefined);
+  const [acceptedIds, setAcceptedIds] = useState<string[]>();
   const [credentialIds, setCredentialIds] = useState<string[]>();
   const { data: orgDetail } = useOrganisationDetail();
+  const { data: credentialsOffer } = useCredentialsOffer(
+    interactionId,
+    acceptedIds,
+  );
   const { data: credential } = useCredentialDetail(credentialIds?.[0]);
   const { data: trustInformation } = useCredentialTrustInformation(
     featureFlags?.ecosystemsEnabled ? credentialIds?.[0] : undefined,
   );
   const { data: config } = useCoreConfig();
   const { mutateAsync: rejectCredential } = useCredentialReject();
+  const { mutateAsync: rejectCredentialFormat } = useCredentialRejectFormat();
   const { onHeaderPress, selectedCredentials, setInitialSelection } =
     useCredentialOfferSelectedCards();
   const language = useCurrentLanguage();
@@ -121,8 +129,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         txCode,
       });
       const result = await acceptance.current;
-      setCredentialIds(result.credentialIds);
-      setInitialSelection(result.credentialIds);
+      setAcceptedIds(result.credentialIds);
     } catch (error) {
       const invalidCodeBRs = ['BR_0169', 'BR_0170'];
       if (error instanceof OneError && invalidCodeBRs.includes(error.code)) {
@@ -142,15 +149,24 @@ const CredentialOfferScreen: FunctionComponent = () => {
     txCode,
     navigation,
     invitationResult,
-    setInitialSelection,
   ]);
 
   useEffect(() => {
     handleCredentialAccept();
   }, [credential, handleCredentialAccept, navigation]);
 
-  console.log('trust info', credential?.trustInformation);
-  console.log('trust info details', trustInformation);
+  useEffect(() => {
+    if (credentialIds !== undefined || !credentialsOffer) {
+      return;
+    }
+    const batchIds = Object.values(credentialsOffer.batches).flatMap(
+      (credentials) => Object.keys(credentials),
+    );
+    const allIds = batchIds.concat(credentialsOffer.singles);
+    setCredentialIds(allIds);
+    setInitialSelection(allIds);
+  }, [credentialIds, credentialsOffer, setInitialSelection]);
+
   const trustDetailsPressHandler = useCallback(() => {
     if (!credential?.trustInformation || !trustInformation) {
       return;
@@ -213,8 +229,12 @@ const CredentialOfferScreen: FunctionComponent = () => {
   ]);
   useBeforeRemove(reject);
 
-  const onAccept = useCallback(() => {
-    if (!credentialIds || selectedCredentials.length === 0) {
+  const onAccept = useCallback(async () => {
+    if (
+      !credentialsOffer ||
+      !credentialIds ||
+      selectedCredentials.length === 0
+    ) {
       return;
     }
 
@@ -229,27 +249,50 @@ const CredentialOfferScreen: FunctionComponent = () => {
     if (selectedCredentials.length === credentialIds.length) {
       showResultScreen();
     } else {
-      const credentialsToReject = credentialIds.filter(
-        (id) => !selectedCredentials.includes(id),
-      );
-      rejectCredential({ credentialIds: credentialsToReject, interactionId })
-        .then(() => {
-          showResultScreen();
-        })
-        .catch((error) => {
-          // BR_0237: rejection not supported by the protocol
-          if (error instanceof OneError && error.code === 'BR_0237') {
-            return;
-          }
-          reportException(error, 'Failed to reject credential offer');
-        });
+      try {
+        const credentialsToReject = credentialsOffer.singles.filter(
+          (id) => !selectedCredentials.includes(id),
+        );
+        if (credentialsToReject.length) {
+          await rejectCredential({
+            credentialIds: credentialsToReject,
+            interactionId,
+          });
+        }
+        await Promise.all(
+          Object.entries(credentialsOffer.batches).map(
+            async ([parentId, children]) => {
+              const formatsToReject = Object.entries(children)
+                .filter(([id]) => !selectedCredentials.includes(id))
+                .map(([_, format]) => format);
+              if (formatsToReject.length === 0) {
+                return Promise.resolve();
+              }
+              await rejectCredentialFormat({
+                formats: formatsToReject,
+                interactionId,
+                parentId,
+              });
+            },
+          ),
+        );
+        showResultScreen();
+      } catch (error) {
+        // BR_0237: rejection not supported by the protocol
+        if (error instanceof OneError && error.code === 'BR_0237') {
+          return;
+        }
+        reportException(error, 'Failed to reject credential offer');
+      }
     }
   }, [
     credential?.redirectUri,
     credentialIds,
+    credentialsOffer,
     interactionId,
     navigation,
     rejectCredential,
+    rejectCredentialFormat,
     selectedCredentials,
   ]);
 

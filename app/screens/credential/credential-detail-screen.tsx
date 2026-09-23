@@ -5,7 +5,6 @@ import {
   Button,
   ButtonType,
   concatTestID,
-  CredentialCardRatio,
   CredentialCardShadow,
   CredentialDetailsCard,
   detailsCardFromCredential,
@@ -13,12 +12,15 @@ import {
   HistoryListItemView,
   ListItemView,
   ScrollViewScreen,
+  TrustInfo,
   Typography,
   useAppColorScheme,
   useCoreConfig,
   useCredentialCardExpanded,
   useCredentialDetail,
+  useCredentialTrustInformation,
   useHistory,
+  useOrganisationDetail,
 } from '@procivis/one-react-native-components';
 import {
   CredentialState,
@@ -43,6 +45,7 @@ import { useCredentialImagePreview } from '../../hooks/credential-card/image-pre
 import { useCurrentLanguage } from '../../hooks/language';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import { historyListActionsFilter } from '../../models/core/history';
 import {
   CredentialDetailNavigationProp,
@@ -51,6 +54,7 @@ import {
 import { RootNavigationProp } from '../../navigators/root/root-routes';
 import { credentialCardLabels } from '../../utils/credential';
 import { historyListItemLabels } from '../../utils/history';
+import { trustInfoLabels } from '../../utils/trust-info';
 
 const CredentialDetailScreen: FC = () => {
   const rootNavigation =
@@ -60,10 +64,19 @@ const CredentialDetailScreen: FC = () => {
   const cardWidth = useMemo(() => Dimensions.get('window').width - 32, []);
   const language = useCurrentLanguage();
   const colorScheme = useAppColorScheme();
+  const {
+    walletStore: {
+      walletProvider: { featureFlags },
+    },
+  } = useStores();
 
   const { credentialId } = route.params;
   const isFocused = useIsFocused();
+  const { data: orgDetail } = useOrganisationDetail();
   const { data: credential } = useCredentialDetail(credentialId, isFocused);
+  const { data: trustInformation } = useCredentialTrustInformation(
+    featureFlags?.ecosystemsEnabled ? credentialId : undefined,
+  );
 
   const { data: historyPages } = useHistory({
     actions: historyListActionsFilter,
@@ -147,6 +160,16 @@ const CredentialDetailScreen: FC = () => {
 
   const onImagePreview = useCredentialImagePreview();
 
+  const trustDetailsPressHandler = useCallback(() => {
+    if (!credential?.trustInformation || !trustInformation) {
+      return;
+    }
+    rootNavigation.navigate('TrustInfo', {
+      result: credential?.trustInformation.result,
+      trustInformation: trustInformation.issuer,
+    });
+  }, [rootNavigation, credential, trustInformation]);
+
   const onSeeAllHistory = useCallback(() => {
     navigation.navigate('History', { credentialId });
   }, [credentialId, navigation]);
@@ -166,8 +189,6 @@ const CredentialDetailScreen: FC = () => {
     credentialCardLabels(),
     language,
   );
-
-  const badgeTop = Math.ceil(cardWidth / CredentialCardRatio) - 34;
 
   const title =
     credential.schema.translations?.name[language] ?? credential.schema.name;
@@ -229,14 +250,39 @@ const CredentialDetailScreen: FC = () => {
           showLessButtonLabel={translate('common.seeLess')}
           testID={testID}
         />
-        {credential.type === CredentialType.BATCH_PARENT &&
-          credential.remainingBatchItemCount !== undefined && (
-            <Badge
-              style={[styles.credentialBadge, { top: badgeTop }]}
-              type="pill"
-              value={credential.remainingBatchItemCount.toString()}
-            />
-          )}
+      </View>
+      <View style={styles.history}>
+        <Typography
+          accessibilityRole="header"
+          color={colorScheme.text}
+          preset="m"
+          style={styles.sectionTitle}
+        >
+          {translate('common.issuer')}
+        </Typography>
+        <View style={styles.historyLog} testID="CredentialDetailScreen.issuer">
+          <TrustInfo
+            labels={trustInfoLabels()}
+            language={language}
+            onPress={trustDetailsPressHandler}
+            style={[styles.issuer, { backgroundColor: colorScheme.white }]}
+            testID={concatTestID(testID, 'trustInfo')}
+            translate={
+              orgDetail?.configuration?.enforceEcosystemAsHolder === false
+            }
+            trustInformation={
+              credential?.trustInformation && trustInformation
+                ? {
+                    identifier: trustInformation.verifier?.value[0]?.identifier,
+                    name:
+                      credential.trustInformation.name ??
+                      trustInformation.verifier?.value[0]?.name,
+                    result: credential.trustInformation.result,
+                  }
+                : undefined
+            }
+          />
+        </View>
       </View>
       {credential.type === CredentialType.BATCH_PARENT &&
         credential.remainingBatchItemCount !== undefined && (
@@ -253,36 +299,46 @@ const CredentialDetailScreen: FC = () => {
               style={styles.historyLog}
               testID="CredentialDetailScreen.credentials"
             >
-              <ListItemView
-                accessory={
-                  <Badge
-                    value={credential.remainingBatchItemCount.toString()}
+              {credential.schema.formats.map((format, index, { length }) => {
+                if (!credential.remainingBatchItemCount?.[format.format]) {
+                  return undefined;
+                }
+                return (
+                  <ListItemView
+                    accessory={
+                      <Badge
+                        value={credential.remainingBatchItemCount[
+                          format.format
+                        ].toString()}
+                      />
+                    }
+                    first={index === 0}
+                    icon={
+                      <View
+                        style={[
+                          styles.avatarPlaceholder,
+                          { backgroundColor: colorScheme.background },
+                        ]}
+                      >
+                        <Typography
+                          color={colorScheme.black}
+                          numberOfLines={1}
+                          preset="s/line-height-small"
+                          style={styles.avatarPlaceholderText}
+                        >
+                          {format.format
+                            .split(' ')[0]
+                            .split('_')[0]
+                            .substring(0, 3)}
+                        </Typography>
+                      </View>
+                    }
+                    key={format.format}
+                    label={format.format}
+                    last={index === length - 1}
                   />
-                }
-                first={true}
-                icon={
-                  <View
-                    style={[
-                      styles.avatarPlaceholder,
-                      { backgroundColor: colorScheme.background },
-                    ]}
-                  >
-                    <Typography
-                      color={colorScheme.black}
-                      numberOfLines={1}
-                      preset="s/line-height-small"
-                      style={styles.avatarPlaceholderText}
-                    >
-                      {credential.schema.formats[0].format
-                        .split(' ')[0]
-                        .split('_')[0]
-                        .substring(0, 3)}
-                    </Typography>
-                  </View>
-                }
-                label={credential.schema.formats[0].format}
-                last={true}
-              />
+                );
+              })}
             </View>
           </View>
         )}
@@ -366,10 +422,6 @@ const styles = StyleSheet.create({
   avatarPlaceholderText: {
     textTransform: 'uppercase',
   },
-  credentialBadge: {
-    position: 'absolute',
-    right: 12,
-  },
   credentialWrapper: {
     ...CredentialCardShadow,
     marginBottom: 12,
@@ -385,6 +437,12 @@ const styles = StyleSheet.create({
   },
   historyLog: {
     marginBottom: 12,
+  },
+  issuer: {
+    borderRadius: 16,
+    marginBottom: 16,
+    paddingLeft: 16,
+    paddingVertical: 16,
   },
   refreshIcon: {
     transform: [{ scaleX: -1 }],

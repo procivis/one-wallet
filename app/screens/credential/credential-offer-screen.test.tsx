@@ -1,4 +1,4 @@
-import { OneError } from '@procivis/react-native-one-core';
+import { CredentialListItem, OneError } from '@procivis/react-native-one-core';
 import { screen, within } from '@testing-library/react-native';
 
 import {
@@ -28,6 +28,14 @@ describe('CredentialOfferScreen', () => {
     ONE_CORE_MOCK.holderAcceptCredential.mockResolvedValueOnce({
       credentialIds: [credentialId],
       ecosystemErrors: {},
+    });
+    ONE_CORE_MOCK.listCredentials.mockImplementation((query) => {
+      expect(query.ids).toEqual([credentialId]);
+      return Promise.resolve({
+        totalItems: 1,
+        totalPages: 1,
+        values: [dummyCredentialDetail as CredentialListItem],
+      });
     });
     ONE_CORE_MOCK.getCredential.mockImplementation((id) => {
       expect(id).toEqual(credentialId);

@@ -273,6 +273,12 @@ export const HistoryDetailScreen: FC = () => {
                           format: credentialSchema.format,
                         },
                       ],
+                      walletAttestation: {
+                        keyStorageSecurityLevel:
+                          credentialSchema.keyStorageSecurity,
+                        requireInstanceAttestation:
+                          credentialSchema.requiresWalletInstanceAttestation,
+                      },
                     },
                     claims
                       .map((c) => claimFromProofInputClaim(c))
