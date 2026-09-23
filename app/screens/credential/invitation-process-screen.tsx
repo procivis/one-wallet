@@ -315,7 +315,7 @@ const InvitationProcessScreen: FunctionComponent = () => {
           setState(LoaderViewState.Error);
         } else if (
           err instanceof OneError &&
-          err.cause?.includes('BLE adapter not enabled')
+          err.cause?.message.includes('BLE adapter not enabled')
         ) {
           setAdapterEnabled(false);
         } else {

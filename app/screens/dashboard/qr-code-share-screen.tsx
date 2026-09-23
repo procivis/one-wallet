@@ -87,7 +87,7 @@ const QRCodeShareScreen: FunctionComponent = observer(() => {
       .catch((e: unknown) => {
         if (
           e instanceof OneError &&
-          e.cause?.includes('BLE adapter not enabled')
+          e.cause?.message.includes('BLE adapter not enabled')
         ) {
           setAdapterDisabled(true);
         }
