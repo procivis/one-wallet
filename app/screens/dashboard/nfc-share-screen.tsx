@@ -74,7 +74,7 @@ const NFCShareScreen = () => {
     } catch (e) {
       if (
         e instanceof OneError &&
-        e.cause?.includes('BLE adapter not enabled')
+        e.cause?.message.includes('BLE adapter not enabled')
       ) {
         setBleDisabled(true);
         return;

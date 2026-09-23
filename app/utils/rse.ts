@@ -12,5 +12,5 @@ export const isRSELockedError = (error: unknown): boolean => {
   if (!error || !(error instanceof OneError)) {
     return false;
   }
-  return rseLockedErrors.some((cause) => error.cause?.includes(cause));
+  return rseLockedErrors.some((cause) => error.cause?.message.includes(cause));
 };

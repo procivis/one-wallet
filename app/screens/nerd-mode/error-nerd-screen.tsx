@@ -33,7 +33,7 @@ const getDataFields = (error: unknown): NerdModeSection['data'] => {
     if (error.cause) {
       result.push({
         attributeKey: translate('common.cause'),
-        attributeText: error.cause,
+        attributeText: error.cause.message,
         canBeCopied: true,
         testID: 'cause',
       });
