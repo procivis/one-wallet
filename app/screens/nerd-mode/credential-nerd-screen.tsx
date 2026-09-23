@@ -198,11 +198,18 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
         : translate('common.no'),
       testID: 'revocationMethod',
     },
-    ...addElementIf(Boolean(credentialDetail.schema.keyStorageSecurity), {
-      attributeKey: translate('common.storageType'),
-      attributeText: credentialDetail.schema.keyStorageSecurity ?? 'UNKNOWN',
-      testID: 'storageType',
-    }),
+    ...addElementIf(
+      Boolean(
+        credentialDetail.schema.walletAttestation.keyStorageSecurityLevel,
+      ),
+      {
+        attributeKey: translate('common.storageType'),
+        attributeText:
+          credentialDetail.schema.walletAttestation.keyStorageSecurityLevel ??
+          'UNKNOWN',
+        testID: 'storageType',
+      },
+    ),
     {
       attributeKey: translate('common.credentialSchema'),
       attributeText: JSON.stringify(credentialSchemaWithoutImages, null, 1),

@@ -159,6 +159,12 @@ const ProofDetailNerdView: FunctionComponent = () => {
                   format: proofInput.credentialSchema.format,
                 },
               ],
+              walletAttestation: {
+                keyStorageSecurityLevel:
+                  proofInput.credentialSchema.keyStorageSecurity,
+                requireInstanceAttestation:
+                  proofInput.credentialSchema.requiresWalletInstanceAttestation,
+              },
             }),
             null,
             1,

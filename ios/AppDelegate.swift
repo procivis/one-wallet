@@ -7,7 +7,7 @@ import RNBootSplash
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {
   
-  var window: UIWindow?
+  weak var window: UIWindow?
   
   public weak var authorizationFlowManagerDelegate:
     RNAppAuthAuthorizationFlowManagerDelegate?

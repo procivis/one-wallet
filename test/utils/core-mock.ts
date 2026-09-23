@@ -42,7 +42,9 @@ export const dummyCredentialSchema: CredentialSchemaListItem = {
   importedSourceUrl: 'importedSourceUrl',
   lastModified: '2026-07-02T08:58:43.002Z',
   name: 'schema-name',
-  requiresWalletInstanceAttestation: false,
+  walletAttestation: {
+    requireInstanceAttestation: false,
+  },
 };
 
 export const dummyClaimSchemaInfo: ClaimSchemaInfo = {
