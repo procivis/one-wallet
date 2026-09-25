@@ -160,15 +160,16 @@ const CredentialDetailScreen: FC = () => {
 
   const onImagePreview = useCredentialImagePreview();
 
+  const issuerTrustDetail = trustInformation?.issuer;
   const trustDetailsPressHandler = useCallback(() => {
-    if (!credential?.trustInformation || !trustInformation) {
+    if (!credential?.trustInformation || !issuerTrustDetail) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
       result: credential?.trustInformation.result,
-      trustInformation: trustInformation.issuer,
+      trustInformation: issuerTrustDetail,
     });
-  }, [rootNavigation, credential, trustInformation]);
+  }, [rootNavigation, credential, issuerTrustDetail]);
 
   const onSeeAllHistory = useCallback(() => {
     navigation.navigate('History', { credentialId });
@@ -264,7 +265,7 @@ const CredentialDetailScreen: FC = () => {
           <TrustInfo
             labels={trustInfoLabels()}
             language={language}
-            onPress={trustDetailsPressHandler}
+            onPress={issuerTrustDetail ? trustDetailsPressHandler : undefined}
             style={[styles.issuer, { backgroundColor: colorScheme.white }]}
             testID={concatTestID(testID, 'trustInfo')}
             translate={

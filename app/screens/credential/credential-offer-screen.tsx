@@ -167,15 +167,16 @@ const CredentialOfferScreen: FunctionComponent = () => {
     setInitialSelection(allIds);
   }, [credentialIds, credentialsOffer, setInitialSelection]);
 
+  const issuerTrustDetail = trustInformation?.issuer;
   const trustDetailsPressHandler = useCallback(() => {
-    if (!credential?.trustInformation || !trustInformation) {
+    if (!credential?.trustInformation || !issuerTrustDetail) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
       result: credential?.trustInformation.result,
-      trustInformation: trustInformation.issuer,
+      trustInformation: issuerTrustDetail,
     });
-  }, [rootNavigation, credential, trustInformation]);
+  }, [rootNavigation, credential, issuerTrustDetail]);
 
   const infoPressHandler = useCallback(() => {
     if (!credentialIds) {
@@ -361,7 +362,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
             <TrustInfo
               labels={trustInfoLabels()}
               language={language}
-              onPress={trustDetailsPressHandler}
+              onPress={issuerTrustDetail ? trustDetailsPressHandler : undefined}
               style={[
                 styles.issuer,
                 { borderBottomColor: colorScheme.grayDark },

@@ -1,7 +1,13 @@
 import {
+  concatTestID,
+  NerdModeItemProps,
   TrustInfoDetailsScreenLabels,
   TrustInfoLabels,
 } from '@procivis/one-react-native-components';
+import {
+  TrustInformation,
+  TrustResolutionResult,
+} from '@procivis/react-native-one-core';
 
 import { translate } from '../i18n';
 
@@ -52,3 +58,33 @@ export const trustInfoDetailsScreenLabels =
       website: translate('common.website'),
     };
   };
+
+/**
+ * One nerd mode row per ecosystem that rejected the entity, as in the verifier app.
+ */
+export const ecosystemErrorsNerdModeFields = (
+  trustInformation: TrustInformation | undefined,
+  testID?: string,
+): Array<Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>> => {
+  if (
+    !trustInformation ||
+    trustInformation.result === TrustResolutionResult.TRUSTED
+  ) {
+    return [];
+  }
+  return Object.entries(trustInformation.ecosystemErrors).flatMap(
+    ([ecosystem, outcome]) =>
+      outcome.error
+        ? [
+            {
+              attributeKey: `${ecosystem} ${translate(
+                'common.ecosystemError',
+              )}`,
+              canBeCopied: true,
+              highlightedText: `${outcome.error.errorCode}: ${outcome.error.message}`,
+              testID: concatTestID(testID, 'ecosystemError', ecosystem),
+            },
+          ]
+        : [],
+  );
+};

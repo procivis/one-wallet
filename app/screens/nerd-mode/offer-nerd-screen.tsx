@@ -23,7 +23,10 @@ import { useCurrentLanguage } from '../../hooks/language';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
-import { trustInfoLabels } from '../../utils/trust-info';
+import {
+  ecosystemErrorsNerdModeFields,
+  trustInfoLabels,
+} from '../../utils/trust-info';
 import { attributesLabels } from './utils';
 
 const CredentialOfferNerdView: FunctionComponent = () => {
@@ -74,6 +77,7 @@ const CredentialOfferNerdView: FunctionComponent = () => {
   const nerdModeFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
+    ...ecosystemErrorsNerdModeFields(credentialDetail.trustInformation),
     {
       attributeKey: translate('common.credentialSchema'),
       highlightedText: credentialDetail.schema.name,

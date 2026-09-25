@@ -28,7 +28,10 @@ import { translate } from '../../i18n';
 import { useStores } from '../../models';
 import { NerdModeRouteProp } from '../../navigators/nerd-mode/nerd-mode-routes';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
-import { trustInfoLabels } from '../../utils/trust-info';
+import {
+  ecosystemErrorsNerdModeFields,
+  trustInfoLabels,
+} from '../../utils/trust-info';
 import { attributesLabels } from './utils';
 
 const ProofDetailNerdView: FunctionComponent = () => {
@@ -79,6 +82,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
   const proofRequestFields: Array<
     Omit<NerdModeItemProps, 'labels' | 'onCopyToClipboard'>
   > = [
+    ...ecosystemErrorsNerdModeFields(proofDetail.trustInformation),
     {
       attributeKey: translate('common.proofSchemaName'),
       highlightedText: proofDetail.proofSchema?.name,
@@ -122,6 +126,10 @@ const ProofDetailNerdView: FunctionComponent = () => {
           trustInfoLabels: trustInfoLabels(),
           trustInformation,
         },
+        ...ecosystemErrorsNerdModeFields(
+          proofInput.credential?.trustInformation,
+          `issuerTrustEntity.${proofInput.credential?.id}`,
+        ),
         {
           attributeKey: translate('common.createDate'),
           attributeText: moment(proofInput.credential?.createdDate).format(

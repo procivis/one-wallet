@@ -59,15 +59,16 @@ const ProofRequestScreen: FunctionComponent = () => {
     setPresentationDefinitionLoaded(true);
   }, []);
 
+  const verifierTrustDetail = trustInformation?.verifier;
   const trustDetailsPressHandler = useCallback(() => {
-    if (!proof?.trustInformation || !trustInformation) {
+    if (!proof?.trustInformation || !verifierTrustDetail) {
       return;
     }
     rootNavigation.navigate('TrustInfo', {
       result: proof?.trustInformation.result,
-      trustInformation: trustInformation.verifier,
+      trustInformation: verifierTrustDetail,
     });
-  }, [rootNavigation, proof, trustInformation]);
+  }, [rootNavigation, proof, verifierTrustDetail]);
 
   const infoPressHandler = useCallback(() => {
     rootNavigation.navigate('NerdMode', {
@@ -113,7 +114,7 @@ const ProofRequestScreen: FunctionComponent = () => {
           <TrustInfo
             labels={trustInfoLabels()}
             language={language}
-            onPress={trustDetailsPressHandler}
+            onPress={verifierTrustDetail ? trustDetailsPressHandler : undefined}
             style={styles.verifier}
             testID="ProofRequestSharingScreen.trustInfo"
             translate={
