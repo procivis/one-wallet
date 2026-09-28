@@ -12,6 +12,7 @@ import React, { FC, useCallback } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { translate } from '../../i18n';
+import { useStores } from '../../models';
 import {
   WalletUnitRegistrationNavigationProp,
   WalletUnitRegistrationRouteProp,
@@ -22,9 +23,24 @@ const WalletUnitInfoScreen: FC = () => {
   const navigation =
     useNavigation<WalletUnitRegistrationNavigationProp<'Info'>>();
   const colorScheme = useAppColorScheme();
+  const {
+    walletStore: {
+      walletProvider: { userAuthentication },
+    },
+  } = useStores();
 
-  const onContinue = useCallback(
+  const authenticationRequired = userAuthentication?.required;
+
+  const onLinkAccount = useCallback(
     () => navigation.navigate('Registration', route.params),
+    [navigation, route],
+  );
+  const onSkip = useCallback(
+    () =>
+      navigation.navigate('Registration', {
+        ...route.params,
+        skipAuthentication: true,
+      }),
     [navigation, route],
   );
 
@@ -33,10 +49,12 @@ const WalletUnitInfoScreen: FC = () => {
   return (
     <ScrollViewScreen
       header={{
-        leftItem:
-          route.params.operation === 'refresh' ? (
-            <HeaderCloseButton testID={concatTestID(testID, 'header.back')} />
-          ) : undefined,
+        leftItem: !authenticationRequired ? (
+          <HeaderCloseButton
+            onPress={onSkip}
+            testID={concatTestID(testID, 'header.close')}
+          />
+        ) : undefined,
         modalHandleVisible: Platform.OS === 'ios',
         static: true,
         title: translate('common.walletActivation'),
@@ -59,12 +77,20 @@ const WalletUnitInfoScreen: FC = () => {
 
       <View style={styles.bottom}>
         <Button
-          onPress={onContinue}
-          style={styles.button}
-          testID={concatTestID(testID, 'continue')}
-          title={translate('common.continue')}
+          onPress={onLinkAccount}
+          testID={concatTestID(testID, 'linkAccount')}
+          title={translate('common.linkAccount')}
           type={ButtonType.Primary}
         />
+        {!authenticationRequired && (
+          <Button
+            onPress={onSkip}
+            style={styles.skipButton}
+            testID={concatTestID(testID, 'skip')}
+            title={translate('common.skip')}
+            type={ButtonType.Secondary}
+          />
+        )}
       </View>
     </ScrollViewScreen>
   );
@@ -73,9 +99,10 @@ const WalletUnitInfoScreen: FC = () => {
 const styles = StyleSheet.create({
   bottom: {
     paddingHorizontal: 12,
+    paddingTop: 12,
   },
-  button: {
-    marginTop: 12,
+  skipButton: {
+    marginTop: 4,
   },
   subtitle: {
     marginBottom: 16,

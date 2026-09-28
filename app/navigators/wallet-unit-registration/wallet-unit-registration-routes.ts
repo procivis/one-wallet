@@ -8,7 +8,7 @@ export type WalletUnitRegistrationParams = {
 
 export type WalletUnitRegistrationNavigatorParamList = {
   Info: WalletUnitRegistrationParams;
-  Registration: WalletUnitRegistrationParams;
+  Registration: WalletUnitRegistrationParams & { skipAuthentication?: boolean };
 };
 
 export type WalletUnitRegistrationRouteProp<

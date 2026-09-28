@@ -139,27 +139,33 @@ const WalletUnitRegistrationScreen = () => {
       if (!userAuthentication) {
         return;
       }
-      const config: AuthConfiguration = {
-        additionalParameters: {
-          nonce,
-        },
-        clientId: userAuthentication.clientId,
-        issuer: userAuthentication.identityProvider,
-        redirectUrl: userAuthentication.redirectUri,
-        scopes: ['openid', 'profile'],
-      };
 
-      const result = await authorize(config).catch((e: AppAuthError) => {
-        reportTraceInfo('Authentication', 'Authorization failed', e);
-        throw new Error(translate('walletUnitRegistration.inactive'));
-      });
-      await activateWalletUnit({
+      const activationRequest: Parameters<typeof activateWalletUnit>[0] = {
         id,
-        userAccessToken: result.accessToken,
-        userIdToken: result.idToken,
-      });
+      };
+      if (!route.params.skipAuthentication) {
+        const config: AuthConfiguration = {
+          additionalParameters: {
+            nonce,
+          },
+          clientId: userAuthentication.clientId,
+          issuer: userAuthentication.identityProvider,
+          redirectUrl: userAuthentication.redirectUri,
+          scopes: ['openid', 'profile'],
+        };
+
+        const result = await authorize(config).catch((e: AppAuthError) => {
+          reportTraceInfo('Authentication', 'Authorization failed', e);
+          throw new Error(translate('walletUnitRegistration.inactive'));
+        });
+
+        activationRequest.userAccessToken = result.accessToken;
+        activationRequest.userIdToken = result.idToken;
+      }
+
+      await activateWalletUnit(activationRequest);
     },
-    [activateWalletUnit, userAuthentication],
+    [activateWalletUnit, userAuthentication, route.params.skipAuthentication],
   );
 
   const handleRegisterOrRefresh = useCallback(async () => {
