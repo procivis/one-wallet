@@ -254,6 +254,7 @@
   "historyAction.ACCEPTED": "accepted",
   "historyAction.ACTIVATED": "activated",
   "historyAction.CLAIMS_REMOVED": "claims removed",
+  "historyAction.CLIENT_SECRET_REGENERATED": "Client secret generated",
   "historyAction.CREATED": "created",
   "historyAction.CSR_GENERATED": "csr generated",
   "historyAction.DEACTIVATED": "deactivated",
