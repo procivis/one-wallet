@@ -6,8 +6,7 @@ import {
   VerificationProtocol,
 } from '@procivis/one-react-native-components';
 import { useCallback, useState } from 'react';
-// eslint-disable-next-line react-native/split-platform-components
-import { PermissionsAndroid, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import {
   AndroidPermission,
   checkMultiple,
@@ -29,7 +28,7 @@ const centralPermissionsAndroid = [
 const centralPermissionsAndroidOld = [
   'android.permission.BLUETOOTH',
   'android.permission.BLUETOOTH_ADMIN',
-  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
 ] as AndroidPermission[];
 const centralPermissionsIOS = [PERMISSIONS.IOS.BLUETOOTH];
 const centralPermissions = (() => {
@@ -61,6 +60,10 @@ const peripheralPermissions = (() => {
   }
 })();
 
+function mergeRemovingDuplicates<T>(a: T[], b: T[]): T[] {
+  return [...new Set([...a, ...b])];
+}
+
 export const useBlePermissions = (exchange: BLEExchange) => {
   const [interactiveStatus, setInteractiveStatus] =
     useState<PermissionStatus>();
@@ -69,7 +72,7 @@ export const useBlePermissions = (exchange: BLEExchange) => {
   const permissions =
     exchange === VerificationProtocol.OPENID4VP_PROXIMITY_DRAFT00
       ? centralPermissions
-      : peripheralPermissions;
+      : mergeRemovingDuplicates(peripheralPermissions, centralPermissions);
 
   const initialStatus = useMemoAsync(async () => {
     if (
