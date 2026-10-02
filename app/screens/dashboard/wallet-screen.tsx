@@ -181,8 +181,11 @@ const WalletScreen: FunctionComponent = observer(() => {
   }, [trustListSubscriptionUpdate, trustListCollectionSync]);
 
   useEffect(() => {
+    if (!registeredWalletUnitId) {
+      return;
+    }
     runTrustTasks();
-  }, [runTrustTasks]);
+  }, [registeredWalletUnitId, runTrustTasks]);
 
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
     if (walletProvider.walletUnitAttestation.required) {
