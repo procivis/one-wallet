@@ -374,11 +374,10 @@ const CredentialOfferScreen: FunctionComponent = () => {
               trustInformation={
                 credential?.trustInformation && trustInformation
                   ? {
-                      identifier:
-                        trustInformation.verifier?.value[0]?.identifier,
+                      identifier: trustInformation.issuer?.value[0]?.identifier,
                       name:
                         credential.trustInformation.name ??
-                        trustInformation.verifier?.value[0]?.name,
+                        trustInformation.issuer?.value[0]?.name,
                       result: credential.trustInformation.result,
                     }
                   : undefined

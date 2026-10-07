@@ -4,6 +4,7 @@ import {
   useCoreConfig,
   useCredentialDetail,
   useCredentials,
+  useCredentialTrustInformation,
   useOrganisationDetail,
   useProofDetail,
   useProofRequestTrustInformation,
@@ -100,7 +101,7 @@ export const HistoryDetailScreen: FC = () => {
       ? entry.entityId
       : undefined,
   );
-  const { data: credentialTrustInformation } = useProofRequestTrustInformation(
+  const { data: credentialTrustInformation } = useCredentialTrustInformation(
     featureFlags?.ecosystemsEnabled &&
       entry.entityType === HistoryEntityType.CREDENTIAL
       ? entry.entityId
@@ -203,7 +204,7 @@ export const HistoryDetailScreen: FC = () => {
                 ? {
                     ...proof.trustInformation,
                     identifier:
-                      proofTrustInformation.issuer?.value[0]?.identifier,
+                      proofTrustInformation.verifier?.value[0]?.identifier,
                   }
                 : undefined,
           },

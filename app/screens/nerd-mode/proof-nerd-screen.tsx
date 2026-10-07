@@ -61,18 +61,19 @@ const ProofDetailNerdView: FunctionComponent = () => {
   );
 
   const trustDetailsPressHandler = useCallback(
-    (trustInformation: TrustInformationDetailInfo) => {
+    (
+      trustInformation: TrustInformationDetailInfo,
+      result?: TrustResolutionResult,
+    ) => {
       if (!trustInformation) {
         return;
       }
       nav.navigate('TrustInfo', {
-        result:
-          proofDetail?.trustInformation?.result ??
-          TrustResolutionResult.UNKNOWN,
+        result: result ?? TrustResolutionResult.UNKNOWN,
         trustInformation,
       });
     },
-    [nav, proofDetail],
+    [nav],
   );
 
   if (!proofDetail) {
@@ -123,8 +124,11 @@ const ProofDetailNerdView: FunctionComponent = () => {
           attributeKey: 'entityCluster',
           identifier: proofInput.credential?.issuer,
           testID: `issuerTrustEntity.${proofInput.credential?.id}`,
+          translate:
+            orgDetail?.configuration?.enforceEcosystemAsHolder === false,
           trustInfoLabels: trustInfoLabels(),
-          trustInformation,
+          trustInformation: proofInput.credential?.trustInformation,
+          trustInformationDetail: trustInformation?.issuer,
         },
         ...ecosystemErrorsNerdModeFields(
           proofInput.credential?.trustInformation,
