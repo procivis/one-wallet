@@ -1505,7 +1505,7 @@ packages:
     engines: {node: '>=14'}
 
   '@procivis/one-react-native-components@0.4.13':
-    resolution: {integrity: sha1-Afv7wea00aO5ixpfvRvE21vEMcA=, tarball: https://gitlab.procivis.ch/api/v4/projects/101/packages/npm/@procivis/one-react-native-components/-/@procivis/one-react-native-components-0.4.13.tgz}
+    resolution: {integrity: sha1-Afv7wea00aO5ixpfvRvE21vEMcA=}
     engines: {node: '>= 22.11.0'}
     peerDependencies:
       '@procivis/react-native-one-core': ^1.129827.0
@@ -1538,7 +1538,7 @@ packages:
       timeago.js: ^4.0.2
 
   '@procivis/react-native-one-core@1.133039.0':
-    resolution: {integrity: sha1-qHRLa5HfYHrSmvdOQqFXW/pI3Yo=, tarball: https://gitlab.procivis.ch/api/v4/projects/88/packages/npm/@procivis/react-native-one-core/-/@procivis/react-native-one-core-1.133039.0.tgz}
+    resolution: {integrity: sha1-qHRLa5HfYHrSmvdOQqFXW/pI3Yo=}
     peerDependencies:
       react-native: '*'
 

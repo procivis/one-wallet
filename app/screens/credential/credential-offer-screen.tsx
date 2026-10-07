@@ -417,10 +417,8 @@ const CredentialOfferScreen: FunctionComponent = () => {
           </View>
           <ShareDisclaimer
             action={translate('common.accept')}
-            // TODO: propagate proper URLs
-            ppUrl={undefined}
+            ppUrl={trustInformation?.issuer?.value[0]?.privacyPolicyUrl}
             testID={concatTestID(testID, 'disclaimer')}
-            tosUrl={undefined}
           />
         </View>
       )}
