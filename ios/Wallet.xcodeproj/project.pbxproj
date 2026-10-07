@@ -40,7 +40,6 @@
 		1DD4ED1E77DE9B2437342BAC /* Pods-Wallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.release.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.release.xcconfig"; sourceTree = "<group>"; };
 		243D1CACD21C74DD99C69660 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 		258702B773E64857AB05C15E /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../assets/fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
-		337670622EAF7C7400CAA66C /* Wallet.procivis.demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.demo.entitlements; path = Wallet/Wallet.procivis.demo.entitlements; sourceTree = "<group>"; };
 		337670632EAF7C7400CAA66C /* Wallet.procivis.dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.dev.entitlements; path = Wallet/Wallet.procivis.dev.entitlements; sourceTree = "<group>"; };
 		337670642EAF7C7400CAA66C /* Wallet.procivis.test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.test.entitlements; path = Wallet/Wallet.procivis.test.entitlements; sourceTree = "<group>"; };
 		337670652EAF7C7400CAA66C /* Wallet.procivis.trial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.trial.entitlements; path = Wallet/Wallet.procivis.trial.entitlements; sourceTree = "<group>"; };
@@ -74,7 +73,6 @@
 				33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */,
 				33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */,
 				1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */,
-				337670622EAF7C7400CAA66C /* Wallet.procivis.demo.entitlements */,
 				337670632EAF7C7400CAA66C /* Wallet.procivis.dev.entitlements */,
 				337670642EAF7C7400CAA66C /* Wallet.procivis.test.entitlements */,
 				337670652EAF7C7400CAA66C /* Wallet.procivis.trial.entitlements */,
