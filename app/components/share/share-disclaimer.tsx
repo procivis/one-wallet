@@ -30,38 +30,21 @@ const ShareDisclaimer: FunctionComponent<{
   action: string;
   ppUrl?: string;
   testID: string;
-  tosUrl?: string;
-}> = ({ tosUrl, ppUrl, testID, action }) => {
+}> = ({ ppUrl, testID, action }) => {
   const colorScheme = useAppColorScheme();
   const lowerCaseAction = action.toLowerCase();
 
   const opts = useMemo(() => {
     const result: TranslateOptions = { action: lowerCaseAction };
-    if (tosUrl) {
-      result.tos = (
-        <Link label={translate('common.termsOfServices')} url={tosUrl} />
-      );
-    }
     if (ppUrl) {
       result.pp = (
         <Link label={translate('common.privacyPolicy')} url={ppUrl} />
       );
     }
     return result;
-  }, [lowerCaseAction, tosUrl, ppUrl]);
+  }, [lowerCaseAction, ppUrl]);
 
-  const label = useMemo(() => {
-    if (tosUrl && ppUrl) {
-      return 'tosAndPp';
-    }
-    if (tosUrl) {
-      return 'tosOnly';
-    }
-    if (ppUrl) {
-      return 'ppOnly';
-    }
-    return 'noUrls';
-  }, [tosUrl, ppUrl]);
+  const label = ppUrl ? 'ppOnly' : 'noUrls';
 
   return (
     <Typography

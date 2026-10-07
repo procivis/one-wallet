@@ -22,7 +22,7 @@ const ADDITIONAL_SOURCE_KEY_PATTERNS = [
   /^passwordStrength\.(level|tip)\./,
   /^(rseChangePin|rsePinSetup)\.(checkCurrentPin|confirmPin|setPin)\.(instruction|title)$/,
   /^securityBiometricsSetTitle\.(dis|en)abled$/,
-  /^shareDisclaimer\.(noUrls|ppOnly|tosAndPp|tosOnly)$/,
+  /^shareDisclaimer\.(noUrls|ppOnly)$/,
   // LoaderViewState translations
   /^(createBackupProcessing|credentialDeleteTitle|credentialOfferTitle|credentialUpdateTitle|credentialRefreshTitle|deleteWalletProcessTitle|invitationProcessTitle|proofRequestProcessTitle|restoreBackupProcessing)\.(error|inProgress|success|warning)$/,
   // PIN change stage translations
