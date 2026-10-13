@@ -225,6 +225,7 @@ const CredentialDetailNerdScreen: FunctionComponent = () => {
   return (
     <NerdModeScreen
       entityCluster={{
+        identifier: credentialDetail.issuer,
         translate: orgDetail?.configuration?.enforceEcosystemAsHolder === false,
         trustInfoLabels: trustInfoLabels(),
         trustInformation: credentialDetail.trustInformation,

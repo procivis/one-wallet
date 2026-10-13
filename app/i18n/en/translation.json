@@ -206,6 +206,7 @@
   "common.tryAgain": "Try again",
   "common.type": "Type",
   "common.unattested": "Unattested",
+  "common.unknown": "Unknown",
   "common.unknownIssuer": "Unknown issuer",
   "common.unknownVerifier": "Unknown verifier",
   "common.unlockBackup": "Unlock backup",

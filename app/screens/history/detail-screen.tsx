@@ -182,11 +182,7 @@ export const HistoryDetailScreen: FC = () => {
               orgDetail?.configuration?.enforceEcosystemAsHolder === false,
             trustInformation:
               issuedCredential.trustInformation && credentialTrustInformation
-                ? {
-                    ...issuedCredential.trustInformation,
-                    identifier:
-                      credentialTrustInformation.issuer?.value[0]?.identifier,
-                  }
+                ? issuedCredential.trustInformation
                 : undefined,
           },
         } satisfies HistoryDetailsViewProps['data']['header'];
@@ -201,11 +197,7 @@ export const HistoryDetailScreen: FC = () => {
               orgDetail?.configuration?.enforceEcosystemAsHolder === false,
             trustInformation:
               proof.trustInformation && proofTrustInformation
-                ? {
-                    ...proof.trustInformation,
-                    identifier:
-                      proofTrustInformation.verifier?.value[0]?.identifier,
-                  }
+                ? proof.trustInformation
                 : undefined,
           },
         } satisfies HistoryDetailsViewProps['data']['header'];

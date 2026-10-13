@@ -13,8 +13,9 @@ import { translate } from '../i18n';
 
 export const trustInfoLabels = (): TrustInfoLabels => {
   return {
-    unknown: translate('common.untrusted'),
-    unknownSubline: translate('common.untrustedRelyingParty'),
+    secondLine: translate('common.untrustedRelyingParty'),
+    unknown: translate('common.unknown'),
+    untrusted: translate('common.untrusted'),
   };
 };
 

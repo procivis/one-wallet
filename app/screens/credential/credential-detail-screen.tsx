@@ -263,6 +263,7 @@ const CredentialDetailScreen: FC = () => {
         </Typography>
         <View style={styles.historyLog} testID="CredentialDetailScreen.issuer">
           <TrustInfo
+            identifier={credential.issuer}
             labels={trustInfoLabels()}
             language={language}
             onPress={issuerTrustDetail ? trustDetailsPressHandler : undefined}
@@ -274,7 +275,6 @@ const CredentialDetailScreen: FC = () => {
             trustInformation={
               credential?.trustInformation && trustInformation
                 ? {
-                    identifier: trustInformation.issuer?.value[0]?.identifier,
                     name:
                       credential.trustInformation.name ??
                       trustInformation.issuer?.value[0]?.name,

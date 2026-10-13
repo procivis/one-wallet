@@ -123,7 +123,6 @@ const ProofRequestScreen: FunctionComponent = () => {
             trustInformation={
               proof?.trustInformation && trustInformation
                 ? {
-                    identifier: trustInformation.verifier?.value[0]?.identifier,
                     name:
                       proof.trustInformation.name ??
                       trustInformation.verifier?.value[0]?.name,

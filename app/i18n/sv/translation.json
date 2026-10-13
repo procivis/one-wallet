@@ -205,6 +205,7 @@
   "common.tryAgain": "Försök igen",
   "common.type": "Typ",
   "common.unattested": "Ej attesterad",
+  "common.unknown": "Okänt",
   "common.unknownIssuer": "Okänd utfärdare",
   "common.unknownVerifier": "Okänd verifierare",
   "common.unlockBackup": "Lås upp säkerhetskopia",

@@ -360,6 +360,7 @@ const CredentialOfferScreen: FunctionComponent = () => {
         <View style={styles.content} testID={concatTestID(testID, 'content')}>
           {featureFlags?.ecosystemsEnabled && (
             <TrustInfo
+              identifier={credential.issuer}
               labels={trustInfoLabels()}
               language={language}
               onPress={issuerTrustDetail ? trustDetailsPressHandler : undefined}
@@ -374,7 +375,6 @@ const CredentialOfferScreen: FunctionComponent = () => {
               trustInformation={
                 credential?.trustInformation && trustInformation
                   ? {
-                      identifier: trustInformation.issuer?.value[0]?.identifier,
                       name:
                         credential.trustInformation.name ??
                         trustInformation.issuer?.value[0]?.name,
