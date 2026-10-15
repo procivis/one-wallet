@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
       return config
   }
   
+  @discardableResult
   func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
     if let authorizationFlowManagerDelegate,
        authorizationFlowManagerDelegate.resumeExternalUserAgentFlow(with: url) {
@@ -33,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     return RCTLinkingManager.application(app, open: url, options: options)
   }
   
+  @discardableResult
   func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([any UIUserActivityRestoring]?) -> Void) -> Bool {
     if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
        let authorizationFlowManagerDelegate,
@@ -69,6 +71,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
     var reactNativeDelegate: ReactNativeDelegate?
     var reactNativeFactory: RCTReactNativeFactory?
+  
+    private var appDelegate: AppDelegate? {
+        UIApplication.shared.delegate as? AppDelegate
+    }
 
     func scene(
         _ scene: UIScene,
@@ -76,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return };
+        guard let appDelegate else { return };
 
         let delegate = ReactNativeDelegate()
         let factory = RCTReactNativeFactory(delegate: delegate)
@@ -95,5 +101,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         appDelegate.window = window;
 
         window?.makeKeyAndVisible()
+      
+        // Cold start from a link.
+        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        for activity in connectionOptions.userActivities {
+            self.scene(scene, continue: activity)
+        }
+    }
+  
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let appDelegate else { return };
+        URLContexts.forEach { urlContext in
+            appDelegate.application(.shared, open: urlContext.url)
+        }
+    }
+  
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        guard let appDelegate else { return };
+        appDelegate.application(.shared, continue: userActivity) { _ in }
     }
 }
