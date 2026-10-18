@@ -1454,7 +1454,7 @@ PODS:
     - React-Core
   - react-native-nfc-manager (3.17.2):
     - React-Core
-  - react-native-one-core (1.133039.0):
+  - react-native-one-core (1.135459.0):
     - React-Core
   - react-native-safe-area-context (5.9.0):
     - hermes-engine
@@ -2941,7 +2941,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: f1e9b76f4cf5665bf5547dcd86e8ee69823856cd
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-nfc-manager: ef3b44c4f1975ab16d6109bb1671ab68068aba58
-  react-native-one-core: f5aaf2a3df64701a98194a63fac03a7432a14c02
+  react-native-one-core: c2b1029c57c8d7a6249265e1539d4d690cc81270
   react-native-safe-area-context: 2dcb1f85f454dcd176abb52bce501d05552bd517
   react-native-ultimate-config: bc816775e31bb2056ccfe18b49e76a5ba2d39b6c
   react-native-webview: 1d072bc3d90c55ab96c1208b34a7d783f4a8d062
@@ -3005,6 +3005,6 @@ SPEC CHECKSUMS:
   VisionCameraBarcodeScanner: 8e3c6a741f3b6bcc424f0830338d0d870d57cd19
   Yoga: 58b502c52b14ad3c4468805d461fc37d275c2a42
 
-PODFILE CHECKSUM: 5d194af79f01ee7310d00393cfa09fda7d1ab1b2
+PODFILE CHECKSUM: e96fa90a82c8a203988281a58af013834b31602a
 
 COCOAPODS: 1.16.2

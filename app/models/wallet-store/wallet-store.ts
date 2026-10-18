@@ -16,6 +16,7 @@ const AppVersionModel = types.model('AppVersion', {
 });
 
 const FeatureFlagsModel = types.model('FeatureFlags', {
+  dcApiIntegrationEnabled: types.maybe(types.boolean),
   documentSigningEnabled: types.maybe(types.boolean),
   ecosystemsEnabled: types.boolean,
   ecosystemsEnforcementEnabled: types.boolean,

@@ -9,7 +9,9 @@ import {
   NavigationState,
   PartialState,
 } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import RNBlobUtil from 'react-native-blob-util';
 import Config from 'react-native-ultimate-config';
 
 import { assets, config } from '../config';
@@ -194,12 +196,47 @@ const coreConfig = {
 
 export const AppNavigator = (props: NavigationProps) => {
   const { locale } = useStores();
+  const [initialized, setInitialized] = useState(false);
+  const [databaseDirPath, setDatabaseDirPath] = useState<string>();
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') {
+      setInitialized(true);
+      return;
+    }
+    const appGroupId = `group.${Config.APP_ID}`;
+    RNBlobUtil.fs
+      .pathForAppGroup(appGroupId)
+      .then((path) => {
+        RNBlobUtil.fs
+          .exists(`${path}/Library/Application Support/one_core_db.sqlite`)
+          .then((exists) => {
+            if (exists) {
+              setDatabaseDirPath(`${path}/Library/Application Support/`);
+            }
+            setInitialized(true);
+          })
+          .catch(() => {
+            setInitialized(true);
+          });
+      })
+      .catch(() => {
+        setInitialized(true);
+      });
+  }, []);
+
+  if (!initialized) {
+    return null;
+  }
 
   return (
     <AccessibilityLanguageProvider
       language={locale.locale ?? i18n.defaultLocale ?? 'en'}
     >
-      <ONECoreContextProvider config={coreConfig}>
+      <ONECoreContextProvider
+        config={coreConfig}
+        databaseDirPath={databaseDirPath}
+      >
         <NavigationContainer
           onStateChange={onNavigationChange}
           ref={navigationRef}

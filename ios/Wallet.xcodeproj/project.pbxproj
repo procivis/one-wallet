@@ -3,12 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0ED34EA2EBAB4DD8BE467220 /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 258702B773E64857AB05C15E /* OpenSans-Medium.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		1510EF98307E7310004DC553 /* Document Provider.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 1510EF91307E7310004DC553 /* Document Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1510F23F3080BE6A004DC553 /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
 		155C79672BF4AF0B00ACA35E /* Procivis-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */; };
 		158D69EA2785F1AA00D5359B /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
 		1598E2272717219400E4B02E /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1598E2262717219400E4B02E /* Void.swift */; };
@@ -19,44 +21,99 @@
 		33A63B8727BC0A6000AC5C33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */; };
 		33A63B8927BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */; };
 		34E2CD48CB6E427DB96AE650 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56F7E5873D6E4D43AC5F0BF2 /* OpenSans-Bold.ttf */; };
-		9A62A601D336CCD56E452045 /* libPods-Wallet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D925AF24570C18ED37845C54 /* libPods-Wallet.a */; };
+		79FC355847ED758262CF5B8A /* libPods-Wallet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E35871F52C2B434CF40A7E7E /* libPods-Wallet.a */; };
+		8A7249DD808A5AD754C339ED /* libPods-Document Provider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7E53379272B248DD7A9E1E6 /* libPods-Document Provider.a */; };
 		A936E1518D87478F87691535 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D423538F2044E07A3A42829 /* OpenSans-Regular.ttf */; };
 		BBF088520E524A9890011E62 /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C726A7939A743A686EE049A /* IBMPlexMono-Regular.ttf */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1510EF96307E7310004DC553 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1510EF90307E7310004DC553;
+			remoteInfo = "Document Provider";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1510EF9D307E7310004DC553 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				1510EF98307E7310004DC553 /* Document Provider.appex in Embed ExtensionKit Extensions */,
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0D423538F2044E07A3A42829 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Procivis Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Procivis Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Wallet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Wallet/Info.plist; sourceTree = "<group>"; };
+		1510EF91307E7310004DC553 /* Document Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = "Document Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Procivis-Book.ttf"; path = "../assets/fonts/Procivis-Book.ttf"; sourceTree = "<group>"; };
 		158D69E92785F1AA00D5359B /* rnuc.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = rnuc.xcconfig; sourceTree = "<group>"; };
 		1598E22327171FE600E4B02E /* Wallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Wallet-Bridging-Header.h"; sourceTree = "<group>"; };
 		1598E2262717219400E4B02E /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		15A4F1BE2718D04800E1384E /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		15A4F1BF2718D04800E1384E /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
-		15C5330D2D54F4EF0004C10E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		15C5330D2D54F4EF0004C10E /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 4; };
 		15F550082BDA828300064BED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1DD4ED1E77DE9B2437342BAC /* Pods-Wallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.release.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.release.xcconfig"; sourceTree = "<group>"; };
-		243D1CACD21C74DD99C69660 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
+		21C08376FEB425CBB8FF598F /* Pods-Wallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.release.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.release.xcconfig"; sourceTree = "<group>"; };
 		258702B773E64857AB05C15E /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../assets/fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
 		337670632EAF7C7400CAA66C /* Wallet.procivis.dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.dev.entitlements; path = Wallet/Wallet.procivis.dev.entitlements; sourceTree = "<group>"; };
 		337670642EAF7C7400CAA66C /* Wallet.procivis.test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.test.entitlements; path = Wallet/Wallet.procivis.test.entitlements; sourceTree = "<group>"; };
 		337670652EAF7C7400CAA66C /* Wallet.procivis.trial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Wallet.procivis.trial.entitlements; path = Wallet/Wallet.procivis.trial.entitlements; sourceTree = "<group>"; };
 		33A63B8627BC0A6000AC5C33 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Wallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		33A63B8827BC0FA600AC5C33 /* LaunchScreen.procivis.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.procivis.storyboard; path = Wallet/LaunchScreen.procivis.storyboard; sourceTree = "<group>"; };
+		36BB68920DBE054ABB389A3B /* Pods-defaults-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-defaults-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-defaults-Wallet/Pods-defaults-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 		4C726A7939A743A686EE049A /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-Regular.ttf"; path = "../assets/fonts/IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
 		56F7E5873D6E4D43AC5F0BF2 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
-		D925AF24570C18ED37845C54 /* libPods-Wallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Wallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		628C8B96B05F57CA7E28944D /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
+		71995575ADEC009C4B715BBF /* Pods-Document Provider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Document Provider.release.xcconfig"; path = "Target Support Files/Pods-Document Provider/Pods-Document Provider.release.xcconfig"; sourceTree = "<group>"; };
+		99205AE10DF47F9362BAD597 /* Pods-Document Provider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Document Provider.debug.xcconfig"; path = "Target Support Files/Pods-Document Provider/Pods-Document Provider.debug.xcconfig"; sourceTree = "<group>"; };
+		9EE8AFD98027A205C4840132 /* Pods-defaults-Document Provider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-defaults-Document Provider.debug.xcconfig"; path = "Target Support Files/Pods-defaults-Document Provider/Pods-defaults-Document Provider.debug.xcconfig"; sourceTree = "<group>"; };
+		ACDC435A585412AF86CC519B /* Pods-defaults-Document Provider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-defaults-Document Provider.release.xcconfig"; path = "Target Support Files/Pods-defaults-Document Provider/Pods-defaults-Document Provider.release.xcconfig"; sourceTree = "<group>"; };
+		D7E53379272B248DD7A9E1E6 /* libPods-Document Provider.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Document Provider.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E35871F52C2B434CF40A7E7E /* libPods-Wallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Wallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F40BC57952FBC674ED1CF6C9 /* Pods-defaults-Wallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-defaults-Wallet.release.xcconfig"; path = "Target Support Files/Pods-defaults-Wallet/Pods-defaults-Wallet.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1510EF99307E7310004DC553 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1510EF90307E7310004DC553 /* Document Provider */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1510EF92307E7310004DC553 /* Document Provider */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1510EF99307E7310004DC553 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Document Provider"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A62A601D336CCD56E452045 /* libPods-Wallet.a in Frameworks */,
+				79FC355847ED758262CF5B8A /* libPods-Wallet.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1510EF8E307E7310004DC553 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A7249DD808A5AD754C339ED /* libPods-Document Provider.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +153,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				D925AF24570C18ED37845C54 /* libPods-Wallet.a */,
+				D7E53379272B248DD7A9E1E6 /* libPods-Document Provider.a */,
+				E35871F52C2B434CF40A7E7E /* libPods-Wallet.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -104,8 +162,14 @@
 		71ED362ACEA45F9F60DCD285 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				243D1CACD21C74DD99C69660 /* Pods-Wallet.debug.xcconfig */,
-				1DD4ED1E77DE9B2437342BAC /* Pods-Wallet.release.xcconfig */,
+				628C8B96B05F57CA7E28944D /* Pods-Wallet.debug.xcconfig */,
+				21C08376FEB425CBB8FF598F /* Pods-Wallet.release.xcconfig */,
+				9EE8AFD98027A205C4840132 /* Pods-defaults-Document Provider.debug.xcconfig */,
+				ACDC435A585412AF86CC519B /* Pods-defaults-Document Provider.release.xcconfig */,
+				36BB68920DBE054ABB389A3B /* Pods-defaults-Wallet.debug.xcconfig */,
+				F40BC57952FBC674ED1CF6C9 /* Pods-defaults-Wallet.release.xcconfig */,
+				99205AE10DF47F9362BAD597 /* Pods-Document Provider.debug.xcconfig */,
+				71995575ADEC009C4B715BBF /* Pods-Document Provider.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -123,20 +187,22 @@
 				158D69E92785F1AA00D5359B /* rnuc.xcconfig */,
 				13B07FAE1A68108700A75B9A /* Wallet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				1510EF92307E7310004DC553 /* Document Provider */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				71ED362ACEA45F9F60DCD285 /* Pods */,
 				9552201ADE9B4CADA1ADB772 /* Resources */,
 			);
-			indentWidth = 2;
+			indentWidth = 4;
 			sourceTree = "<group>";
-			tabWidth = 2;
+			tabWidth = 4;
 			usesTabs = 0;
 		};
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* Procivis Wallet.app */,
+				1510EF91307E7310004DC553 /* Document Provider.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,15 +234,38 @@
 				068F1FFF817F4F429E7D5922 /* Upload Debug Symbols to Sentry */,
 				4CEB135B972E39021102FB8F /* [CP] Embed Pods Frameworks */,
 				5F0C7342E769C4A3BF2BF39E /* [CP] Copy Pods Resources */,
+				1510EF9D307E7310004DC553 /* Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1510EF97307E7310004DC553 /* PBXTargetDependency */,
 			);
 			name = Wallet;
 			productName = Wallet;
 			productReference = 13B07F961A680F5B00A75B9A /* Procivis Wallet.app */;
 			productType = "com.apple.product-type.application";
+		};
+		1510EF90307E7310004DC553 /* Document Provider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1510EF9A307E7310004DC553 /* Build configuration list for PBXNativeTarget "Document Provider" */;
+			buildPhases = (
+				56A5F1981C090A5C8BBF3FDC /* [CP] Check Pods Manifest.lock */,
+				1510EF8D307E7310004DC553 /* Sources */,
+				1510EF8E307E7310004DC553 /* Frameworks */,
+				1510EF8F307E7310004DC553 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1510EF92307E7310004DC553 /* Document Provider */,
+			);
+			name = "Document Provider";
+			productName = "Document Provider";
+			productReference = 1510EF91307E7310004DC553 /* Document Provider.appex */;
+			productType = "com.apple.product-type.extensionkit-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -184,11 +273,15 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = AGG3V6QN4G;
 						LastSwiftMigration = 1300;
+					};
+					1510EF90307E7310004DC553 = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -206,6 +299,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* Wallet */,
+				1510EF90307E7310004DC553 /* Document Provider */,
 			);
 		};
 /* End PBXProject section */
@@ -227,6 +321,14 @@
 				34E2CD48CB6E427DB96AE650 /* OpenSans-Bold.ttf in Resources */,
 				0ED34EA2EBAB4DD8BE467220 /* OpenSans-Medium.ttf in Resources */,
 				A936E1518D87478F87691535 /* OpenSans-Regular.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1510EF8F307E7310004DC553 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1510F23F3080BE6A004DC553 /* rnuc.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +390,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		56A5F1981C090A5C8BBF3FDC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Document Provider-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5F0C7342E769C4A3BF2BF39E /* [CP] Copy Pods Resources */ = {
@@ -374,12 +498,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1510EF8D307E7310004DC553 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1510EF97307E7310004DC553 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1510EF90307E7310004DC553 /* Document Provider */;
+			targetProxy = 1510EF96307E7310004DC553 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 243D1CACD21C74DD99C69660 /* Pods-Wallet.debug.xcconfig */;
+			baseConfigurationReference = 628C8B96B05F57CA7E28944D /* Pods-Wallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon.${CONFIG_NAME}.${ENVIRONMENT}";
 				CLANG_ENABLE_MODULES = YES;
@@ -404,6 +543,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_ID}";
 				PRODUCT_NAME = "Procivis Wallet";
+				REGISTER_APP_GROUPS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Wallet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -413,7 +553,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DD4ED1E77DE9B2437342BAC /* Pods-Wallet.release.xcconfig */;
+			baseConfigurationReference = 21C08376FEB425CBB8FF598F /* Pods-Wallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon.${CONFIG_NAME}.${ENVIRONMENT}";
 				CLANG_ENABLE_MODULES = YES;
@@ -438,9 +578,111 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_ID}";
 				PRODUCT_NAME = "Procivis Wallet";
+				REGISTER_APP_GROUPS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Wallet-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		1510EF9B307E7310004DC553 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 99205AE10DF47F9362BAD597 /* Pods-Document Provider.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "Document Provider/Document Provider.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = AGG3V6QN4G;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Document Provider/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Document Provider";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "${APP_ID}.documentProvider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Document Provider/DocumentProvider-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1510EF9C307E7310004DC553 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71995575ADEC009C4B715BBF /* Pods-Document Provider.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "Document Provider/Document Provider.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = AGG3V6QN4G;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Document Provider/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Document Provider";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "${APP_ID}.documentProvider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Document Provider/DocumentProvider-Bridging-Header.h";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -518,10 +760,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -599,10 +838,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -619,6 +855,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1510EF9A307E7310004DC553 /* Build configuration list for PBXNativeTarget "Document Provider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1510EF9B307E7310004DC553 /* Debug */,
+				1510EF9C307E7310004DC553 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

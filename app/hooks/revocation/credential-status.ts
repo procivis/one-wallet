@@ -8,7 +8,7 @@ import {
   CredentialState,
 } from '@procivis/react-native-one-core';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -26,6 +26,7 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
     ids: credentialIds,
     states: [CredentialState.ACCEPTED, CredentialState.SUSPENDED],
   });
+  const [checkFinished, setCheckFinished] = useState(false);
 
   const runCheck = useCallback(
     async (checkedCredentials: CredentialListItem[]) => {
@@ -54,6 +55,7 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
           credentialIds: updatedCredentialIds,
         });
       }
+      setCheckFinished(true);
     },
     [check, navigation],
   );
@@ -71,4 +73,6 @@ export const useCredentialStatusCheck = (credentialIds?: string[]) => {
       });
     }
   }, [credentials, isFocused, runCheck]);
+
+  return { checkFinished };
 };

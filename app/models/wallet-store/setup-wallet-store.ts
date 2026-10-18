@@ -55,6 +55,7 @@ export async function setupWalletStore(env: Environment) {
       appVersion: undefined,
       documentSigners: [],
       featureFlags: {
+        dcApiIntegrationEnabled: false,
         documentSigningEnabled: false,
         ecosystemsEnabled: true,
         ecosystemsEnforcementEnabled: true,

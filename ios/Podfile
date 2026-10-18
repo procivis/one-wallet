@@ -62,3 +62,8 @@ target 'Wallet' do
     end
   end
 end
+
+target 'Document Provider' do
+  pod 'react-native-ultimate-config', :path => '../node_modules/react-native-ultimate-config'
+  pod 'react-native-one-core', :path => '../node_modules/@procivis/react-native-one-core'
+end

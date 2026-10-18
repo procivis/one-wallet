@@ -6,6 +6,7 @@ import {
   StatusErrorIcon,
   StatusWarningIcon,
   useAppColorScheme,
+  useCredentialRegistrySync,
   useInstanceCheck,
   usePagedCredentials,
   useTrustCollectionSync,
@@ -38,6 +39,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HeaderOptionsButton } from '../../components/navigation/header-buttons';
 import WalletCredentialList from '../../components/wallet/credential-list';
 import { assets, config } from '../../config';
+import { useCurrentLanguage } from '../../hooks/language';
 import { useCredentialStatusCheck } from '../../hooks/revocation/credential-status';
 import useVersionCheck from '../../hooks/version-check/version-check';
 import { translate } from '../../i18n';
@@ -50,6 +52,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   const {
     walletStore: { walletProvider, registeredWalletUnitId },
   } = useStores();
+  const language = useCurrentLanguage();
   const documentSigningEnabled =
     walletProvider.featureFlags?.documentSigningEnabled;
   const safeAreaInsets = useSafeAreaInsets();
@@ -60,6 +63,8 @@ const WalletScreen: FunctionComponent = observer(() => {
   const { mutateAsync: trustListCollectionSync } = useTrustCollectionSync();
   const { mutateAsync: trustListSubscriptionUpdate } =
     useTrustListSubscriptionUpdate();
+  const { mutateAsync: synchronizeCredentialRegistry } =
+    useCredentialRegistrySync(language);
 
   const [scrollOffset] = useState(() => new Animated.Value(0));
   const [searchPhrase, setSearchPhrase] = useState<string>('');
@@ -85,7 +90,8 @@ const WalletScreen: FunctionComponent = observer(() => {
     credentialIssuers.length > 0 &&
     credentialIssuers.filter((issuer) => issuer.enabled).length > 0;
 
-  useCredentialStatusCheck();
+  const { checkFinished: statusCheckFinished } = useCredentialStatusCheck();
+
   const { isLoading: isLoadingWU, instanceDetail } = useInstanceCheck(
     registeredWalletUnitId,
   );
@@ -186,6 +192,21 @@ const WalletScreen: FunctionComponent = observer(() => {
     }
     runTrustTasks();
   }, [registeredWalletUnitId, runTrustTasks]);
+
+  useEffect(() => {
+    if (
+      !walletProvider.featureFlags?.dcApiIntegrationEnabled ||
+      !statusCheckFinished
+    ) {
+      return;
+    }
+    synchronizeCredentialRegistry();
+  }, [
+    walletProvider,
+    statusCheckFinished,
+    credentials,
+    synchronizeCredentialRegistry,
+  ]);
 
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {
     if (walletProvider.walletUnitAttestation.required) {
