@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -87,7 +87,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		1510EF99307E7310004DC553 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		1510EF99307E7310004DC553 /* Exceptions for "Document Provider" folder in "Document Provider" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -97,7 +97,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1510EF92307E7310004DC553 /* Document Provider */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1510EF99307E7310004DC553 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Document Provider"; sourceTree = "<group>"; };
+		1510EF92307E7310004DC553 /* Document Provider */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1510EF99307E7310004DC553 /* Exceptions for "Document Provider" folder in "Document Provider" target */,
+			);
+			path = "Document Provider";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,7 +293,6 @@
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Wallet" */;
-			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -294,6 +300,7 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
