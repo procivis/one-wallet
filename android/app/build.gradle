@@ -147,6 +147,12 @@ dependencies {
 
     implementation "androidx.core:core-splashscreen:1.0.0"
 
+    implementation "androidx.credentials.registry:registry-digitalcredentials-mdoc:1.0.0-alpha05"
+    implementation "androidx.credentials.registry:registry-digitalcredentials-openid:1.0.0-alpha05"
+    implementation "androidx.credentials.registry:registry-digitalcredentials-sdjwtvc:1.0.0-alpha05"
+    implementation "androidx.credentials.registry:registry-provider:1.0.0-alpha05"
+    implementation "androidx.credentials.registry:registry-provider-play-services:1.0.0-alpha05"
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
