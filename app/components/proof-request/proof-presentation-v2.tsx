@@ -235,6 +235,18 @@ function prepareSubmission(
   return { allSetsValid, credentials };
 }
 
+function claimRequiresUserConsent(
+  claim: PresentationDefinitionV2Claim,
+): boolean {
+  if (claim.requireBiometricDataUserConsent) {
+    return true;
+  }
+  if (claim.value.type_ === 'NESTED') {
+    return claim.value.value.some(claimRequiresUserConsent);
+  }
+  return false;
+}
+
 function getNewSetSelection(
   requestGroup: string[],
   selectedCredentials: SetCredentialQuerySelection,
@@ -304,6 +316,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
   const [submitCredentials, setSubmitCredentials] =
     useState<CredentialQuerySelection>({});
   const [allSelectionsValid, setAllSelectionsValid] = useState(true);
+  const [userConsentState, setUserConsentState] = useState<boolean>();
   const language = useCurrentLanguage();
 
   const {
@@ -380,6 +393,23 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       preselectCredentialsForPresentationDefinitionV2(presentationDefinition),
     );
   }, [presentationDefinition, setSelectedCredentials]);
+
+  useEffect(() => {
+    if (!presentationDefinition) {
+      return;
+    }
+    const userConsentRequired = Object.values(
+      presentationDefinition.credentialQueries,
+    ).some((query) => {
+      if (query.credentialOrFailureHint.type_ !== 'APPLICABLE_CREDENTIALS') {
+        return false;
+      }
+      return query.credentialOrFailureHint.applicableCredentials.some(
+        (credential) => credential.claims.some(claimRequiresUserConsent),
+      );
+    });
+    setUserConsentState(!userConsentRequired);
+  }, [presentationDefinition]);
 
   const transactionDataContext = useMemo(
     () =>
@@ -625,6 +655,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       credentialId: CredentialListItem['id'],
       fieldPath: PresentationDefinitionV2Claim['path'],
       selected: boolean,
+      allUserConsentAttributesSelected?: boolean,
     ) => {
       setSelectedCredentials((current) =>
         selectedCredentialsWithUpdatedSelection(
@@ -636,6 +667,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
           selected,
         ),
       );
+      setUserConsentState(allUserConsentAttributesSelected);
     };
 
   useEffect(() => {
@@ -658,6 +690,14 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
     selectedCredentials,
     transactionSelectedCredentials,
   ]);
+
+  const allUserConsentAttributesSelected = useMemo(
+    () => userConsentState !== false,
+    [userConsentState],
+  );
+
+  const shareButtonEnabled =
+    allSelectionsValid && allUserConsentAttributesSelected;
 
   const onSubmit = useCallback(() => {
     proofAccepted.current = true;
@@ -758,6 +798,9 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
                       'credential',
                       credentialRequestId,
                     )}
+                    userConsentWarningLabel={translate(
+                      'info.proofRequest.userConsentWarning',
+                    )}
                   />
                 );
               },
@@ -853,11 +896,11 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
           </View>
         )}
         <Button
-          disabled={!allSelectionsValid}
+          disabled={!shareButtonEnabled}
           onPress={onSubmit}
           testID="ProofRequestSharingScreen.shareButton"
           title={translate('common.share')}
-          type={allSelectionsValid ? ButtonType.Primary : ButtonType.Secondary}
+          type={shareButtonEnabled ? ButtonType.Primary : ButtonType.Secondary}
         />
       </View>
     </>
