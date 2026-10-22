@@ -6,6 +6,7 @@ import {
   StatusErrorIcon,
   StatusWarningIcon,
   useAppColorScheme,
+  useAppState,
   useCredentialRegistrySync,
   useInstanceCheck,
   usePagedCredentials,
@@ -48,6 +49,7 @@ import { RootNavigationProp } from '../../navigators/root/root-routes';
 
 const WalletScreen: FunctionComponent = observer(() => {
   const isFocused = useIsFocused();
+  const appState = useAppState();
   const colorScheme = useAppColorScheme();
   const {
     walletStore: { walletProvider, registeredWalletUnitId },
@@ -195,6 +197,8 @@ const WalletScreen: FunctionComponent = observer(() => {
 
   useEffect(() => {
     if (
+      appState !== 'active' ||
+      !isFocused ||
       !walletProvider.featureFlags?.dcApiIntegrationEnabled ||
       !statusCheckFinished
     ) {
@@ -206,6 +210,8 @@ const WalletScreen: FunctionComponent = observer(() => {
     statusCheckFinished,
     credentials,
     synchronizeCredentialRegistry,
+    appState,
+    isFocused,
   ]);
 
   const topNotice: WalletNoticeProps | undefined = useMemo(() => {

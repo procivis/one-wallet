@@ -7,6 +7,10 @@ import OSLog
 
 struct DocumentProviderView: View {
     
+    enum ProviderError: Error {
+        case unknown
+    }
+    
     struct Document: Identifiable {
         
         let id: String
@@ -64,6 +68,16 @@ struct DocumentProviderView: View {
             }
             .listStyle(.plain)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            Button("Submit") {
+                context.cancel()
+            }
+            .buttonStyle(PrimaryButton())
+            .padding([.horizontal])
+            Button("Cancel") {
+                context.cancel()
+            }
+            .buttonStyle(BorderedButton())
+            .padding([.bottom, .horizontal])
         }
         .task {
             do {
