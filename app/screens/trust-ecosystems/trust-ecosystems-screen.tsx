@@ -17,7 +17,7 @@ import {
 } from '@procivis/one-react-native-components';
 import {
   DisplayName,
-  UpsertOrganisationRequest,
+  UpdateOrganisationRequest,
 } from '@procivis/react-native-one-core';
 import { Route, useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -138,7 +138,7 @@ export const TrustEcosystemsScreen: FC = observer(() => {
     (
       selectedEcosystems: NonNullable<
         NonNullable<
-          UpsertOrganisationRequest['configuration']
+          UpdateOrganisationRequest['configuration']
         >['selectedEcosystems']
       >,
     ) => {

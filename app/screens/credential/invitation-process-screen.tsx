@@ -295,9 +295,12 @@ const InvitationProcessScreen: FunctionComponent = () => {
     }
 
     handleInvitation({
+      data: {
+        type_: 'URL',
+        url: invitationUrl,
+      },
       redirectUri: config.requestCredentialRedirectUri,
       transport: [transport],
-      url: invitationUrl,
     })
       .then((result) => {
         setInvitationResult(result);

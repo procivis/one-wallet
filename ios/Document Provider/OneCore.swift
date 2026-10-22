@@ -96,10 +96,10 @@ class OneCore: ObservableObject {
         return try await self.core.getOrganisation(id: organisationId)
     }
     
-    func handleInvitation(url: String) async throws -> HandleInvitationResponse {
+    func handleInvitation(data: HandleInvitationRequestData) async throws -> HandleInvitationResponse {
         return try await self.core.handleInvitation(
             request: HandleInvitationRequest(
-                url: url,
+                data: data,
                 organisationId: organisationId,
                 transport: nil,
                 redirectUri: nil,
