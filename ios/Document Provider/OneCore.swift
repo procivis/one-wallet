@@ -4,76 +4,78 @@ import Foundation
 
 class OneCore: ObservableObject {
     
+    enum OneCoreError: Error {
+        case configSerializationFailed
+    }
+    
     private var core: OneCoreProtocol!
     private let organisationId = "11111111-2222-3333-a444-ffffffffffff"
     
-    private let configJson = """
-        {
-          "issuanceProtocol": {
-            "OPENID4VCI_FINAL1": {
-              "params": {
-                "private": {
-                  "encryption":
-                    "93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e"
-                }
-              }
-            },
-            "OPENID4VCI_FINAL1_HAIP": {
-              "params": {
-                "private": {
-                  "encryption":
-                    "93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e"
-                }
-              }
-            },
-            "OPENID4VCI_FINAL1_SWIYU": {
-              "params": {
-                "private": {
-                  "encryption":
-                    "93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e"
-                }
-              }
-            }
-          },
-          "keyStorage": {
-            "INTERNAL": {
-              "params": {
-                "private": {
-                  "encryption":
-                    "93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e"
-                }
-              }
-            },
-            "SECURE_ELEMENT": {
-              "display": "keyStorage.secureElement",
-              "params": { "private": { "aliasPrefix": "ch.procivis.one.wallet.keys" } },
-              "type": "SECURE_ELEMENT"
-            }
-          },
-          "transport": {
-            "BLE": {
-              "enabled": false
-            },
-            "HTTP": {
-              "enabled": true
-            },
-            "MQTT": {
-              "enabled": false
-            }
-          },
-          "verificationProtocol": {
-            "ISO_MDL": {
-              "enabled": true
-            }
-          }
-        }
-    """
+    private let config = [
+        "issuanceProtocol": [
+            "OPENID4VCI_FINAL1": [
+                "params": [
+                    "private": [
+                        "encryption": CORE_ENCRYPTION
+                    ]
+                ]
+            ],
+            "OPENID4VCI_FINAL1_HAIP": [
+                "params": [
+                    "private": [
+                        "encryption": CORE_ENCRYPTION
+                    ]
+                ]
+            ],
+            "OPENID4VCI_FINAL1_SWIYU": [
+                "params": [
+                    "private": [
+                        "encryption": CORE_ENCRYPTION
+                    ]
+                ]
+            ]
+        ],
+        "keyStorage": [
+            "INTERNAL": [
+                "params": [
+                    "private": [
+                        "encryption": CORE_ENCRYPTION
+                    ]
+                ]
+            ],
+            "SECURE_ELEMENT": [
+                "display": "keyStorage.secureElement",
+                "params": [ "private": [ "aliasPrefix": "ch.procivis.one.wallet.keys" ] ],
+                "type": "SECURE_ELEMENT"
+            ]
+        ],
+        "transport": [
+            "BLE": [
+                "enabled": false
+            ],
+            "HTTP": [
+                "enabled": true
+            ],
+            "MQTT": [
+                "enabled": false
+            ]
+        ],
+        "verificationProtocol": [
+            "ISO_MDL": [
+                "enabled": true
+            ]
+        ]
+    ]
     
     init() throws {
         try self.initialize()
     }
     
     func initialize() throws {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: config),
+              let configJson = String(data: jsonData, encoding: .utf8) else {
+            throw OneCoreError.configSerializationFailed
+        }
         let appId = APP_ID as String
         let appGroupContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(appId)")
         let dataDirPath = appGroupContainer?.appendingPathComponent("Library", isDirectory: true).appendingPathComponent("Application Support", isDirectory: true).path

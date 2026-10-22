@@ -108,7 +108,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.scene(scene, openURLContexts: connectionOptions.urlContexts)
         for activity in connectionOptions.userActivities {
             self.scene(scene, continue: activity)
-        }
+        } 
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

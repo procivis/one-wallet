@@ -125,24 +125,21 @@ const coreConfig = {
     OPENID4VCI_FINAL1: {
       params: {
         private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+          encryption: Config.CORE_ENCRYPTION,
         },
       },
     },
     OPENID4VCI_FINAL1_HAIP: {
       params: {
         private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+          encryption: Config.CORE_ENCRYPTION,
         },
       },
     },
     OPENID4VCI_FINAL1_SWIYU: {
       params: {
         private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+          encryption: Config.CORE_ENCRYPTION,
         },
       },
     },
@@ -151,8 +148,7 @@ const coreConfig = {
     INTERNAL: {
       params: {
         private: {
-          encryption:
-            '93d9182795f0d1bec61329fc2d18c4b4c1b7e65e69e20ec30a2101a9875fff7e',
+          encryption: Config.CORE_ENCRYPTION,
         },
       },
     },
