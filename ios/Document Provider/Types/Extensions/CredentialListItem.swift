@@ -3,7 +3,7 @@ import ProcivisOneCore
 
 protocol CredentialCardViewModelProviding {
     
-    var schema: CredentialSchemaListItem { get }
+    var schemaListItem: CredentialSchemaListItem { get }
     
     var headerPrimary: String? { get }
     var headerPrimaryColor: Color? { get }
@@ -23,10 +23,10 @@ extension CredentialCardViewModelProviding {
     var batchCount: Int? { nil }
     
     func credentialHeaderViewModel(language: String) -> CredentialHeaderView.ViewModel {
-        guard let layoutProperties = schema.layoutProperties else {
+        guard let layoutProperties = schemaListItem.layoutProperties else {
             return CredentialHeaderView.ViewModel(
                 logo: .default,
-                name: schema.translations?.name[language] ?? schema.translations?.name["en"] ?? schema.name,
+                name: schemaListItem.translations?.name[language] ?? schemaListItem.translations?.name["en"] ?? schemaListItem.name,
                 primary: headerPrimary,
                 primaryColor: headerPrimaryColor,
                 secondary: headerSecondary,
@@ -35,7 +35,7 @@ extension CredentialCardViewModelProviding {
         }
         return CredentialHeaderView.ViewModel(
             logo: layoutProperties.credentialHeaderLogo,
-            name: schema.name,
+            name: schemaListItem.name,
             primary: headerPrimary,
             primaryColor: headerPrimaryColor,
             secondary: headerSecondary,
@@ -44,7 +44,7 @@ extension CredentialCardViewModelProviding {
     }
     
     func credentialCardViewModel(language: String) -> CredentialCardView.ViewModel {
-        guard let layoutProperties = schema.layoutProperties else {
+        guard let layoutProperties = schemaListItem.layoutProperties else {
             return CredentialCardView.ViewModel(
                 header: self.credentialHeaderViewModel(language: language),
                 background: .default,
@@ -60,6 +60,10 @@ extension CredentialCardViewModelProviding {
 }
 
 extension CredentialListItem: CredentialCardViewModelProviding {
+    
+    var schemaListItem: CredentialSchemaListItem {
+        return self.schema
+    }
     
     var headerPrimary: String? {
         if let date = DateFormatterProvider().isoDateFormatter.date(from: createdDate) {
@@ -80,7 +84,7 @@ extension CredentialListItem: CredentialCardViewModelProviding {
 
 extension CredentialQueryFailureHint: CredentialCardViewModelProviding {
 
-    var schema: CredentialSchemaListItem {
+    var schemaListItem: CredentialSchemaListItem {
         return CredentialSchemaListItem(
             id: "",
             createdDate: "",
