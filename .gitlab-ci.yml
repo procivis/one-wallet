@@ -80,7 +80,7 @@ workflow:
       echo "node_modules does not exist or is not valid, re-installing deps."
       apk add --update --no-cache python3 build-base g++ cairo-dev pango-dev giflib-dev
       apk add --update --no-cache --virtual .build-deps alpine-sdk libc6-compat gcompat
-      pnpm dlx node-gyp @mapbox/node-pre-gyp
+      pnpm dlx node-gyp@12 @mapbox/node-pre-gyp
       pnpm install --frozen-lockfile
       pnpm rnuc:dev
     fi
