@@ -8,11 +8,19 @@
 	</array>
 	<key>com.apple.developer.nfc.hce</key>
 	<true/>
+	<key>com.apple.developer.nfc.hce.default-contactless-app</key>
+	<true/>
 	<key>com.apple.developer.nfc.hce.iso7816.select-identifier-prefixes</key>
 	<array>
 		<string>D2760000850101</string>
 	</array>
-	<key>com.apple.developer.nfc.hce.default-contactless-app</key>
-	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.${APP_ID}</string>
+	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)${APP_ID}</string>
+	</array>
 </dict>
 </plist>
