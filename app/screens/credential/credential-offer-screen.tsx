@@ -46,6 +46,7 @@ import {
   HeaderInfoButton,
 } from '../../components/navigation/header-buttons';
 import ShareDisclaimer from '../../components/share/share-disclaimer';
+import { config as appConfig } from '../../config';
 import { useCredentialOfferSelectedCards } from '../../hooks/credential-card/credential-card-expanding';
 import { useCredentialImagePreview } from '../../hooks/credential-card/image-preview';
 import { useCurrentLanguage } from '../../hooks/language';
@@ -159,9 +160,12 @@ const CredentialOfferScreen: FunctionComponent = () => {
     if (credentialIds !== undefined || !credentialsOffer) {
       return;
     }
-    const batchIds = Object.values(credentialsOffer.batches).flatMap(
-      (credentials) => Object.keys(credentials),
-    );
+    const batchIds = appConfig.featureFlags
+      .multiformatCredentialIssuanceGrouping
+      ? Object.keys(credentialsOffer.batches)
+      : Object.values(credentialsOffer.batches).flatMap((credentials) =>
+          Object.keys(credentials),
+        );
     const allIds = batchIds.concat(credentialsOffer.singles);
     setCredentialIds(allIds);
     setInitialSelection(allIds);

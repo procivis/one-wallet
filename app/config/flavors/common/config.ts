@@ -18,6 +18,7 @@ export const commonConfig: Pick<
     isoMdl: true,
     localization: true,
     mqttTransportEnabled: true,
+    multiformatCredentialIssuanceGrouping: true,
     nfcEnabled: true,
     requestCredentialEnabled: true,
     ubiquRse: true,

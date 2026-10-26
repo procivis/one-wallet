@@ -17,6 +17,8 @@ export interface FeatureFlags {
   localization: boolean;
   /** MQTT transport enabled */
   mqttTransportEnabled: boolean;
+  /** Grouping multiformat credentials in one card during issuance */
+  multiformatCredentialIssuanceGrouping: boolean;
   /** NFC (HCE) support enabled */
   nfcEnabled: boolean;
   /** create request credential enabled */
