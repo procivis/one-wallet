@@ -298,12 +298,14 @@ const TransactionDataItem: FC<TransactionDataItemProps> = ({ item }) => {
           }
           return (
             <View key={index}>
-              <View
-                style={[
-                  styles.separator,
-                  { backgroundColor: colorScheme.accentText },
-                ]}
-              />
+              {(index > 0 || Boolean(item.title)) && (
+                <View
+                  style={[
+                    styles.separator,
+                    { backgroundColor: colorScheme.accentText },
+                  ]}
+                />
+              )}
               <ListItem
                 action={action}
                 forceExpandable={forceExpandable}
