@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0ED34EA2EBAB4DD8BE467220 /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 258702B773E64857AB05C15E /* OpenSans-Medium.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1510EF98307E7310004DC553 /* Document Provider.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 1510EF91307E7310004DC553 /* Document Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1510F23F3080BE6A004DC553 /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
 		155C79672BF4AF0B00ACA35E /* Procivis-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 155C79662BF4AF0B00ACA35E /* Procivis-Book.ttf */; };
 		158D69EA2785F1AA00D5359B /* rnuc.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 158D69E92785F1AA00D5359B /* rnuc.xcconfig */; };
@@ -36,20 +35,6 @@
 			remoteInfo = "Document Provider";
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		1510EF9D307E7310004DC553 /* Embed ExtensionKit Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
-			dstSubfolderSpec = 16;
-			files = (
-				1510EF98307E7310004DC553 /* Document Provider.appex in Embed ExtensionKit Extensions */,
-			);
-			name = "Embed ExtensionKit Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0D423538F2044E07A3A42829 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -241,7 +226,7 @@
 				068F1FFF817F4F429E7D5922 /* Upload Debug Symbols to Sentry */,
 				4CEB135B972E39021102FB8F /* [CP] Embed Pods Frameworks */,
 				5F0C7342E769C4A3BF2BF39E /* [CP] Copy Pods Resources */,
-				1510EF9D307E7310004DC553 /* Embed ExtensionKit Extensions */,
+				15487BF7308FAC170076E9F0 /* Conditionally Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
@@ -373,6 +358,24 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh\n";
 		};
+		15487BF7308FAC170076E9F0 /* Conditionally Embed ExtensionKit Extensions */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Conditionally Embed ExtensionKit Extensions";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Reusable function to check if an entitlement key exists and has a value\n# Arguments: $1 = Entitlement Key (e.g., \"com.apple.security.application-groups\")\n# Returns: Echoes \"true\" or \"false\"\nhas_entitlement_key() {\n    local target_key=\"$1\" \n    \n    # 1. Resolve the full path (handles relative paths used by Xcode)\n    local entitlements_path=\"${PROJECT_DIR}/Wallet/Wallet.${CONFIG_NAME}.${ENVIRONMENT}.entitlements\"\n    \n    if [ ! -f \"$entitlements_path\" ]; then\n        echo \"false\"\n        return\n    fi\n    \n    # 2. Use PlistBuddy to print the key. \n    # If the key doesn't exist, PlistBuddy throws an error, which we silence.\n    /usr/libexec/PlistBuddy -c \"Print :${target_key}\" \"$entitlements_path\" > /dev/null 2>&1\n    local exit_code=$?\n    \n    # 3. If exit code is 0, the key exists in the file\n    if [ $exit_code -eq 0 ]; then\n        echo \"true\"\n    else\n        echo \"false\"\n    fi\n}\n\n# Helper function to copy and embed the extension\nembed_extension() {\n    local ext_name=\"$1\"\n    local source_path=\"${CONFIGURATION_BUILD_DIR}/${ext_name}.appex\"\n    local destination_path=\"${CONFIGURATION_BUILD_DIR}/${PLUGINS_FOLDER_PATH}\"\n    \n    if [ -d \"$source_path\" ]; then\n        echo \"Embedding Extension: $ext_name\"\n        rsync -r --copy-links \"$source_path\" \"$destination_path\"\n    else\n        echo \"Error: Extension source path not found at $source_path\"\n        exit 1\n    fi\n}\n\nif [ \"$(has_entitlement_key 'com.apple.developer.identity-document-services.document-provider.mobile-document-types')\" = \"true\" ]; then\n    embed_extension \"Document Provider\"\nelse\n    echo \"Skipping Document Provider extension\"\nfi\n";
+		};
 		4CEB135B972E39021102FB8F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,9 +384,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -420,9 +427,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Wallet/Pods-Wallet-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -725,10 +736,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -806,10 +814,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
