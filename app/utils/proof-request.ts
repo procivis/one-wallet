@@ -1,5 +1,6 @@
 import {
   PresentationDefinitionV2,
+  PresentationDefinitionV2Credential,
   PresentationSubmitV2CredentialRequest,
 } from '@procivis/react-native-one-core';
 
@@ -17,6 +18,7 @@ export type SetCredentialQuerySelection = Record<
 
 export const preselectCredentialsForPresentationDefinitionV2 = (
   presentationDefinition: PresentationDefinitionV2,
+  preselectedCredentialIds?: string[],
 ) => {
   const preselected =
     presentationDefinition.credentialSets.reduce<SetCredentialQuerySelection>(
@@ -31,12 +33,10 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
                 credentialQuery.credentialOrFailureHint.type_ ===
                   'APPLICABLE_CREDENTIALS'
               ) {
-                const applicableCredentials =
-                  credentialQuery.credentialOrFailureHint.applicableCredentials;
-                applicableCredentials.sort(
-                  objectByTimestampSorter('issuanceDate', false),
+                const selectedCredential = pickFromApplicable(
+                  credentialQuery.credentialOrFailureHint.applicableCredentials,
+                  preselectedCredentialIds,
                 );
-                const selectedCredential = applicableCredentials[0];
 
                 const userSelections: PresentationSubmitV2CredentialRequest['userSelections'] =
                   [];
@@ -71,3 +71,21 @@ export const preselectCredentialsForPresentationDefinitionV2 = (
 
   return preselected;
 };
+
+function pickFromApplicable(
+  applicableCredentials: PresentationDefinitionV2Credential[],
+  preselectedCredentialIds?: string[],
+): PresentationDefinitionV2Credential {
+  if (preselectedCredentialIds) {
+    const preselected = applicableCredentials.find((credential) =>
+      preselectedCredentialIds.includes(credential.id),
+    );
+    if (preselected) {
+      return preselected;
+    }
+  }
+
+  // otherwise return the latest
+  applicableCredentials.sort(objectByTimestampSorter('issuanceDate', false));
+  return applicableCredentials[0];
+}

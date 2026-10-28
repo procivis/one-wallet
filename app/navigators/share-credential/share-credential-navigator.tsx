@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
+import DcApiProofErrorScreen from '../../screens/credential/dcapi-proof-error-screen';
 import ProofProcessScreen from '../../screens/credential/proof-process-screen';
 import ProofRequestScreen from '../../screens/credential/proof-request-screen';
 import SelectCredentialV2Screen from '../../screens/credential/proof-request-select-credential-v2-screen';
@@ -16,6 +17,7 @@ const Processing = React.memo(formSheetWrapper(ProofProcessScreen));
 const TransactionDataScreen = React.memo(
   formSheetWrapper(ProofRequestTransactionDataScreen),
 );
+const DcApiError = React.memo(formSheetWrapper(DcApiProofErrorScreen));
 
 const Stack = createNativeStackNavigator<ShareCredentialNavigatorParamList>();
 
@@ -29,6 +31,7 @@ const ShareCredentialNavigator = () => {
         component={TransactionDataScreen}
         name="TransactionDetails"
       />
+      <Stack.Screen component={DcApiError} name="DcApiError" />
     </Stack.Navigator>
   );
 };

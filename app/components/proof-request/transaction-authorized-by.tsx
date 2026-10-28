@@ -63,6 +63,7 @@ const TransactionAuthorizedBy: FC<TransactionAuthorizedByProps> = ({
                       credential.schema.keyStorageSecurity,
                     requireInstanceAttestation:
                       credential.schema.requiresWalletInstanceAttestation,
+                    monitorCredentialLifetime: false,
                   },
                 },
                 type: CredentialType.SINGLE,

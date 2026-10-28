@@ -34,16 +34,19 @@ export const ONE_CORE_MOCK: ONECoreMock = {
 export const dummyCredentialSchema: CredentialSchemaListItem = {
   allowSuspension: false,
   createdDate: '2026-07-02T08:58:43.002Z',
-  formats: [{
-    ecosystemSchemaId: 'schemaId',
-    format: 'JWT',
-  }],
+  formats: [
+    {
+      ecosystemSchemaId: 'schemaId',
+      format: 'JWT',
+    },
+  ],
   id: 'credentialSchemaInfo-id',
   importedSourceUrl: 'importedSourceUrl',
   lastModified: '2026-07-02T08:58:43.002Z',
   name: 'schema-name',
   walletAttestation: {
     requireInstanceAttestation: false,
+    monitorCredentialLifetime: false,
   },
 };
 

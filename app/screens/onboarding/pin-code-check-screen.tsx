@@ -23,7 +23,10 @@ import { RESULTS } from 'react-native-permissions';
 import PinCodeScreenContent, {
   PinCodeActions,
 } from '../../components/pin-code/pin-code-screen-content';
-import { useInitialDeepLinkHandling } from '../../hooks/navigation/deep-link';
+import {
+  useDcApiCheck,
+  useInitialDeepLinkHandling,
+} from '../../hooks/navigation/deep-link';
 import {
   biometricAuthenticate,
   useBiometricType,
@@ -79,6 +82,7 @@ const PinCodeCheckScreen: FunctionComponent = () => {
     );
 
   const handleInitialDeepLink = useInitialDeepLinkHandling();
+  const dcApiCheck = useDcApiCheck();
   const onCheckPassed = useCallback(() => {
     // the entry was correct (biometric or manual) -> hide the lock screen
     navigation.pop();
@@ -91,12 +95,16 @@ const PinCodeCheckScreen: FunctionComponent = () => {
         resetToDashboard: true,
       });
     }
-    checkAppVersion();
+    if (!checkAppVersion()) {
+      return;
+    }
 
     handleInitialDeepLink();
+    dcApiCheck();
   }, [
     checkAppVersion,
     handleInitialDeepLink,
+    dcApiCheck,
     navigation,
     walletProvider.walletUnitAttestation.required,
     walletUnitRegistration?.status,

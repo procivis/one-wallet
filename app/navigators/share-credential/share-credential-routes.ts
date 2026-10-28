@@ -16,6 +16,9 @@ type InvitationResultProofRequest = Extract<
 >;
 
 export type ShareCredentialNavigatorParamList = {
+  DcApiError: {
+    error: unknown;
+  };
   Processing: {
     credentialsV2: Record<string, PresentationSubmitV2CredentialRequest[]>;
     interactionId: string;
@@ -23,6 +26,7 @@ export type ShareCredentialNavigatorParamList = {
   };
   ProofRequest: {
     request: InvitationResultProofRequest;
+    preselectedCredentialIds?: string[];
     selectedCredentials?: {
       credentialQueryId: string;
       selectedCredentialIds: string[];

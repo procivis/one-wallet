@@ -271,6 +271,7 @@ export const HistoryDetailScreen: FC = () => {
                           credentialSchema.keyStorageSecurity,
                         requireInstanceAttestation:
                           credentialSchema.requiresWalletInstanceAttestation,
+                        monitorCredentialLifetime: false,
                       },
                     },
                     claims

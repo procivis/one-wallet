@@ -176,6 +176,7 @@ const ProofDetailNerdView: FunctionComponent = () => {
                   proofInput.credentialSchema.keyStorageSecurity,
                 requireInstanceAttestation:
                   proofInput.credentialSchema.requiresWalletInstanceAttestation,
+                monitorCredentialLifetime: false,
               },
             }),
             null,

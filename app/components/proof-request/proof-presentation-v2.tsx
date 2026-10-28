@@ -321,6 +321,7 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
 
   const {
     request: { interactionId, proofId },
+    preselectedCredentialIds,
     selectedCredentials: updatedCredentialSelection,
     selectedTransactionCredential,
   } = route.params;
@@ -390,9 +391,12 @@ const ProofPresentationV2: FC<ProofPresentationProps> = ({
       return;
     }
     setSelectedCredentials(
-      preselectCredentialsForPresentationDefinitionV2(presentationDefinition),
+      preselectCredentialsForPresentationDefinitionV2(
+        presentationDefinition,
+        preselectedCredentialIds,
+      ),
     );
-  }, [presentationDefinition, setSelectedCredentials]);
+  }, [presentationDefinition, preselectedCredentialIds]);
 
   useEffect(() => {
     if (!presentationDefinition) {

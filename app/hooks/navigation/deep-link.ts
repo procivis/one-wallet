@@ -1,10 +1,14 @@
 import {
   parseUniversalLink,
+  reportException,
   useInitialDeepLinkHandling as useCommonInitialDeepLinkHandling,
+  useONECore,
   useRuntimeDeepLinkHandling as useCommonRuntimeDeepLinkHandling,
 } from '@procivis/one-react-native-components';
+import { CredentialManager } from '@procivis/react-native-one-core';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
+import { Platform } from 'react-native';
 
 import { config } from '../../config';
 import { RootNavigationProp } from '../../navigators/root/root-routes';
@@ -88,4 +92,45 @@ export const useInvitationHandling = () => {
     },
     [navigation],
   );
+};
+
+export const useDcApiCheck = () => {
+  const { organisationId } = useONECore();
+  const navigation = useNavigation<RootNavigationProp>();
+
+  return useCallback(async () => {
+    if (Platform.OS !== 'android') {
+      return;
+    }
+
+    return CredentialManager.checkDcApi({ organisationId })
+      .then((request) => {
+        if (request) {
+          navigation.navigate('CredentialManagement', {
+            params: {
+              params: {
+                request,
+                preselectedCredentialIds: request.preselectedCredentialId
+                  ? [request.preselectedCredentialId]
+                  : undefined,
+              },
+              screen: 'ProofRequest',
+            },
+            screen: 'ShareCredential',
+          });
+        }
+
+        return Boolean(request);
+      })
+      .catch((error) => {
+        reportException(error, 'DC-API check failed');
+        navigation.navigate('CredentialManagement', {
+          params: {
+            params: { error },
+            screen: 'DcApiError',
+          },
+          screen: 'ShareCredential',
+        });
+      });
+  }, [organisationId, navigation]);
 };
