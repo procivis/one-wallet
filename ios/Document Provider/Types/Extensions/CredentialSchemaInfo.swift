@@ -13,7 +13,8 @@ extension CredentialSchemaInfo {
                 requireInstanceAttestation: self.requiresWalletInstanceAttestation,
                 keyStorageSecurityLevel: self.keyStorageSecurity,
                 preferredKeyStorageAttestationLifetime: nil,
-                preferredInstanceAttestationLifetime: nil
+                preferredInstanceAttestationLifetime: nil,
+                monitorCredentialLifetime: false
             ),
             importedSourceUrl: self.importedSourceUrl,
             layoutProperties: self.layoutProperties,

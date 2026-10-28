@@ -95,7 +95,8 @@ extension CredentialQueryFailureHint: CredentialCardViewModelProviding {
                 requireInstanceAttestation: false,
                 keyStorageSecurityLevel: nil,
                 preferredKeyStorageAttestationLifetime: nil,
-                preferredInstanceAttestationLifetime: nil
+                preferredInstanceAttestationLifetime: nil,
+                monitorCredentialLifetime: false
             ),
             importedSourceUrl: "",
             layoutProperties: credentialSchema?.layoutProperties,
