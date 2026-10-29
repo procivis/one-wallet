@@ -11,6 +11,7 @@ import {
   GhostButton,
   HistoryListItemView,
   ListItemView,
+  resolveLocalizedValue,
   ScrollViewScreen,
   TrustInfo,
   Typography,
@@ -192,7 +193,10 @@ const CredentialDetailScreen: FC = () => {
   );
 
   const title =
-    credential.schema.translations?.name[language] ?? credential.schema.name;
+    resolveLocalizedValue(credential.schema.translations?.name, [
+      language,
+      config.globalSettings.defaultLanguage,
+    ]) ?? credential.schema.name;
 
   return (
     <ScrollViewScreen

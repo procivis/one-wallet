@@ -8,6 +8,7 @@ import {
   Header,
   LoaderView,
   LoaderViewState,
+  resolveLanguageTaggedValue,
   TouchableOpacity,
   Typography,
   useAppColorScheme,
@@ -36,12 +37,10 @@ const getTranslatedDisplayName = (
   language: string,
   defaultLanguage?: string,
 ) => {
-  const translation = translations.find((t) => t.lang === language);
-  const defaultTranslation = translations.find(
-    (t) => t.lang === defaultLanguage,
+  return (
+    resolveLanguageTaggedValue(translations, [language, defaultLanguage]) ??
+    translations[0]?.value
   );
-  const anyTranslation = translations[0];
-  return (translation ?? defaultTranslation ?? anyTranslation)?.value;
 };
 
 type TrustEcosystemProps = {

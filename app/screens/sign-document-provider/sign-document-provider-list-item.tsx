@@ -1,5 +1,6 @@
 import {
   concatTestID,
+  resolveLanguageTaggedValue,
   Selector,
   SelectorStatus,
   Typography,
@@ -52,7 +53,7 @@ const CredentialRequestListItem: FC<CredentialRequestListItemProps> = ({
           style={styles.title}
           testID={concatTestID(testID, 'label')}
         >
-          {provider.displayName.find((l) => l.lang === language)?.value}
+          {resolveLanguageTaggedValue(provider.displayName, [language])}
         </Typography>
         <Typography
           color={colorScheme.text}
@@ -61,7 +62,7 @@ const CredentialRequestListItem: FC<CredentialRequestListItemProps> = ({
           style={styles.description}
           testID={concatTestID(testID, 'description')}
         >
-          {provider.description.find((l) => l.lang === language)?.value}
+          {resolveLanguageTaggedValue(provider.description, [language])}
         </Typography>
       </View>
       <Selector status={status} />
