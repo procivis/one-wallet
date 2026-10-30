@@ -23,7 +23,6 @@ describe('CredentialOfferScreen rejection', () => {
       ecosystemErrors: {},
       interactionId: 'interactionId',
       protocol: 'protocol',
-      requiresWalletInstanceAttestation: false,
       type_: 'CREDENTIAL_ISSUANCE',
     };
 
