@@ -7,10 +7,7 @@
 		<key>EXExtensionPointIdentifier</key>
 		<string>com.apple.identity-document-services.document-provider-ui</string>
 	</dict>
-	<key>NSExtension</key>
-	<dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.identity-document-services.document-provider-ui</string>
-	</dict>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 </dict>
 </plist>
