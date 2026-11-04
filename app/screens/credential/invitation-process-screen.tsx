@@ -364,9 +364,11 @@ const InvitationProcessScreen: FunctionComponent = () => {
         });
       } else {
         const needsRSESetup =
+          config.featureFlags.ubiquRse &&
           invitationResult.keyStorageSecurityLevels?.includes(
             KeyStorageSecurity.HIGH,
-          ) && !isRSESetup;
+          ) &&
+          !isRSESetup;
         managementNavigation.replace('IssueCredential', {
           params: {
             invitationResult: invitationResult,

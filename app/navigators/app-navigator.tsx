@@ -144,6 +144,20 @@ const coreConfig = {
       },
     },
   },
+  keySecurityLevel: {
+    HIGH: {
+      params: {
+        public: {
+          holder: {
+            // ONE-11729: overrides, to be interoperable with EUDI issuer
+            keyStorages: config.featureFlags.ubiquRse
+              ? ['UBIQU_RSE', 'SECURE_ELEMENT']
+              : ['SECURE_ELEMENT'],
+          },
+        },
+      },
+    },
+  },
   keyStorage: {
     INTERNAL: {
       params: {

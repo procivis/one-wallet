@@ -15,6 +15,7 @@ import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderCloseModalButton } from '../../components/navigation/header-buttons';
+import { config } from '../../config';
 import { useCapturePrevention } from '../../hooks/capture-prevention';
 import { translate } from '../../i18n';
 import { useStores } from '../../models';
@@ -70,6 +71,7 @@ const CredentialConfirmationCodeScreen: FunctionComponent = () => {
 
   const handleSubmit = useCallback(() => {
     const needsRSESetup =
+      config.featureFlags.ubiquRse &&
       keyStorageSecurityLevels?.includes(KeyStorageSecurity.HIGH) &&
       !walletStore.isRSESetup;
 
