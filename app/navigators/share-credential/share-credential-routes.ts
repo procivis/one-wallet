@@ -25,8 +25,8 @@ export type ShareCredentialNavigatorParamList = {
     proofId: string;
   };
   ProofRequest: {
-    request: InvitationResultProofRequest;
     preselectedCredentialIds?: string[];
+    request: InvitationResultProofRequest;
     selectedCredentials?: {
       credentialQueryId: string;
       selectedCredentialIds: string[];

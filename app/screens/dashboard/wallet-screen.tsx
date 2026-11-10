@@ -196,12 +196,7 @@ const WalletScreen: FunctionComponent = observer(() => {
   }, [registeredWalletUnitId, runTrustTasks]);
 
   useEffect(() => {
-    if (
-      appState !== 'active' ||
-      !isFocused ||
-      !walletProvider.featureFlags?.dcApiIntegrationEnabled ||
-      !statusCheckFinished
-    ) {
+    if (appState !== 'active' || !isFocused || !statusCheckFinished) {
       return;
     }
     synchronizeCredentialRegistry();

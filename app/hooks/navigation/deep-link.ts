@@ -109,10 +109,10 @@ export const useDcApiCheck = () => {
           navigation.navigate('CredentialManagement', {
             params: {
               params: {
-                request,
                 preselectedCredentialIds: request.preselectedCredentialId
                   ? [request.preselectedCredentialId]
                   : undefined,
+                request,
               },
               screen: 'ProofRequest',
             },

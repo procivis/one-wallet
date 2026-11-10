@@ -3,6 +3,7 @@ import {
   reportException,
   reportTraceInfo,
   useBlockOSBackNavigation,
+  useCredentialRegistrySync,
   useONECore,
 } from '@procivis/one-react-native-components';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +16,7 @@ import React, {
 import { useQueryClient } from 'react-query';
 
 import { ProcessingView } from '../../components/common/processing-view';
+import { useCurrentLanguage } from '../../hooks/language';
 import { removePin } from '../../hooks/pin-code/pin-code';
 import { translate, translateError } from '../../i18n';
 import { useStores } from '../../models';
@@ -29,6 +31,9 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
   const { core, initialize } = useONECore();
   const queryClient = useQueryClient();
   const [error, setError] = useState<unknown>();
+  const language = useCurrentLanguage();
+  const { mutateAsync: synchronizeCredentialRegistry } =
+    useCredentialRegistrySync(language);
 
   const { walletStore } = useStores();
 
@@ -44,6 +49,7 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     }
 
     await initialize(true);
+    await synchronizeCredentialRegistry();
 
     try {
       await removePin();
@@ -56,7 +62,13 @@ const DeleteWalletProcessScreen: FunctionComponent = () => {
     await queryClient.resetQueries();
     walletStore.walletDeleted();
     setState(LoaderViewState.Success);
-  }, [core, initialize, queryClient, walletStore]);
+  }, [
+    core,
+    initialize,
+    queryClient,
+    synchronizeCredentialRegistry,
+    walletStore,
+  ]);
 
   useBlockOSBackNavigation();
 
