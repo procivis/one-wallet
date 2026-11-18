@@ -98,19 +98,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         factory.startReactNative(
             withModuleName: "Wallet",
             in: window,
-            launchOptions: [:] // TODO: update to connectionOptions:(UISceneConnectionOptions *_Nullable)connectionOptions with react-native 0.88.0 release
+            launchOptions: makeLaunchOptions(from: connectionOptions) // TODO: update to connectionOptions:(UISceneConnectionOptions *_Nullable)connectionOptions with react-native 0.88.0 release
         )
         appDelegate.window = window;
-        
+
         window?.makeKeyAndVisible()
-        
-        // Cold start from a link.
-        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
-        for activity in connectionOptions.userActivities {
-            self.scene(scene, continue: activity)
-        } 
     }
-    
+
+    /// Scenes deliver the cold-start link in `connectionOptions`, but `RCTLinkingManager.getInitialURL`
+    /// reads it from launch options, so map it into the shape React Native expects.
+    private func makeLaunchOptions(from connectionOptions: UIScene.ConnectionOptions) -> [UIApplication.LaunchOptionsKey: Any] {
+        if let url = connectionOptions.urlContexts.first?.url {
+            return [.url: url]
+        }
+        if let activity = connectionOptions.userActivities.first(where: { $0.activityType == NSUserActivityTypeBrowsingWeb }) {
+            return [.userActivityDictionary: [
+                UIApplication.LaunchOptionsKey.userActivityType.rawValue: activity.activityType,
+                "UIApplicationLaunchOptionsUserActivityKey": activity,
+            ]]
+        }
+        return [:]
+    }
+
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let appDelegate else { return };
         URLContexts.forEach { urlContext in
